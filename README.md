@@ -57,6 +57,7 @@ More Details coming soon! :-)
 <img src="assets/logos/black_logo.png" alt="Logo" width="60" height="60">
 <img src="assets/logos/yellow_logo.png" alt="Logo" width="60" height="60">
 </div>
+
 ### Built With
 
 * [Python Flask](https://flask.palletsprojects.com/en/1.1.x/)
@@ -75,7 +76,7 @@ To view the hosted application, [click here instead (Coming Soon!)](http://lmao.
 
 ### Prerequisites
 Please ensure that you have the following dependencies installed before carrying on!
-* Python 3
+* Python 3 and pip3
   ```sh
   # MacOS Developers
     brew install python
@@ -85,6 +86,11 @@ Please ensure that you have the following dependencies installed before carrying
     sudo apt update
     sudo apt-get install python3
   ```
+* Flask 
+  * Refer to https://flask.palletsprojects.com/en/1.0.x/installation/
+    ```sh
+    pip install Flask
+    ```
 * NodeJS and NPM
   ```sh
   # MacOS Developers
@@ -114,11 +120,16 @@ Please ensure that you have the following dependencies installed before carrying
 Run `yarn start:all` or `npm run start:all`
 
 #### Backend-only
+1. Run `. /backend/venv/bin/activate` to activate virtual env
+2. Run `export FLASK_APP=testpy.py` to set entry file
+3. Run `flask run` to start flask server
+4. Go to http://127.0.0.1:5000/ to view the server
 
 #### Frontend-only
 1. Copy and paste `.env.template` to fill up the env variables and save as `frontend/.env`
 2. run `yarn` in `/frontend` to install dependencies
 3. run `yarn start` to start front-end
+4. Go to http://127.0.0.1:3000/ to view the frontend
 
 
 <!-- CONTRIBUTING -->
