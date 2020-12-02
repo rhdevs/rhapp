@@ -114,22 +114,36 @@ Please ensure that you have the following dependencies installed before carrying
     # Debian/Ubuntu
         sudo apt update && sudo apt install yarn
   ```
+* Python 3 Virtual Env 
+  ```sh
+  ## Unix
+  python3 -m venv venv
+  virtualenv venv
+  . venv/bin/activate
+  
+  ## Windows
+  py -3 -m venv venv
+  \Python27\Scripts\virtualenv.exe venv
+  venv\Scripts\activate
+  
+  ```
 
 ### Installation
 #### Running both instances for testing
 Run `yarn start:all` or `npm run start:all`
 
 #### Backend-only
-1. Run `. /backend/venv/bin/activate` to activate virtual env
+1. Ensure your venv is up (check pre-requisite)
 2. Run `export FLASK_APP=testpy.py` to set entry file
 3. Run `flask run` to start flask server
 4. Go to http://127.0.0.1:5000/ to view the server
+5. To share new dependencies, run `pip freeze --local > requirements.txt`
 
 #### Frontend-only
 1. Copy and paste `.env.template` to fill up the env variables and save as `frontend/.env`
 2. run `yarn` in `/frontend` to install dependencies
 3. run `yarn start` to start front-end
-4. Go to http://127.0.0.1:3000/ to view the frontend
+4. Go to http://localhost:3000/ to view the frontend
 
 
 <!-- CONTRIBUTING -->
