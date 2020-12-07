@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 
 export enum PATHS {
@@ -34,11 +34,12 @@ export enum PATHS {
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
+  LANDING_PAGE = '/landingpage',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
-const FallBack = React.lazy(() => import(/* webpackChunckName: "Search" */ './ErrorPages/NotFound'))
+const FallBack = React.lazy(() => import(/* webpackChunckName: "FallBack" */ './ErrorPages/NotFound'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
@@ -68,6 +69,7 @@ const ViewWashingMachine = React.lazy(
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
+const LandingPage = React.lazy(() => import(/* webpackChunckName: "LandingPage" */ './LandingPage'))
 
 export default class Routes extends React.Component {
   render() {
@@ -79,7 +81,6 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SEARCH_PAGE} component={Search} />
             <Route exact path={PATHS.LOGIN_PAGE} component={Login} />
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
-<<<<<<< HEAD
 
             <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
             <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
@@ -105,9 +106,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
             <Route component={FallBack} />
-=======
-            <Redirect to={PATHS.HOME_PAGE} />
->>>>>>> Add some UI to Sign in and sign up page
+            <Route exact path={PATHS.LANDING_PAGE} component={LandingPage} />
           </Switch>
         </Suspense>
       </Root>

@@ -1,28 +1,22 @@
 import React from 'react'
-import styled from 'styled-components'
 
 import { Button, Input } from 'antd'
 import 'antd/dist/antd.css'
+import { Link } from 'react-router-dom'
+import { PATHS } from '../routes/Routes'
 
-const CardContainer = styled.div`
-  height: 30%;
-  width: 50%;
-  margin: 0 auto;
-  background-color: #fafaf4;
-`
-
-function SignInCard() {
+function LoginCard() {
   return (
-    <CardContainer>
+    <>
       <Input placeholder="Username"></Input> <br />
       <br />
       <Input placeholder="Password"></Input>
       <br /> <br />
       <Button type="primary" block>
-        Sign in
+        <Link to={PATHS.LANDING_PAGE}>Sign in</Link>
       </Button>
-    </CardContainer>
+    </>
   )
 }
 
-export default SignInCard
+export default LoginCard
