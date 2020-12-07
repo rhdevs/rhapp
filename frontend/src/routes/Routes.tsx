@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 
 export enum PATHS {
@@ -79,6 +79,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SEARCH_PAGE} component={Search} />
             <Route exact path={PATHS.LOGIN_PAGE} component={Login} />
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
+<<<<<<< HEAD
 
             <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
             <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
@@ -104,6 +105,9 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
             <Route component={FallBack} />
+=======
+            <Redirect to={PATHS.HOME_PAGE} />
+>>>>>>> Add some UI to Sign in and sign up page
           </Switch>
         </Suspense>
       </Root>
