@@ -3,10 +3,12 @@ import { ActionTypes, HOME_PAGE_ACTIONS, Account } from './types'
 
 const initialState = {
   Account: null,
+  sampleStateText: 'Hola',
 }
 
 type State = {
   Account: Account | null
+  sampleStateText: string
 }
 
 export const home: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -15,6 +17,13 @@ export const home: Reducer<State, ActionTypes> = (state = initialState, action) 
       return {
         ...state,
         account: action.account,
+      }
+    }
+
+    case HOME_PAGE_ACTIONS.SAMPLE_TEXT: {
+      return {
+        ...state,
+        sampleStateText: action.sampleStateText,
       }
     }
 

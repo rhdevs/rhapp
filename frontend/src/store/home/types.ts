@@ -9,7 +9,8 @@ export type Account = {
 }
 
 export enum HOME_PAGE_ACTIONS {
-  SET_ACCOUNT = 'LANDING_PAGE_ACTIONS.SET_PERSONAL_ACCOUNT',
+  SET_ACCOUNT = 'HOME_PAGE_ACTIONS.SET_ACCOUNT',
+  SAMPLE_TEXT = 'HOME_PAGE_ACTIONS.SAMPLE_TEXT',
 }
 
 type SetAccount = {
@@ -17,4 +18,9 @@ type SetAccount = {
   account: Account
 }
 
-export type ActionTypes = SetAccount
+type getSampleText = {
+  type: typeof HOME_PAGE_ACTIONS.SAMPLE_TEXT
+  sampleStateText: string
+}
+
+export type ActionTypes = SetAccount | getSampleText
