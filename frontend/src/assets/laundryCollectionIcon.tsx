@@ -1,9 +1,6 @@
 import React from 'react'
 
 const CollectionIcon = () => {
-  // =======
-  // const LaundryCollectionIcon = () => {
-  // >>>>>>> 6d0a659f... Changed variable names and file names
   return (
     <div className="App">
       <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,6 +18,3 @@ const CollectionIcon = () => {
 }
 
 export { CollectionIcon }
-// =======
-// export default LaundryCollectionIcon
-// >>>>>>> 6d0a659f... Changed variable names and file names
