@@ -5,8 +5,7 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
 import DropDownBar from '../../components/dropdown'
-//import { Header } from '../../components/laundryCard'
-import Logo from '../../assets'
+import { FacilityBooking } from '../../components/LaundryCards/template'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -39,7 +38,7 @@ export default function Home() {
       <Reddropdownbar menutitle={'Choose your block'} menuarray={['Blk 2', 'Blk 3', 'Blk 4']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
-      <Logo />
+      <FacilityBooking title={'In Use'} subtitle={'123'} colour={'red'} />
     </MainContainer>
   )
 }
