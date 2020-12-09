@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LaundryCollectionIcon = () => {
+const CollectionIcon = () => {
   return (
     <div className="App">
       <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,4 +16,4 @@ const LaundryCollectionIcon = () => {
     </div>
   )
 }
-export default LaundryCollectionIcon
+export default CollectionIcon
