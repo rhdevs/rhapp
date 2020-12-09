@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -28,6 +29,7 @@ export default function Home() {
     <MainContainer>
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
+      <BottomNavBar />
     </MainContainer>
   )
 }
