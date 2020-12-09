@@ -5,6 +5,8 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
 import DropDownBar from '../../components/dropdown'
+//import { Header } from '../../components/laundryCard'
+import Logo from '../../assets'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -33,9 +35,11 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <Reddropdownbar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
+      <Reddropdownbar menutitle={'Choose your level'} menuarray={['Level 1', 'Level 2', 'Level 3']} />
+      <Reddropdownbar menutitle={'Choose your block'} menuarray={['Blk 2', 'Blk 3', 'Blk 4']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
+      <Logo />
     </MainContainer>
   )
 }
