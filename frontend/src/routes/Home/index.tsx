@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
+import DropDownBar from '../../components/dropdown'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -24,8 +25,15 @@ export default function Home() {
     dispatch(getUpdateMockString())
   }
 
+  const Reddropdownbar = styled(DropDownBar)`
+    .ant-btn {
+      background.background-color: red;
+    }
+  `
+
   return (
     <MainContainer>
+      <Reddropdownbar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
     </MainContainer>
