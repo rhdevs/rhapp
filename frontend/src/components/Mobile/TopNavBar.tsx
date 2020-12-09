@@ -26,7 +26,7 @@ function TopNavBar({
   rightComponent,
 }: {
   title: string
-  leftIcon?: true
+  leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement | typeof ReactComponent
 }) {
