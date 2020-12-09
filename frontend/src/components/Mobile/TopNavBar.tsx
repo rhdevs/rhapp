@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
+import { ReactComponent } from '*.svg'
 
 const TitleText = styled.text`
   font-family: Inter;
@@ -13,6 +14,7 @@ const TitleText = styled.text`
 `
 const StyledNavBar = styled(NavBar)`
   &.am-navbar {
+    height: 70px;
     background-color: #fafaf4; !important
   }
 `
@@ -26,7 +28,7 @@ function TopNavBar({
   title: string
   leftIcon?: true
   leftIconComponent?: ReactElement
-  rightComponent?: ReactElement
+  rightComponent?: ReactElement | typeof ReactComponent
 }) {
   return (
     <StyledNavBar
