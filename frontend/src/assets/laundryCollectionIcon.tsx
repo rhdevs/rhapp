@@ -1,6 +1,10 @@
 import React from 'react'
 
+<<<<<<< HEAD
 const LaundryCollectionIcon = () => {
+=======
+const CollectionIcon = () => {
+>>>>>>> 3a69a49e... Create Template for laundry card w/o btn
   return (
     <div className="App">
       <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,4 +20,8 @@ const LaundryCollectionIcon = () => {
     </div>
   )
 }
+<<<<<<< HEAD
 export default LaundryCollectionIcon
+=======
+export default CollectionIcon
+>>>>>>> 3a69a49e... Create Template for laundry card w/o btn
