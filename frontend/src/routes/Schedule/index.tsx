@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
+import { Link } from 'react-router-dom'
 
 const TimetableContainer = styled.div`
   height: 45vh;
@@ -47,28 +48,18 @@ export default function Schedule() {
               console.log('share')
             }}
           >
-            <Menu.Item
-              key="1"
-              onClick={() => {
-                console.log('menu.item')
-              }}
-            >
-              Share with...
+            <Menu.Item key="1">
+              <Link to={'/shareTimetable'}>Share with...</Link>
             </Menu.Item>
+
             <Menu.Item key="2">Save as png</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
             <Menu.Item key="3">Import an ICalander File (.ics)</Menu.Item>
             <Menu.Item key="4">Add an event</Menu.Item>
           </SubMenu>
-          <Menu.Item
-            key="5"
-            icon={<SearchOutlined />}
-            onClick={() => {
-              console.log('last menu.item')
-            }}
-          >
-            Events
+          <Menu.Item key="5" icon={<SearchOutlined />}>
+            <Link to={'/eventList'}>Events</Link>
           </Menu.Item>
         </>
       }
@@ -78,7 +69,6 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-
       <TimetableContainer>
         <h1>TIMETABLE</h1>
       </TimetableContainer>

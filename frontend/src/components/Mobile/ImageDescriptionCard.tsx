@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import profilePicture from '../../assets/profilePicture.png'
 
 const CardContainer = styled.div`
-  width: 80vw;
+  width: 85vw;
   min-height: 3vh;
   margin: 0 auto 10px;
   background-color: white;
@@ -79,6 +79,12 @@ const TextContainer = styled.div`
 const BottomElementContainer = styled.div`
   margin: 0 auto;
   z-index: 10;
+  padding-top: 10px;
+`
+
+const ImageContainer = styled.div`
+  width: 43px;
+  height: 43px;
 `
 
 type Props = {
@@ -100,7 +106,13 @@ function ImageDescriptionCard(props: Props) {
   return (
     <CardContainer onClick={expandCard}>
       <ContentContainer>
-        <img src={props.avatar ?? profilePicture} alt="logo" style={{ maxWidth: '43px', maxHeight: '43px' }} />
+        <ImageContainer>
+          <img
+            src={props.avatar ?? profilePicture}
+            alt="logo"
+            style={{ width: '43px', height: '43px', objectFit: 'scale-down' }}
+          />
+        </ImageContainer>
         <TextContainer>
           {!isVisible ? (
             <>
