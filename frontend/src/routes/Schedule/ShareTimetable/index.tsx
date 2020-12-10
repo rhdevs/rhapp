@@ -1,4 +1,6 @@
+import { LeftOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -31,18 +33,18 @@ const RecentDataText = styled.text`
   padding-left: 5vw;
 `
 
-type recentData = {
-  avatar: string
+type RecentData = {
+  avatar?: string
   title: string
   description: string
 }
 
-const testData: recentData[] = [
+const testData: RecentData[] = [
   { avatar: 'https://i.pravatar.cc/150?img=3', title: 'Zhou Mamam', description: 'Block 1' },
-  { avatar: 'https://i.pravatar.cc/150?img=3', title: 'John', description: 'description' },
+  { title: 'John', description: 'description' },
 ]
 
-export default function ShareTimetable({ recentSearches }: { recentSearches: recentData[] }) {
+export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const data = recentSearches ?? testData
   const [searchValue, setSearchValue] = useState('')
 
@@ -51,9 +53,15 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: rec
     console.log(searchValue)
   }
 
+  const leftIcon = (
+    <Link to={'/schedule'}>
+      <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
+    </Link>
+  )
+
   return (
     <Background>
-      <TopNavBar title={'Share'} />
+      <TopNavBar title={'Share'} leftIcon={true} leftIconComponent={leftIcon} />
       <SearchBar placeholder={'Search user'} value={searchValue} onChange={onChange} />
       {searchValue ? (
         <NoRecentDataText>No friends</NoRecentDataText>
@@ -74,28 +82,6 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: rec
       ) : (
         <NoRecentDataText>No recent searches</NoRecentDataText>
       )}
-
-      {/* <ImageDescriptionCard avatar={'https://i.pravatar.cc/150?img=3'} title={'Zhou Mamam'} description={'Block 1'} />
-      <ImageDescriptionCard
-        title={
-          'Zhou Mamam hello this is my long nameZhou Mamam hello this is my long name Zhou Mamam hello this is my long name'
-        }
-        description={
-          'Block 1 description description description description Zhou Mamam hello this is my long name Zhou Mamam hello this is my long name'
-        }
-        dateTime={'08-dec-2020 01:00'}
-        bottomElement={
-          <button
-            onClick={(e) => {
-              console.log('button is clicked')
-              e.stopPropagation()
-            }}
-          >
-            hello
-          </button>
-        }
-      /> */}
-
       <BottomNavBar></BottomNavBar>
     </Background>
   )
