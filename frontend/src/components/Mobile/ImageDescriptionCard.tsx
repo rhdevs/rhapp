@@ -90,11 +90,11 @@ type Props = {
 }
 
 function ImageDescriptionCard(props: Props) {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const expandCard = () => {
-    setIsVisible(!isVisible)
-    console.log(isVisible)
+    setIsExpanded(!isExpanded)
+    console.log(isExpanded)
   }
 
   return (
@@ -102,7 +102,7 @@ function ImageDescriptionCard(props: Props) {
       <ContentContainer>
         <img src={props.avatar ?? profilePicture} alt="logo" style={{ maxWidth: '43px', maxHeight: '43px' }} />
         <TextContainer>
-          {!isVisible ? (
+          {!isExpanded ? (
             <>
               <TitleText>{props.title}</TitleText>
               <DateTimeText>{props.dateTime}</DateTimeText>
@@ -117,7 +117,7 @@ function ImageDescriptionCard(props: Props) {
           )}
         </TextContainer>
       </ContentContainer>
-      <BottomElementContainer>{isVisible && props.bottomElement}</BottomElementContainer>
+      <BottomElementContainer>{isExpanded && props.bottomElement}</BottomElementContainer>
     </CardContainer>
   )
 }

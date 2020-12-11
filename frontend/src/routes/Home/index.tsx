@@ -11,6 +11,7 @@ const MainContainer = styled.div`
   width: 100vw;
   background-color: #fafaf4;
 `
+
 export default function Home() {
   const dispatch = useDispatch()
   const { sampleStateText } = useSelector((state: RootState) => state.home)
@@ -25,15 +26,9 @@ export default function Home() {
     dispatch(getUpdateMockString())
   }
 
-  const Reddropdownbar = styled(DropDownBar)`
-    .ant-btn {
-      background.background-color: red;
-    }
-  `
-
   return (
     <MainContainer>
-      <Reddropdownbar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
+      <DropDownBar menuTitle={'Choose your block'} menuArray={['level', 'floor', 'block']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
     </MainContainer>
