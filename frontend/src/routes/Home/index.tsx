@@ -25,15 +25,9 @@ export default function Home() {
     dispatch(getUpdateMockString())
   }
 
-  const Reddropdownbar = styled(DropDownBar)`
-    .ant-btn {
-      background.background-color: red;
-    }
-  `
-
   return (
     <MainContainer>
-      <Reddropdownbar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
+      <DropDownBar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
     </MainContainer>
