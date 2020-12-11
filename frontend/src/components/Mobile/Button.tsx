@@ -4,6 +4,7 @@ import { message } from 'antd'
 
 type Props = {
   buttonIsPressed?: boolean
+  hasSuccessMessage: boolean
   stopPropagation: boolean
   defaultButtonDescription: string
   updatedButtonDescription?: string
@@ -23,13 +24,12 @@ function Button(props: Props) {
 
   const successfulAdd = () => {
     console.log('Added event to schedule')
-    message.success('Successfully added to schedule!')
+    if (props.hasSuccessMessage) message.success('Successfully added to schedule!')
   }
 
   const successfulRemove = () => {
     console.log('Removed event to schedule')
-
-    message.warning('Successfully removed from schedule!')
+    if (props.hasSuccessMessage) message.warning('Successfully removed from schedule!')
   }
 
   return (

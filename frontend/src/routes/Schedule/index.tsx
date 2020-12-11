@@ -10,7 +10,7 @@ import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import { Link } from 'react-router-dom'
 
 const TimetableContainer = styled.div`
-  height: 45vh;
+  height: 44vh;
 `
 
 const SmallContainer = styled.div`
