@@ -43,6 +43,7 @@ const testData: CurrentEvents[] = [
     description: 'Only for block 7 members! Follow us @block7 to find out more!',
     bottomElement: (
       <Button
+        hasSuccessMessage={true}
         buttonIsPressed={true}
         stopPropagation={true}
         defaultButtonDescription={'Add to Schedule'}
@@ -56,6 +57,7 @@ const testData: CurrentEvents[] = [
     description: 'description description description description description description',
     bottomElement: (
       <Button
+        hasSuccessMessage={true}
         stopPropagation={true}
         defaultButtonDescription={'Add to Schedule'}
         updatedButtonDescription={'Remove from Schedule'}
