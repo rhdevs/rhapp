@@ -3,17 +3,16 @@ import React from 'react'
 import 'antd/dist/antd.css'
 import { Menu, Dropdown, Button, message, Space } from 'antd'
 import { DownOutlined, UserOutlined } from '@ant-design/icons'
-import { title } from 'process'
 
 function handleMenuClick() {
   message.info('Click on menu item.')
   console.log('click')
 }
 
-function DropDownBar({ menutitle, menuarray }: { menutitle: string; menuarray: string[] }) {
+function DropDownBar({ menuTitle, menuArray }: { menuTitle: string; menuArray: string[] }) {
   const menu = (
     <Menu onClick={handleMenuClick}>
-      {menuarray.map((person, index) => (
+      {menuArray.map((person, index) => (
         <Menu.Item key={index} icon={<UserOutlined />}>
           {person}
         </Menu.Item>
@@ -24,7 +23,7 @@ function DropDownBar({ menutitle, menuarray }: { menutitle: string; menuarray: s
     <Space wrap>
       <Dropdown overlay={menu}>
         <Button>
-          {menutitle} <DownOutlined />
+          {menuTitle} <DownOutlined />
         </Button>
       </Dropdown>
     </Space>
