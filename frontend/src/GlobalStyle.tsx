@@ -4,6 +4,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     color: #fafaf4
   }
+  font-family: Inter
 `
 
 export default GlobalStyle
