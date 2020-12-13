@@ -3,7 +3,6 @@ import React from 'react'
 import 'antd/dist/antd.css'
 import { Menu, Dropdown, Button, message, Space } from 'antd'
 import { DownOutlined, UserOutlined } from '@ant-design/icons'
-import { title } from 'process'
 
 function handleMenuClick() {
   message.info('Click on menu item.')

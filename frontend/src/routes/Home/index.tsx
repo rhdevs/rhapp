@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
-import DropDownBar from '../../components/dropdown'
+import DropDownBar from '../../components/DropdownBar'
 
 const MainContainer = styled.div`
   height: 100vh;
