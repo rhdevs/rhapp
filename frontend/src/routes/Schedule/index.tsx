@@ -7,9 +7,17 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
+import EventCell from '../../components/timetable/EventCell'
+import Timetable from '../../components/timetable/Timetable'
+
+const TimetableMainContainer = styled.div`
+  box-sizing: border-box;
+`
 
 const TimetableContainer = styled.div`
-  height: 45vh;
+  position: relative;
+  width: 100%;
+  padding: 0 15px;
 `
 
 const SmallContainer = styled.div`
@@ -24,12 +32,13 @@ const GroupContainer = styled.div`
 
 const Background = styled.div`
   background-color: #fafaf4;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 `
 
 const BottomNavBar = styled.div`
   height: 64px;
+  background-color: #fafaf4;
 `
 
 const { SubMenu } = Menu
@@ -78,10 +87,39 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-
-      <TimetableContainer>
-        <h1>TIMETABLE</h1>
-      </TimetableContainer>
+      <TimetableMainContainer>
+        <TimetableContainer>
+          <Timetable
+            monChildren={
+              <>
+                <EventCell
+                  numberOfHours={1}
+                  eventTitle={'title title title title title title title title title title title title '}
+                  eventDescription={
+                    'description description description description description description description description description description '
+                  }
+                ></EventCell>
+                {/* <EventCell
+                  numberOfHours={1}
+                  eventTitle={'title title title title title title title title title title title title '}
+                  eventDescription={
+                    'description description description description description description description description description description '
+                  }
+                ></EventCell> */}
+              </>
+            }
+            tueChildren={
+              <EventCell
+                numberOfHours={2}
+                eventTitle={'title title title title title title title title title title title title '}
+                eventDescription={
+                  'description description description description description description description description description description '
+                }
+              ></EventCell>
+            }
+          />
+        </TimetableContainer>
+      </TimetableMainContainer>
       <GroupContainer>
         <SmallContainer>
           <h1 style={{ color: 'black', padding: '5px 15px 0px 0px', margin: '0px', fontSize: '24px' }}>Friends</h1>

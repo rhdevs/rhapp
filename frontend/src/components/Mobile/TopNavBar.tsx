@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
-import { ReactComponent } from '*.svg'
 
 const TitleText = styled.text`
   font-family: Inter;
