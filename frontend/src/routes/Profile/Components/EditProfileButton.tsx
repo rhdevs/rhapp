@@ -1,0 +1,35 @@
+import React from 'react'
+import styled from 'styled-components'
+import { Button } from 'antd'
+import 'antd/dist/antd.css'
+
+const LongButton = {
+  size: 'large',
+  backgroundColor: '#DE5F4C',
+  borderColor: '#DE5F4C',
+  width: '80vw',
+  left: '5%',
+}
+
+const ButtonDiv = styled.div`
+  position: relative;
+  left: 5%;
+  margin-top: 3vh;
+  margin-bottom: 6vh;
+`
+
+const handleClick = () => {
+  alert('Edit Profile')
+}
+
+const EditProfileButton = () => {
+  return (
+    <ButtonDiv>
+      <Button type="primary" style={LongButton} onClick={handleClick}>
+        Edit Profile
+      </Button>
+    </ButtonDiv>
+  )
+}
+
+export default EditProfileButton
