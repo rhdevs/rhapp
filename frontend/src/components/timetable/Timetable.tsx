@@ -50,15 +50,24 @@ function Timetable(props: Props) {
     timeArray.push(i)
   }
 
+<<<<<<< HEAD
   const daysArray = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
   const eventsArray = [
+=======
+  const daysArray = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+  const eventsArray = [
+    props.sunChildren,
+>>>>>>> Create timetable (without events)
     props.monChildren,
     props.tueChildren,
     props.wedChildren,
     props.thuChildren,
     props.friChildren,
     props.satChildren,
+<<<<<<< HEAD
     props.sunChildren,
+=======
+>>>>>>> Create timetable (without events)
   ]
   console.log(eventsArray)
   return (
