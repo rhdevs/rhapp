@@ -116,15 +116,6 @@ def getCcaMembers(ccaID):
     return data, 200
 
 
-@ app.route("/user_lesson/<userID>")
-def getUserLessons(userID):
-    try:
-        data = db.userLesson.find({"userID": userID}).pretty()
-    except Exception as e:
-        return {"err": e}, 400
-    return data, 200
-
-
 @ app.route("/permissions/<userID>")
 def getUserPermissions(userID):
     try:
