@@ -16,9 +16,16 @@ export enum PATHS {
 =======
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
+<<<<<<< HEAD
   VIEW_FACILITY = '/facility/view', // TO BE UPDATES
   CREATE_FACILITY = '/facility/create',
 >>>>>>> Created Main Facility PAge
+=======
+  VIEW_FACILITY = '/facility/:facilityName',
+  CREATE_FACILITY_BOOKING = '/facility/create',
+  VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
+  VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
+>>>>>>> Implement UI for facility main page
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -33,7 +40,11 @@ const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ '
 =======
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
+<<<<<<< HEAD
 >>>>>>> Created Main Facility PAge
+=======
+const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
+>>>>>>> Implement UI for facility main page
 export default class Routes extends React.Component {
   render() {
     return (
@@ -49,7 +60,11 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
 =======
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+<<<<<<< HEAD
 >>>>>>> Created Main Facility PAge
+=======
+            <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
+>>>>>>> Implement UI for facility main page
           </Switch>
         </Suspense>
       </Root>
