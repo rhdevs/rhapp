@@ -1,5 +1,5 @@
-from flask import Flask
-import pymongo
+from flask import Flask, request
+import pymongo, json
 from datetime import datetime
 #MongoDB
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -24,26 +24,30 @@ def root_route():
 @app.route('/facilities/all')
 def all_facilities(): 
     try :
-        data = db.Facilities.find(), 200
+        #data = db.Facilities.find()
+        data = "Test 1"
     except Exception as e:
         return {"err": e}, 400
     return data, 200
 
-@app.route('/bookings/<userID>')
+@app.route('/bookings/user/<userID>')
 def user_bookings(userID) :
     try:
-        data = db.Bookings.find({"userID" : userID}), 200
+        #data = db.Bookings.find({"userID" : userID})
+        data = "Test 2"
     except Exception as e:
         return {"err": e}, 400
     return data, 200
 
 
-@app.route('/bookings/<facilityID>/')
+@app.route('/bookings/facility/<facilityID>/')
 def check_bookings(facilityID):
+    print('TESTING 0')
     try :
-        startDate = datetime.strptime(request.args.get('startDate'), "%Y-%m-%d")
-        endDate = datetime.strptime(request.args.get('endDate'), "%Y-%m-%d")
-        data = db.Bookings.find({"facilityID": facilityID, "startDate" : {"$gt": startDate}, "endDate": {"$lt" : endDate}})
+        startDate = datetime.strptime(request.args.get('startDate'), "%Y-%m-%d").date()
+        endDate = datetime.strptime(request.args.get('endDate'), "%Y-%m-%d").date()
+        #data = db.Bookings.find({"facilityID": facilityID, "startDate" : {"$gt": startDate}, "endDate": {"$lt" : endDate}})
+        data = {"start" : startDate, "end" : endDate,"test" : "Test 3"}
     except Exception as e:
         return {"err": e}, 400
 
@@ -51,8 +55,10 @@ def check_bookings(facilityID):
 @app.route('/users/telegramID/<userID>')
 def user_telegram(userID) :
     try :
-        data = db.User.find({"userID" : userID})['telegramHandle']
+        #data = db.User.find({"userID" : userID})['telegramHandle']
+        data = userID
     except Exception as e:
+        print(e)
         return {"err": e}, 400
     return data, 200
 
@@ -60,7 +66,8 @@ def user_telegram(userID) :
 def add_booking() :
     try:
         formData = request.form
-        db.Bookings.insertOne(formData)
+        #db.Bookings.insertOne(formData)
+        print(formData, " test4")
     except Exception as e:
         return {"err": e}, 400
 
@@ -72,7 +79,8 @@ def add_booking() :
 @app.route('/bookings/<bookingID>', methods=['GET'])
 def get_booking(bookingID) :
     try:
-        data = db.Bookings.find({"bookingID":bookingID}), 200
+        #data = db.Bookings.find({"bookingID":bookingID}), 200
+        data = bookingID + " Test 5"
     except Exception as e:
         return {"err": e}, 400
     return data, 200
@@ -80,10 +88,11 @@ def get_booking(bookingID) :
 @app.route('/bookings/<bookingID>', methods=['PUT'])
 def edit_booking(bookingID) :
     try : 
-        if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID})['userID'] :
-            db.Bookings.findOneAndUpdate({"bookingID": bookingID}, {request.form})
-        else:
-            return {"err": "Unauthorised Access"}, 401
+        #if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID})['userID'] :
+            #db.Bookings.findOneAndUpdate({"bookingID": bookingID}, {request.form})
+            print(bookingID, request.form, "Test6")
+        #else:
+            #return {"err": "Unauthorised Access"}, 401
     except Exception as e:
         return {"err": e}, 400
     
@@ -93,10 +102,11 @@ def edit_booking(bookingID) :
 @app.route('/bookings/<bookingID>', methods=['DELETE'])
 def delete_booking(bookingID) :
     try :
-        if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID})['userID'] :
-            db.Bookings.remove({"bookingID" : bookingID})
-        else:
-            return {"err": "Unauthorised Access"}, 401
+        #if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID}).get('userID') :
+            #db.Bookings.remove({"bookingID" : bookingID})
+        print(bookingID, "Test7")
+        #else:
+            #return {"err": "Unauthorised Access"}, 401
     except Exception as e:
         return {"err": e}, 400
     
