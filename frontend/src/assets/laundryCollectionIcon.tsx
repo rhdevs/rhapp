@@ -21,4 +21,6 @@ const CollectionIcon = () => {
 }
 
 export { CollectionIcon }
-
+// =======
+// export default LaundryCollectionIcon
+// >>>>>>> 6d0a659f... Changed variable names and file names
