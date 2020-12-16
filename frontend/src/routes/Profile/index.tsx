@@ -5,6 +5,7 @@ import 'antd/dist/antd.css'
 import DetailsCard from './Components/DetailsCard'
 import PersonalInfoContainer from './Components/PersonalInfoContainer'
 import EditProfileButton from './Components/EditProfileButton'
+import TopNavBar from '../../components/Mobile/TopNavBar'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -46,7 +47,7 @@ export default class Profile extends React.Component {
   render() {
     return (
       <MainContainer>
-        <div style={{ marginLeft: '30vw' }}>TOPNAVBAR HERE</div>
+        <TopNavBar title={'Profile'} leftIcon={true} />
         <ProfileComponent>
           <AvatarSpan>
             <p>IMAGE HERE</p>

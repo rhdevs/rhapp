@@ -9,6 +9,8 @@ const LongButton = {
   borderColor: '#DE5F4C',
   width: '80vw',
   left: '5%',
+  boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
+  borderRadius: '8px',
 }
 
 const ButtonDiv = styled.div`
