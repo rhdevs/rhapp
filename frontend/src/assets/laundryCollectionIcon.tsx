@@ -1,10 +1,14 @@
 import React from 'react'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const LaundryCollectionIcon = () => {
 =======
 const CollectionIcon = () => {
 >>>>>>> 3a69a49e... Create Template for laundry card w/o btn
+=======
+const LaundryCollectionIcon = () => {
+>>>>>>> 6d0a659f... Changed variable names and file names
   return (
     <div className="App">
       <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +25,11 @@ const CollectionIcon = () => {
   )
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default LaundryCollectionIcon
 =======
 export default CollectionIcon
 >>>>>>> 3a69a49e... Create Template for laundry card w/o btn
+=======
+export default LaundryCollectionIcon
+>>>>>>> 6d0a659f... Changed variable names and file names

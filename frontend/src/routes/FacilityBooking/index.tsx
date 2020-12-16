@@ -6,10 +6,13 @@ import bookingsIcon from '../../assets/bookingsIcon.svg'
 import { useDispatch } from 'react-redux'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { redirect } from '../../store/route/action'
 import { PATHS } from '../Routes'
 =======
 >>>>>>> 6d0a659f (Changed variable names and file names)
+=======
+>>>>>>> 6d0a659f... Changed variable names and file names
 // import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
@@ -22,9 +25,13 @@ const FacilityCard = styled.div`
   background-color: #ffffff;
   margin: 23px;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   max-width: 337px;
 >>>>>>> 6d0a659f (Changed variable names and file names)
+=======
+  max-width: 337px;
+>>>>>>> 6d0a659f... Changed variable names and file names
   min-height: 70px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -56,10 +63,14 @@ const FacilityLabels = styled.div`
 `
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default function FacilityBooking() {
 =======
 function FacilityBooking() {
 >>>>>>> 6d0a659f (Changed variable names and file names)
+=======
+function FacilityBooking() {
+>>>>>>> 6d0a659f... Changed variable names and file names
   const dispatch = useDispatch()
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
 
@@ -71,6 +82,7 @@ function FacilityBooking() {
     console.log('My bookings')
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   const handleSelectFacility = (facility: FacilityType) => {
     console.log('Selected facility ' + facility.name)
@@ -89,18 +101,24 @@ function FacilityBooking() {
     { name: 'Alumni Room', location: 'Upper Lounge' },
   ]
 =======
+=======
+>>>>>>> 6d0a659f... Changed variable names and file names
   const handleSelectFacility = () => {
     console.log('Selected facility')
   }
 
   const MyBookingIcon = <img src={bookingsIcon} onClick={navigateToMyBookings} />
   const DummyFacilities = [{ name: 'Conference Room', location: 'Upper Lounge' }]
+<<<<<<< HEAD
 >>>>>>> 6d0a659f (Changed variable names and file names)
+=======
+>>>>>>> 6d0a659f... Changed variable names and file names
 
   return (
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
+<<<<<<< HEAD
 <<<<<<< HEAD
         {DummyFacilities.map((facility) => (
           <FacilityCard
@@ -117,6 +135,8 @@ function FacilityBooking() {
           </FacilityCard>
         ))}
 =======
+=======
+>>>>>>> 6d0a659f... Changed variable names and file names
         <FacilityCard onClick={handleSelectFacility}>
           <FacilityAvatar src={dummyAvatar} />
           <FacilityLabels>
@@ -131,6 +151,7 @@ function FacilityBooking() {
             <FacilitySubHeader>Upper Lounge</FacilitySubHeader>
           </FacilityLabels>
         </FacilityCard>
+<<<<<<< HEAD
 >>>>>>> 6d0a659f (Changed variable names and file names)
       </MainContainer>
     </>
@@ -145,3 +166,11 @@ function FacilityBooking() {
 export default FacilityBooking
 >>>>>>> 6d0a659f (Changed variable names and file names)
 >>>>>>> b3181697... Changed variable names and file names
+=======
+      </MainContainer>
+    </>
+  )
+}
+
+export default FacilityBooking
+>>>>>>> 6d0a659f... Changed variable names and file names
