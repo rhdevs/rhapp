@@ -11,11 +11,11 @@ function handleMenuClick() {
 }
 
 function DropDownBar({
-  menutitle,
-  menuarray,
+  MenuTitle,
+  MenuArray,
 }: {
-  menutitle: string
-  menuarray: string[]
+  MenuTitle: string
+  MenuArray: string[]
 }) {
   const menu = (
 
@@ -23,7 +23,7 @@ function DropDownBar({
     
     <Menu onClick={handleMenuClick}>
 
-{menuarray.map((person, index) => (
+{MenuArray.map((person, index) => (
       <Menu.Item key={index} icon={<UserOutlined />}>
       {person}
     </Menu.Item>
@@ -37,7 +37,7 @@ function DropDownBar({
     <Space wrap>
       <Dropdown overlay={menu}>
         <Button>
-          {menutitle} <DownOutlined />
+          {MenuTitle} <DownOutlined />
         </Button>
       </Dropdown>
     </Space>
