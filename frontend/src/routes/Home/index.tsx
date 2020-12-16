@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
-<<<<<<< HEAD
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
@@ -13,10 +12,6 @@ import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import ScrollToTopButton from '../../components/Mobile/ScrollToTopButton'
-=======
-import DropDownBar from '../../components/DropdownBar'
-import { FacilityBooking } from '../../components/LaundryCards/template'
->>>>>>> ba1af377... Create Template for laundry card w/o btn
 
 const MainContainer = styled.div`
   height: 100vh;

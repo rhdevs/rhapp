@@ -21,8 +21,6 @@ const FacilityCard = styled.div`
   cursor: pointer;
   background-color: #ffffff;
   margin: 23px;
-
-  max-width: 337px;
   min-height: 70px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
