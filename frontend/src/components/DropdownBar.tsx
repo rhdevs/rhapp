@@ -9,21 +9,30 @@ function handleMenuClick() {
   console.log('click')
 }
 
-function DropDownBar({ menuTitle, menuArray }: { menuTitle: string; menuArray: string[] }) {
+function DropDownBar({
+  MenuTitle,
+  MenuArray,
+}: {
+  MenuTitle: string
+  MenuArray: string[]
+}) {
   const menu = (
     <Menu onClick={handleMenuClick}>
-      {menuArray.map((person, index) => (
-        <Menu.Item key={index} icon={<UserOutlined />}>
-          {person}
-        </Menu.Item>
-      ))}
+
+{MenuArray.map((person, index) => (
+      <Menu.Item key={index} icon={<UserOutlined />}>
+      {person}
+    </Menu.Item>
+  ))}
+
+    
     </Menu>
   )
   return (
     <Space wrap>
       <Dropdown overlay={menu}>
         <Button>
-          {menuTitle} <DownOutlined />
+          {MenuTitle} <DownOutlined />
         </Button>
       </Dropdown>
     </Space>
