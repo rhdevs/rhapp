@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 const GlobalStyle = createGlobalStyle`
   body {
-    color: #000000
+    color: #fafaf4
   }
   font-family: Inter
 `

@@ -3,22 +3,18 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 
 const NameParagraph = styled.p`
-  font-family: Inter;
   font-size: 24px;
   font-weight: bold;
 `
 const TelegramParagraph = styled.p`
-  font-family: Inter;
   font-size: 15px;
   font-weight: 500;
 `
 const BlockParagraph = styled.p`
-  font-family: Inter;
   font-size: 15px;
   font-weight: 300;
 `
 const BioParagraph = styled.p`
-  font-family: Inter;
   font-size: 15px;
 `
 
