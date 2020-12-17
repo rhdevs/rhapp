@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import TopNavBar from '../../../components/Mobile/TopNav Bar'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
