@@ -43,6 +43,24 @@ const BottomNavBar = styled.div`
   background-color: #fafaf4;
 `
 
+const testLink =
+  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG2023=LAB:02,PTUT:03,PLEC:02&CS1010=TUT:2,SEC:1'
+//moduleCode=lessonType:classNo,lessonType:classNo
+// AC5002=LEC:1
+// CG2023=LAB:02,PTUT:03,PLEC:02
+// CS1010=TUT:2,SEC:1
+
+const extractDataFromLink = (link: string) => {
+  const timetableInformation = link.split('?')[1]
+  const timetableData = timetableInformation.split('&')
+  const data = []
+  for (let i = 0; i < timetableData.length; i++) {
+    data[i] = []
+    data.push(timetableData[i].split('=')[0])
+    for (let j = 0; j < timetableData[i].split(',').length; j++) {}
+  }
+}
+
 const { SubMenu } = Menu
 
 type NUSModsEvent = {
