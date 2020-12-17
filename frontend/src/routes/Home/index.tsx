@@ -31,11 +31,6 @@ export default function Home() {
     dispatch(getUpdateMockString())
   }
 
-  const Reddropdownbar = styled(DropDownBar)`
-    .ant-btn {
-      background.background-color: red;
-    }
-  `
   return (
     <MainContainer>
       <Selector SelectedValue={'Choose your block'} ValueArray={['1', '2', '3', '4']} />
