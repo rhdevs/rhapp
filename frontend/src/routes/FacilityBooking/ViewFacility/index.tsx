@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
+import TopNavBar from '../../../components/Mobile/TopNav Bar'
 import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
@@ -9,10 +9,8 @@ import { useDispatch } from 'react-redux'
 import { DateRange } from 'react-date-range'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
-import { redirect } from '../../../store/route/action'
-import { PATHS } from '../../Routes'
 import Button from '../../../components/Mobile/Button'
-import { Alert, Card } from 'antd'
+import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`import { Alert } from 'antd';
