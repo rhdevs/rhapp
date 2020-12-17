@@ -10,7 +10,7 @@ export enum PATHS {
   LOGIN_PAGE = '/login',
   SIGNUP_PAGE = '/signup',
   SCHEDULE_PAGE = '/schedule',
-  SHARE_TIMETABLE_PAGE = '/shareTimetable',
+  SHARE_TIMETABLE_PAGE = '/sharetimetable',
   EVENT_LIST_PAGE = '/eventList',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
@@ -18,6 +18,8 @@ export enum PATHS {
   CREATE_FACILITY_BOOKING = '/facility/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
   VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
+  // FACILITY WASHING MACHINE
+  WM_PRE_SELECTION = '/washingmachine',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -33,6 +35,8 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" *
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+// FACILITY WASHING MACHINE
+const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 
 export default class Routes extends React.Component {
   render() {
