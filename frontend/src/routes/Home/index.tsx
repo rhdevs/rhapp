@@ -5,6 +5,7 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
 import DropDownBar from '../../components/DropdownBar'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -31,6 +32,7 @@ export default function Home() {
       <DropDownBar menuTitle={'Choose your block'} menuArray={['level', 'floor', 'block']} />
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
+      <BottomNavBar />
     </MainContainer>
   )
 }
