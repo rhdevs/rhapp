@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
-import Grid from 'antd/lib/card/Grid'
 // import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
