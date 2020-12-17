@@ -36,7 +36,11 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 // FACILITY WASHING MACHINE
+<<<<<<< HEAD
 const WashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
+=======
+const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+>>>>>>> b7a9bd70... Added Selector to replace DropDownBar
 
 export default class Routes extends React.Component {
   render() {
