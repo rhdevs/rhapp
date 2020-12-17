@@ -54,6 +54,9 @@ const StyledRadioGroup = styled(Radio.Group)`
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     color: red;
   }
+  .ant-radio-button-wrapper {
+    font-family: Inter;
+  }
 `
 
 const StyledRadioGroupDiv = styled.div`
@@ -91,7 +94,7 @@ export default function FacilityBooking() {
     { name: 'Alumni Room', location: 'Upper Lounge' },
   ]
 
-  const DummyLocations = ['All', 'Upper Lounge', 'Lower Lounge', 'Communal Hall']
+  const DummyLocations = ['All', 'Upper Lounge', 'Lower Lounge', 'Communal Hall', 'Sports']
 
   return (
     <>
