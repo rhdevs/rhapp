@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
+
 import 'antd-mobile/dist/antd-mobile.css'
 
 const TitleText = styled.text`
@@ -10,11 +11,25 @@ const TitleText = styled.text`
   font-size: 30px;
   line-height: 14px;
   color: #002642;
+  align-self: center;
+  white-space: nowrap;
 `
 const StyledNavBar = styled(NavBar)`
   &.am-navbar {
+    height: 70px;
     background-color: #fafaf4; !important
   }
+  margin: 15px;
+  max-width:100%;
+`
+const NavBarIcons = styled(Icon)`
+  &.am-icon-md {
+    width: 28px;
+    height: 28px;
+  }
+  padding-right: 11px;
+  width: 40px;
+  height: 40px;
 `
 // UNDONE, feel free to complete
 function TopNavBar({
@@ -24,7 +39,7 @@ function TopNavBar({
   rightComponent,
 }: {
   title: string
-  leftIcon?: true
+  leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement
 }) {
@@ -34,7 +49,15 @@ function TopNavBar({
       icon={
         <>
           {leftIcon && leftIconComponent}
-          {!leftIcon && <Icon type="left" color="#002642" />}
+          {!leftIcon && (
+            <NavBarIcons
+              type="left"
+              // onClick={() => {
+              //   console.log('goback')
+              // }}
+              color="#002642"
+            />
+          )}
           <TitleText>{title}</TitleText>
         </>
       }
