@@ -1,71 +1,56 @@
 import React from 'react'
-import 'antd-mobile/dist/antd-mobile.css'
 import styled from 'styled-components'
-import calendarIcon from '../../assets/calendarIcon.svg'
-import profileIcon from '../../assets/profileIcon.svg'
-import homeIcon from '../../assets/homeIcon.svg'
-import { DESKTOP_VIEW, TABLET_VIEW } from '../../common/breakpoints'
-import { useHistory } from 'react-router-dom'
+import { TabBar } from 'antd-mobile'
+import homeIconSelected from '../../assets/homeIconSelected.svg'
+import homeIconUnselected from '../../assets/homeIconUnselected.svg'
+import facilitiesIconSelected from '../../assets/facilitiesIconSelected.svg'
+import facilitiesIconUnselected from '../../assets/facilitiesIconUnselected.svg'
+import calenderIconSelected from '../../assets/calenderIconSelected.svg'
+import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
+import profileIconSelected from '../../assets/profileIconSelected.svg'
+import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 
-const BottomBarContainer = styled.div`
-  bottom: 0;
-  z-index: 999;
-  background-color: #ffffff;
-  position: absolute;
-  width: 100%;
-  display: -ms-flexbox;
-  display: flex;
-  height: 64px;
-
-  ${TABLET_VIEW} {
-    height: 40px;
-  }
-
-  ${DESKTOP_VIEW} {
-    display: none;
-  }
+const StyledButton = styled.img`
+  width: 27px;
+  height: 27px;
 `
 
-const Button = styled.div`
-  padding: 0.67em;
-  font-size: 2em;
-  text-align: center;
-  width: 24.9%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`
-
-const ButtonIcon = styled.img`
-  width: 37px;
-  height: 37px;
-  fill: #002642;
-}
-`
-
-// UNDONE, feel free to complete
 function BottomNavBar() {
-  const history = useHistory()
-
-  const handleClick = () => {
-    history.push('/profile')
-  }
-
   return (
-    <BottomBarContainer>
-      <Button>
-        <ButtonIcon src={homeIcon} />
-      </Button>
-      <Button>2</Button>
-
-      <Button>
-        <ButtonIcon src={calendarIcon} />
-      </Button>
-      <Button onClick={handleClick}>
-        <ButtonIcon src={profileIcon} />
-      </Button>
-    </BottomBarContainer>
+    <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
+      <TabBar.Item
+        key="Home"
+        icon={<StyledButton src={homeIconUnselected} />}
+        selectedIcon={<StyledButton src={homeIconSelected} />}
+        selected={true}
+        badge={0}
+        // onPress={}
+      ></TabBar.Item>
+      <TabBar.Item
+        key="Facilities"
+        icon={<StyledButton src={facilitiesIconUnselected} />}
+        selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
+        selected={true}
+        badge={12}
+        // onPress={}
+      ></TabBar.Item>
+      <TabBar.Item
+        key="Calender"
+        icon={<StyledButton src={calenderIconUnselected} />}
+        selectedIcon={<StyledButton src={calenderIconSelected} />}
+        selected={false}
+        badge={'test'}
+        // onPress={}
+      ></TabBar.Item>
+      <TabBar.Item
+        key="Profile"
+        icon={<StyledButton src={profileIconUnselected} />}
+        selectedIcon={<StyledButton src={profileIconSelected} />}
+        selected={false}
+        badge={1}
+        // onPress={}
+      ></TabBar.Item>
+    </TabBar>
   )
 }
 
