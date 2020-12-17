@@ -26,20 +26,11 @@ const FacilityCard = styled.div`
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
-`
-const FacilityDiv = styled.div`
-  display: flex;
-  width: 200px;
+  position: relative;
 `
 
 const FacilityAvatar = styled.img`
   padding: 20px;
-`
-
-const FacilityButton = styled.img`
-  position: relative;
-  top: 10%;
-  right: 0%;
 `
 
 const FacilityHeader = styled.p`
@@ -48,6 +39,22 @@ const FacilityHeader = styled.p`
   font-size: 17px;
   line-height: 5px;
   color: #000000;
+  display: flex;
+`
+
+const FacilityLabels = styled.div`
+  align-self: center;
+`
+const Actions = styled.div`
+  position: absolute;
+  right: 0px;
+  top: 60%;
+  transform: translate(-25%, -50%);
+`
+
+const FacilityButton = styled.img`
+  position: relative;
+  left: 15%;
 `
 
 const FacilitySubHeader = styled.p`
@@ -56,12 +63,10 @@ const FacilitySubHeader = styled.p`
   font-size: 14px;
   line-height: 0px;
   color: #000000;
+  display: flex;
+  margin-top: 10px;
+  margin-right: 10px;
 `
-
-const FacilityLabels = styled.div`
-  align-self: center;
-`
-
 const FacilityBooking = ({
   status,
   serial,
@@ -119,25 +124,42 @@ const FacilityBooking = ({
     <>
       <MainContainer>
         <FacilityCard>
-          <FacilityDiv>
-            <FacilityAvatar src={laundry} />
-            <FacilityLabels>
-              <FacilityHeader style={{ color: card.colour }}>{card.status}</FacilityHeader>
-              <FacilitySubHeader style={{ color: card.colour }}>{serial}</FacilitySubHeader>
-            </FacilityLabels>
-          </FacilityDiv>
-          <FacilityButton src={card.action} onClick={(e) => buttonPress(e)} />
-          <FacilitySubHeader style={{ color: card.colour }}>
-            {(card.status === using || card.status === reserved) && (
-              <Timer
-                destination={addMinutes(new Date(), 1)}
-                activate={() => {
-                  setAvailable()
-                }}
-              />
-            )}
-            {card.caption}
-          </FacilitySubHeader>
+          <FacilityAvatar src={laundry} />
+          <FacilityLabels>
+            <FacilityHeader style={{ color: card.colour }}>
+              {card.status}
+              {card.status === uncollected && (
+                <Timer
+                  destination={new Date()}
+                  caption={false}
+                  onlyMinutes={true}
+                  activate={() => {
+                    console.log('hello')
+                  }}
+                  elapsed={true}
+                />
+              )}
+            </FacilityHeader>
+            <FacilitySubHeader style={{ color: card.colour }}>{serial}</FacilitySubHeader>
+          </FacilityLabels>
+          <Actions>
+            <FacilityButton src={card.action} onClick={(e) => buttonPress(e)} />
+            <FacilitySubHeader style={{ color: card.colour }}>
+              {(card.status === using || card.status === reserved) && (
+                <Timer
+                  destination={addMinutes(new Date(), 1)}
+                  activate={() => {
+                    setAvailable()
+                  }}
+                  caption={false}
+                  onlyMinutes={false}
+                  elapsed={false}
+                />
+              )}{' '}
+              &nbsp;
+              {card.caption}
+            </FacilitySubHeader>
+          </Actions>
         </FacilityCard>
       </MainContainer>
     </>

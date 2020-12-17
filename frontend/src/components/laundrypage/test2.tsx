@@ -6,9 +6,97 @@ import { Slider, Button } from 'antd'
 import { available, using, completed, reserved, edit } from '../laundrypage/status'
 import { addMinutes } from 'date-fns'
 import styled from 'styled-components'
+import '../../assets/fonts.css'
+import '../../assets/trial.less'
 
 const Container = styled.div`
-  padding: 100px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+  width: 300px;
+`
+const Top = styled.div`
+  display: flex;
+`
+const Bottom = styled.div`
+  margin-top: 50px;
+  text-align: center;
+`
+
+const Left = styled.div``
+
+const Right = styled.div`
+  margin-left: 15px;
+  font-family: Inter;
+`
+
+const ButtonContainer1 = styled.div`
+  .ant-btn-primary {
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 200;
+    color: FFFFFF;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 210px;
+    height: 33px;
+    border-radius: 8px;
+    background-color: #002642;
+    border-color: #002642;
+    opacity: 80%;
+  }
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 200;
+    color: FFFFFF;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 210px;
+    height: 33px;
+    border-radius: 8px;
+    background-color: #002642;
+    border-color: #002642;
+    opacity: 80%;
+  }
+`
+
+const ButtonContainer2 = styled.div`
+  .ant-btn-primary {
+    background-color: #de5f4c;
+    border-color: #de5f4c;
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 226px;
+    height: 33px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  .ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    background-color: #de5f4c;
+    border-color: #de5f4c;
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 226px;
+    height: 33px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
 `
 
 const Laundry = ({ status, serial }: { status: string; serial: string }) => {
@@ -44,7 +132,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     if (status === reserved) {
       setPage({
         status: reserved,
-        caption: '14 minutes left',
+        caption: '!',
         button1: 'Cancel Reservation',
         button2: 'Use Washing Machine',
         showcaption: true,
@@ -56,7 +144,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     } else if (status === available) {
       setPage({
         status: available,
-        caption: 'Its washy time',
+        caption: 'Its washy time!',
         button1: '',
         button2: 'Use Washing Machine',
         showcaption: true,
@@ -145,49 +233,89 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     setStatus(edit)
   }
 
-  function trial() {
-    console.log('hello')
+  function formatter(value: unknown) {
+    return `${value} minutes`
   }
 
   return (
     <Container>
-      <div>
-        <img src={laundry} />
-        <p>{serial}</p>
-        <div>
-          {page.showcaption && <p>{page.caption}</p>}
-          {page.showbutton1 && (
-            <Button type="primary" onClick={(e) => button1Press(e)}>
-              {page.button1}
-            </Button>
-          )}
-          {page.showTimer && (
-            <div>
-              <Timer destination={time.date} activate={() => setStatus(available)} />
-              <u onClick={() => startEdit()}>Edit</u>
-            </div>
-          )}
-        </div>
-      </div>
-      <div>
+      <Top>
+        <Left>
+          <img className="icon" src={laundry} />
+        </Left>
+        <Right>
+          <p className="serial">{serial}</p>
+          <div>
+            {page.showcaption && (
+              <p className="caption">
+                {page.status === reserved && (
+                  <Timer
+                    destination={new Date('December 17, 2020 17:53:00')}
+                    caption={false}
+                    onlyMinutes={true}
+                    activate={() => {
+                      setStatus(available)
+                    }}
+                    elapsed={false}
+                  />
+                )}
+                {page.caption}
+              </p>
+            )}
+            {page.status === edit && (
+              <p className="caption" style={{ fontSize: '20px' }}>
+                {time.inputValue}
+                &nbsp;
+                {'minutes'}
+              </p>
+            )}
+            {page.showbutton1 && (
+              <ButtonContainer1>
+                <Button type="primary" onClick={(e) => button1Press(e)}>
+                  {page.button1}
+                </Button>
+              </ButtonContainer1>
+            )}
+            {page.showTimer && (
+              <Top>
+                <Timer
+                  destination={time.date}
+                  activate={() => setStatus(available)}
+                  caption={true}
+                  onlyMinutes={false}
+                  elapsed={false}
+                />
+                <u className="edit-button" onClick={() => startEdit()}>
+                  Edit
+                </u>
+              </Top>
+            )}
+          </div>
+        </Right>
+      </Top>
+      <Bottom>
         {page.showSlider && (
           <>
-            <p>{time.inputValue}</p>
             <Slider
+              className="slider"
               min={0}
               max={50}
               onChange={onChange}
               value={typeof time.inputValue === 'number' ? time.inputValue : 0}
               defaultValue={30}
+              tipFormatter={formatter}
+              tooltipPrefixCls="slider-tooltip ant-tooltip"
             />
           </>
         )}
         {page.showbutton2 && (
-          <Button type="primary" onClick={(e) => button2Press(e)} block>
-            {page.button2}
-          </Button>
+          <ButtonContainer2>
+            <Button type="primary" onClick={(e) => button2Press(e)} block>
+              {page.button2}
+            </Button>
+          </ButtonContainer2>
         )}
-      </div>
+      </Bottom>
     </Container>
   )
 }
