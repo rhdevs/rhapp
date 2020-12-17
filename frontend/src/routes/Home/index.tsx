@@ -4,10 +4,6 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
-<<<<<<< HEAD
-import DropDownBar from '../../components/DropdownBar'
-=======
->>>>>>> d909cd34 (DropDownBar in components but not used in index.)
 import { FacilityBooking } from '../../components/LaundryCards/template'
 import Selector from '../../components/Selector'
 

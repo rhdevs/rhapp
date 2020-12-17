@@ -36,7 +36,7 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 // FACILITY WASHING MACHINE
-const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+const WashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
 
 export default class Routes extends React.Component {
   render() {
@@ -56,6 +56,8 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+
+            <Route exact path={PATHS.WM_PRE_SELECTION} component={WashingMachine} />
           </Switch>
         </Suspense>
       </Root>

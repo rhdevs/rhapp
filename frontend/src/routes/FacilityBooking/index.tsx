@@ -5,11 +5,8 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
 import { useDispatch } from 'react-redux'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
-<<<<<<< HEAD
 import { redirect } from '../../store/route/action'
 import { PATHS } from '../Routes'
-=======
->>>>>>> 6d0a659f (Changed variable names and file names)
 // import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
@@ -21,10 +18,6 @@ const FacilityCard = styled.div`
   cursor: pointer;
   background-color: #ffffff;
   margin: 23px;
-<<<<<<< HEAD
-=======
-  max-width: 337px;
->>>>>>> 6d0a659f (Changed variable names and file names)
   min-height: 70px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -55,11 +48,7 @@ const FacilityLabels = styled.div`
   align-self: center;
 `
 
-<<<<<<< HEAD
 export default function FacilityBooking() {
-=======
-function FacilityBooking() {
->>>>>>> 6d0a659f (Changed variable names and file names)
   const dispatch = useDispatch()
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
 
@@ -71,7 +60,6 @@ function FacilityBooking() {
     console.log('My bookings')
   }
 
-<<<<<<< HEAD
   const handleSelectFacility = (facility: FacilityType) => {
     console.log('Selected facility ' + facility.name)
     dispatch(redirect(PATHS.HOME_PAGE))
@@ -88,20 +76,11 @@ function FacilityBooking() {
     { name: 'Conference Room', location: 'Upper Lounge' },
     { name: 'Alumni Room', location: 'Upper Lounge' },
   ]
-=======
-  const handleSelectFacility = () => {
-    console.log('Selected facility')
-  }
-
-  const MyBookingIcon = <img src={bookingsIcon} onClick={navigateToMyBookings} />
-  const DummyFacilities = [{ name: 'Conference Room', location: 'Upper Lounge' }]
->>>>>>> 6d0a659f (Changed variable names and file names)
 
   return (
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
-<<<<<<< HEAD
         {DummyFacilities.map((facility) => (
           <FacilityCard
             key={facility.name}
@@ -116,28 +95,7 @@ function FacilityBooking() {
             </FacilityLabels>
           </FacilityCard>
         ))}
-=======
-        <FacilityCard onClick={handleSelectFacility}>
-          <FacilityAvatar src={dummyAvatar} />
-          <FacilityLabels>
-            <FacilityHeader>Conference Room</FacilityHeader>
-            <FacilitySubHeader>Upper Lounge</FacilitySubHeader>
-          </FacilityLabels>
-        </FacilityCard>
-        <FacilityCard onClick={handleSelectFacility}>
-          <FacilityAvatar src={dummyAvatar} />
-          <FacilityLabels>
-            <FacilityHeader>Conference Room</FacilityHeader>
-            <FacilitySubHeader>Upper Lounge</FacilitySubHeader>
-          </FacilityLabels>
-        </FacilityCard>
->>>>>>> 6d0a659f (Changed variable names and file names)
       </MainContainer>
     </>
   )
 }
-<<<<<<< HEAD
-=======
-
-export default FacilityBooking
->>>>>>> 6d0a659f (Changed variable names and file names)
