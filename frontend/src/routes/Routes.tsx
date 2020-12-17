@@ -49,6 +49,7 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" *
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+
 const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
