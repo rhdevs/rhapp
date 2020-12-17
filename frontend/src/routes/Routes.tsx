@@ -32,6 +32,7 @@ const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ '
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
+const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 
 export default class Routes extends React.Component {
   render() {
@@ -50,6 +51,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
           </Switch>
         </Suspense>
       </Root>
