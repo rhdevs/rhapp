@@ -19,7 +19,6 @@ export enum PATHS {
   EVENT_LIST_PAGE = '/eventList',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
-<<<<<<< HEAD
   VIEW_FACILITY = '/facility/view/:facilityName',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
@@ -30,14 +29,6 @@ export enum PATHS {
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
-=======
-  VIEW_FACILITY = '/facility/:facilityName',
-  CREATE_FACILITY_BOOKING = '/facility/create',
-  VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
-  VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
-  // FACILITY WASHING MACHINE
-  WM_PRE_SELECTION = '/washingmachine',
->>>>>>> 26501b96... Added Selector to replace DropDownBar
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -53,7 +44,6 @@ const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */
 const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
-const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
@@ -84,7 +74,6 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
             <Route exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
-            <Route exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
 
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
