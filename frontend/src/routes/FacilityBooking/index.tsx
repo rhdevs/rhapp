@@ -8,6 +8,8 @@ import dummyAvatar from '../../assets/dummyAvatar.svg'
 import { redirect } from '../../store/route/action'
 import { PATHS } from '../Routes'
 // import { RootState } from '../../store/types'
+import { Radio } from 'antd'
+import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -48,6 +50,21 @@ const FacilityLabels = styled.div`
   align-self: center;
 `
 
+const StyledRadioGroup = styled(Radio.Group)`
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: red;
+  }
+  .ant-radio-button-wrapper {
+    font-family: Inter;
+  }
+`
+
+const StyledRadioGroupDiv = styled.div`
+  overflow: auto;
+  white-space: nowrap;
+  margin-left: 23px;
+`
+
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
@@ -77,10 +94,22 @@ export default function FacilityBooking() {
     { name: 'Alumni Room', location: 'Upper Lounge' },
   ]
 
+  const DummyLocations = ['All', 'Upper Lounge', 'Lower Lounge', 'Communal Hall', 'Sports']
+
   return (
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
+        <StyledRadioGroupDiv>
+          <StyledRadioGroup defaultValue={0}>
+            {DummyLocations.map((location, idx) => (
+              <Radio.Button key={idx} value={idx}>
+                {location}
+              </Radio.Button>
+            ))}
+          </StyledRadioGroup>
+        </StyledRadioGroupDiv>
+
         {DummyFacilities.map((facility) => (
           <FacilityCard
             key={facility.name}
