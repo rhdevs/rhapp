@@ -4,10 +4,6 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
-<<<<<<< HEAD
-=======
-import DropDownBar from '../../components/DropDownbar'
->>>>>>> 6d0a659f... Changed variable names and file names
 import { FacilityBooking } from '../../components/LaundryCards/template'
 import Selector from '../../components/Selector'
 
@@ -33,12 +29,7 @@ export default function Home() {
 
   return (
     <MainContainer>
-<<<<<<< HEAD
       <Selector SelectedValue={'Choose your block'} ValueArray={['1', '2', '3', '4']} />
-=======
-      <Reddropdownbar MenuTitle={'Choose your level'} MenuArray={['Level 1', 'Level 2', 'Level 3']} />
-      <Reddropdownbar MenuTitle={'Choose your block'} MenuArray={['Blk 2', 'Blk 3', 'Blk 4']} />
->>>>>>> 6d0a659f... Changed variable names and file names
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
       <FacilityBooking title={'In Use'} subtitle={'123'} colour={'red'} />
