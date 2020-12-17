@@ -9,6 +9,7 @@ const MenuContainer = styled.div`
   display: flex;
   flex-direction: vertical;
   justify-content: flex-end;
+  z-index: 5;
 `
 
 type Props = {

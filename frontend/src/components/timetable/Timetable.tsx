@@ -50,15 +50,15 @@ function Timetable(props: Props) {
     timeArray.push(i)
   }
 
-  const daysArray = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+  const daysArray = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
   const eventsArray = [
-    props.sunChildren,
     props.monChildren,
     props.tueChildren,
     props.wedChildren,
     props.thuChildren,
     props.friChildren,
     props.satChildren,
+    props.sunChildren,
   ]
   console.log(eventsArray)
   return (
