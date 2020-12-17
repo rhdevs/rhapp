@@ -20,11 +20,7 @@ const ButtonDiv = styled.div`
   margin-bottom: 6vh;
 `
 
-const handleClick = () => {
-  alert('Edit Profile')
-}
-
-const EditProfileButton = () => {
+const EditProfileButton = ({ handleClick }: { handleClick: () => void }) => {
   return (
     <ButtonDiv>
       <Button type="primary" style={LongButton} onClick={handleClick}>

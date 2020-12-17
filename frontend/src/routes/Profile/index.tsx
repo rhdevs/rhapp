@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import DetailsCard from './Components/DetailsCard'
 import PersonalInfoContainer from './Components/PersonalInfoContainer'
 import EditProfileButton from './Components/EditProfileButton'
+import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
+import ProfilePicture from '../../assets/profilePicture.png'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -26,15 +28,6 @@ const CardContainer = styled.div`
   margin: 0 auto;
 `
 
-const AvatarSpan = styled.span`
-  background-color: #f6e6df;
-  display: inline-block;
-  margin-left: 10vw;
-  height: 30vh;
-  width: 35vw;
-  vertical-align: middle;
-`
-
 const PersonalInfoSpan = styled.span`
   display: inline-block;
   height: 30vh;
@@ -43,25 +36,31 @@ const PersonalInfoSpan = styled.span`
   padding-left: 3vw;
 `
 
-export default class Profile extends React.Component {
-  render() {
-    return (
+export default function Profile() {
+  const [isOwnProfile, setIsOwnProfile] = useState(true)
+
+  const handleClick = () => {
+    setIsOwnProfile(!isOwnProfile)
+  }
+
+  return (
+    <>
+      <TopNavBar title={'Profile'} leftIcon={true} />
       <MainContainer>
-        <TopNavBar title={'Profile'} leftIcon={true} />
         <ProfileComponent>
-          <AvatarSpan>
-            <p>IMAGE HERE</p>
-          </AvatarSpan>
-          <PersonalInfoSpan>
-            <PersonalInfoContainer />
-          </PersonalInfoSpan>
-          <EditProfileButton />
+          <PersonalInfoContainer />
+
+          {isOwnProfile ? (
+            <EditProfileButton handleClick={handleClick} />
+          ) : (
+            <FriendAndTelegramButtons handleClick={handleClick} />
+          )}
           <CardContainer>
             <DetailsCard />
           </CardContainer>
         </ProfileComponent>
-        <BottomNavBar />
       </MainContainer>
-    )
-  }
+      <BottomNavBar />
+    </>
+  )
 }

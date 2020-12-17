@@ -28,13 +28,8 @@ const LongButton = {
 
 const ButtonDiv = styled.div`
   display: flex
-//   vertical-align: middle;
   justify-content: 'center';
   align-items: 'center';
-  //   position: relative;
-  //   left: 40%;
-  //   margin-top: 3vh;
-  //   margin-bottom: 6vh;
 `
 
 const handleClick = () => {
