@@ -30,7 +30,7 @@ function BottomNavBar() {
         key="Facilities"
         icon={<StyledButton src={facilitiesIconUnselected} />}
         selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
-        selected={false}
+        selected={true}
         badge={12}
         // onPress={}
       ></TabBar.Item>
