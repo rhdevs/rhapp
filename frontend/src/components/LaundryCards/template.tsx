@@ -1,5 +1,8 @@
 import styled from 'styled-components'
-import washing from '../../assets/washingMachineIcon.svg'
+import TopNavBar from '../../components/Mobile/TopNavBar'
+import { useDispatch } from 'react-redux'
+import washing from '../../assets/WashingMachineIcon.svg'
+import { Button } from 'antd'
 
 const MainContainer = styled.div`
   width: 100%;

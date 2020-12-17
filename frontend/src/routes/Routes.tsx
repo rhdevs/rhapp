@@ -15,11 +15,11 @@ export enum PATHS {
   FRIEND_LIST_PAGE = '/social/profile/friendList',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
-  SHARE_TIMETABLE_PAGE = '/schedule/share',
-  EVENT_LIST_PAGE = '/schedule/events',
-  CREATE_EVENT = '/schedule/events/create',
+  SHARE_TIMETABLE_PAGE = '/sharetimetable',
+  EVENT_LIST_PAGE = '/eventList',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
+<<<<<<< HEAD
   VIEW_FACILITY = '/facility/view/:facilityName',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
@@ -30,6 +30,14 @@ export enum PATHS {
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
+=======
+  VIEW_FACILITY = '/facility/:facilityName',
+  CREATE_FACILITY_BOOKING = '/facility/create',
+  VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
+  VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
+  // FACILITY WASHING MACHINE
+  WM_PRE_SELECTION = '/washingmachine',
+>>>>>>> 26501b96... Added Selector to replace DropDownBar
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
