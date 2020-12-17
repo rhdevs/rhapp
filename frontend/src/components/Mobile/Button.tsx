@@ -20,7 +20,7 @@ function Button(props: Props) {
   const [buttonColour, setButtonColour] = useState(
     props.buttonIsPressed ? props.updatedButtonColor ?? 'transparent' : props.defaultButtonColor ?? '#DE5F4C',
   )
-  const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : 'white')
+  const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : props.defaultTextColor || 'white')
 
   const successfulAdd = () => {
     console.log('Added event to schedule')

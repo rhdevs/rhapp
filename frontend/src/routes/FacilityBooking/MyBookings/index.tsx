@@ -113,7 +113,7 @@ export default function ViewMyBookings() {
 
   return (
     <>
-      <TopNavBar title={'Facilities'} />
+      <TopNavBar title={'My Bookings'} />
       <MainContainer>
         {dummyEvents.map((event) => (
           <BookingCard

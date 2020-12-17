@@ -2,52 +2,112 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../../assets/bookingsIcon.svg'
+import messageIcon from '../../../assets/messageIcon.svg'
+import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { DateRange } from 'react-date-range'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
-import Button from 'antd-mobile/lib/button'
 import { redirect } from '../../../store/route/action'
 import { PATHS } from '../../Routes'
+import Button from '../../../components/Mobile/Button'
+import { Alert, Card } from 'antd'
+import 'antd/dist/antd.css'
 
-const MainContainer = styled.div`
+const MainContainer = styled.div`import { Alert } from 'antd';
   width: 100%;
   height: 100%;
   background-color: #fafaf4;
 `
 
-const ActionButtonGroup = styled.div``
+const StyledButton = styled(Button)`
+  .ant-btn {
+    border-radius: 25px;
+  }
+`
+
+const DateDisplayText = styled.p`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  text-align: right;
+  padding: 10px 23px 0px 0px;
+}
+`
+
+const Icon = styled.img`
+  padding: 20px;
+`
+
+const ActionButtonGroup = styled.div`
+  justify-content: space-between;
+  display: flex;
+  padding: 0px 23px 0px 23px;
+`
+
 const EventsGroup = styled.div``
+
 const EventCard = styled.div`
+  position: relative;
   cursor: pointer;
   background-color: #ffffff;
   margin: 23px;
-  max-width: 337px;a
   min-height: 70px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
+  padding: 15px;
 `
 
-const EventHeader = styled.p`
-  font-style: normal;
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 5px;
-  color: #000000;
-`
-
-const EventSubHeader = styled.p`
-  font-style: normal;
-  font-weight: 200;
-  font-size: 14px;
-  line-height: 0px;
-  color: #000000;
+const AlertGroup = styled.div`
+  margin: 23px;
 `
 
 const EventLabels = styled.div`
   align-self: center;
+`
+
+const EventBoldLabel = styled.p`
+  margin-bottom: 0em;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+`
+
+const EventNormalLabel = styled.p`
+  margin-bottom: 0em;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 14px;
+`
+
+const EventDateLabel = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  text-align: right;
+
+  color: #c4c4c4;
+`
+
+const DateSelectorGroup = styled.div`
+  margin: 23px;
+  font-family: inter;
+  display: flex;
+  place-content: center;
+  align-self: center;
+`
+
+const EventRightDisplay = styled.div`
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translate(-17%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export default function ViewFacility() {
@@ -96,31 +156,87 @@ export default function ViewFacility() {
     <>
       <TopNavBar title={params.facilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
-        <DateRange
-          editableDateInputs={true}
-          color="#DE5F4C"
-          // onChange={(item) => setState([item.selection])}
-          moveRangeOnFirstSelection={false}
-          // ranges={state}
-        />
+        <AlertGroup>
+          <Alert
+            message="Successfully Created Event"
+            description="Yay yippe doodles"
+            type="success"
+            closable
+            showIcon
+          />
+          <Alert
+            message="Event not created!!!"
+            description="Insert error message here"
+            type="error"
+            closable
+            showIcon
+          />
+        </AlertGroup>
+        <DateSelectorGroup>
+          <DateRange
+            editableDateInputs={true}
+            color="#DE5F4C"
+            // onChange={(item) => setState([item.selection])}
+            moveRangeOnFirstSelection={false}
+            // ranges={state}
+          />
+        </DateSelectorGroup>
+
         <ActionButtonGroup>
-          <Button
-            onClick={() => {
-              dispatch(redirect(PATHS.CREATE_FACILITY_BOOKING))
-            }}
-          >
-            Book Facility
-          </Button>
-          <Button>Booking/Availability</Button>
+          <StyledButton
+            hasSuccessMessage={false}
+            stopPropagation={false}
+            defaultButtonDescription={'Book Facility'}
+            defaultButtonColor="#DE5F4C"
+            updatedButtonColor="#DE5F4C"
+            updatedTextColor="white"
+          />
+          <StyledButton
+            hasSuccessMessage={false}
+            stopPropagation={false}
+            defaultButtonDescription={'👓 Bookings ⌄'}
+            defaultButtonColor="transparent"
+            updatedButtonColor="transparent"
+            updatedTextColor="#DE5F4C"
+            defaultTextColor="#DE5F4C"
+            updatedButtonDescription={'🕶 Availabilities ⌄'}
+          />
         </ActionButtonGroup>
-        <p>Date Range:16 Dec to 18 Dec</p>
+        <DateDisplayText>16 Dec to 18 Dec</DateDisplayText>
         <EventsGroup>
           {dummyEvents.map((event) => (
-            <EventCard key={event.id}>
+            <EventCard
+              key={event.id}
+              onClick={() => {
+                console.log('clicked on event')
+              }}
+            >
+              {/* <EventAvatar src={dummyAvatar} /> */}
               <EventLabels>
-                <EventHeader>{event.eventName}</EventHeader>
-                <EventSubHeader>{event.eventCCA}</EventSubHeader>
+                <EventBoldLabel>
+                  📅{' '}
+                  <b>
+                    {event.startTime} to {event.endTime}
+                  </b>
+                </EventBoldLabel>
+                <EventNormalLabel>
+                  <b> {event.eventCCA} </b>
+                  {event.eventName}
+                </EventNormalLabel>
               </EventLabels>
+              <EventRightDisplay>
+                {event.eventOwner === 'you' ? (
+                  <Icon src={adminIcon} />
+                ) : (
+                  <Icon
+                    onClick={() => {
+                      console.log('contact yes')
+                    }}
+                    src={messageIcon}
+                  />
+                )}
+                <EventDateLabel>{event.date}</EventDateLabel>
+              </EventRightDisplay>
             </EventCard>
           ))}
         </EventsGroup>

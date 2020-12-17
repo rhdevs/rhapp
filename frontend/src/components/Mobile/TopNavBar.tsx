@@ -3,7 +3,6 @@ import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
 
 import 'antd-mobile/dist/antd-mobile.css'
-import { ReactComponent } from '*.svg'
 
 const TitleText = styled.text`
   font-family: Inter;
@@ -13,6 +12,7 @@ const TitleText = styled.text`
   line-height: 14px;
   color: #002642;
   align-self: center;
+  white-space: nowrap;
 `
 const StyledNavBar = styled(NavBar)`
   &.am-navbar {
