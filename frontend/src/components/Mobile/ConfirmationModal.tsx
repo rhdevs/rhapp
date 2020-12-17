@@ -41,12 +41,14 @@ const ButtonContainer = styled.div`
 
 function ConfirmationModal({
   title,
+  hasLeftButton,
   leftButtonText,
   leftButtonTextColor,
   leftButtonColor,
   onLeftButtonClick,
   rightButtonText,
   rightButtonTextColor,
+  rightButtonColor,
   onRightButtonClick,
   top,
   bottom,
@@ -54,12 +56,14 @@ function ConfirmationModal({
   left,
 }: {
   title: string
+  hasLeftButton?: boolean
   leftButtonText: string
   leftButtonTextColor?: string
   leftButtonColor?: string
   onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   rightButtonText: string
   rightButtonTextColor?: string
+  rightButtonColor?: string
   onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   top?: number
   bottom?: number
@@ -68,6 +72,7 @@ function ConfirmationModal({
 }) {
   const defaultLeftButtonColor = leftButtonColor ?? '#DE5F4C'
   const defaultLeftButtonTextColor = leftButtonTextColor ?? '#FFFFFF'
+  const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
 
   return (
@@ -76,18 +81,28 @@ function ConfirmationModal({
       <MainContainer style={{ bottom: bottom ?? '50%', right: right ?? 0, left: left ?? 0, top: top }}>
         <TitleText>{title}</TitleText>
         <ButtonContainer>
+          {hasLeftButton && (
+            <Button
+              style={{
+                background: defaultLeftButtonColor,
+                color: defaultLeftButtonTextColor,
+                borderRadius: '5px',
+                border: defaultLeftButtonColor,
+              }}
+              onClick={onLeftButtonClick}
+            >
+              {leftButtonText}
+            </Button>
+          )}
           <Button
             style={{
-              background: defaultLeftButtonColor,
-              color: defaultLeftButtonTextColor,
+              background: defaultRightButtonColor,
+              color: defaultRightButtonTextColor,
               borderRadius: '5px',
-              border: defaultLeftButtonColor,
+              marginLeft: '10px',
             }}
-            onClick={onLeftButtonClick}
+            onClick={onRightButtonClick}
           >
-            {leftButtonText}
-          </Button>
-          <Button type="text" style={{ color: defaultRightButtonTextColor }} onClick={onRightButtonClick}>
             {rightButtonText}
           </Button>
         </ButtonContainer>
