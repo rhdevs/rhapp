@@ -6,7 +6,6 @@ import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
 import DropDownBar from '../../components/DropdownBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
-import { home } from '../../store/home/reducer'
 
 const MainContainer = styled.div`
   height: 100vh;

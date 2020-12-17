@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { TabBar } from 'antd-mobile'
 import homeIconSelected from '../../assets/homeIconSelected.svg'
