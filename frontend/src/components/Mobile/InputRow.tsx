@@ -49,6 +49,7 @@ const StyledTitle = styled.text`
   font-weight: bold;
   line-height: 30px;
   margin-right: 20px;
+  white-space: nowrap;
 `
 
 type InputRowProps = {

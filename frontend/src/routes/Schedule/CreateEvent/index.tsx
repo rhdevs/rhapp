@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import dayjs from 'dayjs'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input, Upload } from 'antd'
-import { DatePicker, List } from 'antd-mobile'
+import { Input, Upload, Select } from 'antd'
+import { DatePicker } from 'antd-mobile'
 import { LeftOutlined, CheckOutlined, CameraFilled } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+
+const { Option } = Select
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -33,12 +36,6 @@ const StyledInput = styled(Input)`
   }
 `
 
-const StyledList = styled(List)`
-  &.am-list {
-    width: 100%;
-  }
-`
-
 const Row = styled.div`
   display: flex;
   width: 100%;
@@ -54,6 +51,7 @@ const StyledTitle = styled.text`
   font-weight: bold;
   line-height: 30px;
   margin-right: 20px;
+  white-space: nowrap;
 `
 
 const UploadButton = styled.div`
@@ -64,11 +62,20 @@ const UploadButton = styled.div`
   height: 50px;
   border: 1px dashed #ddd;
   border-radius: 5px;
-  /* background-color: red; */
 `
 
-const nowTimeStamp = Date.now()
-const now = new Date(nowTimeStamp)
+const DatePickerRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0px;
+`
+
+const StyledSelect = styled(Select)`
+  &.ant-select {
+    width: 100%;
+  }
+`
 
 const BackIcon = (
   <Link to={'/schedule'}>
@@ -82,14 +89,17 @@ const CheckIcon = (
   </div>
 )
 
+const nowTimeStamp = Date.now()
+const now = new Date(nowTimeStamp)
+
 export default function CreateEvent() {
   const [eventName, setEventName] = useState('')
   const [fromDateTime, setFromDateTime] = useState(now)
-  const [toDateTime, setToDateTime] = useState(now)
+  const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
   const [location, setLocation] = useState('')
   const [cca, setCca] = useState('')
   const [description, setDescription] = useState('')
-  const [eventType, setEventType] = useState('')
+  const [, setEventType] = useState('')
 
   /** Incomplete functionality for Uploading Image */
 
@@ -116,22 +126,48 @@ export default function CreateEvent() {
   //   }
   // }
 
+  const handleFromDateChange = (newDate: Date) => {
+    if (toDateTime < newDate) {
+      setToDateTime(dayjs(newDate).add(1, 'hour').toDate())
+    }
+
+    setFromDateTime(newDate)
+  }
+
+  const handleToDateChange = (newDate: Date) => {
+    if (fromDateTime > newDate) {
+      setFromDateTime(dayjs(newDate).subtract(1, 'hour').toDate())
+    }
+
+    setToDateTime(newDate)
+  }
+
+  const toCustomDateFormat = (date: Date) => {
+    return `${dayjs(date).format('ddd, MMM D, YYYY, h:mm A')}`
+  }
+
   return (
     <div>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={CheckIcon} />
       <Background>
         <StyledInput placeholder="Event Name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
-        <StyledList style={{ backgroundColor: 'transparent', padding: '0px 20px' }}>
-          <DatePicker mode="datetime" locale={enUs} value={fromDateTime} onChange={setFromDateTime}>
-            <StyledList.Item arrow="horizontal" style={{ backgroundColor: 'rgb(217, 217, 217)' }}>
-              From
-            </StyledList.Item>
+        <div style={{ width: '100%' }}>
+          <DatePicker mode="datetime" locale={enUs} value={fromDateTime} onChange={handleFromDateChange}>
+            <DatePickerRow>
+              <StyledTitle>From</StyledTitle>
+              <span>{`${toCustomDateFormat(fromDateTime)}`}</span>
+            </DatePickerRow>
           </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={toDateTime} onChange={setToDateTime}>
-            <StyledList.Item arrow="horizontal">To</StyledList.Item>
+          <DatePicker mode="datetime" locale={enUs} value={toDateTime} onChange={handleToDateChange}>
+            <DatePickerRow>
+              <StyledTitle>To</StyledTitle>
+              <span>{`${toCustomDateFormat(toDateTime)}`}</span>
+            </DatePickerRow>
           </DatePicker>
-        </StyledList>
-
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(toDateTime)
+            .diff(dayjs(fromDateTime), 'hour', true)
+            .toFixed(1)} hours`}</div>
+        </div>
         <InputRow title="Location" placeholder="Event Location" value={location} setValue={setLocation} />
         <InputRow title="CCA" placeholder="CCA Name" value={cca} setValue={setCca} />
         <InputRow
@@ -141,12 +177,20 @@ export default function CreateEvent() {
           setValue={setDescription}
           textarea
         />
-        <InputRow title="Event Type" placeholder="Select" value={eventType} setValue={setEventType} />
+        <Row>
+          <StyledTitle>Event Type</StyledTitle>
+          <StyledSelect defaultValue="Select" onChange={(value) => setEventType(value as string)}>
+            <Option value="None" disabled>
+              None
+            </Option>
+            <Option value="Hall Event">Hall Event</Option>
+          </StyledSelect>
+        </Row>
         <Row>
           <StyledTitle>Upload Image</StyledTitle>
           <Upload name="Event_Image" showUploadList={false}>
             <UploadButton>
-              <CameraFilled />
+              <CameraFilled style={{ fontSize: 20 }} />
             </UploadButton>
           </Upload>
         </Row>
