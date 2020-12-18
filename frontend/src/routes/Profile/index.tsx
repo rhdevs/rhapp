@@ -7,7 +7,6 @@ import PersonalInfoContainer from './Components/PersonalInfoContainer'
 import EditProfileButton from './Components/EditProfileButton'
 import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
-import ProfilePicture from '../../assets/profilePicture.png'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -26,14 +25,6 @@ const CardContainer = styled.div`
   position: relative;
   width: 80vw;
   margin: 0 auto;
-`
-
-const PersonalInfoSpan = styled.span`
-  display: inline-block;
-  height: 30vh;
-  width: 45vw;
-  vertical-align: middle;
-  padding-left: 3vw;
 `
 
 export default function Profile() {
