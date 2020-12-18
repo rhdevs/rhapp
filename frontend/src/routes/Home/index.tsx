@@ -29,7 +29,11 @@ export default function Home() {
 
   return (
     <MainContainer>
+<<<<<<< HEAD
       <DropDownBar menuTitle={'Choose your block'} menuArray={['level', 'floor', 'block']} />
+=======
+      <DropDownBar menutitle={'Choose your block'} menuarray={['level', 'floor', 'block']} />
+>>>>>>> Delete package-lock.json, Remove style in Home/index
       <TopNavBar title={'NavBarTitle'} leftIconComponent={leftIcon} />
       <button onClick={onButtonClick}>{sampleStateText}</button>
       <BottomNavBar />
