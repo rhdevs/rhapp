@@ -11,9 +11,11 @@ export enum PATHS {
   SIGNUP_PAGE = '/signup',
   PROFILE_PAGE = '/profile',
   CHANGE_PASSWORD_PAGE = '/changePassword',
+  // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/shareTimetable',
   EVENT_LIST_PAGE = '/eventList',
+  CREATE_EVENT = '/createEvent',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/:facilityName',
@@ -32,6 +34,7 @@ const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePass
 const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
+const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
@@ -53,6 +56,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
             <Route exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
+            <Route exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
 
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />

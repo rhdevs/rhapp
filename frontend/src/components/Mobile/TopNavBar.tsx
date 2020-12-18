@@ -19,7 +19,7 @@ const StyledNavBar = styled(NavBar)`
     height: 70px;
     background-color: #fafaf4; !important
   }
-  margin: 15px;
+  padding: 15px;
   max-width:100%;
 `
 const NavBarIcons = styled(Icon)`
