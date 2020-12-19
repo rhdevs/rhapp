@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -7,7 +6,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { Input } from 'antd'
 import { DatePicker } from 'antd-mobile'
-import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
+import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
@@ -51,12 +50,6 @@ const DatePickerRow = styled.div`
   color: #666666;
 `
 
-const BackIcon = (
-  <Link to={'/schedule'}>
-    <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-  </Link>
-)
-
 const CheckIcon = (
   <div>
     <CheckOutlined style={{ color: 'black' }} />
@@ -95,7 +88,7 @@ export default function CreateBooking() {
 
   return (
     <div>
-      <TopNavBar title={`New Booking`} leftIcon leftIconComponent={BackIcon} rightComponent={CheckIcon} />
+      <TopNavBar title={`New Booking`} rightComponent={CheckIcon} />
       <Background>
         <StyledInput placeholder="Event Name" value={bookingName} onChange={(e) => setBookingName(e.target.value)} />
         <div style={{ width: '100%' }}>
