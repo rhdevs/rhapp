@@ -7,12 +7,14 @@ import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { DateRange } from 'react-date-range'
+import { useHistory } from 'react-router-dom'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import Button from '../../../components/Mobile/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`import { Alert } from 'antd';
   width: 100%;
@@ -111,6 +113,8 @@ const EventRightDisplay = styled.div`
 
 export default function ViewFacility() {
   const dispatch = useDispatch()
+  const history = useHistory()
+
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
 
   const params = useParams<{ facilityName: string }>()
@@ -149,7 +153,14 @@ export default function ViewFacility() {
     },
   ]
 
-  const MyBookingIcon = <img src={bookingsIcon} />
+  const MyBookingIcon = (
+    <img
+      src={bookingsIcon}
+      onClick={() => {
+        history.push(PATHS.VIEW_MY_BOOKINGS)
+      }}
+    />
+  )
 
   return (
     <>

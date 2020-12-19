@@ -8,6 +8,7 @@ import { RootState } from '../../store/types'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
+import { PATHS } from '../Routes'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -41,28 +42,28 @@ export default function Home() {
           <h3>Authentication Pages</h3>
           <Button
             onClick={() => {
-              history.push('/login')
+              history.push(PATHS.LOGIN_PAGE)
             }}
           >
             Login
           </Button>
           <Button
             onClick={() => {
-              history.push('/profile')
+              history.push(PATHS.PROFILE_PAGE)
             }}
           >
             Profile
           </Button>
           <Button
             onClick={() => {
-              history.push('/changePassword')
+              history.push(PATHS.CHANGE_PASSWORD_PAGE)
             }}
           >
             Change Password
           </Button>
           <Button
             onClick={() => {
-              history.push('/signup')
+              history.push(PATHS.SIGNUP_PAGE)
             }}
           >
             Sign Up
@@ -71,28 +72,28 @@ export default function Home() {
           <h3>Scheduling</h3>
           <Button
             onClick={() => {
-              history.push('/schedule')
+              history.push(PATHS.SCHEDULE_PAGE)
             }}
           >
             Schedule
           </Button>
           <Button
             onClick={() => {
-              history.push('/schedule/share')
+              history.push(PATHS.SHARE_TIMETABLE_PAGE)
             }}
           >
             Share Timetable
           </Button>
           <Button
             onClick={() => {
-              history.push('/schedule/events')
+              history.push(PATHS.EVENT_LIST_PAGE)
             }}
           >
             Event List
           </Button>
           <Button
             onClick={() => {
-              history.push('/schedule/events/create')
+              history.push(PATHS.CREATE_EVENT)
             }}
           >
             Create Event
@@ -101,35 +102,35 @@ export default function Home() {
           <h3>Facility</h3>
           <Button
             onClick={() => {
-              history.push('/facility')
+              history.push(PATHS.FACILITY_BOOKING_MAIN)
             }}
           >
             Select Facility
           </Button>
           <Button
             onClick={() => {
-              history.push('/facility/Upper%20Lounge')
+              history.push(PATHS.VIEW_FACILITY)
             }}
           >
             View Facility
           </Button>
           <Button
             onClick={() => {
-              history.push('/facility/booking/youreventId')
+              history.push(PATHS.VIEW_FACILITY_BOOKING)
             }}
           >
             View one booking
           </Button>
           <Button
             onClick={() => {
-              history.push('/facility/mybooking/youruserid')
+              history.push(PATHS.VIEW_MY_BOOKINGS)
             }}
           >
             View all your Bookings
           </Button>
           <Button
             onClick={() => {
-              history.push('/facility/create')
+              history.push(PATHS.CREATE_FACILITY_BOOKING)
             }}
           >
             Create Booking

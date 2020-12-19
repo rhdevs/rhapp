@@ -9,6 +9,7 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
+import { PATHS } from '../Routes'
 
 const TimetableContainer = styled.div`
   height: 44vh;
@@ -49,7 +50,7 @@ export default function Schedule() {
             <Menu.Item
               key="1"
               onClick={() => {
-                history.push('/schedule/share')
+                history.push(PATHS.SHARE_TIMETABLE_PAGE)
               }}
             >
               Share with...
@@ -62,7 +63,7 @@ export default function Schedule() {
             <Menu.Item
               key="4"
               onClick={() => {
-                history.push('/schedule/events/create')
+                history.push(PATHS.CREATE_EVENT)
               }}
             >
               Add an event
@@ -72,7 +73,7 @@ export default function Schedule() {
             key="5"
             icon={<SearchOutlined />}
             onClick={() => {
-              history.push('/schedule/events')
+              history.push(PATHS.EVENT_LIST_PAGE)
             }}
           >
             Events
