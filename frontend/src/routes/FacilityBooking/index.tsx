@@ -5,8 +5,9 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
 import { useDispatch } from 'react-redux'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
-import { redirect } from '../../store/route/action'
 import { PATHS } from '../Routes'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useHistory } from 'react-router-dom'
 // import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
@@ -67,6 +68,7 @@ const StyledRadioGroupDiv = styled.div`
 
 export default function FacilityBooking() {
   const dispatch = useDispatch()
+  const history = useHistory()
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
 
   useEffect(() => {
@@ -77,18 +79,9 @@ export default function FacilityBooking() {
     console.log('My bookings')
   }
 
-  const handleSelectFacility = (facility: FacilityType) => {
-    console.log('Selected facility ' + facility.name)
-    dispatch(redirect(PATHS.HOME_PAGE))
-  }
-
   const MyBookingIcon = <img src={bookingsIcon} onClick={navigateToMyBookings} />
 
   // To change up when backend is up
-  interface FacilityType {
-    name: string
-    location: string
-  }
   const DummyFacilities = [
     { name: 'Conference Room', location: 'Upper Lounge' },
     { name: 'Alumni Room', location: 'Upper Lounge' },
@@ -114,7 +107,7 @@ export default function FacilityBooking() {
           <FacilityCard
             key={facility.name}
             onClick={() => {
-              handleSelectFacility(facility)
+              history.push(PATHS.VIEW_FACILITY)
             }}
           >
             <FacilityAvatar src={dummyAvatar} />
@@ -124,6 +117,7 @@ export default function FacilityBooking() {
             </FacilityLabels>
           </FacilityCard>
         ))}
+        <BottomNavBar />
       </MainContainer>
     </>
   )

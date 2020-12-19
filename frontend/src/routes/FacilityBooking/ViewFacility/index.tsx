@@ -10,12 +10,13 @@ import { DateRange } from 'react-date-range'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import Button from '../../../components/Mobile/Button'
+import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`import { Alert } from 'antd';
   width: 100%;
-  height: 100%;
+  height: calc(100% + 100px);
   background-color: #fafaf4;
 `
 
@@ -238,6 +239,7 @@ export default function ViewFacility() {
             </EventCard>
           ))}
         </EventsGroup>
+        <BottomNavBar />
       </MainContainer>
     </>
   )

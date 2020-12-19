@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { useHistory } from 'react-router-dom'
 import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
 
@@ -43,6 +44,7 @@ function TopNavBar({
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement
 }) {
+  const history = useHistory()
   return (
     <StyledNavBar
       mode="light"
@@ -52,16 +54,15 @@ function TopNavBar({
           {!leftIcon && (
             <NavBarIcons
               type="left"
-              // onClick={() => {
-              //   console.log('goback')
-              // }}
+              onClick={() => {
+                history.goBack()
+              }}
               color="#002642"
             />
           )}
           <TitleText>{title}</TitleText>
         </>
       }
-      onLeftClick={() => console.log('onLeftClick')}
       rightContent={rightComponent}
     ></StyledNavBar>
   )

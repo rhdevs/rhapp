@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 
@@ -14,11 +15,6 @@ const Background = styled.div`
   height: 100vh;
   width: 100vw;
 `
-
-const BottomNavBar = styled.div`
-  height: 64px;
-`
-
 const NoEventDataText = styled.text`
   font-family: Inter;
   color: black;
@@ -103,7 +99,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
       ) : (
         <NoEventDataText>No Events</NoEventDataText>
       )}
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Background>
   )
 }

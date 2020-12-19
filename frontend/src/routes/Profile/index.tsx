@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import DetailsCard from './Components/DetailsCard'
@@ -7,6 +6,7 @@ import PersonalInfoContainer from './Components/PersonalInfoContainer'
 import EditProfileButton from './Components/EditProfileButton'
 import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -16,9 +16,7 @@ const MainContainer = styled.div`
 
 const ProfileComponent = styled.div`
   background-color: #fafaf4;
-  height: 30vh;
   width: 100vw;
-  padding-top: 3vh;
 `
 
 const CardContainer = styled.div`
@@ -36,11 +34,10 @@ export default function Profile() {
 
   return (
     <>
-      <TopNavBar title={'Profile'} leftIcon={true} />
+      <TopNavBar title={'Profile'} />
       <MainContainer>
         <ProfileComponent>
           <PersonalInfoContainer />
-
           {isOwnProfile ? (
             <EditProfileButton handleClick={handleClick} />
           ) : (

@@ -7,7 +7,8 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
-import { Link } from 'react-router-dom'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useHistory } from 'react-router-dom'
 
 const TimetableContainer = styled.div`
   height: 44vh;
@@ -29,13 +30,10 @@ const Background = styled.div`
   width: 100vw;
 `
 
-const BottomNavBar = styled.div`
-  height: 64px;
-`
-
 const { SubMenu } = Menu
 
 export default function Schedule() {
+  const history = useHistory()
   const rightIcon = (
     <MenuDropdown
       menuItem={
@@ -48,18 +46,36 @@ export default function Schedule() {
               console.log('share')
             }}
           >
-            <Menu.Item key="1">
-              <Link to={'/shareTimetable'}>Share with...</Link>
+            <Menu.Item
+              key="1"
+              onClick={() => {
+                history.push('/schedule/share')
+              }}
+            >
+              Share with...
             </Menu.Item>
 
             <Menu.Item key="2">Save as png</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
             <Menu.Item key="3">Import an ICalander File (.ics)</Menu.Item>
-            <Menu.Item key="4">Add an event</Menu.Item>
+            <Menu.Item
+              key="4"
+              onClick={() => {
+                history.push('/schedule/events/create')
+              }}
+            >
+              Add an event
+            </Menu.Item>
           </SubMenu>
-          <Menu.Item key="5" icon={<SearchOutlined />}>
-            <Link to={'/eventList'}>Events</Link>
+          <Menu.Item
+            key="5"
+            icon={<SearchOutlined />}
+            onClick={() => {
+              history.push('/schedule/events')
+            }}
+          >
+            Events
           </Menu.Item>
         </>
       }
@@ -68,7 +84,7 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
       <TimetableContainer>
         <h1>TIMETABLE</h1>
       </TimetableContainer>
@@ -99,7 +115,7 @@ export default function Schedule() {
         </SmallContainer>
         <Tags options={['Group1', 'Group2']} />
       </GroupContainer>
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Background>
   )
 }
