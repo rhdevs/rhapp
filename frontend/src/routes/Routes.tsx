@@ -18,10 +18,10 @@ export enum PATHS {
   CREATE_EVENT = '/schedule/events/create',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/:facilityName',
-  CREATE_FACILITY_BOOKING = '/facility/create',
-  VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
-  VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
+  VIEW_FACILITY = '/facility/view/:facilityName',
+  CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
+  VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -40,6 +40,7 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" *
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
 
 export default class Routes extends React.Component {
   render() {
@@ -62,6 +63,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+            <Route exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
           </Switch>
         </Suspense>
       </Root>

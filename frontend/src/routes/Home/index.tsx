@@ -9,6 +9,7 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
+import SocialPostCard from '../../components/Mobile/SocialPostCard'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -137,8 +138,14 @@ export default function Home() {
           </Button>
           <br />
         </Navigations>
-        <BottomNavBar />
-      </MainContainer>
-    </>
+      <SocialPostCard
+        title={'Hello'}
+        dateTime={'Zhou Gou Gou, 8h ago'}
+        description={
+          'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!'
+        }
+      />
+      <BottomNavBar />
+    </MainContainer>
   )
 }
