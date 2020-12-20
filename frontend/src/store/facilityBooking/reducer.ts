@@ -1,12 +1,21 @@
+import dayjs from 'dayjs'
 import { Reducer } from 'redux'
 import { ActionTypes, FACILITY_ACTIONS, Facility, Booking } from './types'
 
 const initialState = {
+  // MAIN PAGE
   facilityList: [],
   locationList: [],
   selectedTab: '',
   myBookings: [],
   isDeleteMyBooking: -1,
+  newBooking: undefined,
+  // CREATE NEW BOOKING STATES
+  newBookingName: '',
+  newBookingFromDate: new Date(),
+  newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
+  newBookingCCA: '',
+  newBookingDescription: '',
 }
 
 type State = {
@@ -15,6 +24,12 @@ type State = {
   selectedTab: string
   myBookings: Booking[]
   isDeleteMyBooking: number
+  newBooking: Booking | undefined
+  newBookingName: string
+  newBookingFromDate: Date
+  newBookingToDate: Date
+  newBookingCCA: string
+  newBookingDescription: string
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -50,6 +65,46 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         myBookings: action.myBookings,
       }
     }
+    case FACILITY_ACTIONS.EDIT_MY_BOOKING: {
+      return {
+        ...state,
+        newBooking: action.newBooking,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BOOKING_NAME: {
+      return {
+        ...state,
+        newBookingName: action.newBookingName,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
+      return {
+        ...state,
+        newBookingFromDate: action.newBookingFromDate,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
+      return {
+        ...state,
+        newBookingToDate: action.newBookingToDate,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_CCA: {
+      return {
+        ...state,
+        newBookingCCA: action.newBookingCCA,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION: {
+      return {
+        ...state,
+        newBookingDescription: action.newBookingDescription,
+      }
+    }
+
     default:
       return state
   }

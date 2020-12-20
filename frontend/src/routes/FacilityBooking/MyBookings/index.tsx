@@ -1,13 +1,20 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
-import { getMyBookings, setIsDeleteMyBooking, deleteMyBooking } from '../../../store/facilityBooking/action'
+import {
+  getMyBookings,
+  setIsDeleteMyBooking,
+  deleteMyBooking,
+  editMyBooking,
+} from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -72,6 +79,7 @@ const ActionButton = styled.img`
 
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { myBookings, isDeleteMyBooking } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -102,7 +110,13 @@ export default function ViewMyBookings() {
               </BookingTime>
             </BookingLabels>
             <RightActionGroups>
-              <ActionButton src={editIcon} />
+              <ActionButton
+                src={editIcon}
+                onClick={() => {
+                  dispatch(editMyBooking(event))
+                  history.push(PATHS.CREATE_FACILITY_BOOKING)
+                }}
+              />
               <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(event.bookingID))} />
             </RightActionGroups>
             {isDeleteMyBooking !== -1 && isDeleteMyBooking === event.bookingID && (

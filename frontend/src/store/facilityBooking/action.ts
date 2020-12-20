@@ -1,5 +1,5 @@
 import { Dispatch } from '../types'
-import { ActionTypes, FACILITY_ACTIONS } from './types'
+import { ActionTypes, Booking, FACILITY_ACTIONS } from './types'
 // import { get, ENDPOINTS } from '../endpoints'
 import { facilityListStub, myBookingsStub } from '../stubs'
 
@@ -52,6 +52,33 @@ export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<Action
   setIsDeleteMyBooking(-1)
 }
 
+export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+    newBooking: oldBooking,
+  })
+}
+
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
+}
+
+export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
+}
+
+export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
+}
+
+export const editBookingFromDate = (newBookingFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
+}
+
+export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: newBookingCCA })
+}
+
+export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
