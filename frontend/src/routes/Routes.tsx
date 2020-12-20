@@ -13,9 +13,9 @@ export enum PATHS {
   CHANGE_PASSWORD_PAGE = '/changePassword',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
-  SHARE_TIMETABLE_PAGE = '/shareTimetable',
-  EVENT_LIST_PAGE = '/eventList',
-  CREATE_EVENT = '/createEvent',
+  SHARE_TIMETABLE_PAGE = '/schedule/share',
+  EVENT_LIST_PAGE = '/schedule/events',
+  CREATE_EVENT = '/schedule/events/create',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityName',

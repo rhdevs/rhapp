@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
-import { useHistory } from 'react-router-dom'
 import { PATHS } from '../Routes'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useHistory } from 'react-router-dom'
 import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
@@ -100,7 +101,6 @@ export default function FacilityBooking() {
             ))}
           </StyledRadioGroup>
         </StyledRadioGroupDiv>
-
         {facilityList.map((facility) => {
           if (facility.facilityLocation === selectedTab || selectedTab === '')
             return (
@@ -118,6 +118,7 @@ export default function FacilityBooking() {
               </FacilityCard>
             )
         })}
+        <BottomNavBar />
       </MainContainer>
     </>
   )
