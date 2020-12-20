@@ -1,7 +1,7 @@
 import { Dispatch } from '../types'
 import { ActionTypes, FACILITY_ACTIONS } from './types'
 // import { get, ENDPOINTS } from '../endpoints'
-import { facilityListStub } from '../stubs'
+import { facilityListStub, myBookingsStub } from '../stubs'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   // get(ENDPOINTS.FACILITY_LIST).then((resp) => {
@@ -19,6 +19,37 @@ export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
     facilityList: facilityListStub,
     locationList: uniqueLocationList,
   })
+}
+
+export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  // get(ENDPOINTS.USER_BOOKINGS + '/' + userId).then((resp) => {
+  //   const fetchedList: Booking[] = resp.data
+  //   dispatch({
+  //     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
+  //     myBookings: fetchedList,
+  //   })
+  // })
+
+  // When backend is up, need to fetch cca name and facility name via ID
+  console.log('getting bookings for ' + userId)
+  dispatch({
+    type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
+    myBookings: myBookingsStub,
+  })
+}
+
+// -1 stands for closed, any others means open for that specific ID.
+export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+}
+
+export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  // DELETE call to backend
+  dispatch({
+    type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+    myBookings: myBookingsStub.filter((booking) => booking.bookingID !== bookingId),
+  })
+  setIsDeleteMyBooking(-1)
 }
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
