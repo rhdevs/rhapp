@@ -7,7 +7,6 @@ import dummyAvatar from '../../assets/dummyAvatar.svg'
 import { PATHS } from '../Routes'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
-import { PATHS } from '../Routes'
 import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
@@ -119,6 +118,7 @@ export default function FacilityBooking() {
               </FacilityCard>
             )
         })}
+        <BottomNavBar />
       </MainContainer>
     </>
   )
