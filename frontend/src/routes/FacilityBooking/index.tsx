@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
-import { useDispatch } from 'react-redux'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
-import { redirect } from '../../store/route/action'
+import { useHistory } from 'react-router-dom'
 import { PATHS } from '../Routes'
-// import { RootState } from '../../store/types'
+import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
+import { changeTab, getFacilityList } from '../../store/facilityBooking/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -67,63 +67,57 @@ const StyledRadioGroupDiv = styled.div`
 
 export default function FacilityBooking() {
   const dispatch = useDispatch()
-  // const { sampleStateText } = useSelector((state: RootState) => state.home)
+  const history = useHistory()
+  const { facilityList, locationList, selectedTab } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    // fetch all default facilities
+    dispatch(getFacilityList())
   }, [dispatch])
 
-  const navigateToMyBookings = () => {
-    console.log('My bookings')
+  const MyBookingIcon = (
+    <img
+      src={bookingsIcon}
+      onClick={() => {
+        history.push(PATHS.VIEW_MY_BOOKINGS)
+      }}
+    />
+  )
+
+  const onChangeTab = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeTab(e.target.value))
   }
-
-  const handleSelectFacility = (facility: FacilityType) => {
-    console.log('Selected facility ' + facility.name)
-    dispatch(redirect(PATHS.HOME_PAGE))
-  }
-
-  const MyBookingIcon = <img src={bookingsIcon} onClick={navigateToMyBookings} />
-
-  // To change up when backend is up
-  interface FacilityType {
-    name: string
-    location: string
-  }
-  const DummyFacilities = [
-    { name: 'Conference Room', location: 'Upper Lounge' },
-    { name: 'Alumni Room', location: 'Upper Lounge' },
-  ]
-
-  const DummyLocations = ['All', 'Upper Lounge', 'Lower Lounge', 'Communal Hall', 'Sports']
 
   return (
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
-        <StyledRadioGroupDiv>
-          <StyledRadioGroup defaultValue={0}>
-            {DummyLocations.map((location, idx) => (
-              <Radio.Button key={idx} value={idx}>
+        <StyledRadioGroupDiv onChange={onChangeTab}>
+          <StyledRadioGroup defaultValue={locationList[0]}>
+            {locationList.map((location, idx) => (
+              <Radio.Button key={idx} value={location}>
                 {location}
               </Radio.Button>
             ))}
           </StyledRadioGroup>
         </StyledRadioGroupDiv>
 
-        {DummyFacilities.map((facility) => (
-          <FacilityCard
-            key={facility.name}
-            onClick={() => {
-              handleSelectFacility(facility)
-            }}
-          >
-            <FacilityAvatar src={dummyAvatar} />
-            <FacilityLabels>
-              <FacilityHeader>{facility.name}</FacilityHeader>
-              <FacilitySubHeader>{facility.location}</FacilitySubHeader>
-            </FacilityLabels>
-          </FacilityCard>
-        ))}
+        {facilityList.map((facility) => {
+          if (facility.facilityLocation === selectedTab || selectedTab === '')
+            return (
+              <FacilityCard
+                key={facility.facilityID}
+                onClick={() => {
+                  history.push('/facility/' + facility.facilityName)
+                }}
+              >
+                <FacilityAvatar src={dummyAvatar} />
+                <FacilityLabels>
+                  <FacilityHeader>{facility.facilityName}</FacilityHeader>
+                  <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
+                </FacilityLabels>
+              </FacilityCard>
+            )
+        })}
       </MainContainer>
     </>
   )
