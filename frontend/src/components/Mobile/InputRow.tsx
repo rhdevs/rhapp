@@ -56,7 +56,7 @@ type InputRowProps = {
   title: string
   placeholder: string
   value: string
-  setValue: Dispatch<SetStateAction<string>>
+  setValue: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textarea?: boolean
 }
 

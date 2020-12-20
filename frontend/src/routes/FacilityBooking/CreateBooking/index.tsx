@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -10,6 +10,15 @@ import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+import { RootState } from '../../../store/types'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  editBookingCCA,
+  editBookingDescription,
+  editBookingFromDate,
+  editBookingName,
+  editBookingToDate,
+} from '../../../store/facilityBooking/action'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -56,30 +65,45 @@ const CheckIcon = (
   </div>
 )
 
-const nowTimeStamp = Date.now()
-const now = new Date(nowTimeStamp)
-
 export default function CreateBooking() {
-  const [bookingName, setBookingName] = useState('')
-  const [fromDateTime, setFromDateTime] = useState(now)
-  const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
-  const [cca, setCca] = useState('')
-  const [description, setDescription] = useState('')
+  const dispatch = useDispatch()
+  const {
+    newBooking,
+    newBookingName,
+    newBookingFromDate,
+    newBookingToDate,
+    newBookingCCA,
+    newBookingDescription,
+  } = useSelector((state: RootState) => state.facilityBooking)
+
+  useEffect(() => {
+    if (newBooking) {
+      dispatch(editBookingFromDate(newBooking.startTime))
+      dispatch(editBookingToDate(newBooking.endTime))
+      dispatch(editBookingDescription(newBooking.description))
+      dispatch(editBookingName(newBooking.eventName))
+      dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
+    }
+  }, [dispatch])
 
   const handleFromDateChange = (newDate: Date) => {
-    if (toDateTime < newDate) {
-      setToDateTime(dayjs(newDate).add(1, 'hour').toDate())
+    if (newBookingToDate > newDate) {
+      dispatch(editBookingFromDate(newDate))
     }
-
-    setFromDateTime(newDate)
   }
 
   const handleToDateChange = (newDate: Date) => {
-    if (fromDateTime > newDate) {
-      setFromDateTime(dayjs(newDate).subtract(1, 'hour').toDate())
+    if (newBookingFromDate < newDate) {
+      dispatch(editBookingToDate(newDate))
     }
+  }
 
-    setToDateTime(newDate)
+  const setCca = (newCCA: string) => {
+    dispatch(editBookingCCA(newCCA))
+  }
+
+  const setDescription = (description: string) => {
+    dispatch(editBookingDescription(description))
   }
 
   const toCustomDateFormat = (date: Date) => {
@@ -88,31 +112,37 @@ export default function CreateBooking() {
 
   return (
     <div>
-      <TopNavBar title={`New Booking`} rightComponent={CheckIcon} />
+      <TopNavBar title={newBooking?.bookingID ? `Edit Booking` : `New Booking`} rightComponent={CheckIcon} />
       <Background>
-        <StyledInput placeholder="Event Name" value={bookingName} onChange={(e) => setBookingName(e.target.value)} />
+        <StyledInput
+          placeholder="Event Name"
+          value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
+          onChange={(e) => dispatch(editBookingName(e.target.value))}
+        />
         <div style={{ width: '100%' }}>
-          <DatePicker mode="datetime" locale={enUs} value={fromDateTime} onChange={handleFromDateChange}>
+          <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
-              <span>{`${toCustomDateFormat(fromDateTime)}`}</span>
+              <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={toDateTime} onChange={handleToDateChange}>
+          <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
-              <span>{`${toCustomDateFormat(toDateTime)}`}</span>
+              <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(toDateTime)
-            .diff(dayjs(fromDateTime), 'hour', true)
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
+            newBookingToDate,
+          )
+            .diff(dayjs(newBookingFromDate), 'hour', true)
             .toFixed(1)} hours`}</div>
         </div>
-        <InputRow title="CCA" placeholder="CCA Name" value={cca} setValue={setCca} />
+        <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
         <InputRow
           title="Description"
           placeholder="Tell us what your booking is for!"
-          value={description}
+          value={newBookingDescription}
           setValue={setDescription}
           textarea
         />
