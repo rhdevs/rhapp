@@ -15,7 +15,7 @@ const LongButton = {
 
 const ButtonDiv = styled.div`
   position: relative;
-  left: 5%;
+  margin-left: 5vw;
   margin-top: 3vh;
   margin-bottom: 6vh;
 `
