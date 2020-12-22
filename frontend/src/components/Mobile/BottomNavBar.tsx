@@ -1,5 +1,4 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { ReactElement } from 'react'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { TabBar } from 'antd-mobile'
@@ -13,10 +12,7 @@ import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 
-const StyledButton = styled.img`
-  width: 27px;
-  height: 27px;
-`
+import 'antd-mobile/dist/antd-mobile.css'
 
 const BottomNav = styled.div`
   z-index: 1000;
@@ -25,8 +21,35 @@ const BottomNav = styled.div`
   bottom: 0;
   width: 100%;
 `
-
-function BottomNavBar() {
+const StyledNavBar = styled(NavBar)`
+  &.am-navbar {
+    height: 70px;
+    background-color: #fafaf4; !important
+  }
+  padding: 15px;
+  max-width:100%;
+`
+const NavBarIcons = styled(Icon)`
+  &.am-icon-md {
+    width: 28px;
+    height: 28px;
+  }
+  padding-right: 11px;
+  width: 40px;
+  height: 40px;
+`
+// UNDONE, feel free to complete
+function TopNavBar({
+  title,
+  leftIcon,
+  leftIconComponent,
+  rightComponent,
+}: {
+  title: string
+  leftIcon?: boolean
+  leftIconComponent?: ReactElement
+  rightComponent?: ReactElement
+}) {
   const history = useHistory()
   const location = useLocation()
 
@@ -92,4 +115,4 @@ function BottomNavBar() {
   )
 }
 
-export default BottomNavBar
+export default TopNavBar

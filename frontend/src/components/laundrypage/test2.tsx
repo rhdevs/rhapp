@@ -7,11 +7,11 @@ import { available, using, completed, reserved, edit } from '../laundrypage/stat
 import { addMinutes } from 'date-fns'
 import styled from 'styled-components'
 import '../../assets/fonts.css'
-import '../../assets/trial.less'
-
+import TopNavBar from '../Mobile/TopNavBar'
+//styling
 const Container = styled.div`
   margin: 0 auto;
-  margin-bottom: 100px;
+  margin-top: 40px;
   width: 300px;
 `
 const Top = styled.div`
@@ -112,24 +112,14 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     showSlider: true,
   })
 
-  const [time, setTime] = useState({
-    date: new Date(),
-    inputValue: 30,
-  })
-
-  function onChange(value: number) {
-    setTime({
-      ...time,
-      inputValue: value,
-    })
-  }
-
   useEffect(() => {
     setStatus(status)
   }, [status])
 
+  //state of component depending on status
   function setStatus(status: string) {
     if (status === reserved) {
+      setNavCap('Reserved')
       setPage({
         status: reserved,
         caption: '!',
@@ -142,6 +132,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: true,
       })
     } else if (status === available) {
+      setNavCap('Laundry Time')
       setPage({
         status: available,
         caption: 'Its washy time!',
@@ -153,7 +144,13 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showTimer: false,
         showSlider: true,
       })
+      setTime({
+        ...time,
+        inputValue: 30,
+      })
     } else if (status === completed) {
+      setNavCap('Collect Laundry')
+
       setPage({
         status: completed,
         caption: '',
@@ -166,6 +163,8 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: false,
       })
     } else if (status === using) {
+      setNavCap('Laundry Time')
+
       setPage({
         status: using,
         caption: '',
@@ -178,6 +177,8 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: false,
       })
     } else if (status === edit) {
+      setNavCap('Edit duration')
+
       setPage({
         status: edit,
         caption: '',
@@ -189,11 +190,37 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showTimer: false,
         showSlider: true,
       })
+      setTime({
+        ...time,
+        inputValue: 30,
+      })
     } else {
     }
   }
 
+  function startEdit() {
+    setStatus(edit)
+  }
+
+  //Timer settings
+  const [time, setTime] = useState({
+    date: new Date(),
+    inputValue: 30,
+  })
+
+  function onChange(value: number) {
+    setTime({
+      ...time,
+      inputValue: value,
+    })
+  }
+
+  function formatter(value: unknown) {
+    return `${value} minutes`
+  }
+
   function button1Press(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    //top button
     //button 1
     //e.preventDefault()
     if (page.status === reserved) {
@@ -204,6 +231,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   }
 
   function button2Press(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    //bottom button
     //button2
     //e.preventDefault()
     if (page.status === reserved) {
@@ -229,94 +257,98 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     }
   }
 
-  function startEdit() {
-    setStatus(edit)
-  }
-
-  function formatter(value: unknown) {
-    return `${value} minutes`
-  }
+  const [navCap, setNavCap] = useState('Reservation')
 
   return (
-    <Container>
-      <Top>
-        <Left>
-          <img className="icon" src={laundry} />
-        </Left>
-        <Right>
-          <p className="serial">{serial}</p>
-          <div>
-            {page.showcaption && (
-              <p className="caption">
-                {page.status === reserved && (
+    <div>
+      <TopNavBar title={navCap} />
+      <Container>
+        <Top>
+          <Left>
+            <img className="icon" src={laundry} />
+          </Left>
+          <Right>
+            <p className="serial">{serial}</p>
+            <div>
+              {page.showcaption && (
+                <p className="caption">
+                  {page.status === reserved && (
+                    <Timer
+                      destination={new Date('December 17, 2020 17:53:00')}
+                      caption={false}
+                      onlyMinutes={true}
+                      activate={() => {
+                        setStatus(available)
+                      }}
+                      elapsed={false}
+                    />
+                  )}
+                  {page.caption}
+                </p>
+              )}
+              {page.status === edit && (
+                <div style={{ marginTop: '25px' }}>
+                  {' '}
+                  <p className="laundry-timer">
+                    {' '}
+                    {time.inputValue < 10 && '0'}
+                    {`${time.inputValue} : 00`}
+                  </p>
+                  <p className="timer-caption">
+                    {'minutes'} &nbsp; &nbsp;
+                    {'seconds'}
+                  </p>
+                </div>
+              )}
+              {page.showbutton1 && (
+                <ButtonContainer1>
+                  <Button type="primary" onClick={(e) => button1Press(e)}>
+                    {page.button1}
+                  </Button>
+                </ButtonContainer1>
+              )}
+              {page.showTimer && (
+                <Top>
                   <Timer
-                    destination={new Date('December 17, 2020 17:53:00')}
-                    caption={false}
-                    onlyMinutes={true}
-                    activate={() => {
-                      setStatus(available)
-                    }}
+                    destination={time.date}
+                    activate={() => setStatus(completed)}
+                    caption={true}
+                    onlyMinutes={false}
                     elapsed={false}
                   />
-                )}
-                {page.caption}
-              </p>
-            )}
-            {page.status === edit && (
-              <p className="caption" style={{ fontSize: '20px' }}>
-                {time.inputValue}
-                &nbsp;
-                {'minutes'}
-              </p>
-            )}
-            {page.showbutton1 && (
-              <ButtonContainer1>
-                <Button type="primary" onClick={(e) => button1Press(e)}>
-                  {page.button1}
-                </Button>
-              </ButtonContainer1>
-            )}
-            {page.showTimer && (
-              <Top>
-                <Timer
-                  destination={time.date}
-                  activate={() => setStatus(available)}
-                  caption={true}
-                  onlyMinutes={false}
-                  elapsed={false}
-                />
-                <u className="edit-button" onClick={() => startEdit()}>
-                  Edit
-                </u>
-              </Top>
-            )}
-          </div>
-        </Right>
-      </Top>
-      <Bottom>
-        {page.showSlider && (
-          <>
-            <Slider
-              className="slider"
-              min={0}
-              max={50}
-              onChange={onChange}
-              value={typeof time.inputValue === 'number' ? time.inputValue : 0}
-              defaultValue={30}
-              tipFormatter={formatter}
-              tooltipPrefixCls="slider-tooltip ant-tooltip"
-            />
-          </>
-        )}
-        {page.showbutton2 && (
-          <ButtonContainer2>
-            <Button type="primary" onClick={(e) => button2Press(e)} block>
-              {page.button2}
-            </Button>
-          </ButtonContainer2>
-        )}
-      </Bottom>
-    </Container>
+                  <u className="edit-button" onClick={() => startEdit()}>
+                    Edit
+                  </u>
+                </Top>
+              )}
+            </div>
+          </Right>
+        </Top>
+        <Bottom>
+          {page.showSlider && (
+            <>
+              <Slider
+                className="slider"
+                min={1}
+                max={50}
+                onChange={onChange}
+                value={typeof time.inputValue === 'number' ? time.inputValue : 0}
+                defaultValue={30}
+                tipFormatter={formatter}
+                tooltipPrefixCls="slider-tooltip ant-tooltip"
+              />
+            </>
+          )}
+          {page.showbutton2 && (
+            <ButtonContainer2>
+              <Button type="primary" onClick={(e) => button2Press(e)} block>
+                {page.button2}
+              </Button>
+            </ButtonContainer2>
+          )}
+        </Bottom>
+      </Container>
+    </div>
   )
 }
 export { Laundry }
