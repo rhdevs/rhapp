@@ -1,5 +1,12 @@
 import { Booking, Facility } from './facilityBooking/types'
 
+/**
+ * ######### STUBS LIST: #########
+ * 1. facilityList
+ * 2. myBookings
+ * 3. userRhEvents
+ */
+
 export const facilityListStub: Facility[] = [
   { facilityID: 123, facilityName: 'Main Area', facilityLocation: 'Upper Lounge' },
   { facilityID: 223, facilityName: 'Alumni Room', facilityLocation: 'Upper Lounge' },
@@ -37,5 +44,19 @@ export const myBookingsStub: Booking[] = [
     startTime: new Date('2020-02-15 12:00:00'),
     endTime: new Date('2020-02-15 14:00:00'),
     description: 'Steal from me i kick u out of hall',
+  },
+]
+
+export const userRhEventsDummy = [
+  {
+    eventID: 1,
+    eventName: 'bonding camp',
+    startDateTime: 1608658452,
+    endDateTime: 1608654852,
+    description: 'nothing',
+    location: 'upper lounge',
+    ccaID: 1,
+    userID: 1,
+    image: null,
   },
 ]

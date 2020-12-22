@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Menu } from 'antd'
+import { Button, Menu } from 'antd'
 import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
-
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom'
 
 import Timetable from '../../components/timetable/Timetable'
 import { invert } from 'lodash'
+import { fetchUserRhEvents } from '../../store/scheduling/actions'
+import { RootState } from '../../store/types'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -66,6 +68,7 @@ type RHEvent = {
 }
 
 type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
+
 export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
   DLEC: 'Design Lecture',
   LAB: 'Laboratory',
@@ -95,6 +98,13 @@ const testLink =
 // CG2023=LAB:05,PTUT:03,PLEC:02
 
 export default function Schedule() {
+  const dispatch = useDispatch()
+  const { userRhEvents } = useSelector((state: RootState) => state.scheduling)
+
+  useEffect(() => {
+    dispatch(fetchUserRhEvents())
+  }, [dispatch])
+
   const [monEvents] = useState<RHEvent[]>([])
   const [tueEvents] = useState<RHEvent[]>([])
   const [wedEvents] = useState<RHEvent[]>([])
@@ -105,7 +115,7 @@ export default function Schedule() {
 
   const doSomething = () => {
     const extractedData = extractDataFromLink(testLink)
-    console.log(extractedData)
+    // console.log(extractedData)
     for (let i = 0; i < extractedData.length; i++) {
       NUSModsToRHEvents('2020-2021', extractedData[i])
     }
