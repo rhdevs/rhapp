@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { useHistory } from 'react-router-dom'
 import { NavBar, Icon } from 'antd-mobile'
 import styled from 'styled-components'
 
@@ -52,9 +53,9 @@ function TopNavBar({
           {!leftIcon && (
             <NavBarIcons
               type="left"
-              // onClick={() => {
-              //   console.log('goback')
-              // }}
+              onClick={() => {
+                history.back()
+              }}
               color="#002642"
             />
           )}

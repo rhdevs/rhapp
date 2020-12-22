@@ -20,6 +20,7 @@ export enum PATHS {
   VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
   // FACILITY WASHING MACHINE
   WM_PRE_SELECTION = '/washingmachine',
+  LAUNDRY_PAGE = '/laundrypage',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -36,11 +37,8 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 // FACILITY WASHING MACHINE
-<<<<<<< HEAD
-const WashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
-=======
 const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
->>>>>>> b7a9bd70... Added Selector to replace DropDownBar
+const LaundryPage = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/LaundryPage'))
 
 export default class Routes extends React.Component {
   render() {
@@ -61,7 +59,8 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
 
-            <Route exact path={PATHS.WM_PRE_SELECTION} component={WashingMachine} />
+            <Route exact path={PATHS.WM_PRE_SELECTION} component={WmPreSelection} />
+            <Route exact path={PATHS.LAUNDRY_PAGE} component={LaundryPage} />
           </Switch>
         </Suspense>
       </Root>

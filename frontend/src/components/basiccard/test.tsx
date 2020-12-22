@@ -12,6 +12,10 @@ import { Timer } from './timer'
 import { available, using, uncollected, completed, reserved } from '../laundrypage/status'
 import { addMinutes } from 'date-fns'
 
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../routes/Routes'
+
+//styling
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -89,6 +93,7 @@ const FacilityBooking = ({
     caption: caption,
   })
 
+  const history = useHistory()
   function buttonPress(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.preventDefault()
     if (card.status === available) {
@@ -106,6 +111,8 @@ const FacilityBooking = ({
       })
     } else if (card.status === completed) {
       setAvailable()
+    } else if (card.status === reserved) {
+      history.push(PATHS.LAUNDRY_PAGE)
     }
   }
 
