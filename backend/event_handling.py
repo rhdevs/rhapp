@@ -3,8 +3,8 @@ import pymongo
 import json
 from datetime import datetime
 client = pymongo.MongoClient(
-    "")
-db = client.test
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/<dbname>?retryWrites=true&w=majority")
+db = client.RHApp
 
 app = Flask("rhapp")
 
@@ -12,119 +12,118 @@ app = Flask("rhapp")
 @app.route("/timetable/all/<userID>")
 def getUserTimetable(userID):
     try:
-        data = db.userLesson.find({"userID": userID}).pretty()
+        data = db.UserLesson.find({"userID": userID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route('/user/all')
 def getAllUsers():
     try:
-        # data = db.user.find().pretty()
-        data = "Test"
+        data = db.User.find()
+        return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
 
 
 @ app.route('/event/all')
 def getAllEvents():
     try:
-        data = db.event.find().pretty()
+        data = db.Event.find().pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route('/cca/all')
 def getAllCCA():
     try:
-        data = db.cca.find().pretty()
+        data = db.CCA.find().pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route('/event/<int:eventID>')
 def getEventDetails(eventID):
     try:
-        data = db.event.find({"eventID": eventID}).pretty()
+        data = db.Event.find({"eventID": eventID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route('/cca/<int:ccaID>')
 def getCCADetails(ccaID):
     try:
-        data = db.cca.find({"ccaID": ccaID}).pretty()
+        data = db.CCA.find({"ccaID": ccaID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route('/lesson/<int:lessonID>')
 def getLessonDetails(lessonID):
     try:
-        data = db.lesson.find({"lessonID": lessonID}).pretty()
+        data = db.Lessons.find({"lessonID": lessonID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/user_CCA/<userID>")
 def getUserCCAs(userID):
     try:
-        data = db.userCCA.find({"userID": userID}).pretty()
+        data = db.UserCCA.find({"userID": userID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/user_event/<userID>")
 def getUserEvents(userID):
     try:
-        data = db.userEvent.find({"userID": userID}).pretty()
+        data = db.UserEvent.find({"userID": userID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/user_lesson/<userID>")
 def getUserLessons(userID):
     try:
-        data = db.userLesson.find({"userID": userID}).pretty()
+        data = db.UserLesson.find({"userID": userID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/user_event/<int:eventID>")
 def getEventAttendees(eventID):
     try:
-        data = db.userEvent.find({"eventID": eventID}).pretty()
+        data = db.UserEvent.find({"eventID": eventID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/user_CCA/<int:ccaID>")
 def getCcaMembers(ccaID):
     try:
-        data = db.userCCA.find({"ccaID": ccaID}).pretty()
+        data = db.UserCCA.find({"ccaID": ccaID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/permissions/<userID>")
 def getUserPermissions(userID):
     try:
-        data = db.permissions.find({"recipient": userID}).pretty()
+        data = db.UserPermissions.find({"recipient": userID}).pretty()
     except Exception as e:
         return {"err": e}, 400
-    return data, 200
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @ app.route("/permissions", methods=['DELETE', 'POST'])
@@ -137,10 +136,10 @@ def addDeletePermissions():
                 "donor": userID1,
                 "recipient": userID2,
             }
-            db.permissions.insertOne(body)
+            db.UserPermissions.insertOne(body)
 
         elif request.method == "DELETE":
-            db.permissions.deleteOne({
+            db.UserPermissions.deleteOne({
                 donor: userID1,
                 recipient: userID2
             })
@@ -177,7 +176,7 @@ def createEvent():
             image: image
         }
 
-        db.event.insertOne(body)
+        db.Event.insertOne(body)
 
     except Exception as e:
         return {"err": e}, 400
@@ -187,7 +186,7 @@ def createEvent():
 @ app.route("/event/delete/<int:eventID>", methods=['DELETE'])
 def deleteEvent(eventID):
     try:
-        db.event.deleteOne({eventID: eventID})
+        db.Event.deleteOne({eventID: eventID})
 
     except Exception as e:
         return {"err": e}, 400
@@ -219,7 +218,7 @@ def editEvent():
             image: image
         }
 
-        db.event.update_one({eventID: eventID}, {'$set': body})
+        db.Event.update_one({eventID: eventID}, {'$set': body})
 
     except Exception as e:
         return {"err": e}, 400
@@ -236,7 +235,7 @@ def editAttendance():
             eventID: eventID,
             userID: userID,
         }
-        db.userEvent.insertOne(body)
+        db.UserEvent.insertOne(body)
 
     except Exception as e:
         return {"err": e}, 400
