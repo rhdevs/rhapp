@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify
 import pymongo
 import json
 from datetime import datetime
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-db = myclient["mydatabase"]
+client = pymongo.MongoClient(
+    "mongodb+srv://rhdevs-admin-db:rhdevs-admin@cluster0.0urzo.mongodb.net/<dbname>?retryWrites=true&w=majority")
+db = client.test
 
 app = Flask("rhapp")
 
