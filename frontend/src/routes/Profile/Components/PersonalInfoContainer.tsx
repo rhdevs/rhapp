@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import ProfilePicture from '../../../assets/profilePicture.png'
+import statusDot from '../../../assets/warning.png'
 
 const MainContainer = styled.div`
   margin-left: 10vw;
@@ -22,19 +23,18 @@ const BlockParagraph = styled.p`
 `
 const BioParagraph = styled.p`
   font-size: 15px;
-  margin-top: -5vh;
 `
 
 const AvatarSpan = styled.span`
   display: inline-block;
-  height: 30vh;
+  height: 27vh;
   width: 30vw;
   vertical-align: middle;
 `
 
 const PersonalInfoSpan = styled.span`
   display: inline-block;
-  height: 30vh;
+  height: 27vh;
   width: 50vw;
   vertical-align: middle;
   padding-left: 3vw;
@@ -75,7 +75,10 @@ const PersonalInfoSecondaryContainer: React.FC<PersonalInfo> = (personalInfo: Pe
         <NameParagraph>{personalInfo.name}</NameParagraph>
         <TelegramParagraph>{personalInfo.telegram}</TelegramParagraph>
         <BlockParagraph>{personalInfo.block}</BlockParagraph>
-        <p>Friends List</p>
+        <p>
+          Friends List
+          <img alt="statusDot" style={{ marginLeft: 5, width: 6 }} src={String(statusDot)} />
+        </p>
       </PersonalInfoSpan>
       <BioParagraph>{personalInfo.bio}</BioParagraph>
     </MainContainer>
