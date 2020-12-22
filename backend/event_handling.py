@@ -3,13 +3,13 @@ import pymongo
 import json
 from datetime import datetime
 client = pymongo.MongoClient(
-    "mongodb+srv://rhdevs-admin-db:rhdevs-admin@cluster0.0urzo.mongodb.net/<dbname>?retryWrites=true&w=majority")
+    "")
 db = client.test
 
 app = Flask("rhapp")
 
 
-@app.route("timetable/all/<userID>")
+@app.route("/timetable/all/<userID>")
 def getUserTimetable(userID):
     try:
         data = db.userLesson.find({"userID": userID}).pretty()
@@ -21,7 +21,8 @@ def getUserTimetable(userID):
 @ app.route('/user/all')
 def getAllUsers():
     try:
-        data = db.user.find().pretty()
+        # data = db.user.find().pretty()
+        data = "Test"
     except Exception as e:
         return {"err": e}, 400
     return data, 200
@@ -149,7 +150,7 @@ def addDeletePermissions():
     return {"message": "Action successful"}, 200
 
 
-@ app.route("event/add")
+@ app.route("/event/add")
 def createEvent():
     try:
         eventID = request.args.get('eventID')
@@ -183,7 +184,7 @@ def createEvent():
     return {"message": "successful"}, 200
 
 
-@ app.route("event/delete/<int:eventID>", methods=['DELETE'])
+@ app.route("/event/delete/<int:eventID>", methods=['DELETE'])
 def deleteEvent(eventID):
     try:
         db.event.deleteOne({eventID: eventID})
@@ -193,7 +194,7 @@ def deleteEvent(eventID):
     return {"message": "successful"}, 200
 
 
-@ app.route("event/edit/", methods=['PUT'])
+@ app.route("/event/edit/", methods=['PUT'])
 def editEvent():
     try:
         eventID = request.args.get('eventID')
