@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import EventCell from './EventCell'
 
 const TimetableRowContainer = styled.li`
   position: relative;
@@ -41,26 +42,71 @@ const TimetableDayContainer = styled.div`
   outline: 1px solid #aeb1b5;
   background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
   background-size: 16rem;
+  flex: 0 1 auto;
 `
 
-const ChildrenContainer = styled.div`
-  margin-left: calc(50% + 1px);
-`
+const ChildrenContainer = styled.div``
+// margin-left: calc(0.0625rem);
+
+type RHEvent = {
+  eventName: string
+  location: string
+  day: string
+  endTime: string
+  startTime: string
+}
 
 type Props = {
+  timetableStartTime: number
+  timetableEndTime: number
   day: string
   width?: number
-  children?: ReactElement
+  children: RHEvent[]
+  //   children?: RHEvent
 }
 
 function TimetableRow(props: Props) {
+  console.log(props.children)
   return (
     <TimetableRowContainer>
       <DayContainer>
         <DaySpanContainer>{props.day}</DaySpanContainer>
       </DayContainer>
       <TimetableDayContainer style={{ width: props.width + 'rem' }}>
-        <ChildrenContainer>{props.children}</ChildrenContainer>
+        {/* <ChildrenContainer
+          style={{ marginLeft: `calc((${Number(props.children?.startTime)}-${props.timetableStartTime})/100 * 8rem)` }}
+        >
+          {props.children ? (
+            <EventCell
+              eventStartTime={props.children?.startTime}
+              eventEndTime={props.children?.endTime}
+              eventTitle={props.children?.eventName}
+              eventLocation={props.children?.location}
+            />
+          ) : (
+            <></>
+          )}
+        </ChildrenContainer> */}
+        {props.children.map((individualEvent, index) => {
+          console.log(individualEvent)
+          return (
+            <ChildrenContainer
+              key={index}
+              style={{
+                marginLeft: `calc((${Number(individualEvent.startTime)}-${
+                  props.timetableStartTime
+                })/100 * 8rem + 0.0625rem)`,
+              }}
+            >
+              <EventCell
+                eventStartTime={individualEvent.startTime}
+                eventEndTime={individualEvent.endTime}
+                eventTitle={individualEvent.eventName}
+                eventLocation={individualEvent.location}
+              />
+            </ChildrenContainer>
+          )
+        })}
       </TimetableDayContainer>
     </TimetableRowContainer>
   )

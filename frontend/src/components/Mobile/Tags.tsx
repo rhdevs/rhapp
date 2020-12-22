@@ -17,7 +17,11 @@ const TagsContainer = styled.div`
 function Tags({ options, defaultOptions }: { options: string[]; defaultOptions?: string[] }) {
   const children = []
   for (let i = 0; i < options.length; i++) {
-    children.push(<Option value={i}>{options[i]}</Option>)
+    children.push(
+      <Option key={i} value={i}>
+        {options[i]}
+      </Option>,
+    )
   }
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`)
