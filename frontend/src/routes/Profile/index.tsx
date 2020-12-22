@@ -34,8 +34,8 @@ export default function Profile() {
 
   return (
     <>
-      <TopNavBar title={'Profile'} />
       <MainContainer>
+        <TopNavBar title={'Profile'} />
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (
@@ -47,8 +47,8 @@ export default function Profile() {
             <DetailsCard />
           </CardContainer>
         </ProfileComponent>
+        <BottomNavBar />
       </MainContainer>
-      <BottomNavBar />
     </>
   )
 }
