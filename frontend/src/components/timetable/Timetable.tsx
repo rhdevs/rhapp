@@ -125,7 +125,8 @@ function Timetable(props: Props) {
     startTime: '1000',
   }
 
-  console.log(props.events)
+  // console.log(props.events)
+
   return (
     <TimetableContainer>
       <TimetableWithTimeContainer>

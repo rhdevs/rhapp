@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import EventCell from './EventCell'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
+import { fetchUserRhEvents } from '../../store/scheduling/actions'
 
 const TimetableRowContainer = styled.li`
   position: relative;
@@ -66,7 +69,10 @@ type Props = {
 }
 
 function TimetableRow(props: Props) {
-  console.log(props.children)
+  // const dispatch = useDispatch()
+  const { userRhEvents } = useSelector((state: RootState) => state.scheduling)
+
+  // console.log(props.children)
   return (
     <TimetableRowContainer>
       <DayContainer>
@@ -87,8 +93,8 @@ function TimetableRow(props: Props) {
             <></>
           )}
         </ChildrenContainer> */}
-        {props.children.map((individualEvent, index) => {
-          console.log(individualEvent)
+        {userRhEvents.map((individualEvent, index) => {
+          // console.log(individualEvent)
           return (
             <ChildrenContainer
               key={index}

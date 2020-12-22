@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
-import { useDispatch } from 'react-redux'
 import dummyAvatar from '../../assets/dummyAvatar.svg'
-import { redirect } from '../../store/route/action'
 import { PATHS } from '../Routes'
-// import { RootState } from '../../store/types'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useHistory } from 'react-router-dom'
+import { RootState } from '../../store/types'
+import { Radio } from 'antd'
+import 'antd/dist/antd.css'
+import { changeTab, getFacilityList } from '../../store/facilityBooking/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -48,53 +51,74 @@ const FacilityLabels = styled.div`
   align-self: center;
 `
 
+const StyledRadioGroup = styled(Radio.Group)`
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: red;
+  }
+  .ant-radio-button-wrapper {
+    font-family: Inter;
+  }
+`
+
+const StyledRadioGroupDiv = styled.div`
+  overflow: auto;
+  white-space: nowrap;
+  margin-left: 23px;
+`
+
 export default function FacilityBooking() {
   const dispatch = useDispatch()
-  // const { sampleStateText } = useSelector((state: RootState) => state.home)
+  const history = useHistory()
+  const { facilityList, locationList, selectedTab } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    // fetch all default facilities
+    dispatch(getFacilityList())
   }, [dispatch])
 
-  const navigateToMyBookings = () => {
-    console.log('My bookings')
-  }
+  const MyBookingIcon = (
+    <img
+      src={bookingsIcon}
+      onClick={() => {
+        history.push(PATHS.VIEW_MY_BOOKINGS)
+      }}
+    />
+  )
 
-  const handleSelectFacility = (facility: FacilityType) => {
-    console.log('Selected facility ' + facility.name)
-    dispatch(redirect(PATHS.HOME_PAGE))
+  const onChangeTab = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeTab(e.target.value))
   }
-
-  const MyBookingIcon = <img src={bookingsIcon} onClick={navigateToMyBookings} />
-
-  // To change up when backend is up
-  interface FacilityType {
-    name: string
-    location: string
-  }
-  const DummyFacilities = [
-    { name: 'Conference Room', location: 'Upper Lounge' },
-    { name: 'Alumni Room', location: 'Upper Lounge' },
-  ]
 
   return (
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
-        {DummyFacilities.map((facility) => (
-          <FacilityCard
-            key={facility.name}
-            onClick={() => {
-              handleSelectFacility(facility)
-            }}
-          >
-            <FacilityAvatar src={dummyAvatar} />
-            <FacilityLabels>
-              <FacilityHeader>{facility.name}</FacilityHeader>
-              <FacilitySubHeader>{facility.location}</FacilitySubHeader>
-            </FacilityLabels>
-          </FacilityCard>
-        ))}
+        <StyledRadioGroupDiv onChange={onChangeTab}>
+          <StyledRadioGroup defaultValue={locationList[0]}>
+            {locationList.map((location, idx) => (
+              <Radio.Button key={idx} value={location}>
+                {location}
+              </Radio.Button>
+            ))}
+          </StyledRadioGroup>
+        </StyledRadioGroupDiv>
+        {facilityList.map((facility) => {
+          if (facility.facilityLocation === selectedTab || selectedTab === '')
+            return (
+              <FacilityCard
+                key={facility.facilityID}
+                onClick={() => {
+                  history.push('/facility/view/' + facility.facilityName)
+                }}
+              >
+                <FacilityAvatar src={dummyAvatar} />
+                <FacilityLabels>
+                  <FacilityHeader>{facility.facilityName}</FacilityHeader>
+                  <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
+                </FacilityLabels>
+              </FacilityCard>
+            )
+        })}
+        <BottomNavBar />
       </MainContainer>
     </>
   )
