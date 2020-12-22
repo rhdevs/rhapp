@@ -15,7 +15,7 @@ const TitleText = styled.text`
   }
 `
 
-const DescriptionText = styled.text`
+const LocationText = styled.text`
   color: grey;
   font-family: Inter;
   font-size: 14px;
@@ -44,21 +44,22 @@ const BottomLineContainer = styled.div`
 `
 
 type Props = {
-  eventStartTime?: number
-  eventEndTime?: number
-  eventTitle: string
-  eventDescription: string
+  eventStartTime?: string
+  eventEndTime?: string
+  eventTitle?: string
+  eventLocation?: string
   eventCellColor?: string
   numberOfHours?: number
 }
 
 function EventCell(props: Props) {
-  const width = (props.numberOfHours ?? 1) * 8 + 'rem'
+  const width =
+    (props.numberOfHours ?? (Number(props.eventEndTime) - Number(props.eventStartTime)) / 100 ?? 1) * 8 - 0.0625 + 'rem'
   return (
     <EventContainer>
       <ContentContainer style={{ backgroundColor: props.eventCellColor ?? '#ffe0b2', width: width }}>
         <TitleText>{props.eventTitle}</TitleText>
-        <DescriptionText>{props.eventDescription}</DescriptionText>
+        <LocationText>{props.eventLocation}</LocationText>
       </ContentContainer>
       <BottomLineContainer
         style={{ backgroundColor: props.eventCellColor ?? '#ffe0b2', width: width }}
