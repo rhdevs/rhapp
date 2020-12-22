@@ -12,7 +12,7 @@ app = Flask("rhapp")
 @app.route("/timetable/all/<userID>")
 def getUserTimetable(userID):
     try:
-        data = db.UserLesson.find({"userID": userID}).pretty()
+        data = db.UserLesson.find({"userID": userID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -30,7 +30,7 @@ def getAllUsers():
 @ app.route('/event/all')
 def getAllEvents():
     try:
-        data = db.Event.find().pretty()
+        data = db.Event.find()
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -39,7 +39,7 @@ def getAllEvents():
 @ app.route('/cca/all')
 def getAllCCA():
     try:
-        data = db.CCA.find().pretty()
+        data = db.CCA.find()
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -48,7 +48,7 @@ def getAllCCA():
 @ app.route('/event/<int:eventID>')
 def getEventDetails(eventID):
     try:
-        data = db.Event.find({"eventID": eventID}).pretty()
+        data = db.Event.find({"eventID": eventID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -57,7 +57,7 @@ def getEventDetails(eventID):
 @ app.route('/cca/<int:ccaID>')
 def getCCADetails(ccaID):
     try:
-        data = db.CCA.find({"ccaID": ccaID}).pretty()
+        data = db.CCA.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -66,7 +66,7 @@ def getCCADetails(ccaID):
 @ app.route('/lesson/<int:lessonID>')
 def getLessonDetails(lessonID):
     try:
-        data = db.Lessons.find({"lessonID": lessonID}).pretty()
+        data = db.Lessons.find({"lessonID": lessonID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -75,7 +75,7 @@ def getLessonDetails(lessonID):
 @ app.route("/user_CCA/<userID>")
 def getUserCCAs(userID):
     try:
-        data = db.UserCCA.find({"userID": userID}).pretty()
+        data = db.UserCCA.find({"userID": userID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -84,7 +84,7 @@ def getUserCCAs(userID):
 @ app.route("/user_event/<userID>")
 def getUserEvents(userID):
     try:
-        data = db.UserEvent.find({"userID": userID}).pretty()
+        data = db.UserEvent.find({"userID": userID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -93,7 +93,7 @@ def getUserEvents(userID):
 @ app.route("/user_lesson/<userID>")
 def getUserLessons(userID):
     try:
-        data = db.UserLesson.find({"userID": userID}).pretty()
+        data = db.UserLesson.find({"userID": userID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -102,7 +102,7 @@ def getUserLessons(userID):
 @ app.route("/user_event/<int:eventID>")
 def getEventAttendees(eventID):
     try:
-        data = db.UserEvent.find({"eventID": eventID}).pretty()
+        data = db.UserEvent.find({"eventID": eventID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -111,7 +111,7 @@ def getEventAttendees(eventID):
 @ app.route("/user_CCA/<int:ccaID>")
 def getCcaMembers(ccaID):
     try:
-        data = db.UserCCA.find({"ccaID": ccaID}).pretty()
+        data = db.UserCCA.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -120,7 +120,7 @@ def getCcaMembers(ccaID):
 @ app.route("/permissions/<userID>")
 def getUserPermissions(userID):
     try:
-        data = db.UserPermissions.find({"recipient": userID}).pretty()
+        data = db.UserPermissions.find({"recipient": userID})
     except Exception as e:
         return {"err": e}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
