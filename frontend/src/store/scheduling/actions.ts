@@ -15,32 +15,32 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
       startTime: getTimeStringFromUNIX(data.startDateTime),
     })
   })
-  console.log(formattedEvents[0].startTime + ' to ' + formattedEvents[0].endTime)
   dispatch({
     type: SCHEDULING_ACTIONS.GET_RH_EVENTS,
     userRhEvents: transformInformationToTimetableFormat(formattedEvents),
     userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
     userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
   })
-  console.log(transformInformationToTimetableFormat(formattedEvents))
+}
+
+const sortEvents = (events: RHEvent[]) => {
+  return events.sort((a, b) => {
+    return a.startTime.localeCompare(b.startTime)
+  })
 }
 
 const getTimetableStartTime = (formattedEvents: RHEvent[]) => {
-  const sortedEvents = formattedEvents.sort((a, b) => {
-    return a.startTime.localeCompare(b.startTime)
-  })
-  return sortedEvents[0].startTime
+  const sortedEvents = sortEvents(formattedEvents)
+  return sortedEvents[0]?.startTime
 }
 
 const getTimetableEndTime = (formattedEvents: RHEvent[]) => {
-  const sortedEvents = formattedEvents.sort((a, b) => {
-    return a.startTime.localeCompare(b.startTime)
-  })
+  const sortedEvents = sortEvents(formattedEvents)
   return last(sortedEvents)?.endTime
 }
 
 /**
- * Returns an array containing arrays of respective days filled with RHEvents
+ * Returns a 2d array containing arrays of respective days filled with RHEvents
  * [
  *    [Monday events],
  *    [Tuesday events], ..
@@ -56,7 +56,6 @@ const splitEventsByDay = (formattedEvents: RHEvent[]) => {
       return indivEvent.day === day
     })
   })
-  console.log(eventsArr)
   return eventsArr
 }
 
@@ -95,6 +94,8 @@ const transformInformationToTimetableFormat = (formattedEvents: RHEvent[]) => {
  *    [event1, event2, ..],
  *    [event10, event20, ..], ..
  * ]
+ *
+ * @param events array of events for a specific day
  */
 const arrangeEventsWithinDay = (events: RHEvent[]) => {
   const rows: RHEvent[][] = []
@@ -102,9 +103,7 @@ const arrangeEventsWithinDay = (events: RHEvent[]) => {
     return rows
   }
 
-  const sortedEvents = events.sort((a, b) => {
-    return a.startTime.localeCompare(b.startTime)
-  })
+  const sortedEvents = sortEvents(events)
 
   sortedEvents.forEach((event: RHEvent) => {
     for (let i = 0; i < rows.length; i++) {
@@ -146,7 +145,7 @@ const getDayStringFromUNIX = (unixDate: number) => {
   }
 }
 
-// converts a unix string into date format and returns the time of string type in 24hour format
+// Converts a unix string into date format and returns the time of string type in 24hour format
 const getTimeStringFromUNIX = (unixDate: number) => {
   // Create a new JavaScript Date object based on the timestamp
   // multiplied by 1000 so that the argument is in milliseconds, not seconds.

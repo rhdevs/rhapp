@@ -4,7 +4,7 @@ import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 const initialState = {
   userRhEvents: [],
   userEventsStartTime: 0,
-  userEventsEndTime: 0,
+  userEventsEndTime: 2400,
 }
 
 type State = {

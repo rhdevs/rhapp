@@ -74,7 +74,7 @@ export const LESSON_SEP = ','
 
 const testLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
-//moduleCode=lessonType:classNo,lessonType:classNo
+// moduleCode=lessonType:classNo,lessonType:classNo
 // AC5002=LEC:1
 // CG1112=LAB:04,TUT:01,LEC:01
 // CG2023=LAB:05,PTUT:03,PLEC:02
@@ -151,6 +151,10 @@ export default function Schedule() {
     })
   }
 
+  doSomething()
+  const [events] = useState<RHEvent[]>([])
+  console.log(events)
+
   const rightIcon = (
     <MenuDropdown
       menuItem={
@@ -192,9 +196,6 @@ export default function Schedule() {
     />
   )
 
-  doSomething()
-  const [events] = useState<RHEvent[]>([])
-  console.log(events)
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
