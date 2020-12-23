@@ -1,9 +1,24 @@
 from flask import Flask, request
 import pymongo, json
 from datetime import datetime
+
+def listToIndexedDict(xs):
+    output = {}
+    for i,item in enumerate(xs, start=0) :
+        del xs[i]["_id"]
+        output[i] = item
+    return output
+
+def removeObjectID(xs):
+    for i,item in enumerate(xs, start=0) :
+        del xs[i]["_id"] 
+    return xs
+
+
+
 #MongoDB
-myclient = pymongo.MongoClient("mongodb+srv://rhdevs-admin-db:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
-db = myclient.test
+myclient = client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+db = myclient["RHApp"]
 
 
 #Flask
@@ -24,19 +39,22 @@ def root_route():
 @app.route('/facilities/all')
 def all_facilities(): 
     try :
-        data = db.Facilities.find()
+        print("testing 1")
+        data = listToIndexedDict(list(db.Facilities.find()))
         print(data)
+
+        
     except Exception as e:
-        return {"err": e}, 400
+        print(e)
+        return "err", 400
     return data, 200
 
 @app.route('/bookings/user/<userID>')
 def user_bookings(userID) :
     try:
-        data = db.Bookings.find({"userID" : userID})
-        data = "Test 2"
+        data = listToIndexedDict(list(db.Bookings.find({"userID" : userID})))
     except Exception as e:
-        return {"err": e}, 400
+        return "err", 400
     return data, 200
 
 
@@ -44,32 +62,33 @@ def user_bookings(userID) :
 def check_bookings(facilityID):
     print('TESTING 0')
     try :
-        startDate = datetime.strptime(request.args.get('startDate'), "%Y-%m-%d").date()
-        endDate = datetime.strptime(request.args.get('endDate'), "%Y-%m-%d").date()
-        data = db.Bookings.find({"facilityID": facilityID, "startDate" : {"$gt": startDate}, "endDate": {"$lt" : endDate}})
-        data = {"start" : startDate, "end" : endDate,"test" : "Test 3"}
+        data = listToIndexedDict(list(db.Bookings.find({"facilityID": facilityID, "startTime" : {"$gt": request.args.get('startDate')}, "endTime": {"$lt" : request.args.get('endDate')}})))
     except Exception as e:
-        return {"err": e}, 400
+        return "err", 400
+    return data
 
     return data, 200
 @app.route('/users/telegramID/<userID>')
 def user_telegram(userID) :
     try :
-        data = db.User.find({"userID" : userID})['telegramHandle']
-        data = userID
+        data = list(db.User.find({"userID" : userID}))[0]['telegramHandle']
     except Exception as e:
         print(e)
-        return {"err": e}, 400
+        return "err", 400
     return data, 200
 
 @app.route('/bookings', methods=['POST'])
 def add_booking() :
     try:
-        formData = request.form
-        db.Bookings.insertOne(formData)
+        print("Testing 2")
+
+        formData = request.form.to_dict()
         print(formData, " test4")
+        db.Bookings.insert(formData)
+        
     except Exception as e:
-        return {"err": e}, 400
+        print(e)
+        return "err", 400
 
     return {"message": "Booking Confirmed"}, 200
 
@@ -79,22 +98,24 @@ def add_booking() :
 @app.route('/bookings/<bookingID>', methods=['GET'])
 def get_booking(bookingID) :
     try:
-        #data = db.Bookings.find({"bookingID":bookingID}), 200
-        data = bookingID + " Test 5"
+        data = listToIndexedDict(list(db.Bookings.find({"bookingID":bookingID})))
     except Exception as e:
-        return {"err": e}, 400
+        print(e)
+        return "err", 400
     return data, 200
      
 @app.route('/bookings/<bookingID>', methods=['PUT'])
 def edit_booking(bookingID) :
     try : 
-        if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID})['userID'] :
-            db.Bookings.findOneAndUpdate({"bookingID": bookingID}, {request.form})
-            print(bookingID, request.form, "Test6")
-        else:
-            return {"err": "Unauthorised Access"}, 401
+        # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
+            print(bookingID, request.form.to_dict(), "Test6")
+            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.form.to_dict()})
+            
+        # else:
+        #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
-        return {"err": e}, 400
+        print(e)
+        return "err", 400
     
     return {"message" : "Booking edited"}, 200
 
@@ -102,13 +123,14 @@ def edit_booking(bookingID) :
 @app.route('/bookings/<bookingID>', methods=['DELETE'])
 def delete_booking(bookingID) :
     try :
-        if request.cookies.get("userID") == db.Bookings.find({"bookingID" : bookingID}).get('userID') :
+        # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0].get('userID') :
             db.Bookings.remove({"bookingID" : bookingID})
             print(bookingID, "Test7")
-        else:
-            return {"err": "Unauthorised Access"}, 401
+        # else:
+        #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
-        return {"err": e}, 400
+        print(e)
+        return "err", 400
     
     return {"message" : "Booking Deleted"}, 200
 
@@ -133,3 +155,6 @@ def authenticate(cookie) :
         return False
 
     return True
+
+
+    
