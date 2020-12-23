@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-// from nusmods: style="margin-left: calc(50% + 1px); width: calc(37.5% - 1px);"
 const TitleText = styled.text`
   color: black;
   font-family: Inter;

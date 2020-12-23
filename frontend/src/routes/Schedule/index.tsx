@@ -251,7 +251,7 @@ export default function Schedule() {
         </SmallContainer>
         <Tags options={['Group1', 'Group2']} />
       </GroupContainer>
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Background>
   )
 }
