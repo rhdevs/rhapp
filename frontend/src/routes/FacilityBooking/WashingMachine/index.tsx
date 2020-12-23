@@ -27,12 +27,12 @@ const Selectors = styled.div`
   display: flex;
 `
 
-const FirstSelector = styled.div`
+const BlockSelector = styled.div`
   position: relative;
   left: 23px;
 `
 
-const SecondSelector = styled.div`
+const FloorSelector = styled.div`
   position: relative;
   right: 0px;
 `
@@ -50,12 +50,12 @@ export default function ViewBooking() {
       <MainContainer>
         <TopNavBar title={'Laundry Time'} />
         <Selectors>
-          <FirstSelector>
+          <BlockSelector>
             <Selector SelectedValue={'Choose your block'} ValueArray={['2', '3']} />
-          </FirstSelector>
-          <SecondSelector>
+          </BlockSelector>
+          <FloorSelector>
             <Selector SelectedValue={'Choose your level'} ValueArray={['2', '3']} />
-          </SecondSelector>
+          </FloorSelector>
         </Selectors>
         <BasicCard />
         <BottomNavBar />

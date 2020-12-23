@@ -8,7 +8,7 @@ import { addMinutes } from 'date-fns'
 import styled from 'styled-components'
 import '../../assets/fonts.css'
 import TopNavBar from '../Mobile/TopNavBar'
-//styling
+
 const Container = styled.div`
   margin: 0 auto;
   margin-top: 40px;
@@ -219,9 +219,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     return `${value} minutes`
   }
 
-  function button1Press(e: React.MouseEvent<HTMLElement, MouseEvent>) {
-    //top button
-    //button 1
+  function ActionButton1(e: React.MouseEvent<HTMLElement, MouseEvent>) {
     //e.preventDefault()
     if (page.status === reserved) {
       setStatus(available)
@@ -230,9 +228,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     }
   }
 
-  function button2Press(e: React.MouseEvent<HTMLElement, MouseEvent>) {
-    //bottom button
-    //button2
+  function ActionButton2(e: React.MouseEvent<HTMLElement, MouseEvent>) {
     //e.preventDefault()
     if (page.status === reserved) {
       setStatus(using)
@@ -302,7 +298,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
               )}
               {page.showbutton1 && (
                 <ButtonContainer1>
-                  <Button type="primary" onClick={(e) => button1Press(e)}>
+                  <Button type="primary" onClick={(e) => ActionButton1(e)}>
                     {page.button1}
                   </Button>
                 </ButtonContainer1>
@@ -341,7 +337,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
           )}
           {page.showbutton2 && (
             <ButtonContainer2>
-              <Button type="primary" onClick={(e) => button2Press(e)} block>
+              <Button type="primary" onClick={(e) => ActionButton2(e)} block>
                 {page.button2}
               </Button>
             </ButtonContainer2>
