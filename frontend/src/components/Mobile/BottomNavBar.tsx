@@ -21,35 +21,15 @@ const BottomNav = styled.div`
   bottom: 0;
   width: 100%;
 `
-const StyledNavBar = styled(NavBar)`
-  &.am-navbar {
-    height: 70px;
-    background-color: #fafaf4; !important
-  }
-  padding: 15px;
-  max-width:100%;
+
+const BottomNav = styled.div`
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 `
-const NavBarIcons = styled(Icon)`
-  &.am-icon-md {
-    width: 28px;
-    height: 28px;
-  }
-  padding-right: 11px;
-  width: 40px;
-  height: 40px;
-`
-// UNDONE, feel free to complete
-function TopNavBar({
-  title,
-  leftIcon,
-  leftIconComponent,
-  rightComponent,
-}: {
-  title: string
-  leftIcon?: boolean
-  leftIconComponent?: ReactElement
-  rightComponent?: ReactElement
-}) {
+
+function BottomNavBar() {
   const history = useHistory()
   const location = useLocation()
 
@@ -115,4 +95,4 @@ function TopNavBar({
   )
 }
 
-export default TopNavBar
+export default BottomNavBar

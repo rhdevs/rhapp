@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -15,12 +14,9 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import ScrollToTopButton from '../../components/Mobile/ScrollToTopButton'
 
 const MainContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   background-color: #fafaf4;
-`
-const Navigations = styled.div`
-  padding-left: 23px;
 `
 
 const TopBar = styled.div`
@@ -48,6 +44,8 @@ const TemporaryRoutes = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const { sampleStateText } = useSelector((state: RootState) => state.home)
+
+  const leftIcon = <button>Hello</button>
 
   const onButtonClick = () => {
     dispatch(getUpdateMockString())
