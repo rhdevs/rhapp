@@ -19,7 +19,7 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING = '/facility/booking/:bookingId',
   VIEW_MY_BOOKINGS = '/facility/mybooking/:userId',
   // FACILITY WASHING MACHINE
-  WM_PRE_SELECTION = '/washingmachine',
+  WASHING_MACHINE = '/washingmachine',
   LAUNDRY_PAGE = '/laundrypage',
 }
 
@@ -37,7 +37,7 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 // FACILITY WASHING MACHINE
-const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
+const WashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
 const LaundryPage = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/LaundryPage'))
 
 export default class Routes extends React.Component {
@@ -59,7 +59,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
 
-            <Route exact path={PATHS.WM_PRE_SELECTION} component={WmPreSelection} />
+            <Route exact path={PATHS.WASHING_MACHINE} component={WashingMachine} />
             <Route exact path={PATHS.LAUNDRY_PAGE} component={LaundryPage} />
           </Switch>
         </Suspense>
