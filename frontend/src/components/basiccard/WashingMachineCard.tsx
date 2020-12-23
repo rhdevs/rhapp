@@ -71,7 +71,7 @@ const FacilitySubHeader = styled.p`
   margin-top: 10px;
   margin-right: 10px;
 `
-const FacilityBooking = ({
+const WashingMachineCard = ({
   status,
   serial,
   colour,
@@ -174,4 +174,4 @@ const FacilityBooking = ({
 }
 
 //year, month, day, hour, minutes, seconds
-export { FacilityBooking }
+export { WashingMachineCard }

@@ -2,16 +2,14 @@ import React from 'react'
 import bell from '../../assets/bell.svg'
 import collect from '../../assets/collect.svg'
 import reserve from '../../assets/reserve.svg'
-import tickblack from '../../assets/tickblack.svg'
-import tickred from '../../assets/tickred.svg'
 import blank from '../../assets/blank.svg'
-import { FacilityBooking } from './test'
-import { available, using, uncollected, completed, reserved } from '../laundrypage/status'
+import { WashingMachineCard } from './WashingMachineCard'
+import { available, using, uncollected, completed } from '../laundrypage/status'
 
 const BasicCard = () => {
   return (
     <div>
-      <FacilityBooking
+      <WashingMachineCard
         status={available}
         serial={'S/N 123456'}
         colour={'black'}
@@ -19,7 +17,7 @@ const BasicCard = () => {
         caption={'Reserve'}
         timer={false}
       />
-      <FacilityBooking
+      <WashingMachineCard
         status={using}
         serial={'S/N 123456'}
         colour={'#EB5757'}
@@ -27,7 +25,7 @@ const BasicCard = () => {
         caption={'remaining'}
         timer={true}
       />
-      <FacilityBooking
+      <WashingMachineCard
         status={uncollected}
         serial={'S/N 123456'}
         colour={'#EB5757'}
@@ -35,7 +33,7 @@ const BasicCard = () => {
         caption={'Notify'}
         timer={false}
       />
-      <FacilityBooking
+      <WashingMachineCard
         status={completed}
         serial={'S/N 123456'}
         colour={'#EB5757'}

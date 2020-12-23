@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Laundry } from './test2'
-import { available, using, edit, completed, reserved } from '../laundrypage/status'
+import { Laundry } from './Laundry'
+import { available, using, edit, completed, reserved } from './status'
 
 const LaundryPage = () => {
   return (

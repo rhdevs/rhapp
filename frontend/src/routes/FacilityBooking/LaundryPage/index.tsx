@@ -4,12 +4,10 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { useDispatch } from 'react-redux'
 // import { RootState } from '../../store/types'
-import { Laundry } from '../../../components/laundrypage/test2'
+import { Laundry } from '../../../components/laundrypage/Laundry'
 import { available, using, edit, completed, reserved } from '../../../components/laundrypage/status'
 import styled from 'styled-components'
 import '../../../assets/fonts.css'
-
-import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -24,13 +22,12 @@ const MainContainer = styled.div`
 export default function ViewBooking() {
   const dispatch = useDispatch()
   // const { sampleStateText } = useSelector((state: RootState) => state.home)
-  const history = useHistory()
 
   useEffect(() => {
     // fetch all default facilities
   }, [dispatch])
 
-  const [navCap, setNavCap] = useState('Reservation')
+  const [] = useState('Reservation')
 
   return (
     <>
