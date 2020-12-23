@@ -1,47 +1,131 @@
+import { isEmpty, last } from 'lodash'
 import { userRhEventsDummy } from '../stubs'
 import { Dispatch } from '../types'
 import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
   const fetchedData = userRhEventsDummy
-  // eventID	INT
-  // eventName	VARCHAR
-  // startDateTime	LOCALDATETIME
-  // endDateTime	LOCALDATETIME
-  // description	VARCHAR
-  // location	VARCHAR
-  // ccaID	INT
-  // userID	VARCHAR
-  // image	VARCHAR
-
-  // {
-  //   eventName: 'dummy event',
-  //   location: 'in my room',
-  //   day: 'Monday',
-  //   endTime: '1200',
-  //   startTime: '1000',
-  // },
-
   const formattedEvents: RHEvent[] = []
   fetchedData.forEach((data) => {
     formattedEvents.push({
       eventName: data.eventName,
       location: data.location,
       day: getDayStringFromUNIX(data.startDateTime),
-      // endTime: getTimeStringFromUNIX(data.endDateTime),
-      // startTime: getTimeStringFromUNIX(data.startDateTime),
-      endTime: '1200',
-      startTime: '1000',
+      endTime: getTimeStringFromUNIX(data.endDateTime),
+      startTime: getTimeStringFromUNIX(data.startDateTime),
     })
   })
-
+  console.log(formattedEvents[0].startTime + ' to ' + formattedEvents[0].endTime)
   dispatch({
     type: SCHEDULING_ACTIONS.GET_RH_EVENTS,
-    userRhEvents: formattedEvents,
+    userRhEvents: transformInformationToTimetableFormat(formattedEvents),
+    userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
+    userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
+  })
+  console.log(transformInformationToTimetableFormat(formattedEvents))
+}
+
+const getTimetableStartTime = (formattedEvents: RHEvent[]) => {
+  const sortedEvents = formattedEvents.sort((a, b) => {
+    return a.startTime.localeCompare(b.startTime)
+  })
+  return sortedEvents[0].startTime
+}
+
+const getTimetableEndTime = (formattedEvents: RHEvent[]) => {
+  const sortedEvents = formattedEvents.sort((a, b) => {
+    return a.startTime.localeCompare(b.startTime)
+  })
+  return last(sortedEvents)?.endTime
+}
+
+/**
+ * Returns an array containing arrays of respective days filled with RHEvents
+ * [
+ *    [Monday events],
+ *    [Tuesday events], ..
+ * ]
+ *
+ * @param formattedEvents events in RHEvent format (transformed from data retrieved from backend)
+ */
+const splitEventsByDay = (formattedEvents: RHEvent[]) => {
+  const dayArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  const eventsArr: RHEvent[][] = []
+  dayArr.map((day, index) => {
+    eventsArr[index] = formattedEvents.filter((indivEvent) => {
+      return indivEvent.day === day
+    })
+  })
+  console.log(eventsArr)
+  return eventsArr
+}
+
+const arrangeEventsForWeek = (eventsArr: RHEvent[][]) => {
+  return eventsArr.map((dayArr) => {
+    return arrangeEventsWithinDay(dayArr)
   })
 }
 
-// converts a unix string into date format and returns the day in string
+/**
+ * Converts formatted events retrieved from backend into a 3d array arranged by day and rows
+ * where events do not overlap
+ * [
+ *    [
+ *      [monEvent1, monEvent2, ..],
+ *      [monEvent10, monEvent20, ..], ..
+ *    ],
+ *    [
+ *      [tueEvent1, tueEvent2, ..], ..
+ *    ], ..
+ * ]
+ *
+ * @param formattedEvents events in RHEvent format (transformed from data retrieved from backend)
+ */
+const transformInformationToTimetableFormat = (formattedEvents: RHEvent[]) => {
+  const eventsArr = splitEventsByDay(formattedEvents)
+  const transformedEventsArr = arrangeEventsForWeek(eventsArr)
+  return transformedEventsArr
+}
+
+/**
+ * Converts a flat array of events for ONE day into rows of events within that day row
+ * to ensure no events overlap within each row of events
+ * [event1, event2, ..] to
+ * [
+ *    [event1, event2, ..],
+ *    [event10, event20, ..], ..
+ * ]
+ */
+const arrangeEventsWithinDay = (events: RHEvent[]) => {
+  const rows: RHEvent[][] = []
+  if (isEmpty(events)) {
+    return rows
+  }
+
+  const sortedEvents = events.sort((a, b) => {
+    return a.startTime.localeCompare(b.startTime)
+  })
+
+  sortedEvents.forEach((event: RHEvent) => {
+    for (let i = 0; i < rows.length; i++) {
+      const rowEvents: RHEvent[] = rows[i]
+      const previousEvents = last(rowEvents)
+      if (!previousEvents || !doEventsOverlap(previousEvents, event)) {
+        rowEvents.push(event)
+        return
+      }
+    }
+    rows.push([event])
+  })
+  return rows
+}
+
+// Determines if two events overlap
+const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
+  return event1.day === event2.day && event1.startTime < event2.endTime && event2.startTime < event1.endTime
+}
+
+// Converts a unix string into date format and returns the day in string
 const getDayStringFromUNIX = (unixDate: number) => {
   const dayInInt = new Date(unixDate * 1000).getDay()
   switch (dayInInt) {
@@ -62,7 +146,15 @@ const getDayStringFromUNIX = (unixDate: number) => {
   }
 }
 
+// converts a unix string into date format and returns the time of string type in 24hour format
 const getTimeStringFromUNIX = (unixDate: number) => {
-  //assume returns;
-  return new Date(unixDate).toLocaleTimeString('en-US').toString()
+  // Create a new JavaScript Date object based on the timestamp
+  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+  const date = new Date(unixDate * 1000)
+  const hours = '0' + date.getHours()
+  const minutes = '0' + date.getMinutes()
+
+  const formattedTime = hours.substr(-2) + minutes.substr(-2)
+
+  return formattedTime
 }

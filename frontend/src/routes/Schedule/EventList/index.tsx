@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { LeftOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -63,6 +63,7 @@ const testData: CurrentEvents[] = [
 ]
 
 export default function EventList({ currentEvents }: { currentEvents: CurrentEvents[] }) {
+  const history = useHistory()
   const data = currentEvents ?? testData
   const [searchValue, setSearchValue] = useState('')
 
@@ -72,9 +73,12 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
   }
 
   const leftIcon = (
-    <Link to={'/schedule'}>
-      <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-    </Link>
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px' }}
+      onClick={() => {
+        history.goBack()
+      }}
+    />
   )
 
   return (

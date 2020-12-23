@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import EventCell from './EventCell'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/types'
-import { fetchUserRhEvents } from '../../store/scheduling/actions'
+import { RHEvent } from '../../store/scheduling/types'
 
 const TimetableRowContainer = styled.li`
   position: relative;
@@ -32,7 +30,7 @@ const DayContainer = styled.div`
 `
 
 const DaySpanContainer = styled.span`
-  width: 0.6rem;
+  width: 0.7rem;
   font-size: 0.85rem;
   line-height: 1.1;
   word-break: break-all;
@@ -48,68 +46,58 @@ const TimetableDayContainer = styled.div`
   flex: 0 1 auto;
 `
 
-const ChildrenContainer = styled.div``
-// margin-left: calc(0.0625rem);
-
-type RHEvent = {
-  eventName: string
-  location: string
-  day: string
-  endTime: string
-  startTime: string
-}
+const ChildrenContainer = styled.div`
+  display: flex;
+`
 
 type Props = {
+  events: RHEvent[][]
   timetableStartTime: number
   timetableEndTime: number
   day: string
   width?: number
-  children: RHEvent[]
-  //   children?: RHEvent
+}
+
+type day = { [day: string]: number }
+export const DAY_TO_NUMBER: day = {
+  mon: 0,
+  tue: 1,
+  wed: 2,
+  thu: 3,
+  fri: 4,
+  sat: 5,
+  sun: 6,
 }
 
 function TimetableRow(props: Props) {
-  // const dispatch = useDispatch()
-  const { userRhEvents } = useSelector((state: RootState) => state.scheduling)
-
-  // console.log(props.children)
   return (
     <TimetableRowContainer>
       <DayContainer>
         <DaySpanContainer>{props.day}</DaySpanContainer>
       </DayContainer>
-      <TimetableDayContainer style={{ width: props.width + 'rem' }}>
-        {/* <ChildrenContainer
-          style={{ marginLeft: `calc((${Number(props.children?.startTime)}-${props.timetableStartTime})/100 * 8rem)` }}
-        >
-          {props.children ? (
-            <EventCell
-              eventStartTime={props.children?.startTime}
-              eventEndTime={props.children?.endTime}
-              eventTitle={props.children?.eventName}
-              eventLocation={props.children?.location}
-            />
-          ) : (
-            <></>
-          )}
-        </ChildrenContainer> */}
-        {userRhEvents.map((individualEvent, index) => {
-          // console.log(individualEvent)
+      <TimetableDayContainer style={{ minWidth: props.width + 'rem' }}>
+        {props.events?.map((eventRow, index) => {
           return (
-            <ChildrenContainer
-              key={index}
-              style={{
-                marginLeft: `calc((${Number(individualEvent.startTime)}-${
-                  props.timetableStartTime
-                })/100 * 8rem + 0.0625rem)`,
-              }}
-            >
-              <EventCell
-                eventStartTime={individualEvent.startTime}
-                eventEndTime={individualEvent.endTime}
-                eventTitle={individualEvent.eventName}
-                eventLocation={individualEvent.location}
-              />
+            <ChildrenContainer key={index}>
+              {eventRow.map((individualEvent, index) => {
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      marginLeft: `calc((${Number(individualEvent.startTime)} - ${
+                        index === 0 ? props.timetableStartTime : Number(eventRow[index - 1].endTime)
+                      }) / 100 * 8rem + 0.0625rem)`,
+                    }}
+                  >
+                    <EventCell
+                      eventStartTime={individualEvent.startTime}
+                      eventEndTime={individualEvent.endTime}
+                      eventTitle={individualEvent.eventName}
+                      eventLocation={individualEvent.location}
+                    />
+                  </div>
+                )
+              })}
             </ChildrenContainer>
           )
         })}

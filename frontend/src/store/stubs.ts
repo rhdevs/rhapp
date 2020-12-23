@@ -47,14 +47,56 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
+// eventID	INT
+// eventName	VARCHAR
+// startDateTime	LOCALDATETIME
+// endDateTime	LOCALDATETIME
+// description	VARCHAR
+// location	VARCHAR
+// ccaID	INT
+// userID	VARCHAR
+// image	VARCHAR
 export const userRhEventsDummy = [
   {
     eventID: 1,
+    eventName: 'dummy event 4',
+    startDateTime: 1607418000,
+    endDateTime: 1607428800,
+    description: 'nothing',
+    location: 'hall',
+    ccaID: 1,
+    userID: 1,
+    image: null,
+  },
+  {
+    eventID: 1,
     eventName: 'bonding camp',
-    startDateTime: 1608658452,
-    endDateTime: 1608654852,
+    startDateTime: 1608654852,
+    endDateTime: 1608658452,
     description: 'nothing',
     location: 'upper lounge',
+    ccaID: 1,
+    userID: 1,
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: '2nd bonding camp',
+    startDateTime: 1607342400,
+    endDateTime: 1607349600,
+    description: 'nothing',
+    location: 'hall',
+    ccaID: 1,
+    userID: 1,
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'dummy event 3',
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
+    description: 'nothing',
+    location: 'hall',
     ccaID: 1,
     userID: 1,
     image: null,

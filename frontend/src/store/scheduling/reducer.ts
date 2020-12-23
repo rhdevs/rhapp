@@ -3,10 +3,14 @@ import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 
 const initialState = {
   userRhEvents: [],
+  userEventsStartTime: 0,
+  userEventsEndTime: 0,
 }
 
 type State = {
-  userRhEvents: RHEvent[]
+  userRhEvents: RHEvent[][][]
+  userEventsStartTime: number
+  userEventsEndTime: number
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -15,6 +19,8 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         userRhEvents: action.userRhEvents,
+        userEventsStartTime: action.userEventsStartTime,
+        userEventsEndTime: action.userEventsEndTime,
       }
     }
     default:

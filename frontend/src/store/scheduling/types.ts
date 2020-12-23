@@ -26,7 +26,9 @@ export enum SCHEDULING_ACTIONS {
 
 type GetRhEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
-  userRhEvents: RHEvent[]
+  userRhEvents: RHEvent[][][]
+  userEventsStartTime: number
+  userEventsEndTime: number
 }
 
 export type ActionTypes = GetRhEvents

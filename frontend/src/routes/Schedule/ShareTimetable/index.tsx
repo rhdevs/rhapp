@@ -1,6 +1,6 @@
 import { LeftOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -45,6 +45,7 @@ const testData: RecentData[] = [
 ]
 
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
+  const history = useHistory()
   const data = recentSearches ?? testData
   const [searchValue, setSearchValue] = useState('')
 
@@ -54,9 +55,12 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
   }
 
   const leftIcon = (
-    <Link to={'/schedule'}>
-      <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-    </Link>
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px' }}
+      onClick={() => {
+        history.goBack()
+      }}
+    />
   )
 
   return (

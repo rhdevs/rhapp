@@ -22,7 +22,7 @@ export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  GET('user/event/booking/userid')
+  // GET('user/event/booking/userid')
   // get(ENDPOINTS.USER_BOOKINGS + '/' + userId).then((resp) => {
   //   const fetchedList: Booking[] = resp.data
   //   dispatch({
