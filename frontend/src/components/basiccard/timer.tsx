@@ -37,9 +37,9 @@ const Timer = ({
   const secs = _.padStart((differenceInSeconds(destination, current) % 60).toString(), 2, '0')
   return (
     <div>
-      <p className={caption ? 'laundry-timer' : 'card-timer'}>
+      <p className={caption ? 'laundry-timer' : elapsed ? 'elapsed' : 'card-timer'}>
         {elapsed
-          ? `(${mins} mins)`
+          ? ` (${mins} mins)`
           : onlyMinutes
           ? parseInt(mins) < 1
             ? 'Less than a minute left'

@@ -73,3 +73,9 @@
   letter-spacing: 0em;
   color: #023666;
 }
+
+.elapsed {
+  margin-bottom: 0px;
+  font-weight: 200;
+  font-size: 14px;
+}
