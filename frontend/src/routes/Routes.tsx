@@ -37,7 +37,7 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 // FACILITY WASHING MACHINE
-const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
+const WmPreSelection = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/WashingMachine'))
 const LaundryPage = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/LaundryPage'))
 
 export default class Routes extends React.Component {
