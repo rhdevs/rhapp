@@ -3,13 +3,11 @@ import React, { useState } from 'react'
 // import { RootState } from '../../store/types'
 import styled from 'styled-components'
 import laundry from '../../assets/laundryicon.svg'
-import bell from '../../assets/bell.svg'
-import collect from '../../assets/collect.svg'
 import reserve from '../../assets/reserve.svg'
 import tickblack from '../../assets/tickblack.svg'
 import tickred from '../../assets/tickred.svg'
 import { Timer } from './timer'
-import { available, using, uncollected, completed, reserved } from '../laundrypage/status'
+import { WashingMachineStatus } from '../laundrypage/status'
 import { addMinutes } from 'date-fns'
 
 import { useHistory } from 'react-router-dom'
@@ -77,14 +75,12 @@ const WashingMachineCard = ({
   colour,
   action,
   caption,
-  timer,
 }: {
   status: string
   serial: string
   colour: string
   action: string
   caption: string
-  timer: boolean
 }) => {
   const [card, setCard] = useState({
     status: status,
@@ -96,22 +92,22 @@ const WashingMachineCard = ({
   const history = useHistory()
   function buttonPress(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.preventDefault()
-    if (card.status === available) {
+    if (card.status === WashingMachineStatus.available) {
       setCard({
         ...card,
-        status: reserved,
+        status: WashingMachineStatus.reserved,
         action: tickblack,
         caption: 'remaining',
       })
-    } else if (card.status === uncollected) {
+    } else if (card.status === WashingMachineStatus.uncollected) {
       setCard({
         ...card,
         action: tickred,
         caption: 'Notified!',
       })
-    } else if (card.status === completed) {
+    } else if (card.status === WashingMachineStatus.completed) {
       setAvailable()
-    } else if (card.status === reserved) {
+    } else if (card.status === WashingMachineStatus.reserved) {
       history.push(PATHS.LAUNDRY_PAGE)
     }
   }
@@ -120,7 +116,7 @@ const WashingMachineCard = ({
     //dispatch
     setCard({
       ...card,
-      status: available,
+      status: WashingMachineStatus.available,
       colour: 'black',
       action: reserve,
       caption: 'Reserve',
@@ -135,7 +131,7 @@ const WashingMachineCard = ({
           <FacilityLabels>
             <FacilityHeader style={{ color: card.colour }}>
               {card.status}
-              {card.status === uncollected && (
+              {card.status === WashingMachineStatus.uncollected && (
                 <Timer
                   destination={new Date()}
                   caption={false}
@@ -152,7 +148,7 @@ const WashingMachineCard = ({
           <Actions>
             <FacilityButton src={card.action} onClick={(e) => buttonPress(e)} />
             <FacilitySubHeader style={{ color: card.colour }}>
-              {(card.status === using || card.status === reserved) && (
+              {(card.status === WashingMachineStatus.using || card.status === WashingMachineStatus.reserved) && (
                 <Timer
                   destination={addMinutes(new Date(), 1)}
                   activate={() => {

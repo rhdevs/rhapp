@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
 import { differenceInSeconds, differenceInMinutes, isSameSecond } from 'date-fns'
-import { check } from 'prettier'
 import '../../assets/fonts.css'
 
 const Timer = ({

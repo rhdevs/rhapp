@@ -4,42 +4,38 @@ import collect from '../../assets/collect.svg'
 import reserve from '../../assets/reserve.svg'
 import blank from '../../assets/blank.svg'
 import { WashingMachineCard } from './WashingMachineCard'
-import { available, using, uncollected, completed } from '../laundrypage/status'
+import { WashingMachineStatus } from '../laundrypage/status'
 
 const BasicCard = () => {
   return (
     <div>
       <WashingMachineCard
-        status={available}
+        status={WashingMachineStatus.available}
         serial={'S/N 123456'}
         colour={'black'}
         action={reserve}
         caption={'Reserve'}
-        timer={false}
       />
       <WashingMachineCard
-        status={using}
+        status={WashingMachineStatus.using}
         serial={'S/N 123456'}
         colour={'#EB5757'}
         action={blank}
         caption={'remaining'}
-        timer={true}
       />
       <WashingMachineCard
-        status={uncollected}
+        status={WashingMachineStatus.uncollected}
         serial={'S/N 123456'}
         colour={'#EB5757'}
         action={bell}
         caption={'Notify'}
-        timer={false}
       />
       <WashingMachineCard
-        status={completed}
+        status={WashingMachineStatus.completed}
         serial={'S/N 123456'}
         colour={'#EB5757'}
         action={collect}
         caption={'collect'}
-        timer={false}
       />
     </div>
   )

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 // import { useDispatch, useSelector } from 'react-redux'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { useDispatch } from 'react-redux'
 // import { RootState } from '../../store/types'
 import { Laundry } from '../../../components/laundrypage/Laundry'
-import { available, using, edit, completed, reserved } from '../../../components/laundrypage/status'
+import { WashingMachineStatus } from '../../../components/laundrypage/status'
 import styled from 'styled-components'
 import '../../../assets/fonts.css'
 
@@ -32,10 +31,7 @@ export default function ViewBooking() {
   return (
     <>
       <MainContainer>
-        {/* <TopNavBar title={navCap} /> */}
-        {/* <LaundryContainer> */}
-        <Laundry status={reserved} serial={'S/N 050201'} />
-        {/* </LaundryContainer> */}
+        <Laundry status={WashingMachineStatus.reserved} serial={'S/N 050201'} />
         <BottomNavBar />
       </MainContainer>
     </>
