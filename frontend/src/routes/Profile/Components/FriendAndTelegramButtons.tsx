@@ -18,18 +18,14 @@ const TelegramButtonStyle = {
   backgroundColor: '#DE5F4C',
   borderColor: '#DE5F4C',
   width: '35vw',
-  marginLeft: '15%',
+  left: '15%',
   boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
   borderRadius: '8px',
 }
 
 const ButtonDiv = styled.div`
-  display: flex
-  justify-content: 'center';
-  align-items: 'center';
   position: relative;
-  left: 5%;
-  margin: auto;
+  margin-left: 5vw;
   margin-top: 3vh;
   margin-bottom: 6vh;
 `
