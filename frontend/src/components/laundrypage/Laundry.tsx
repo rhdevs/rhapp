@@ -17,10 +17,16 @@ const Container = styled.div`
 const Top = styled.div`
   display: flex;
 `
-const Bottom = styled.div`
-  margin-top: 50px;
-  text-align: center;
-`
+// const Bottom = styled.div`
+//   text-align: center;
+//   margin-top: ${status === WashingMachineStatus.available
+//     ? '50px'
+//     : status === WashingMachineStatus.reserved
+//     ? '10px'
+//     : status === WashingMachineStatus.edit
+//     ? '100px'
+//     : '30px'};
+// `
 
 const Left = styled.div``
 
@@ -103,6 +109,62 @@ const EditTimer = styled.div`
   margin-top: 25px;
 `
 
+const Icon = styled.img`
+  height: 128px;
+  width: 91px;
+  border-radius: 10px;
+`
+
+const Serial = styled.p`
+  color: #002642;
+  font-weight: 700;
+  font-size: 30px;
+  margin-top: 13px;
+  margin-bottom: 5px;
+`
+
+const Caption = styled.p`
+  font-weight: 200;
+  font-size: 17px;
+  color: #002642;
+  margin-bottom: 6px;
+  display: flex;
+`
+
+const LaundryTimer = styled.p`
+  font-family: Inter;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0em;
+  color: #023666;
+  margin-bottom: 15px;
+  margin-top: 0px;
+`
+
+const TimerCaption = styled.p`
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+  color: #023666;
+`
+
+const EditButton = styled.u`
+  margin-left: 28px;
+  margin-top: 10px;
+  color: #de5f4c;
+  font-size: 18px;
+  cursor: pointer;
+`
+
+const Bottom = styled.div`
+  text-align: center;
+`
+
 const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   const [page, setPage] = useState({
     status: WashingMachineStatus.reserved,
@@ -114,13 +176,13 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
     showbutton2: true,
     showTimer: false,
     showSlider: true,
+    margintop: 50,
   })
 
   useEffect(() => {
     setStatus(status)
   }, [status])
 
-  //state of component depending on status
   function setStatus(status: string) {
     if (status === WashingMachineStatus.reserved) {
       setNavCap('Reserved')
@@ -134,6 +196,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showbutton2: true,
         showTimer: false,
         showSlider: true,
+        margintop: 48,
       })
     } else if (status === WashingMachineStatus.available) {
       setNavCap('Laundry Time')
@@ -147,6 +210,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showbutton2: true,
         showTimer: false,
         showSlider: true,
+        margintop: 50,
       })
       setTime({
         ...time,
@@ -165,6 +229,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showbutton2: false,
         showTimer: false,
         showSlider: false,
+        margintop: 50,
       })
     } else if (status === WashingMachineStatus.using) {
       setNavCap('Laundry Time')
@@ -179,6 +244,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showbutton2: true,
         showTimer: true,
         showSlider: false,
+        margintop: 66,
       })
     } else if (status === WashingMachineStatus.edit) {
       setNavCap('Edit duration')
@@ -193,6 +259,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showbutton2: true,
         showTimer: false,
         showSlider: true,
+        margintop: 32,
       })
       setTime({
         ...time,
@@ -265,13 +332,14 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
       <Container>
         <Top>
           <Left>
-            <img className="icon" src={laundry} />
+            <Icon src={laundry} />
           </Left>
           <Right>
-            <p className="serial">{serial}</p>
+            <Serial>{serial}</Serial>
+
             <div>
               {page.showcaption && (
-                <p className="caption">
+                <Caption>
                   {page.status === WashingMachineStatus.reserved && (
                     <Timer
                       destination={new Date('December 17, 2020 17:53:00')}
@@ -284,20 +352,20 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
                     />
                   )}
                   {page.caption}
-                </p>
+                </Caption>
               )}
               {page.status === WashingMachineStatus.edit && (
                 <EditTimer>
                   {' '}
-                  <p className="laundry-timer">
+                  <LaundryTimer>
                     {' '}
                     {time.inputValue < 10 && '0'}
                     {`${time.inputValue} : 00`}
-                  </p>
-                  <p className="timer-caption">
+                  </LaundryTimer>
+                  <TimerCaption>
                     {'minutes'} &nbsp; &nbsp;
                     {'seconds'}
-                  </p>
+                  </TimerCaption>
                 </EditTimer>
               )}
               {page.showbutton1 && (
@@ -316,15 +384,13 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
                     onlyMinutes={false}
                     elapsed={false}
                   />
-                  <u className="edit-button" onClick={() => startEdit()}>
-                    Edit
-                  </u>
+                  <EditButton onClick={() => startEdit()}>Edit</EditButton>
                 </Top>
               )}
             </div>
           </Right>
         </Top>
-        <Bottom>
+        <Bottom style={{ marginTop: page.margintop }}>
           {page.showSlider && (
             <>
               <Slider
@@ -336,6 +402,8 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
                 defaultValue={30}
                 tipFormatter={formatter}
                 tooltipPrefixCls="slider-tooltip ant-tooltip"
+                trackStyle={{ backgroundColor: '#023666' }}
+                handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
               />
             </>
           )}

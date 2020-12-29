@@ -1,45 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;700;800&display=swap');
 
-.serial {
-  color: #002642;
-  font-weight: 700;
-  font-size: 30px;
-  margin-top: 13px;
-  margin-bottom: 5px;
-}
-
-.caption {
-  font-weight: 200;
-  font-size: 17px;
-  color: #002642;
-  margin-bottom: 6px;
-  display: flex;
-}
-
-.edit-button {
-  margin-left: 28px;
-  margin-top: 10px;
-  color: #de5f4c;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.icon {
-  height: 128px;
-  width: 91px;
-  border-radius: 10px;
-}
-
-.ant-slider:hover .ant-slider-track {
-  background-color: #023666;
-}
-
-.ant-slider .ant-slider-track {
-  background-color: #023666;
-}
-
 .slider-tooltip {
-  font-family: Inter;
   font-family: Inter;
   font-size: 17px;
   font-style: normal;
