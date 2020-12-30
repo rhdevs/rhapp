@@ -49,7 +49,7 @@ const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ '.
 const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
-// const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewMachine'))
+const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewWashingMachine'))
 
 export default class Routes extends React.Component {
   render() {
@@ -77,7 +77,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
             <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
-            <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={CreateBooking} />
+            <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
           </Switch>
         </Suspense>
       </Root>

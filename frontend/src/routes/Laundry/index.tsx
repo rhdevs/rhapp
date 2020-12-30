@@ -17,16 +17,17 @@ const FilterGroup = styled.div`
   justify-content: space-between;
   display: flex;
   padding: 23px;
+  padding-bottom: 0px;
 `
 
-export default function ViewBooking() {
+export default function LaundryMain() {
   return (
     <>
       <MainContainer>
         <TopNavBar title={'Laundry Time'} />
         <FilterGroup>
-          <DropDownSelector SelectedValue={'Choose your block'} ValueArray={['2', '3']} />
-          <DropDownSelector SelectedValue={'Choose your level'} ValueArray={['2', '3']} />
+          <DropDownSelector SelectedValue={'Block'} ValueArray={['2', '3']} />
+          <DropDownSelector SelectedValue={'Level'} ValueArray={['2', '3']} />
         </FilterGroup>
         {WashingMachineListStub.map((item: WashingMachine) => (
           <WashingMachineCard key={item.machineId} washingMachine={item} />
