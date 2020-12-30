@@ -7,15 +7,23 @@ interface Activities {
   dateTime: string
   description: string
   id: number
+  postId: string
+  name: string
+  avatar: string
+  isOwner: boolean
 }
 
 const testData: Activities[] = [
   {
+    isOwner: true,
     title: 'Hello',
-    dateTime: 'Zhou Gou Gou, 8h ago',
+    dateTime: '8h ago',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
     id: 1,
+    postId: '12345678',
+    name: 'Zhou Gou Gou',
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
   },
 ]
 
@@ -39,9 +47,13 @@ const testData: Activities[] = [
 const ActivitiesItem = (activitiesItem: Activities) => {
   return (
     <SocialPostCard
+      isOwner={activitiesItem.isOwner}
+      postId={activitiesItem.postId}
       title={activitiesItem.title}
       dateTime={activitiesItem.dateTime}
       description={activitiesItem.description}
+      avatar={activitiesItem.avatar}
+      name={activitiesItem.name}
     />
   )
 }
@@ -55,6 +67,10 @@ const renderActivitiesItems = () => {
         dateTime={data.dateTime}
         id={data.id}
         description={data.description}
+        postId={data.postId}
+        avatar={data.avatar}
+        name={data.name}
+        isOwner={data.isOwner}
       />
     )
   })

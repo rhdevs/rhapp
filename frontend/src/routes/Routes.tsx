@@ -27,6 +27,8 @@ export enum PATHS {
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
+  //SOCIAL
+  VIEW_POST = '/social/post/:postId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -52,6 +54,8 @@ const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ 
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
 const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewWashingMachine'))
+//SOCIAL
+const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 
 export default class Routes extends React.Component {
   render() {
@@ -81,6 +85,8 @@ export default class Routes extends React.Component {
 
             <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
+
+            <Route exact path={PATHS.VIEW_POST} component={ViewPost} />
           </Switch>
         </Suspense>
       </Root>
