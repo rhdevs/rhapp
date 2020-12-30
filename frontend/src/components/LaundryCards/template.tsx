@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // import { useDispatch, useSelector } from 'react-redux'
 // import { RootState } from '../../store/types'
 import styled from 'styled-components'
-// import TopNavBar from '../../components/Mobile/TopNavBar'
-// import { useDispatch } from 'react-redux'
+import TopNavBar from '../../components/Mobile/TopNavBar'
+import { useDispatch } from 'react-redux'
 import washing from '../../assets/washingMachineIcon.svg'
-// import { Button } from 'antd'
+import { Button } from 'antd'
 
 const MainContainer = styled.div`
   width: 100%;

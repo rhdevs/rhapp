@@ -3,7 +3,7 @@ import laundry from '../../assets/laundryicon2.svg'
 import { Timer } from '../basiccard/timer'
 import 'antd/dist/antd.css'
 import { Slider, Button } from 'antd'
-import { WashingMachineStatus } from './status'
+import { available, using, completed, reserved, edit } from './status'
 import { addMinutes } from 'date-fns'
 import styled from 'styled-components'
 import '../../assets/fonts.css'
@@ -157,7 +157,7 @@ const Bottom = styled.div`
 
 const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   const [page, setPage] = useState({
-    status: WashingMachineStatus.reserved,
+    status: reserved,
     caption: '14 minutes left',
     button1: 'Cancel Reservation',
     button2: 'Use Washing Machine',
@@ -174,10 +174,10 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   }, [status])
 
   function setStatus(status: string) {
-    if (status === WashingMachineStatus.reserved) {
+    if (status === reserved) {
       setNavCap('Reserved')
       setPage({
-        status: WashingMachineStatus.reserved,
+        status: reserved,
         caption: '!',
         button1: 'Cancel Reservation',
         button2: 'Use Washing Machine',
@@ -188,10 +188,10 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: true,
         margintop: 48,
       })
-    } else if (status === WashingMachineStatus.available) {
+    } else if (status === available) {
       setNavCap('Laundry Time')
       setPage({
-        status: WashingMachineStatus.available,
+        status: available,
         caption: 'Its washy time!',
         button1: '',
         button2: 'Use Washing Machine',
@@ -206,11 +206,11 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         ...time,
         inputValue: 30,
       })
-    } else if (status === WashingMachineStatus.completed) {
+    } else if (status === completed) {
       setNavCap('Collect Laundry')
 
       setPage({
-        status: WashingMachineStatus.completed,
+        status: completed,
         caption: '',
         button1: 'Collected my laundry!',
         button2: '',
@@ -221,11 +221,11 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: false,
         margintop: 50,
       })
-    } else if (status === WashingMachineStatus.using) {
+    } else if (status === using) {
       setNavCap('Laundry Time')
 
       setPage({
-        status: WashingMachineStatus.using,
+        status: using,
         caption: '',
         button1: '',
         button2: 'Stop washing',
@@ -236,11 +236,11 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
         showSlider: false,
         margintop: 66,
       })
-    } else if (status === WashingMachineStatus.edit) {
+    } else if (status === edit) {
       setNavCap('Edit duration')
 
       setPage({
-        status: WashingMachineStatus.edit,
+        status: edit,
         caption: '',
         button1: '',
         button2: 'Update Duration',
@@ -260,7 +260,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   }
 
   function startEdit() {
-    setStatus(WashingMachineStatus.edit)
+    setStatus(edit)
   }
 
   //Timer settings
@@ -281,32 +281,32 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
   }
 
   function ActionButton1(e: React.MouseEvent<HTMLElement, MouseEvent>) {
-    e.preventDefault()
-    if (page.status === WashingMachineStatus.reserved) {
-      setStatus(WashingMachineStatus.available)
-    } else if (page.status === WashingMachineStatus.completed) {
-      setStatus(WashingMachineStatus.available)
+    //e.preventDefault()
+    if (page.status === reserved) {
+      setStatus(available)
+    } else if (page.status === completed) {
+      setStatus(available)
     }
   }
 
   function ActionButton2(e: React.MouseEvent<HTMLElement, MouseEvent>) {
-    e.preventDefault()
-    if (page.status === WashingMachineStatus.reserved) {
-      setStatus(WashingMachineStatus.using)
+    //e.preventDefault()
+    if (page.status === reserved) {
+      setStatus(using)
       setTime({
         ...time,
         date: addMinutes(new Date(), time.inputValue),
       })
-    } else if (page.status === WashingMachineStatus.available) {
-      setStatus(WashingMachineStatus.using)
+    } else if (page.status === available) {
+      setStatus(using)
       setTime({
         ...time,
         date: addMinutes(new Date(), time.inputValue),
       })
-    } else if (page.status === WashingMachineStatus.using) {
-      setStatus(WashingMachineStatus.available)
-    } else if (page.status === WashingMachineStatus.edit) {
-      setStatus(WashingMachineStatus.using)
+    } else if (page.status === using) {
+      setStatus(available)
+    } else if (page.status === edit) {
+      setStatus(using)
       setTime({
         ...time,
         date: addMinutes(new Date(), time.inputValue),
@@ -330,13 +330,13 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
             <div>
               {page.showcaption && (
                 <Caption>
-                  {page.status === WashingMachineStatus.reserved && (
+                  {page.status === reserved && (
                     <Timer
                       destination={new Date('December 17, 2020 17:53:00')}
                       caption={false}
                       onlyMinutes={true}
                       activate={() => {
-                        setStatus(WashingMachineStatus.available)
+                        setStatus(available)
                       }}
                       elapsed={false}
                     />
@@ -344,7 +344,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
                   {page.caption}
                 </Caption>
               )}
-              {page.status === WashingMachineStatus.edit && (
+              {page.status === edit && (
                 <EditTimer>
                   {' '}
                   <LaundryTimer>
@@ -369,7 +369,7 @@ const Laundry = ({ status, serial }: { status: string; serial: string }) => {
                 <Top>
                   <Timer
                     destination={time.date}
-                    activate={() => setStatus(WashingMachineStatus.completed)}
+                    activate={() => setStatus(completed)}
                     caption={true}
                     onlyMinutes={false}
                     elapsed={false}
