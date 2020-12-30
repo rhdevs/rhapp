@@ -13,6 +13,7 @@ type Props = {
   defaultTextColor?: string
   updatedTextColor?: string
   style?: React.CSSProperties
+  onButtonClick?: (arg0: boolean) => void
 }
 
 function Button(props: Props) {
@@ -20,7 +21,7 @@ function Button(props: Props) {
   const [buttonColour, setButtonColour] = useState(
     props.buttonIsPressed ? props.updatedButtonColor ?? 'transparent' : props.defaultButtonColor ?? '#DE5F4C',
   )
-  const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : 'white')
+  const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : props.defaultTextColor || 'white')
 
   const successfulAdd = () => {
     console.log('Added event to schedule')
@@ -46,6 +47,7 @@ function Button(props: Props) {
         )
         setTextColour(buttonIsPressed ? props.defaultTextColor ?? 'white' : props.updatedTextColor ?? '#ff7875')
         setButtonIsPressed(!buttonIsPressed)
+        if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
       }}
     >
       {buttonIsPressed
