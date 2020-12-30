@@ -15,7 +15,8 @@ const StyledHexagon = styled(Hexagon)`
 `
 
 const Container = styled.div`
-  min-height: 140px;
+  width: 100%;
+  overflow: inherit !important;
 `
 
 export default function HexagonNavigation() {
@@ -73,10 +74,10 @@ export default function HexagonNavigation() {
       },
     },
   ]
-  const hexagonSize = { x: 28, y: 28 }
+  const hexagonSize = { x: 27, y: 27 }
   return (
     <Container>
-      <HexGrid width={375} height={170}>
+      <HexGrid style={{ overflow: 'inherit' }} width={'100%'} height={180}>
         <Layout size={hexagonSize} flat={true} spacing={1.2}>
           {hexagons.map((hex, i) => (
             <StyledHexagon

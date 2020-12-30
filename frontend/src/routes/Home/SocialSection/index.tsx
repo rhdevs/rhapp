@@ -39,19 +39,19 @@ const Tab = styled.div<TabProps>`
 const dummyAllData = [
   {
     title: 'Hello',
-    dateTime: 'Zhou Gou Gou, 8h ago',
+    dateTime: 'Zhou Gou Gou, 5h ago',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
   },
   {
     title: 'Hello',
-    dateTime: 'Zhou Mao Mao, 8h ago',
+    dateTime: 'Zhou Mao Mao, 6h ago',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
   },
   {
     title: 'Hello',
-    dateTime: 'Zhou Gou Gou, 8h ago',
+    dateTime: 'Zhou Gou Gou, 7h ago',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
   },

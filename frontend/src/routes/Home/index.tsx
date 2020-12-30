@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
-import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
 import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
+import HexagonNavigation from './HexagonNavigation'
 import SocialSection from './SocialSection'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -158,27 +158,21 @@ const TemporaryRoutes = () => {
 }
 
 export default function Home() {
-  const dispatch = useDispatch()
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
 
-  useEffect(() => {
-    //do smth @ the start
-  }, [dispatch])
-
   return (
-    <>
-      <MainContainer>
-        <TopBar>
-          <Greetings>{`Good ${partOfTheDay} Mao Mao,`}</Greetings>
-          <SearchOutlined style={{ fontSize: 25, color: '#fff' }} />
-        </TopBar>
-        <AnnouncementCarousel />
-        <h1>Temporary Routes</h1>
-        <TemporaryRoutes />
-        <SocialSection />
-        <BottomNavBar />
-      </MainContainer>
-    </>
+    <MainContainer>
+      <TopBar>
+        <Greetings>{`Good ${partOfTheDay} Mao Mao,`}</Greetings>
+        <SearchOutlined style={{ fontSize: 25, color: '#fff' }} />
+      </TopBar>
+      <AnnouncementCarousel />
+      <HexagonNavigation />
+      <SocialSection />
+      <h1>Temporary Routes</h1>
+      <TemporaryRoutes />
+      <BottomNavBar />
+    </MainContainer>
   )
 }

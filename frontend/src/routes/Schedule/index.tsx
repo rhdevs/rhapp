@@ -194,7 +194,7 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userRhEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
