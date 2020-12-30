@@ -7,11 +7,11 @@ export enum PATHS {
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   // AUTHENTICATION
-  LOGIN_PAGE = '/login',
-  SIGNUP_PAGE = '/signup',
-  PROFILE_PAGE = '/profile',
-  CHANGE_PASSWORD_PAGE = '/changePassword',
-  FRIEND_LIST_PAGE = '/profile/friendList',
+  LOGIN_PAGE = '/auth/login',
+  SIGNUP_PAGE = '/auth/signup',
+  CHANGE_PASSWORD_PAGE = '/auth/changePassword',
+  PROFILE_PAGE = '/social/profile',
+  FRIEND_LIST_PAGE = '/social/profile/friendList',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',

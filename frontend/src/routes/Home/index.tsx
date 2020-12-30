@@ -10,6 +10,7 @@ import { Button } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
 import SocialPostCard from '../../components/Mobile/SocialPostCard'
+import HexagonNavigation from './HexagonNavigation'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -37,6 +38,7 @@ export default function Home() {
     <>
       <TopNavBar title={'RHapp'} leftIcon />
       <MainContainer>
+        <HexagonNavigation />
         <Navigations>
           <Button onClick={onButtonClick}>Add an n! {sampleStateText}</Button>
           <br />
