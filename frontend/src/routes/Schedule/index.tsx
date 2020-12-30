@@ -4,6 +4,7 @@ import axios from 'axios'
 import { invert } from 'lodash'
 import { useHistory } from 'react-router-dom'
 
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Menu } from 'antd'
 import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
@@ -41,11 +42,6 @@ const Background = styled.div`
   background-color: #fafaf4;
   height: 100%;
   width: 100%;
-`
-
-const BottomNavBar = styled.div`
-  height: 64px;
-  background-color: #fafaf4;
 `
 
 const { SubMenu } = Menu
@@ -198,7 +194,7 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userRhEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
