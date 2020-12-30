@@ -1,10 +1,12 @@
 import { Booking, Facility } from './facilityBooking/types'
+import { WashingMachine, WMStatus } from './laundry/types'
 
 /**
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
  * 3. userRhEvents
+ * 4. Washing Machines
  * 5. Events
  */
 
@@ -48,15 +50,6 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
-// eventID	INT
-// eventName	VARCHAR
-// startDateTime	LOCALDATETIME
-// endDateTime	LOCALDATETIME
-// description	VARCHAR
-// location	VARCHAR
-// ccaID	INT
-// userID	VARCHAR
-// image	VARCHAR
 export const userRhEventsDummy = [
   {
     eventID: 1,
@@ -101,6 +94,67 @@ export const userRhEventsDummy = [
     ccaID: 1,
     userID: 1,
     image: null,
+  },
+]
+
+// machineID	STRING 	ID of laundry machine	6101
+// locationID	STRING	ID of location of laundry machines	61
+// userID	VARCHAR	ID of user	7
+// jobID 	VARCHAR 	current Job ID using the machine	5443OGSDFDS... ( MongoDB object ID )
+// type	VARCHAR	Type of laundry machine	Washing Machine/ Dryer
+// startTime	DATETIME 	Log of starting time for state	1/1/1970 0000
+// duration	INT	Duration of a job state (in minutes)	15, 45, 90
+// job	VARCHAR	Current job state	Vacant, Reserved, In Use, Done, Alerted, Collected, Cancelled
+export const WashingMachineListStub: WashingMachine[] = [
+  {
+    machineId: '6100',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.AVAIL,
+  },
+  {
+    machineId: '6101',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.INUSE,
+  },
+  {
+    machineId: '6102',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.UNCOLLECTED,
+  },
+  {
+    machineId: '6103',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.COMPLETED,
+  },
+  {
+    machineId: '6104',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.RESERVED,
   },
 ]
 
