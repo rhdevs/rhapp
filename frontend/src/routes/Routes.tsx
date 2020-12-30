@@ -7,11 +7,12 @@ export enum PATHS {
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   // AUTHENTICATION
-  LOGIN_PAGE = '/auth/login',
-  SIGNUP_PAGE = '/auth/signup',
-  CHANGE_PASSWORD_PAGE = '/auth/changePassword',
-  PROFILE_PAGE = '/social/profile',
-  FRIEND_LIST_PAGE = '/social/profile/friendList',
+  LOGIN_PAGE = '/login',
+  SIGNUP_PAGE = '/signup',
+  PROFILE_PAGE = '/profile',
+  EDIT_PROFILE_PAGE = '/profile/editProfile',
+  CHANGE_PASSWORD_PAGE = '/changePassword',
+  FRIEND_LIST_PAGE = '/profile/friendList',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -34,6 +35,7 @@ const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authen
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
+const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" */ './Profile/EditProfile'))
 const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePassword" */ './Profile/ChangePassword'))
 const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */ './Profile/FriendList'))
 // SCHEDULING
@@ -62,6 +64,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
             <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
+            <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <Route exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <Route exact path={PATHS.FRIEND_LIST_PAGE} component={FriendList} />
 
