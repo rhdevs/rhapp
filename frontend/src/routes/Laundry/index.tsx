@@ -5,6 +5,7 @@ import DropDownSelector from '../../components/Mobile/DropDownSelector'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import WashingMachineCard from '../../components/Laundry/WashingMachineCard'
 import { WashingMachineListStub } from '../../store/stubs'
+import { WashingMachine } from '../../store/laundry/types'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -27,8 +28,10 @@ export default function ViewBooking() {
           <DropDownSelector SelectedValue={'Choose your block'} ValueArray={['2', '3']} />
           <DropDownSelector SelectedValue={'Choose your level'} ValueArray={['2', '3']} />
         </FilterGroup>
-        {/* {WashingMachineListStub.map()} */}
-        <WashingMachineCard />
+        {WashingMachineListStub.map((item: WashingMachine) => (
+          <WashingMachineCard key={item.machineId} washingMachine={item} />
+        ))}
+
         <BottomNavBar />
       </MainContainer>
     </>

@@ -6,6 +6,7 @@ import notifyBellIcon from '../../assets/notifyBellIcon.svg'
 import collectIcon from '../../assets/collectIcon.svg'
 import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import tickIcon from '../../assets/tickIcon.svg'
+import { WashingMachine, WMStatus } from '../../store/laundry/types'
 
 const CardContainer = styled.div`
   position: relative;
@@ -58,33 +59,51 @@ const ActionButtonLabel = styled.p`
   color: #000000;
   text-align: center;
 `
-type Props = {
-  // {
-  //   machineId: 6101,
-  //   locationId: 61,
-  //   userId: '1',
-  //   jobId: '2312',
-  //   type: 'Washing Machine',
-  //   startTime: 1608723138,
-  //   duration: 60,
-  //   job: 'Available',
-  // },
+const ActionButtons = (status: WMStatus) => {
+  let label
+  let iconSrc
+  switch (status) {
+    case WMStatus.AVAIL:
+      label = 'Reserve'
+      iconSrc = reserveIcon
+      break
+    case WMStatus.COMPLETED:
+      label = 'Collect'
+      iconSrc = collectIcon
+      break
+    case WMStatus.RESERVED:
+      label = '14:39 remaining'
+      iconSrc = tickIcon
+      break
+    case WMStatus.INUSE:
+      label = '14:39 remaining'
+      break
+    case WMStatus.UNCOLLECTED:
+      label = 'Notify'
+      iconSrc = notifyBellIcon
+      break
+    default:
+      label = 'Reserved'
+  }
+
+  return (
+    <RightActionGroups>
+      <ActionButton src={iconSrc} />
+      {status === WMStatus.RESERVED && <ActionButton src={rightArrowIcon} />}
+      <ActionButtonLabel>{label}</ActionButtonLabel>
+    </RightActionGroups>
+  )
 }
 
-function WashingMachineCard(props: Props) {
+export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   return (
     <CardContainer>
       <WashingMachineAvatar src={washingMachineIcon} />
       <Labels>
-        <Header>Available</Header>
-        <SubHeader>S/N111</SubHeader>
+        <Header>{props.washingMachine.job}</Header>
+        <SubHeader>S/N{props.washingMachine.machineId}</SubHeader>
       </Labels>
-      <RightActionGroups>
-        <ActionButton src={collectIcon} />
-        <ActionButtonLabel>14:39 remaining</ActionButtonLabel>
-      </RightActionGroups>
+      {ActionButtons(props.washingMachine.job)}
     </CardContainer>
   )
 }
-
-export default WashingMachineCard

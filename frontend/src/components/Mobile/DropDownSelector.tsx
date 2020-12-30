@@ -17,7 +17,7 @@ export default function DropDownSelector({
 }) {
   return (
     <Space wrap>
-      <Select defaultValue={SelectedValue} style={{ width: 170 }} onChange={handleChange}>
+      <Select defaultValue={SelectedValue} style={{ width: '100%' }} onChange={handleChange}>
         {ValueArray.map((value, index) => (
           <Option key={index} value={value}>
             {value}

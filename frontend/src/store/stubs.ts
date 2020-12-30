@@ -1,4 +1,5 @@
 import { Booking, Facility } from './facilityBooking/types'
+import { WashingMachine, WMStatus } from './laundry/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -103,45 +104,55 @@ export const userRhEventsDummy = [
 // startTime	DATETIME 	Log of starting time for state	1/1/1970 0000
 // duration	INT	Duration of a job state (in minutes)	15, 45, 90
 // job	VARCHAR	Current job state	Vacant, Reserved, In Use, Done, Alerted, Collected, Cancelled
-export const WashingMachineListStub = [
+export const WashingMachineListStub: WashingMachine[] = [
   {
-    machineId: 6101,
-    locationId: 61,
+    machineId: '6100',
+    locationId: '61',
     userId: '1',
     jobId: '2312',
     type: 'Washing Machine',
     startTime: 1608723138,
     duration: 60,
-    job: 'Available',
+    job: WMStatus.AVAIL,
   },
   {
-    machineId: 6101,
-    locationId: 61,
+    machineId: '6101',
+    locationId: '61',
     userId: '1',
     jobId: '2312',
     type: 'Washing Machine',
     startTime: 1608723138,
     duration: 60,
-    job: 'In Use',
+    job: WMStatus.INUSE,
   },
   {
-    machineId: 6101,
-    locationId: 61,
+    machineId: '6102',
+    locationId: '61',
     userId: '1',
     jobId: '2312',
     type: 'Washing Machine',
     startTime: 1608723138,
     duration: 60,
-    job: 'Uncollected',
+    job: WMStatus.UNCOLLECTED,
   },
   {
-    machineId: 6101,
-    locationId: 61,
+    machineId: '6103',
+    locationId: '61',
     userId: '1',
     jobId: '2312',
     type: 'Washing Machine',
     startTime: 1608723138,
     duration: 60,
-    job: 'Completed',
+    job: WMStatus.COMPLETED,
+  },
+  {
+    machineId: '6104',
+    locationId: '61',
+    userId: '1',
+    jobId: '2312',
+    type: 'Washing Machine',
+    startTime: 1608723138,
+    duration: 60,
+    job: WMStatus.RESERVED,
   },
 ]
