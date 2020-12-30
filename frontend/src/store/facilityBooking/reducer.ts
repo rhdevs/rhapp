@@ -12,10 +12,17 @@ const initialState = {
   newBooking: undefined,
   // CREATE NEW BOOKING STATES
   newBookingName: '',
+  newBookingFacilityName: '',
   newBookingFromDate: new Date(),
   newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
   newBookingCCA: '',
   newBookingDescription: '',
+  createSuccess: false,
+  createFailure: false,
+  // VIEW FACILITY PARAMS
+  ViewStartDate: new Date(),
+  ViewEndDate: dayjs(new Date()).add(3, 'day').toDate(),
+  ViewFacilityMode: 'Bookings',
 }
 
 type State = {
@@ -25,11 +32,16 @@ type State = {
   myBookings: Booking[]
   isDeleteMyBooking: number
   newBooking: Booking | undefined
+  newBookingFacilityName: string
   newBookingName: string
   newBookingFromDate: Date
   newBookingToDate: Date
   newBookingCCA: string
   newBookingDescription: string
+  createSuccess: boolean
+  createFailure: boolean
+  ViewStartDate: Date
+  ViewEndDate: Date
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -102,6 +114,42 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         newBookingDescription: action.newBookingDescription,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
+      return {
+        ...state,
+        ViewStartDate: action.ViewStartDate,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE: {
+      return {
+        ...state,
+        ViewEndDate: action.ViewEndDate,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE: {
+      return {
+        ...state,
+        ViewFacilityMode: action.ViewFacilityMode,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BOOKING_FACILITY: {
+      return {
+        ...state,
+        newBookingFacilityName: action.newBookingFacilityName,
+      }
+    }
+
+    case FACILITY_ACTIONS.HANDLE_CREATE_BOOKING: {
+      return {
+        ...state,
+        createFailure: action.createFailure,
+        createSuccess: action.createSuccess,
       }
     }
 

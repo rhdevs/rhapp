@@ -1,6 +1,5 @@
 import { Dispatch } from '../types'
 import { ActionTypes, Booking, FACILITY_ACTIONS } from './types'
-// import { get, ENDPOINTS } from '../endpoints'
 import { facilityListStub, myBookingsStub } from '../stubs'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
@@ -82,4 +81,39 @@ export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<Act
 
 export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
+}
+
+export const getAllEventsForFacility = (facilityName: string) => () => {
+  //get facility id from name
+  //call to api to fetch all events
+  console.log(facilityName)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setViewDates = (newDates: any) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: newDates.ViewDateSelection.startDate })
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: newDates.ViewDateSelection.endDate })
+}
+
+// currentMode TRUE == view bookings || FALSE == view availabilities
+export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  const ViewFacilityMode = currentMode ? 'Bookings' : 'Availabilities'
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
+}
+
+export const createNewBookingFromFacility = (startDate: Date, endDate: Date, facilityName: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
+}
+
+export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>) => {
+  const success = true
+  if (success) {
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+  } else {
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+  }
 }

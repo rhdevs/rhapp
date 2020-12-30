@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
-
+import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { Input } from 'antd'
@@ -18,6 +18,7 @@ import {
   editBookingFromDate,
   editBookingName,
   editBookingToDate,
+  handleCreateBooking,
 } from '../../../store/facilityBooking/action'
 
 const Background = styled.div`
@@ -59,14 +60,9 @@ const DatePickerRow = styled.div`
   color: #666666;
 `
 
-const CheckIcon = (
-  <div>
-    <CheckOutlined style={{ color: 'black' }} />
-  </div>
-)
-
 export default function CreateBooking() {
   const dispatch = useDispatch()
+  const history = useHistory()
   const {
     newBooking,
     newBookingName,
@@ -74,6 +70,7 @@ export default function CreateBooking() {
     newBookingToDate,
     newBookingCCA,
     newBookingDescription,
+    newBookingFacilityName,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -85,6 +82,17 @@ export default function CreateBooking() {
       dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
     }
   }, [dispatch])
+
+  const CheckIcon = (
+    <div
+      onClick={() => {
+        dispatch(handleCreateBooking())
+        history.push('/facility/view/' + newBookingFacilityName)
+      }}
+    >
+      <CheckOutlined style={{ color: 'black' }} />
+    </div>
+  )
 
   const handleFromDateChange = (newDate: Date) => {
     if (newBookingToDate > newDate) {
@@ -114,6 +122,7 @@ export default function CreateBooking() {
     <div>
       <TopNavBar title={newBooking?.bookingID ? `Edit Booking` : `New Booking`} rightComponent={CheckIcon} />
       <Background>
+        <StyledTitle>{newBookingFacilityName}</StyledTitle>
         <StyledInput
           placeholder="Event Name"
           value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
