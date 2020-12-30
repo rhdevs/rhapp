@@ -1,40 +1,101 @@
 import React from 'react'
 import styled from 'styled-components'
-// import { useHistory } from 'react-router-dom'
-import { HexGrid, Layout, Hexagon, Text, Pattern, Path, Hex } from 'react-hexgrid'
+import { useHistory } from 'react-router-dom'
+import { HexGrid, Layout, Hexagon, Text } from 'react-hexgrid'
+import { PATHS } from '../../Routes'
+// import calendarIcon from '../../../assets/hexagonIcons/calendarIcon.svg'
+// import facilitiesIcon from '../../../assets/hexagonIcons/facilitiesIcon.svg'
+// import laundryIcon from '../../../assets/hexagonIcons/laundryIcon.svg'
+// import moreIcon from '../../../assets/hexagonIcons/moreIcon.svg'
+// import socialIcon from '../../../assets/hexagonIcons/socialIcon.svg'
+
+const StyledHexagon = styled(Hexagon)`
+  fill: #de5f4c;
+  fill-opacity: 0.8;
+`
 
 const Container = styled.div`
   min-height: 140px;
 `
 
 export default function HexagonNavigation() {
-  // const history = useHistory()
+  const history = useHistory()
 
+  const hexagons = [
+    {
+      q: 0,
+      r: 0,
+      s: 0,
+      // fill: 'calendar',
+      text: 'Calendar',
+      onClick: () => {
+        history.push(PATHS.SCHEDULE_PAGE)
+      },
+    },
+    {
+      q: 1,
+      r: -1,
+      s: 0,
+      // fill: 'laundry',
+      text: 'Laundry',
+      onClick: () => {
+        history.push(PATHS.LAUNDRY_MAIN)
+      },
+    },
+    {
+      q: 1,
+      r: 0,
+      s: -1,
+      // fill: 'more',
+      text: 'More',
+      onClick: () => {
+        // history.push(PATHS.SCHEDULE_PAGE)
+      },
+    },
+    {
+      q: -1,
+      r: 1,
+      s: 0,
+      // fill: 'social',
+      text: 'Social',
+      onClick: () => {
+        history.push(PATHS.FRIEND_LIST_PAGE)
+      },
+    },
+    {
+      q: -1,
+      r: 0,
+      s: 0,
+      // fill: 'facilities',
+      text: 'Facilities',
+      onClick: () => {
+        history.push(PATHS.FACILITY_BOOKING_MAIN)
+      },
+    },
+  ]
+  const hexagonSize = { x: 28, y: 28 }
   return (
     <Container>
-      <HexGrid width={1200} height={800} viewBox="-50 -50 100 100">
-        {/* Grid with manually inserted hexagons */}
-        <Layout size={{ x: 10, y: 10 }} flat={true} spacing={1.1} origin={{ x: 0, y: 0 }}>
-          <Hexagon q={0} r={0} s={0} />
-          {/* Using pattern (defined below) to fill the hexagon */}
-          <Hexagon q={0} r={-1} s={1} fill="pat-1" />
-          <Hexagon q={0} r={1} s={-1} />
-          <Hexagon q={1} r={-1} s={0}>
-            <Text>1, -1, 0</Text>
-          </Hexagon>
-          <Hexagon q={1} r={0} s={-1}>
-            <Text>1, 0, -1</Text>
-          </Hexagon>
-          {/* Pattern and text */}
-          <Hexagon q={-1} r={1} s={0} fill="pat-2">
-            <Text>-1, 1, 0</Text>
-          </Hexagon>
-          <Hexagon q={-1} r={0} s={1} />
-          <Hexagon q={-2} r={0} s={1} />
-          <Path start={new Hex(0, 0, 0)} end={new Hex(-2, 0, 1)} />
+      <HexGrid width={375} height={170}>
+        <Layout size={hexagonSize} flat={true} spacing={1.2}>
+          {hexagons.map((hex, i) => (
+            <StyledHexagon
+              key={i}
+              q={hex.q}
+              r={hex.r}
+              s={hex.s}
+              onClick={hex.onClick}
+              // fill={hex.fill}
+            >
+              <Text>{hex.text}</Text>
+            </StyledHexagon>
+          ))}
         </Layout>
-        <Pattern id="pat-1" link="http://cat-picture" />
-        <Pattern id="pat-2" link="http://cat-picture2" />
+        {/* <Pattern id="calendar" link="../../../assets/hexagonIcons/calendarIcon.png" size={hexagonSize} />
+        <Pattern id="facilities" src={facilitiesIcon} size={hexagonSize} />
+        <Pattern id="laundry" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} />
+        <Pattern id="more" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} />
+        <Pattern id="social" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} /> */}
       </HexGrid>
     </Container>
   )

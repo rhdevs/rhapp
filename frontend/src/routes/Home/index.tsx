@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import TopNavBar from '../../components/Mobile/TopNavBar'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
@@ -12,6 +11,7 @@ import { PATHS } from '../Routes'
 import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import SocialSection from './SocialSection'
+import HexagonNavigation from './HexagonNavigation'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -174,6 +174,7 @@ export default function Home() {
           <SearchOutlined style={{ fontSize: 25, color: '#fff' }} />
         </TopBar>
         <AnnouncementCarousel />
+        <HexagonNavigation />
         <h1>Temporary Routes</h1>
         <TemporaryRoutes />
         <SocialSection />

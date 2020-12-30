@@ -36,7 +36,7 @@ type Props = {
 function Timetable(props: Props) {
   const DEFAULT_START_TIME = 700
   const DEFAULT_END_TIME = 1900
-  const timeArray = []
+  const timeArray: Array<string> = []
 
   const eventsStartTime = Math.round(props.eventsStartTime / 100) * 100
   const timetableStartTime = DEFAULT_START_TIME < eventsStartTime ? DEFAULT_START_TIME : eventsStartTime
@@ -48,7 +48,7 @@ function Timetable(props: Props) {
     } else if (i < 1000) {
       timeArray.push('0' + i)
     } else {
-      timeArray.push(i)
+      timeArray.push(i.toString())
     }
   }
 
