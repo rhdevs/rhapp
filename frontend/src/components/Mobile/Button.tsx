@@ -13,6 +13,7 @@ type Props = {
   defaultTextColor?: string
   updatedTextColor?: string
   style?: React.CSSProperties
+  onButtonClick?: (arg0: boolean) => void
 }
 
 function Button(props: Props) {
@@ -46,6 +47,7 @@ function Button(props: Props) {
         )
         setTextColour(buttonIsPressed ? props.defaultTextColor ?? 'white' : props.updatedTextColor ?? '#ff7875')
         setButtonIsPressed(!buttonIsPressed)
+        if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
       }}
     >
       {buttonIsPressed

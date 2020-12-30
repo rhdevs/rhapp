@@ -5,6 +5,7 @@ import { Booking, Facility } from './facilityBooking/types'
  * 1. facilityList
  * 2. myBookings
  * 3. userRhEvents
+ * 5. Events
  */
 
 export const facilityListStub: Facility[] = [
@@ -100,5 +101,26 @@ export const userRhEventsDummy = [
     ccaID: 1,
     userID: 1,
     image: null,
+  },
+]
+
+export const facilityBookingsStubs = [
+  {
+    id: 1,
+    date: '17 Dec',
+    startTime: '1530',
+    endTime: '1720',
+    eventName: 'Bonding Camp',
+    eventCCA: 'RHMP',
+    eventOwner: 'not you',
+  },
+  {
+    id: 2,
+    date: '18 Dec',
+    startTime: '1530',
+    endTime: '1720',
+    eventName: 'Training',
+    eventCCA: 'Voices',
+    eventOwner: 'you',
   },
 ]
