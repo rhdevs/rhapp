@@ -2,6 +2,7 @@ import { Dispatch } from '../types'
 import { ActionTypes, Booking, FACILITY_ACTIONS } from './types'
 // import { get, ENDPOINTS } from '../endpoints'
 import { facilityListStub, myBookingsStub } from '../stubs'
+import { OnChangeProps } from 'react-date-range'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   // get(ENDPOINTS.FACILITY_LIST).then((resp) => {
@@ -82,4 +83,15 @@ export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<Act
 
 export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
+}
+
+export const getAllEventsForFacility = (facilityName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  //get facility id from name
+  //call to api to fetch all events
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setViewDates = (newDates: any) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: newDates.ViewDateSelection.startDate })
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: newDates.ViewDateSelection.endDate })
 }

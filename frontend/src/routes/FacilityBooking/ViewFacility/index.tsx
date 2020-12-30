@@ -5,7 +5,7 @@ import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { DateRange } from 'react-date-range'
 import { useHistory } from 'react-router-dom'
 import 'react-date-range/dist/styles.css' // main css file
@@ -15,6 +15,8 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
+import { RootState } from '../../../store/types'
+import { setViewDates } from '../../../store/facilityBooking/action'
 
 const MainContainer = styled.div`import { Alert } from 'antd';
   width: 100%;
@@ -115,13 +117,14 @@ export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  // const { sampleStateText } = useSelector((state: RootState) => state.home)
+  const { ViewStartDate, ViewEndDate } = useSelector((state: RootState) => state.facilityBooking)
 
   const params = useParams<{ facilityName: string }>()
 
   useEffect(() => {
     // fetch all default facilities
   }, [dispatch])
+
   interface eventType {
     id: number
     date: string
@@ -186,9 +189,16 @@ export default function ViewFacility() {
           <DateRange
             editableDateInputs={true}
             color="#DE5F4C"
-            // onChange={(item) => setState([item.selection])}
+            onChange={(item) => dispatch(setViewDates(item))}
             moveRangeOnFirstSelection={false}
-            // ranges={state}
+            rangeColors={['#DE5F4C', '#002642']}
+            ranges={[
+              {
+                startDate: ViewStartDate,
+                endDate: ViewEndDate,
+                key: 'ViewDateSelection',
+              },
+            ]}
           />
         </DateSelectorGroup>
 

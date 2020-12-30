@@ -28,6 +28,8 @@ export enum FACILITY_ACTIONS {
   SET_BOOKING_FROM_DATE = 'FACILITY_ACTIONS.SET_BOOKING_FROM_DATE',
   SET_BOOKING_CCA = 'FACILITY_ACTIONS.SET_BOOKING_CCA',
   SET_BOOKING_DESCRIPTION = 'FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION',
+  SET_VIEW_FACILITY_START_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE',
+  SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
 }
 
 type GetFacilityList = {
@@ -85,6 +87,16 @@ type SetBookingDescription = {
   newBookingDescription: string
 }
 
+type SetViewFacilityStartDate = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE
+  ViewStartDate: Date
+}
+
+type SetViewFacilityEndDate = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE
+  ViewEndDate: Date
+}
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -97,3 +109,5 @@ export type ActionTypes =
   | SetBookingToDate
   | SetBookingCCA
   | SetBookingDescription
+  | SetViewFacilityStartDate
+  | SetViewFacilityEndDate

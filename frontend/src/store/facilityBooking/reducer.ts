@@ -16,6 +16,9 @@ const initialState = {
   newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
   newBookingCCA: '',
   newBookingDescription: '',
+  // VIEW FACILITY PARAMS
+  ViewStartDate: new Date(),
+  ViewEndDate: dayjs(new Date()).add(3, 'day').toDate(),
 }
 
 type State = {
@@ -30,6 +33,8 @@ type State = {
   newBookingToDate: Date
   newBookingCCA: string
   newBookingDescription: string
+  ViewStartDate: Date
+  ViewEndDate: Date
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -102,6 +107,20 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         newBookingDescription: action.newBookingDescription,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
+      return {
+        ...state,
+        ViewStartDate: action.ViewStartDate,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE: {
+      return {
+        ...state,
+        ViewEndDate: action.ViewEndDate,
       }
     }
 
