@@ -5,7 +5,7 @@ import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { DateRange } from 'react-date-range'
 import { useHistory } from 'react-router-dom'
 import 'react-date-range/dist/styles.css' // main css file
@@ -15,6 +15,14 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
+import { RootState } from '../../../store/types'
+import {
+  createNewBookingFromFacility,
+  getAllEventsForFacility,
+  setViewDates,
+  setViewFacilityMode,
+} from '../../../store/facilityBooking/action'
+import { facilityBookingsStubs } from '../../../store/stubs'
 
 const MainContainer = styled.div`import { Alert } from 'antd';
   width: 100%;
@@ -114,44 +122,14 @@ const EventRightDisplay = styled.div`
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
-
-  // const { sampleStateText } = useSelector((state: RootState) => state.home)
-
   const params = useParams<{ facilityName: string }>()
+  const { ViewStartDate, ViewEndDate, createSuccess, createFailure } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   useEffect(() => {
-    // fetch all default facilities
+    dispatch(getAllEventsForFacility(params.facilityName))
   }, [dispatch])
-  interface eventType {
-    id: number
-    date: string
-    startTime: string
-    endTime: string
-    eventName: string
-    eventCCA: string
-    eventOwner: string
-  }
-
-  const dummyEvents: Array<eventType> = [
-    {
-      id: 1,
-      date: '17 Dec',
-      startTime: '1530',
-      endTime: '1720',
-      eventName: 'Bonding Camp',
-      eventCCA: 'RHMP',
-      eventOwner: 'not you',
-    },
-    {
-      id: 2,
-      date: '18 Dec',
-      startTime: '1530',
-      endTime: '1720',
-      eventName: 'Training',
-      eventCCA: 'Voices',
-      eventOwner: 'you',
-    },
-  ]
 
   const MyBookingIcon = (
     <img
@@ -162,38 +140,45 @@ export default function ViewFacility() {
     />
   )
 
+  const AlertSection = (
+    <AlertGroup>
+      {createSuccess && (
+        <Alert message="Successfully Created Event" description="Yay yippe doodles" type="success" closable showIcon />
+      )}
+      {createFailure && (
+        <Alert message="Event not created!!!" description="Insert error message here" type="error" closable showIcon />
+      )}
+    </AlertGroup>
+  )
+
   return (
     <>
       <TopNavBar title={params.facilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
-        <AlertGroup>
-          <Alert
-            message="Successfully Created Event"
-            description="Yay yippe doodles"
-            type="success"
-            closable
-            showIcon
-          />
-          <Alert
-            message="Event not created!!!"
-            description="Insert error message here"
-            type="error"
-            closable
-            showIcon
-          />
-        </AlertGroup>
+        {AlertSection}
         <DateSelectorGroup>
           <DateRange
             editableDateInputs={true}
             color="#DE5F4C"
-            // onChange={(item) => setState([item.selection])}
+            onChange={(item) => dispatch(setViewDates(item))}
             moveRangeOnFirstSelection={false}
-            // ranges={state}
+            rangeColors={['#DE5F4C', '#002642']}
+            ranges={[
+              {
+                startDate: ViewStartDate,
+                endDate: ViewEndDate,
+                key: 'ViewDateSelection',
+              },
+            ]}
           />
         </DateSelectorGroup>
 
         <ActionButtonGroup>
           <StyledButton
+            onButtonClick={() => {
+              dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, params.facilityName))
+              history.push('/facility/booking/create')
+            }}
             hasSuccessMessage={false}
             stopPropagation={false}
             defaultButtonDescription={'Book Facility'}
@@ -201,20 +186,23 @@ export default function ViewFacility() {
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
           />
-          <StyledButton
-            hasSuccessMessage={false}
-            stopPropagation={false}
-            defaultButtonDescription={'👓 Bookings ⌄'}
-            defaultButtonColor="transparent"
-            updatedButtonColor="transparent"
-            updatedTextColor="#DE5F4C"
-            defaultTextColor="#DE5F4C"
-            updatedButtonDescription={'🕶 Availabilities ⌄'}
-          />
+          <div onClick={() => console.log('pressed')}>
+            <StyledButton
+              onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'👓 Bookings ⌄'}
+              defaultButtonColor="transparent"
+              updatedButtonColor="transparent"
+              updatedTextColor="#DE5F4C"
+              defaultTextColor="#DE5F4C"
+              updatedButtonDescription={'🕶 Availabilities ⌄'}
+            />
+          </div>
         </ActionButtonGroup>
         <DateDisplayText>16 Dec to 18 Dec</DateDisplayText>
         <EventsGroup>
-          {dummyEvents.map((event) => (
+          {facilityBookingsStubs.map((event) => (
             <EventCard
               key={event.id}
               onClick={() => {
