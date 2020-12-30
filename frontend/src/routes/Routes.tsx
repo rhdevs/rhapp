@@ -23,6 +23,9 @@ export enum PATHS {
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
+  // LAUNDRY
+  LAUNDRY_MAIN = '/facility/laundry',
+  VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -44,6 +47,9 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ '
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
 const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
+// LAUNDRY
+const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
+// const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewMachine'))
 
 export default class Routes extends React.Component {
   render() {
@@ -69,6 +75,9 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <Route exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <Route exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+
+            <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
+            <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={CreateBooking} />
           </Switch>
         </Suspense>
       </Root>
