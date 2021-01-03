@@ -8,6 +8,11 @@ const initialState = {
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
   shareSearchResults: [],
+
+  // Create new event states
+  newEventName: '',
+  newEventLocation: '',
+  newEventFromDate: new Date(),
 }
 
 type State = {
@@ -16,6 +21,9 @@ type State = {
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
+  newEventName: string
+  newEventLocation: string
+  newEventFromDate: Date
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -38,6 +46,24 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         shareSearchResults: action.shareSearchResults,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_NAME: {
+      return {
+        ...state,
+        newEventName: action.newEventName,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_LOCATION: {
+      return {
+        ...state,
+        newEventLocation: action.newEventLocation,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE: {
+      return {
+        ...state,
+        newEventFromDate: action.newEventFromDate,
       }
     }
     default:
