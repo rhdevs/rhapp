@@ -19,7 +19,7 @@ import {
   editEventFromDate,
   editCca,
   editDescription,
-} from '../../../store/scheduling/actions'
+} from '../../../store/scheduling/action'
 
 const { Option } = Select
 
