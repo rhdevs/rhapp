@@ -125,8 +125,8 @@ const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (unixDate: number) => {
-  const dayInInt = new Date(unixDate * 1000).getDay()
+const getDayStringFromUNIX = (unixDate: Date) => {
+  const dayInInt = unixDate.getDay()
   switch (dayInInt) {
     case 0:
       return 'Sunday'
@@ -146,14 +146,23 @@ const getDayStringFromUNIX = (unixDate: number) => {
 }
 
 // Converts a unix string into date format and returns the time of string type in 24hour format
-const getTimeStringFromUNIX = (unixDate: number) => {
-  // Create a new JavaScript Date object based on the timestamp
-  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  const date = new Date(unixDate * 1000)
-  const hours = '0' + date.getHours()
-  const minutes = '0' + date.getMinutes()
+const getTimeStringFromUNIX = (unixDate: Date) => {
+  const hours = '0' + unixDate.getHours()
+  const minutes = '0' + unixDate.getMinutes()
 
   const formattedTime = hours.substr(-2) + minutes.substr(-2)
 
   return formattedTime
+}
+
+export const editEventName = (newEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_NAME, newEventName: newEventName })
+}
+
+export const editEventLocation = (newEventLocation: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_LOCATION, newEventLocation: newEventLocation })
+}
+
+export const editEventFromDate = (newEventFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE, newEventFromDate: newEventFromDate })
 }
