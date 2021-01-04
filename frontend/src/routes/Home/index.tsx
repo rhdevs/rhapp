@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -159,6 +159,8 @@ const TemporaryRoutes = () => {
 }
 
 export default function Home() {
+  const history = useHistory()
+
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
 
@@ -166,7 +168,7 @@ export default function Home() {
     <MainContainer>
       <TopBar>
         <Greetings>{`Good ${partOfTheDay} Mao Mao,`}</Greetings>
-        <SearchOutlined style={{ fontSize: 25, color: '#fff' }} />
+        <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />
       <HexagonNavigation />
