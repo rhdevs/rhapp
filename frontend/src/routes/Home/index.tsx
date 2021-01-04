@@ -158,6 +158,8 @@ const TemporaryRoutes = () => {
 }
 
 export default function Home() {
+  const history = useHistory()
+
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
 
@@ -165,9 +167,7 @@ export default function Home() {
     <MainContainer>
       <TopBar>
         <Greetings>{`Good ${partOfTheDay} Mao Mao,`}</Greetings>
-        <Link to={PATHS.SEARCH_PAGE}>
-          <SearchOutlined style={{ fontSize: 25, color: '#fff' }} />
-        </Link>
+        <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />
       <HexagonNavigation />
