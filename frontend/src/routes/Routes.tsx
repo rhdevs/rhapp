@@ -6,6 +6,7 @@ import LoadingSpin from '../components/LoadingSpin'
 export enum PATHS {
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
+  SEARCH_PAGE = '/search',
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
@@ -29,6 +30,7 @@ export enum PATHS {
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
+const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
@@ -58,6 +60,7 @@ export default class Routes extends React.Component {
         <Suspense fallback={LoadingSpin}>
           <Switch>
             <Route exact path={PATHS.HOME_PAGE} component={Home} />
+            <Route exact path={PATHS.SEARCH_PAGE} component={Search} />
             <Route exact path={PATHS.LOGIN_PAGE} component={Login} />
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
