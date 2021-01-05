@@ -2,9 +2,9 @@ import { LeftOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch /**, useSelector */ } from 'react-redux'
 import { getSearchResults } from '../../../store/home/action'
-import { RootState } from '../../../store/types'
+// import { RootState } from '../../../store/types'
 import { searchResultsStub } from '../../../store/stubs'
 
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -46,7 +46,7 @@ type RecentData = {
 export default function Search({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const searchResults = useSelector((state: RootState) => state.home.searchResults)
+  // const searchResults = useSelector((state: RootState) => state.home.searchResults)
   const [searchValue, setSearchValue] = useState('')
 
   const onChange = (input: string) => {

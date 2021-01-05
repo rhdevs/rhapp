@@ -29,6 +29,7 @@ export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getSt
 }
 
 export const getSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch) // to be remove
   // Uncomment when endpoint for search is obtained from backend
   // get(ENDPOINTS.SEARCH).then((results) => {
   //   dispatch({

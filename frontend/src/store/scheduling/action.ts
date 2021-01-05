@@ -159,6 +159,7 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 }
 
 export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch)
   // Uncomment when endpoint for share search is obtained from backend
   // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
   //   dispatch({

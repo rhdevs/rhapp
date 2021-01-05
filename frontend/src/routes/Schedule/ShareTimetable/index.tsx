@@ -1,8 +1,8 @@
 import { LeftOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../../../store/types'
+import { useDispatch /** , useSelector */ } from 'react-redux'
+// import { RootState } from '../../../store/types'
 import { getShareSearchResults } from '../../../store/scheduling/action'
 import { searchResultsStub } from '../../../store/stubs'
 
@@ -46,7 +46,7 @@ type RecentData = {
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
+  // const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
   const [searchValue, setSearchValue] = useState('')
 
   const onChange = (input: string) => {
