@@ -63,6 +63,7 @@ def check_bookings(facilityID):
     print('TESTING 0')
     try :
         data = listToIndexedDict(list(db.Bookings.find({"facilityID": facilityID, "startTime" : {"$gt": request.args.get('startDate')}, "endTime": {"$lt" : request.args.get('endDate')}})))
+        print(data)
     except Exception as e:
         return {"err": str(e)}, 400
     return data
@@ -74,7 +75,7 @@ def user_telegram(userID) :
     try :
         data = list(db.User.find({"userID" : userID}))
         if len(data) > 0 :
-            data = data[0]['telegramHandle']
+            data = {"telegramHandle": data[0]['telegramHandle']}
         else :
             return "No User Found", 200
     except Exception as e:
