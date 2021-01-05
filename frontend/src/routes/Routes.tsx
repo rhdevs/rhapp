@@ -6,13 +6,13 @@ import LoadingSpin from '../components/LoadingSpin'
 export enum PATHS {
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
+  SEARCH_PAGE = '/search',
   // AUTHENTICATION
-  LOGIN_PAGE = '/login',
-  SIGNUP_PAGE = '/signup',
-  PROFILE_PAGE = '/profile',
-  EDIT_PROFILE_PAGE = '/profile/editProfile',
-  CHANGE_PASSWORD_PAGE = '/changePassword',
-  FRIEND_LIST_PAGE = '/profile/friendList',
+  LOGIN_PAGE = '/auth/login',
+  SIGNUP_PAGE = '/auth/signup',
+  CHANGE_PASSWORD_PAGE = '/auth/changePassword',
+  PROFILE_PAGE = '/social/profile',
+  FRIEND_LIST_PAGE = '/social/profile/friendList',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -30,12 +30,12 @@ export enum PATHS {
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
+const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
-const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" */ './Profile/EditProfile'))
 const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePassword" */ './Profile/ChangePassword'))
 const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */ './Profile/FriendList'))
 // SCHEDULING
@@ -60,11 +60,11 @@ export default class Routes extends React.Component {
         <Suspense fallback={LoadingSpin}>
           <Switch>
             <Route exact path={PATHS.HOME_PAGE} component={Home} />
+            <Route exact path={PATHS.SEARCH_PAGE} component={Search} />
             <Route exact path={PATHS.LOGIN_PAGE} component={Login} />
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
             <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
-            <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <Route exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <Route exact path={PATHS.FRIEND_LIST_PAGE} component={FriendList} />
 
