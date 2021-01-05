@@ -77,7 +77,7 @@ def user_telegram(userID) :
         if len(data) > 0 :
             data = {"telegramHandle": data[0]['telegramHandle']}
         else :
-            return "No User Found", 200
+            return {"err" : "No User Found"}, 400
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
