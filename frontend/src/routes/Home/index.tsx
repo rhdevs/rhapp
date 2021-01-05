@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -154,6 +154,7 @@ const TemporaryRoutes = () => {
         Create Booking
       </Button>
       <br />
+      <div style={{ height: 100 }} />
     </Navigations>
   )
 }

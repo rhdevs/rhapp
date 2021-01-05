@@ -24,7 +24,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import { facilityBookingsStubs } from '../../../store/stubs'
 
-const MainContainer = styled.div`import { Alert } from 'antd';
+const MainContainer = styled.div`
   width: 100%;
   height: calc(100% + 100px);
   background-color: #fafaf4;
