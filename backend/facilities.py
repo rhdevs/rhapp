@@ -46,7 +46,7 @@ def all_facilities():
         
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
     return data, 200
 
 @app.route('/bookings/user/<userID>')
@@ -54,7 +54,7 @@ def user_bookings(userID) :
     try:
         data = listToIndexedDict(list(db.Bookings.find({"userID" : userID})))
     except Exception as e:
-        return "err", 400
+        return {"err": str(e)}, 400
     return data, 200
 
 
@@ -64,10 +64,11 @@ def check_bookings(facilityID):
     try :
         data = listToIndexedDict(list(db.Bookings.find({"facilityID": facilityID, "startTime" : {"$gt": request.args.get('startDate')}, "endTime": {"$lt" : request.args.get('endDate')}})))
     except Exception as e:
-        return "err", 400
+        return {"err": str(e)}, 400
     return data
 
     return data, 200
+    
 @app.route('/users/telegramID/<userID>')
 def user_telegram(userID) :
     try :
@@ -78,23 +79,34 @@ def user_telegram(userID) :
             return "No User Found", 200
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
     return data, 200
 
 @app.route('/bookings', methods=['POST'])
 def add_booking() :
     try:
         print("Testing 2")
-
+        # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
         formData = request.form.to_dict()
+
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
+
+        formData["bookingID"] = int(formData["bookingID"])
+        formData["facilityID"] = int(formData["facilityID"])
+        formData["ccaID"] = int(formData["ccaID"])
+
+        if (formData["endTime"] < formData["startTime"]) :
+            raise Exception("End time eariler than start time")    
+        # else:
+        #     return {"err": "Unauthorised Access"}, 401    
+        
         print(formData["startTime"], " test4")
         db.Bookings.insert(formData)
         
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
 
     return {"message": "Booking Confirmed"}, 200
 
@@ -107,7 +119,7 @@ def get_booking(bookingID) :
         data = listToIndexedDict(list(db.Bookings.find({"bookingID":bookingID})))
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
     return data, 200
      
 @app.route('/bookings/<bookingID>', methods=['PUT'])
@@ -121,7 +133,7 @@ def edit_booking(bookingID) :
         #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
     
     return {"message" : "Booking edited"}, 200
 
@@ -136,31 +148,31 @@ def delete_booking(bookingID) :
         #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
         print(e)
-        return "err", 400
+        return {"err": str(e)}, 400
     
     return {"message" : "Booking Deleted"}, 200
 
 if __name__ == '__main__':
    app.run(debug = True)
 
-def authenticate(cookie) :
-    userID = cookie.get('userID')
-    sessionID = cookie.get('sessionID')
-    serverSession = session.get("userID")
+# def authenticate(cookie) :
+#     userID = cookie.get('userID')
+#     sessionID = cookie.get('sessionID')
+#     serverSession = session.get("userID")
 
-    if not userID or not sessionID or not serverSession :
-        return False
+#     if not userID or not sessionID or not serverSession :
+#         return False
 
-    if not db.User.find({"userID" : userID}) :
-        return False
+#     if not db.User.find({"userID" : userID}) :
+#         return False
     
-    if serverSession.get("sessionID") != sessionID :
-        return False
+#     if serverSession.get("sessionID") != sessionID :
+#         return False
 
-    if serverSession.get("startTime") + datetime.timeDelta(0, serverSession.get("expiry") * 60) < datetime.today() :
-        return False
+#     if serverSession.get("startTime") + datetime.timeDelta(0, serverSession.get("expiry") * 60) < datetime.today() :
+#         return False
 
-    return True
+#     return True
 
 
     
