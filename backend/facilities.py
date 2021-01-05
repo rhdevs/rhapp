@@ -60,10 +60,10 @@ def user_bookings(userID) :
 
 @app.route('/bookings/facility/<facilityID>/')
 def check_bookings(facilityID):
-    print('TESTING 0')
+    #print('TESTING 0')
     try :
-        data = listToIndexedDict(list(db.Bookings.find({"facilityID": facilityID, "startTime" : {"$gt": request.args.get('startDate')}, "endTime": {"$lt" : request.args.get('endDate')}})))
-        print(data)
+        data = listToIndexedDict(list(db.Bookings.find({"facilityID": int(facilityID), "startTime" : {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
+        #print(data)
     except Exception as e:
         return {"err": str(e)}, 400
     return data
