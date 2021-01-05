@@ -1,5 +1,6 @@
 import { Reducer } from 'redux'
-import { ActionTypes, HOME_PAGE_ACTIONS, Account, SearchResult } from './types'
+import { ActionTypes, HOME_PAGE_ACTIONS, Account } from './types'
+import { SearchResult } from '../types'
 
 const initialState = {
   Account: null,

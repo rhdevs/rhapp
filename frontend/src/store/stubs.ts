@@ -1,6 +1,6 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
-import { SearchResult } from './home/types'
+import { SearchResult } from './types'
 
 /**
  * ######### STUBS LIST: #########

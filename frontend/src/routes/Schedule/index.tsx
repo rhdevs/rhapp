@@ -13,7 +13,7 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserRhEvents } from '../../store/scheduling/actions'
+import { fetchUserRhEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import { RHEvent } from '../../store/scheduling/types'

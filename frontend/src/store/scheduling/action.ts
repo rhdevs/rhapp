@@ -157,3 +157,13 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 
   return formattedTime
 }
+
+export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  // Uncomment when endpoint for share search is obtained from backend
+  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
+  //   dispatch({
+  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+  //     shareSearchResults: results,
+  //   })
+  // })
+}

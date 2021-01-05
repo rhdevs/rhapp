@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { setSearchResults } from '../../../store/home/action'
+import { getSearchResults } from '../../../store/home/action'
 import { RootState } from '../../../store/types'
 import { searchResultsStub } from '../../../store/stubs'
 
@@ -51,7 +51,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
 
   const onChange = (input: string) => {
     setSearchValue(input)
-    input && dispatch(setSearchResults(input))
+    input && dispatch(getSearchResults(input))
   }
 
   const leftIcon = (

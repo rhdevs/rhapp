@@ -28,7 +28,7 @@ export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getSt
   })
 }
 
-export const setSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
   // Uncomment when endpoint for search is obtained from backend
   // get(ENDPOINTS.SEARCH).then((results) => {
   //   dispatch({
