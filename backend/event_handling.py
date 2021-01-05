@@ -238,7 +238,7 @@ def editAttendance():
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return {'message': "Attendance editted"}, 200
+    return {'message': "Attendance edited"}, 200
 
 
 if __name__ == '__main__':
