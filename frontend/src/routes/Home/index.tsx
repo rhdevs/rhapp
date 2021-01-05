@@ -12,7 +12,6 @@ import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import HexagonNavigation from './HexagonNavigation'
 import SocialSection from './SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
-import ScrollToTopButton from '../../components/Mobile/ScrollToTopButton'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -174,7 +173,6 @@ export default function Home() {
       <AnnouncementCarousel />
       <HexagonNavigation />
       <SocialSection />
-      <ScrollToTopButton />
       <h1>Temporary Routes</h1>
       <TemporaryRoutes />
       <BottomNavBar />
