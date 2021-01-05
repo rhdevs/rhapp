@@ -10,7 +10,7 @@ db = client.RHApp
 app = Flask("rhapp")
 
 
-@app.route("/timetable/all/<userID>")
+@app.route("/timetable/<userID>")
 def getUserTimetable(userID):
     try:
         data = db.Lessons.find({"userID": userID})
@@ -101,7 +101,7 @@ def getEventAttendees(eventID):
 
 
 @ app.route("/user_CCA/<int:ccaID>")
-def getCcaMembers(ccaID):
+def getCCAMembers(ccaID):
     try:
         data = db.UserCCA.find({"ccaID": ccaID})
     except Exception as e:
@@ -144,26 +144,25 @@ def addDeletePermissions():
     return {"message": "Action successful"}, 200
 
 
-@ app.route("/event/add")
+@ app.route("/event/add", methods=['POST'])
 def createEvent():
     try:
-        eventID = int(request.args.get('eventID'))
-        eventName = request.args.get('eventName')
-        startDateTime = datetime.strptime(
-            request.args.get('startDateTime'), "%Y-%m-%d").date()
-        endDateTime = datetime.strptime(
-            request.args.get('endDateTime'), "%Y-%m-%d").date()
-        description = request.args.get('description')
-        location = request.args.get('location')
-        ccaID = int(request.args.get('ccaID'))
-        userID = request.args.get('userID')
-        image = request.args.get('image')
+        data = request.get_json()
+        eventID = int(data.get('eventID'))
+        eventName = str(data.get('eventName'))
+        startDateTime = int(data.get('startDateTime'))
+        endDateTime = int(data.get('endDateTime'))
+        description = str(data.get('description'))
+        location = data.get('location')
+        ccaID = int(data.get('ccaID'))
+        userID = data.get('userID')
+        image = data.get('image')
 
         body = {
             "eventID": eventID,
             "eventName": eventName,
-            "startDateTime": time.mktime(startDateTime.timetuple()),
-            "endDateTime": time.mktime(endDateTime.timetuple()),
+            "startDateTime": startDateTime,
+            "endDateTime": endDateTime,
             "description": description,
             "location": location,
             "ccaID": ccaID,
@@ -193,23 +192,22 @@ def deleteEvent(eventID):
 @ app.route("/event/edit/", methods=['PUT'])
 def editEvent():
     try:
-        eventID = int(request.args.get('eventID'))
-        eventName = request.args.get('eventName')
-        startDateTime = datetime.strptime(
-            request.args.get('startDateTime'), "%Y-%m-%d").date()
-        endDateTime = datetime.strptime(
-            request.args.get('endDateTime'), "%Y-%m-%d").date()
-        description = request.args.get('description')
-        location = request.args.get('location')
-        ccaID = int(request.args.get('ccaID'))
-        userID = request.args.get('userID')
-        image = request.args.get('image')
+        data = request.get_json()
+        eventID = int(data.get('eventID'))
+        eventName = str(data.get('eventName'))
+        startDateTime = int(data.get('startDateTime'))
+        endDateTime = int(data.get('endDateTime'))
+        description = str(data.get('description'))
+        location = data.get('location')
+        ccaID = int(data.get('ccaID'))
+        userID = data.get('userID')
+        image = data.get('image')
 
         body = {
             "eventID": eventID,
             "eventName": eventName,
-            "startDateTime": time.mktime(startDateTime.timetuple()),
-            "endDateTime": time.mktime(endDateTime.timetuple()),
+            "startDateTime": startDateTime,
+            "endDateTime": endDateTime,
             "description": description,
             "location": location,
             "ccaID": ccaID,
