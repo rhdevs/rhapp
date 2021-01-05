@@ -1,5 +1,6 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
+import { SearchResult } from './home/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -8,6 +9,7 @@ import { WashingMachine, WMStatus } from './laundry/types'
  * 3. userRhEvents
  * 4. Washing Machines
  * 5. Events
+ * 6. Search Results
  */
 
 export const facilityListStub: Facility[] = [
@@ -176,5 +178,18 @@ export const facilityBookingsStubs = [
     eventName: 'Training',
     eventCCA: 'Voices',
     eventOwner: 'you',
+  },
+]
+
+export const searchResultsStub: SearchResult[] = [
+  {
+    id: 1,
+    title: 'Ali',
+    description: 'Hello my name is Ali',
+  },
+  {
+    id: 2,
+    title: 'Bob',
+    description: 'Hello my name is Bob',
   },
 ]

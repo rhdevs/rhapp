@@ -1,14 +1,16 @@
 import { Reducer } from 'redux'
-import { ActionTypes, HOME_PAGE_ACTIONS, Account } from './types'
+import { ActionTypes, HOME_PAGE_ACTIONS, Account, SearchResult } from './types'
 
 const initialState = {
   Account: null,
   sampleStateText: 'Hola',
+  searchResults: [],
 }
 
 type State = {
   Account: Account | null
   sampleStateText: string
+  searchResults: SearchResult[]
 }
 
 export const home: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -26,7 +28,12 @@ export const home: Reducer<State, ActionTypes> = (state = initialState, action) 
         sampleStateText: action.sampleStateText,
       }
     }
-
+    case HOME_PAGE_ACTIONS.SEARCH: {
+      return {
+        ...state,
+        searchResults: action.searchResults,
+      }
+    }
     default:
       return state
   }

@@ -27,3 +27,13 @@ export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getSt
     sampleStateText: sampleStateText + 'n',
   })
 }
+
+export const setSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  // Uncomment when endpoint for search is obtained from backend
+  // get(ENDPOINTS.SEARCH).then((results) => {
+  //   dispatch({
+  //     type: HOME_PAGE_ACTIONS.SEARCH,
+  //     searchResults: results,
+  //   })
+  // })
+}
