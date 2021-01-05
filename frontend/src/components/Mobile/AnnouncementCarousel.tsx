@@ -5,13 +5,7 @@ import StyledCarousel from './StyledCarousel'
 
 const Content = styled.div`
   height: 160px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
-  padding: 20px;
-  text-align: center;
-  font-size: 10px;
   &:before {
     content: '';
     background-image: url('https://farm3.static.flickr.com/2098/2260149771_00cb406fd6_o.jpg');
@@ -20,7 +14,7 @@ const Content = styled.div`
     right: 0px;
     bottom: 0px;
     left: 0px;
-    opacity: 0.4;
+    opacity: 1;
   }
 `
 
