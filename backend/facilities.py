@@ -71,7 +71,11 @@ def check_bookings(facilityID):
 @app.route('/users/telegramID/<userID>')
 def user_telegram(userID) :
     try :
-        data = list(db.User.find({"userID" : userID}))[0]['telegramHandle']
+        data = list(db.User.find({"userID" : userID}))
+        if len(data) > 0 :
+            data = data[0]['telegramHandle']
+        else :
+            return "No User Found", 200
     except Exception as e:
         print(e)
         return "err", 400
@@ -83,7 +87,9 @@ def add_booking() :
         print("Testing 2")
 
         formData = request.form.to_dict()
-        print(formData, " test4")
+        formData["startTime"] = int(formData["startTime"])
+        formData["endTime"] = int(formData["endTime"])
+        print(formData["startTime"], " test4")
         db.Bookings.insert(formData)
         
     except Exception as e:
