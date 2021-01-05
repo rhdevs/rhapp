@@ -13,7 +13,7 @@ app = Flask("rhapp")
 @app.route("/timetable/all/<userID>")
 def getUserTimetable(userID):
     try:
-        data = db.UserLesson.find({"userID": userID})
+        data = db.Lessons.find({"userID": userID})
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
@@ -70,16 +70,6 @@ def getCCADetails(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@ app.route('/lesson/<int:lessonID>')
-def getLessonDetails(lessonID):
-    try:
-        data = db.Lessons.find({"lessonID": lessonID})
-    except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
 @ app.route("/user_CCA/<userID>")
 def getUserCCAs(userID):
     try:
@@ -94,16 +84,6 @@ def getUserCCAs(userID):
 def getUserEvents(userID):
     try:
         data = db.UserEvent.find({"userID": userID})
-    except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
-@ app.route("/user_lesson/<userID>")
-def getUserLessons(userID):
-    try:
-        data = db.UserLesson.find({"userID": userID})
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
