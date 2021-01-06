@@ -82,7 +82,7 @@ const DescriptionText = styled.text`
   display: -webkit-box;
   padding: 20px;
 `
-type Props = {
+type ViewPostProps = {
   isOwner: boolean
   avatar?: string
   name: string
@@ -94,7 +94,7 @@ type Props = {
   postPics?: string[]
 }
 
-export default function ViewPost() {
+export default function ViewPost(props: ViewPostProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
@@ -102,9 +102,9 @@ export default function ViewPost() {
   // const history = useHistory()
 
   // const params = useParams<{ postId: string }>()
-  const props = useLocation<Props>()
+  // const props = useLocation<Props>()
 
-  const { isOwner, avatar, name, title, dateTime, description, postId, initials, postPics } = props.state
+  const { isOwner, avatar, name, title, dateTime, description, postId, initials, postPics } = props
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
