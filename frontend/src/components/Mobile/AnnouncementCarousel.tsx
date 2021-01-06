@@ -1,6 +1,7 @@
 import React from 'react'
-import { Carousel } from 'antd'
 import styled from 'styled-components'
+
+import StyledCarousel from './StyledCarousel'
 
 const Content = styled.div`
   height: 160px;
@@ -20,18 +21,6 @@ const Content = styled.div`
     bottom: 0px;
     left: 0px;
     opacity: 0.4;
-  }
-`
-
-const StyledCarousel = styled(Carousel)`
-  &.slick-slider {
-    position: relative;
-    top: -10px;
-  }
-  .slick-dots li.slick-active button {
-    background: #000 !important;
-    opacity: 0.8 !important;
-    z-index: 1 !important;
   }
 `
 

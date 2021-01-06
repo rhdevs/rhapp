@@ -28,7 +28,8 @@ export enum PATHS {
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
   //SOCIAL
-  VIEW_POST = '/social/post/:postId',
+  VIEW_POST = '/social/post/',
+  VIEW_POST_ID = '/social/post/:postId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -86,7 +87,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
-            <Route exact path={PATHS.VIEW_POST} component={ViewPost} />
+            <Route path={PATHS.VIEW_POST_ID} component={ViewPost} />
           </Switch>
         </Suspense>
       </Root>

@@ -143,8 +143,7 @@ function SocialPostCard(props: Props) {
 
   const onExpandClick = () => {
     history.push({
-      pathname: PATHS.VIEW_POST,
-      state: { ...props, initials },
+      pathname: `${PATHS.VIEW_POST}${props.postId}`,
     })
     console.log('Link to expanded version of post!')
   }

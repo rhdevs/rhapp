@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useParams } from 'react-router-dom'
+// import { useDispatch } from 'react-redux'
+import 'antd/dist/antd.css'
+import useSnackbar from '../../../hooks/useSnackbar'
+
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import StyledCarousel from '../../../components/Mobile/StyledCarousel'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
-import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import 'antd/dist/antd.css'
-// import { PATHS } from '../../Routes'
 import { Avatar, Menu } from 'antd'
 
 const MainContainer = styled.div`
@@ -82,40 +84,60 @@ const DescriptionText = styled.text`
   display: -webkit-box;
   padding: 20px;
 `
-type ViewPostProps = {
-  isOwner: boolean
-  avatar?: string
-  name: string
-  title: string
-  dateTime: string
-  description: string
-  postId: string
-  initials: string
-  postPics?: string[]
-}
 
-export default function ViewPost(props: ViewPostProps) {
+// type ViewPostProps = {
+//   isOwner: boolean
+//   avatar?: string
+//   name: string
+//   title: string
+//   dateTime: string
+//   description: string
+//   postId: string
+//   initials: string
+//   postPics?: string[]
+// }
+
+export default function ViewPost() {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false)
-
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const [success] = useSnackbar()
   // const dispatch = useDispatch()
-  // const history = useHistory()
 
-  // const params = useParams<{ postId: string }>()
-  // const props = useLocation<Props>()
+  const { postId } = useParams<{ postId: string }>()
 
-  const { isOwner, avatar, name, title, dateTime, description, postId, initials, postPics } = props
+  const dummyPost = {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+    initials: 'ZGG',
+  }
+
+  const { isOwner, avatar, name, title, dateTime, description, initials, postPics } = dummyPost
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
-    console.log(menuIsOpen)
   }
 
   const onDeleteClick = () => {
     setMenuIsOpen(false)
-    setDeleteConfirmation(!deleteConfirmation)
-    console.log(deleteConfirmation)
+    setIsDeleteModalVisible(true)
   }
+
+  const handleDeletePost = () => {
+    // TODO: Call delete post endpoint
+    success('Successfully Deleted!')
+    setIsDeleteModalVisible(false)
+  }
+
   const MenuIcon = isOwner ? (
     <MenuContainer>
       <div onClick={onMenuClick}>
@@ -126,7 +148,6 @@ export default function ViewPost(props: ViewPostProps) {
     <></>
   )
 
-  console.log(props)
   const Topbar = (
     <CenterContainer>
       <Avatar
@@ -143,6 +164,14 @@ export default function ViewPost(props: ViewPostProps) {
         </TimeDateText>
       </TextContainer>
     </CenterContainer>
+  )
+
+  const renderPhotoCarousel = () => (
+    <StyledCarousel>
+      {postPics.map((pic) => (
+        <StyledImg src={pic} key={pic} />
+      ))}
+    </StyledCarousel>
   )
 
   return (
@@ -162,14 +191,21 @@ export default function ViewPost(props: ViewPostProps) {
             </StyledMenuContainer>
           </>
         )}
-        {postPics && (
-          <ImageContainer>
-            <StyledImg src={postPics[0]} />
-          </ImageContainer>
-        )}
+        {postPics && renderPhotoCarousel()}
         <DescriptionText>{description}</DescriptionText>
         <BottomNavBar />
       </MainContainer>
+
+      {isDeleteModalVisible && (
+        <ConfirmationModal
+          title="Discard Changes?"
+          hasLeftButton
+          leftButtonText="Delete"
+          onLeftButtonClick={handleDeletePost}
+          rightButtonText="Cancel"
+          onRightButtonClick={() => setIsDeleteModalVisible(false)}
+        />
+      )}
     </>
   )
 }
