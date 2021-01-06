@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 // import { useDispatch } from 'react-redux'
 import 'antd/dist/antd.css'
 import useSnackbar from '../../../hooks/useSnackbar'
@@ -43,11 +43,6 @@ const StyledMenuContainer = styled(Menu)`
   border-radius: 5px;
 `
 
-const ImageContainer = styled.div`
-  width: 100%;
-  margin: auto 0;
-  position: relative;
-`
 const StyledImg = styled.img`
   width: 100%;
   aspect-ratio: 1;
@@ -103,7 +98,8 @@ export default function ViewPost() {
   const [success] = useSnackbar()
   // const dispatch = useDispatch()
 
-  const { postId } = useParams<{ postId: string }>()
+  // const { postId } = useParams<{ postId: string }>()
+  // TODO: Use postId to fetch post data from endpoint
 
   const dummyPost = {
     isOwner: true,
