@@ -13,6 +13,8 @@ const initialState = {
   newEventName: '',
   newEventLocation: '',
   newEventFromDate: new Date(),
+  newCca: '',
+  newDescription: '',
 }
 
 type State = {
@@ -24,6 +26,8 @@ type State = {
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
+  newCca: string
+  newDescription: string
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -64,6 +68,18 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         newEventFromDate: action.newEventFromDate,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CCA: {
+      return {
+        ...state,
+        newCca: action.newCca,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_DESCRIPTION: {
+      return {
+        ...state,
+        newDescription: action.newDescription,
       }
     }
     default:
