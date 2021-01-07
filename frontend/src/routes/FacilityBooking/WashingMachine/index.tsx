@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import '../../../assets/fonts.css'
 import Selector from '../../../components/Selector'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import Selector from '../../../components/Selector'
 // import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`

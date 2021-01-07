@@ -1,5 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -38,6 +39,9 @@ const Greetings = styled.text`
   font-size: 17px;
   color: #fff;
   font-weight: 100;
+`
+const Navigations = styled.div`
+  padding-left: 23px;
 `
 
 const TemporaryRoutes = () => {

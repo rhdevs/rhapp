@@ -44,9 +44,9 @@ const Background = styled.div`
   width: 100%;
 `
 
-const BottomNavBar = styled.div`
-  height: 64px;
-`
+// const BottomNavBar = styled.div`
+//   height: 64px;
+// `
 
 const { SubMenu } = Menu
 
@@ -167,8 +167,13 @@ export default function Schedule() {
               console.log('share')
             }}
           >
-            <Menu.Item key="1">
-              <Link to={'/shareTimetable'}>Share with...</Link>
+            <Menu.Item
+              key="1"
+              onClick={() => {
+                history.push(PATHS.SHARE_TIMETABLE_PAGE)
+              }}
+            >
+              Share with...
             </Menu.Item>
 
             <Menu.Item key="2">Save as png</Menu.Item>
@@ -177,8 +182,14 @@ export default function Schedule() {
             <Menu.Item key="3">Import an ICalander File (.ics)</Menu.Item>
             <Menu.Item key="4">Add an event</Menu.Item>
           </SubMenu>
-          <Menu.Item key="5" icon={<SearchOutlined />}>
-            <Link to={'/eventList'}>Events</Link>
+          <Menu.Item
+            key="5"
+            icon={<SearchOutlined />}
+            onClick={() => {
+              history.push(PATHS.EVENT_LIST_PAGE)
+            }}
+          >
+            Events
           </Menu.Item>
         </>
       }

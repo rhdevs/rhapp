@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { TabBar } from 'antd-mobile'
@@ -14,6 +15,11 @@ import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 
 import 'antd-mobile/dist/antd-mobile.css'
 
+const StyledButton = styled.img`
+  width: 27px;
+  height: 27px;
+`
+
 const BottomNav = styled.div`
   z-index: 1000;
   overflow: hidden;
@@ -22,12 +28,12 @@ const BottomNav = styled.div`
   width: 100%;
 `
 
-const BottomNav = styled.div`
-  overflow: hidden;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-`
+// const BottomNav = styled.div`
+//   overflow: hidden;
+//   position: fixed;
+//   bottom: 0;
+//   width: 100%;
+// `
 
 function BottomNavBar() {
   const history = useHistory()

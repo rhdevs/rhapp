@@ -112,7 +112,7 @@ const WashingMachineCard = ({
     } else if (card.status === completed) {
       setAvailable()
     } else if (card.status === reserved) {
-      history.push(PATHS.LAUNDRY_PAGE)
+      history.push(PATHS.VIEW_WASHING_MACHINE)
     }
   }
 

@@ -17,6 +17,7 @@ export enum PATHS {
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/sharetimetable',
   EVENT_LIST_PAGE = '/eventList',
+  CREATE_EVENT = '/schedule/events/create',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityName',
@@ -29,6 +30,8 @@ export enum PATHS {
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
+
+  CREATE_POST = '/social/createpost',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -44,6 +47,8 @@ const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */
 const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
+const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
+
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
@@ -56,6 +61,8 @@ const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ '.
 const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewWashingMachine'))
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
+
+const CreatePost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/CreatePost'))
 
 export default class Routes extends React.Component {
   render() {
@@ -86,6 +93,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
             <Route path={PATHS.VIEW_POST_ID} component={ViewPost} />
+            <Route path={PATHS.CREATE_POST} component={CreatePost} />
           </Switch>
         </Suspense>
       </Root>
