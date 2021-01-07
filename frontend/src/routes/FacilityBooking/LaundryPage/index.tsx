@@ -7,6 +7,7 @@ import { Laundry } from '../../../components/laundrypage/Laundry'
 import { WashingMachineStatus } from '../../../components/laundrypage/status'
 import styled from 'styled-components'
 import '../../../assets/fonts.css'
+import { CreatePost } from '../../../components/createpost/createpost'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -31,8 +32,9 @@ export default function ViewBooking() {
   return (
     <>
       <MainContainer>
-        <Laundry status={WashingMachineStatus.reserved} serial={'S/N 050201'} />
-        <BottomNavBar />
+        {/* <Laundry status={WashingMachineStatus.reserved} serial={'S/N 050201'} />
+                <BottomNavBar /> */}
+        <CreatePost status={'leadercreate'} />
       </MainContainer>
     </>
   )

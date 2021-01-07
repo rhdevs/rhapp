@@ -17,16 +17,6 @@ const Container = styled.div`
 const Top = styled.div`
   display: flex;
 `
-// const Bottom = styled.div`
-//   text-align: center;
-//   margin-top: ${status === WashingMachineStatus.available
-//     ? '50px'
-//     : status === WashingMachineStatus.reserved
-//     ? '10px'
-//     : status === WashingMachineStatus.edit
-//     ? '100px'
-//     : '30px'};
-// `
 
 const Left = styled.div``
 
