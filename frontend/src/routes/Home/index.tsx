@@ -49,7 +49,7 @@ const TemporaryRoutes = () => {
   const dispatch = useDispatch()
   const { sampleStateText } = useSelector((state: RootState) => state.home)
 
-  const leftIcon = <button>Hello</button>
+  //const leftIcon = <button>Hello</button>
 
   const onButtonClick = () => {
     dispatch(getUpdateMockString())

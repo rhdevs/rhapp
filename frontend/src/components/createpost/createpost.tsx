@@ -117,11 +117,6 @@ const InputLabel = styled.label`
   left: 106.5px;
 `
 
-const InputImage = styled.label`
-  width: 75.49px;
-  height: 80.28px;
-`
-
 const Announcement = styled.div`
   display: flex;
   margin: 35px 0px 0px 31px;
@@ -182,13 +177,6 @@ const PostButton = styled.div`
   }
 `
 
-const ModalContainer = styled.div`
-  .ant-modal-content {
-    width: 340px;
-    height: 140px;
-    border-radius: 20px;
-  }
-`
 const WarningDiv = styled.div`
   position: absolute;
   bottom: 140px;
@@ -264,14 +252,14 @@ const CreatePost = ({ status }: { status: string }) => {
     setOfficial: false,
   })
 
-  function onChange(e: any) {
+  function onChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
     setBody({
       ...body,
       [e.target.name]: e.target.value,
     })
   }
 
-  function onSubmit(e: any) {
+  function onSubmit(e: React.MouseEvent<HTMLElement, MouseEvent>) {
     e.preventDefault()
     console.log(body.title)
     console.log(body.caption)
@@ -295,17 +283,18 @@ const CreatePost = ({ status }: { status: string }) => {
 
   //image
   interface ImageData {
-    file: string
+    file: File | null
     imagePreviewUrl: Array<string>
   }
 
-  const [image, setImage] = useState<ImageData>({ file: '', imagePreviewUrl: [] })
+  const [image, setImage] = useState<ImageData>({ file: null, imagePreviewUrl: [] })
 
-  function handleImageChange(e: any) {
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
 
     const reader = new FileReader()
-    const file = e.target.files[0]
+    const files = e.target.files ?? []
+    const file = files.length > 0 ? files[0] : null
     if (!file) {
       setShowWarning({ shown: true, warning: 'No file selected!' })
       setTimeout(() => setShowWarning({ ...showWarning, shown: false }), 2000)

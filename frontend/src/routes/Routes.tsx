@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import styled from 'styled-components'
 import { Route, Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
+//import { createEvent } from '@testing-library/react'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -82,6 +83,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
             <Route exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
+            <Route exact path={PATHS.CREATE_EVENT} component={CreateEvent} />
 
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />

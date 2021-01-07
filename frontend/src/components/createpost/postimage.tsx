@@ -1,5 +1,5 @@
-import { url } from 'inspector'
-import React, { useState, useEffect } from 'react'
+//import { url } from 'inspector'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import cross from '../../assets/cross.svg'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
@@ -22,7 +22,7 @@ const DeleteImage = styled.div`
   background-color: transparent;
 `
 
-const PostImage = ({ card, deleteFunc }: { card: string; deleteFunc: any }) => {
+const PostImage = ({ card, deleteFunc }: { card: string; deleteFunc: (string) => void }) => {
   const [modal, setModal] = useState(false)
   return (
     <MainContainer>
