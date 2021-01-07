@@ -35,6 +35,8 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
   SET_EVENT_LOCATION = 'SCHEDULING_ACTIONS.SET_EVENT_LOCATION',
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
+  SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
+  SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
 }
 
 type GetRhEvents = {
@@ -59,4 +61,14 @@ type SetEventFromDate = {
   newEventFromDate: Date
 }
 
-export type ActionTypes = GetRhEvents | SetEventName | SetEventLocation | SetEventFromDate
+type SetCca = {
+  type: typeof SCHEDULING_ACTIONS.SET_CCA
+  newCca: string
+}
+
+type SetDescription = {
+  type: typeof SCHEDULING_ACTIONS.SET_DESCRIPTION
+  newDescription: string
+}
+
+export type ActionTypes = GetRhEvents | SetEventName | SetEventLocation | SetEventFromDate | SetCca | SetDescription
