@@ -8,6 +8,7 @@ export enum ENDPOINTS {
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
+  FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
@@ -52,7 +53,7 @@ async function makeRequest(
   additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
-  let DOMAIN_URL
+  let DOMAIN_URL: string
   switch (domain) {
     case DOMAINS.FACILITY:
       DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'

@@ -1,4 +1,4 @@
-import { Dispatch } from '../types'
+import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { facilityListStub, myBookingsStub } from '../stubs'
 import { ENDPOINTS, DOMAINS, get } from '../endpoints'
@@ -18,20 +18,12 @@ export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  // GET('user/event/booking/userid')
-  // get(ENDPOINTS.USER_BOOKINGS + '/' + userId).then((resp) => {
-  //   const fetchedList: Booking[] = resp.data
-  //   dispatch({
-  //     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
-  //     myBookings: fetchedList,
-  //   })
-  // })
-
-  // When backend is up, need to fetch cca name and facility name via ID
-  console.log('getting bookings for ' + userId)
-  dispatch({
-    type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
-    myBookings: myBookingsStub,
+  get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, userId).then((resp) => {
+    const fetchedList: Booking[] = resp.data
+    dispatch({
+      type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
+      myBookings: fetchedList,
+    })
   })
 }
 
@@ -80,10 +72,24 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
 
-export const getAllEventsForFacility = (facilityName: string) => () => {
-  //get facility id from name
-  //call to api to fetch all events
-  console.log(facilityName)
+export const getAllEventsForFacility = (facilityName: string) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { ViewEndDate, ViewStartDate } = getState().facilityBooking
+  get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, '?facilityName=' + facilityName).then((resp) => {
+    const fetchedFacility: Facility = resp.data
+    const newSubstring =
+      fetchedFacility.facilityID +
+      '?startDate=' +
+      parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
+      '&endDate=' +
+      parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+    get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, newSubstring).then((resp) => {
+      const bookings: Booking[] = resp.data
+      dispatch({ type: FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS, bookings: bookings })
+    })
+  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

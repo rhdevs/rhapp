@@ -153,6 +153,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
+    case FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS: {
+      return {
+        ...state,
+        bookings: action.bookings,
+      }
+    }
+
     default:
       return state
   }
