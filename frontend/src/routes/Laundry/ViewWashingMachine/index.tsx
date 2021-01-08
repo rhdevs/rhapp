@@ -80,18 +80,7 @@ const MachineSize = styled.p`
   line-height: 30px;
   color: #023666;
 `
-/**
- * PageTitle can be: Reservation | Laundry Time | Collect Laundry | Edit Duration
- * SubTitle can be: "xx mins left", "It's Washy Time!", "Donezo!", or
- * DEPENDANT ON washingmachine.status :
- * export enum WMStatus {
-  AVAIL = 'Available',
-  INUSE = 'In Use',
-  UNCOLLECTED = 'Uncollected',
-  COMPLETED = 'Completed',
-  RESERVED = 'Reserved',
-}
- */
+
 export default function ViewWashingMachine() {
   const MachineDetails = (machine: WashingMachine) => {
     let pageTitle = 'Laundry Time!'
