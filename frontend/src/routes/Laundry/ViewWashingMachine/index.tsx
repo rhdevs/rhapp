@@ -54,7 +54,6 @@ const TimeLabel = styled.p`
   font-weight: normal;
   font-size: 15px;
   line-height: 20px;
-  padding: 0px 10px 0px 10px;
   display: flex;
   align-items: center;
   text-align: center;
@@ -95,9 +94,9 @@ const MachineSize = styled.p`
  */
 export default function ViewWashingMachine() {
   const MachineDetails = (machine: WashingMachine) => {
-    let pageTitle
-    let actions
-    let subtitle
+    let pageTitle = 'Laundry Time!'
+    let actions = <></>
+    let subtitle = <></>
     const imagesrc = washingMachineInUse
 
     const timeLeftGroup = (
@@ -116,16 +115,13 @@ export default function ViewWashingMachine() {
     switch (machine.job) {
       case WMStatus.AVAIL:
         subtitle = <TimeLabel>{"It's Washy Time!"}</TimeLabel>
-        actions = <></>
         pageTitle = 'Laundry Time'
         break
       case WMStatus.INUSE:
         subtitle = timeLeftGroup
-        actions = <></>
         pageTitle = 'In Use'
         break
       case WMStatus.COMPLETED:
-        subtitle = <></>
         pageTitle = 'Collect Laundry'
         actions = (
           <Button
