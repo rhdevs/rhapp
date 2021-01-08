@@ -45,7 +45,7 @@ async function makeRequest(
   additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
-  const DOMAIN = 'localhost:3000'
+  const DOMAIN = 'https://rhappfacilities.rhdevs.repl.co'
   return axios({
     method,
     url: DOMAIN + url,
