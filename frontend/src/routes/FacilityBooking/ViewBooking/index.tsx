@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-// import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,7 +7,8 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import { setSelectedBooking } from '../../../store/facilityBooking/action'
+import { deleteMyBooking, setIsDeleteMyBooking, setSelectedBooking } from '../../../store/facilityBooking/action'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -102,7 +102,7 @@ const EventOwnerDetails = styled.div`
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
-  const { selectedBooking } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedBooking, isDeleteMyBooking } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setSelectedBooking(params.bookingId))
@@ -147,10 +147,20 @@ export default function ViewBooking() {
           ) : (
             <ActionButtonGroup>
               <Icon src={editIcon} />
-              <Icon src={deleteIcon} />
+              <Icon src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
             </ActionButtonGroup>
           )}
         </EventCard>
+        {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
+          <ConfirmationModal
+            title={'Delete Booking?'}
+            hasLeftButton={true}
+            leftButtonText={'Delete'}
+            onLeftButtonClick={() => dispatch(deleteMyBooking(selectedBooking?.bookingID))}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+          />
+        )}
       </MainContainer>
     </>
   )

@@ -1,7 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { facilityListStub, myBookingsStub } from '../stubs'
-import { ENDPOINTS, DOMAINS, get, post } from '../endpoints'
+import { facilityListStub } from '../stubs'
+import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
@@ -32,13 +32,15 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
   dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
 }
 
-export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<ActionTypes>) => {
-  // DELETE call to backend
-  dispatch({
-    type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-    myBookings: myBookingsStub.filter((booking) => booking.bookingID !== bookingId),
+export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, bookingId.toString()).then(() => {
+    const { myBookings } = getState().facilityBooking
+    dispatch({
+      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+    })
+    setIsDeleteMyBooking(-1)
   })
-  setIsDeleteMyBooking(-1)
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
@@ -151,7 +153,7 @@ export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<Act
     endTime: new Date(),
     eventName: 'Training',
     ccaID: 122,
-    userID: '123',
+    userID: 'you',
     facilityID: 223,
     description: 'Backup location! Feel free to PM me',
   }
