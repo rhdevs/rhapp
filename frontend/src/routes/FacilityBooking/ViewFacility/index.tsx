@@ -18,11 +18,12 @@ import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import {
   createNewBookingFromFacility,
-  getAllEventsForFacility,
+  getAllBookingsForFacility,
   setViewDates,
   setViewFacilityMode,
 } from '../../../store/facilityBooking/action'
 import { facilityBookingsStubs } from '../../../store/stubs'
+import { months } from '../../../common/dates'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -128,7 +129,7 @@ export default function ViewFacility() {
   )
 
   useEffect(() => {
-    dispatch(getAllEventsForFacility(params.facilityName))
+    dispatch(getAllBookingsForFacility(params.facilityName))
   }, [dispatch])
 
   const MyBookingIcon = (
@@ -200,7 +201,10 @@ export default function ViewFacility() {
             />
           </div>
         </ActionButtonGroup>
-        <DateDisplayText>16 Dec to 18 Dec</DateDisplayText>
+        <DateDisplayText>
+          {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
+          {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
+        </DateDisplayText>
         <EventsGroup>
           {facilityBookingsStubs.map((event) => (
             <EventCard

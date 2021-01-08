@@ -83,7 +83,7 @@ export default function ViewMyBookings() {
   const { myBookings, isDeleteMyBooking } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(getMyBookings('123'))
+    dispatch(getMyBookings('1'))
   }, [dispatch])
 
   return (

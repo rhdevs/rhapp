@@ -8,6 +8,7 @@ export enum ENDPOINTS {
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
+  FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
@@ -39,16 +40,35 @@ export enum ENDPOINTS {
   EVENT_DETAILS = '/event',
 }
 
+export enum DOMAINS {
+  FACILITY = 'facility',
+  EVENT = 'event',
+  LAUNDRY = 'laundry',
+}
+
 async function makeRequest(
   url: string,
+  domain: DOMAINS,
   method: 'get' | 'post' | 'delete' | 'put',
   additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
-  const DOMAIN = 'localhost:3000'
+  let DOMAIN_URL: string
+  switch (domain) {
+    case DOMAINS.FACILITY:
+      DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'
+      break
+    case DOMAINS.EVENT:
+      DOMAIN_URL = 'https://rhappevents.rhdevs.repl.co'
+      break
+    case DOMAINS.LAUNDRY:
+      DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      break
+  }
+
   return axios({
     method,
-    url: DOMAIN + url,
+    url: DOMAIN_URL + url,
     headers: {
       ...additionalHeaders,
     },
@@ -67,32 +87,35 @@ async function makeRequest(
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ResponsePromise = Promise<any>
 
-export function get(endpoint: ENDPOINTS, subRoute = ''): ResponsePromise {
-  return makeRequest(endpoint + subRoute, 'get')
+export function get(endpoint: ENDPOINTS, domain: DOMAINS, subRoute = ''): ResponsePromise {
+  return makeRequest(endpoint + subRoute, domain, 'get')
 }
 
 export function post(
   endpoint: ENDPOINTS,
+  domain: DOMAINS,
   requestBody: Record<string, unknown>,
   additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
-  return makeRequest(endpoint + subRoute, 'post', additionalHeaders, requestBody)
+  return makeRequest(endpoint + subRoute, domain, 'post', additionalHeaders, requestBody)
 }
 
 export function del(
   endpoint: ENDPOINTS,
+  domain: DOMAINS,
   additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
-  return makeRequest(endpoint + subRoute, 'delete', additionalHeaders)
+  return makeRequest(endpoint + subRoute, domain, 'delete', additionalHeaders)
 }
 
 export function put(
   endpoint: ENDPOINTS,
+  domain: DOMAINS,
   requestBody: Record<string, unknown>,
   additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
-  return makeRequest(endpoint + subRoute, 'put', additionalHeaders, requestBody)
+  return makeRequest(endpoint + subRoute, domain, 'put', additionalHeaders, requestBody)
 }
