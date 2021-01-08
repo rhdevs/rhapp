@@ -1,20 +1,19 @@
 import React, { useState, useEffect, createRef } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { Divider } from 'antd'
-import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
-import { PATHS } from '../../../Routes'
+import SocialPostCard from '../../../components/Mobile/SocialPostCard'
 
 type TabProps = {
   active: boolean
 }
 
-type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
-
 type StickyProps = {
   isSticky: boolean
 }
+
+type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
+
 
 enum SOCIAL_TABS {
   ALL_USERS = 'ALL_USERS',
@@ -97,7 +96,7 @@ export default function SocialSection() {
 
   const renderSocialPosts = () => {
     const data = isAllSocialPosts ? dummyAllData : dummyFriendData
-    return data.map((post: SocialPostCardProps) => <SocialPostCard {...post} key={post.dateTime} />)
+    return data.map((post) => <SocialPostCard {...post} key={post.dateTime} />)
   }
 
   return (
