@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import StyledCarousel from './StyledCarousel'
 
-const Content = styled.div`
+const CarouselCard = styled.div`
   height: 160px;
   position: relative;
   &:before {
@@ -17,12 +17,6 @@ const Content = styled.div`
     opacity: 1;
   }
 `
-
-const CarouselCard = () => {
-  const content =
-    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s.'
-  return <Content>{content}</Content>
-}
 
 export default function AnnouncementCarousel() {
   return (
