@@ -24,19 +24,19 @@ function Button(props: Props) {
   const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : props.defaultTextColor || 'white')
 
   const successfulAdd = () => {
-    console.log('Added event to schedule')
     if (props.hasSuccessMessage) message.success('Successfully added to schedule!')
   }
 
   const successfulRemove = () => {
-    console.log('Removed event to schedule')
     if (props.hasSuccessMessage) message.warning('Successfully removed from schedule!')
   }
 
   return (
     <AntdButton
       danger
-      style={props.style ?? { background: buttonColour, color: textColour, borderRadius: '5px' }}
+      style={
+        props.style ?? { background: buttonColour, borderColor: buttonColour, color: textColour, borderRadius: '5px' }
+      }
       onClick={(e) => {
         {
           props.stopPropagation && e.stopPropagation()
