@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { HexGrid, Layout, Hexagon, Text } from 'react-hexgrid'
+import { HexGrid, Layout, Hexagon, Text as GridText } from 'react-hexgrid'
 import { PATHS } from '../../../Routes'
 // import calendarIcon from '../../../assets/hexagonIcons/calendarIcon.svg'
 // import facilitiesIcon from '../../../assets/hexagonIcons/facilitiesIcon.svg'
@@ -88,7 +88,7 @@ export default function HexagonNavigation() {
               onClick={hex.onClick}
               // fill={hex.fill}
             >
-              <Text>{hex.text}</Text>
+              <GridText>{hex.text}</GridText>
             </StyledHexagon>
           ))}
         </Layout>
