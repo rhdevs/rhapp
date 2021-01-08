@@ -1,7 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { facilityListStub, myBookingsStub } from '../stubs'
-import { ENDPOINTS, DOMAINS, get } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, post } from '../endpoints'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
@@ -72,7 +72,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
 
-export const getAllEventsForFacility = (facilityName: string) => (
+export const getAllBookingsForFacility = (facilityName: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -85,6 +85,7 @@ export const getAllEventsForFacility = (facilityName: string) => (
       parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
       '&endDate=' +
       parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+    dispatch({ type: FACILITY_ACTIONS.SET_FACILITY_DETAILS, selectedFacility: fetchedFacility })
     get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, newSubstring).then((resp) => {
       const bookings: Booking[] = resp.data
       dispatch({ type: FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS, bookings: bookings })
@@ -112,11 +113,33 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
 }
 
-export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>) => {
-  const success = true
-  if (success) {
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-  } else {
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-  }
+export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const {
+    newBookingName,
+    selectedFacility,
+    newBookingFromDate,
+    newBookingToDate,
+    newBookingCCA,
+    newBookingDescription,
+  } = getState().facilityBooking
+
+  get(ENDPOINTS.CCA_DETAILS, DOMAINS.FACILITY, newBookingCCA).then((resp) => {
+    const requestBody = {
+      facilityID: selectedFacility?.facilityID,
+      eventName: newBookingName,
+      userID: 1,
+      ccaID: resp.data.ccaID,
+      startTime: newBookingFromDate,
+      endTime: newBookingToDate,
+      description: newBookingDescription,
+    }
+    post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+      .then((resp) => {
+        resp.info
+        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+      })
+      .catch(() => {
+        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      })
+  })
 }

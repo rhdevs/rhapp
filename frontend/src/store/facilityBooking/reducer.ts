@@ -7,6 +7,7 @@ const initialState = {
   facilityList: [],
   locationList: [],
   selectedTab: '',
+  selectedFacility: null,
   myBookings: [],
   isDeleteMyBooking: -1,
   newBooking: undefined,
@@ -29,6 +30,7 @@ type State = {
   facilityList: Facility[]
   locationList: string[]
   selectedTab: string
+  selectedFacility: Facility | null
   myBookings: Booking[]
   isDeleteMyBooking: number
   newBooking: Booking | undefined
@@ -160,6 +162,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
+    case FACILITY_ACTIONS.SET_FACILITY_DETAILS: {
+      return {
+        ...state,
+        selectedFacility: action.selectedFacility,
+      }
+    }
     default:
       return state
   }
