@@ -45,6 +45,7 @@ export enum FACILITY_ACTIONS {
   HANDLE_CREATE_BOOKING = 'FACILITY_ACTIONS.HANDLE_CREATE_BOOKING',
   POPULATE_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS',
   SET_FACILITY_DETAILS = 'FACILITY_ACTIONS.SET_FACILITY_DETAILS',
+  SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
 }
 
 type GetFacilityList = {
@@ -138,6 +139,11 @@ type SetFacilityDetails = {
   selectedFacility: Facility
 }
 
+type SetViewBooking = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_BOOKING
+  selectedBooking: Booking
+}
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -157,3 +163,4 @@ export type ActionTypes =
   | HandleCreateBooking
   | PopulateFacilityBookings
   | SetFacilityDetails
+  | SetViewBooking

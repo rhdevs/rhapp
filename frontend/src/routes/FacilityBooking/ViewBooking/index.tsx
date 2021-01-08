@@ -2,12 +2,13 @@ import React, { useEffect } from 'react'
 // import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
-// import { RootState } from '../../store/types'
+import { RootState } from '../../../store/types'
+import { setSelectedBooking } from '../../../store/facilityBooking/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -101,98 +102,55 @@ const EventOwnerDetails = styled.div`
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
-  // const { sampleStateText } = useSelector((state: RootState) => state.home)
+  const { selectedBooking } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    // fetch all default facilities
+    dispatch(setSelectedBooking(params.bookingId))
   }, [dispatch])
-
-  interface eventType {
-    id: number
-    date: string
-    startTime: string
-    endTime: string
-    duration: string
-    eventName: string
-    eventCCA: string
-    eventOwner: string
-    description: string
-  }
-
-  const dummyEvents: Array<eventType> = [
-    {
-      id: 1,
-      date: '17 Dec',
-      startTime: '1530',
-      endTime: '1720',
-      duration: '20 mins',
-      eventName: 'Bonding Camp',
-      eventCCA: 'RHMP',
-      eventOwner: 'not you',
-      description: 'Backup location! Feel free to PM me',
-    },
-    {
-      id: 2,
-      date: '18 Dec',
-      startTime: '1530',
-      endTime: '1720',
-      duration: '2 hrs',
-      eventName: 'Training',
-      eventCCA: 'Voices',
-      eventOwner: 'you',
-      description: 'Backup location! Feel free to PM me',
-    },
-  ]
 
   return (
     <>
       <TopNavBar title={'View Event'} />
       <MainContainer>
-        {dummyEvents.map((event) => (
-          <EventCard key={event.id}>
-            <HeaderGroup>
-              {event.eventName} <br />
-              {event.eventCCA}
-              <IdText>RHEID-{params.bookingId}</IdText>
-            </HeaderGroup>
-            <DetailsGroup>
-              <TimeDetails>
-                <CardDurationLabel>{event.duration}</CardDurationLabel>
-                <DateTimeDetails>
-                  <CardTimeLabel>
-                    {event.date} {event.startTime}
-                  </CardTimeLabel>
-                  <CardTimeLabel>
-                    {event.date} {event.endTime}
-                  </CardTimeLabel>
-                </DateTimeDetails>
-              </TimeDetails>
-              <EventOwnerDetails>
-                <CardSubtitle>Created by</CardSubtitle>
-                <p style={{ textAlign: 'right' }}>{event.eventOwner}</p>
-              </EventOwnerDetails>
-              <>
-                <CardSubtitle>Additional Note</CardSubtitle>
-                <p>{event.description}</p>
-              </>
-            </DetailsGroup>
-            {event.eventOwner !== 'you' ? (
-              <ActionButtonGroup>
-                <Icon
-                  onClick={() => {
-                    console.log('contact yes')
-                  }}
-                  src={messageIcon}
-                />
-              </ActionButtonGroup>
-            ) : (
-              <ActionButtonGroup>
-                <Icon src={editIcon} />
-                <Icon src={deleteIcon} />
-              </ActionButtonGroup>
-            )}
-          </EventCard>
-        ))}
+        <EventCard key={selectedBooking?.bookingID}>
+          <HeaderGroup>
+            {selectedBooking?.eventName} <br />
+            {selectedBooking?.ccaID}
+            <IdText>RHEID-{params.bookingId}</IdText>
+          </HeaderGroup>
+          <DetailsGroup>
+            <TimeDetails>
+              <CardDurationLabel>duration here</CardDurationLabel>
+              <DateTimeDetails>
+                <CardTimeLabel>{selectedBooking?.startTime.toDateString}</CardTimeLabel>
+                <CardTimeLabel>{selectedBooking?.endTime.toDateString}</CardTimeLabel>
+              </DateTimeDetails>
+            </TimeDetails>
+            <EventOwnerDetails>
+              <CardSubtitle>Created by</CardSubtitle>
+              <p style={{ textAlign: 'right' }}>{selectedBooking?.userID}</p>
+            </EventOwnerDetails>
+            <>
+              <CardSubtitle>Additional Note</CardSubtitle>
+              <p>{selectedBooking?.description}</p>
+            </>
+          </DetailsGroup>
+          {selectedBooking?.userID !== 'you' ? (
+            <ActionButtonGroup>
+              <Icon
+                onClick={() => {
+                  console.log('contact yes')
+                }}
+                src={messageIcon}
+              />
+            </ActionButtonGroup>
+          ) : (
+            <ActionButtonGroup>
+              <Icon src={editIcon} />
+              <Icon src={deleteIcon} />
+            </ActionButtonGroup>
+          )}
+        </EventCard>
       </MainContainer>
     </>
   )

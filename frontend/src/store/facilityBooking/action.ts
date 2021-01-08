@@ -143,3 +143,18 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
       })
   })
 }
+
+export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const selectedBooking: Booking = {
+    bookingID: parseInt(bookingId),
+    startTime: new Date(),
+    endTime: new Date(),
+    eventName: 'Training',
+    ccaID: 122,
+    userID: '123',
+    facilityID: 223,
+    description: 'Backup location! Feel free to PM me',
+  }
+
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: selectedBooking })
+}
