@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { getUpdateMockString } from '../../store/home/action'
 import { RootState } from '../../store/types'
@@ -9,8 +9,8 @@ import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
 import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
-import HexagonNavigation from './HexagonNavigation'
-import SocialSection from './SocialSection'
+import HexagonNavigation from './components/HexagonNavigation'
+import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import ScrollToTopButton from '../../components/Mobile/ScrollToTopButton'
 
@@ -154,6 +154,7 @@ const TemporaryRoutes = () => {
         Create Booking
       </Button>
       <br />
+      <div style={{ height: 100 }} />
     </Navigations>
   )
 }

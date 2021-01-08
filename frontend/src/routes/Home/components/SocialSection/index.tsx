@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { Divider } from 'antd'
-import SocialPostCard from '../../../components/Mobile/SocialPostCard'
+import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
 
 type TabProps = {
   active: boolean
 }
+
+type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
 
 const Header = styled.div`
   display: flex;
@@ -36,30 +38,20 @@ const Tab = styled.div<TabProps>`
   opacity: ${(props) => (props.active ? 1 : 0.5)};
 `
 
-const dummyAllData = [
+const dummyAllData: SocialPostCardProps[] = [
   {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
     title: 'Hello',
-    dateTime: 'Zhou Gou Gou, 5h ago',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-  },
-  {
-    title: 'Hello',
-    dateTime: 'Zhou Mao Mao, 6h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-  },
-  {
-    title: 'Hello',
-    dateTime: 'Zhou Gou Gou, 7h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-  },
-  {
-    title: 'Hello',
-    dateTime: 'Zhou Mao Mao, 8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
   },
 ]
 
@@ -71,7 +63,7 @@ export default function SocialSection() {
 
   const renderSocialPosts = () => {
     const data = isAllSocialPosts ? dummyAllData : dummyFriendData
-    return data.map((post) => <SocialPostCard {...post} key={post.dateTime} />)
+    return data.map((post: SocialPostCardProps) => <SocialPostCard {...post} key={post.dateTime} />)
   }
 
   return (

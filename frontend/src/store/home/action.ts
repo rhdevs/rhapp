@@ -27,3 +27,14 @@ export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getSt
     sampleStateText: sampleStateText + 'n',
   })
 }
+
+export const getSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch) // to be remove
+  // Uncomment when endpoint for search is obtained from backend
+  // get(ENDPOINTS.SEARCH).then((results) => {
+  //   dispatch({
+  //     type: HOME_PAGE_ACTIONS.SEARCH,
+  //     searchResults: results,
+  //   })
+  // })
+}
