@@ -1,10 +1,10 @@
 import { Dispatch } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { facilityListStub, myBookingsStub } from '../stubs'
-import { ENDPOINTS, get } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get } from '../endpoints'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
-  get(ENDPOINTS.FACILITY_LIST).then((resp) => {
+  get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
     const fetchedList: Facility[] = resp.data
     console.log(fetchedList)
     // filters through all locations and gives a unique list
