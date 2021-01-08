@@ -4,9 +4,10 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import 'antd/dist/antd.css'
 import Button from '../../../components/Mobile/Button'
-import washingMachineGraphic from '../../../assets/washingMachineGraphic.svg'
 import { Slider } from 'antd'
-import { WMStatus } from '../../../store/laundry/types'
+import { WashingMachine, WMStatus } from '../../../store/laundry/types'
+import washingMachineInUse from '../../../assets/washing-machines/washingmachine-inuse.gif'
+import { WashingMachineListStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -15,6 +16,7 @@ const MainContainer = styled.div`
 `
 const StyledSlider = styled(Slider)`
   padding: 23px;
+  padding-bottom: 35px;
 `
 const WashingMachineDetails = styled.div`
   padding: 23px;
@@ -50,7 +52,7 @@ const UseWashingMachineSection = styled.div`
 const TimeLabel = styled.p`
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 20px;
   padding: 0px 10px 0px 10px;
   display: flex;
@@ -71,10 +73,18 @@ const UnderLineButton = styled.p`
   padding-left: 20px;
   color: #de5f4c;
 `
+
+const MachineSize = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 30px;
+  color: #023666;
+`
 /**
  * PageTitle can be: Reservation | Laundry Time | Collect Laundry | Edit Duration
  * SubTitle can be: "xx mins left", "It's Washy Time!", "Donezo!", or
- * DEPENDANT ON washingmachine.status : 
+ * DEPENDANT ON washingmachine.status :
  * export enum WMStatus {
   AVAIL = 'Available',
   INUSE = 'In Use',
@@ -84,9 +94,11 @@ const UnderLineButton = styled.p`
 }
  */
 export default function ViewWashingMachine() {
-  const MachineDetails = (machineStatus: string) => {
+  const MachineDetails = (machine: WashingMachine) => {
+    let pageTitle
     let actions
     let subtitle
+    const imagesrc = washingMachineInUse
 
     const timeLeftGroup = (
       <TimeLeft>
@@ -101,17 +113,20 @@ export default function ViewWashingMachine() {
       </TimeLeft>
     )
 
-    switch (machineStatus) {
+    switch (machine.job) {
       case WMStatus.AVAIL:
         subtitle = <TimeLabel>{"It's Washy Time!"}</TimeLabel>
         actions = <></>
+        pageTitle = 'Laundry Time'
         break
       case WMStatus.INUSE:
         subtitle = timeLeftGroup
         actions = <></>
+        pageTitle = 'In Use'
         break
       case WMStatus.COMPLETED:
         subtitle = <></>
+        pageTitle = 'Collect Laundry'
         actions = (
           <Button
             hasSuccessMessage={false}
@@ -125,6 +140,7 @@ export default function ViewWashingMachine() {
         break
       case WMStatus.RESERVED:
         subtitle = timeLeftGroup
+        pageTitle = 'Reservation'
         actions = (
           <Button
             hasSuccessMessage={false}
@@ -136,25 +152,29 @@ export default function ViewWashingMachine() {
           />
         )
         break
-      default:
-      // contents = <TimeLabel></TimeLabel>
     }
 
     return (
-      <WashingMachineDetails>
-        <img src={washingMachineGraphic} />
-        <WashingMachineActionGroup>
-          <WashingMachineTitle>S/N 1 (70 litres)</WashingMachineTitle>
-          {subtitle}
-          {actions}
-        </WashingMachineActionGroup>
-      </WashingMachineDetails>
+      <>
+        <TopNavBar title={pageTitle} />
+        <WashingMachineDetails>
+          <img src={imagesrc} style={{ width: '30%', height: '30%' }} />
+          <WashingMachineActionGroup>
+            <WashingMachineTitle>
+              S/N {machine.machineId}
+              <MachineSize>(70 litres)</MachineSize>
+            </WashingMachineTitle>
+            {subtitle}
+            {actions}
+          </WashingMachineActionGroup>
+        </WashingMachineDetails>
+      </>
     )
   }
 
-  const UseWashineMachine = (machineStatus: string) => {
+  const UseWashineMachine = (machine: WashingMachine) => {
     const editMode = false
-    if (machineStatus === WMStatus.AVAIL || machineStatus === WMStatus.RESERVED) {
+    if (machine.job === WMStatus.AVAIL || machine.job === WMStatus.RESERVED) {
       // or In editmode
       return (
         <UseWashingMachineSection>
@@ -178,25 +198,26 @@ export default function ViewWashingMachine() {
           />
         </UseWashingMachineSection>
       )
-    } else if (machineStatus === WMStatus.INUSE) {
+    } else if (machine.job === WMStatus.INUSE) {
       return (
-        <Button
-          hasSuccessMessage={false}
-          stopPropagation={false}
-          defaultButtonDescription={'Stop Washing'}
-          defaultButtonColor="#DE5F4C"
-          updatedButtonColor="#DE5F4C"
-          updatedTextColor="white"
-        />
+        <UseWashingMachineSection>
+          <Button
+            hasSuccessMessage={false}
+            stopPropagation={false}
+            defaultButtonDescription={'Stop Washing'}
+            defaultButtonColor="#DE5F4C"
+            updatedButtonColor="#DE5F4C"
+            updatedTextColor="white"
+          />
+        </UseWashingMachineSection>
       )
     }
   }
 
   return (
     <MainContainer>
-      <TopNavBar title={'Washing Machine'} />
-      {MachineDetails('Available')}
-      {UseWashineMachine('Available')}
+      {MachineDetails(WashingMachineListStub[1])}
+      {UseWashineMachine(WashingMachineListStub[1])}
       <BottomNavBar />
     </MainContainer>
   )
