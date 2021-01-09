@@ -1,13 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { HexGrid, Layout, Hexagon, Text as GridText } from 'react-hexgrid'
+import { HexGrid, Layout, Hexagon, Pattern } from 'react-hexgrid'
 import { PATHS } from '../../../Routes'
-// import calendarIcon from '../../../assets/hexagonIcons/calendarIcon.svg'
-// import facilitiesIcon from '../../../assets/hexagonIcons/facilitiesIcon.svg'
-// import laundryIcon from '../../../assets/hexagonIcons/laundryIcon.svg'
-// import moreIcon from '../../../assets/hexagonIcons/moreIcon.svg'
-// import socialIcon from '../../../assets/hexagonIcons/socialIcon.svg'
 
 const StyledHexagon = styled(Hexagon)`
   fill: #de5f4c;
@@ -27,8 +22,7 @@ export default function HexagonNavigation() {
       q: 0,
       r: 0,
       s: 0,
-      // fill: 'calendar',
-      text: 'Calendar',
+      fill: 'calendar',
       onClick: () => {
         history.push(PATHS.SCHEDULE_PAGE)
       },
@@ -37,8 +31,7 @@ export default function HexagonNavigation() {
       q: 1,
       r: -1,
       s: 0,
-      // fill: 'laundry',
-      text: 'Laundry',
+      fill: 'laundry',
       onClick: () => {
         history.push(PATHS.LAUNDRY_MAIN)
       },
@@ -47,8 +40,7 @@ export default function HexagonNavigation() {
       q: 1,
       r: 0,
       s: -1,
-      // fill: 'more',
-      text: 'More',
+      fill: 'more',
       onClick: () => {
         // history.push(PATHS.SCHEDULE_PAGE)
       },
@@ -57,18 +49,16 @@ export default function HexagonNavigation() {
       q: -1,
       r: 1,
       s: 0,
-      // fill: 'social',
-      text: 'Social',
+      fill: 'social',
       onClick: () => {
-        history.push(PATHS.FRIEND_LIST_PAGE)
+        // history.push(PATHS.FRIEND_LIST_PAGE)
       },
     },
     {
       q: -1,
       r: 0,
       s: 0,
-      // fill: 'facilities',
-      text: 'Facilities',
+      fill: 'facilities',
       onClick: () => {
         history.push(PATHS.FACILITY_BOOKING_MAIN)
       },
@@ -80,23 +70,16 @@ export default function HexagonNavigation() {
       <HexGrid style={{ overflow: 'inherit' }} width={'100%'} height={180}>
         <Layout size={hexagonSize} flat={true} spacing={1.2}>
           {hexagons.map((hex, i) => (
-            <StyledHexagon
-              key={i}
-              q={hex.q}
-              r={hex.r}
-              s={hex.s}
-              onClick={hex.onClick}
-              // fill={hex.fill}
-            >
-              <GridText>{hex.text}</GridText>
+            <StyledHexagon key={i} q={hex.q} r={hex.r} s={hex.s} onClick={hex.onClick} fill={hex.fill}>
+              {/* <GridText>{hex.text}</GridText> */}
             </StyledHexagon>
           ))}
         </Layout>
-        {/* <Pattern id="calendar" link="../../../assets/hexagonIcons/calendarIcon.png" size={hexagonSize} />
-        <Pattern id="facilities" src={facilitiesIcon} size={hexagonSize} />
-        <Pattern id="laundry" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} />
-        <Pattern id="more" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} />
-        <Pattern id="social" link="http://lorempixel.com/400/400/cats/2/" size={hexagonSize} /> */}
+        <Pattern id="calendar" link="https://svgshare.com/i/SwC.svg" size={hexagonSize} />
+        <Pattern id="facilities" link="https://svgur.com/i/SxR.svg" size={hexagonSize} />
+        <Pattern id="laundry" link="https://svgur.com/i/SvM.svg" size={hexagonSize} />
+        <Pattern id="more" link="https://svgur.com/i/Sxc.svg" size={hexagonSize} />
+        <Pattern id="social" link="https://svgur.com/i/SwQ.svg" size={hexagonSize} />
       </HexGrid>
     </Container>
   )

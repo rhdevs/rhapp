@@ -19,15 +19,17 @@ import { RootState } from '../../../store/types'
 import {
   createNewBookingFromFacility,
   getAllBookingsForFacility,
+  SetIsLoading,
   setViewDates,
   setViewFacilityMode,
 } from '../../../store/facilityBooking/action'
 import { facilityBookingsStubs } from '../../../store/stubs'
 import { months } from '../../../common/dates'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: calc(100% + 100px);
+  height: 95vh;
   background-color: #fafaf4;
 `
 
@@ -124,11 +126,12 @@ export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityName: string }>()
-  const { ViewStartDate, ViewEndDate, createSuccess, createFailure } = useSelector(
+  const { ViewStartDate, ViewEndDate, createSuccess, createFailure, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
+    dispatch(SetIsLoading(true))
     dispatch(getAllBookingsForFacility(params.facilityName))
   }, [dispatch])
 
@@ -156,93 +159,98 @@ export default function ViewFacility() {
     <>
       <TopNavBar title={params.facilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
-        {AlertSection}
-        <DateSelectorGroup>
-          <DateRange
-            editableDateInputs={true}
-            color="#DE5F4C"
-            onChange={(item) => dispatch(setViewDates(item))}
-            moveRangeOnFirstSelection={false}
-            rangeColors={['#DE5F4C', '#002642']}
-            ranges={[
-              {
-                startDate: ViewStartDate,
-                endDate: ViewEndDate,
-                key: 'ViewDateSelection',
-              },
-            ]}
-          />
-        </DateSelectorGroup>
+        {isLoading && <LoadingSpin />}
+        {!isLoading && (
+          <>
+            {AlertSection}
+            <DateSelectorGroup>
+              <DateRange
+                editableDateInputs={true}
+                color="#DE5F4C"
+                onChange={(item) => dispatch(setViewDates(item))}
+                moveRangeOnFirstSelection={false}
+                rangeColors={['#DE5F4C', '#002642']}
+                ranges={[
+                  {
+                    startDate: ViewStartDate,
+                    endDate: ViewEndDate,
+                    key: 'ViewDateSelection',
+                  },
+                ]}
+              />
+            </DateSelectorGroup>
 
-        <ActionButtonGroup>
-          <StyledButton
-            onButtonClick={() => {
-              dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, params.facilityName))
-              history.push('/facility/booking/create')
-            }}
-            hasSuccessMessage={false}
-            stopPropagation={false}
-            defaultButtonDescription={'Book Facility'}
-            defaultButtonColor="#DE5F4C"
-            updatedButtonColor="#DE5F4C"
-            updatedTextColor="white"
-          />
-          <div onClick={() => console.log('pressed')}>
-            <StyledButton
-              onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
-              hasSuccessMessage={false}
-              stopPropagation={false}
-              defaultButtonDescription={'👓 Bookings ⌄'}
-              defaultButtonColor="transparent"
-              updatedButtonColor="transparent"
-              updatedTextColor="#DE5F4C"
-              defaultTextColor="#DE5F4C"
-              updatedButtonDescription={'🕶 Availabilities ⌄'}
-            />
-          </div>
-        </ActionButtonGroup>
-        <DateDisplayText>
-          {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-          {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-        </DateDisplayText>
-        <EventsGroup>
-          {facilityBookingsStubs.map((event) => (
-            <EventCard
-              key={event.id}
-              onClick={() => {
-                console.log('clicked on event')
-              }}
-            >
-              {/* <EventAvatar src={dummyAvatar} /> */}
-              <EventLabels>
-                <EventBoldLabel>
-                  📅{' '}
-                  <b>
-                    {event.startTime} to {event.endTime}
-                  </b>
-                </EventBoldLabel>
-                <EventNormalLabel>
-                  <b> {event.eventCCA} </b>
-                  {event.eventName}
-                </EventNormalLabel>
-              </EventLabels>
-              <EventRightDisplay>
-                {event.eventOwner === 'you' ? (
-                  <Icon src={adminIcon} />
-                ) : (
-                  <Icon
-                    onClick={() => {
-                      console.log('contact yes')
-                    }}
-                    src={messageIcon}
-                  />
-                )}
-                <EventDateLabel>{event.date}</EventDateLabel>
-              </EventRightDisplay>
-            </EventCard>
-          ))}
-        </EventsGroup>
-        <BottomNavBar />
+            <ActionButtonGroup>
+              <StyledButton
+                onButtonClick={() => {
+                  dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, params.facilityName))
+                  history.push('/facility/booking/create')
+                }}
+                hasSuccessMessage={false}
+                stopPropagation={false}
+                defaultButtonDescription={'Book Facility'}
+                defaultButtonColor="#DE5F4C"
+                updatedButtonColor="#DE5F4C"
+                updatedTextColor="white"
+              />
+              <div onClick={() => console.log('pressed')}>
+                <StyledButton
+                  onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
+                  hasSuccessMessage={false}
+                  stopPropagation={false}
+                  defaultButtonDescription={'👓 Bookings ⌄'}
+                  defaultButtonColor="transparent"
+                  updatedButtonColor="transparent"
+                  updatedTextColor="#DE5F4C"
+                  defaultTextColor="#DE5F4C"
+                  updatedButtonDescription={'🕶 Availabilities ⌄'}
+                />
+              </div>
+            </ActionButtonGroup>
+            <DateDisplayText>
+              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
+              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
+            </DateDisplayText>
+            <EventsGroup>
+              {facilityBookingsStubs.map((event) => (
+                <EventCard
+                  key={event.id}
+                  onClick={() => {
+                    console.log('clicked on event')
+                  }}
+                >
+                  {/* <EventAvatar src={dummyAvatar} /> */}
+                  <EventLabels>
+                    <EventBoldLabel>
+                      📅{' '}
+                      <b>
+                        {event.startTime} to {event.endTime}
+                      </b>
+                    </EventBoldLabel>
+                    <EventNormalLabel>
+                      <b> {event.eventCCA} </b>
+                      {event.eventName}
+                    </EventNormalLabel>
+                  </EventLabels>
+                  <EventRightDisplay>
+                    {event.eventOwner === 'you' ? (
+                      <Icon src={adminIcon} />
+                    ) : (
+                      <Icon
+                        onClick={() => {
+                          console.log('contact yes')
+                        }}
+                        src={messageIcon}
+                      />
+                    )}
+                    <EventDateLabel>{event.date}</EventDateLabel>
+                  </EventRightDisplay>
+                </EventCard>
+              ))}
+            </EventsGroup>
+            <BottomNavBar />
+          </>
+        )}
       </MainContainer>
     </>
   )

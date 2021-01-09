@@ -3,6 +3,7 @@ import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 import { SearchResult } from '../types'
 
 const initialState = {
+  isLoading: true,
   userRhEvents: [],
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
@@ -10,6 +11,7 @@ const initialState = {
 }
 
 type State = {
+  isLoading: boolean
   userRhEvents: RHEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
@@ -18,6 +20,12 @@ type State = {
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
+    case SCHEDULING_ACTIONS.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      }
+    }
     case SCHEDULING_ACTIONS.GET_RH_EVENTS: {
       return {
         ...state,

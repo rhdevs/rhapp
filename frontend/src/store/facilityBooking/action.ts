@@ -4,6 +4,7 @@ import { facilityListStub } from '../stubs'
 import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
   get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
     const fetchedList: Facility[] = resp.data
     console.log(fetchedList)
@@ -14,16 +15,19 @@ export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
       facilityList: facilityListStub,
       locationList: uniqueLocationList,
     })
+    dispatch(SetIsLoading(false))
   })
 }
 
 export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
   get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, userId).then((resp) => {
     const fetchedList: Booking[] = resp.data
     dispatch({
       type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
       myBookings: fetchedList,
     })
+    dispatch(SetIsLoading(false))
   })
 }
 
@@ -33,6 +37,7 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
 }
 
 export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  dispatch(SetIsLoading(true))
   del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, bookingId.toString()).then(() => {
     const { myBookings } = getState().facilityBooking
     dispatch({
@@ -40,6 +45,7 @@ export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<Action
       myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
     })
     setIsDeleteMyBooking(-1)
+    dispatch(SetIsLoading(false))
   })
 }
 
@@ -78,6 +84,7 @@ export const getAllBookingsForFacility = (facilityName: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
+  dispatch(SetIsLoading(true))
   const { ViewEndDate, ViewStartDate } = getState().facilityBooking
   get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, '?facilityName=' + facilityName).then((resp) => {
     const fetchedFacility: Facility = resp.data
@@ -92,6 +99,7 @@ export const getAllBookingsForFacility = (facilityName: string) => (
       const bookings: Booking[] = resp.data
       dispatch({ type: FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS, bookings: bookings })
     })
+    dispatch(SetIsLoading(false))
   })
 }
 
@@ -110,12 +118,15 @@ export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch
 export const createNewBookingFromFacility = (startDate: Date, endDate: Date, facilityName: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  SetIsLoading(true)
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
+  dispatch(SetIsLoading(false))
 }
 
 export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  dispatch(SetIsLoading(true))
   const {
     newBookingName,
     selectedFacility,
@@ -139,6 +150,7 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
       .then((resp) => {
         resp.info
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+        dispatch(SetIsLoading(false))
       })
       .catch(() => {
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
@@ -147,6 +159,7 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
 }
 
 export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
   const selectedBooking: Booking = {
     bookingID: parseInt(bookingId),
     startTime: new Date(),
@@ -159,4 +172,10 @@ export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<Act
   }
 
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: selectedBooking })
+  dispatch(SetIsLoading(false))
+}
+
+export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { isLoading } = getState().facilityBooking
+  dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
 }

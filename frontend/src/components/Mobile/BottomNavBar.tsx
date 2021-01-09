@@ -14,8 +14,8 @@ import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 
 const StyledButton = styled.img`
-  width: 27px;
-  height: 27px;
+  width: 28px;
+  max-height: 28px;
 `
 
 const BottomNav = styled.div`

@@ -7,12 +7,18 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import { deleteMyBooking, setIsDeleteMyBooking, setSelectedBooking } from '../../../store/facilityBooking/action'
+import {
+  deleteMyBooking,
+  setIsDeleteMyBooking,
+  SetIsLoading,
+  setSelectedBooking,
+} from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 95vh;
   background-color: #fafaf4;
   color: #33363a;
 `
@@ -102,9 +108,10 @@ const EventOwnerDetails = styled.div`
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
-  const { selectedBooking, isDeleteMyBooking } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
+    dispatch(SetIsLoading(true))
     dispatch(setSelectedBooking(params.bookingId))
   }, [dispatch])
 
@@ -112,54 +119,59 @@ export default function ViewBooking() {
     <>
       <TopNavBar title={'View Event'} />
       <MainContainer>
-        <EventCard key={selectedBooking?.bookingID}>
-          <HeaderGroup>
-            {selectedBooking?.eventName} <br />
-            {selectedBooking?.ccaID}
-            <IdText>RHEID-{params.bookingId}</IdText>
-          </HeaderGroup>
-          <DetailsGroup>
-            <TimeDetails>
-              <CardDurationLabel>duration here</CardDurationLabel>
-              <DateTimeDetails>
-                <CardTimeLabel>{selectedBooking?.startTime.toDateString}</CardTimeLabel>
-                <CardTimeLabel>{selectedBooking?.endTime.toDateString}</CardTimeLabel>
-              </DateTimeDetails>
-            </TimeDetails>
-            <EventOwnerDetails>
-              <CardSubtitle>Created by</CardSubtitle>
-              <p style={{ textAlign: 'right' }}>{selectedBooking?.userID}</p>
-            </EventOwnerDetails>
-            <>
-              <CardSubtitle>Additional Note</CardSubtitle>
-              <p>{selectedBooking?.description}</p>
-            </>
-          </DetailsGroup>
-          {selectedBooking?.userID !== 'you' ? (
-            <ActionButtonGroup>
-              <Icon
-                onClick={() => {
-                  console.log('contact yes')
-                }}
-                src={messageIcon}
+        {isLoading && <LoadingSpin />}
+        {!isLoading && (
+          <>
+            <EventCard key={selectedBooking?.bookingID}>
+              <HeaderGroup>
+                {selectedBooking?.eventName} <br />
+                {selectedBooking?.ccaID}
+                <IdText>RHEID-{params.bookingId}</IdText>
+              </HeaderGroup>
+              <DetailsGroup>
+                <TimeDetails>
+                  <CardDurationLabel>duration here</CardDurationLabel>
+                  <DateTimeDetails>
+                    <CardTimeLabel>{selectedBooking?.startTime.toDateString}</CardTimeLabel>
+                    <CardTimeLabel>{selectedBooking?.endTime.toDateString}</CardTimeLabel>
+                  </DateTimeDetails>
+                </TimeDetails>
+                <EventOwnerDetails>
+                  <CardSubtitle>Created by</CardSubtitle>
+                  <p style={{ textAlign: 'right' }}>{selectedBooking?.userID}</p>
+                </EventOwnerDetails>
+                <>
+                  <CardSubtitle>Additional Note</CardSubtitle>
+                  <p>{selectedBooking?.description}</p>
+                </>
+              </DetailsGroup>
+              {selectedBooking?.userID !== 'you' ? (
+                <ActionButtonGroup>
+                  <Icon
+                    onClick={() => {
+                      console.log('contact yes')
+                    }}
+                    src={messageIcon}
+                  />
+                </ActionButtonGroup>
+              ) : (
+                <ActionButtonGroup>
+                  <Icon src={editIcon} />
+                  <Icon src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                </ActionButtonGroup>
+              )}
+            </EventCard>
+            {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
+              <ConfirmationModal
+                title={'Delete Booking?'}
+                hasLeftButton={true}
+                leftButtonText={'Delete'}
+                onLeftButtonClick={() => dispatch(deleteMyBooking(selectedBooking?.bookingID))}
+                rightButtonText={'Cancel'}
+                onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
               />
-            </ActionButtonGroup>
-          ) : (
-            <ActionButtonGroup>
-              <Icon src={editIcon} />
-              <Icon src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
-            </ActionButtonGroup>
-          )}
-        </EventCard>
-        {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
-          <ConfirmationModal
-            title={'Delete Booking?'}
-            hasLeftButton={true}
-            leftButtonText={'Delete'}
-            onLeftButtonClick={() => dispatch(deleteMyBooking(selectedBooking?.bookingID))}
-            rightButtonText={'Cancel'}
-            onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
-          />
+            )}
+          </>
         )}
       </MainContainer>
     </>

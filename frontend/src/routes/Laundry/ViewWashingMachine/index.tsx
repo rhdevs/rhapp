@@ -11,7 +11,7 @@ import { WashingMachineListStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 95vh;
   background-color: #fafaf4; !important
 `
 const StyledSlider = styled(Slider)`
