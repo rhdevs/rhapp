@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pymongo
 import json
 import time
@@ -8,6 +9,7 @@ client = pymongo.MongoClient(
 db = client.RHApp
 
 app = Flask("rhapp")
+CORS(app)
 
 
 @app.route("/timetable/<userID>")
