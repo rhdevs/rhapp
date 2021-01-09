@@ -48,6 +48,7 @@ const Complete: React.FC = () => (
     style={{ width: '120px', height: '22px' }}
     options={options}
     placeholder="search info.."
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
   />
 )
