@@ -4,6 +4,7 @@ import { ActionTypes, FACILITY_ACTIONS, Facility, Booking } from './types'
 
 const initialState = {
   // MAIN PAGE
+  isLoading: true,
   facilityList: [],
   locationList: [],
   selectedTab: '',
@@ -28,6 +29,7 @@ const initialState = {
 }
 
 type State = {
+  isLoading: boolean
   facilityList: Facility[]
   locationList: string[]
   selectedTab: string
@@ -175,6 +177,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         selectedBooking: action.selectedBooking,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
       }
     }
 

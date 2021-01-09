@@ -12,7 +12,7 @@ import ScrollToTopButton from '../../components/Mobile/ScrollToTopButton'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 95vh;
   background-color: #fafaf4;
 `
 
@@ -33,6 +33,7 @@ const TopBar = styled.div`
 
 const Greetings = styled.text`
   font-size: 17px;
+  padding-left: 10px;
   color: #fff;
   font-weight: 100;
 `
@@ -46,7 +47,7 @@ export default function Home() {
   return (
     <MainContainer>
       <TopBar>
-        <Greetings>{`Good ${partOfTheDay} Mao Mao,`}</Greetings>
+        <Greetings>{`Good ${partOfTheDay} Mao Mao!`}</Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />

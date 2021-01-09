@@ -26,6 +26,7 @@ export type Event = {
 }
 
 export enum FACILITY_ACTIONS {
+  SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
   CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
@@ -144,6 +145,11 @@ type SetViewBooking = {
   selectedBooking: Booking
 }
 
+type SetIsLoading = {
+  type: typeof FACILITY_ACTIONS.SET_IS_LOADING
+  isLoading: boolean
+}
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -164,3 +170,4 @@ export type ActionTypes =
   | PopulateFacilityBookings
   | SetFacilityDetails
   | SetViewBooking
+  | SetIsLoading

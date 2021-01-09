@@ -10,11 +10,12 @@ import { useHistory } from 'react-router-dom'
 import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
-import { changeTab, getFacilityList } from '../../store/facilityBooking/action'
+import { changeTab, getFacilityList, SetIsLoading } from '../../store/facilityBooking/action'
+import LoadingSpin from '../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 95vh;
   background-color: #fafaf4;
 `
 const FacilityCard = styled.div`
@@ -69,9 +70,12 @@ const StyledRadioGroupDiv = styled.div`
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, selectedTab } = useSelector((state: RootState) => state.facilityBooking)
+  const { facilityList, locationList, selectedTab, isLoading } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   useEffect(() => {
+    dispatch(SetIsLoading(true))
     dispatch(getFacilityList())
   }, [dispatch])
 
@@ -92,32 +96,37 @@ export default function FacilityBooking() {
     <>
       <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
       <MainContainer>
-        <StyledRadioGroupDiv onChange={onChangeTab}>
-          <StyledRadioGroup defaultValue={locationList[0]}>
-            {locationList.map((location, idx) => (
-              <Radio.Button key={idx} value={location}>
-                {location}
-              </Radio.Button>
-            ))}
-          </StyledRadioGroup>
-        </StyledRadioGroupDiv>
-        {facilityList.map((facility) => {
-          if (facility.facilityLocation === selectedTab || selectedTab === '')
-            return (
-              <FacilityCard
-                key={facility.facilityID}
-                onClick={() => {
-                  history.push('/facility/view/' + facility.facilityName)
-                }}
-              >
-                <FacilityAvatar src={dummyAvatar} />
-                <FacilityLabels>
-                  <FacilityHeader>{facility.facilityName}</FacilityHeader>
-                  <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
-                </FacilityLabels>
-              </FacilityCard>
-            )
-        })}
+        {isLoading && <LoadingSpin />}
+        {!isLoading && (
+          <>
+            <StyledRadioGroupDiv onChange={onChangeTab}>
+              <StyledRadioGroup defaultValue={locationList[0]}>
+                {locationList.map((location, idx) => (
+                  <Radio.Button key={idx} value={location}>
+                    {location}
+                  </Radio.Button>
+                ))}
+              </StyledRadioGroup>
+            </StyledRadioGroupDiv>
+            {facilityList.map((facility) => {
+              if (facility.facilityLocation === selectedTab || selectedTab === '')
+                return (
+                  <FacilityCard
+                    key={facility.facilityID}
+                    onClick={() => {
+                      history.push('/facility/view/' + facility.facilityName)
+                    }}
+                  >
+                    <FacilityAvatar src={dummyAvatar} />
+                    <FacilityLabels>
+                      <FacilityHeader>{facility.facilityName}</FacilityHeader>
+                      <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
+                    </FacilityLabels>
+                  </FacilityCard>
+                )
+            })}
+          </>
+        )}
         <BottomNavBar />
       </MainContainer>
     </>

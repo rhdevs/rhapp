@@ -17,6 +17,7 @@ import { fetchUserRhEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import { RHEvent } from '../../store/scheduling/types'
+import LoadingSpin from '../../components/LoadingSpin'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -78,7 +79,9 @@ const testLink =
 export default function Schedule() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userRhEvents, userEventsStartTime, userEventsEndTime } = useSelector((state: RootState) => state.scheduling)
+  const { userRhEvents, userEventsStartTime, userEventsEndTime, isLoading } = useSelector(
+    (state: RootState) => state.scheduling,
+  )
 
   useEffect(() => {
     dispatch(fetchUserRhEvents())
@@ -195,6 +198,7 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
+      {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userRhEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />

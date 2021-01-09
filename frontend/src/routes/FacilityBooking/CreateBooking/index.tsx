@@ -19,7 +19,9 @@ import {
   editBookingName,
   editBookingToDate,
   handleCreateBooking,
+  SetIsLoading,
 } from '../../../store/facilityBooking/action'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -71,9 +73,11 @@ export default function CreateBooking() {
     newBookingCCA,
     newBookingDescription,
     newBookingFacilityName,
+    isLoading,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
+    dispatch(SetIsLoading(true))
     if (newBooking) {
       dispatch(editBookingFromDate(newBooking.startTime))
       dispatch(editBookingToDate(newBooking.endTime))
@@ -121,41 +125,44 @@ export default function CreateBooking() {
   return (
     <div>
       <TopNavBar title={newBooking?.bookingID ? `Edit Booking` : `New Booking`} rightComponent={CheckIcon} />
-      <Background>
-        <StyledTitle>{newBookingFacilityName}</StyledTitle>
-        <StyledInput
-          placeholder="Event Name"
-          value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
-          onChange={(e) => dispatch(editBookingName(e.target.value))}
-        />
-        <div style={{ width: '100%' }}>
-          <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
-            <DatePickerRow>
-              <StyledTitle>From</StyledTitle>
-              <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
-            </DatePickerRow>
-          </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
-            <DatePickerRow>
-              <StyledTitle>To</StyledTitle>
-              <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
-            </DatePickerRow>
-          </DatePicker>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
-            newBookingToDate,
-          )
-            .diff(dayjs(newBookingFromDate), 'hour', true)
-            .toFixed(1)} hours`}</div>
-        </div>
-        <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
-        <InputRow
-          title="Description"
-          placeholder="Tell us what your booking is for!"
-          value={newBookingDescription}
-          setValue={setDescription}
-          textarea
-        />
-      </Background>
+      {isLoading && <LoadingSpin />}
+      {!isLoading && (
+        <Background>
+          <StyledTitle>{newBookingFacilityName}</StyledTitle>
+          <StyledInput
+            placeholder="Event Name"
+            value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
+            onChange={(e) => dispatch(editBookingName(e.target.value))}
+          />
+          <div style={{ width: '100%' }}>
+            <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
+              <DatePickerRow>
+                <StyledTitle>From</StyledTitle>
+                <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
+              </DatePickerRow>
+            </DatePicker>
+            <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
+              <DatePickerRow>
+                <StyledTitle>To</StyledTitle>
+                <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
+              </DatePickerRow>
+            </DatePicker>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
+              newBookingToDate,
+            )
+              .diff(dayjs(newBookingFromDate), 'hour', true)
+              .toFixed(1)} hours`}</div>
+          </div>
+          <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
+          <InputRow
+            title="Description"
+            placeholder="Tell us what your booking is for!"
+            value={newBookingDescription}
+            setValue={setDescription}
+            textarea
+          />
+        </Background>
+      )}
     </div>
   )
 }

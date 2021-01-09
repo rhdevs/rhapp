@@ -14,7 +14,7 @@ import { Avatar, Menu } from 'antd'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: calc(100% + 100px);
+  height: 95vh;
   background-color: #fafaf4;
 `
 
