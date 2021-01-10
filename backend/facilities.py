@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 import pymongo, json
 from datetime import datetime
 
@@ -23,6 +24,7 @@ db = myclient["RHApp"]
 
 #Flask
 app = Flask("rhapp")
+CORS(app)
 
 #Session
 session = {}
