@@ -5,6 +5,8 @@ import EditDetailsCard from './EditDetailsCard'
 import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
+import { RootState } from '../../../store/types'
+import { useDispatch, useSelector } from 'react-redux'
 
 const MainContainer = styled.div`
   height: 100vh;
