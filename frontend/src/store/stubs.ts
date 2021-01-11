@@ -1,6 +1,9 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
+<<<<<<< HEAD
 import { SearchResult } from './types'
+=======
+>>>>>>> 0fa6333f3fd279e1be409b28b11f1a3e995190fb
 import { SchedulingEvent } from './scheduling/types'
 
 /**
