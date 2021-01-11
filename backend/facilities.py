@@ -24,7 +24,11 @@ db = myclient["RHApp"]
 
 #Flask
 app = Flask("rhapp")
-CORS(app)
+CORS(app, origins = {
+    "https://rhapplaundry.rhdevs.repl.co/",
+    "https://rhappfacilities.rhdevs.repl.co/",
+    "https://rhappevents.rhdevs.repl.co/"
+})
 
 #Session
 session = {}
