@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
+import { ActionTypes, RHEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
 import { SearchResult } from '../types'
 
 const initialState = {
@@ -17,7 +17,7 @@ type State = {
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
-  searchedEvents: RHEvent[]
+  searchedEvents: SchedulingEvent[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {

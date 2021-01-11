@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { userRhEventsDummy } from '../../../store/stubs'
 import { getSearchedEvents } from '../../../store/scheduling/action'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -76,18 +77,11 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
   // const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
   const [searchValue, setSearchValue] = useState('')
 
-  console.log(
-    userRhEventsDummy.filter((events) => {
-      return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
-    }).length,
-  )
-
   const formatDate = (eventStartTime: Date) => {
     return format(eventStartTime, 'dd-MMM-yy kk:mm')
   }
 
   const renderResults = () => {
-    console.log(formatDate(userRhEventsDummy[0].startDateTime))
     if (searchValue) {
       return userRhEventsDummy ? (
         userRhEventsDummy.filter((events) => {
@@ -153,7 +147,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
     <LeftOutlined
       style={{ color: 'black', padding: '0 10px' }}
       onClick={() => {
-        history.goBack()
+        history.push(PATHS.SCHEDULE_PAGE)
       }}
     />
   )

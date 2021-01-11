@@ -61,7 +61,7 @@ type GetRhEvents = {
 
 type GetSearchedEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS
-  searchedEvents: RHEvent[]
+  searchedEvents: SchedulingEvent[]
 }
 
 type GetShareSearchResults = {
