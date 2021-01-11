@@ -31,10 +31,14 @@ export enum PATHS {
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
+  CREATE_POST = '/social/post/create',
+  EDIT = '/social/post/edit',
+  EDIT_POST = '/social/post/edit/:postId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
+const FallBack = React.lazy(() => import(/* webpackChunckName: "Search" */ './ErrorPages/NotFound'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
@@ -49,16 +53,21 @@ const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimet
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
 const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
 // FACILITY BOOKING
-const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
-const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
-const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
-const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
-const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
+const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
+const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
+const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
+const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
+const CreateBooking = React.lazy(
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
+)
 // LAUNDRY
-const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
-const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewWashingMachine'))
+const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
+const ViewWashingMachine = React.lazy(
+  () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
+)
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
+const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 export default class Routes extends React.Component {
   render() {
@@ -90,7 +99,11 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
-            <Route path={PATHS.VIEW_POST_ID} component={ViewPost} />
+            <Route exact path={PATHS.CREATE_POST} component={CreateEditPost} />
+            <Route exact path={PATHS.EDIT_POST} component={CreateEditPost} />
+            <Route exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
+
+            <Route component={FallBack} />
           </Switch>
         </Suspense>
       </Root>

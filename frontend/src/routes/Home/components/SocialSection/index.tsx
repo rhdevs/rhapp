@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { Divider } from 'antd'
 import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
+import { PATHS } from '../../../Routes'
 
 type TabProps = {
   active: boolean
@@ -58,6 +60,7 @@ const dummyAllData: SocialPostCardProps[] = [
 const dummyFriendData = dummyAllData.slice(0, 1)
 
 export default function SocialSection() {
+  const history = useHistory()
   const [isAllSocialPosts, setIsAllSocialPosts] = useState(true)
   const toggleTab = () => setIsAllSocialPosts(!isAllSocialPosts)
 
@@ -70,7 +73,7 @@ export default function SocialSection() {
     <>
       <Header>
         <span>{`What's happening....`}</span>
-        <PlusCircleFilled style={{ color: '#EB5757', fontSize: 20 }} />
+        <PlusCircleFilled style={{ color: '#EB5757', fontSize: 20 }} onClick={() => history.push(PATHS.CREATE_POST)} />
       </Header>
       <TabBar>
         <Tab active={isAllSocialPosts} onClick={toggleTab}>

@@ -145,18 +145,15 @@ function SocialPostCard(props: Props) {
     history.push({
       pathname: `${PATHS.VIEW_POST}${props.postId}`,
     })
-    console.log('Link to expanded version of post!')
   }
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
-    console.log(menuIsOpen)
   }
 
   const onDeleteClick = () => {
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
-    console.log(deleteConfirmation)
   }
 
   const onConfirmDeleteClick = () => {
@@ -210,7 +207,7 @@ function SocialPostCard(props: Props) {
           </div>
           {menuIsOpen && (
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<EditFilled />} onClick={onMenuClick}>
+              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + props.postId)}>
                 Edit
               </Menu.Item>
               <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>

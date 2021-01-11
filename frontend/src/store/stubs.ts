@@ -1,5 +1,6 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
+import { User } from './profile/types'
 import { SearchResult } from './types'
 
 /**
@@ -10,6 +11,7 @@ import { SearchResult } from './types'
  * 4. Washing Machines
  * 5. Events
  * 6. Search Results
+ * 7. User
  */
 
 export const facilityListStub: Facility[] = [
@@ -193,3 +195,16 @@ export const searchResultsStub: SearchResult[] = [
     description: 'Hello my name is Bob',
   },
 ]
+
+export const userProfileStub: User = {
+  userId: 1,
+  profilePictureUrl:
+    'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+  displayName: 'Zhang MaoMao',
+  telegramHandle: 'zhoumm',
+  block: 8,
+  bio: 'This is my bio hur hur',
+  cca: [{ userId: '1', ccaId: 1, ccaName: 'RHDevs' }],
+  modules: ['CS1010', 'CFG1000'],
+  posts: [],
+}
