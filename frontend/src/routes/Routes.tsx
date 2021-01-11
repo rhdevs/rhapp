@@ -57,10 +57,14 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityB
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
-const CreateBooking = React.lazy(() => import(/* webpackChunckName: "CreateBook" */ './FacilityBooking/CreateBooking'))
+const CreateBooking = React.lazy(
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
+)
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
-const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "ViewWM" */ './Laundry/ViewWashingMachine'))
+const ViewWashingMachine = React.lazy(
+  () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
+)
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
