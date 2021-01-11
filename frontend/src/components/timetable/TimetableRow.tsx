@@ -80,11 +80,9 @@ function TimetableRow(props: Props) {
         }}
       >
         {props.events?.map((eventRow, index) => {
-          console.log(eventRow)
           return (
             <ChildrenContainer key={index}>
               {eventRow.map((individualEvent, index) => {
-                console.log(individualEvent)
                 return (
                   <div
                     key={index}

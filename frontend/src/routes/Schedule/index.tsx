@@ -18,6 +18,7 @@ import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import { RHEvent } from '../../store/scheduling/types'
 import LoadingSpin from '../../components/LoadingSpin'
+import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -202,6 +203,19 @@ export default function Schedule() {
     />
   )
 
+  const [searchFriendsValue, setSearchFriendsValue] = useState('')
+  const [searchGroupValue, setSearchGroupValue] = useState('')
+
+  const friendsOnChange = (input: string) => {
+    setSearchFriendsValue(input)
+    console.log(searchFriendsValue)
+  }
+
+  const groupOnChange = (input: string) => {
+    setSearchGroupValue(input)
+    console.log(searchGroupValue)
+  }
+
   return (
     <Background>
       <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
@@ -224,6 +238,9 @@ export default function Schedule() {
           >
             Friends
           </h1>
+          <div style={{ width: '25rem' }}>
+            <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
+          </div>
         </SmallContainer>
         <Tags
           options={[
@@ -255,6 +272,9 @@ export default function Schedule() {
           >
             Groups
           </h1>
+          <div style={{ width: '25rem' }}>
+            <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
+          </div>
         </SmallContainer>
         <Tags options={['Group1', 'Group2']} />
       </GroupContainer>

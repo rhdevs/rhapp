@@ -101,7 +101,6 @@ function EventCell(props: Props) {
     0.0625 +
     'rem'
 
-  console.log(onlyShowEventName)
   return (
     <EventContainer style={{ border: EVENT_CELL_COLOUR === '#fafaf4' ? '1px #000000 solid' : '' }}>
       <ContentContainer
