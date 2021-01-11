@@ -1,14 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS
 import pymongo, json
 from datetime import datetime
 
-def listToIndexedDict(xs):
-    output = {}
-    for i,item in enumerate(xs, start=0) :
-        del xs[i]["_id"]
-        output[i] = item
-    return output
 
 def removeObjectID(xs):
     for i,item in enumerate(xs, start=0) :
@@ -42,35 +36,33 @@ def root_route():
 def all_facilities(): 
     try :
         print("testing 1")
-        data = listToIndexedDict(list(db.Facilities.find()))
-        print(data)
+        data = removeObjectID(list(db.Facilities.find()))
 
         
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return data, 200
+    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
 
 @app.route('/bookings/user/<userID>')
 def user_bookings(userID) :
     try:
-        data = listToIndexedDict(list(db.Bookings.find({"userID" : userID})))
+        data = removeObjectID(list(db.Bookings.find({"userID" : userID})))
     except Exception as e:
         return {"err": str(e)}, 400
-    return data, 200
+    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
 
 
 @app.route('/bookings/facility/<facilityID>/')
 def check_bookings(facilityID):
     #print('TESTING 0')
     try :
-        data = listToIndexedDict(list(db.Bookings.find({"facilityID": int(facilityID), "startTime" : {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
+        data = removeObjectID(list(db.Bookings.find({"facilityID": int(facilityID), "startTime" : {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
         #print(data)
     except Exception as e:
         return {"err": str(e)}, 400
-    return data
 
-    return data, 200
+    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
     
 @app.route('/users/telegramID/<userID>')
 def user_telegram(userID) :
