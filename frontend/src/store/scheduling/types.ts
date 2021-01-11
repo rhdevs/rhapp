@@ -20,6 +20,7 @@ export type RHEvent = {
   day: string
   endTime: string
   startTime: string
+  hasOverlap: boolean
 }
 
 // type lessonTypeAbbrev = { [abbrevLessonType: string]: string }

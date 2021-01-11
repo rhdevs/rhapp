@@ -87,72 +87,72 @@ export default function Schedule() {
     dispatch(fetchUserRhEvents())
   }, [dispatch])
 
-  const doSomething = () => {
-    const extractedData = extractDataFromLink(testLink)
-    // console.log(extractedData)
-    for (let i = 0; i < extractedData.length; i++) {
-      NUSModsToRHEvents('2020-2021', extractedData[i])
-    }
-  }
+  // const doSomething = () => {
+  //   const extractedData = extractDataFromLink(testLink)
+  //   // console.log(extractedData)
+  //   for (let i = 0; i < extractedData.length; i++) {
+  //     NUSModsToRHEvents('2020-2021', extractedData[i])
+  //   }
+  // }
 
-  /**
-   * Returns a 2D array, containing module code and lesson information of each module
-   *
-   * @param link NUSMods share link
-   */
-  const extractDataFromLink = (link: string) => {
-    const timetableInformation = link.split('?')[1]
-    const timetableData = timetableInformation.split('&')
-    const data: string[][] = []
-    for (let i = 0; i < timetableData.length; i++) {
-      const moduleCode = timetableData[i].split('=')[0]
-      data[i] = []
-      data[i].push(moduleCode)
-      timetableData[i] = timetableData[i].split('=')[1]
-      const moduleLessons = timetableData[i].split(LESSON_SEP)
-      for (let j = 0; j < moduleLessons.length; j++) {
-        data[i].push(moduleLessons[j])
-      }
-    }
-    return data
-  }
+  // /**
+  //  * Returns a 2D array, containing module code and lesson information of each module
+  //  *
+  //  * @param link NUSMods share link
+  //  */
+  // const extractDataFromLink = (link: string) => {
+  //   const timetableInformation = link.split('?')[1]
+  //   const timetableData = timetableInformation.split('&')
+  //   const data: string[][] = []
+  //   for (let i = 0; i < timetableData.length; i++) {
+  //     const moduleCode = timetableData[i].split('=')[0]
+  //     data[i] = []
+  //     data[i].push(moduleCode)
+  //     timetableData[i] = timetableData[i].split('=')[1]
+  //     const moduleLessons = timetableData[i].split(LESSON_SEP)
+  //     for (let j = 0; j < moduleLessons.length; j++) {
+  //       data[i].push(moduleLessons[j])
+  //     }
+  //   }
+  //   return data
+  // }
 
-  /**
-   * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
-   *
-   * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
-   * @param moduleArray array of lessons selected by user (from link provided)
-   */
-  const NUSModsToRHEvents = (acadYear: string, moduleArray: string[]) => {
-    const moduleCode = moduleArray[0]
-    axios.get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`).then((res) => {
-      const moduleData = res.data.semesterData[0].timetable
-      moduleArray = moduleArray.splice(1)
-      for (let i = 0; i < moduleArray.length; i++) {
-        const lessonType = moduleArray[i].split(LESSON_TYPE_SEP)[0]
-        const classNo = moduleArray[i].split(LESSON_TYPE_SEP)[1]
-        const correspondingClassInformationArray = moduleData.filter(
-          (moduleClass: { classNo: string; lessonType: string }) => {
-            return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
-          },
-        )
-        for (let i = 0; i < correspondingClassInformationArray.length; i++) {
-          const newEvent: RHEvent = {
-            eventName: moduleCode + ' ' + LESSON_TO_ABBREV[correspondingClassInformationArray[i].lessonType],
-            location: correspondingClassInformationArray[i].venue,
-            day: correspondingClassInformationArray[i].day,
-            endTime: correspondingClassInformationArray[i].endTime,
-            startTime: correspondingClassInformationArray[i].startTime,
-          }
-          events.push(newEvent)
-        }
-      }
-    })
-  }
+  // /**
+  //  * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
+  //  *
+  //  * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
+  //  * @param moduleArray array of lessons selected by user (from link provided)
+  //  */
+  // const NUSModsToRHEvents = (acadYear: string, moduleArray: string[]) => {
+  //   const moduleCode = moduleArray[0]
+  //   axios.get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`).then((res) => {
+  //     const moduleData = res.data.semesterData[0].timetable
+  //     moduleArray = moduleArray.splice(1)
+  //     for (let i = 0; i < moduleArray.length; i++) {
+  //       const lessonType = moduleArray[i].split(LESSON_TYPE_SEP)[0]
+  //       const classNo = moduleArray[i].split(LESSON_TYPE_SEP)[1]
+  //       const correspondingClassInformationArray = moduleData.filter(
+  //         (moduleClass: { classNo: string; lessonType: string }) => {
+  //           return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
+  //         },
+  //       )
+  //       for (let i = 0; i < correspondingClassInformationArray.length; i++) {
+  //         const newEvent: RHEvent = {
+  //           eventName: moduleCode + ' ' + LESSON_TO_ABBREV[correspondingClassInformationArray[i].lessonType],
+  //           location: correspondingClassInformationArray[i].venue,
+  //           day: correspondingClassInformationArray[i].day,
+  //           endTime: correspondingClassInformationArray[i].endTime,
+  //           startTime: correspondingClassInformationArray[i].startTime,
+  //         }
+  //         events.push(newEvent)
+  //       }
+  //     }
+  //   })
+  // }
 
-  doSomething()
-  const [events] = useState<RHEvent[]>([])
-  console.log(events)
+  // doSomething()
+  // const [events] = useState<RHEvent[]>([])
+  // console.log(events)
 
   const rightIcon = (
     <MenuDropdown
