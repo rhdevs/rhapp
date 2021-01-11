@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
 import { SearchResult } from './types'
-import { RHEvent, SchedulingEvent } from './scheduling/types'
+import { SchedulingEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
