@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import EditDetailsCard from './EditDetailsCard'
-import EditPersonalInfoContainer from '../components/EditPersonalInfoContainer'
+import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 
