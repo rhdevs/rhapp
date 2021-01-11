@@ -10,6 +10,8 @@ db = client.RHApp
 
 app = Flask("rhapp")
 CORS(app)
+app.config['CORS_HEADERS'] = "Content-Type"
+# app.config.from_object(os.environ['APP_SETTINGS'])
 
 
 @app.route("/timetable/<userID>")
