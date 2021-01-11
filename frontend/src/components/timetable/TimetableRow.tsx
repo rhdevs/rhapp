@@ -67,8 +67,6 @@ export const DAY_TO_NUMBER: day = {
 }
 
 function TimetableRow(props: Props) {
-  const overlapEvents: RHEvent[] = []
-
   return (
     <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
       <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
@@ -82,6 +80,7 @@ function TimetableRow(props: Props) {
         }}
       >
         {props.events?.map((eventRow, index) => {
+          console.log(eventRow)
           return (
             <ChildrenContainer key={index}>
               {eventRow.map((individualEvent, index) => {
@@ -96,7 +95,7 @@ function TimetableRow(props: Props) {
                     }}
                   >
                     <EventCell
-                      isSingleEvent={!individualEvent.hasOverlap}
+                      // isSingleEvent={!individualEvent.hasOverlap}
                       eventType={'mods'}
                       oneHourWidth={props.oneHourWidth}
                       oneDayMinHeight={props.oneDayMinHeight}
