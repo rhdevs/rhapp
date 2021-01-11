@@ -2,10 +2,25 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { FileImageFilled } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 import { Button, Switch } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { Alert } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import {
+  AddImage,
+  DeleteImage,
+  EditPostDetail,
+  GetPostDetailsToEdit,
+  handleCreateEditPost,
+  PopWarning,
+  ResetPostDetails,
+} from '../../../store/social/action'
+import { PostImage } from './Components/postImage'
+import { PATHS } from '../../Routes'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -164,6 +179,11 @@ const PostButton = styled.div`
   }
 `
 
+const AlertGroup = styled.div`
+  margin-bottom: 23px;
+  margin-top: 23px; !important
+`
+
 const ImageDiv = styled.div`
   margin-top: 0px;
   display: flex;
@@ -174,11 +194,22 @@ const ImageDiv = styled.div`
 export default function CreateEditPost() {
   const params = useParams<{ editPostId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
+  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
+    (state: RootState) => state.social,
+  )
 
   useEffect(() => {
-    console.log(params.editPostId)
-    //fetch post details, populate.
+    if (window.location.href.includes('/post/edit')) {
+      dispatch(GetPostDetailsToEdit(params.editPostId))
+    } else {
+      dispatch(ResetPostDetails())
+    }
   }, [dispatch])
+
+  const deleteImage = (source: string) => {
+    dispatch(DeleteImage(source))
+  }
 
   return (
     <MainContainer>
@@ -204,15 +235,27 @@ export default function CreateEditPost() {
         />
       )} */}
       <PostContainer>
+        {warnings.length !== 0 &&
+          warnings.map((warning, idx) => (
+            <AlertGroup key={idx}>
+              <Alert
+                message="Error :-( "
+                description={warning}
+                type="error"
+                closable
+                showIcon
+                onClose={() => dispatch(PopWarning())}
+              />
+            </AlertGroup>
+          ))}
         <form>
           <Card>
             <Header>
               <Title
                 type="text"
                 name="title"
-                // value={body.title}
-                value="New Post"
-                // onChange={(e) => onChange(e)}
+                value={newPostTitle}
+                onChange={(e) => dispatch(EditPostDetail('title', e.target.value))}
                 placeholder="Title"
                 required
               />
@@ -220,49 +263,44 @@ export default function CreateEditPost() {
             <Content>
               <Caption
                 name="caption"
-                // value={body.caption}
-                value="body"
-                // onChange={(e) => onChange(e)}
+                value={newPostBody}
+                onChange={(e) => dispatch(EditPostDetail('body', e.target.value))}
                 placeholder="Tap to type your caption..."
                 required
               />
             </Content>
-            <Footer>
-              <InputFile
-                type="file"
-                name="file"
-                id="file"
-                // onChange={(e) => handleImageChange(e)}
-              />
-              <InputLabel htmlFor="file">
-                <FileImageFilled style={{ fontSize: '20px' }} />
-              </InputLabel>
-            </Footer>
+            {isUploading && <LoadingSpin />}
+            {!isUploading && (
+              <Footer>
+                <InputFile type="file" name="file" id="file" onChange={(e) => dispatch(AddImage(e))} />
+                <InputLabel htmlFor="file">
+                  <FileImageFilled style={{ fontSize: '20px' }} />
+                </InputLabel>
+              </Footer>
+            )}
           </Card>
-          {/* {showWarning.shown && (
-            <WarningDiv>
-              <Warning>{showWarning.warning}</Warning>
-            </WarningDiv>
-          )} */}
           {true && (
             <Announcement>
               <p>Official</p>
               <SwitchContainer>
-                <Switch defaultChecked onChange={() => console.log('hello')} />
+                <Switch checked={newPostOfficial} onChange={() => dispatch(EditPostDetail('official', 'null'))} />
               </SwitchContainer>
             </Announcement>
           )}
           <ImageDiv>
-            {/* {image.imagePreviewUrl.map((url) => (
+            {newPostImages.map((url) => (
               <div key={url}>
                 <PostImage card={url} deleteFunc={deleteImage} />
               </div>
-            ))} */}
+            ))}
           </ImageDiv>
           <PostButton>
             <Button
               type="primary"
-              // onClick={() => setModal({ ...modal, buttonModal: true })}
+              onClick={() => {
+                dispatch(handleCreateEditPost())
+                history.push(PATHS.HOME_PAGE)
+              }}
             >
               {window.location.href.includes('/post/edit') ? 'Save Changes' : 'Create Post'}
             </Button>

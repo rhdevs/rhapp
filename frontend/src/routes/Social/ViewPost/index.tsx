@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 // import { useParams } from 'react-router-dom'
 // import { useDispatch } from 'react-redux'
 import 'antd/dist/antd.css'
@@ -11,6 +12,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Avatar, Menu } from 'antd'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -93,6 +95,7 @@ const DescriptionText = styled.text`
 // }
 
 export default function ViewPost() {
+  const history = useHistory()
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [success] = useSnackbar()
@@ -178,7 +181,11 @@ export default function ViewPost() {
         {menuIsOpen && (
           <>
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<EditFilled />} onClick={onMenuClick}>
+              <Menu.Item
+                key="1"
+                icon={<EditFilled />}
+                onClick={() => history.push(PATHS.EDIT + '/' + dummyPost.postId)}
+              >
                 Edit
               </Menu.Item>
               <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>

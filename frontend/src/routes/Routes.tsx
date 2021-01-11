@@ -2,7 +2,6 @@ import React, { Suspense } from 'react'
 import styled from 'styled-components'
 import { Route, Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
-import NotFound from './ErrorPages/NotFound/NotFound'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -33,6 +32,7 @@ export enum PATHS {
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
   CREATE_POST = '/social/post/create',
+  EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
 }
 
