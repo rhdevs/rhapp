@@ -67,8 +67,8 @@ export const userRhEventsDummy = [
   {
     eventID: 1,
     eventName: 'bonding camp',
-    startDateTime: 1608654852,
-    endDateTime: 1608658452,
+    startDateTime: 1605594852,
+    endDateTime: 1605598452,
     description: 'nothing',
     location: 'upper lounge',
     ccaID: 1,
@@ -89,8 +89,8 @@ export const userRhEventsDummy = [
   {
     eventID: 1,
     eventName: 'dummy event 3',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
+    startDateTime: 1607423138,
+    endDateTime: 1607426751,
     description: 'nothing',
     location: 'hall',
     ccaID: 1,

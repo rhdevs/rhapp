@@ -14,6 +14,7 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
       day: getDayStringFromUNIX(data.startDateTime),
       endTime: getTimeStringFromUNIX(data.endDateTime),
       startTime: getTimeStringFromUNIX(data.startDateTime),
+      hasOverlap: false,
     })
   })
   dispatch({
@@ -114,6 +115,9 @@ const arrangeEventsWithinDay = (events: RHEvent[]) => {
       if (!previousEvents || !doEventsOverlap(previousEvents, event)) {
         rowEvents.push(event)
         return
+      } else {
+        previousEvents.hasOverlap = true
+        event.hasOverlap = true
       }
     }
     rows.push([event])

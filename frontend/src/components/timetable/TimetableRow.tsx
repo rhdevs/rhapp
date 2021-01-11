@@ -7,7 +7,6 @@ const TimetableRowContainer = styled.li`
   position: relative;
   display: flex;
   flex: 1 0 auto;
-  min-height: 4.5rem;
 `
 
 const DayContainer = styled.div`
@@ -25,7 +24,6 @@ const DayContainer = styled.div`
   writing-mode: tb;
   background-color: #fff;
   text-align: center;
-  min-height: 67px;
   z-index: 2;
 `
 
@@ -37,12 +35,9 @@ const DaySpanContainer = styled.span`
 `
 
 const TimetableDayContainer = styled.div`
-  min-height: 67px;
   min-width: 64rem;
-  padding-bottom: 0.3rem;
   outline: 1px solid #aeb1b5;
   background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
-  background-size: 16rem;
   flex: 0 1 auto;
 `
 
@@ -51,6 +46,8 @@ const ChildrenContainer = styled.div`
 `
 
 type Props = {
+  oneHourWidth: string
+  oneDayMinHeight: string
   events: RHEvent[][]
   timetableStartTime: number
   timetableEndTime: number
@@ -70,26 +67,39 @@ export const DAY_TO_NUMBER: day = {
 }
 
 function TimetableRow(props: Props) {
+  const overlapEvents: RHEvent[] = []
+
   return (
-    <TimetableRowContainer>
-      <DayContainer>
+    <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
+      <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
         <DaySpanContainer>{props.day}</DaySpanContainer>
       </DayContainer>
-      <TimetableDayContainer style={{ minWidth: props.width + 'rem' }}>
+      <TimetableDayContainer
+        style={{
+          minWidth: props.width + 'rem',
+          backgroundSize: `calc(${props.oneHourWidth}*2)`,
+          minHeight: `${props.oneDayMinHeight}`,
+        }}
+      >
         {props.events?.map((eventRow, index) => {
           return (
             <ChildrenContainer key={index}>
               {eventRow.map((individualEvent, index) => {
+                console.log(individualEvent)
                 return (
                   <div
                     key={index}
                     style={{
                       marginLeft: `calc((${Number(individualEvent.startTime)} - ${
                         index === 0 ? props.timetableStartTime : Number(eventRow[index - 1].endTime)
-                      }) / 100 * 8rem + 0.0625rem)`,
+                      }) / 100 * ${props.oneHourWidth} + 0.0625rem)`,
                     }}
                   >
                     <EventCell
+                      isSingleEvent={!individualEvent.hasOverlap}
+                      eventType={'mods'}
+                      oneHourWidth={props.oneHourWidth}
+                      oneDayMinHeight={props.oneDayMinHeight}
                       eventStartTime={individualEvent.startTime}
                       eventEndTime={individualEvent.endTime}
                       eventTitle={individualEvent.eventName}
