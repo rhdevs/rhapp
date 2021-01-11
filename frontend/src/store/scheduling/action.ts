@@ -4,7 +4,7 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   const fetchedData = userRhEventsDummy
   const formattedEvents: RHEvent[] = []
   fetchedData.forEach((data) => {
@@ -12,6 +12,7 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
       eventName: data.eventName,
       location: data.location,
       day: getDayStringFromUNIX(data.startDateTime),
+      date: getDate(data.startDateTime),
       endTime: getTimeStringFromUNIX(data.endDateTime),
       startTime: getTimeStringFromUNIX(data.startDateTime),
       hasOverlap: false,
@@ -23,13 +24,17 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
     userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
     userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
   })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 const sortEvents = (events: RHEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
+}
+
+const getDate = (eventStartTime: Date) => {
+  return String(eventStartTime)
 }
 
 const getTimetableStartTime = (formattedEvents: RHEvent[]) => {
@@ -131,8 +136,8 @@ const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (unixDate: number) => {
-  const dayInInt = new Date(unixDate * 1000).getDay()
+const getDayStringFromUNIX = (date: Date) => {
+  const dayInInt = date.getDay()
   switch (dayInInt) {
     case 0:
       return 'Sunday'
@@ -151,11 +156,8 @@ const getDayStringFromUNIX = (unixDate: number) => {
   }
 }
 
-// Converts a unix string into date format and returns the time of string type in 24hour format
-const getTimeStringFromUNIX = (unixDate: number) => {
-  // Create a new JavaScript Date object based on the timestamp
-  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-  const date = new Date(unixDate * 1000)
+// Converts a date of Date type and returns the time of string type in 24hour format
+const getTimeStringFromUNIX = (date: Date) => {
   const hours = '0' + date.getHours()
   const minutes = '0' + date.getMinutes()
 
@@ -173,10 +175,22 @@ export const getShareSearchResults = (query: string) => (dispatch: Dispatch<Acti
   //     shareSearchResults: results,
   //   })
   // })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
-export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isLoading } = getState().scheduling
   dispatch({ type: SCHEDULING_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
+}
+
+export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch)
+  // Uncomment when endpoint for share search is obtained from backend
+  // get(ENDPOINTS.SEARCH_EVENTS).then((results) => {
+  //   dispatch({
+  //     type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
+  //     searchedEvents: results,
+  //   })
+  // })
+  dispatch(setIsLoading(false))
 }

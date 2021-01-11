@@ -35,7 +35,11 @@ function Button(props: Props) {
     <AntdButton
       danger
       style={
-        props.style ?? { background: buttonColour, borderColor: buttonColour, color: textColour, borderRadius: '5px' }
+        props.style ?? {
+          background: buttonColour,
+          color: textColour,
+          borderRadius: '5px',
+        }
       }
       onClick={(e) => {
         {

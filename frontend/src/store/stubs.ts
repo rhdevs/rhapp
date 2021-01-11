@@ -1,6 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
 import { SearchResult } from './types'
+import { RHEvent, SchedulingEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -52,50 +53,50 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
-export const userRhEventsDummy = [
+export const userRhEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
+    startDateTime: new Date('2020-02-15 12:00:00'),
+    endDateTime: new Date('2020-02-15 14:00:00'),
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
-    image: null,
+    userID: 'A0123456Z',
+    image: 'null',
   },
   {
     eventID: 1,
     eventName: 'bonding camp',
-    startDateTime: 1605594852,
-    endDateTime: 1605598452,
+    startDateTime: new Date('2020-02-18 13:00:00'),
+    endDateTime: new Date('2020-02-18 14:00:00'),
     description: 'nothing',
     location: 'upper lounge',
     ccaID: 1,
-    userID: 1,
-    image: null,
+    userID: 'A0123456Z',
+    image: 'null',
   },
   {
     eventID: 1,
     eventName: '2nd bonding camp',
-    startDateTime: 1607342400,
-    endDateTime: 1607349600,
+    startDateTime: new Date('2020-02-15 13:00:00'),
+    endDateTime: new Date('2020-02-15 15:00:00'),
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
-    image: null,
+    userID: 'A0123456Z',
+    image: 'null',
   },
   {
     eventID: 1,
     eventName: 'dummy event 3',
-    startDateTime: 1607423138,
-    endDateTime: 1607426751,
+    startDateTime: new Date('2020-02-18 2:00:00'),
+    endDateTime: new Date('2020-02-18 4:00:00'),
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
-    image: null,
+    userID: 'A0123456Z',
+    image: 'null',
   },
 ]
 

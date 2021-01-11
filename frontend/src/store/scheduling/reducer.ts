@@ -8,6 +8,7 @@ const initialState = {
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
   shareSearchResults: [],
+  searchedEvents: [],
 }
 
 type State = {
@@ -16,6 +17,7 @@ type State = {
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
+  searchedEvents: RHEvent[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -38,6 +40,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         shareSearchResults: action.shareSearchResults,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS: {
+      return {
+        ...state,
+        searchedEvents: action.searchedEvents,
       }
     }
     default:
