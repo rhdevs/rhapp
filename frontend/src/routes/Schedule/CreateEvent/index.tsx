@@ -13,7 +13,13 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { editEventName, editEventLocation, editEventFromDate } from '../../../store/scheduling/actions'
+import {
+  editEventName,
+  editEventLocation,
+  editEventFromDate,
+  editCca,
+  editDescription,
+} from '../../../store/scheduling/actions'
 
 const { Option } = Select
 
@@ -98,11 +104,11 @@ const now = new Date(nowTimeStamp)
 export default function CreateEvent() {
   const dispatch = useDispatch()
 
-  const { newEventName, newEventLocation, newEventFromDate } = useSelector((state: RootState) => state.scheduling)
+  const { newEventName, newEventLocation, newEventFromDate, newCca, newDescription } = useSelector(
+    (state: RootState) => state.scheduling,
+  )
 
   const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
-  const [cca, setCca] = useState('')
-  const [description, setDescription] = useState('')
   const [, setEventType] = useState('')
 
   /** Incomplete functionality for Uploading Image */
@@ -181,12 +187,12 @@ export default function CreateEvent() {
           value={newEventLocation}
           setValue={dispatch(editEventLocation)}
         />
-        <InputRow title="CCA" placeholder="CCA Name" value={cca} setValue={setCca} />
+        <InputRow title="CCA" placeholder="CCA Name" value={newCca} setValue={dispatch(editCca)} />
         <InputRow
           title="Description"
           placeholder="Tell us what your event is about!"
-          value={description}
-          setValue={setDescription}
+          value={newDescription}
+          setValue={dispatch(editDescription)}
           textarea
         />
         <Row>
