@@ -81,9 +81,15 @@ function EventCell(props: Props) {
       ? '#000000'
       : DEFAULT_EVENT_CELL_WORDS_COLOUR
 
+  const onlyShowEventName = props.onlyShowEventName
+    ? props.onlyShowEventName
+    : (props.isSingleEvent ?? true) === true
+    ? false
+    : true
+
   const EVENT_HEIGHT = props.eventHeight
     ? props.eventHeight
-    : !props.isSingleEvent
+    : onlyShowEventName
     ? Number(props.oneDayMinHeight.replace('rem', '')) / 2 + 'rem'
     : EVENT_CELL_COLOUR === '#fafaf4'
     ? Number(props.oneDayMinHeight.replace('rem', '')) - 0.0625 * 3 + 'rem'
@@ -95,12 +101,7 @@ function EventCell(props: Props) {
     0.0625 +
     'rem'
 
-  const onlyShowEventName = props.onlyShowEventName
-    ? props.onlyShowEventName
-    : props.isSingleEvent === true
-    ? false
-    : true
-
+  console.log(onlyShowEventName)
   return (
     <EventContainer style={{ border: EVENT_CELL_COLOUR === '#fafaf4' ? '1px #000000 solid' : '' }}>
       <ContentContainer
