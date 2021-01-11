@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 // import { useParams } from 'react-router-dom'
-// import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import 'antd/dist/antd.css'
 import useSnackbar from '../../../hooks/useSnackbar'
-
+import dayjs from 'dayjs'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import StyledCarousel from '../../../components/Mobile/StyledCarousel'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -13,6 +13,9 @@ import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Avatar, Menu } from 'antd'
 import { PATHS } from '../../Routes'
+import { RootState } from '../../../store/types'
+
+import { GetPosts, DeletePost } from '../../../store/social/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -81,46 +84,41 @@ const DescriptionText = styled.text`
   display: -webkit-box;
   padding: 20px;
 `
-
-// type ViewPostProps = {
-//   isOwner: boolean
-//   avatar?: string
-//   name: string
-//   title: string
-//   dateTime: string
-//   description: string
-//   postId: string
-//   initials: string
-//   postPics?: string[]
-// }
-
 export default function ViewPost() {
+  const dispatch = useDispatch()
   const history = useHistory()
+
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [success] = useSnackbar()
-  // const dispatch = useDispatch()
 
   // const { postId } = useParams<{ postId: string }>()
-  // TODO: Use postId to fetch post data from endpoint
+  const postId = '123456789' // To uncomment above line
+  const { posts } = useSelector((state: RootState) => state.social)
+  const post = posts.find((post) => {
+    return post.postId == parseInt(postId)
+  })
 
-  const dummyPost = {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-    initials: 'ZGG',
-  }
+  useEffect(() => {
+    dispatch(GetPosts())
+  }, [dispatch])
 
-  const { isOwner, avatar, name, title, dateTime, description, initials, postPics } = dummyPost
+  const title = post?.title
+  const ownerId = post?.ownerId
+  const date = post?.date
+  const description = post?.description
+  const postPics = post?.postPics
+
+  const formattedDate = date ? dayjs(date).format('D/M/YY, h:mmA') : dayjs().format('D/M/YY, h:mmA')
+
+  // TODO: Change avatar to the link to the user's profile pic
+  const avatar = 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+  //TODO: Change initials to user's initials
+  const initials = 'ZGG'
+  //TODO: Change name to user's name
+  const name = 'Zhou Gou Gou'
+  //TODO: Change userId to user' id
+  const userId = 1
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
@@ -133,19 +131,22 @@ export default function ViewPost() {
 
   const handleDeletePost = () => {
     // TODO: Call delete post endpoint
+    dispatch(DeletePost(userId))
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)
   }
 
-  const MenuIcon = isOwner ? (
-    <MenuContainer>
-      <div onClick={onMenuClick}>
-        <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
-      </div>
-    </MenuContainer>
-  ) : (
-    <></>
-  )
+  // TODO: change to ownerId == userId
+  const MenuIcon =
+    ownerId == 1 ? (
+      <MenuContainer>
+        <div onClick={onMenuClick}>
+          <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
+        </div>
+      </MenuContainer>
+    ) : (
+      <></>
+    )
 
   const Topbar = (
     <CenterContainer>
@@ -159,18 +160,14 @@ export default function ViewPost() {
       <TextContainer>
         <TitleText>{title}</TitleText>
         <TimeDateText>
-          {name}, {dateTime}
+          {name}, {formattedDate}
         </TimeDateText>
       </TextContainer>
     </CenterContainer>
   )
 
   const renderPhotoCarousel = () => (
-    <StyledCarousel>
-      {postPics.map((pic) => (
-        <StyledImg src={pic} key={pic} />
-      ))}
-    </StyledCarousel>
+    <StyledCarousel>{postPics && postPics.map((pic) => <StyledImg src={pic} key={pic} />)}</StyledCarousel>
   )
 
   return (
@@ -181,11 +178,7 @@ export default function ViewPost() {
         {menuIsOpen && (
           <>
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item
-                key="1"
-                icon={<EditFilled />}
-                onClick={() => history.push(PATHS.EDIT + '/' + dummyPost.postId)}
-              >
+              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + postId)}>
                 Edit
               </Menu.Item>
               <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>

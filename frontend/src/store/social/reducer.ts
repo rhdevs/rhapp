@@ -9,6 +9,7 @@ const initialState = {
   newPostImages: [],
   newPostOfficial: false,
   warnings: [],
+  posts: [],
 }
 
 type State = {
@@ -19,6 +20,8 @@ type State = {
   newPostImages: string[]
   newPostOfficial: boolean
   warnings: string[]
+
+  posts: Post[]
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -62,6 +65,20 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         isUploading: action.isUploading,
+      }
+    }
+
+    case SOCIAL_ACTIONS.GET_POSTS: {
+      return {
+        ...state,
+        posts: action.posts,
+      }
+    }
+
+    case SOCIAL_ACTIONS.DELETE_POST: {
+      return {
+        ...state,
+        posts: action.posts,
       }
     }
 
