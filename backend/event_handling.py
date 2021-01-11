@@ -245,6 +245,56 @@ def editAttendance():
     return {'message': "Attendance edited"}, 200
 
 
+/*
+
+END OF EVENT HANDLING, START OF SOCIAL
+
+*/
+
+
+@app.route("/profile/<userID>")
+def getUserProfile(userID):
+    try:
+        data = db.Profiles.find({"userID": userID})
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
+
+@ app.route("/profile", methods=['DELETE', 'POST'])
+def addDeleteProfile():
+    try:
+        if request.method == "POST":
+            data = request.get_json()
+            userID = str(data.get('userID'))
+            name = str(data.get('name'))
+            bio = str(data.get('bio'))
+            profilePictureURL = str(data.get('profilePictureURL'))
+            block = int(data.get('block'))
+            telegramHandle = str(data.get('telegramHandle'))
+            modules = data.get('modules')
+
+            body = {
+                "userID": userID,
+                "name": name,
+                "bio": bio,
+                "profilePictureURL": profilePictureURL,
+                "block": block,
+                "telegramHandle": telegramHandle,
+                "modules": modules
+            }
+            db.Profiles.insert_one(body)
+
+        elif request.method == "DELETE":
+            db.Profiles.delete_one({"userID": userID})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {"message": "Action successful"}, 200
+
+
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
