@@ -287,6 +287,7 @@ def addDeleteProfile():
             db.Profiles.insert_one(body)
 
         elif request.method == "DELETE":
+            userID = request.args.get('userID')
             db.Profiles.delete_one({"userID": userID})
 
     except Exception as e:
