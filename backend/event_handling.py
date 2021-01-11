@@ -245,11 +245,11 @@ def editAttendance():
     return {'message': "Attendance edited"}, 200
 
 
-/*
+"""
 
 END OF EVENT HANDLING, START OF SOCIAL
 
-*/
+"""
 
 
 @app.route("/profile/<userID>")
@@ -293,6 +293,36 @@ def addDeleteProfile():
         print(e)
         return {"err": "Action failed"}, 400
     return {"message": "Action successful"}, 200
+
+
+@ app.route("/profile/edit/", methods=['PUT'])
+def editProfile():
+    try:
+        data = request.get_json()
+        userID = str(data.get('userID'))
+        name = str(data.get('name'))
+        bio = str(data.get('bio'))
+        profilePictureURL = str(data.get('profilePictureURL'))
+        block = int(data.get('block'))
+        telegramHandle = str(data.get('telegramHandle'))
+        modules = data.get('modules')
+
+        body = {
+            "userID": userID,
+            "name": name,
+            "bio": bio,
+            "profilePictureURL": profilePictureURL,
+            "block": block,
+            "telegramHandle": telegramHandle,
+            "modules": modules
+        }
+
+        db.Events.update_one({"userID": userID}, {'$set': body})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {'message': "Event changed"}, 200
 
 
 if __name__ == '__main__':
