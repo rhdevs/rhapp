@@ -31,6 +31,7 @@ export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
   GET_RH_EVENTS = 'SCHEDULING_ACTIONS.GET_RH_EVENTS',
   GET_SHARE_SEARCH_RESULTS = 'SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS',
+  GET_SEARCHED_RH_EVENT = 'SCHEDULING_ACTIONS.GET_SEARCHED_RH_EVENT',
 }
 
 /** Actions */
@@ -52,4 +53,9 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-export type ActionTypes = GetRhEvents | GetShareSearchResults | SetIsLoading
+type GetSearchedRhEvent = {
+  type: typeof SCHEDULING_ACTIONS.GET_SEARCHED_RH_EVENT
+  searchedRhEvent: RHEvent
+}
+
+export type ActionTypes = GetRhEvents | GetShareSearchResults | SetIsLoading | GetSearchedRhEvent

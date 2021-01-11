@@ -179,7 +179,14 @@ export default function Schedule() {
           </SubMenu>
           <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
             <Menu.Item key="3">Import an ICalander File (.ics)</Menu.Item>
-            <Menu.Item key="4">Add an event</Menu.Item>
+            <Menu.Item
+              key="4"
+              onClick={() => {
+                history.push(PATHS.CREATE_EVENT)
+              }}
+            >
+              Add an event
+            </Menu.Item>
           </SubMenu>
           <Menu.Item
             key="5"
