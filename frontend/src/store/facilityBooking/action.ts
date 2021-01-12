@@ -1,20 +1,18 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { facilityListStub } from '../stubs'
 import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(SetIsLoading(true))
-  get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
-    const fetchedList: Facility[] = resp.data
-    console.log(fetchedList)
-    // filters through all locations and gives a unique list
-    const uniqueLocationList = [...new Set(fetchedList.map((item) => item.facilityLocation))]
+  get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then(async (resp) => {
+    const uniqueLocationList = [...new Set(resp.map((item: Facility) => item.facilityLocation))]
+
     dispatch({
       type: FACILITY_ACTIONS.GET_FACILITY_LIST,
-      facilityList: facilityListStub,
-      locationList: uniqueLocationList,
+      facilityList: resp,
+      locationList: ['All'].concat(uniqueLocationList as string[]),
     })
+
     dispatch(SetIsLoading(false))
   })
 }

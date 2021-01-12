@@ -7,7 +7,7 @@ export enum ENDPOINTS {
   TELEGRAM_HANDLE = '/users/telegramID',
 
   // FACILITY
-  FACILITY_LIST = '/facilities/all',
+  FACILITY_LIST = '/facilities',
   FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
@@ -56,24 +56,24 @@ async function makeRequest(
   let DOMAIN_URL: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'
+      DOMAIN_URL = 'http://rhappfacilities.rhdevs.repl.co'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL = 'https://rhappevents.rhdevs.repl.co'
+      DOMAIN_URL = 'http://rhappevents.rhdevs.repl.co'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      DOMAIN_URL = 'http://rhapplaundry.rhdevs.repl.co'
       break
   }
 
   return axios({
-    method,
+    method: method,
     url: DOMAIN_URL + url,
     headers: {
       ...additionalHeaders,
     },
     data: requestBody,
-    withCredentials: true,
+    // withCredentials: true,
     validateStatus: (status) => {
       if (status >= 200 && status < 400) {
         return true

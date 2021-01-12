@@ -6,6 +6,7 @@ import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
+import catIcon from '../../../assets/catMagnifyGlass.svg'
 import {
   getMyBookings,
   setIsDeleteMyBooking,
@@ -96,7 +97,7 @@ export default function ViewMyBookings() {
         {isLoading && <LoadingSpin />}
         {!isLoading && (
           <>
-            {myBookings.map((event) => (
+            {myBookings?.map((event) => (
               <BookingCard
                 key={event.eventName}
                 onClick={() => {
@@ -137,6 +138,11 @@ export default function ViewMyBookings() {
                 )}
               </BookingCard>
             ))}
+            {!myBookings && (
+              <div>
+                <img src={catIcon} /> <h1>You have no Bookings yet!</h1>
+              </div>
+            )}
           </>
         )}
       </MainContainer>

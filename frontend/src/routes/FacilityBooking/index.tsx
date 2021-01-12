@@ -109,7 +109,7 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             {facilityList.map((facility) => {
-              if (facility.facilityLocation === selectedTab || selectedTab === '')
+              if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
                 return (
                   <FacilityCard
                     key={facility.facilityID}
