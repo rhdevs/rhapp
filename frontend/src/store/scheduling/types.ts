@@ -1,3 +1,7 @@
+import { SearchResult } from '../types'
+
+/** Types */
+
 // type NUSModsEvent = {
 //   classNo: string
 //   covidZone: string
@@ -20,9 +24,15 @@ export type RHEvent = {
 
 // type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
 
+/** Actions' types */
+
 export enum SCHEDULING_ACTIONS {
+  SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
   GET_RH_EVENTS = 'SCHEDULING_ACTIONS.GET_RH_EVENTS',
+  GET_SHARE_SEARCH_RESULTS = 'SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS',
 }
+
+/** Actions */
 
 type GetRhEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
@@ -31,4 +41,14 @@ type GetRhEvents = {
   userEventsEndTime: number
 }
 
-export type ActionTypes = GetRhEvents
+type GetShareSearchResults = {
+  type: typeof SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS
+  shareSearchResults: SearchResult[]
+}
+
+type SetIsLoading = {
+  type: typeof SCHEDULING_ACTIONS.SET_IS_LOADING
+  isLoading: boolean
+}
+
+export type ActionTypes = GetRhEvents | GetShareSearchResults | SetIsLoading

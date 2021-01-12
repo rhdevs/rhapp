@@ -15,13 +15,6 @@ const TagsContainer = styled.div`
 `
 
 function Tags({ options, defaultOptions }: { options: string[]; defaultOptions?: string[] }) {
-  const children = []
-  let num = 0
-  for (const option in options) {
-    num++
-    children.push(<Option value={num}>{option}</Option>)
-  }
-
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`)
   }
@@ -36,7 +29,11 @@ function Tags({ options, defaultOptions }: { options: string[]; defaultOptions?:
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
       >
-        {children}
+        {options.map((option, key) => (
+          <Option value={option} key={key}>
+            {option}
+          </Option>
+        ))}
       </Select>
     </TagsContainer>
   )

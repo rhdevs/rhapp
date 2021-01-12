@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Truncate from 'react-truncate'
+import { useDispatch } from 'react-redux'
 import { Avatar, Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
+import { DeletePost } from '../../store/social/action'
 
 const CardContainer = styled.div`
   display: flex;
@@ -114,51 +116,56 @@ const SeeMoreText = styled.text`
 `
 
 type Props = {
-  avatar?: string
+  isOwner: boolean
+  avatar: string
+  name: string
   title: string
   dateTime: string
   description: string
+  postId: string
+  postPics?: string[]
+}
+
+const getInitials = (name: string) => {
+  const names = name.split(' ')
+  let initials = names[0].substring(0, 1).toUpperCase()
+  if (names.length > 1) {
+    initials += names[names.length - 1].substring(0, 1).toUpperCase()
+  }
+  return initials
 }
 
 function SocialPostCard(props: Props) {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
-  const DummyPicture = 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-  const DummyName = 'Zhou Gou Gou'
-  const DummyPostPicture = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-
-  const getInitials = (name: string) => {
-    const names = name.split(' ')
-    let initials = names[0].substring(0, 1).toUpperCase()
-    if (names.length > 1) {
-      initials += names[names.length - 1].substring(0, 1).toUpperCase()
-    }
-    return initials
-  }
+  const initials = getInitials(props.name)
+  //TODO: To change to user's id
+  const postId = 1
 
   const onExpandClick = () => {
-    history.push(PATHS.HOME_PAGE)
-    console.log('Link to expanded version of post!')
+    history.push({
+      pathname: `${PATHS.VIEW_POST}${props.postId}`,
+    })
   }
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
-    console.log(menuIsOpen)
   }
 
   const onDeleteClick = () => {
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
-    console.log(deleteConfirmation)
   }
 
   const onConfirmDeleteClick = () => {
-    // To remove post!
+    //TODO: To remove post!
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
+    dispatch(DeletePost(postId))
   }
 
   return (
@@ -168,15 +175,17 @@ function SocialPostCard(props: Props) {
           <Avatar
             size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
             style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-            src={DummyPicture}
+            src={props.avatar}
           >
-            {getInitials(DummyName)}
+            {initials}
           </Avatar>
         </div>
         <CenterContainer onClick={onExpandClick}>
           <TextContainer>
             <TitleText>{props.title}</TitleText>
-            <TimeDateText>{props.dateTime}</TimeDateText>
+            <TimeDateText>
+              {props.name}, {props.dateTime}
+            </TimeDateText>
             <Truncate
               lines={1}
               ellipsis={
@@ -189,11 +198,13 @@ function SocialPostCard(props: Props) {
               <DescriptionText>{props.description}</DescriptionText>
             </Truncate>
           </TextContainer>
-          <ImageContainer>
-            <StyledImg src={DummyPostPicture} />
-            <StyledImgShadow />
-            <StyledImgShadowTwo />
-          </ImageContainer>
+          {props.postPics && (
+            <ImageContainer>
+              <StyledImg src={props.postPics[0]} />
+              <StyledImgShadow />
+              <StyledImgShadowTwo />
+            </ImageContainer>
+          )}
         </CenterContainer>
 
         <MenuContainer>
@@ -202,7 +213,7 @@ function SocialPostCard(props: Props) {
           </div>
           {menuIsOpen && (
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<EditFilled />} onClick={onMenuClick}>
+              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + props.postId)}>
                 Edit
               </Menu.Item>
               <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>
