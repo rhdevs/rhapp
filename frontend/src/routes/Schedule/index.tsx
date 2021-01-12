@@ -179,7 +179,14 @@ export default function Schedule() {
             <Menu.Item key="2">Save as png</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
-            <Menu.Item key="3">Import an ICalander File (.ics)</Menu.Item>
+            <Menu.Item
+              key="3"
+              onClick={() => {
+                history.push(PATHS.IMPORT_FROM_NUSMODS)
+              }}
+            >
+              Import from NUSMods
+            </Menu.Item>
             <Menu.Item
               key="4"
               onClick={() => {

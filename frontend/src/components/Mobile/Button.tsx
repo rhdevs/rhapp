@@ -14,12 +14,17 @@ type Props = {
   updatedTextColor?: string
   style?: React.CSSProperties
   onButtonClick?: (arg0: boolean) => void
+  isFlipButton?: boolean
 }
 
 function Button(props: Props) {
   const [buttonIsPressed, setButtonIsPressed] = useState(props.buttonIsPressed ?? false)
   const [buttonColour, setButtonColour] = useState(
-    props.buttonIsPressed ? props.updatedButtonColor ?? 'transparent' : props.defaultButtonColor ?? '#DE5F4C',
+    props.buttonIsPressed
+      ? props.updatedButtonColor ?? props.isFlipButton ?? true
+        ? 'transparent'
+        : props.defaultButtonColor ?? '#DE5F4C'
+      : props.defaultButtonColor ?? '#DE5F4C',
   )
   const [textColour, setTextColour] = useState(props.buttonIsPressed ? '#ff7875' : props.defaultTextColor || 'white')
 
@@ -47,9 +52,19 @@ function Button(props: Props) {
         }
         buttonIsPressed ? successfulRemove() : successfulAdd()
         setButtonColour(
-          buttonIsPressed ? props.defaultButtonColor ?? '#DE5F4C' : props.updatedButtonColor ?? 'transparent',
+          buttonIsPressed
+            ? props.defaultButtonColor ?? '#DE5F4C'
+            : props.updatedButtonColor ?? props.isFlipButton ?? true
+            ? 'transparent'
+            : props.defaultButtonColor ?? '#DE5F4C',
         )
-        setTextColour(buttonIsPressed ? props.defaultTextColor ?? 'white' : props.updatedTextColor ?? '#ff7875')
+        setTextColour(
+          buttonIsPressed
+            ? props.defaultTextColor ?? 'white'
+            : props.updatedTextColor ?? props.isFlipButton ?? true
+            ? '#ff7875'
+            : props.defaultTextColor ?? 'white',
+        )
         setButtonIsPressed(!buttonIsPressed)
         if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
       }}

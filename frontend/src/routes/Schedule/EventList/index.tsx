@@ -100,11 +100,6 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
               return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
             })
             .map((result, index) => {
-              console.log(
-                userRhEventsList.filter((event) => {
-                  return event.eventName === result.eventName
-                }),
-              )
               return (
                 <ImageDescriptionCard
                   key={index}
