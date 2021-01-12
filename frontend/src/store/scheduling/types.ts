@@ -45,9 +45,16 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
   SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
   SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
+  GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
+  SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
 }
 
 /** Actions */
+
+type getHallEventTypes = {
+  type: typeof SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES
+  hallEventTypes: string[]
+}
 
 type GetRhEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
@@ -91,6 +98,11 @@ type SetDescription = {
   newDescription: string
 }
 
+type SetHallEventType = {
+  type: typeof SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE
+  newHallEventType: string
+}
+
 export type ActionTypes =
   | GetRhEvents
   | SetEventName
@@ -100,3 +112,5 @@ export type ActionTypes =
   | SetDescription
   | GetShareSearchResults
   | SetIsLoading
+  | getHallEventTypes
+  | SetHallEventType

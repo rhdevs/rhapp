@@ -20,6 +20,8 @@ export const facilityListStub: Facility[] = [
   { facilityID: 225, facilityName: 'Hard Court', facilityLocation: 'Block 5' },
 ]
 
+export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Training', 'IHG']
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,

@@ -1,7 +1,8 @@
 import { isEmpty, last } from 'lodash'
-import { userRhEventsDummy } from '../stubs'
+import { getHallEventTypesStub, userRhEventsDummy } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
+import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(SetIsLoading(true))
@@ -23,6 +24,14 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
     userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
   })
   dispatch(SetIsLoading(false))
+}
+
+export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
+    hallEventTypes: getHallEventTypesStub,
+  })
 }
 
 const sortEvents = (events: RHEvent[]) => {
@@ -197,4 +206,8 @@ export const editDescription = (newDescription: string) => (dispatch: Dispatch<A
 export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newDescription } = getState().scheduling
   console.log(newDescription)
+}
+
+export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
 }

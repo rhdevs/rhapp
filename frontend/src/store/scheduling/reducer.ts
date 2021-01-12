@@ -15,6 +15,8 @@ const initialState = {
   newEventFromDate: new Date(),
   newCca: '',
   newDescription: '',
+  newHallEventType: '',
+  hallEventTypes: [],
 }
 
 type State = {
@@ -28,6 +30,8 @@ type State = {
   newEventFromDate: Date
   newCca: string
   newDescription: string
+  hallEventTypes: string[]
+  newHallEventType: string
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -80,6 +84,18 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         newDescription: action.newDescription,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES: {
+      return {
+        ...state,
+        hallEventTypes: action.hallEventTypes,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE: {
+      return {
+        ...state,
+        newHallEventType: action.newHallEventType,
       }
     }
     default:
