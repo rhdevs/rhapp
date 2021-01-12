@@ -2,7 +2,6 @@ import { isEmpty, last } from 'lodash'
 import { getHallEventTypesStub, userRhEventsDummy } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(SetIsLoading(true))

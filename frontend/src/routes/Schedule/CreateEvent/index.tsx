@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
@@ -97,9 +97,6 @@ const BackIcon = (
   </Link>
 )
 
-const nowTimeStamp = Date.now()
-const now = new Date(nowTimeStamp)
-
 export default function CreateEvent() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -115,8 +112,6 @@ export default function CreateEvent() {
     newCca,
     newDescription,
   } = useSelector((state: RootState) => state.scheduling)
-
-  const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
 
   const CheckIcon = (
     <div>
