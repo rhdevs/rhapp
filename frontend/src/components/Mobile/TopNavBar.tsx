@@ -38,11 +38,13 @@ function TopNavBar({
   leftIcon,
   leftIconComponent,
   rightComponent,
+  centerComponent,
 }: {
-  title: string
+  title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement
+  centerComponent?: ReactElement
 }) {
   const history = useHistory()
   return (
@@ -61,6 +63,7 @@ function TopNavBar({
             />
           )}
           <TitleText>{title}</TitleText>
+          {centerComponent}
         </>
       }
       rightContent={rightComponent}

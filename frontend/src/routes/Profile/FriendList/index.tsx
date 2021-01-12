@@ -8,7 +8,7 @@ import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 95vh;
   background-color: #fafaf4;
   align-items: center;
 `

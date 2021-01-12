@@ -1,9 +1,10 @@
 import { isEmpty, last } from 'lodash'
 import { userRhEventsDummy } from '../stubs'
-import { Dispatch } from '../types'
+import { Dispatch, GetState } from '../types'
 import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
   const fetchedData = userRhEventsDummy
   const formattedEvents: RHEvent[] = []
   fetchedData.forEach((data) => {
@@ -21,6 +22,7 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
     userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
     userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
   })
+  dispatch(SetIsLoading(false))
 }
 
 const sortEvents = (events: RHEvent[]) => {
@@ -156,4 +158,21 @@ const getTimeStringFromUNIX = (unixDate: number) => {
   const formattedTime = hours.substr(-2) + minutes.substr(-2)
 
   return formattedTime
+}
+
+export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch)
+  // Uncomment when endpoint for share search is obtained from backend
+  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
+  //   dispatch({
+  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+  //     shareSearchResults: results,
+  //   })
+  // })
+  dispatch(SetIsLoading(false))
+}
+
+export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { isLoading } = getState().scheduling
+  dispatch({ type: SCHEDULING_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
 }

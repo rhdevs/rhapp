@@ -4,6 +4,7 @@ import axios from 'axios'
 import { invert } from 'lodash'
 import { useHistory } from 'react-router-dom'
 
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Menu } from 'antd'
 import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
@@ -12,10 +13,11 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserRhEvents } from '../../store/scheduling/actions'
+import { fetchUserRhEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import { RHEvent } from '../../store/scheduling/types'
+import LoadingSpin from '../../components/LoadingSpin'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -41,11 +43,6 @@ const Background = styled.div`
   background-color: #fafaf4;
   height: 100%;
   width: 100%;
-`
-
-const BottomNavBar = styled.div`
-  height: 64px;
-  background-color: #fafaf4;
 `
 
 const { SubMenu } = Menu
@@ -82,7 +79,9 @@ const testLink =
 export default function Schedule() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userRhEvents, userEventsStartTime, userEventsEndTime } = useSelector((state: RootState) => state.scheduling)
+  const { userRhEvents, userEventsStartTime, userEventsEndTime, isLoading } = useSelector(
+    (state: RootState) => state.scheduling,
+  )
 
   useEffect(() => {
     dispatch(fetchUserRhEvents())
@@ -198,7 +197,8 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
+      {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userRhEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
