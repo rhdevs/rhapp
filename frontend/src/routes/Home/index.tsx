@@ -52,8 +52,6 @@ export default function Home() {
       <AnnouncementCarousel />
       <HexagonNavigation />
       <SocialSection />
-      <h1>Temporary Routes</h1>
-      <TemporaryRoutes />
       <BottomNavBar />
     </MainContainer>
   )

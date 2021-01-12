@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { Avatar, Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
@@ -189,8 +190,8 @@ function SocialPostCard(props: Props) {
         </CenterContainer>
 
         <MenuContainer>
-          <div onClick={onMenuClick}>
-            <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
+          <div style={{ width: 16 }}>
+            {props.isOwner && <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} onClick={onMenuClick} />}
           </div>
           {menuIsOpen && (
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>

@@ -11,7 +11,6 @@ type TabProps = {
 }
 
 type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
-
 type StickyProps = {
   isSticky: boolean
 }
@@ -74,6 +73,7 @@ const dummyAllData: SocialPostCardProps[] = [
 const dummyFriendData = dummyAllData.slice(0, 1)
 
 export default function SocialSection() {
+  const history = useHistory()
   const [isAllSocialPosts, setIsAllSocialPosts] = useState<SOCIAL_TABS>(SOCIAL_TABS.ALL_USERS)
   const [isSticky, setIsSticky] = useState<boolean>(false)
   const toggleTab = (socialTab: SOCIAL_TABS) => () => setIsAllSocialPosts(socialTab)
@@ -105,7 +105,10 @@ export default function SocialSection() {
       <Sticky ref={ref} isSticky={isSticky}>
         <Header>
           <span>{`What's happening....`}</span>
-          <PlusCircleFilled style={{ color: '#EB5757', fontSize: 20 }} />
+          <PlusCircleFilled
+            style={{ color: '#EB5757', fontSize: 20 }}
+            onClick={() => history.push(PATHS.CREATE_POST)}
+          />
         </Header>
         <TabBar>
           <Tab active={isAllSocialPosts === SOCIAL_TABS.ALL_USERS} onClick={toggleTab(SOCIAL_TABS.ALL_USERS)}>
