@@ -15,7 +15,7 @@ import { Avatar, Menu } from 'antd'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 
-import { GetPosts, DeletePost } from '../../../store/social/action'
+import { GetPosts, DeletePost, SetPostUser } from '../../../store/social/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -94,13 +94,15 @@ export default function ViewPost() {
 
   // const { postId } = useParams<{ postId: string }>()
   const postId = '123456789' // To uncomment above line
-  const { posts } = useSelector((state: RootState) => state.social)
-  const post = posts.find((post) => {
-    return post.postId == parseInt(postId)
-  })
+  const { posts, postUser } = useSelector((state: RootState) => state.social)
+  let post
 
   useEffect(() => {
     dispatch(GetPosts())
+    post = posts.find((post) => {
+      return post.postId == parseInt(postId)
+    })
+    dispatch(SetPostUser(post?.ownerId))
   }, [dispatch])
 
   const title = post?.title
@@ -111,14 +113,9 @@ export default function ViewPost() {
 
   const formattedDate = date ? dayjs(date).format('D/M/YY, h:mmA') : dayjs().format('D/M/YY, h:mmA')
 
-  // TODO: Change avatar to the link to the user's profile pic
-  const avatar = 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-  //TODO: Change initials to user's initials
-  const initials = 'ZGG'
-  //TODO: Change name to user's name
-  const name = 'Zhou Gou Gou'
-  //TODO: Change userId to user' id
-  const userId = 1
+  const avatar = postUser?.avatar
+  const initials = postUser?.initials
+  const name = postUser?.name
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
@@ -131,7 +128,9 @@ export default function ViewPost() {
 
   const handleDeletePost = () => {
     // TODO: Call delete post endpoint
-    dispatch(DeletePost(userId))
+    if (postId) {
+      dispatch(DeletePost(parseInt(postId)))
+    }
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)
   }

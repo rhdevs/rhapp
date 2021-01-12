@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Post, SOCIAL_ACTIONS } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, User } from './types'
 
 export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const postToEdit: Post = {
@@ -172,5 +172,21 @@ export const DeletePost = (postIdToDelete: number) => (dispatch: Dispatch<Action
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
+  })
+}
+
+export const SetPostUser = (userId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  // TODO: Fetch user's details from users table
+  const userDetails: User = {
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    initials: 'ZGG',
+    name: 'Zhou Gou Gou',
+    userId: 1,
+    block: '8',
+  }
+
+  dispatch({
+    type: SOCIAL_ACTIONS.SET_POST_USER,
+    postUser: userDetails,
   })
 }

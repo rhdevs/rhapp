@@ -144,7 +144,7 @@ function SocialPostCard(props: Props) {
 
   const initials = getInitials(props.name)
   //TODO: To change to user's id
-  const userId = 1
+  const postId = 1
 
   const onExpandClick = () => {
     history.push({
@@ -165,7 +165,7 @@ function SocialPostCard(props: Props) {
     //TODO: To remove post!
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
-    dispatch(DeletePost(userId))
+    dispatch(DeletePost(postId))
   }
 
   return (
