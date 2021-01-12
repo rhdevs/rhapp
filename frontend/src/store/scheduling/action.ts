@@ -1,13 +1,26 @@
 import { isEmpty, last } from 'lodash'
-import { userRhEventsDummy } from '../stubs'
+import { rhEventsDummy, userRhEventsDummy } from '../stubs'
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, RHEvent, SCHEDULING_ACTIONS } from './types'
+import { ActionTypes, RHEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
 
 export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const fetchedData = userRhEventsDummy
+  const formattedEvents: RHEvent[] = transformScheduleTypeToRhEvent(fetchedData)
+
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_USER_RH_EVENTS,
+    userRhEvents: transformInformationToTimetableFormat(formattedEvents),
+    userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
+    userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
+    userRhEventsList: formattedEvents,
+  })
+  dispatch(setIsLoading(false))
+}
+
+const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => {
   const formattedEvents: RHEvent[] = []
-  fetchedData.forEach((data) => {
+  scheduleTypeData.forEach((data) => {
     formattedEvents.push({
       eventName: data.eventName,
       location: data.location,
@@ -18,13 +31,7 @@ export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
       hasOverlap: false,
     })
   })
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_RH_EVENTS,
-    userRhEvents: transformInformationToTimetableFormat(formattedEvents),
-    userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
-    userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
-  })
-  dispatch(setIsLoading(false))
+  return formattedEvents
 }
 
 const sortEvents = (events: RHEvent[]) => {
@@ -197,4 +204,25 @@ export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTy
   //   })
   // })
   dispatch(setIsLoading(false))
+}
+
+export const editUserRhEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const fetchedUserData = transformScheduleTypeToRhEvent(userRhEventsDummy)
+  const fetchedEventsData = transformScheduleTypeToRhEvent(rhEventsDummy)
+  let newUserRhEvents: RHEvent[] = []
+
+  if (action === 'remove') {
+    newUserRhEvents = fetchedUserData.filter((userEvent) => {
+      return userEvent.eventName !== selectedEventName
+    })
+    console.log(newUserRhEvents)
+  } else if (action === 'add') {
+    newUserRhEvents = fetchedUserData.concat(
+      fetchedEventsData.filter((event) => {
+        return event.eventName === selectedEventName
+      }),
+    )
+    console.log(newUserRhEvents)
+  }
+  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS, newUserRhEvents: newUserRhEvents })
 }

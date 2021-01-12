@@ -5,6 +5,8 @@ import { SearchResult } from '../types'
 const initialState = {
   isLoading: true,
   userRhEvents: [],
+  userRhEventsList: [],
+  newUserRhEvents: [],
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
   shareSearchResults: [],
@@ -14,6 +16,8 @@ const initialState = {
 type State = {
   isLoading: boolean
   userRhEvents: RHEvent[][][]
+  userRhEventsList: RHEvent[]
+  newUserRhEvents: RHEvent[]
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
@@ -28,12 +32,19 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         isLoading: action.isLoading,
       }
     }
-    case SCHEDULING_ACTIONS.GET_RH_EVENTS: {
+    case SCHEDULING_ACTIONS.GET_USER_RH_EVENTS: {
       return {
         ...state,
         userRhEvents: action.userRhEvents,
+        userRhEventsList: action.userRhEventsList,
         userEventsStartTime: action.userEventsStartTime,
         userEventsEndTime: action.userEventsEndTime,
+      }
+    }
+    case SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS: {
+      return {
+        ...state,
+        newUserRhEvents: action.newUserRhEvents,
       }
     }
     case SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS: {

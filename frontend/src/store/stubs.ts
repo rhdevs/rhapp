@@ -8,9 +8,10 @@ import { SchedulingEvent } from './scheduling/types'
  * 1. facilityList
  * 2. myBookings
  * 3. userRhEvents
- * 4. Washing Machines
- * 5. Events
- * 6. Search Results
+ * 4. RhEvents
+ * 5. Washing Machines
+ * 6. Events
+ * 7. Search Results
  */
 
 export const facilityListStub: Facility[] = [
@@ -93,6 +94,53 @@ export const userRhEventsDummy: SchedulingEvent[] = [
     startDateTime: 1608723138,
     endDateTime: 1608726751,
     description: 'nothing',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+]
+
+export const rhEventsDummy: SchedulingEvent[] = [
+  {
+    eventID: 1,
+    eventName: 'Block 7 Christmas Event',
+    startDateTime: 1607418000,
+    endDateTime: 1607428800,
+    description: 'Only for block 7 members! Follow us @block7 to find out more!',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'New YeaRH Event',
+    startDateTime: 1608654852,
+    endDateTime: 1608658452,
+    description: 'nothing',
+    location: 'Comm Hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'RHdev bonding camp',
+    startDateTime: 1607342400,
+    endDateTime: 1607349600,
+    description: 'nothing',
+    location: 'upper lounge',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'dummy event',
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
+    description: 'description description description description description description',
     location: 'hall',
     ccaID: 1,
     userID: 'A0123456Z',

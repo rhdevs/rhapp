@@ -40,7 +40,8 @@ export type SchedulingEvent = {
 
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
-  GET_RH_EVENTS = 'SCHEDULING_ACTIONS.GET_RH_EVENTS',
+  GET_USER_RH_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_RH_EVENTS',
+  EDIT_USER_RH_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS',
   GET_SEARCHED_EVENTS = 'SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS',
   GET_SHARE_SEARCH_RESULTS = 'SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS',
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
@@ -52,11 +53,17 @@ export enum SCHEDULING_ACTIONS {
 
 /** Actions */
 
-type GetRhEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
+type GetUserRhEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_USER_RH_EVENTS
   userRhEvents: RHEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
+  userRhEventsList: RHEvent[]
+}
+
+type EditUserRhEvents = {
+  type: typeof SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS
+  newUserRhEvents: RHEvent[]
 }
 
 type GetSearchedEvents = {
@@ -100,7 +107,8 @@ type SetDescription = {
 }
 
 export type ActionTypes =
-  | GetRhEvents
+  | GetUserRhEvents
+  | EditUserRhEvents
   | SetEventName
   | SetEventLocation
   | SetEventFromDate
