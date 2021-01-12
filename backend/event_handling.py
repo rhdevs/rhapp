@@ -4,6 +4,7 @@ import pymongo
 import json
 import time
 from datetime import datetime
+from bson.objectid import ObjectId
 client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/<dbname>?retryWrites=true&w=majority")
 db = client.RHApp
@@ -197,11 +198,11 @@ def deleteEvent(eventID):
     return {"message": "successful"}, 200
 
 
-@ app.route("/event/edit/", methods=['PUT'])
+@ app.route("/event/edit", methods=['PUT'])
 def editEvent():
     try:
         data = request.get_json()
-        eventID = int(data.get('eventID'))
+        eventID = data.get('eventID')
         eventName = str(data.get('eventName'))
         startDateTime = int(data.get('startDateTime'))
         endDateTime = int(data.get('endDateTime'))
@@ -212,7 +213,7 @@ def editEvent():
         image = data.get('image')
 
         body = {
-            "eventID": eventID,
+            # "eventID": eventID,
             "eventName": eventName,
             "startDateTime": startDateTime,
             "endDateTime": endDateTime,
@@ -222,8 +223,9 @@ def editEvent():
             "userID": userID,
             "image": image
         }
+        print(body, eventID)
 
-        db.Events.update_one({"_id": eventID}, {'$set': body})
+        db.Events.update_one({"_id": ObjectId(eventID)}, {'$set': body})
 
     except Exception as e:
         print(e)
