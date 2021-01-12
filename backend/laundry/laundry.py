@@ -21,7 +21,8 @@ db = client.RHApp
 @cross_origin()
 def home_page(): 
     # landing page 
-    return make_response(render_template("index.html"), 200);
+    # return make_response(render_template("index.html"), 200);
+    return make_response("Laundry API", 200);
 
 @app.route('/location', methods = ['GET'])
 @cross_origin()
