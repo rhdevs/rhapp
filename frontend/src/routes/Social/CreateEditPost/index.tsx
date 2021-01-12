@@ -185,10 +185,9 @@ const AlertGroup = styled.div`
 `
 
 const ImageDiv = styled.div`
-  margin-top: 0px;
   display: flex;
   text-align: center;
-  margin-left: 100px;
+  justify-content: center;
 `
 
 export default function CreateEditPost() {
@@ -198,7 +197,7 @@ export default function CreateEditPost() {
   const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
-
+  console.log(newPostImages)
   useEffect(() => {
     if (window.location.href.includes('/post/edit')) {
       dispatch(GetPostDetailsToEdit(params.editPostId))
@@ -258,6 +257,7 @@ export default function CreateEditPost() {
                 onChange={(e) => dispatch(EditPostDetail('title', e.target.value))}
                 placeholder="Title"
                 required
+                maxLength={30}
               />
             </Header>
             <Content>
@@ -267,10 +267,11 @@ export default function CreateEditPost() {
                 onChange={(e) => dispatch(EditPostDetail('body', e.target.value))}
                 placeholder="Tap to type your caption..."
                 required
+                maxLength={200}
               />
             </Content>
             {isUploading && <LoadingSpin />}
-            {!isUploading && (
+            {!isUploading && newPostImages.length < 3 && (
               <Footer>
                 <InputFile type="file" name="file" id="file" onChange={(e) => dispatch(AddImage(e))} />
                 <InputLabel htmlFor="file">
@@ -289,9 +290,7 @@ export default function CreateEditPost() {
           )}
           <ImageDiv>
             {newPostImages.map((url) => (
-              <div key={url}>
-                <PostImage card={url} deleteFunc={deleteImage} />
-              </div>
+              <PostImage card={url} key={url} deleteFunc={deleteImage} />
             ))}
           </ImageDiv>
           <PostButton>
