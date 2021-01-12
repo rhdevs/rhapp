@@ -180,11 +180,9 @@ def createEvent():
 
         return {"message": body}, 200
 
-
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-
 
 
 @ app.route("/event/delete/<int:eventID>", methods=['DELETE'])
@@ -223,7 +221,6 @@ def editEvent():
             "userID": userID,
             "image": image
         }
-        print(body, eventID)
 
         db.Events.update_one({"_id": ObjectId(eventID)}, {'$set': body})
 
@@ -258,6 +255,66 @@ END OF EVENT HANDLING, START OF SOCIAL
 """
 
 
+@app.route("/user/<userID>")
+def getUser(userID):
+    try:
+        data = db.User.find({"userID": userID})
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
+
+@ app.route("/user", methods=['DELETE', 'POST'])
+def addDeleteUser():
+    try:
+        if request.method == "POST":
+            data = request.get_json()
+            userID = str(data.get('userID'))
+            passwordHash = str(data.get('passwordHash'))
+            email = str(data.get('email'))
+
+            body = {
+                "userID": userID,
+                "passwordHash": passwordHash,
+                "email": email,
+            }
+            receipt = db.User.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
+
+        elif request.method == "DELETE":
+            userID = request.args.get('userID')
+            db.User.delete_one({"userID": userID})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+
+
+@ app.route("/profile/edit/", methods=['PUT'])
+def editUser():
+    try:
+        data = request.get_json()
+        userID = str(data.get('userID'))
+        passwordHash = str(data.get('passwordHash'))
+        email = str(data.get('email'))
+
+        body = {
+            "userID": userID,
+            "passwordHash": passwordHash,
+            "email": email,
+        }
+
+        db.User.update_one({"userID": userID}, {'$set': body})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {'message': "Event changed"}, 200
+
+
 @app.route("/profile/<userID>")
 def getUserProfile(userID):
     try:
@@ -276,7 +333,7 @@ def addDeleteProfile():
             userID = str(data.get('userID'))
             name = str(data.get('name'))
             bio = str(data.get('bio'))
-            profilePictureURL = str(data.get('profilePictureURL'))
+            profilePicture = str(data.get('profilePicture'))
             block = int(data.get('block'))
             telegramHandle = str(data.get('telegramHandle'))
             modules = data.get('modules')
@@ -285,12 +342,15 @@ def addDeleteProfile():
                 "userID": userID,
                 "name": name,
                 "bio": bio,
-                "profilePictureURL": profilePictureURL,
+                "profilePicture": profilePicture,
                 "block": block,
                 "telegramHandle": telegramHandle,
                 "modules": modules
             }
-            db.Profiles.insert_one(body)
+            receipt = db.Profiles.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
 
         elif request.method == "DELETE":
             userID = request.args.get('userID')
@@ -299,7 +359,6 @@ def addDeleteProfile():
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return {"message": "Action successful"}, 200
 
 
 @ app.route("/profile/edit/", methods=['PUT'])
@@ -309,7 +368,7 @@ def editProfile():
         userID = str(data.get('userID'))
         name = str(data.get('name'))
         bio = str(data.get('bio'))
-        profilePictureURL = str(data.get('profilePictureURL'))
+        profilePicture = str(data.get('profilePicture'))
         block = int(data.get('block'))
         telegramHandle = str(data.get('telegramHandle'))
         modules = data.get('modules')
@@ -318,18 +377,31 @@ def editProfile():
             "userID": userID,
             "name": name,
             "bio": bio,
-            "profilePictureURL": profilePictureURL,
+            "profilePicture": profilePicture,
             "block": block,
             "telegramHandle": telegramHandle,
             "modules": modules
         }
 
-        db.Events.update_one({"userID": userID}, {'$set': body})
+        db.Profiles.update_one({"userID": userID}, {'$set': body})
 
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
     return {'message': "Event changed"}, 200
+
+
+@app.route("/user/details/<userID>")
+def getUserDetails(userID):
+    try:
+        data1 = db.User.find_one({"userID": userID})
+        data2 = db.Profiles.find_one({"userID": userID})
+        data1.update(data2)
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(data1, default=lambda o: str(o)), 200
 
 
 if __name__ == '__main__':
