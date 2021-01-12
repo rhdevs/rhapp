@@ -31,42 +31,44 @@ export default function Login() {
   return (
     <>
       <NavBar text="Sign in" />
-      <Input
-        placeholder="Username"
-        onChange={() => {
-          setUsername(username)
-          console.log(username)
-        }}
-      ></Input>
-      <br />
-      <br />
-      <Input
-        placeholder="Password"
-        onChange={() => {
-          setPassword(password)
-          console.log(password)
-        }}
-      ></Input>
-      <br /> <br />
-      <Button
-        type="primary"
-        block
-        onClick={() => {
-          history.push(PATHS.HOME_PAGE)
-        }}
-      >
-        Sign in
-      </Button>
-      <AccountText>Do not have an account?</AccountText>
-      <Button
-        type="primary"
-        block
-        onClick={() => {
-          history.push(PATHS.SIGNUP_PAGE)
-        }}
-      >
-        Sign Up
-      </Button>
+      <LoginContainer>
+        <Input
+          placeholder="Username"
+          onChange={() => {
+            setUsername(username)
+            console.log(username)
+          }}
+        ></Input>
+        <br />
+        <br />
+        <Input
+          placeholder="Password"
+          onChange={() => {
+            setPassword(password)
+            console.log(password)
+          }}
+        ></Input>
+        <br /> <br />
+        <Button
+          type="primary"
+          block
+          onClick={() => {
+            history.push(PATHS.HOME_PAGE)
+          }}
+        >
+          Sign in
+        </Button>
+        <AccountText>Do not have an account?</AccountText>
+        <Button
+          type="primary"
+          block
+          onClick={() => {
+            history.push(PATHS.SIGNUP_PAGE)
+          }}
+        >
+          Sign Up
+        </Button>
+      </LoginContainer>
     </>
   )
 }
