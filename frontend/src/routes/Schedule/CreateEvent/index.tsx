@@ -20,7 +20,10 @@ import {
   editCca,
   editDescription,
   handleSubmitCreateEvent,
+  getHallEventTypes,
+  editHallEventType,
 } from '../../../store/scheduling/action'
+import { useEffect } from 'react'
 
 const { Option } = Select
 
@@ -98,13 +101,15 @@ const now = new Date(nowTimeStamp)
 
 export default function CreateEvent() {
   const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getHallEventTypes())
+  }, [dispatch])
 
-  const { newEventName, newEventLocation, newEventFromDate, newCca, newDescription } = useSelector(
+  const { hallEventTypes, newEventName, newEventLocation, newEventFromDate, newCca, newDescription } = useSelector(
     (state: RootState) => state.scheduling,
   )
 
   const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
-  const [, setEventType] = useState('')
 
   const CheckIcon = (
     <div>
@@ -206,11 +211,12 @@ export default function CreateEvent() {
         />
         <Row>
           <StyledTitle>Event Type</StyledTitle>
-          <StyledSelect defaultValue="Select" onChange={(value) => setEventType(value as string)}>
-            <Option value="None" disabled>
-              None
-            </Option>
-            <Option value="Hall Event">Hall Event</Option>
+          <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
+            {hallEventTypes.map((eventTypes, idx) => (
+              <Option key={idx} value={eventTypes}>
+                {eventTypes}
+              </Option>
+            ))}
           </StyledSelect>
         </Row>
         <Row>
