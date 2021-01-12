@@ -181,7 +181,7 @@ export const SetPostUser = (userId: number) => (dispatch: Dispatch<ActionTypes>)
     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
     initials: 'ZGG',
     name: 'Zhou Gou Gou',
-    userId: 1,
+    userId: userId,
     block: '8',
   }
 
