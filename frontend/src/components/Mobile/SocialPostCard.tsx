@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Truncate from 'react-truncate'
+import { useDispatch } from 'react-redux'
 import { Avatar, Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
+import { DeletePost } from '../../store/social/action'
 
 const CardContainer = styled.div`
   display: flex;
@@ -135,11 +137,14 @@ const getInitials = (name: string) => {
 
 function SocialPostCard(props: Props) {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
   const initials = getInitials(props.name)
+  //TODO: To change to user's id
+  const postId = 1
 
   const onExpandClick = () => {
     history.push({
@@ -157,9 +162,10 @@ function SocialPostCard(props: Props) {
   }
 
   const onConfirmDeleteClick = () => {
-    // To remove post!
+    //TODO: To remove post!
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
+    dispatch(DeletePost(postId))
   }
 
   return (
