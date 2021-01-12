@@ -188,7 +188,7 @@ def createEvent():
 @ app.route("/event/delete/<int:eventID>", methods=['DELETE'])
 def deleteEvent(eventID):
     try:
-        db.Events.delete_one({eventID: eventID})
+        db.Events.delete_one({"eventID": eventID})
 
     except Exception as e:
         print(e)
