@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { PlusCircleFilled } from '@ant-design/icons'
@@ -11,9 +11,6 @@ type TabProps = {
 }
 
 type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
-type StickyProps = {
-  isSticky: boolean
-}
 
 enum SOCIAL_TABS {
   ALL_USERS = 'ALL_USERS',
@@ -21,13 +18,12 @@ enum SOCIAL_TABS {
   FRIEND_USERS = 'FRIEND_USERS',
 }
 
-const Sticky = styled.div<StickyProps>`
+const Sticky = styled.div`
   position: -webkit-sticky;
   position: sticky;
   top: 50px;
   z-index: 100;
   background-color: #fafaf4;
-  filter: ${(props) => props.isSticky && 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))'};
 `
 
 const Header = styled.div`
@@ -68,6 +64,76 @@ const dummyAllData: SocialPostCardProps[] = [
       'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
     ],
   },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
 ]
 
 const dummyFriendData = dummyAllData.slice(0, 1)
@@ -75,25 +141,7 @@ const dummyFriendData = dummyAllData.slice(0, 1)
 export default function SocialSection() {
   const history = useHistory()
   const [isAllSocialPosts, setIsAllSocialPosts] = useState<SOCIAL_TABS>(SOCIAL_TABS.ALL_USERS)
-  const [isSticky, setIsSticky] = useState<boolean>(false)
   const toggleTab = (socialTab: SOCIAL_TABS) => () => setIsAllSocialPosts(socialTab)
-  const ref = createRef<HTMLDivElement>()
-
-  // TODO: Not working
-  useEffect(() => {
-    const stickyBar: Element = ref.current as Element
-    const observer = new window.IntersectionObserver(
-      ([e]) => {
-        console.log('stick')
-        setIsSticky(e.intersectionRatio < 1)
-      },
-      { threshold: 1 },
-    )
-
-    return () => {
-      observer.unobserve(stickyBar)
-    }
-  }, [])
 
   const renderSocialPosts = () => {
     const data = isAllSocialPosts ? dummyAllData : dummyFriendData
@@ -102,7 +150,7 @@ export default function SocialSection() {
 
   return (
     <>
-      <Sticky ref={ref} isSticky={isSticky}>
+      <Sticky>
         <Header>
           <span>{`What's happening....`}</span>
           <PlusCircleFilled

@@ -197,7 +197,7 @@ export default function CreateEditPost() {
   const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
-  console.log(newPostImages)
+
   useEffect(() => {
     if (window.location.href.includes('/post/edit')) {
       dispatch(GetPostDetailsToEdit(params.editPostId))
@@ -265,7 +265,7 @@ export default function CreateEditPost() {
                 name="caption"
                 value={newPostBody}
                 onChange={(e) => dispatch(EditPostDetail('body', e.target.value))}
-                placeholder="Tap to type your caption..."
+                placeholder="Tap to type your caption!"
                 required
                 maxLength={200}
               />

@@ -11,9 +11,10 @@ import StyledCarousel from '../../../components/Mobile/StyledCarousel'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { Avatar, Menu } from 'antd'
+import { Menu } from 'antd'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
+import Avatar from '../../../components/Mobile/Avatar'
 
 import { GetPosts, DeletePost, SetPostUser } from '../../../store/social/action'
 

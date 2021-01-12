@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { Avatar, Menu } from 'antd'
+import { Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { DeletePost } from '../../store/social/action'
+import Avatar from '../../components/Mobile/Avatar'
 
 const CardContainer = styled.div`
   display: flex;
