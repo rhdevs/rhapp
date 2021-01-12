@@ -193,3 +193,8 @@ export const editCca = (newCca: string) => (dispatch: Dispatch<ActionTypes>) => 
 export const editDescription = (newDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_DESCRIPTION, newDescription: newDescription })
 }
+
+export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { newDescription } = getState().scheduling
+  console.log(newDescription)
+}
