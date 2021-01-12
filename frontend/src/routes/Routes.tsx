@@ -34,7 +34,6 @@ export enum PATHS {
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
-  LANDING_PAGE = '/landingpage',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -69,7 +68,6 @@ const ViewWashingMachine = React.lazy(
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
-const LandingPage = React.lazy(() => import(/* webpackChunckName: "LandingPage" */ './LandingPage'))
 
 export default class Routes extends React.Component {
   render() {
@@ -106,7 +104,6 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
             <Route component={FallBack} />
-            <Route exact path={PATHS.LANDING_PAGE} component={LandingPage} />
           </Switch>
         </Suspense>
       </Root>
