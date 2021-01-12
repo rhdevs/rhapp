@@ -19,6 +19,7 @@ import {
   editEventFromDate,
   editCca,
   editDescription,
+  handleSubmitCreateEvent,
 } from '../../../store/scheduling/action'
 
 const { Option } = Select
@@ -92,12 +93,6 @@ const BackIcon = (
   </Link>
 )
 
-const CheckIcon = (
-  <div>
-    <CheckOutlined style={{ color: 'black' }} />
-  </div>
-)
-
 const nowTimeStamp = Date.now()
 const now = new Date(nowTimeStamp)
 
@@ -110,6 +105,12 @@ export default function CreateEvent() {
 
   const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
   const [, setEventType] = useState('')
+
+  const CheckIcon = (
+    <div>
+      <CheckOutlined style={{ color: 'black' }} />
+    </div>
+  )
 
   /** Incomplete functionality for Uploading Image */
 
@@ -177,22 +178,30 @@ export default function CreateEvent() {
               <span>{`${toCustomDateFormat(toDateTime)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(toDateTime)
-            .diff(dayjs(newEventFromDate), 'hour', true)
-            .toFixed(1)} hours`}</div>
+          <div
+            style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}
+            onClick={() => dispatch(handleSubmitCreateEvent())}
+          >{`Duration: ${dayjs(toDateTime).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
         </div>
         <InputRow
           title="Location"
           placeholder="Event Location"
           value={newEventLocation}
-          setValue={dispatch(editEventLocation)}
+          setValue={(eventLocation: string) => dispatch(editEventLocation(eventLocation))}
         />
-        <InputRow title="CCA" placeholder="CCA Name" value={newCca} setValue={dispatch(editCca)} />
+        <InputRow
+          title="CCA"
+          placeholder="CCA Name"
+          value={newCca}
+          setValue={(newCCA: string) => {
+            dispatch(editCca(newCCA))
+          }}
+        />
         <InputRow
           title="Description"
           placeholder="Tell us what your event is about!"
           value={newDescription}
-          setValue={dispatch(editDescription)}
+          setValue={(description: string) => dispatch(editDescription(description))}
           textarea
         />
         <Row>
