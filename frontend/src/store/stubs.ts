@@ -58,8 +58,8 @@ export const userRhEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
     description: 'nothing',
     location: 'hall',
     ccaID: 1,

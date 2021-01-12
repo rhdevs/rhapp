@@ -93,7 +93,7 @@ function TimetableRow(props: Props) {
                     }}
                   >
                     <EventCell
-                      // isSingleEvent={!individualEvent.hasOverlap}
+                      isSingleEvent={!individualEvent.hasOverlap}
                       eventType={'mods'}
                       oneHourWidth={props.oneHourWidth}
                       oneDayMinHeight={props.oneDayMinHeight}
