@@ -1,24 +1,31 @@
 from flask import Flask, request, make_response
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
+
 import pymongo, json
 from datetime import datetime
-
 
 def removeObjectID(xs):
     for i,item in enumerate(xs, start=0) :
         del xs[i]["_id"] 
     return xs
 
-
+def listToIndexedDict(xs):
+    output = {}
+    for i,item in enumerate(xs, start=0) :
+        del xs[i]["_id"]
+        output[i] = item
+    return output    
 
 #MongoDB
 myclient = client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = myclient["RHApp"]
 
+CROSS_ORIGINS_LIST="https://rhapp.cjunxiang.vercel.app"
 
 #Flask
 app = Flask("rhapp")
-CORS(app)
+CORS(app, origins=CROSS_ORIGINS_LIST, headers=['Content-Type'],
+         expose_headers=['Access-Control-Allow-Origin'], supports_credentials=True)
 
 #Session
 session = {}
@@ -29,20 +36,25 @@ session = {}
 #                  }}
 
 @app.route('/')
+@cross_origin()
 def root_route():
     return 'What up losers'
 
-@app.route('/facilities/all')
+@app.route('/facilities/all/')
+@cross_origin()
 def all_facilities(): 
     try :
         print("testing 1")
         data = removeObjectID(list(db.Facilities.find()))
-
         
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
+    response = make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
 
 @app.route('/bookings/user/<userID>')
 def user_bookings(userID) :
@@ -143,31 +155,10 @@ def delete_booking(bookingID) :
         #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
         print(e)
-        return {"err": str(e)}, 400
+        return {"err": str(e)}, 400 
     
     return {"message" : "Booking Deleted"}, 200
 
 if __name__ == '__main__':
-   app.run(debug = True)
-
-# def authenticate(cookie) :
-#     userID = cookie.get('userID')
-#     sessionID = cookie.get('sessionID')
-#     serverSession = session.get("userID")
-
-#     if not userID or not sessionID or not serverSession :
-#         return False
-
-#     if not db.User.find({"userID" : userID}) :
-#         return False
-    
-#     if serverSession.get("sessionID") != sessionID :
-#         return False
-
-#     if serverSession.get("startTime") + datetime.timeDelta(0, serverSession.get("expiry") * 60) < datetime.today() :
-#         return False
-
-#     return True
-
-
-    
+   app.run('0.0.0.0', port=8080)
+   
