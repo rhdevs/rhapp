@@ -15,6 +15,6 @@ export type GetState = () => RootState
 export type SearchResult = {
   id: number
   title: string
-  description: string
+  description?: string
   avatar?: string
 }

@@ -12,6 +12,20 @@ type TabProps = {
 
 type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
 
+enum SOCIAL_TABS {
+  ALL_USERS = 'ALL_USERS',
+  OFFICIAL_USERS = 'OFFICIAL_USERS',
+  FRIEND_USERS = 'FRIEND_USERS',
+}
+
+const Sticky = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50px;
+  z-index: 100;
+  background-color: #fafaf4;
+`
+
 const Header = styled.div`
   display: flex;
   width: 100%;
@@ -19,11 +33,6 @@ const Header = styled.div`
   justify-content: space-between;
   padding: 10px;
   font-size: 20px;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 50px;
-  background-color: #fafaf4;
-  z-index: 100;
 `
 
 const TabBar = styled.div`
@@ -31,7 +40,7 @@ const TabBar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 `
 
 const Tab = styled.div<TabProps>`
@@ -55,14 +64,84 @@ const dummyAllData: SocialPostCardProps[] = [
       'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
     ],
   },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
+  {
+    isOwner: true,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    postId: '123456789',
+    title: 'Hello',
+    name: 'Zhou Gou Gou',
+    dateTime: '8h ago',
+    description:
+      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
+    postPics: [
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+    ],
+  },
 ]
 
 const dummyFriendData = dummyAllData.slice(0, 1)
 
 export default function SocialSection() {
   const history = useHistory()
-  const [isAllSocialPosts, setIsAllSocialPosts] = useState(true)
-  const toggleTab = () => setIsAllSocialPosts(!isAllSocialPosts)
+  const [isAllSocialPosts, setIsAllSocialPosts] = useState<SOCIAL_TABS>(SOCIAL_TABS.ALL_USERS)
+  const toggleTab = (socialTab: SOCIAL_TABS) => () => setIsAllSocialPosts(socialTab)
 
   const renderSocialPosts = () => {
     const data = isAllSocialPosts ? dummyAllData : dummyFriendData
@@ -71,19 +150,28 @@ export default function SocialSection() {
 
   return (
     <>
-      <Header>
-        <span>{`What's happening....`}</span>
-        <PlusCircleFilled style={{ color: '#EB5757', fontSize: 20 }} onClick={() => history.push(PATHS.CREATE_POST)} />
-      </Header>
-      <TabBar>
-        <Tab active={isAllSocialPosts} onClick={toggleTab}>
-          All
-        </Tab>
-        <Divider type="vertical" />
-        <Tab active={!isAllSocialPosts} onClick={toggleTab}>
-          Friends
-        </Tab>
-      </TabBar>
+      <Sticky>
+        <Header>
+          <span>{`What's happening....`}</span>
+          <PlusCircleFilled
+            style={{ color: '#EB5757', fontSize: 20 }}
+            onClick={() => history.push(PATHS.CREATE_POST)}
+          />
+        </Header>
+        <TabBar>
+          <Tab active={isAllSocialPosts === SOCIAL_TABS.ALL_USERS} onClick={toggleTab(SOCIAL_TABS.ALL_USERS)}>
+            All
+          </Tab>
+          <Divider type="vertical" />
+          <Tab active={isAllSocialPosts === SOCIAL_TABS.OFFICIAL_USERS} onClick={toggleTab(SOCIAL_TABS.OFFICIAL_USERS)}>
+            Official
+          </Tab>
+          <Divider type="vertical" />
+          <Tab active={isAllSocialPosts === SOCIAL_TABS.FRIEND_USERS} onClick={toggleTab(SOCIAL_TABS.FRIEND_USERS)}>
+            Friends
+          </Tab>
+        </TabBar>
+      </Sticky>
       {renderSocialPosts()}
     </>
   )

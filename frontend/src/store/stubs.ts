@@ -192,4 +192,8 @@ export const searchResultsStub: SearchResult[] = [
     title: 'Bob',
     description: 'Hello my name is Bob',
   },
+  {
+    id: 3,
+    title: 'Bob',
+  },
 ]
