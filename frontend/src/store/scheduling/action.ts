@@ -136,8 +136,8 @@ const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (unixDate: Date) => {
-  const dayInInt = unixDate.getDay()
+const getDayStringFromUNIX = (unixDate: number) => {
+  const dayInInt = new Date(unixDate * 1000).getDay()
   switch (dayInInt) {
     case 0:
       return 'Sunday'
@@ -157,9 +157,10 @@ const getDayStringFromUNIX = (unixDate: Date) => {
 }
 
 // Converts a unix string into date format and returns the time of string type in 24hour format
-const getTimeStringFromUNIX = (unixDate: Date) => {
-  const hours = '0' + unixDate.getHours()
-  const minutes = '0' + unixDate.getMinutes()
+const getTimeStringFromUNIX = (unixDate: number) => {
+  const date = new Date(unixDate * 1000)
+  const hours = '0' + date.getHours()
+  const minutes = '0' + date.getMinutes()
 
   const formattedTime = hours.substr(-2) + minutes.substr(-2)
 
