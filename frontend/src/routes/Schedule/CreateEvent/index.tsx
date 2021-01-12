@@ -22,6 +22,7 @@ import {
   handleSubmitCreateEvent,
   getHallEventTypes,
   editHallEventType,
+  editEventToDate,
 } from '../../../store/scheduling/action'
 import { useEffect } from 'react'
 
@@ -105,9 +106,15 @@ export default function CreateEvent() {
     dispatch(getHallEventTypes())
   }, [dispatch])
 
-  const { hallEventTypes, newEventName, newEventLocation, newEventFromDate, newCca, newDescription } = useSelector(
-    (state: RootState) => state.scheduling,
-  )
+  const {
+    hallEventTypes,
+    newEventName,
+    newEventLocation,
+    newEventFromDate,
+    newEventToDate,
+    newCca,
+    newDescription,
+  } = useSelector((state: RootState) => state.scheduling)
 
   const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
 
@@ -143,18 +150,18 @@ export default function CreateEvent() {
   // }
 
   const handleFromDateChange = (newDate: Date) => {
-    if (toDateTime < newDate) {
-      setToDateTime(dayjs(newDate).add(1, 'hour').toDate())
+    if (newEventToDate < newDate) {
+      editEventToDate(dayjs(newDate).add(1, 'hour').toDate())
     }
     dispatch(editEventFromDate(newDate))
   }
 
   const handleToDateChange = (newDate: Date) => {
     if (newEventFromDate > newDate) {
-      dispatch(editEventFromDate(dayjs(newDate).subtract(1, 'hour').toDate()))
+      editEventFromDate(dayjs(newDate).subtract(1, 'hour').toDate())
     }
 
-    setToDateTime(newDate)
+    dispatch(editEventToDate(newDate))
   }
 
   const toCustomDateFormat = (date: Date) => {
@@ -177,16 +184,16 @@ export default function CreateEvent() {
               <span>{`${toCustomDateFormat(newEventFromDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={toDateTime} onChange={handleToDateChange}>
+          <DatePicker mode="datetime" locale={enUs} value={newEventToDate} onChange={handleToDateChange}>
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
-              <span>{`${toCustomDateFormat(toDateTime)}`}</span>
+              <span>{`${toCustomDateFormat(newEventToDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
           <div
             style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}
             onClick={() => dispatch(handleSubmitCreateEvent())}
-          >{`Duration: ${dayjs(toDateTime).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
+          >{`Duration: ${dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
         </div>
         <InputRow
           title="Location"

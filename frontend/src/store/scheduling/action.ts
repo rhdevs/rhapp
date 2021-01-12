@@ -196,6 +196,10 @@ export const editEventFromDate = (newEventFromDate: Date) => (dispatch: Dispatch
   dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE, newEventFromDate: newEventFromDate })
 }
 
+export const editEventToDate = (newEventToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_TO_DATE, newEventToDate: newEventToDate })
+}
+
 export const editCca = (newCca: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_CCA, newCca: newCca })
 }

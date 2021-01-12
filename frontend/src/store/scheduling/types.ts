@@ -43,6 +43,7 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
   SET_EVENT_LOCATION = 'SCHEDULING_ACTIONS.SET_EVENT_LOCATION',
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
+  SET_EVENT_TO_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_TO_DATE',
   SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
   SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
   GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
@@ -88,6 +89,11 @@ type SetEventFromDate = {
   newEventFromDate: Date
 }
 
+type SetEventToDate = {
+  type: typeof SCHEDULING_ACTIONS.SET_EVENT_TO_DATE
+  newEventToDate: Date
+}
+
 type SetCca = {
   type: typeof SCHEDULING_ACTIONS.SET_CCA
   newCca: string
@@ -108,6 +114,7 @@ export type ActionTypes =
   | SetEventName
   | SetEventLocation
   | SetEventFromDate
+  | SetEventToDate
   | SetCca
   | SetDescription
   | GetShareSearchResults
