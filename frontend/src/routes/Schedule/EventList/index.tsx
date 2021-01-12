@@ -77,8 +77,9 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
   // const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
   const [searchValue, setSearchValue] = useState('')
 
-  const formatDate = (eventStartTime: Date) => {
-    return format(eventStartTime, 'dd-MMM-yy kk:mm')
+  const formatDate = (eventStartTime: number) => {
+    const date = new Date(eventStartTime * 1000).getDate()
+    return format(date, 'dd-MMM-yy kk:mm')
   }
 
   const renderResults = () => {

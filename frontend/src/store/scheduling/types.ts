@@ -27,13 +27,13 @@ export type RHEvent = {
 export type SchedulingEvent = {
   eventID: number
   eventName: string
-  startDateTime: Date
-  endDateTime: Date
+  startDateTime: number
+  endDateTime: number
   description: string
   location: string
   ccaID: number
   userID: string
-  image: string
+  image: string | null
 }
 
 /** Actions' types */

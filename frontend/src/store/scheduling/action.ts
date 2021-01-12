@@ -33,8 +33,9 @@ const sortEvents = (events: RHEvent[]) => {
   })
 }
 
-const getDate = (eventStartTime: Date) => {
-  return String(eventStartTime)
+const getDate = (unixDate: number) => {
+  const date = new Date(unixDate * 1000).getDate()
+  return String(date)
 }
 
 const getTimetableStartTime = (formattedEvents: RHEvent[]) => {
@@ -136,8 +137,8 @@ const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (date: Date) => {
-  const dayInInt = date.getDay()
+const getDayStringFromUNIX = (unixDate: number) => {
+  const dayInInt = new Date(unixDate * 1000).getDay()
   switch (dayInInt) {
     case 0:
       return 'Sunday'
@@ -156,8 +157,11 @@ const getDayStringFromUNIX = (date: Date) => {
   }
 }
 
-// Converts a date of Date type and returns the time of string type in 24hour format
-const getTimeStringFromUNIX = (date: Date) => {
+// Converts a unix string into date format and returns the time of string type in 24hour format
+const getTimeStringFromUNIX = (unixDate: number) => {
+  // Create a new JavaScript Date object based on the timestamp
+  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+  const date = new Date(unixDate * 1000)
   const hours = '0' + date.getHours()
   const minutes = '0' + date.getMinutes()
 
