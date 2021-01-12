@@ -223,7 +223,7 @@ def editEvent():
             "image": image
         }
 
-        db.Events.update_one({"eventID": eventID}, {'$set': body})
+        db.Events.update_one({"_id": eventID}, {'$set': body})
 
     except Exception as e:
         print(e)
