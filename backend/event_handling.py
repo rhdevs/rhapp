@@ -152,7 +152,7 @@ def addDeletePermissions():
 def createEvent():
     try:
         data = request.get_json()
-        eventID = int(data.get('eventID'))
+        # eventID = int(data.get('eventID'))
         eventName = str(data.get('eventName'))
         startDateTime = int(data.get('startDateTime'))
         endDateTime = int(data.get('endDateTime'))
@@ -163,7 +163,7 @@ def createEvent():
         image = data.get('image')
 
         body = {
-            "eventID": eventID,
+            # "eventID": eventID,
             "eventName": eventName,
             "startDateTime": startDateTime,
             "endDateTime": endDateTime,
@@ -174,12 +174,16 @@ def createEvent():
             "image": image
         }
 
-        db.Events.insert_one(body)
+        receipt = db.Events.insert_one(body)
+        body["_id"] = str(receipt.inserted_id)
+
+        return {"message": body}, 200
+
 
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return {"message": "successful"}, 200
+
 
 
 @ app.route("/event/delete/<int:eventID>", methods=['DELETE'])
