@@ -43,7 +43,15 @@ const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => 
   return formattedEvents
 }
 
-const sortEvents = (events: UserEvent[]) => {
+export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
+    hallEventTypes: getHallEventTypesStub,
+  })
+}
+
+const sortEvents = (events: RHEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
@@ -179,8 +187,6 @@ const getDayStringFromUNIX = (unixDate: number) => {
 
 // Converts a unix string into date format and returns the time of string type in 24hour format
 const getTimeStringFromUNIX = (unixDate: number) => {
-  // Create a new JavaScript Date object based on the timestamp
-  // multiplied by 1000 so that the argument is in milliseconds, not seconds.
   const date = new Date(unixDate * 1000)
   const hours = '0' + date.getHours()
   const minutes = '0' + date.getMinutes()
@@ -335,3 +341,36 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
 
   return returnEventsArray
 }
+
+export const editEventName = (newEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_NAME, newEventName: newEventName })
+}
+
+export const editEventLocation = (newEventLocation: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_LOCATION, newEventLocation: newEventLocation })
+}
+
+export const editEventFromDate = (newEventFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE, newEventFromDate: newEventFromDate })
+}
+
+export const editEventToDate = (newEventToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_TO_DATE, newEventToDate: newEventToDate })
+}
+
+export const editCca = (newCca: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_CCA, newCca: newCca })
+}
+
+export const editDescription = (newDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_DESCRIPTION, newDescription: newDescription })
+}
+
+export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { newDescription } = getState().scheduling
+  console.log(newDescription)
+}
+
+export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
+

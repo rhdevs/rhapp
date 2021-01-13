@@ -55,7 +55,7 @@ export type SchedulingEvent = {
   location: string
   ccaID: number
   userID: string
-  image: string | null
+  image: null | string
 }
 
 /** Actions' types */
@@ -71,11 +71,20 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
   SET_EVENT_LOCATION = 'SCHEDULING_ACTIONS.SET_EVENT_LOCATION',
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
+  SET_EVENT_TO_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_TO_DATE',
   SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
   SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
+  GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
+  SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
 }
 
 /** Actions */
+
+
+type getHallEventTypes = {
+  type: typeof SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES
+  hallEventTypes: string[]
+}
 
 type GetUserEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
@@ -130,6 +139,11 @@ type SetEventFromDate = {
   newEventFromDate: Date
 }
 
+type SetEventToDate = {
+  type: typeof SCHEDULING_ACTIONS.SET_EVENT_TO_DATE
+  newEventToDate: Date
+}
+
 type SetCca = {
   type: typeof SCHEDULING_ACTIONS.SET_CCA
   newCca: string
@@ -140,6 +154,11 @@ type SetDescription = {
   newDescription: string
 }
 
+type SetHallEventType = {
+  type: typeof SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE
+  newHallEventType: string
+}
+
 export type ActionTypes =
   | GetUserEvents
   | EditUserEvents
@@ -148,8 +167,11 @@ export type ActionTypes =
   | SetEventName
   | SetEventLocation
   | SetEventFromDate
+  | SetEventToDate
   | SetCca
   | SetDescription
   | GetShareSearchResults
   | SetIsLoading
   | GetSearchedEvents
+  | getHallEventTypes
+  | SetHallEventType

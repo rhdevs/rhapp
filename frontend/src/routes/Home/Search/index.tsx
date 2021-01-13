@@ -76,7 +76,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
               key={index}
               avatar={result.avatar}
               title={result.title}
-              description={result.description}
+              description={result?.description ?? ''}
             />
           )
         })
@@ -93,7 +93,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
                 key={index}
                 avatar={result.avatar}
                 title={result.title}
-                description={result.description}
+                description={result?.description ?? ''}
               />
             )
           })}

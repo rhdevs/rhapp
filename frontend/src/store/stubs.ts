@@ -22,6 +22,8 @@ export const facilityListStub: Facility[] = [
   { facilityID: 225, facilityName: 'Hard Court', facilityLocation: 'Block 5' },
 ]
 
+export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Training', 'IHG']
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
@@ -29,8 +31,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2020-12-15 12:00:00'),
-    endTime: new Date('2020-12-15 14:00:00'),
+    startTime: new Date('2020-12-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-12-15 14:00:00').getTime() / 1000,
     description: 'My Backup Location',
   },
   {
@@ -39,8 +41,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2020-01-15 12:00:00'),
-    endTime: new Date('2020-01-15 14:00:00'),
+    startTime: new Date('2020-01-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-01-15 14:00:00').getTime() / 1000,
     description: 'Pls dont steal from me',
   },
   {
@@ -49,8 +51,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2020-02-15 12:00:00'),
-    endTime: new Date('2020-02-15 14:00:00'),
+    startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
   },
 ]
@@ -241,6 +243,10 @@ export const searchResultsStub: SearchResult[] = [
     id: 2,
     title: 'Bob',
     description: 'Hello my name is Bob',
+  },
+  {
+    id: 3,
+    title: 'Bob',
   },
 ]
 

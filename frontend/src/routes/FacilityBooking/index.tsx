@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom'
 import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
-import { changeTab, getFacilityList, SetIsLoading } from '../../store/facilityBooking/action'
+import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
 
 const MainContainer = styled.div`
@@ -94,7 +94,7 @@ export default function FacilityBooking() {
 
   return (
     <>
-      <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
+      <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && (
@@ -109,12 +109,13 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             {facilityList.map((facility) => {
-              if (facility.facilityLocation === selectedTab || selectedTab === '')
+              if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
                 return (
                   <FacilityCard
                     key={facility.facilityID}
                     onClick={() => {
                       history.push('/facility/view/' + facility.facilityName)
+                      dispatch(setSelectedFacility(facility.facilityID))
                     }}
                   >
                     <FacilityAvatar src={dummyAvatar} />

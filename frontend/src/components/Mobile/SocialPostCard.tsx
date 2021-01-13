@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import Truncate from 'react-truncate'
-import { Avatar, Menu } from 'antd'
+import { Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
+import { DeletePost } from '../../store/social/action'
+import Avatar from '../../components/Mobile/Avatar'
 
 const CardContainer = styled.div`
   display: flex;
@@ -13,7 +15,7 @@ const CardContainer = styled.div`
   min-height: 3vh;
   margin: 0 auto 10px;
   background-color: white;
-  padding: 15px 20px;
+  padding: 20px 20px;
   transition-duration: 0.25s;
 `
 const CenterContainer = styled.div`
@@ -26,6 +28,7 @@ const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0px 10px;
+  width: 75%;
 `
 const MenuContainer = styled.div`
   position: relative;
@@ -102,15 +105,9 @@ const DescriptionText = styled.text`
   font-family: Inter;
   font-size: 14px;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-`
-
-const SeeMoreText = styled.text`
-  color: grey;
-  font-family: Inter;
-  font-size: 14px;
 `
 
 type Props = {
@@ -135,11 +132,14 @@ const getInitials = (name: string) => {
 
 function SocialPostCard(props: Props) {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
   const initials = getInitials(props.name)
+  //TODO: To change to user's id
+  const postId = 1
 
   const onExpandClick = () => {
     history.push({
@@ -157,9 +157,10 @@ function SocialPostCard(props: Props) {
   }
 
   const onConfirmDeleteClick = () => {
-    // To remove post!
+    //TODO: To remove post!
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
+    dispatch(DeletePost(postId))
   }
 
   return (
@@ -177,20 +178,8 @@ function SocialPostCard(props: Props) {
         <CenterContainer onClick={onExpandClick}>
           <TextContainer>
             <TitleText>{props.title}</TitleText>
-            <TimeDateText>
-              {props.name}, {props.dateTime}
-            </TimeDateText>
-            <Truncate
-              lines={1}
-              ellipsis={
-                <>
-                  <br />
-                  <SeeMoreText>...see more</SeeMoreText>
-                </>
-              }
-            >
-              <DescriptionText>{props.description}</DescriptionText>
-            </Truncate>
+            <TimeDateText>{props.dateTime}</TimeDateText>
+            <DescriptionText>{props.description}</DescriptionText>
           </TextContainer>
           {props.postPics && (
             <ImageContainer>
@@ -202,8 +191,8 @@ function SocialPostCard(props: Props) {
         </CenterContainer>
 
         <MenuContainer>
-          <div onClick={onMenuClick}>
-            <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
+          <div style={{ width: 16 }}>
+            {props.isOwner && <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} onClick={onMenuClick} />}
           </div>
           {menuIsOpen && (
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>

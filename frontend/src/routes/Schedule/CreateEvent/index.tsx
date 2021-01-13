@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
@@ -11,6 +11,20 @@ import { LeftOutlined, CheckOutlined, CameraFilled } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import {
+  editEventName,
+  editEventLocation,
+  editEventFromDate,
+  editCca,
+  editDescription,
+  handleSubmitCreateEvent,
+  getHallEventTypes,
+  editHallEventType,
+  editEventToDate,
+} from '../../../store/scheduling/action'
+import { useEffect } from 'react'
 
 const { Option } = Select
 
@@ -83,23 +97,27 @@ const BackIcon = (
   </Link>
 )
 
-const CheckIcon = (
-  <div>
-    <CheckOutlined style={{ color: 'black' }} />
-  </div>
-)
-
-const nowTimeStamp = Date.now()
-const now = new Date(nowTimeStamp)
-
 export default function CreateEvent() {
-  const [eventName, setEventName] = useState('')
-  const [fromDateTime, setFromDateTime] = useState(now)
-  const [toDateTime, setToDateTime] = useState(dayjs(now).add(1, 'hour').toDate())
-  const [location, setLocation] = useState('')
-  const [cca, setCca] = useState('')
-  const [description, setDescription] = useState('')
-  const [, setEventType] = useState('')
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getHallEventTypes())
+  }, [dispatch])
+
+  const {
+    hallEventTypes,
+    newEventName,
+    newEventLocation,
+    newEventFromDate,
+    newEventToDate,
+    newCca,
+    newDescription,
+  } = useSelector((state: RootState) => state.scheduling)
+
+  const CheckIcon = (
+    <div>
+      <CheckOutlined style={{ color: 'black' }} />
+    </div>
+  )
 
   /** Incomplete functionality for Uploading Image */
 
@@ -127,19 +145,18 @@ export default function CreateEvent() {
   // }
 
   const handleFromDateChange = (newDate: Date) => {
-    if (toDateTime < newDate) {
-      setToDateTime(dayjs(newDate).add(1, 'hour').toDate())
+    if (newEventToDate < newDate) {
+      editEventToDate(dayjs(newDate).add(1, 'hour').toDate())
     }
-
-    setFromDateTime(newDate)
+    dispatch(editEventFromDate(newDate))
   }
 
   const handleToDateChange = (newDate: Date) => {
-    if (fromDateTime > newDate) {
-      setFromDateTime(dayjs(newDate).subtract(1, 'hour').toDate())
+    if (newEventFromDate > newDate) {
+      editEventFromDate(dayjs(newDate).subtract(1, 'hour').toDate())
     }
 
-    setToDateTime(newDate)
+    dispatch(editEventToDate(newDate))
   }
 
   const toCustomDateFormat = (date: Date) => {
@@ -150,40 +167,58 @@ export default function CreateEvent() {
     <div>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={CheckIcon} />
       <Background>
-        <StyledInput placeholder="Event Name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
+        <StyledInput
+          placeholder="Event Name"
+          value={newEventName}
+          onChange={(e) => dispatch(editEventName(e.target.value))}
+        />
         <div style={{ width: '100%' }}>
-          <DatePicker mode="datetime" locale={enUs} value={fromDateTime} onChange={handleFromDateChange}>
+          <DatePicker mode="datetime" locale={enUs} value={newEventFromDate} onChange={handleFromDateChange}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
-              <span>{`${toCustomDateFormat(fromDateTime)}`}</span>
+              <span>{`${toCustomDateFormat(newEventFromDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={toDateTime} onChange={handleToDateChange}>
+          <DatePicker mode="datetime" locale={enUs} value={newEventToDate} onChange={handleToDateChange}>
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
-              <span>{`${toCustomDateFormat(toDateTime)}`}</span>
+              <span>{`${toCustomDateFormat(newEventToDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(toDateTime)
-            .diff(dayjs(fromDateTime), 'hour', true)
-            .toFixed(1)} hours`}</div>
+          <div
+            style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}
+            onClick={() => dispatch(handleSubmitCreateEvent())}
+          >{`Duration: ${dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
         </div>
-        <InputRow title="Location" placeholder="Event Location" value={location} setValue={setLocation} />
-        <InputRow title="CCA" placeholder="CCA Name" value={cca} setValue={setCca} />
+        <InputRow
+          title="Location"
+          placeholder="Event Location"
+          value={newEventLocation}
+          setValue={(eventLocation: string) => dispatch(editEventLocation(eventLocation))}
+        />
+        <InputRow
+          title="CCA"
+          placeholder="CCA Name"
+          value={newCca}
+          setValue={(newCCA: string) => {
+            dispatch(editCca(newCCA))
+          }}
+        />
         <InputRow
           title="Description"
           placeholder="Tell us what your event is about!"
-          value={description}
-          setValue={setDescription}
+          value={newDescription}
+          setValue={(description: string) => dispatch(editDescription(description))}
           textarea
         />
         <Row>
           <StyledTitle>Event Type</StyledTitle>
-          <StyledSelect defaultValue="Select" onChange={(value) => setEventType(value as string)}>
-            <Option value="None" disabled>
-              None
-            </Option>
-            <Option value="Hall Event">Hall Event</Option>
+          <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
+            {hallEventTypes.map((eventTypes, idx) => (
+              <Option key={idx} value={eventTypes}>
+                {eventTypes}
+              </Option>
+            ))}
           </StyledSelect>
         </Row>
         <Row>
