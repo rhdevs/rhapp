@@ -8,6 +8,16 @@ const initialState = {
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
   shareSearchResults: [],
+
+  // Create new event states
+  newEventName: '',
+  newEventLocation: '',
+  newEventFromDate: new Date(),
+  newEventToDate: new Date(),
+  newCca: '',
+  newDescription: '',
+  newHallEventType: '',
+  hallEventTypes: [],
 }
 
 type State = {
@@ -16,6 +26,14 @@ type State = {
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
+  newEventName: string
+  newEventLocation: string
+  newEventFromDate: Date
+  newEventToDate: Date
+  newCca: string
+  newDescription: string
+  hallEventTypes: string[]
+  newHallEventType: string
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -38,6 +56,54 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         shareSearchResults: action.shareSearchResults,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_NAME: {
+      return {
+        ...state,
+        newEventName: action.newEventName,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_LOCATION: {
+      return {
+        ...state,
+        newEventLocation: action.newEventLocation,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE: {
+      return {
+        ...state,
+        newEventFromDate: action.newEventFromDate,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_EVENT_TO_DATE: {
+      return {
+        ...state,
+        newEventToDate: action.newEventToDate,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CCA: {
+      return {
+        ...state,
+        newCca: action.newCca,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_DESCRIPTION: {
+      return {
+        ...state,
+        newDescription: action.newDescription,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES: {
+      return {
+        ...state,
+        hallEventTypes: action.hallEventTypes,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE: {
+      return {
+        ...state,
+        newHallEventType: action.newHallEventType,
       }
     }
     default:

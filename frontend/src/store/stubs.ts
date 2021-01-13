@@ -1,6 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
 import { SearchResult } from './types'
+import { SchedulingEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -18,6 +19,8 @@ export const facilityListStub: Facility[] = [
   { facilityID: 224, facilityName: 'Stage', facilityLocation: 'Communal Hall' },
   { facilityID: 225, facilityName: 'Hard Court', facilityLocation: 'Block 5' },
 ]
+
+export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Training', 'IHG']
 
 export const myBookingsStub: Booking[] = [
   {
@@ -52,7 +55,7 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
-export const userRhEventsDummy = [
+export const userRhEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
@@ -61,7 +64,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -72,7 +75,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'upper lounge',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -83,7 +86,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -94,7 +97,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
 ]
