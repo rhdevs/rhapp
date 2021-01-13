@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
-import { invert } from 'lodash'
 import { useHistory } from 'react-router-dom'
 
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
@@ -16,7 +14,6 @@ import Timetable from '../../components/timetable/Timetable'
 import { fetchUserEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
-import { UserEvent } from '../../store/scheduling/types'
 import LoadingSpin from '../../components/LoadingSpin'
 import SearchBar from '../../components/Mobile/SearchBar'
 
@@ -47,13 +44,6 @@ const Background = styled.div`
 `
 
 const { SubMenu } = Menu
-
-const testLink =
-  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
-// moduleCode=lessonType:classNo,lessonType:classNo
-// AC5002=LEC:1
-// CG1112=LAB:04,TUT:01,LEC:01
-// CG2023=LAB:05,PTUT:03,PLEC:02
 
 export default function Schedule() {
   const dispatch = useDispatch()
