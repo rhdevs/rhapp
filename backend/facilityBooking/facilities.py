@@ -153,7 +153,7 @@ def edit_booking(bookingID) :
 def delete_booking(bookingID) :
     try :
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0].get('userID') :
-            db.Bookings.remove({"bookingID" : bookingID})
+            db.Bookings.delete_one({"bookingID" : int(bookingID)})
             print(bookingID, "Test7")
         # else:
         #     return {"err": "Unauthorised Access"}, 401
