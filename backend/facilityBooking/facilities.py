@@ -138,7 +138,7 @@ def edit_booking(bookingID) :
     try : 
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
             print(bookingID, request.get_json(), "Test6")
-            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.get_json()})
+            db.Bookings.update_one({"bookingID": int(bookingID)}, { "$set": request.get_json()})
             
         # else:
         #     return {"err": "Unauthorised Access"}, 401
