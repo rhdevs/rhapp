@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
+import axios from 'axios'
 
 import NavBar from '../../../components/NavBar'
 import 'antd/dist/antd.css'
@@ -27,6 +28,35 @@ export default function Login() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+
+  const loginHandler = () => {
+    axios.post('/auth/login', {
+      username,
+      password,
+    })
+      .then((res: any) => {
+        console.log(res);
+        // HOW TO SET LOGIN=TRUE?
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  const signupHandler = () => {
+    axios.post('auth/register', {
+      username,
+      password,
+      email
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err.responser);
+      });
+  };
 
   return (
     <>
