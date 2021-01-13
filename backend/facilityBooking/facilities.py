@@ -127,11 +127,11 @@ def add_booking() :
 @app.route('/bookings/<bookingID>', methods=['GET'])
 def get_booking(bookingID) :
     try:
-        data = listToIndexedDict(list(db.Bookings.find({"bookingID":bookingID})))
+        data = removeObjectID(list(db.Bookings.find({"bookingID": int(bookingID)})))
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return data, 200
+    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
      
 @app.route('/bookings/<bookingID>', methods=['PUT'])
 def edit_booking(bookingID) :
