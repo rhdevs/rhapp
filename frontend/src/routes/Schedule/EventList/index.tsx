@@ -12,8 +12,8 @@ import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { rhEventsDummy } from '../../../store/stubs'
-import { editUserRhEvents, fetchUserRhEvents, getSearchedEvents } from '../../../store/scheduling/action'
+import { eventsDummy } from '../../../store/stubs'
+import { editUserEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
 
 const Background = styled.div`
@@ -76,10 +76,10 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
 
   const [searchValue, setSearchValue] = useState('')
   // const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
-  const { userRhEventsList } = useSelector((state: RootState) => state.scheduling)
+  const { userEventsList } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
-    dispatch(fetchUserRhEvents())
+    dispatch(fetchUserEvents())
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -89,13 +89,13 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
 
   const renderResults = () => {
     if (searchValue) {
-      return rhEventsDummy ? (
-        rhEventsDummy.filter((events) => {
+      return eventsDummy ? (
+        eventsDummy.filter((events) => {
           return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
         }).length === 0 ? (
           <NoEventDataText>No Events Found</NoEventDataText>
         ) : (
-          rhEventsDummy
+          eventsDummy
             .filter((events) => {
               return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
             })
@@ -109,7 +109,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
                   bottomElement={
                     <Button
                       buttonIsPressed={
-                        userRhEventsList.filter((event) => {
+                        userEventsList.filter((event) => {
                           return event.eventName === result.eventName
                         }).length !== 0
                       } //check if event is already in schedule
@@ -119,7 +119,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
                       updatedButtonDescription={'Remove from Schedule'}
                       onButtonClick={(buttonIsPressed) => {
                         if (
-                          userRhEventsList.filter((event) => {
+                          userEventsList.filter((event) => {
                             return event.eventName === result.eventName
                           }).length !== 0
                         ) {
@@ -127,26 +127,26 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
                             // event is in list and button is pressed
                             // remove event from list
                             console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserRhEvents('remove', result.eventName))
+                            dispatch(editUserEvents('remove', result.eventName))
                           } else {
                             // event is in list, button is un-pressed
                             console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserRhEvents('add', result.eventName))
+                            dispatch(editUserEvents('add', result.eventName))
                           }
                         } else if (
-                          userRhEventsList.filter((event) => {
+                          userEventsList.filter((event) => {
                             return event.eventName === result.eventName
                           }).length === 0
                         ) {
                           if (buttonIsPressed) {
                             // event is not in list, button is un-pressed
                             console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserRhEvents('remove', result.eventName))
+                            dispatch(editUserEvents('remove', result.eventName))
                           } else {
                             // event is not in list and button is pressed
                             // add event to list
                             console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserRhEvents('add', result.eventName))
+                            dispatch(editUserEvents('add', result.eventName))
                           }
                         }
                         return

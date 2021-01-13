@@ -7,11 +7,12 @@ import { SchedulingEvent } from './scheduling/types'
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
- * 3. userRhEvents
- * 4. RhEvents
+ * 3. userEvents
+ * 4. EventsList
  * 5. Washing Machines
  * 6. Events
  * 7. Search Results
+ * 8. NUSModsLink
  */
 
 export const facilityListStub: Facility[] = [
@@ -54,7 +55,7 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
-export const userRhEventsDummy: SchedulingEvent[] = [
+export const userEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
@@ -101,7 +102,7 @@ export const userRhEventsDummy: SchedulingEvent[] = [
   },
 ]
 
-export const rhEventsDummy: SchedulingEvent[] = [
+export const eventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'Block 7 Christmas Event',
@@ -242,3 +243,6 @@ export const searchResultsStub: SearchResult[] = [
     description: 'Hello my name is Bob',
   },
 ]
+
+export const dummyNusModsLink =
+  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'

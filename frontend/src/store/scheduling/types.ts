@@ -1,4 +1,24 @@
+import { invert } from 'lodash'
 import { SearchResult } from '../types'
+
+type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
+export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
+  DLEC: 'Design Lecture',
+  LAB: 'Laboratory',
+  LEC: 'Lecture',
+  PLEC: 'Packaged Lecture',
+  PTUT: 'Packaged Tutorial',
+  REC: 'Recitation',
+  SEC: 'Sectional Teaching',
+  SEM: 'Seminar-Style Module Class',
+  TUT: 'Tutorial',
+  TUT2: 'Tutorial Type 2',
+  TUT3: 'Tutorial Type 3',
+  WS: 'Workshop',
+}
+
+// Reverse lookup map of ABBREV_TO_LESSON
+export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_TO_LESSON)
 
 /** Types */
 
@@ -14,14 +34,16 @@ import { SearchResult } from '../types'
 //   weeks: number[]
 // }
 
-export type RHEvent = {
+export type UserEvent = {
   eventName: string
   location: string
   day: string
-  date?: string
+  date: string | null
   endTime: string
   startTime: string
-  hasOverlap?: boolean
+  hasOverlap: boolean
+  eventType?: string
+  eventID: number
 }
 
 export type SchedulingEvent = {
@@ -40,8 +62,10 @@ export type SchedulingEvent = {
 
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
-  GET_USER_RH_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_RH_EVENTS',
-  EDIT_USER_RH_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS',
+  GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
+  EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
+  SET_USER_NUSMODS_LINK = 'SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK',
+  GET_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS',
   GET_SEARCHED_EVENTS = 'SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS',
   GET_SHARE_SEARCH_RESULTS = 'SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS',
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
@@ -53,17 +77,27 @@ export enum SCHEDULING_ACTIONS {
 
 /** Actions */
 
-type GetUserRhEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_USER_RH_EVENTS
-  userRhEvents: RHEvent[][][]
+type GetUserEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
+  userEvents: UserEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
-  userRhEventsList: RHEvent[]
+  userEventsList: UserEvent[]
 }
 
-type EditUserRhEvents = {
-  type: typeof SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS
-  newUserRhEvents: RHEvent[]
+type EditUserEvents = {
+  type: typeof SCHEDULING_ACTIONS.EDIT_USER_EVENTS
+  newUserEvents: UserEvent[]
+}
+
+type SetUserNusModsLink = {
+  type: typeof SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK
+  userNusModsLink: string
+}
+
+type GetNusModsEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS
+  userNusModsEvents: UserEvent[]
 }
 
 type GetSearchedEvents = {
@@ -107,8 +141,10 @@ type SetDescription = {
 }
 
 export type ActionTypes =
-  | GetUserRhEvents
-  | EditUserRhEvents
+  | GetUserEvents
+  | EditUserEvents
+  | SetUserNusModsLink
+  | GetNusModsEvents
   | SetEventName
   | SetEventLocation
   | SetEventFromDate

@@ -13,10 +13,10 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserRhEvents } from '../../store/scheduling/action'
+import { fetchUserEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
-import { RHEvent } from '../../store/scheduling/types'
+import { UserEvent } from '../../store/scheduling/types'
 import LoadingSpin from '../../components/LoadingSpin'
 import SearchBar from '../../components/Mobile/SearchBar'
 
@@ -48,28 +48,6 @@ const Background = styled.div`
 
 const { SubMenu } = Menu
 
-type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
-export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
-  DLEC: 'Design Lecture',
-  LAB: 'Laboratory',
-  LEC: 'Lecture',
-  PLEC: 'Packaged Lecture',
-  PTUT: 'Packaged Tutorial',
-  REC: 'Recitation',
-  SEC: 'Sectional Teaching',
-  SEM: 'Seminar-Style Module Class',
-  TUT: 'Tutorial',
-  TUT2: 'Tutorial Type 2',
-  TUT3: 'Tutorial Type 3',
-  WS: 'Workshop',
-}
-
-// Reverse lookup map of ABBREV_TO_LESSON
-export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_TO_LESSON)
-
-export const LESSON_TYPE_SEP = ':'
-export const LESSON_SEP = ','
-
 const testLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
 // moduleCode=lessonType:classNo,lessonType:classNo
@@ -80,80 +58,13 @@ const testLink =
 export default function Schedule() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userRhEvents, userEventsStartTime, userEventsEndTime, isLoading } = useSelector(
+  const { userEvents, userEventsStartTime, userEventsEndTime, isLoading } = useSelector(
     (state: RootState) => state.scheduling,
   )
 
   useEffect(() => {
-    dispatch(fetchUserRhEvents())
+    dispatch(fetchUserEvents())
   }, [dispatch])
-
-  // const doSomething = () => {
-  //   const extractedData = extractDataFromLink(testLink)
-  //   // console.log(extractedData)
-  //   for (let i = 0; i < extractedData.length; i++) {
-  //     NUSModsToRHEvents('2020-2021', extractedData[i])
-  //   }
-  // }
-
-  // /**
-  //  * Returns a 2D array, containing module code and lesson information of each module
-  //  *
-  //  * @param link NUSMods share link
-  //  */
-  // const extractDataFromLink = (link: string) => {
-  //   const timetableInformation = link.split('?')[1]
-  //   const timetableData = timetableInformation.split('&')
-  //   const data: string[][] = []
-  //   for (let i = 0; i < timetableData.length; i++) {
-  //     const moduleCode = timetableData[i].split('=')[0]
-  //     data[i] = []
-  //     data[i].push(moduleCode)
-  //     timetableData[i] = timetableData[i].split('=')[1]
-  //     const moduleLessons = timetableData[i].split(LESSON_SEP)
-  //     for (let j = 0; j < moduleLessons.length; j++) {
-  //       data[i].push(moduleLessons[j])
-  //     }
-  //   }
-  //   return data
-  // }
-
-  // /**
-  //  * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
-  //  *
-  //  * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
-  //  * @param moduleArray array of lessons selected by user (from link provided)
-  //  */
-  // const NUSModsToRHEvents = (acadYear: string, moduleArray: string[]) => {
-  //   const moduleCode = moduleArray[0]
-  //   axios.get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`).then((res) => {
-  //     const moduleData = res.data.semesterData[0].timetable
-  //     moduleArray = moduleArray.splice(1)
-  //     for (let i = 0; i < moduleArray.length; i++) {
-  //       const lessonType = moduleArray[i].split(LESSON_TYPE_SEP)[0]
-  //       const classNo = moduleArray[i].split(LESSON_TYPE_SEP)[1]
-  //       const correspondingClassInformationArray = moduleData.filter(
-  //         (moduleClass: { classNo: string; lessonType: string }) => {
-  //           return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
-  //         },
-  //       )
-  //       for (let i = 0; i < correspondingClassInformationArray.length; i++) {
-  //         const newEvent: RHEvent = {
-  //           eventName: moduleCode + ' ' + LESSON_TO_ABBREV[correspondingClassInformationArray[i].lessonType],
-  //           location: correspondingClassInformationArray[i].venue,
-  //           day: correspondingClassInformationArray[i].day,
-  //           endTime: correspondingClassInformationArray[i].endTime,
-  //           startTime: correspondingClassInformationArray[i].startTime,
-  //         }
-  //         events.push(newEvent)
-  //       }
-  //     }
-  //   })
-  // }
-
-  // doSomething()
-  // const [events] = useState<RHEvent[]>([])
-  // console.log(events)
 
   const rightIcon = (
     <MenuDropdown
@@ -229,7 +140,7 @@ export default function Schedule() {
       {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>
-          <Timetable events={userRhEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
+          <Timetable events={userEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
         </TimetableContainer>
       </TimetableMainContainer>
       <GroupContainer>

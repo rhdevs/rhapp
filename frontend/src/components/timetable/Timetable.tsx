@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RHEvent } from '../../store/scheduling/types'
+import { UserEvent } from '../../store/scheduling/types'
 import TimetableRow from './TimetableRow'
 
 const TimetableContainer = styled.div`
@@ -29,7 +29,7 @@ const IndividualTimeContainer = styled.time`
 type Props = {
   eventsStartTime: number
   eventsEndTime: number
-  events: RHEvent[][][]
+  events: UserEvent[][][]
 }
 
 function Timetable(props: Props) {

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import EventCell from './EventCell'
-import { RHEvent } from '../../store/scheduling/types'
+import { UserEvent } from '../../store/scheduling/types'
 
 const TimetableRowContainer = styled.li`
   position: relative;
@@ -48,7 +48,7 @@ const ChildrenContainer = styled.div`
 type Props = {
   oneHourWidth: string
   oneDayMinHeight: string
-  events: RHEvent[][]
+  events: UserEvent[][]
   timetableStartTime: number
   timetableEndTime: number
   day: string
@@ -93,7 +93,7 @@ function TimetableRow(props: Props) {
                     }}
                   >
                     <EventCell
-                      isSingleEvent={!individualEvent.hasOverlap}
+                      // isSingleEvent={!individualEvent.hasOverlap}
                       eventType={'mods'}
                       oneHourWidth={props.oneHourWidth}
                       oneDayMinHeight={props.oneDayMinHeight}

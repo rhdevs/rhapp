@@ -1,27 +1,31 @@
 import { Reducer } from 'redux'
-import { ActionTypes, RHEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
+import { ActionTypes, UserEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
 import { SearchResult } from '../types'
 
 const initialState = {
   isLoading: true,
-  userRhEvents: [],
-  userRhEventsList: [],
-  newUserRhEvents: [],
+  userEvents: [],
+  userEventsList: [],
+  newUserEvents: [],
   userEventsStartTime: 0,
   userEventsEndTime: 2400,
   shareSearchResults: [],
   searchedEvents: [],
+  userNusModsLink: '',
+  userNusModsEvents: [],
 }
 
 type State = {
   isLoading: boolean
-  userRhEvents: RHEvent[][][]
-  userRhEventsList: RHEvent[]
-  newUserRhEvents: RHEvent[]
+  userEvents: UserEvent[][][]
+  userEventsList: UserEvent[]
+  newUserEvents: UserEvent[]
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
+  userNusModsLink: string
+  userNusModsEvents: UserEvent[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -32,19 +36,31 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         isLoading: action.isLoading,
       }
     }
-    case SCHEDULING_ACTIONS.GET_USER_RH_EVENTS: {
+    case SCHEDULING_ACTIONS.GET_USER_EVENTS: {
       return {
         ...state,
-        userRhEvents: action.userRhEvents,
-        userRhEventsList: action.userRhEventsList,
+        userEvents: action.userEvents,
+        userEventsList: action.userEventsList,
         userEventsStartTime: action.userEventsStartTime,
         userEventsEndTime: action.userEventsEndTime,
       }
     }
-    case SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS: {
+    case SCHEDULING_ACTIONS.EDIT_USER_EVENTS: {
       return {
         ...state,
-        newUserRhEvents: action.newUserRhEvents,
+        newUserEvents: action.newUserEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK: {
+      return {
+        ...state,
+        userNusModsLink: action.userNusModsLink,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS: {
+      return {
+        ...state,
+        userNusModsEvents: action.userNusModsEvents,
       }
     }
     case SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS: {

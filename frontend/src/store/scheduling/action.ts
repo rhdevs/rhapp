@@ -1,27 +1,36 @@
+import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { rhEventsDummy, userRhEventsDummy } from '../stubs'
+import { eventsDummy, userEventsDummy, dummyNusModsLink } from '../stubs'
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, RHEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
+import {
+  ActionTypes,
+  UserEvent,
+  SchedulingEvent,
+  SCHEDULING_ACTIONS,
+  LESSON_TO_ABBREV,
+  ABBREV_TO_LESSON,
+} from './types'
 
-export const fetchUserRhEvents = () => (dispatch: Dispatch<ActionTypes>) => {
+export const fetchUserEvents = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const fetchedData = userRhEventsDummy
-  const formattedEvents: RHEvent[] = transformScheduleTypeToRhEvent(fetchedData)
+  const fetchedData = userEventsDummy
+  const formattedEvents: UserEvent[] = transformScheduleTypeToRhEvent(fetchedData)
 
   dispatch({
-    type: SCHEDULING_ACTIONS.GET_USER_RH_EVENTS,
-    userRhEvents: transformInformationToTimetableFormat(formattedEvents),
+    type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
+    userEvents: transformInformationToTimetableFormat(formattedEvents),
     userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
     userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
-    userRhEventsList: formattedEvents,
+    userEventsList: formattedEvents,
   })
   dispatch(setIsLoading(false))
 }
 
 const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => {
-  const formattedEvents: RHEvent[] = []
+  const formattedEvents: UserEvent[] = []
   scheduleTypeData.forEach((data) => {
     formattedEvents.push({
+      eventID: data.eventID,
       eventName: data.eventName,
       location: data.location,
       day: getDayStringFromUNIX(data.startDateTime),
@@ -34,7 +43,7 @@ const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => 
   return formattedEvents
 }
 
-const sortEvents = (events: RHEvent[]) => {
+const sortEvents = (events: UserEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
@@ -45,28 +54,32 @@ const getDate = (unixDate: number) => {
   return String(date)
 }
 
-const getTimetableStartTime = (formattedEvents: RHEvent[]) => {
+const getTimetableStartTime = (formattedEvents: UserEvent[]) => {
   const sortedEvents = sortEvents(formattedEvents)
   return sortedEvents[0]?.startTime
 }
 
-const getTimetableEndTime = (formattedEvents: RHEvent[]) => {
-  const sortedEvents = sortEvents(formattedEvents)
-  return last(sortedEvents)?.endTime
+const getTimetableEndTime = (formattedEvents: UserEvent[]) => {
+  const sortByEndTime = (events: UserEvent[]) => {
+    return events.sort((a, b) => {
+      return b.endTime.localeCompare(a.endTime)
+    })
+  }
+  return sortByEndTime(formattedEvents)[0].endTime
 }
 
 /**
- * Returns a 2d array containing arrays of respective days filled with RHEvents
+ * Returns a 2d array containing arrays of respective days filled with UserEvents
  * [
  *    [Monday events],
  *    [Tuesday events], ..
  * ]
  *
- * @param formattedEvents events in RHEvent format (transformed from data retrieved from backend)
+ * @param formattedEvents events in UserEvent format (transformed from data retrieved from backend)
  */
-const splitEventsByDay = (formattedEvents: RHEvent[]) => {
+const splitEventsByDay = (formattedEvents: UserEvent[]) => {
   const dayArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  const eventsArr: RHEvent[][] = []
+  const eventsArr: UserEvent[][] = []
   dayArr.map((day, index) => {
     eventsArr[index] = formattedEvents.filter((indivEvent) => {
       return indivEvent.day === day
@@ -75,7 +88,7 @@ const splitEventsByDay = (formattedEvents: RHEvent[]) => {
   return eventsArr
 }
 
-const arrangeEventsForWeek = (eventsArr: RHEvent[][]) => {
+const arrangeEventsForWeek = (eventsArr: UserEvent[][]) => {
   return eventsArr.map((dayArr) => {
     return arrangeEventsWithinDay(dayArr)
   })
@@ -94,9 +107,9 @@ const arrangeEventsForWeek = (eventsArr: RHEvent[][]) => {
  *    ], ..
  * ]
  *
- * @param formattedEvents events in RHEvent format (transformed from data retrieved from backend)
+ * @param formattedEvents events in UserEvent format (transformed from data retrieved from backend)
  */
-const transformInformationToTimetableFormat = (formattedEvents: RHEvent[]) => {
+const transformInformationToTimetableFormat = (formattedEvents: UserEvent[]) => {
   const eventsArr = splitEventsByDay(formattedEvents)
   const transformedEventsArr = arrangeEventsForWeek(eventsArr)
   return transformedEventsArr
@@ -113,17 +126,17 @@ const transformInformationToTimetableFormat = (formattedEvents: RHEvent[]) => {
  *
  * @param events array of events for a specific day
  */
-const arrangeEventsWithinDay = (events: RHEvent[]) => {
-  const rows: RHEvent[][] = []
+const arrangeEventsWithinDay = (events: UserEvent[]) => {
+  const rows: UserEvent[][] = []
   if (isEmpty(events)) {
     return rows
   }
 
   const sortedEvents = sortEvents(events)
 
-  sortedEvents.forEach((event: RHEvent) => {
+  sortedEvents.forEach((event: UserEvent) => {
     for (let i = 0; i < rows.length; i++) {
-      const rowEvents: RHEvent[] = rows[i]
+      const rowEvents: UserEvent[] = rows[i]
       const previousEvents = last(rowEvents)
       if (!previousEvents || !doEventsOverlap(previousEvents, event)) {
         rowEvents.push(event)
@@ -139,7 +152,7 @@ const arrangeEventsWithinDay = (events: RHEvent[]) => {
 }
 
 // Determines if two events overlap
-const doEventsOverlap = (event1: RHEvent, event2: RHEvent) => {
+const doEventsOverlap = (event1: UserEvent, event2: UserEvent) => {
   return event1.day === event2.day && event1.startTime < event2.endTime && event2.startTime < event1.endTime
 }
 
@@ -206,23 +219,119 @@ export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTy
   dispatch(setIsLoading(false))
 }
 
-export const editUserRhEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
-  const fetchedUserData = transformScheduleTypeToRhEvent(userRhEventsDummy)
-  const fetchedEventsData = transformScheduleTypeToRhEvent(rhEventsDummy)
-  let newUserRhEvents: RHEvent[] = []
+export const editUserEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const fetchedUserData = transformScheduleTypeToRhEvent(userEventsDummy)
+  const fetchedEventsData = transformScheduleTypeToRhEvent(eventsDummy)
+  let newUserEvents: UserEvent[] = []
 
   if (action === 'remove') {
-    newUserRhEvents = fetchedUserData.filter((userEvent) => {
+    newUserEvents = fetchedUserData.filter((userEvent) => {
       return userEvent.eventName !== selectedEventName
     })
-    console.log(newUserRhEvents)
+    console.log(newUserEvents)
   } else if (action === 'add') {
-    newUserRhEvents = fetchedUserData.concat(
+    newUserEvents = fetchedUserData.concat(
       fetchedEventsData.filter((event) => {
         return event.eventName === selectedEventName
       }),
     )
-    console.log(newUserRhEvents)
+    console.log(newUserEvents)
   }
-  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_RH_EVENTS, newUserRhEvents: newUserRhEvents })
+  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
+}
+
+export const setUserNusModsLink = (userNusModsLink: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK, userNusModsLink: userNusModsLink })
+}
+
+export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const currentYear = new Date().getFullYear()
+  const academicYear = String(currentYear - 1) + '-' + String(currentYear)
+  const userNusModsLink = dummyNusModsLink
+
+  const dataFromLink = extractDataFromLink(userNusModsLink)
+  let retrivedEventInformation: UserEvent[] = []
+  const temporaryData: UserEvent[][] = []
+
+  dataFromLink.map(async (oneModuleData) => {
+    temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
+    retrivedEventInformation = temporaryData.flat()
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS,
+      userNusModsEvents: retrivedEventInformation,
+    })
+  })
+
+  dispatch(setIsLoading(false))
+}
+
+/**
+ * Returns a 2D array, containing module code and lesson information of each module
+ *
+ * @param link NUSMods share link
+ */
+const extractDataFromLink = (link: string) => {
+  const timetableInformation = link.split('?')[1]
+  const timetableData = timetableInformation.split('&')
+  const data: string[][] = []
+  let count = 0
+
+  timetableData.forEach((moduleInformation) => {
+    const moduleCode = moduleInformation.split('=')[0]
+    data[count] = []
+    data[count].push(moduleCode)
+    moduleInformation = moduleInformation.split('=')[1]
+    const moduleLessons = moduleInformation.split(',')
+    moduleLessons.forEach((classes) => {
+      data[count].push(classes)
+    })
+    count++
+  })
+
+  return data
+}
+
+/**
+ * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
+ *
+ * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
+ * @param moduleArray array of lessons selected by user (from link provided)
+ * @param events array of information retrieved from NUSMods of selected events
+ */
+const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => {
+  const moduleCode = moduleArray[0]
+  const returnEventsArray = await axios
+    .get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`)
+    .then((res) => {
+      const events: UserEvent[] = []
+      const moduleData = res.data.semesterData[0].timetable
+      moduleArray = moduleArray.splice(1)
+      for (let i = 0; i < moduleArray.length; i++) {
+        const lessonType = moduleArray[i].split(':')[0]
+        const classNo = moduleArray[i].split(':')[1]
+        const correspondingClassInformationArray = moduleData.filter(
+          (moduleClass: { classNo: string; lessonType: string }) => {
+            return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
+          },
+        )
+        correspondingClassInformationArray.map((classInformation) => {
+          const newEvent: UserEvent = {
+            eventName: moduleCode + ' ' + LESSON_TO_ABBREV[classInformation.lessonType],
+            location: classInformation.venue,
+            day: classInformation.day,
+            date: null,
+            endTime: classInformation.endTime,
+            startTime: classInformation.startTime,
+            hasOverlap: false,
+            eventType: 'private',
+            eventID: 1,
+          }
+          events.push(newEvent)
+        })
+      }
+      return events
+    })
+
+  return returnEventsArray
 }
