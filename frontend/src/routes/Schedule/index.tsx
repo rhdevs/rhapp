@@ -146,9 +146,9 @@ export default function Schedule() {
           >
             Friends
           </h1>
-          <div style={{ width: '25rem' }}>
+          {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
-          </div>
+          </div> */}
         </SmallContainer>
         <Tags
           options={[
@@ -180,9 +180,9 @@ export default function Schedule() {
           >
             Groups
           </h1>
-          <div style={{ width: '25rem' }}>
+          {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
-          </div>
+          </div> */}
         </SmallContainer>
         <Tags options={['Group1', 'Group2']} />
       </GroupContainer>
