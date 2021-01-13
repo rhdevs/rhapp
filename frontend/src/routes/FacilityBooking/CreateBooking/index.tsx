@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input } from 'antd'
+import { AutoComplete, Input } from 'antd'
 import { DatePicker } from 'antd-mobile'
 import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
@@ -18,6 +18,7 @@ import {
   editBookingFromDate,
   editBookingName,
   editBookingToDate,
+  fetchAllCCAs,
   handleCreateBooking,
   SetIsLoading,
 } from '../../../store/facilityBooking/action'
@@ -64,7 +65,7 @@ const DatePickerRow = styled.div`
 
 export default function CreateBooking() {
   const dispatch = useDispatch()
-  const history = useHistory()
+  // const history = useHistory()
   const {
     newBooking,
     newBookingName,
@@ -74,6 +75,7 @@ export default function CreateBooking() {
     newBookingDescription,
     newBookingFacilityName,
     isLoading,
+    ccaList,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -85,13 +87,14 @@ export default function CreateBooking() {
       dispatch(editBookingName(newBooking.eventName))
       dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
     }
+    dispatch(fetchAllCCAs())
   }, [dispatch])
 
   const CheckIcon = (
     <div
       onClick={() => {
         dispatch(handleCreateBooking())
-        history.push('/facility/view/' + newBookingFacilityName)
+        // history.push('/facility/view/' + newBookingFacilityName)
       }}
     >
       <CheckOutlined style={{ color: 'black' }} />
@@ -153,7 +156,21 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
-          <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
+          <div style={{ width: '100%', margin: '10px 0px' }}>
+            <StyledTitle>CCA</StyledTitle>
+            <AutoComplete
+              style={{ width: '100%' }}
+              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                value: cca.ccaName,
+              }))}
+              value={newBookingCCA}
+              placeholder="Select your CCA, else select Personal"
+              onChange={(value) => setCca(value)}
+              filterOption={(inputValue, option) =>
+                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
+            />
+          </div>
           <InputRow
             title="Description"
             placeholder="Tell us what your booking is for!"

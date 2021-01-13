@@ -23,7 +23,6 @@ import {
   setViewDates,
   setViewFacilityMode,
 } from '../../../store/facilityBooking/action'
-import { facilityBookingsStubs } from '../../../store/stubs'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -126,13 +125,13 @@ export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityName: string }>()
-  const { ViewStartDate, ViewEndDate, createSuccess, createFailure, isLoading } = useSelector(
+  const { ViewStartDate, ViewEndDate, createSuccess, createFailure, isLoading, facilityBookings } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
-    dispatch(getAllBookingsForFacility(params.facilityName))
+    dispatch(getAllBookingsForFacility())
   }, [dispatch])
 
   const MyBookingIcon = (
@@ -212,9 +211,9 @@ export default function ViewFacility() {
               {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
             </DateDisplayText>
             <EventsGroup>
-              {facilityBookingsStubs.map((event) => (
+              {facilityBookings?.map((event) => (
                 <EventCard
-                  key={event.id}
+                  key={event.bookingID}
                   onClick={() => {
                     console.log('clicked on event')
                   }}
@@ -228,12 +227,12 @@ export default function ViewFacility() {
                       </b>
                     </EventBoldLabel>
                     <EventNormalLabel>
-                      <b> {event.eventCCA} </b>
+                      <b> {event.ccaID} </b>
                       {event.eventName}
                     </EventNormalLabel>
                   </EventLabels>
                   <EventRightDisplay>
-                    {event.eventOwner === 'you' ? (
+                    {event.userID === 'you' ? (
                       <Icon src={adminIcon} />
                     ) : (
                       <Icon
@@ -243,7 +242,7 @@ export default function ViewFacility() {
                         src={messageIcon}
                       />
                     )}
-                    <EventDateLabel>{event.date}</EventDateLabel>
+                    <EventDateLabel>{event.startTime}</EventDateLabel>
                   </EventRightDisplay>
                 </EventCard>
               ))}

@@ -1,6 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
+import axios from 'axios'
 
 export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(SetIsLoading(true))
@@ -15,6 +16,39 @@ export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
 
     dispatch(SetIsLoading(false))
   })
+}
+
+export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  dispatch(SetIsLoading(true))
+  const { ViewEndDate, ViewStartDate, selectedFacilityId } = getState().facilityBooking
+  const querySubString =
+    '/' +
+    selectedFacilityId +
+    '?startDate=' +
+    parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
+    '&endDate=' +
+    parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+  console.log('hello')
+  console.log(querySubString)
+
+  axios
+    .get('https://rhappfacilities.rhdevs.repl.co/bookings/facility/12/?startDate=1610510547&endDate=1610769747', {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+    .then((response) => {
+      dispatch({
+        type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
+        facilityBookings: response.data,
+      })
+      dispatch(SetIsLoading(false))
+    })
+
+  // get(ENDPOINTS.FACILITY_BOOKING, DOMAINS.FACILITY, querySubString).then((resp) => {
+  //   console.log(resp.data)
+  //   dispatch(SetIsLoading(false))
+  // })
 }
 
 export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -64,10 +98,12 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
 
 export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
+  dispatch(getAllBookingsForFacility())
 }
 
 export const editBookingFromDate = (newBookingFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
+  dispatch(getAllBookingsForFacility())
 }
 
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -76,29 +112,6 @@ export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<Act
 
 export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
-}
-
-export const getAllBookingsForFacility = (facilityName: string) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(SetIsLoading(true))
-  const { ViewEndDate, ViewStartDate } = getState().facilityBooking
-  get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, '?facilityName=' + facilityName).then((resp) => {
-    const fetchedFacility: Facility = resp.data
-    const newSubstring =
-      fetchedFacility.facilityID +
-      '?startDate=' +
-      parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
-      '&endDate=' +
-      parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
-    dispatch({ type: FACILITY_ACTIONS.SET_FACILITY_DETAILS, selectedFacility: fetchedFacility })
-    get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, newSubstring).then((resp) => {
-      const bookings: Booking[] = resp.data
-      dispatch({ type: FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS, bookings: bookings })
-    })
-    dispatch(SetIsLoading(false))
-  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,37 +136,54 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch(SetIsLoading(false))
 }
 
+export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
+  get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
+    dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp })
+    dispatch(SetIsLoading(false))
+  })
+}
+
 export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(SetIsLoading(true))
   const {
     newBookingName,
-    selectedFacility,
+    selectedFacilityId,
     newBookingFromDate,
     newBookingToDate,
     newBookingCCA,
     newBookingDescription,
+    ccaList,
   } = getState().facilityBooking
 
-  get(ENDPOINTS.CCA_DETAILS, DOMAINS.FACILITY, newBookingCCA).then((resp) => {
-    const requestBody = {
-      facilityID: selectedFacility?.facilityID,
-      eventName: newBookingName,
-      userID: 1,
-      ccaID: resp.data.ccaID,
-      startTime: newBookingFromDate,
-      endTime: newBookingToDate,
-      description: newBookingDescription,
-    }
-    post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
-      .then((resp) => {
-        resp.info
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-        dispatch(SetIsLoading(false))
-      })
-      .catch(() => {
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      })
-  })
+  const requestBody = {
+    facilityID: selectedFacilityId,
+    eventName: newBookingName,
+    userID: '1',
+    ccaID: ccaList.find((cca) => cca.ccaName === newBookingCCA)?.ccaID,
+    startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
+    endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
+    description: newBookingDescription,
+  }
+  console.log(requestBody)
+  //   {
+  //     "ccaID": 2,
+  //     "description": "123",
+  //     "endTime": 1610185978,
+  //     "eventName": "123",
+  //     "facilityID": 1,
+  //     "startTime": 1610175978,
+  //     "userID": 1
+  // }
+  post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+    .then((resp) => {
+      console.log(resp)
+      resp.info
+      // dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+      // dispatch(SetIsLoading(false))
+    })
+    .catch(() => {
+      // dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    })
 }
 
 export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -176,4 +206,8 @@ export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<Act
 export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isLoading } = getState().facilityBooking
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
+}
+
+export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
 }

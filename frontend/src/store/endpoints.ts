@@ -56,13 +56,13 @@ async function makeRequest(
   let DOMAIN_URL: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL = 'http://rhappfacilities.rhdevs.repl.co'
+      DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL = 'http://rhappevents.rhdevs.repl.co'
+      DOMAIN_URL = 'https://rhappevents.rhdevs.repl.co'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL = 'http://rhapplaundry.rhdevs.repl.co'
+      DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
       break
   }
 
@@ -70,6 +70,7 @@ async function makeRequest(
     method: method,
     url: DOMAIN_URL + url,
     headers: {
+      'Access-Control-Allow-Origin': '*',
       ...additionalHeaders,
     },
     data: requestBody,

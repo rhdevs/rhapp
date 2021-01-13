@@ -4,6 +4,12 @@ export type Facility = {
   facilityLocation: string
 }
 
+export type userCCA = {
+  ccaID: number
+  ccaName: string
+  category: string
+}
+
 export type Booking = {
   bookingID: number
   eventName: string
@@ -47,6 +53,9 @@ export enum FACILITY_ACTIONS {
   POPULATE_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS',
   SET_FACILITY_DETAILS = 'FACILITY_ACTIONS.SET_FACILITY_DETAILS',
   SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
+  SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
+  GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
+  SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
 }
 
 type GetFacilityList = {
@@ -150,6 +159,21 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
+type SetSelectedFacility = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_FACILITY
+  selectedFacilityId: number
+}
+
+type GetAllCCA = {
+  type: typeof FACILITY_ACTIONS.GET_ALL_CCA
+  ccaList: userCCA[]
+}
+
+type SetFacilityBookings = {
+  type: typeof FACILITY_ACTIONS.SET_FACILITY_BOOKINGS
+  facilityBookings: Booking[]
+}
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -171,3 +195,6 @@ export type ActionTypes =
   | SetFacilityDetails
   | SetViewBooking
   | SetIsLoading
+  | SetSelectedFacility
+  | GetAllCCA
+  | SetFacilityBookings
