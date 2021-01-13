@@ -16,8 +16,8 @@ export type Booking = {
   facilityID: number
   userID: string
   ccaID: number
-  startTime: Date
-  endTime: Date
+  startTime: number
+  endTime: number
   description: string
 }
 

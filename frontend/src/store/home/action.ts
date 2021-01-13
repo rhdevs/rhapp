@@ -20,7 +20,6 @@ export const mockActionSetAccount = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { sampleStateText } = getState().home
-  console.log('Hello')
   console.log(getState().home.sampleStateText)
   dispatch({
     type: HOME_PAGE_ACTIONS.SAMPLE_TEXT,

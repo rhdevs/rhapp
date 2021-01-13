@@ -28,7 +28,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 95vh;
+  height: 100vh;
   background-color: #fafaf4;
 `
 
@@ -109,6 +109,7 @@ const DateSelectorGroup = styled.div`
   display: flex;
   place-content: center;
   align-self: center;
+  background-color: #fafaf4;
 `
 
 const EventRightDisplay = styled.div`

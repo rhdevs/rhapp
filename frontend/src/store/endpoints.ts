@@ -7,7 +7,7 @@ export enum ENDPOINTS {
   TELEGRAM_HANDLE = '/users/telegramID',
 
   // FACILITY
-  FACILITY_LIST = '/facilities',
+  FACILITY_LIST = '/facilities/all',
   FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
@@ -46,6 +46,12 @@ export enum DOMAINS {
   LAUNDRY = 'laundry',
 }
 
+export enum DOMAIN_URL {
+  FACILITY = 'https://rhappfacilities.rhdevs.repl.co',
+  EVENT = 'https://rhappevents.rhdevs.repl.co',
+  LAUNDRY = 'https://rhapplaundry.rhdevs.repl.co',
+}
+
 async function makeRequest(
   url: string,
   domain: DOMAINS,
@@ -65,7 +71,7 @@ async function makeRequest(
       DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
       break
   }
-
+  console.log(DOMAIN_URL + url)
   return axios({
     method: method,
     url: DOMAIN_URL + url,

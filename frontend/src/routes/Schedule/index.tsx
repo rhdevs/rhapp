@@ -197,7 +197,7 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={'Timetable'} rightComponent={rightIcon} />
+      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
       {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>

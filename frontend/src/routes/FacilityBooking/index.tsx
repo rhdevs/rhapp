@@ -94,7 +94,7 @@ export default function FacilityBooking() {
 
   return (
     <>
-      <TopNavBar title={'Facilities'} rightComponent={MyBookingIcon} />
+      <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && (
