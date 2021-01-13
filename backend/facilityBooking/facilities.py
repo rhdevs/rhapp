@@ -96,7 +96,6 @@ def add_booking() :
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
         formData = request.get_json()
 
-        print("Check point 1")
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
