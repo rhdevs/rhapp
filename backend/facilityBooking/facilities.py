@@ -94,22 +94,26 @@ def add_booking() :
     try:
         print("Testing 2")
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
-        formData = request.form.to_dict()
+        formData = request.get_json()
 
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
-        formData["bookingID"] = int(formData["bookingID"])
         formData["facilityID"] = int(formData["facilityID"])
         formData["ccaID"] = int(formData["ccaID"])
 
         if (formData["endTime"] < formData["startTime"]) :
             raise Exception("End time eariler than start time")    
         # else:
-        #     return {"err": "Unauthorised Access"}, 401    
-        
-        print(formData["startTime"], " test4")
-        db.Bookings.insert(formData)
+        #     return {"err": "Unauthorised Access"}, 401
+
+        lastbookingID = list(db.Bookings.find().sort([('_id', pymongo.DESCENDING)]).limit(1))[0]
+
+        newBookingID = 1 if lastbookingID is None else int(lastbookingID.get("bookingID")) + 1
+
+        formData["bookingID"] = newBookingID
+        print(formData)
+        db.Bookings.insert_one(formData)
         
     except Exception as e:
         print(e)
@@ -133,8 +137,8 @@ def get_booking(bookingID) :
 def edit_booking(bookingID) :
     try : 
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
-            print(bookingID, request.form.to_dict(), "Test6")
-            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.form.to_dict()})
+            print(bookingID, request.get_json(), "Test6")
+            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.get_json()})
             
         # else:
         #     return {"err": "Unauthorised Access"}, 401
