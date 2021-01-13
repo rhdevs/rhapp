@@ -52,10 +52,10 @@ If true return JWT to client, else return 500.
 @app.route('/auth/login', methods=['POST'])
 def login():
     req = request.get_json()
-    username = req['username']
+    username = req['userID']
     passwordHash = req['passwordHash']
     #authenticate the credentials
-    if db.User.find({'userID': { "$in": username}, 'passwordHash': { "$in": username}}).count() == 0:
+    if db.User.find({'userID': { "$in": username}, 'passwordHash': { "$in": passwordHash}}).count() == 0:
         return jsonify({'message': 'Invalid credentials'}), 403
     #generate JWT
     token = jwt.encode({'user': req.username,
