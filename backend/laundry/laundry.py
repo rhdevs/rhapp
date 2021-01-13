@@ -18,14 +18,14 @@ client = MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.
 db = client.RHApp
 
 @app.route('/', methods = ['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def home_page(): 
     # landing page 
     # return make_response(render_template("index.html"), 200);
     return make_response("Laundry API", 200);
 
 @app.route('/location', methods = ['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def all_location():
     try : 
         all_location = db.LaundryLocation.find();
@@ -34,7 +34,7 @@ def all_location():
         return make_response({"err" : str(e)}, 400)
 
 @app.route('/location/<int:block_num>', methods = ['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def location(block_num):
     try : 
         block_info = dumps(db.LaundryLocation.find({'block' : block_num})) 
@@ -43,7 +43,7 @@ def location(block_num):
         return make_response({"err" : str(e)}, 400)
 
 @app.route('/laundry/machine', methods = ['GET', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def laundry_by_location():
     try :
         job = request.args.get('job')
@@ -72,11 +72,11 @@ def laundry_by_location():
                 return make_response(dumps(db.LaundryMachine.find()), 200)
             
         elif request.method == 'POST':
-            form = request.form 
+            data = request.get_json()          
             # it is possible to change into JSON format, using request.json to check 
-            job = str(form.get("job"))
-            machineID = str(form.get("machineID"))
-            userID = str(form.get("userID"))
+            job = str(data.get("job"))
+            machineID = str(data.get("machineID"))
+            userID = str(data.get("userID"))
 
             myquery = {
                 'machineID' : machineID
@@ -212,7 +212,7 @@ def laundry_by_location():
         return {"err" : str(e)}, 400
      
 @app.route('/laundry/machine/editDuration', methods = ['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def change_duration():
     try : 
         form = request.form 
@@ -241,7 +241,7 @@ def change_duration():
         return {"err" : str(e)}, 400
     
 @app.route('/laundry/job', methods = ['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def laundry_machine_by_job():
     try :
         machineID = request.args.get('machineID')
