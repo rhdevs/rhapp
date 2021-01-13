@@ -64,7 +64,7 @@ export default function Profile() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Profile'} />
+        <TopNavBar title={'Profile'} leftIcon={true} />
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (

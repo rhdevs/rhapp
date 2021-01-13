@@ -6,12 +6,14 @@ import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
+import catIcon from '../../../assets/catMagnifyGlass.svg'
 import {
   getMyBookings,
   setIsDeleteMyBooking,
   deleteMyBooking,
   editMyBooking,
   SetIsLoading,
+  setSelectedBooking,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
@@ -96,23 +98,26 @@ export default function ViewMyBookings() {
         {isLoading && <LoadingSpin />}
         {!isLoading && (
           <>
-            {myBookings.map((event) => (
-              <BookingCard
-                key={event.eventName}
-                onClick={() => {
-                  // view booking
-                }}
-              >
+            {myBookings?.map((event) => (
+              <BookingCard key={event.eventName}>
                 <BookingAvatar src={dummyAvatar} />
-                <BookingLabels>
+                <BookingLabels
+                  onClick={() => {
+                    history.push('/facility/booking/view/' + event.bookingID)
+                    dispatch(setSelectedBooking(event.bookingID))
+                  }}
+                >
                   <BookingHeader>{event.eventName}</BookingHeader>
                   <BookingSubHeader>
                     {event.ccaID}: {event.facilityID}
                   </BookingSubHeader>
                   <BookingTime>
-                    <b>{event.startTime.toDateString()}</b> <br />
-                    {event.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to{' '}
-                    {event.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <b>{new Date(event.startTime * 1000).toDateString()}</b> <br />
+                    {new Date(event.startTime * 1000).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}{' '}
+                    to {new Date(event.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </BookingTime>
                 </BookingLabels>
                 <RightActionGroups>
@@ -137,6 +142,11 @@ export default function ViewMyBookings() {
                 )}
               </BookingCard>
             ))}
+            {myBookings?.length === 0 && !myBookings && (
+              <div>
+                <img src={catIcon} /> <h1>You have no Bookings yet!</h1>
+              </div>
+            )}
           </>
         )}
       </MainContainer>
