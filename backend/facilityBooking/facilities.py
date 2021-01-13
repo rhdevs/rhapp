@@ -94,8 +94,9 @@ def add_booking() :
     try:
         print("Testing 2")
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
-        formData = request.form.to_dict()
+        formData = request.get_json()
 
+        print("Check point 1")
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
@@ -133,8 +134,8 @@ def get_booking(bookingID) :
 def edit_booking(bookingID) :
     try : 
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
-            print(bookingID, request.form.to_dict(), "Test6")
-            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.form.to_dict()})
+            print(bookingID, request.get_json(), "Test6")
+            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.get_json()})
             
         # else:
         #     return {"err": "Unauthorised Access"}, 401
