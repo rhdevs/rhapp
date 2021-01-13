@@ -99,17 +99,21 @@ def add_booking() :
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
-        formData["bookingID"] = int(formData["bookingID"])
         formData["facilityID"] = int(formData["facilityID"])
         formData["ccaID"] = int(formData["ccaID"])
 
         if (formData["endTime"] < formData["startTime"]) :
             raise Exception("End time eariler than start time")    
         # else:
-        #     return {"err": "Unauthorised Access"}, 401    
-        
-        print(formData["startTime"], " test4")
-        db.Bookings.insert(formData)
+        #     return {"err": "Unauthorised Access"}, 401
+
+        lastbookingID = list(db.Bookings.find().sort([('_id', pymongo.DESCENDING)]).limit(1))[0]
+
+        newBookingID = 1 if lastbookingID is None else int(lastbookingID.get("bookingID")) + 1
+
+        formData["bookingID"] = newBookingID
+        print(formData)
+        db.Bookings.insert_one(formData)
         
     except Exception as e:
         print(e)
