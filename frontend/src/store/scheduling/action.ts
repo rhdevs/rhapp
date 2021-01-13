@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { eventsDummy, userEventsDummy, dummyNusModsLink } from '../stubs'
+import { eventsDummy, userEventsDummy, dummyNusModsLink, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -44,14 +44,14 @@ const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => 
 }
 
 export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   dispatch({
     type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
     hallEventTypes: getHallEventTypesStub,
   })
 }
 
-const sortEvents = (events: RHEvent[]) => {
+const sortEvents = (events: UserEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
@@ -373,4 +373,4 @@ export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, g
 
 export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
-
+}

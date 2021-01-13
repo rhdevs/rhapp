@@ -80,8 +80,7 @@ export enum SCHEDULING_ACTIONS {
 
 /** Actions */
 
-
-type getHallEventTypes = {
+type GetHallEventTypes = {
   type: typeof SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES
   hallEventTypes: string[]
 }
@@ -173,5 +172,5 @@ export type ActionTypes =
   | GetShareSearchResults
   | SetIsLoading
   | GetSearchedEvents
-  | getHallEventTypes
+  | GetHallEventTypes
   | SetHallEventType

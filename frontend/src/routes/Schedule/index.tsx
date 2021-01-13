@@ -15,7 +15,7 @@ import { fetchUserEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
-import SearchBar from '../../components/Mobile/SearchBar'
+// import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -111,18 +111,18 @@ export default function Schedule() {
     />
   )
 
-  const [searchFriendsValue, setSearchFriendsValue] = useState('')
-  const [searchGroupValue, setSearchGroupValue] = useState('')
+  // const [searchFriendsValue, setSearchFriendsValue] = useState('')
+  // const [searchGroupValue, setSearchGroupValue] = useState('')
 
-  const friendsOnChange = (input: string) => {
-    setSearchFriendsValue(input)
-    console.log(searchFriendsValue)
-  }
+  // const friendsOnChange = (input: string) => {
+  //   setSearchFriendsValue(input)
+  //   console.log(searchFriendsValue)
+  // }
 
-  const groupOnChange = (input: string) => {
-    setSearchGroupValue(input)
-    console.log(searchGroupValue)
-  }
+  // const groupOnChange = (input: string) => {
+  //   setSearchGroupValue(input)
+  //   console.log(searchGroupValue)
+  // }
 
   return (
     <Background>

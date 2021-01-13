@@ -91,6 +91,8 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         searchedEvents: action.searchedEvents,
+      }
+    }
     case SCHEDULING_ACTIONS.SET_EVENT_NAME: {
       return {
         ...state,
