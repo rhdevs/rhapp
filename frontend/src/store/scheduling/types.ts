@@ -34,17 +34,27 @@ export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_
 //   weeks: number[]
 // }
 
-export type UserEvent = {
+export type TimetableEvent = {
+  eventID: number
   eventName: string
+  startTime: string
+  endTime: string
   location: string
   day: string
-  date: string | null
-  endTime: string
-  startTime: string
   hasOverlap: boolean
-  eventType?: string
-  eventID: number
 }
+
+// export type UserEvent = {
+//   eventID: number
+//   eventName: string
+//   startTime: string
+//   endTime: string
+//   location: string
+//   day: string
+//   date: string | null
+//   hasOverlap: boolean
+//   eventType?: string
+// }
 
 export type SchedulingEvent = {
   eventID: number
@@ -87,15 +97,15 @@ type GetHallEventTypes = {
 
 type GetUserEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
-  userEvents: UserEvent[][][]
+  userEvents: TimetableEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
-  userEventsList: UserEvent[]
+  userEventsList: SchedulingEvent[]
 }
 
 type EditUserEvents = {
   type: typeof SCHEDULING_ACTIONS.EDIT_USER_EVENTS
-  newUserEvents: UserEvent[]
+  newUserEvents: TimetableEvent[]
 }
 
 type SetUserNusModsLink = {
@@ -105,7 +115,7 @@ type SetUserNusModsLink = {
 
 type GetNusModsEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS
-  userNusModsEvents: UserEvent[]
+  userNusModsEvents: TimetableEvent[]
 }
 
 type GetSearchedEvents = {

@@ -1,106 +1,71 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { useSelector } from 'react-redux'
-import { eventsDummy, userEventsDummy, dummyNusModsLink, getHallEventTypesStub } from '../stubs'
-import { Dispatch, GetState, RootState } from '../types'
+import { eventsDummy, userEventsDummy, getHallEventTypesStub } from '../stubs'
+import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
-  UserEvent,
   SchedulingEvent,
   SCHEDULING_ACTIONS,
   LESSON_TO_ABBREV,
   ABBREV_TO_LESSON,
+  TimetableEvent,
 } from './types'
+import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 
-export const fetchUserEvents = () => (dispatch: Dispatch<ActionTypes>) => {
+export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const fetchedData = userEventsDummy
-  const formattedEvents: UserEvent[] = transformScheduleTypeToRhEvent(fetchedData)
+  // const fetchedData = userEventsDummy
+  const fetchedData = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_EVENTS, {
+    method: 'GET',
+    mode: 'cors',
+  }).then((resp) => {
+    return resp.json()
+  })
+
+  const timetableFormatEvents: TimetableEvent[] = fetchedData.map((singleEvent) => {
+    return convertSchedulingEventToTimetableEvent(singleEvent)
+  })
 
   dispatch({
     type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-    userEvents: transformInformationToTimetableFormat(formattedEvents),
-    userEventsStartTime: Number(getTimetableStartTime(formattedEvents)),
-    userEventsEndTime: Number(getTimetableEndTime(formattedEvents)),
-    userEventsList: formattedEvents,
+    userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
+    userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
+    userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
+    userEventsList: fetchedData,
   })
   dispatch(setIsLoading(false))
 }
 
-const transformScheduleTypeToRhEvent = (scheduleTypeData: SchedulingEvent[]) => {
-  const formattedEvents: UserEvent[] = []
-  scheduleTypeData.forEach((data) => {
-    formattedEvents.push({
-      eventID: data.eventID,
-      eventName: data.eventName,
-      location: data.location,
-      day: getDayStringFromUNIX(data.startDateTime),
-      date: getDate(data.startDateTime),
-      endTime: getTimeStringFromUNIX(data.endDateTime),
-      startTime: getTimeStringFromUNIX(data.startDateTime),
-      hasOverlap: false,
-    })
-  })
-  return formattedEvents
+const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
+  return {
+    eventID: singleEvent.eventID,
+    eventName: singleEvent.eventName,
+    startTime: getTimeStringFromUNIX(singleEvent.startDateTime),
+    endTime: getTimeStringFromUNIX(singleEvent.endDateTime),
+    location: singleEvent.location,
+    day: getDayStringFromUNIX(singleEvent.startDateTime),
+    hasOverlap: false,
+  }
 }
 
-export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
-    hallEventTypes: getHallEventTypesStub,
-  })
-}
-
-const sortEvents = (events: UserEvent[]) => {
+const sortEvents = (events: TimetableEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
 }
 
-const getDate = (unixDate: number) => {
-  const date = new Date(unixDate * 1000).getDate()
-  return String(date)
-}
-
-const getTimetableStartTime = (formattedEvents: UserEvent[]) => {
+const getTimetableStartTime = (formattedEvents: TimetableEvent[]) => {
   const sortedEvents = sortEvents(formattedEvents)
   return sortedEvents[0]?.startTime
 }
 
-const getTimetableEndTime = (formattedEvents: UserEvent[]) => {
-  const sortByEndTime = (events: UserEvent[]) => {
+const getTimetableEndTime = (formattedEvents: TimetableEvent[]) => {
+  const sortByEndTime = (events: TimetableEvent[]) => {
     return events.sort((a, b) => {
       return b.endTime.localeCompare(a.endTime)
     })
   }
   return sortByEndTime(formattedEvents)[0].endTime
-}
-
-/**
- * Returns a 2d array containing arrays of respective days filled with UserEvents
- * [
- *    [Monday events],
- *    [Tuesday events], ..
- * ]
- *
- * @param formattedEvents events in UserEvent format (transformed from data retrieved from backend)
- */
-const splitEventsByDay = (formattedEvents: UserEvent[]) => {
-  const dayArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  const eventsArr: UserEvent[][] = []
-  dayArr.map((day, index) => {
-    eventsArr[index] = formattedEvents.filter((indivEvent) => {
-      return indivEvent.day === day
-    })
-  })
-  return eventsArr
-}
-
-const arrangeEventsForWeek = (eventsArr: UserEvent[][]) => {
-  return eventsArr.map((dayArr) => {
-    return arrangeEventsWithinDay(dayArr)
-  })
 }
 
 /**
@@ -116,12 +81,38 @@ const arrangeEventsForWeek = (eventsArr: UserEvent[][]) => {
  *    ], ..
  * ]
  *
- * @param formattedEvents events in UserEvent format (transformed from data retrieved from backend)
+ * @param formattedEvents events in TimetableEvent format (transformed from data retrieved from backend)
  */
-const transformInformationToTimetableFormat = (formattedEvents: UserEvent[]) => {
+const transformInformationToTimetableFormat = (formattedEvents: TimetableEvent[]) => {
   const eventsArr = splitEventsByDay(formattedEvents)
   const transformedEventsArr = arrangeEventsForWeek(eventsArr)
   return transformedEventsArr
+}
+
+/**
+ * Returns a 2d array containing arrays of respective days filled with UserEvents
+ * [
+ *    [Monday events],
+ *    [Tuesday events], ..
+ * ]
+ *
+ * @param formattedEvents events in UserEvent format (transformed from data retrieved from backend)
+ */
+const splitEventsByDay = (formattedEvents: TimetableEvent[]) => {
+  const dayArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  const eventsArr: TimetableEvent[][] = []
+  dayArr.map((day, index) => {
+    eventsArr[index] = formattedEvents.filter((indivEvent) => {
+      return indivEvent.day === day
+    })
+  })
+  return eventsArr
+}
+
+const arrangeEventsForWeek = (eventsArr: TimetableEvent[][]) => {
+  return eventsArr.map((dayArr) => {
+    return arrangeEventsWithinDay(dayArr)
+  })
 }
 
 /**
@@ -135,17 +126,17 @@ const transformInformationToTimetableFormat = (formattedEvents: UserEvent[]) => 
  *
  * @param events array of events for a specific day
  */
-const arrangeEventsWithinDay = (events: UserEvent[]) => {
-  const rows: UserEvent[][] = []
+const arrangeEventsWithinDay = (events: TimetableEvent[]) => {
+  const rows: TimetableEvent[][] = []
   if (isEmpty(events)) {
     return rows
   }
 
   const sortedEvents = sortEvents(events)
 
-  sortedEvents.forEach((event: UserEvent) => {
+  sortedEvents.forEach((event: TimetableEvent) => {
     for (let i = 0; i < rows.length; i++) {
-      const rowEvents: UserEvent[] = rows[i]
+      const rowEvents: TimetableEvent[] = rows[i]
       const previousEvents = last(rowEvents)
       if (!previousEvents || !doEventsOverlap(previousEvents, event)) {
         rowEvents.push(event)
@@ -161,7 +152,7 @@ const arrangeEventsWithinDay = (events: UserEvent[]) => {
 }
 
 // Determines if two events overlap
-const doEventsOverlap = (event1: UserEvent, event2: UserEvent) => {
+const doEventsOverlap = (event1: TimetableEvent, event2: TimetableEvent) => {
   return event1.day === event2.day && event1.startTime < event2.endTime && event2.startTime < event1.endTime
 }
 
@@ -197,57 +188,7 @@ const getTimeStringFromUNIX = (unixDate: number) => {
   return formattedTime
 }
 
-export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
-  // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
-  //     shareSearchResults: results,
-  //   })
-  // })
-  dispatch(setIsLoading(false))
-}
-
-export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { isLoading } = getState().scheduling
-  dispatch({ type: SCHEDULING_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
-}
-
-export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
-  // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SEARCH_EVENTS).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
-  //     searchedEvents: results,
-  //   })
-  // })
-  dispatch(setIsLoading(false))
-}
-
-//send userId and eventId to backend
-export const editUserEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
-  const fetchedUserData = transformScheduleTypeToRhEvent(userEventsDummy)
-  const fetchedEventsData = transformScheduleTypeToRhEvent(eventsDummy)
-  let newUserEvents: UserEvent[] = []
-
-  if (action === 'remove') {
-    newUserEvents = fetchedUserData.filter((userEvent) => {
-      return userEvent.eventName !== selectedEventName
-    })
-    console.log(newUserEvents)
-  } else if (action === 'add') {
-    newUserEvents = fetchedUserData.concat(
-      fetchedEventsData.filter((event) => {
-        return event.eventName === selectedEventName
-      }),
-    )
-    console.log(newUserEvents)
-  }
-  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
-}
-
+// ---------------------- NUSMODS ----------------------
 export const setUserNusModsLink = (userNusModsLink: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK, userNusModsLink: userNusModsLink })
   console.log(userNusModsLink)
@@ -263,8 +204,8 @@ export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>
   // const userNusModsLink = dummyNusModsLink //fetch link *include validation!
 
   const dataFromLink = extractDataFromLink(userNusModsLink)
-  let retrivedEventInformation: UserEvent[] = []
-  const temporaryData: UserEvent[][] = []
+  let retrivedEventInformation: TimetableEvent[] = []
+  const temporaryData: TimetableEvent[][] = []
 
   dataFromLink.map(async (oneModuleData) => {
     temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
@@ -319,7 +260,7 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
   const returnEventsArray = await axios
     .get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`)
     .then((res) => {
-      const events: UserEvent[] = []
+      const events: TimetableEvent[] = []
       const moduleData = res.data.semesterData[0].timetable
       moduleArray = moduleArray.splice(1)
       for (let i = 0; i < moduleArray.length; i++) {
@@ -331,15 +272,13 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
           },
         )
         correspondingClassInformationArray.map((classInformation) => {
-          const newEvent: UserEvent = {
+          const newEvent: TimetableEvent = {
             eventName: moduleCode + ' ' + LESSON_TO_ABBREV[classInformation.lessonType],
             location: classInformation.venue,
             day: classInformation.day,
-            date: null,
             endTime: classInformation.endTime,
             startTime: classInformation.startTime,
             hasOverlap: false,
-            eventType: 'private',
             eventID: 1,
           }
           events.push(newEvent)
@@ -350,7 +289,63 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
 
   return returnEventsArray
 }
+// ---------------------- NUSMODS ----------------------
 
+// ---------------------- SHARE SEARCH ----------------------
+export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch)
+  // Uncomment when endpoint for share search is obtained from backend
+  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
+  //   dispatch({
+  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+  //     shareSearchResults: results,
+  //   })
+  // })
+  dispatch(setIsLoading(false))
+}
+// ---------------------- SHARE SEARCH ----------------------
+
+// ---------------------- SEARCH EVENTS ----------------------
+export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(query, dispatch)
+  // Uncomment when endpoint for share search is obtained from backend
+  // get(ENDPOINTS.SEARCH_EVENTS).then((results) => {
+  //   dispatch({
+  //     type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
+  //     searchedEvents: results,
+  //   })
+  // })
+  dispatch(setIsLoading(false))
+}
+
+//send userId and eventId to backend
+export const editUserEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const fetchedUserData = userEventsDummy.map((userEvent) => {
+    return convertSchedulingEventToTimetableEvent(userEvent)
+  })
+  const fetchedEventsData = eventsDummy.map((event) => {
+    return convertSchedulingEventToTimetableEvent(event)
+  })
+  let newUserEvents: TimetableEvent[] = []
+
+  if (action === 'remove') {
+    newUserEvents = fetchedUserData.filter((userEvent) => {
+      return userEvent.eventName !== selectedEventName
+    })
+    console.log(newUserEvents)
+  } else if (action === 'add') {
+    newUserEvents = fetchedUserData.concat(
+      fetchedEventsData.filter((event) => {
+        return event.eventName === selectedEventName
+      }),
+    )
+    console.log(newUserEvents)
+  }
+  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
+}
+// ---------------------- SEARCH EVENTS ----------------------
+
+// ---------------------- CREATE EVENTS ----------------------
 export const editEventName = (newEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_NAME, newEventName: newEventName })
 }
@@ -382,4 +377,18 @@ export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, g
 
 export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
+}
+// ---------------------- CREATE EVENTS ----------------------
+
+export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
+    hallEventTypes: getHallEventTypesStub,
+  })
+}
+
+export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { isLoading } = getState().scheduling
+  dispatch({ type: SCHEDULING_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
 }

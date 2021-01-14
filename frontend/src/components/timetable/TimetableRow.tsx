@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import EventCell from './EventCell'
-import { UserEvent } from '../../store/scheduling/types'
+import { TimetableEvent } from '../../store/scheduling/types'
 
 const TimetableRowContainer = styled.li`
   position: relative;
@@ -48,7 +48,7 @@ const ChildrenContainer = styled.div`
 type Props = {
   oneHourWidth: string
   oneDayMinHeight: string
-  events: UserEvent[][]
+  events: TimetableEvent[][]
   timetableStartTime: number
   timetableEndTime: number
   day: string
