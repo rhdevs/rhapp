@@ -147,7 +147,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         }}
       >
         <Header style={{ color: cardPrimaryColor }}>{props.washingMachine.job}</Header>
-        <SubHeader style={{ color: cardPrimaryColor }}>S/N{props.washingMachine.machineID}</SubHeader>
+        <SubHeader style={{ color: cardPrimaryColor }}>
+          S/N{props.washingMachine.machineID} ({props.washingMachine.capacity} kg)
+        </SubHeader>
       </Labels>
       <RightActionGroups onClick={rightAction}>
         <ActionButton
