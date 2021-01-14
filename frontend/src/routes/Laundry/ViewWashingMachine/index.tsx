@@ -12,7 +12,7 @@ import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetEditMode, SetFilteredMachines, updateMachine } from '../../../store/laundry/action'
+import { SetEditMode, updateMachine } from '../../../store/laundry/action'
 
 const MainContainer = styled.div`
   width: 100%;
