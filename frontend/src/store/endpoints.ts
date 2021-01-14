@@ -46,6 +46,12 @@ export enum DOMAINS {
   LAUNDRY = 'laundry',
 }
 
+export enum DOMAIN_URL {
+  FACILITY = 'https://rhappfacilities.rhdevs.repl.co',
+  EVENT = 'https://rhappevents.rhdevs.repl.co',
+  LAUNDRY = 'https://rhapplaundry.rhdevs.repl.co',
+}
+
 async function makeRequest(
   url: string,
   domain: DOMAINS,
@@ -65,15 +71,16 @@ async function makeRequest(
       DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
       break
   }
-
+  console.log(DOMAIN_URL + url)
   return axios({
-    method,
+    method: method,
     url: DOMAIN_URL + url,
     headers: {
+      'Access-Control-Allow-Origin': '*',
       ...additionalHeaders,
     },
     data: requestBody,
-    withCredentials: true,
+    // withCredentials: true,
     validateStatus: (status) => {
       if (status >= 200 && status < 400) {
         return true

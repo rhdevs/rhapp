@@ -2,16 +2,18 @@ import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
 import { User } from './profile/types'
 import { SearchResult } from './types'
+import { SchedulingEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
- * 3. userRhEvents
- * 4. Washing Machines
- * 5. Events
- * 6. Search Results
- * 7. User
+ * 3. userEvents
+ * 4. EventsList
+ * 5. Washing Machines
+ * 6. Events
+ * 7. Search Results
+ * 8. NUSModsLink
  */
 
 export const facilityListStub: Facility[] = [
@@ -21,6 +23,8 @@ export const facilityListStub: Facility[] = [
   { facilityID: 225, facilityName: 'Hard Court', facilityLocation: 'Block 5' },
 ]
 
+export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Training', 'IHG']
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
@@ -28,8 +32,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2020-12-15 12:00:00'),
-    endTime: new Date('2020-12-15 14:00:00'),
+    startTime: new Date('2020-12-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-12-15 14:00:00').getTime() / 1000,
     description: 'My Backup Location',
   },
   {
@@ -38,8 +42,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2020-01-15 12:00:00'),
-    endTime: new Date('2020-01-15 14:00:00'),
+    startTime: new Date('2020-01-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-01-15 14:00:00').getTime() / 1000,
     description: 'Pls dont steal from me',
   },
   {
@@ -48,22 +52,22 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2020-02-15 12:00:00'),
-    endTime: new Date('2020-02-15 14:00:00'),
+    startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
+    endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
   },
 ]
 
-export const userRhEventsDummy = [
+export const userEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -74,7 +78,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'upper lounge',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -85,7 +89,7 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
   {
@@ -96,7 +100,54 @@ export const userRhEventsDummy = [
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
-    userID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+]
+
+export const eventsDummy: SchedulingEvent[] = [
+  {
+    eventID: 1,
+    eventName: 'Block 7 Christmas Event',
+    startDateTime: 1607418000,
+    endDateTime: 1607428800,
+    description: 'Only for block 7 members! Follow us @block7 to find out more!',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'New YeaRH Event',
+    startDateTime: 1608654852,
+    endDateTime: 1608658452,
+    description: 'nothing',
+    location: 'Comm Hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'RHdev bonding camp',
+    startDateTime: 1607342400,
+    endDateTime: 1607349600,
+    description: 'nothing',
+    location: 'upper lounge',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'dummy event',
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
+    description: 'description description description description description description',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
     image: null,
   },
 ]
@@ -194,6 +245,10 @@ export const searchResultsStub: SearchResult[] = [
     title: 'Bob',
     description: 'Hello my name is Bob',
   },
+  {
+    id: 3,
+    title: 'Bob',
+  },
 ]
 
 export const userProfileStub: User = {
@@ -211,3 +266,6 @@ export const userProfileStub: User = {
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
   posts: [],
 }
+
+export const dummyNusModsLink =
+  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'

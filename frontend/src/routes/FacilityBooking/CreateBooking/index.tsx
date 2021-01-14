@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input } from 'antd'
+import { AutoComplete, Input } from 'antd'
 import { DatePicker } from 'antd-mobile'
 import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
@@ -18,8 +18,11 @@ import {
   editBookingFromDate,
   editBookingName,
   editBookingToDate,
+  fetchAllCCAs,
+  getFacilityList,
   handleCreateBooking,
   SetIsLoading,
+  setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -73,17 +76,24 @@ export default function CreateBooking() {
     newBookingCCA,
     newBookingDescription,
     newBookingFacilityName,
+    selectedFacility,
+    facilityList,
     isLoading,
+    ccaList,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
     if (newBooking) {
-      dispatch(editBookingFromDate(newBooking.startTime))
-      dispatch(editBookingToDate(newBooking.endTime))
+      dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
+      dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
       dispatch(editBookingDescription(newBooking.description))
       dispatch(editBookingName(newBooking.eventName))
       dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
+    }
+    dispatch(fetchAllCCAs())
+    if (facilityList.length === 0) {
+      dispatch(getFacilityList())
     }
   }, [dispatch])
 
@@ -118,9 +128,20 @@ export default function CreateBooking() {
     dispatch(editBookingDescription(description))
   }
 
+  const setFacility = (newFacilityName: string) => {
+    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
+    if (newSelectedFacilityId) {
+      dispatch(setSelectedFacility(newSelectedFacilityId))
+    }
+  }
+
   const toCustomDateFormat = (date: Date) => {
     return `${dayjs(date).format('ddd, MMM D, YYYY, h:mm A')}`
   }
+
+  const locationOptions = facilityList.map((facility) => ({
+    value: facility.facilityName,
+  }))
 
   return (
     <div>
@@ -128,7 +149,14 @@ export default function CreateBooking() {
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          <StyledTitle>{newBookingFacilityName}</StyledTitle>
+          <AutoComplete
+            style={{ width: '50%', marginBottom: '23px' }}
+            options={locationOptions}
+            value={selectedFacility?.facilityName}
+            placeholder="Location"
+            onChange={(newFacilityName) => setFacility(newFacilityName)}
+            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+          />
           <StyledInput
             placeholder="Event Name"
             value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
@@ -153,7 +181,21 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
-          <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
+          <div style={{ width: '100%', margin: '10px 0px' }}>
+            <StyledTitle>CCA</StyledTitle>
+            <AutoComplete
+              style={{ width: '100%' }}
+              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                value: cca.ccaName,
+              }))}
+              value={newBookingCCA}
+              placeholder="Select your CCA, else select Personal"
+              onChange={(value) => setCca(value)}
+              filterOption={(inputValue, option) =>
+                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
+            />
+          </div>
           <InputRow
             title="Description"
             placeholder="Tell us what your booking is for!"
