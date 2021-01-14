@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine } from './types'
+import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
@@ -96,11 +96,57 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 }
 
 export const SetSelectedMachine = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {
-  console.log(selectedMachine)
   dispatch({ type: LAUNDRY_ACTIONS.SET_SELECTED_MACHINE, selectedMachine: selectedMachine })
 }
 
 export const SetEditMode = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isEdit } = getState().laundry
   dispatch({ type: LAUNDRY_ACTIONS.SET_EDIT_MODE, isEdit: !isEdit })
+}
+
+export const getUserProfilePic = (machineID: string) => {
+  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_JOB + '?machineID=' + machineID, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + data.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data)
+          return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
+          // TODO: remove hardcoded
+        })
+    })
+  return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
+}
+
+export const updateMachine = (updatedState: string, machineID: string) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { filteredMachines } = getState().laundry
+  const queryBody: { job: string; machineID: string; userID: string } = {
+    job: updatedState,
+    machineID: machineID,
+    userID: '1', //TODO: Update userId
+  }
+  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify(queryBody),
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(data)
+    })
+
+  filteredMachines.forEach((machine) => {
+    if (machine.machineID === machineID) machine.job = updatedState as WMStatus
+  })
+  dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }

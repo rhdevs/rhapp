@@ -5,6 +5,8 @@ export enum ENDPOINTS {
   MOCK_ENDPOINT = 'this/is/fake/endpoint',
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
+  USER = '/user',
+  USER_PROFILE = '/profile',
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
@@ -16,6 +18,7 @@ export enum ENDPOINTS {
   // LAUNDRY
   MACHINE_LIST = '/location',
   LAUNDRY_MACHINE = '/laundry/machine',
+  UPDATE_MACHINE = '/location/machine',
   LAUNDRY_JOB = '/laundry/job',
 
   // SCHEDULING

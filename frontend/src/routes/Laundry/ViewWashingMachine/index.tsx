@@ -6,13 +6,13 @@ import 'antd/dist/antd.css'
 import Button from '../../../components/Mobile/Button'
 import { Slider } from 'antd'
 import { WashingMachine, WMStatus } from '../../../store/laundry/types'
-import washingMachineInUse from '../../../assets/washing-machines/washingmachine-inuse.gif'
+import wm_inuse from '../../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetEditMode } from '../../../store/laundry/action'
+import { SetEditMode, SetFilteredMachines, updateMachine } from '../../../store/laundry/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -114,8 +114,8 @@ export default function ViewWashingMachine() {
         break
       case WMStatus.INUSE:
         subtitle = timeLeftGroup
-        pageTitle = 'In Use'
-        imagesrc = washingMachineInUse
+        pageTitle = isEdit ? 'Update Duration' : 'In Use'
+        imagesrc = wm_inuse
         break
       case WMStatus.COMPLETED:
         pageTitle = 'Collect Laundry'
@@ -143,6 +143,9 @@ export default function ViewWashingMachine() {
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
+            onButtonClick={() => {
+              dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+            }}
           />
         )
         break
@@ -190,6 +193,7 @@ export default function ViewWashingMachine() {
               if (isEdit) {
                 dispatch(SetEditMode())
               } else {
+                dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
               }
             }}
           />
@@ -198,13 +202,32 @@ export default function ViewWashingMachine() {
     } else if (machine?.job === WMStatus.INUSE) {
       return (
         <UseWashingMachineSection>
+          {isEdit && (
+            <StyledSlider
+              min={1}
+              max={120}
+              tooltipVisible
+              // onChange={onChange}
+              // value={typeof time.inputValue === 'number' ? time.inputValue : 0}
+              defaultValue={30}
+              trackStyle={{ backgroundColor: '#023666' }}
+              handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
+            />
+          )}
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={'Stop Washing'}
+            defaultButtonDescription={isEdit ? 'Update Duration' : 'Stop Washing'}
             defaultButtonColor="#DE5F4C"
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
+            onButtonClick={() => {
+              if (isEdit) {
+                dispatch(SetEditMode())
+              } else {
+                dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              }
+            }}
           />
         </UseWashingMachineSection>
       )

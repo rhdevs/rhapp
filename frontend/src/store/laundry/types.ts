@@ -4,6 +4,7 @@ export enum WMStatus {
   UNCOLLECTED = 'Uncollected',
   COMPLETED = 'Completed',
   RESERVED = 'Reserved',
+  ALERTED = 'Alerted',
 }
 export type WashingMachine = {
   machineID: string

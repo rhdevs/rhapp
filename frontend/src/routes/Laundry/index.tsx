@@ -52,8 +52,7 @@ export default function LaundryMain() {
           )}
         </FilterGroup>
         {isLoading && <LoadingSpin />}
-        {filteredMachines === [] && <h2>Select Your Block and level!</h2>}
-        {selectedLevel === null && <h2>Select Your Block and level!</h2>}
+        {selectedLevel === null && selectedBlock !== 'Kuok' && <h2>Select Your Block and level!</h2>}
         {!isLoading &&
           filteredMachines.map((item: WashingMachine) => (
             <WashingMachineCard key={item.machineID} washingMachine={item} />
