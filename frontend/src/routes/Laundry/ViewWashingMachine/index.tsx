@@ -6,8 +6,13 @@ import 'antd/dist/antd.css'
 import Button from '../../../components/Mobile/Button'
 import { Slider } from 'antd'
 import { WashingMachine, WMStatus } from '../../../store/laundry/types'
-import washingMachineInUse from '../../../assets/washing-machines/washingmachine-inuse.gif'
-import { WashingMachineListStub } from '../../../store/stubs'
+import wm_inuse from '../../../assets/washing-machines/wm_inuse.gif'
+import wm_available from '../../../assets/washing-machines/wm_available.svg'
+import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
+import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
+import { RootState } from '../../../store/types'
+import { useDispatch, useSelector } from 'react-redux'
+import { SetDuration, SetEditMode, UpdateJobDuration, updateMachine } from '../../../store/laundry/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -82,12 +87,13 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const MachineDetails = (machine: WashingMachine) => {
+  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
+  const dispatch = useDispatch()
+  const MachineDetails = (machine: WashingMachine | null) => {
     let pageTitle = 'Laundry Time!'
     let actions = <></>
     let subtitle = <></>
-    const imagesrc = washingMachineInUse
-
+    let imagesrc = ''
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
@@ -97,21 +103,23 @@ export default function ViewWashingMachine() {
         <TimeUnit>
           <TimeLeftText> 59 </TimeLeftText> <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
-        <UnderLineButton>Edit</UnderLineButton>
+        {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
       </TimeLeft>
     )
-
-    switch (machine.job) {
+    switch (machine?.job) {
       case WMStatus.AVAIL:
         subtitle = <TimeLabel>{"It's Washy Time!"}</TimeLabel>
         pageTitle = 'Laundry Time'
+        imagesrc = wm_available
         break
       case WMStatus.INUSE:
         subtitle = timeLeftGroup
-        pageTitle = 'In Use'
+        pageTitle = isEdit ? 'Update Duration' : 'In Use'
+        imagesrc = wm_inuse
         break
       case WMStatus.COMPLETED:
         pageTitle = 'Collect Laundry'
+        imagesrc = wm_uncollected
         actions = (
           <Button
             hasSuccessMessage={false}
@@ -125,7 +133,8 @@ export default function ViewWashingMachine() {
         break
       case WMStatus.RESERVED:
         subtitle = timeLeftGroup
-        pageTitle = 'Reservation'
+        pageTitle = isEdit ? 'Edit Reservation' : 'Reservation'
+        imagesrc = wm_reserved
         actions = (
           <Button
             hasSuccessMessage={false}
@@ -134,20 +143,22 @@ export default function ViewWashingMachine() {
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
+            onButtonClick={() => {
+              dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+            }}
           />
         )
         break
     }
-
     return (
       <>
         <TopNavBar title={pageTitle} />
         <WashingMachineDetails>
-          <img src={imagesrc} style={{ width: '30%', height: '30%' }} />
+          <img src={imagesrc} style={{ width: '40%', height: '30%' }} />
           <WashingMachineActionGroup>
             <WashingMachineTitle>
-              S/N {machine.machineId}
-              <MachineSize>(70 litres)</MachineSize>
+              S/N {machine?.machineID}
+              <MachineSize>({machine?.capacity} kg)</MachineSize>
             </WashingMachineTitle>
             {subtitle}
             {actions}
@@ -157,43 +168,95 @@ export default function ViewWashingMachine() {
     )
   }
 
-  const UseWashineMachine = (machine: WashingMachine) => {
-    const editMode = false
-    if (machine.job === WMStatus.AVAIL || machine.job === WMStatus.RESERVED) {
-      // or In editmode
+  const UseWashineMachine = (machine: WashingMachine | null) => {
+    if (machine?.job === WMStatus.AVAIL || machine?.job === WMStatus.RESERVED) {
       return (
         <UseWashingMachineSection>
           <StyledSlider
             min={1}
-            max={120}
+            max={machine?.job === WMStatus.RESERVED && isEdit ? 15 : 120}
             tooltipVisible
-            // onChange={onChange}
-            // value={typeof time.inputValue === 'number' ? time.inputValue : 0}
-            defaultValue={30}
+            onChange={(value: number) => dispatch(SetDuration(value))}
+            value={duration}
             trackStyle={{ backgroundColor: '#023666' }}
             handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
           />
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={editMode ? 'Update Duration' : 'Use Washing Machine'}
+            defaultButtonDescription={isEdit ? 'Update Duration' : 'Use Washing Machine'}
             defaultButtonColor="#DE5F4C"
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
+            onButtonClick={() => {
+              if (isEdit) {
+                dispatch(SetEditMode())
+                dispatch(UpdateJobDuration(machine.machineID))
+              } else {
+                dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
+              }
+            }}
           />
+          {isEdit && (
+            <Button
+              style={{ marginLeft: '23px' }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Cancel'}
+              defaultButtonColor="#FAFAF4"
+              updatedButtonColor="#FAFAF4"
+              updatedTextColor="#000000"
+              onButtonClick={() => {
+                dispatch(SetEditMode())
+              }}
+            />
+          )}
         </UseWashingMachineSection>
       )
-    } else if (machine.job === WMStatus.INUSE) {
+    } else if (machine?.job === WMStatus.INUSE) {
       return (
         <UseWashingMachineSection>
+          {isEdit && (
+            <StyledSlider
+              min={1}
+              max={120}
+              tooltipVisible
+              onChange={(value: number) => dispatch(SetDuration(value))}
+              value={duration}
+              trackStyle={{ backgroundColor: '#023666' }}
+              handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
+            />
+          )}
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={'Stop Washing'}
+            defaultButtonDescription={isEdit ? 'Update Duration' : 'Stop Washing'}
             defaultButtonColor="#DE5F4C"
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
+            onButtonClick={() => {
+              if (isEdit) {
+                dispatch(SetEditMode())
+                dispatch(UpdateJobDuration(machine.machineID))
+              } else {
+                dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              }
+            }}
           />
+          {isEdit && (
+            <Button
+              style={{ marginLeft: '23px' }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Cancel'}
+              defaultButtonColor="#FAFAF4"
+              updatedButtonColor="#FAFAF4"
+              updatedTextColor="#000000"
+              onButtonClick={() => {
+                dispatch(SetEditMode())
+              }}
+            />
+          )}
         </UseWashingMachineSection>
       )
     }
@@ -201,8 +264,8 @@ export default function ViewWashingMachine() {
 
   return (
     <MainContainer>
-      {MachineDetails(WashingMachineListStub[1])}
-      {UseWashineMachine(WashingMachineListStub[1])}
+      {MachineDetails(selectedMachine)}
+      {UseWashineMachine(selectedMachine)}
       <BottomNavBar />
     </MainContainer>
   )

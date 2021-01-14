@@ -7,9 +7,10 @@ import { route } from './route/reducer'
 import { facilityBooking } from './facilityBooking/reducer'
 import { scheduling } from './scheduling/reducer'
 import { social } from './social/reducer'
+import { laundry } from './laundry/reducer'
 import { profile } from './profile/reducer'
 
-export const rootReducer = combineReducers({ home, route, facilityBooking, scheduling, social, profile })
+export const rootReducer = combineReducers({ home, route, facilityBooking, scheduling, social, profile, laundry })
 const middlewares = [thunk]
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(...middlewares)))
 

@@ -4,14 +4,12 @@ import { Space, Select } from 'antd'
 
 const { Option } = Select
 
-function handleChange(value: unknown) {
-  console.log(`selected ${value}`)
-}
-
 export default function DropDownSelector({
   SelectedValue,
   ValueArray,
+  handleChange,
 }: {
+  handleChange: (value: string) => void
   SelectedValue: string
   ValueArray: string[]
 }) {
