@@ -42,6 +42,47 @@ def location(block_num):
     except Exception as e :
         return make_response({"err" : str(e)}, 400)
 
+def SweepAll():
+    #function to do lazy deletion of all the laundry machines after 15 mins
+    #Also do lazy update when duration + starttime of laundry is finished, change from In Use --> Uncollected
+    #I assume since there are only 74 machines, sweeping 74 machines would be pretty fast for each call 
+    all_machines = db.LaundryMachine.find();
+    for machine in all_machines:
+        # print(machine.get('duration'));
+        startTime = 0 if machine.get('startTime') == None else machine.get('startTime');
+        expiryTime = startTime + int(machine.get('duration'))
+        currentTime = datetime.now().timestamp();
+        status = machine.get('job')
+
+        myquery = {
+                    'machineID' : machine.get("machineID")
+                }
+        
+        if(expiryTime > currentTime and status == "Reserved"):
+            try :
+                #reset the duration 
+                data_body = {'$set' : 
+                                    {'duration' : 0,
+                                     'job' : 'Available'}
+                            }
+                    
+                result = db.LaundryMachine.update_one(myquery, data_body)
+            except :
+                return make_response("Update " + str(machine.get("machineID")) + " failed", 400)        
+        elif (expiryTime > currentTime and status == "In Use"):
+            try :
+                #reset the duration 
+                data_body = {'$set' : 
+                                    {'duration' : 0,
+                                     'job' : 'Uncollected'}
+                            }
+                    
+                result = db.LaundryMachine.update_one(myquery, data_body)
+            except :
+                return make_response("Update " + str(machine.get("machineID")) + " failed", 400)  
+               
+    return True 
+    
 @app.route('/laundry/machine', methods = ['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def laundry_by_location():
@@ -51,7 +92,9 @@ def laundry_by_location():
             locationID = request.args.get('locationID')
             type = request.args.get('type')
             machineID = request.args.get('machineID')
-
+            print("Just Sweep : " + str(SweepAll())); 
+            #actually pretty not efficient, can optimize by lazily deleting and updating only those that wants to be returned 
+            
             if machineID :
                 laundry_info = dumps(db.LaundryMachine.find_one({'machineID' : machineID}))
                 return make_response(laundry_info, 200)
@@ -62,7 +105,6 @@ def laundry_by_location():
                 laundry_info = dumps(db.LaundryMachine.find({'job' : job, 'type' : type}))
                 return make_response(laundry_info, 200)
             elif type :
-                print(type)
                 laundry_info = dumps(db.LaundryMachine.find({'type' : type}))
                 return make_response(laundry_info, 200)
             elif job : 
@@ -72,21 +114,20 @@ def laundry_by_location():
                 return make_response(dumps(db.LaundryMachine.find()), 200)
             
         elif request.method == 'POST':
-     
             data = request.get_json()   
-           
             # it is possible to change into JSON format, using request.json to check 
             job = str(data.get("job"))
             machineID = str(data.get("machineID"))
             userID = str(data.get("userID"))
+            currentDuration = None if data.get('currentDuration') is None else int(data.get('currentDuration'))
       
             myquery = {
                 'machineID' : machineID
             }
+            
             currMachine = db.LaundryMachine.find_one({'machineID' : machineID})
 
             status = currMachine.get("job")
-            currentDuration = currMachine.get("duration")
             
             if status == "Available" and job == 'None':
                 # if status is Available, change the job to In Use 
@@ -98,6 +139,7 @@ def laundry_by_location():
                                 {'job' : "Reserved",
                                  'jobID' : newJobID,
                                  'userID' : userID,
+                                 'duration' : 15 * 60,  # fix to 15 minutes 
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -120,7 +162,7 @@ def laundry_by_location():
             elif status == "Broken" and (job != 'Available'):
                 raise Exception('From Broken, you can only make it to Available')
             
-            elif status in ["In Use", "Alerted"] and job == "Completed": 
+            elif status in ['Uncollected', 'Alerted'] and job == "Completed": 
                 jobID = db.LaundryMachine.find_one({'machineID' : machineID}).get("jobID")
                 data_body = {'$set' : 
                                 {'job' : "Available",
@@ -153,18 +195,18 @@ def laundry_by_location():
                 return make_response("Successfully change the machine to Broken", 200)
             
             elif status == "Reserved" and job == 'None':
-                if(int(currentDuration) == 0):
-                    return make_response("cannot start with duration 0", 400)
+                if(currentDuration == None or currentDuration == 0):
+                    return make_response("cannot start with duration 0 / Not supplied", 400)
                 
                 data_body = {'$set' : 
                                 {'job' : "In Use",
                                  'userID' : userID,
+                                 'duration' : currentDuration,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
                 jobID = db.LaundryMachine.find_one({'machineID' : machineID}).get("jobID")
                 result = db.LaundryMachine.update_one(myquery, data_body)
-                
                 jobUpdate = db.LaundryJob.update_one(
                     {'jobID' : int(jobID)},
                     {'$push' : {
@@ -175,12 +217,12 @@ def laundry_by_location():
    
                 return make_response("Successfully update job from Reserved to In Use", 200)
             
-            elif status in ["In Use", "Alerted"] and job == "Alerted":
+            elif status in ['Uncollected', 'Alerted'] and job == "Alerted":
                 # just update the database without creating new entry
                 data_body = {'$set' : 
                                 {'job' : job,
                                  'userID' : userID,
-                                'startTime' : datetime.now().timestamp()}
+                                }
                         }
                 
                 jobID = db.LaundryMachine.find_one({'machineID' : machineID}).get("jobID")
@@ -201,6 +243,7 @@ def laundry_by_location():
                 data_body = {'$set' : 
                                 {'job' : "Available",
                                  'userID' : '',
+                                 'duration' : 0,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -224,10 +267,10 @@ def laundry_by_location():
 @cross_origin(supports_credentials=True)
 def change_duration():
     try : 
-        form = request.form 
+        data = request.get_json() 
         # it is possible to change into JSON format, using request.json to check 
-        duration = int(form.get("duration"))
-        machineID = str(form.get("machineID"))
+        duration = int(data.get("duration"))
+        machineID = str(data.get("machineID"))
 
         myquery = {
             'machineID' : machineID
@@ -235,7 +278,7 @@ def change_duration():
         
         status = db.LaundryMachine.find_one({'machineID' : machineID}).get("job")
         
-        if status in ['Available', 'Reserved']:
+        if status in ['In Use']:
             data_body = {'$set' : 
                             {'duration' : duration}
                     }
@@ -245,7 +288,7 @@ def change_duration():
    
             return make_response("Successfully Update the duration", 200)
         else :
-            return make_response("Can only update duration when its Available or Reserved")
+            return make_response("Can only update duration when its In Use, cannot change Reserved Timing")
     except Exception as e :
         return {"err" : str(e)}, 400
     
@@ -272,4 +315,5 @@ def laundry_machine_by_job():
         return make_response({"err" : str(e)}, 400)
 
 if __name__ == "__main__":
+    # app.run(debug = True)
   app.run('0.0.0.0', port=8080)
