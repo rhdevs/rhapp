@@ -1,6 +1,7 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
+import { format } from 'date-fns'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -9,6 +10,11 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import { eventsDummy } from '../../../store/stubs'
+import { editUserEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -64,30 +70,98 @@ const testData: CurrentEvents[] = [
 
 export default function EventList({ currentEvents }: { currentEvents: CurrentEvents[] }) {
   const history = useHistory()
-  const data = currentEvents ?? testData
-  const [searchValue, setSearchValue] = useState('')
+  const dispatch = useDispatch()
 
-  const onChange = (input: string) => {
-    setSearchValue(input)
-    console.log(searchValue)
+  const data = currentEvents ?? testData
+
+  const [searchValue, setSearchValue] = useState('')
+  // const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
+  const { userEventsList } = useSelector((state: RootState) => state.scheduling)
+
+  useEffect(() => {
+    dispatch(fetchUserEvents())
+  }, [dispatch])
+
+  const formatDate = (eventStartTime: number) => {
+    const date = new Date(eventStartTime * 1000).getDate()
+    return format(date, 'dd-MMM-yy kk:mm')
   }
 
-  const leftIcon = (
-    <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
-      onClick={() => {
-        history.goBack()
-      }}
-    />
-  )
-
-  return (
-    <Background>
-      <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
-      {searchValue ? (
+  const renderResults = () => {
+    if (searchValue) {
+      return eventsDummy ? (
+        eventsDummy.filter((events) => {
+          return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
+        }).length === 0 ? (
+          <NoEventDataText>No Events Found</NoEventDataText>
+        ) : (
+          eventsDummy
+            .filter((events) => {
+              return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
+            })
+            .map((result, index) => {
+              return (
+                <ImageDescriptionCard
+                  key={index}
+                  title={result.eventName}
+                  dateTime={formatDate(result.startDateTime)}
+                  description={result.description}
+                  bottomElement={
+                    <Button
+                      buttonIsPressed={
+                        userEventsList.filter((event) => {
+                          return event.eventName === result.eventName
+                        }).length !== 0
+                      } //check if event is already in schedule
+                      hasSuccessMessage={true}
+                      stopPropagation={true}
+                      defaultButtonDescription={'Add to Schedule'}
+                      updatedButtonDescription={'Remove from Schedule'}
+                      onButtonClick={(buttonIsPressed) => {
+                        if (
+                          userEventsList.filter((event) => {
+                            return event.eventName === result.eventName
+                          }).length !== 0
+                        ) {
+                          if (buttonIsPressed) {
+                            // event is in list and button is pressed
+                            // remove event from list
+                            console.log('remove ' + result.eventName + ' from list')
+                            dispatch(editUserEvents('remove', result.eventName))
+                          } else {
+                            // event is in list, button is un-pressed
+                            console.log('add ' + result.eventName + ' to list')
+                            dispatch(editUserEvents('add', result.eventName))
+                          }
+                        } else if (
+                          userEventsList.filter((event) => {
+                            return event.eventName === result.eventName
+                          }).length === 0
+                        ) {
+                          if (buttonIsPressed) {
+                            // event is not in list, button is un-pressed
+                            console.log('remove ' + result.eventName + ' from list')
+                            dispatch(editUserEvents('remove', result.eventName))
+                          } else {
+                            // event is not in list and button is pressed
+                            // add event to list
+                            console.log('add ' + result.eventName + ' to list')
+                            dispatch(editUserEvents('add', result.eventName))
+                          }
+                        }
+                        return
+                      }}
+                    />
+                  }
+                />
+              )
+            })
+        )
+      ) : (
         <NoEventDataText>No Events Found</NoEventDataText>
-      ) : data ? (
+      )
+    } else {
+      return data ? (
         data.map((event, index) => {
           return (
             <ImageDescriptionCard
@@ -101,8 +175,33 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
           )
         })
       ) : (
-        <NoEventDataText>No Events</NoEventDataText>
-      )}
+        <>
+          <NoEventDataText>No Upcoming Events</NoEventDataText>
+        </>
+      )
+    }
+  }
+
+  const onChange = (input: string) => {
+    setSearchValue(input)
+    input && dispatch(getSearchedEvents(input))
+    console.log(searchValue)
+  }
+
+  const leftIcon = (
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px' }}
+      onClick={() => {
+        history.push(PATHS.SCHEDULE_PAGE)
+      }}
+    />
+  )
+
+  return (
+    <Background>
+      <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
+      <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
+      {renderResults()}
       <BottomNavBar />
     </Background>
   )
