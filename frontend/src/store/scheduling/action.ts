@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { getHallEventTypesStub, targetAudienceListStub, userRhEventsDummy } from '../stubs'
+import { dummyNusModsLink, eventsDummy, getHallEventTypesStub, targetAudienceListStub, userEventsDummy } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -51,7 +51,7 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-const sortEvents = (events: RHEvent[]) => {
+const sortEvents = (events: UserEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
@@ -372,7 +372,7 @@ export const editHallEventType = (newHallEventType: string) => (dispatch: Dispat
 }
 
 export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   dispatch({
     type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
     targetAudienceList: targetAudienceListStub,

@@ -81,7 +81,7 @@ export enum SCHEDULING_ACTIONS {
 
 /** Actions */
 
-type GetHallEventTypes = {
+type getHallEventTypes = {
   type: typeof SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES
   hallEventTypes: string[]
 }
@@ -91,9 +91,9 @@ type getTargetAudienceList = {
   targetAudienceList: string[]
 }
 
-type GetRhEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
-  userRhEvents: RHEvent[][][]
+type GetUserEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
+  userEvents: UserEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
   userEventsList: UserEvent[]
@@ -176,6 +176,7 @@ export type ActionTypes =
   | SetTargetAudience
   | SetDescription
   | GetShareSearchResults
+  | GetSearchedEvents
   | SetIsLoading
   | getHallEventTypes
   | getTargetAudienceList
