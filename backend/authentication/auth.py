@@ -22,6 +22,13 @@ def userIDAlreadyExists(testID):
     else:
         return False
 
+def tokenHasExpired(token):
+    #if db.Blacklist.find({'token': token}).count():
+    #   return True
+    #else:
+    #   return False
+    pass
+
 
 """
 Decorative function: 
@@ -35,7 +42,8 @@ def check_for_token(func):
 
         if not token:
             return jsonify({'message': 'Token is missing'}), 403
-        
+        #if tokenHasExpired(token):
+        #    return jsonify({'message': 'Token is no longer valid'}), 403
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             currentUser = db.User.find({'userID': { "$in": username}}).limit(1)
@@ -104,6 +112,8 @@ def protected(currentUser):
 @app.route('/auth/logout')
 def logout():
     pass
+    #extract token, add to a new collection Blacklist (remember to include the TTL)
+    #pass success message
 
 
 # Run the example
