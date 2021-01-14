@@ -7,10 +7,12 @@ import { SchedulingEvent } from './scheduling/types'
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
- * 3. userRhEvents
- * 4. Washing Machines
- * 5. Events
- * 6. Search Results
+ * 3. userEvents
+ * 4. EventsList
+ * 5. Washing Machines
+ * 6. Events
+ * 7. Search Results
+ * 8. NUSModsLink
  */
 
 export const facilityListStub: Facility[] = [
@@ -55,12 +57,12 @@ export const myBookingsStub: Booking[] = [
   },
 ]
 
-export const userRhEventsDummy: SchedulingEvent[] = [
+export const userEventsDummy: SchedulingEvent[] = [
   {
     eventID: 1,
     eventName: 'dummy event 4',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
     description: 'nothing',
     location: 'hall',
     ccaID: 1,
@@ -95,6 +97,53 @@ export const userRhEventsDummy: SchedulingEvent[] = [
     startDateTime: 1608723138,
     endDateTime: 1608726751,
     description: 'nothing',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+]
+
+export const eventsDummy: SchedulingEvent[] = [
+  {
+    eventID: 1,
+    eventName: 'Block 7 Christmas Event',
+    startDateTime: 1607418000,
+    endDateTime: 1607428800,
+    description: 'Only for block 7 members! Follow us @block7 to find out more!',
+    location: 'hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'New YeaRH Event',
+    startDateTime: 1608654852,
+    endDateTime: 1608658452,
+    description: 'nothing',
+    location: 'Comm Hall',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'RHdev bonding camp',
+    startDateTime: 1607342400,
+    endDateTime: 1607349600,
+    description: 'nothing',
+    location: 'upper lounge',
+    ccaID: 1,
+    userID: 'A0123456Z',
+    image: null,
+  },
+  {
+    eventID: 1,
+    eventName: 'dummy event',
+    startDateTime: 1608723138,
+    endDateTime: 1608726751,
+    description: 'description description description description description description',
     location: 'hall',
     ccaID: 1,
     userID: 'A0123456Z',
@@ -200,3 +249,6 @@ export const searchResultsStub: SearchResult[] = [
     title: 'Bob',
   },
 ]
+
+export const dummyNusModsLink =
+  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'

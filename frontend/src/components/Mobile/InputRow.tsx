@@ -53,7 +53,7 @@ const StyledTitle = styled.text`
 `
 
 type InputRowProps = {
-  title: string
+  title?: string
   placeholder: string
   value: string
   setValue: Dispatch<SetStateAction<string>> | ((input: string) => void)
@@ -65,7 +65,7 @@ export default function InputRow({ title, placeholder, value, setValue, textarea
 
   return (
     <Container>
-      <StyledTitle>{title}</StyledTitle>
+      {title && <StyledTitle>{title}</StyledTitle>}
       {textarea ? (
         <StyledTextArea placeholder={placeholder} value={value} onChange={(e) => setValue(e.target.value)} rows={4} />
       ) : (

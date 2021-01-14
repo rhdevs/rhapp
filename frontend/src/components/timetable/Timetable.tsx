@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RHEvent } from '../../store/scheduling/types'
+import { UserEvent } from '../../store/scheduling/types'
 import TimetableRow from './TimetableRow'
 
 const TimetableContainer = styled.div`
@@ -23,19 +23,21 @@ const TimeContainer = styled.div`
 `
 
 const IndividualTimeContainer = styled.time`
-  width: 8rem;
   font-weight: 600;
 `
 
 type Props = {
   eventsStartTime: number
   eventsEndTime: number
-  events: RHEvent[][][]
+  events: UserEvent[][][]
 }
 
 function Timetable(props: Props) {
-  const DEFAULT_START_TIME = 700
-  const DEFAULT_END_TIME = 1900
+  const ONE_HOUR_WIDTH = '7rem'
+  const ONE_DAY_MIN_HEIGHT = '4.5rem'
+
+  const DEFAULT_START_TIME = 1000
+  const DEFAULT_END_TIME = 1800
   const timeArray: Array<string> = []
 
   const eventsStartTime = Math.round(props.eventsStartTime / 100) * 100
@@ -59,17 +61,23 @@ function Timetable(props: Props) {
       <TimetableWithTimeContainer>
         <TimeContainer>
           {timeArray.map((time, index) => {
-            return <IndividualTimeContainer key={index}>{time}</IndividualTimeContainer>
+            return (
+              <IndividualTimeContainer style={{ width: `${ONE_HOUR_WIDTH}` }} key={index}>
+                {time}
+              </IndividualTimeContainer>
+            )
           })}
         </TimeContainer>
         <TimetableRowsContainer>
           {daysArray.map((day, index) => {
             return (
               <TimetableRow
+                oneHourWidth={ONE_HOUR_WIDTH}
+                oneDayMinHeight={ONE_DAY_MIN_HEIGHT}
                 events={props.events[index]}
                 key={index}
                 day={day}
-                width={((timetableEndTime - timetableStartTime) / 100) * 8}
+                width={((timetableEndTime - timetableStartTime) / 100) * Number(ONE_HOUR_WIDTH.replace('rem', ''))}
                 timetableStartTime={timetableStartTime}
                 timetableEndTime={timetableEndTime}
               />
