@@ -33,11 +33,17 @@ export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => 
         userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
         userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
         userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
-        userEventsList: data,
+        userEventsList: timetableFormatEvents,
       })
       dispatch(setIsLoading(false))
     })
 }
+
+// const withNusModsEvents = (userEventsList: TimetableEvent[]) => {
+//   //fetch nusmodsEvents from backend
+//   const nusModsEvent = 
+//   userEventsList.concat()
+// }
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
   const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
@@ -328,30 +334,33 @@ export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTy
   dispatch(setIsLoading(false))
 }
 
-//send userId and eventId to backend
-export const editUserEvents = (action: string, eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  const fetchedUserData = userEventsDummy.map((userEvent) => {
-    return convertSchedulingEventToTimetableEvent(userEvent)
-  })
-  const fetchedEventsData = eventsDummy.map((event) => {
-    return convertSchedulingEventToTimetableEvent(event)
-  })
-  let newUserEvents: TimetableEvent[] = []
+export const editUserEvents = (action: string, eventId: number, userId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  // const fetchedUserData = userEventsDummy.map((userEvent) => {
+  //   return convertSchedulingEventToTimetableEvent(userEvent)
+  // })
+  // const fetchedEventsData = eventsDummy.map((event) => {
+  //   return convertSchedulingEventToTimetableEvent(event)
+  // })
+  // let newUserEvents: TimetableEvent[] = []
 
   if (action === 'remove') {
-    newUserEvents = fetchedUserData.filter((userEvent) => {
-      return userEvent.eventName !== eventId
-    })
-    console.log(newUserEvents)
+    console.log('REMOVE: eventId - ' + eventId + '; userId: ' + userId)
+    // newUserEvents = fetchedUserData.filter((userEvent) => {
+    //   return userEvent.eventID !== eventId
+    // })
+    // console.log(newUserEvents)
   } else if (action === 'add') {
-    newUserEvents = fetchedUserData.concat(
-      fetchedEventsData.filter((event) => {
-        return event.eventName === eventId
-      }),
-    )
-    console.log(newUserEvents)
+    console.log('ADD: eventId - ' + eventId + '; userId: ' + userId)
+    // newUserEvents = fetchedUserData.concat(
+    //   fetchedEventsData.filter((event) => {
+    //     return event.eventID === eventId
+    //   }),
+    // )
+    // console.log(newUserEvents)
   }
-  dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
+  // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
 }
 // ---------------------- SEARCH EVENTS ----------------------
 

@@ -110,7 +110,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
                     <Button
                       buttonIsPressed={
                         userEventsList.filter((event) => {
-                          return event.eventName === result.eventName
+                          return event.eventID === result.eventID
                         }).length !== 0
                       } //check if event is already in schedule
                       hasSuccessMessage={true}
@@ -120,33 +120,33 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
                       onButtonClick={(buttonIsPressed) => {
                         if (
                           userEventsList.filter((event) => {
-                            return event.eventName === result.eventName
+                            return event.eventID === result.eventID
                           }).length !== 0
                         ) {
                           if (buttonIsPressed) {
                             // event is in list and button is pressed
                             // remove event from list
                             console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserEvents('remove', result.eventName))
+                            dispatch(editUserEvents('remove', result.eventID, result.userID))
                           } else {
                             // event is in list, button is un-pressed
                             console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserEvents('add', result.eventName))
+                            dispatch(editUserEvents('add', result.eventID, result.userID))
                           }
                         } else if (
                           userEventsList.filter((event) => {
-                            return event.eventName === result.eventName
+                            return event.eventID === result.eventID
                           }).length === 0
                         ) {
                           if (buttonIsPressed) {
                             // event is not in list, button is un-pressed
                             console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserEvents('remove', result.eventName))
+                            dispatch(editUserEvents('remove', result.eventID, result.userID))
                           } else {
                             // event is not in list and button is pressed
                             // add event to list
                             console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserEvents('add', result.eventName))
+                            dispatch(editUserEvents('add', result.eventID, result.userID))
                           }
                         }
                         return

@@ -47,11 +47,6 @@ export default function ImportFromNusMods() {
 
   const [link, setLink] = useState('')
   const [modal, setModal] = useState(false)
-  const { userNusModsLink, userNusModsEvents } = useSelector((state: RootState) => state.scheduling)
-
-  // useEffect(() => {
-  //   dispatch(getUserNusModsEvents())
-  // }, [dispatch])
 
   const leftIcon = (
     <LeftOutlined

@@ -89,7 +89,7 @@ type GetUserEvents = {
   userEvents: TimetableEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
-  userEventsList: SchedulingEvent[]
+  userEventsList: TimetableEvent[]
 }
 
 type EditUserEvents = {

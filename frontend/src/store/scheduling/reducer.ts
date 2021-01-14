@@ -28,7 +28,7 @@ const initialState = {
 type State = {
   isLoading: boolean
   userEvents: TimetableEvent[][][]
-  userEventsList: SchedulingEvent[]
+  userEventsList: TimetableEvent[]
   newUserEvents: TimetableEvent[]
   userEventsStartTime: number
   userEventsEndTime: number
