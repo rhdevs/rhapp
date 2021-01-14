@@ -1,5 +1,6 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { WashingMachine, WMStatus } from './laundry/types'
+import { User } from './profile/types'
 import { SearchResult } from './types'
 import { SchedulingEvent } from './scheduling/types'
 
@@ -249,6 +250,22 @@ export const searchResultsStub: SearchResult[] = [
     title: 'Bob',
   },
 ]
+
+export const userProfileStub: User = {
+  userId: 1,
+  profilePictureUrl:
+    'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+  displayName: 'Zhang MaoMao',
+  telegramHandle: 'zhoumm',
+  block: 8,
+  bio: 'This is my bio hur hur',
+  ccas: [
+    { userId: '1', ccaId: 1, ccaName: 'RHDevs' },
+    { userId: '1', ccaId: 1, ccaName: 'Badminton' },
+  ],
+  modules: ['CS1010', 'CFG1000', 'CS2040S'],
+  posts: [],
+}
 
 export const dummyNusModsLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
