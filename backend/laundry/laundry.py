@@ -94,6 +94,7 @@ def laundry_by_location():
                 data_body = {'$set' : 
                                 {'job' : "Reserved",
                                  'jobID' : newJobID,
+                                 'userID' : userID,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -120,6 +121,7 @@ def laundry_by_location():
                 jobID = db.LaundryMachine.find_one({'machineID' : machineID}).get("jobID")
                 data_body = {'$set' : 
                                 {'job' : "Available",
+                                 'userID' : userID,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -139,6 +141,7 @@ def laundry_by_location():
                 #just update the machine without new entry 
                 data_body = {'$set' : 
                                 {'job' : job,
+                                 'userID' : userID,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -152,6 +155,7 @@ def laundry_by_location():
                 
                 data_body = {'$set' : 
                                 {'job' : "In Use",
+                                 'userID' : userID,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -172,6 +176,7 @@ def laundry_by_location():
                 # just update the database without creating new entry
                 data_body = {'$set' : 
                                 {'job' : job,
+                                 'userID' : userID,
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
@@ -192,6 +197,7 @@ def laundry_by_location():
                 jobID = db.LaundryMachine.find_one({'machineID' : machineID}).get("jobID")
                 data_body = {'$set' : 
                                 {'job' : "Available",
+                                 'userID' : '',
                                 'startTime' : datetime.now().timestamp()}
                         }
                 
