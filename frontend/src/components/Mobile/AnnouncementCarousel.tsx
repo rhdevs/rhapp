@@ -8,9 +8,10 @@ const CarouselCard = styled.div`
   position: relative;
   &:before {
     content: '';
-    background-image: url('https://farm3.static.flickr.com/2098/2260149771_00cb406fd6_o.jpg');
+    background-image: url('http://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhockfest2019.jpg?sfvrsn=aa9c34b9_2');
     position: absolute;
     top: 0px;
+    background-size: contain;
     right: 0px;
     bottom: 0px;
     left: 0px;

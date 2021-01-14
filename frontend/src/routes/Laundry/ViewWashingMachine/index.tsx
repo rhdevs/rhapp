@@ -174,7 +174,7 @@ export default function ViewWashingMachine() {
         <UseWashingMachineSection>
           <StyledSlider
             min={1}
-            max={machine?.job === WMStatus.RESERVED ? 15 : 120}
+            max={machine?.job === WMStatus.RESERVED && isEdit ? 15 : 120}
             tooltipVisible
             onChange={(value: number) => dispatch(SetDuration(value))}
             value={duration}
