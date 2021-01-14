@@ -4,7 +4,7 @@ import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './typ
 
 const initialState = {
   // MAIN PAGE
-  isLoading: true,
+  isLoading: false,
   facilityList: [],
   locationList: [],
   selectedTab: '',

@@ -14,8 +14,8 @@ export enum ENDPOINTS {
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
-  MACHINE_LIST = '/location/',
-  LAUNDRY_MACHINE = 'laundry/machine',
+  MACHINE_LIST = '/location',
+  LAUNDRY_MACHINE = '/laundry/machine',
   LAUNDRY_JOB = '/laundry/job',
 
   // SCHEDULING

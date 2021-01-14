@@ -8,7 +8,9 @@ import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
 import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
+import { SetSelectedMachine } from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
+import { useDispatch } from 'react-redux'
 
 const CardContainer = styled.div`
   position: relative;
@@ -63,6 +65,7 @@ const ActionButtonLabel = styled.p`
 `
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
+  const dispatch = useDispatch()
   let label
   let iconSrc
   const cardPrimaryColor =
@@ -110,9 +113,14 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   return (
     <CardContainer>
       <WashingMachineAvatar src={washingMachineIcon} onClick={() => history.push(PATHS.VIEW_WASHING_MACHINE)} />
-      <Labels onClick={() => history.push(PATHS.VIEW_WASHING_MACHINE)}>
+      <Labels
+        onClick={() => {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }}
+      >
         <Header style={{ color: cardPrimaryColor }}>{props.washingMachine.job}</Header>
-        <SubHeader style={{ color: cardPrimaryColor }}>S/N{props.washingMachine.machineId}</SubHeader>
+        <SubHeader style={{ color: cardPrimaryColor }}>S/N{props.washingMachine.machineID}</SubHeader>
       </Labels>
       <RightActionGroups onClick={rightAction}>
         <ActionButton src={iconSrc} style={{ color: cardPrimaryColor }} />

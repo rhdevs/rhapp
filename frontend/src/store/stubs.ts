@@ -1,5 +1,4 @@
 import { Booking, Facility } from './facilityBooking/types'
-import { WashingMachine, WMStatus } from './laundry/types'
 import { SearchResult } from './types'
 import { SchedulingEvent } from './scheduling/types'
 
@@ -110,58 +109,58 @@ export const userRhEventsDummy: SchedulingEvent[] = [
 // startTime	DATETIME 	Log of starting time for state	1/1/1970 0000
 // duration	INT	Duration of a job state (in minutes)	15, 45, 90
 // job	VARCHAR	Current job state	Vacant, Reserved, In Use, Done, Alerted, Collected, Cancelled
-export const WashingMachineListStub: WashingMachine[] = [
-  {
-    machineId: '6100',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.AVAIL,
-  },
-  {
-    machineId: '6101',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.INUSE,
-  },
-  {
-    machineId: '6102',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.UNCOLLECTED,
-  },
-  {
-    machineId: '6103',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.COMPLETED,
-  },
-  {
-    machineId: '6104',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.RESERVED,
-  },
-]
+// export const WashingMachineListStub: WashingMachine[] = [
+//   {
+//     machineId: '6100',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.AVAIL,
+//   },
+//   {
+//     machineId: '6101',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.INUSE,
+//   },
+//   {
+//     machineId: '6102',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.UNCOLLECTED,
+//   },
+//   {
+//     machineId: '6103',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.COMPLETED,
+//   },
+//   {
+//     machineId: '6104',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.RESERVED,
+//   },
+// ]
 
 export const facilityBookingsStubs = [
   {
