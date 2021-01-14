@@ -67,6 +67,21 @@ export const DAY_TO_NUMBER: day = {
 }
 
 function TimetableRow(props: Props) {
+  const leftMargin = (eventRow, individualEvent, index) => {
+    let leftPosition
+    if (index === 0) {
+      leftPosition = (Number(individualEvent.startTime) - props.timetableStartTime) / 100
+    } else {
+      leftPosition = (Number(individualEvent.startTime) - Number(eventRow[index - 1].endTime)) / 100
+    }
+    const margin = leftPosition * Number(props.oneHourWidth.replace('rem', '')) + 0.0625
+    if (margin < 0) {
+      return '0rem'
+    } else {
+      return String(margin) + 'rem'
+    }
+  }
+
   return (
     <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
       <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
@@ -77,6 +92,7 @@ function TimetableRow(props: Props) {
           minWidth: props.width + 'rem',
           backgroundSize: `calc(${props.oneHourWidth}*2)`,
           minHeight: `${props.oneDayMinHeight}`,
+          maxWidth: `calc(${props.oneHourWidth}*24)`,
         }}
       >
         {props.events?.map((eventRow, index) => {
@@ -87,9 +103,7 @@ function TimetableRow(props: Props) {
                   <div
                     key={index}
                     style={{
-                      marginLeft: `calc((${Number(individualEvent.startTime)} - ${
-                        index === 0 ? props.timetableStartTime : Number(eventRow[index - 1].endTime)
-                      }) / 100 * ${props.oneHourWidth} + 0.0625rem)`,
+                      marginLeft: `${leftMargin(eventRow, individualEvent, index)}`,
                     }}
                   >
                     <EventCell
