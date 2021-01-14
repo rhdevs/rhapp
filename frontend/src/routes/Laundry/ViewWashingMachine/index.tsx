@@ -197,6 +197,20 @@ export default function ViewWashingMachine() {
               }
             }}
           />
+          {isEdit && (
+            <Button
+              style={{ marginLeft: '23px' }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Cancel'}
+              defaultButtonColor="#FAFAF4"
+              updatedButtonColor="#FAFAF4"
+              updatedTextColor="#000000"
+              onButtonClick={() => {
+                dispatch(SetEditMode())
+              }}
+            />
+          )}
         </UseWashingMachineSection>
       )
     } else if (machine?.job === WMStatus.INUSE) {
@@ -229,6 +243,20 @@ export default function ViewWashingMachine() {
               }
             }}
           />
+          {isEdit && (
+            <Button
+              style={{ marginLeft: '23px' }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Cancel'}
+              defaultButtonColor="#FAFAF4"
+              updatedButtonColor="#FAFAF4"
+              updatedTextColor="#000000"
+              onButtonClick={() => {
+                dispatch(SetEditMode())
+              }}
+            />
+          )}
         </UseWashingMachineSection>
       )
     }
