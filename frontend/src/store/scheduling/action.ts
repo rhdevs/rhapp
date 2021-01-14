@@ -51,14 +51,6 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
-    targetAudienceList: targetAudienceListStub,
-  })
-}
-
 const sortEvents = (events: RHEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
@@ -366,10 +358,6 @@ export const editEventToDate = (newEventToDate: Date) => (dispatch: Dispatch<Act
   dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_TO_DATE, newEventToDate: newEventToDate })
 }
 
-export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE, newTargetAudience: newTargetAudience })
-}
-
 export const editDescription = (newDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_DESCRIPTION, newDescription: newDescription })
 }
@@ -381,4 +369,16 @@ export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, g
 
 export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
+}
+
+export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
+    targetAudienceList: targetAudienceListStub,
+  })
+}
+
+export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE, newTargetAudience: newTargetAudience })
 }
