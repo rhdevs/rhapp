@@ -127,18 +127,18 @@ def add_booking() :
 @app.route('/bookings/<bookingID>', methods=['GET'])
 def get_booking(bookingID) :
     try:
-        data = listToIndexedDict(list(db.Bookings.find({"bookingID":bookingID})))
+        data = removeObjectID(list(db.Bookings.find({"bookingID": int(bookingID)})))
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return data, 200
+    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
      
 @app.route('/bookings/<bookingID>', methods=['PUT'])
 def edit_booking(bookingID) :
     try : 
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
             print(bookingID, request.get_json(), "Test6")
-            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.get_json()})
+            db.Bookings.update_one({"bookingID": int(bookingID)}, { "$set": request.get_json()})
             
         # else:
         #     return {"err": "Unauthorised Access"}, 401
@@ -153,7 +153,7 @@ def edit_booking(bookingID) :
 def delete_booking(bookingID) :
     try :
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0].get('userID') :
-            db.Bookings.remove({"bookingID" : bookingID})
+            db.Bookings.delete_one({"bookingID" : int(bookingID)})
             print(bookingID, "Test7")
         # else:
         #     return {"err": "Unauthorised Access"}, 401
