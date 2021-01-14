@@ -17,12 +17,13 @@ import {
   editEventName,
   editEventLocation,
   editEventFromDate,
-  editCca,
+  editTargetAudience,
   editDescription,
   handleSubmitCreateEvent,
   getHallEventTypes,
   editHallEventType,
   editEventToDate,
+  getTargetAudienceList,
 } from '../../../store/scheduling/action'
 import { useEffect } from 'react'
 
@@ -90,16 +91,16 @@ const BackIcon = (
 export default function CreateEvent() {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getHallEventTypes())
+    dispatch(getHallEventTypes()), dispatch(getTargetAudienceList())
   }, [dispatch])
 
   const {
     hallEventTypes,
+    targetAudienceList,
     newEventName,
     newEventLocation,
     newEventFromDate,
     newEventToDate,
-    newCca,
     newDescription,
   } = useSelector((state: RootState) => state.scheduling)
 
@@ -186,14 +187,16 @@ export default function CreateEvent() {
           value={newEventLocation}
           setValue={(eventLocation: string) => dispatch(editEventLocation(eventLocation))}
         />
-        <InputRow
-          title="CCA"
-          placeholder="CCA Name"
-          value={newCca}
-          setValue={(newCCA: string) => {
-            dispatch(editCca(newCCA))
-          }}
-        />
+        <Row>
+          <StyledTitle>For who</StyledTitle>
+          <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editTargetAudience(value.toString()))}>
+            {targetAudienceList.map((targetAudience, idx) => (
+              <Option key={idx} value={targetAudience}>
+                {targetAudience}
+              </Option>
+            ))}
+          </StyledSelect>
+        </Row>
         <InputRow
           title="Description"
           placeholder="Tell us what your event is about!"

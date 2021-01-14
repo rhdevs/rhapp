@@ -72,10 +72,11 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_LOCATION = 'SCHEDULING_ACTIONS.SET_EVENT_LOCATION',
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
   SET_EVENT_TO_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_TO_DATE',
-  SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
+  SET_TARGET_AUDIENCE = 'SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE',
   SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
   GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
+  GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
 }
 
 /** Actions */
@@ -85,9 +86,14 @@ type GetHallEventTypes = {
   hallEventTypes: string[]
 }
 
-type GetUserEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
-  userEvents: UserEvent[][][]
+type getTargetAudienceList = {
+  type: typeof SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST
+  targetAudienceList: string[]
+}
+
+type GetRhEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_RH_EVENTS
+  userRhEvents: RHEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
   userEventsList: UserEvent[]
@@ -143,9 +149,9 @@ type SetEventToDate = {
   newEventToDate: Date
 }
 
-type SetCca = {
-  type: typeof SCHEDULING_ACTIONS.SET_CCA
-  newCca: string
+type SetTargetAudience = {
+  type: typeof SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE
+  newTargetAudience: string
 }
 
 type SetDescription = {
@@ -167,10 +173,10 @@ export type ActionTypes =
   | SetEventLocation
   | SetEventFromDate
   | SetEventToDate
-  | SetCca
+  | SetTargetAudience
   | SetDescription
   | GetShareSearchResults
   | SetIsLoading
-  | GetSearchedEvents
-  | GetHallEventTypes
+  | getHallEventTypes
+  | getTargetAudienceList
   | SetHallEventType

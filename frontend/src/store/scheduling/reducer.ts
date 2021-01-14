@@ -19,10 +19,11 @@ const initialState = {
   newEventLocation: '',
   newEventFromDate: new Date(),
   newEventToDate: new Date(),
-  newCca: '',
+  newTargetAudience: '',
   newDescription: '',
   newHallEventType: '',
   hallEventTypes: [],
+  targetAudienceList: [],
 }
 
 type State = {
@@ -40,10 +41,11 @@ type State = {
   newEventLocation: string
   newEventFromDate: Date
   newEventToDate: Date
-  newCca: string
+  newTargetAudience: string
   newDescription: string
   hallEventTypes: string[]
   newHallEventType: string
+  targetAudienceList: string[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -117,10 +119,10 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         newEventToDate: action.newEventToDate,
       }
     }
-    case SCHEDULING_ACTIONS.SET_CCA: {
+    case SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE: {
       return {
         ...state,
-        newCca: action.newCca,
+        newTargetAudience: action.newTargetAudience,
       }
     }
     case SCHEDULING_ACTIONS.SET_DESCRIPTION: {
@@ -139,6 +141,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         newHallEventType: action.newHallEventType,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST: {
+      return {
+        ...state,
+        targetAudienceList: action.targetAudienceList,
       }
     }
     default:

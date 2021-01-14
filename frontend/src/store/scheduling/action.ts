@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { eventsDummy, userEventsDummy, dummyNusModsLink, getHallEventTypesStub } from '../stubs'
+import { getHallEventTypesStub, targetAudienceListStub, userRhEventsDummy } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -51,7 +51,15 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-const sortEvents = (events: UserEvent[]) => {
+export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
+    targetAudienceList: targetAudienceListStub,
+  })
+}
+
+const sortEvents = (events: RHEvent[]) => {
   return events.sort((a, b) => {
     return a.startTime.localeCompare(b.startTime)
   })
@@ -358,8 +366,8 @@ export const editEventToDate = (newEventToDate: Date) => (dispatch: Dispatch<Act
   dispatch({ type: SCHEDULING_ACTIONS.SET_EVENT_TO_DATE, newEventToDate: newEventToDate })
 }
 
-export const editCca = (newCca: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: SCHEDULING_ACTIONS.SET_CCA, newCca: newCca })
+export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE, newTargetAudience: newTargetAudience })
 }
 
 export const editDescription = (newDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
