@@ -15,36 +15,45 @@ import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   // const fetchedData = userEventsDummy
-  const fetchedData = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_EVENTS, {
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_EVENTS, {
     method: 'GET',
     mode: 'cors',
-  }).then((resp) => {
-    return resp.json()
   })
+    .then((resp) => {
+      return resp.json()
+    })
+    .then((data) => {
+      console.log(data)
+      const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+        return convertSchedulingEventToTimetableEvent(singleEvent)
+      })
 
-  const timetableFormatEvents: TimetableEvent[] = fetchedData.map((singleEvent) => {
-    return convertSchedulingEventToTimetableEvent(singleEvent)
-  })
-
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-    userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
-    userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
-    userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
-    userEventsList: fetchedData,
-  })
-  dispatch(setIsLoading(false))
+      dispatch({
+        type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
+        userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
+        userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
+        userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
+        userEventsList: data,
+      })
+      dispatch(setIsLoading(false))
+    })
 }
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
+  const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
+  let endTime = getTimeStringFromUNIX(singleEvent.endDateTime)
+  if (startTime > endTime) {
+    endTime = '2400'
+  }
   return {
     eventID: singleEvent.eventID,
     eventName: singleEvent.eventName,
-    startTime: getTimeStringFromUNIX(singleEvent.startDateTime),
-    endTime: getTimeStringFromUNIX(singleEvent.endDateTime),
+    startTime: startTime,
+    endTime: endTime,
     location: singleEvent.location,
     day: getDayStringFromUNIX(singleEvent.startDateTime),
     hasOverlap: false,
+    eventType: 'private', //change!
   }
 }
 
@@ -56,7 +65,7 @@ const sortEvents = (events: TimetableEvent[]) => {
 
 const getTimetableStartTime = (formattedEvents: TimetableEvent[]) => {
   const sortedEvents = sortEvents(formattedEvents)
-  return sortedEvents[0]?.startTime
+  return sortedEvents[0].startTime
 }
 
 const getTimetableEndTime = (formattedEvents: TimetableEvent[]) => {
@@ -280,6 +289,7 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
             startTime: classInformation.startTime,
             hasOverlap: false,
             eventID: 1,
+            eventType: 'timetable', //change!
           }
           events.push(newEvent)
         })
@@ -319,7 +329,7 @@ export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTy
 }
 
 //send userId and eventId to backend
-export const editUserEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const editUserEvents = (action: string, eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const fetchedUserData = userEventsDummy.map((userEvent) => {
     return convertSchedulingEventToTimetableEvent(userEvent)
   })
@@ -330,13 +340,13 @@ export const editUserEvents = (action: string, selectedEventName: string) => (di
 
   if (action === 'remove') {
     newUserEvents = fetchedUserData.filter((userEvent) => {
-      return userEvent.eventName !== selectedEventName
+      return userEvent.eventName !== eventId
     })
     console.log(newUserEvents)
   } else if (action === 'add') {
     newUserEvents = fetchedUserData.concat(
       fetchedEventsData.filter((event) => {
-        return event.eventName === selectedEventName
+        return event.eventName === eventId
       }),
     )
     console.log(newUserEvents)

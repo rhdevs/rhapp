@@ -42,19 +42,8 @@ export type TimetableEvent = {
   location: string
   day: string
   hasOverlap: boolean
+  eventType: string
 }
-
-// export type UserEvent = {
-//   eventID: number
-//   eventName: string
-//   startTime: string
-//   endTime: string
-//   location: string
-//   day: string
-//   date: string | null
-//   hasOverlap: boolean
-//   eventType?: string
-// }
 
 export type SchedulingEvent = {
   eventID: number
