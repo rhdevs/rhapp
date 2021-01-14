@@ -20,12 +20,10 @@ def listToIndexedDict(xs):
 myclient = client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = myclient["RHApp"]
 
-CROSS_ORIGINS_LIST="https://rhapp.cjunxiang.vercel.app"
-
 #Flask
 app = Flask("rhapp")
-CORS(app, origins=CROSS_ORIGINS_LIST, headers=['Content-Type'],
-         expose_headers=['Access-Control-Allow-Origin'], supports_credentials=True)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = "Content-Type";
 
 #Session
 session = {}
@@ -44,19 +42,16 @@ def root_route():
 @cross_origin()
 def all_facilities(): 
     try :
-        print("testing 1")
         data = removeObjectID(list(db.Facilities.find()))
         
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
     response = make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add('Access-Control-Allow-Headers', "*")
-    response.headers.add('Access-Control-Allow-Methods', "*")
     return response
 
 @app.route('/bookings/user/<userID>')
+@cross_origin()
 def user_bookings(userID) :
     try:
         data = removeObjectID(list(db.Bookings.find({"userID" : userID})))
@@ -66,6 +61,7 @@ def user_bookings(userID) :
 
 
 @app.route('/bookings/facility/<facilityID>/')
+@cross_origin()
 def check_bookings(facilityID):
     #print('TESTING 0')
     try :
@@ -77,6 +73,7 @@ def check_bookings(facilityID):
     return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
     
 @app.route('/users/telegramID/<userID>')
+@cross_origin()
 def user_telegram(userID) :
     try :
         data = list(db.User.find({"userID" : userID}))
@@ -90,15 +87,13 @@ def user_telegram(userID) :
     return data, 200
 
 @app.route('/bookings', methods=['POST'])
+@cross_origin()
 def add_booking() :
     try:
-        print("Testing 2")
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
         formData = request.get_json()
-
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
-
         formData["facilityID"] = int(formData["facilityID"])
         formData["ccaID"] = int(formData["ccaID"])
 
@@ -106,10 +101,9 @@ def add_booking() :
             raise Exception("End time eariler than start time")    
         # else:
         #     return {"err": "Unauthorised Access"}, 401
+        lastbookingID = list(db.Bookings.find().sort([('_id', pymongo.DESCENDING)]).limit(1))
 
-        lastbookingID = list(db.Bookings.find().sort([('_id', pymongo.DESCENDING)]).limit(1))[0]
-
-        newBookingID = 1 if lastbookingID is None else int(lastbookingID.get("bookingID")) + 1
+        newBookingID = 1 if len(lastbookingID) == 0 else int(lastbookingID[0].get("bookingID")) + 1
 
         formData["bookingID"] = newBookingID
         print(formData)
@@ -121,24 +115,24 @@ def add_booking() :
 
     return {"message": "Booking Confirmed"}, 200
 
-
-
-
 @app.route('/bookings/<bookingID>', methods=['GET'])
+@cross_origin()
 def get_booking(bookingID) :
     try:
-        data = removeObjectID(list(db.Bookings.find({"bookingID": int(bookingID)})))
+        print(bookingID)
+        data = listToIndexedDict(list(db.Bookings.find({"bookingID":bookingID})))
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return make_response(json.dumps(list(data), default = lambda o:str(o)), 200)
+    return data, 200
      
 @app.route('/bookings/<bookingID>', methods=['PUT'])
+@cross_origin()
 def edit_booking(bookingID) :
     try : 
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
             print(bookingID, request.get_json(), "Test6")
-            db.Bookings.update_one({"bookingID": int(bookingID)}, { "$set": request.get_json()})
+            db.Bookings.update_one({"bookingID": bookingID}, { "$set": request.get_json()})
             
         # else:
         #     return {"err": "Unauthorised Access"}, 401
@@ -150,6 +144,7 @@ def edit_booking(bookingID) :
 
 
 @app.route('/bookings/<bookingID>', methods=['DELETE'])
+@cross_origin()
 def delete_booking(bookingID) :
     try :
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0].get('userID') :
@@ -165,4 +160,3 @@ def delete_booking(bookingID) :
 
 if __name__ == '__main__':
    app.run('0.0.0.0', port=8080)
-   
