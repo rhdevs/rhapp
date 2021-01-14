@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
+import { User } from '../../../store/profile/types'
 
 const AddFriendButtonStyle = {
   size: 'large',
@@ -30,9 +31,8 @@ const ButtonDiv = styled.div`
   margin-bottom: 6vh;
 `
 
-function FriendAndTelegramButtons({ handleClick }: { handleClick: () => void }) {
+export default function FriendAndTelegramButtons({ user }: { user: User }) {
   const [isFriend, setIsFriend] = useState(false)
-
   const handleFriendButtonClick = () => {
     setIsFriend(!isFriend)
   }
@@ -42,11 +42,16 @@ function FriendAndTelegramButtons({ handleClick }: { handleClick: () => void }) 
       <Button type="primary" style={AddFriendButtonStyle} onClick={handleFriendButtonClick}>
         {isFriend ? 'Unfriend' : 'Add Friend'}
       </Button>
-      <Button type="primary" style={TelegramButtonStyle} onClick={handleClick}>
+      <Button
+        type="primary"
+        style={TelegramButtonStyle}
+        onClick={(e) => {
+          e.preventDefault()
+          window.location.href = 'https://t.me/' + user.telegramHandle
+        }}
+      >
         Telegram
       </Button>
     </ButtonDiv>
   )
 }
-
-export default FriendAndTelegramButtons

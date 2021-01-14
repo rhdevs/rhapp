@@ -1,5 +1,5 @@
 import { Booking, Facility } from './facilityBooking/types'
-import { WashingMachine, WMStatus } from './laundry/types'
+import { User } from './profile/types'
 import { SearchResult } from './types'
 import { SchedulingEvent } from './scheduling/types'
 
@@ -159,58 +159,58 @@ export const eventsDummy: SchedulingEvent[] = [
 // startTime	DATETIME 	Log of starting time for state	1/1/1970 0000
 // duration	INT	Duration of a job state (in minutes)	15, 45, 90
 // job	VARCHAR	Current job state	Vacant, Reserved, In Use, Done, Alerted, Collected, Cancelled
-export const WashingMachineListStub: WashingMachine[] = [
-  {
-    machineId: '6100',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.AVAIL,
-  },
-  {
-    machineId: '6101',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.INUSE,
-  },
-  {
-    machineId: '6102',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.UNCOLLECTED,
-  },
-  {
-    machineId: '6103',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.COMPLETED,
-  },
-  {
-    machineId: '6104',
-    locationId: '61',
-    userId: '1',
-    jobId: '2312',
-    type: 'Washing Machine',
-    startTime: 1608723138,
-    duration: 60,
-    job: WMStatus.RESERVED,
-  },
-]
+// export const WashingMachineListStub: WashingMachine[] = [
+//   {
+//     machineId: '6100',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.AVAIL,
+//   },
+//   {
+//     machineId: '6101',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.INUSE,
+//   },
+//   {
+//     machineId: '6102',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.UNCOLLECTED,
+//   },
+//   {
+//     machineId: '6103',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.COMPLETED,
+//   },
+//   {
+//     machineId: '6104',
+//     locationId: '61',
+//     userId: '1',
+//     jobId: '2312',
+//     type: 'Washing Machine',
+//     startTime: 1608723138,
+//     duration: 60,
+//     job: WMStatus.RESERVED,
+//   },
+// ]
 
 export const facilityBookingsStubs = [
   {
@@ -249,6 +249,22 @@ export const searchResultsStub: SearchResult[] = [
     title: 'Bob',
   },
 ]
+
+export const userProfileStub: User = {
+  userId: 1,
+  profilePictureUrl:
+    'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+  displayName: 'Zhang MaoMao',
+  telegramHandle: 'zhoumm',
+  block: 8,
+  bio: 'This is my bio hur hur',
+  ccas: [
+    { userId: '1', ccaId: 1, ccaName: 'RHDevs' },
+    { userId: '1', ccaId: 1, ccaName: 'Badminton' },
+  ],
+  modules: ['CS1010', 'CFG1000', 'CS2040S'],
+  posts: [],
+}
 
 export const dummyNusModsLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
