@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
+import { useSelector } from 'react-redux'
 import { eventsDummy, userEventsDummy, dummyNusModsLink, getHallEventTypesStub } from '../stubs'
-import { Dispatch, GetState } from '../types'
+import { Dispatch, GetState, RootState } from '../types'
 import {
   ActionTypes,
   UserEvent,
@@ -225,6 +226,7 @@ export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTy
   dispatch(setIsLoading(false))
 }
 
+//send userId and eventId to backend
 export const editUserEvents = (action: string, selectedEventName: string) => (dispatch: Dispatch<ActionTypes>) => {
   const fetchedUserData = transformScheduleTypeToRhEvent(userEventsDummy)
   const fetchedEventsData = transformScheduleTypeToRhEvent(eventsDummy)
@@ -248,13 +250,17 @@ export const editUserEvents = (action: string, selectedEventName: string) => (di
 
 export const setUserNusModsLink = (userNusModsLink: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK, userNusModsLink: userNusModsLink })
+  console.log(userNusModsLink)
 }
 
-export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
   const currentYear = new Date().getFullYear()
   const academicYear = String(currentYear - 1) + '-' + String(currentYear)
-  const userNusModsLink = dummyNusModsLink
+
+  const { userNusModsLink } = getState().scheduling
+
+  // const userNusModsLink = dummyNusModsLink //fetch link *include validation!
 
   const dataFromLink = extractDataFromLink(userNusModsLink)
   let retrivedEventInformation: UserEvent[] = []
@@ -263,12 +269,15 @@ export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>
   dataFromLink.map(async (oneModuleData) => {
     temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
     retrivedEventInformation = temporaryData.flat()
-    dispatch({
-      type: SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS,
-      userNusModsEvents: retrivedEventInformation,
-    })
+    if (oneModuleData === last(dataFromLink)) {
+      console.log(retrivedEventInformation)
+      dispatch({
+        type: SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS,
+        userNusModsEvents: retrivedEventInformation,
+      })
+    }
   })
-
+  //post to userEvents
   dispatch(setIsLoading(false))
 }
 

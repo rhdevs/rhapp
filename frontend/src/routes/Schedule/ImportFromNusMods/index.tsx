@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { LeftOutlined } from '@ant-design/icons'
@@ -11,6 +11,8 @@ import Button from '../../../components/Mobile/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { setUserNusModsLink, getUserNusModsEvents } from '../../../store/scheduling/action'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -43,13 +45,12 @@ export default function ImportFromNusMods() {
   const history = useHistory()
   const dispatch = useDispatch()
 
+  const [link, setLink] = useState('')
+  const [modal, setModal] = useState(false)
   const { userNusModsLink, userNusModsEvents } = useSelector((state: RootState) => state.scheduling)
 
-  useEffect(() => {
-    dispatch(getUserNusModsEvents())
-  }, [dispatch])
   // useEffect(() => {
-  //   dispatch(fetchUserEvents())
+  //   dispatch(getUserNusModsEvents())
   // }, [dispatch])
 
   const leftIcon = (
@@ -66,21 +67,32 @@ export default function ImportFromNusMods() {
       <TopNavBar title={'NUSMods'} leftIcon={true} leftIconComponent={leftIcon} />
       <img alt="plusCircle" style={{ width: '90vw', display: 'flex', margin: '15px auto' }} src={nusmodsImportImage} />
       <BottomContainer>
+        {modal && (
+          <ConfirmationModal
+            title={'Confirm Import?'}
+            hasLeftButton={true}
+            leftButtonText={'Import'}
+            onLeftButtonClick={() => {
+              dispatch(setUserNusModsLink(link))
+              dispatch(getUserNusModsEvents())
+              history.push(PATHS.SCHEDULE_PAGE)
+            }}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => {
+              setModal(false)
+            }}
+          />
+        )}
         <LinkText>Copy link from NUSMods below:</LinkText>
-        <InputRow
-          placeholder={'Enter link here...'}
-          value={userNusModsLink}
-          setValue={(link: string) => dispatch(setUserNusModsLink(link))}
-        />
+        <InputRow placeholder={'Enter link here...'} value={link} setValue={setLink} />
         <ButtonContainer>
           <Button
             stopPropagation={true}
             hasSuccessMessage={false}
             defaultButtonDescription={'Import'}
             onButtonClick={() => {
-              console.log(userNusModsLink)
-              dispatch(setUserNusModsLink(userNusModsLink))
-              console.log(userNusModsEvents)
+              setModal(!modal)
+              console.log(modal)
             }}
             isFlipButton={false}
           />
