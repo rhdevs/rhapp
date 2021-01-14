@@ -83,7 +83,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
-    const date = new Date(eventStartTime * 1000).getDate()
+    const date = new Date(eventStartTime * 1000)
     return format(date, 'dd-MMM-yy kk:mm')
   }
 

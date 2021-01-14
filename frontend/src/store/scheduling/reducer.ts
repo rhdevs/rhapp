@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, UserEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
+import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { SearchResult } from '../types'
 
 const initialState = {
@@ -28,15 +28,15 @@ const initialState = {
 
 type State = {
   isLoading: boolean
-  userEvents: UserEvent[][][]
-  userEventsList: UserEvent[]
-  newUserEvents: UserEvent[]
+  userEvents: TimetableEvent[][][]
+  userEventsList: SchedulingEvent[]
+  newUserEvents: TimetableEvent[]
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
   userNusModsLink: string
-  userNusModsEvents: UserEvent[]
+  userNusModsEvents: TimetableEvent[]
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
