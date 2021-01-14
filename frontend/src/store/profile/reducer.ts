@@ -1,7 +1,7 @@
 import { Reducer } from 'redux'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
-const initialState = {
+export const initialState = {
   user: {
     userId: 0,
     profilePictureUrl:
@@ -10,14 +10,14 @@ const initialState = {
     telegramHandle: 'zhoumm',
     block: 8,
     bio: 'This is my bio hur hur',
-    cca: [{ userId: '1', ccaId: 1, ccaName: 'RHDevs' }],
-    modules: ['CS1010', 'CFG1000'],
+    ccas: [{ userId: '1', ccaId: 1, ccaName: 'RHDevs' }],
+    modules: ['CS1010', 'CFG1000', 'CS2040S'],
     posts: [],
   },
   newDisplayName: '',
   newTelegramHandle: '',
   newBio: '',
-  newCCA: [],
+  newCCAs: [],
   newModules: [],
 }
 
@@ -26,7 +26,7 @@ type State = {
   newDisplayName: string
   newTelegramHandle: string
   newBio: string
-  newCCA: UserCCA[]
+  newCCAs: UserCCA[]
   newModules: string[]
 }
 
@@ -44,8 +44,14 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
         newDisplayName: action.newDisplayName,
         newTelegramHandle: action.newTelegramHandle,
         newBio: action.newBio,
-        newCCA: action.newCCA,
+        newCCAs: action.newCCAs,
         newModules: action.newModules,
+      }
+    }
+    case PROFILE_ACTIONS.UPDATE_CURRENT_USER: {
+      return {
+        ...state,
+        user: action.user,
       }
     }
     default:

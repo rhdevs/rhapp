@@ -204,7 +204,10 @@ export const userProfileStub: User = {
   telegramHandle: 'zhoumm',
   block: 8,
   bio: 'This is my bio hur hur',
-  cca: [{ userId: '1', ccaId: 1, ccaName: 'RHDevs' }],
-  modules: ['CS1010', 'CFG1000'],
+  ccas: [
+    { userId: '1', ccaId: 1, ccaName: 'RHDevs' },
+    { userId: '1', ccaId: 1, ccaName: 'Badminton' },
+  ],
+  modules: ['CS1010', 'CFG1000', 'CS2040S'],
   posts: [],
 }

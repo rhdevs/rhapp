@@ -7,7 +7,7 @@ export type User = {
   telegramHandle: string
   block: number
   bio: string
-  cca: UserCCA[]
+  ccas: UserCCA[]
   modules: string[]
   posts: Post[]
 }
@@ -21,6 +21,9 @@ export type UserCCA = {
 export enum PROFILE_ACTIONS {
   SET_USER_DETAILS = 'PROFILE_ACTIONS.SET_USER_DETAILS',
   EDIT_USER_DETAILS = 'PROFILE_ACTIONS.EDIT_USER_DETAILS',
+  UPDATE_CURRENT_USER = 'PROFILE_ACTIONS.UPDATE_CURRENT_USER',
+  UPDATE_USER_MODULES = 'PROFILE_ACTIONS.UPDATE_USER_MODULES',
+  UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
 }
 
 type SetUserDetails = {
@@ -33,8 +36,23 @@ type EditUserDetails = {
   newDisplayName: string
   newTelegramHandle: string
   newBio: string
-  newCCA: UserCCA[]
+  newCCAs: UserCCA[]
   newModules: string[]
 }
 
-export type ActionTypes = SetUserDetails | EditUserDetails
+type UpdateCurrentUser = {
+  type: typeof PROFILE_ACTIONS.UPDATE_CURRENT_USER
+  user: User
+}
+
+type UpdateUserModules = {
+  type: typeof PROFILE_ACTIONS.UPDATE_USER_MODULES
+  newModules: string[]
+}
+
+type UpdateUserCcas = {
+  type: typeof PROFILE_ACTIONS.UPDATE_USER_CCAS
+  newCcas: UserCCA[]
+}
+
+export type ActionTypes = SetUserDetails | EditUserDetails | UpdateCurrentUser | UpdateUserModules | UpdateUserCcas

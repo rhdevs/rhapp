@@ -75,10 +75,9 @@ const EditPersonalInfoContainer = () => {
   const { newDisplayName, newTelegramHandle, newBio, user } = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
 
-  const onFinish = (values: string) => {
-    console.log(values)
+  const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
-    dispatch(handleEditProfileDetails(values))
+    dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
   }
 
   return (

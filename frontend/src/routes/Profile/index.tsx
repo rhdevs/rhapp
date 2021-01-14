@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Tabs } from 'antd'
+import { Button, Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
-import ActivitiesCard from './Components/ActivitiesCard'
+import ActivitiesCard from './components/ActivitiesCard'
 import { useHistory } from 'react-router-dom'
-import DetailsCard from './Components/DetailsCard'
-import EditProfileButton from './Components/EditProfileButton'
-import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
+import EditProfileButton from './components/EditProfileButton'
+import FriendAndTelegramButtons from './components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
@@ -86,6 +85,7 @@ export default function Profile() {
 
   useEffect(() => {
     dispatch(fetchUserDetails())
+    console.log(user)
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
@@ -101,7 +101,8 @@ export default function Profile() {
         <ActivitiesCard />
       </TabPane>
       <TabPane tab="Details" key="2">
-        <DetailsCard />
+        <CCAItem />
+        <ModulesItem />
       </TabPane>
     </CustomTabs>
   )
@@ -123,6 +124,46 @@ export default function Profile() {
       <BioParagraph>{user?.bio}</BioParagraph>
     </ProfileDetailsGroup>
   )
+
+  const CCAItem = () => {
+    return (
+      <div className="site-card-border-less-wrapper">
+        <Card
+          title={<span style={{ fontSize: '20px' }}>CCAs</span>}
+          bordered={false}
+          style={{ width: '80vw' }}
+          size={'small'}
+        >
+          {user.ccas.map((cca) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{cca.ccaName}</span>
+            )
+          })}
+        </Card>
+      </div>
+    )
+  }
+
+  const ModulesItem = () => {
+    return (
+      <div className="site-card-border-less-wrapper">
+        <Card
+          title={<span style={{ fontSize: '20px' }}>Modules</span>}
+          bordered={false}
+          style={{ width: '80vw' }}
+          size={'small'}
+        >
+          {user.modules.map((module) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{module}</span>
+            )
+          })}
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <>
