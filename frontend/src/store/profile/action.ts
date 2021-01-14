@@ -1,7 +1,6 @@
 import { userProfileStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
-import { initialState } from './reducer'
-import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
+import { ActionTypes, PROFILE_ACTIONS, User } from './types'
 
 export const fetchUserDetails = () => (dispatch: Dispatch<ActionTypes>) => {
   const selectedUser = userProfileStub
