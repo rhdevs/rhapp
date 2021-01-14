@@ -190,3 +190,31 @@ export const updateMachine = (updatedState: string, machineID: string) => (
 export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_DURATION, duration: duration })
 }
+
+export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { duration, filteredMachines } = getState().laundry
+  const queryBody: { machineID: string; duration: number } = {
+    machineID: machineID,
+    duration: duration,
+  }
+
+  console.log(queryBody)
+  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.EDIT_DURATION, {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(queryBody),
+  })
+    .then((resp) => resp)
+    .then((data) => {
+      if (data.ok) {
+        console.log('success')
+      }
+    })
+  filteredMachines.forEach((machine) => {
+    if (machine.machineID === machineID) machine.duration = duration
+  })
+  dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
+}

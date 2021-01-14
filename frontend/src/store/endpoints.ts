@@ -20,6 +20,7 @@ export enum ENDPOINTS {
   LAUNDRY_MACHINE = '/laundry/machine',
   UPDATE_MACHINE = '/laundry/machine',
   LAUNDRY_JOB = '/laundry/job',
+  EDIT_DURATION = '/laundry/machine/editDuration',
 
   // SCHEDULING
   USER_TIMETABLE = '/timetable/all',

@@ -12,7 +12,7 @@ import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetDuration, SetEditMode, updateMachine } from '../../../store/laundry/action'
+import { SetDuration, SetEditMode, UpdateJobDuration, updateMachine } from '../../../store/laundry/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -174,7 +174,7 @@ export default function ViewWashingMachine() {
         <UseWashingMachineSection>
           <StyledSlider
             min={1}
-            max={120}
+            max={machine?.job === WMStatus.RESERVED ? 15 : 120}
             tooltipVisible
             onChange={(value: number) => dispatch(SetDuration(value))}
             value={duration}
@@ -191,6 +191,7 @@ export default function ViewWashingMachine() {
             onButtonClick={() => {
               if (isEdit) {
                 dispatch(SetEditMode())
+                dispatch(UpdateJobDuration(machine.machineID))
               } else {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
               }
@@ -222,6 +223,7 @@ export default function ViewWashingMachine() {
             onButtonClick={() => {
               if (isEdit) {
                 dispatch(SetEditMode())
+                dispatch(UpdateJobDuration(machine.machineID))
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
               }
