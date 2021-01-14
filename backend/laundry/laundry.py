@@ -46,12 +46,12 @@ def location(block_num):
 @cross_origin(supports_credentials=True)
 def laundry_by_location():
     try :
-        job = request.args.get('job')
-        locationID = request.args.get('locationID')
-        type = request.args.get('type')
-        machineID = request.args.get('machineID')
-
         if request.method == 'GET':
+            job = request.args.get('job')
+            locationID = request.args.get('locationID')
+            type = request.args.get('type')
+            machineID = request.args.get('machineID')
+
             if machineID :
                 laundry_info = dumps(db.LaundryMachine.find_one({'machineID' : machineID}))
                 return make_response(laundry_info, 200)
@@ -72,16 +72,19 @@ def laundry_by_location():
                 return make_response(dumps(db.LaundryMachine.find()), 200)
             
         elif request.method == 'POST':
-            data = request.get_json()          
+     
+            data = request.get_json()   
+           
             # it is possible to change into JSON format, using request.json to check 
             job = str(data.get("job"))
             machineID = str(data.get("machineID"))
             userID = str(data.get("userID"))
-
+      
             myquery = {
                 'machineID' : machineID
             }
             currMachine = db.LaundryMachine.find_one({'machineID' : machineID})
+
             status = currMachine.get("job")
             currentDuration = currMachine.get("duration")
             
@@ -269,5 +272,4 @@ def laundry_machine_by_job():
         return make_response({"err" : str(e)}, 400)
 
 if __name__ == "__main__":
-    # print(os.environ['APP_SETTINGS'])
-    app.run(debug = True)
+  app.run('0.0.0.0', port=8080)
