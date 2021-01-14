@@ -96,12 +96,17 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 }
 
 export const SetSelectedMachine = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetManualEditMode(false))
   dispatch({ type: LAUNDRY_ACTIONS.SET_SELECTED_MACHINE, selectedMachine: selectedMachine })
 }
 
 export const SetEditMode = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isEdit } = getState().laundry
   dispatch({ type: LAUNDRY_ACTIONS.SET_EDIT_MODE, isEdit: !isEdit })
+}
+
+export const SetManualEditMode = (isEdit: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: LAUNDRY_ACTIONS.SET_EDIT_MODE, isEdit: isEdit })
 }
 
 export const getUserProfilePic = (machineID: string) => {
@@ -125,28 +130,63 @@ export const getUserProfilePic = (machineID: string) => {
   return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
 }
 
+/**
+ *
+ * AVAILABLE ---> job: "None" ---> RESERVED
+ * AVAILABLE ---> job: not in broken ---> ERROR
+ * BROKEN ---> job: not AVAILABLE ---> Error
+ * INUSE // ALERTED ---> job: "Completed" ---> AVAILABLE
+ * INUSE // ALERTED ---> job: "Alerted" ---> ALERTED
+ * WHATEVER ---> job: "Cancelled" ---> AVAILABLE
+ *
+ **/
 export const updateMachine = (updatedState: string, machineID: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { filteredMachines } = getState().laundry
-  const queryBody: { job: string; machineID: string; userID: string } = {
-    job: updatedState,
+  const { filteredMachines, duration } = getState().laundry
+  let newJob
+  switch (updatedState) {
+    case 'In Use':
+    case 'Reserved':
+      newJob = 'None'
+      break
+    case 'Available':
+      newJob = 'Cancelled'
+      break
+    default:
+      newJob = 'None'
+  }
+
+  const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
+    job: newJob,
     machineID: machineID,
     userID: '1', //TODO: Update userId
+    currentDuration: duration,
   }
+
+  console.log(queryBody)
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
     method: 'POST',
     mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(queryBody),
   })
-    .then((resp) => resp.json())
+    .then((resp) => resp)
     .then((data) => {
-      console.log(data)
+      if (data.ok) {
+        console.log('success') // TODO: user interaction for successfulyl booked
+      }
     })
 
   filteredMachines.forEach((machine) => {
     if (machine.machineID === machineID) machine.job = updatedState as WMStatus
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
+}
+
+export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: LAUNDRY_ACTIONS.SET_DURATION, duration: duration })
 }

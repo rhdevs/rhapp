@@ -11,6 +11,7 @@ const initialState = {
   selectedLevel: null,
   filteredMachines: [],
   selectedMachine: null,
+  duration: 60,
 }
 
 type State = {
@@ -23,6 +24,7 @@ type State = {
   selectedLevel: string | null
   filteredMachines: WashingMachine[]
   selectedMachine: WashingMachine | null
+  duration: number
 }
 
 export const laundry: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -69,6 +71,13 @@ export const laundry: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         isEdit: action.isEdit,
+      }
+    }
+
+    case LAUNDRY_ACTIONS.SET_DURATION: {
+      return {
+        ...state,
+        duration: action.duration,
       }
     }
     default:

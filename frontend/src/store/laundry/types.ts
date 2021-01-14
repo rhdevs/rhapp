@@ -32,6 +32,7 @@ export enum LAUNDRY_ACTIONS {
   SET_FILTERED_MACHINES = 'LAUNDRY_ACTIONS.SET_FILTERED_MACHINES',
   SET_SELECTED_MACHINE = 'LAUNDRY_ACTIONS.SET_SELECTED_MACHINE',
   SET_EDIT_MODE = 'LAUNDRY_ACTIONS.SET_EDIT_MODE',
+  SET_DURATION = 'LAUNDRY_ACTIONS.SET_DURATION',
 }
 
 type GetLocationList = {
@@ -67,6 +68,11 @@ type SetEditMode = {
   isEdit: boolean
 }
 
+type SetDuration = {
+  type: typeof LAUNDRY_ACTIONS.SET_DURATION
+  duration: number
+}
+
 export type ActionTypes =
   | GetLocationList
   | SetIsLoading
@@ -74,3 +80,4 @@ export type ActionTypes =
   | SetFilteredMachines
   | SetSelectedMachine
   | SetEditMode
+  | SetDuration

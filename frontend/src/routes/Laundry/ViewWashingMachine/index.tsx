@@ -12,7 +12,7 @@ import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetEditMode, updateMachine } from '../../../store/laundry/action'
+import { SetDuration, SetEditMode, updateMachine } from '../../../store/laundry/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -87,7 +87,7 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const { selectedMachine, isEdit } = useSelector((state: RootState) => state.laundry)
+  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
   const dispatch = useDispatch()
   const MachineDetails = (machine: WashingMachine | null) => {
     let pageTitle = 'Laundry Time!'
@@ -176,9 +176,8 @@ export default function ViewWashingMachine() {
             min={1}
             max={120}
             tooltipVisible
-            // onChange={onChange}
-            // value={typeof time.inputValue === 'number' ? time.inputValue : 0}
-            defaultValue={30}
+            onChange={(value: number) => dispatch(SetDuration(value))}
+            value={duration}
             trackStyle={{ backgroundColor: '#023666' }}
             handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
           />
@@ -207,9 +206,8 @@ export default function ViewWashingMachine() {
               min={1}
               max={120}
               tooltipVisible
-              // onChange={onChange}
-              // value={typeof time.inputValue === 'number' ? time.inputValue : 0}
-              defaultValue={30}
+              onChange={(value: number) => dispatch(SetDuration(value))}
+              value={duration}
               trackStyle={{ backgroundColor: '#023666' }}
               handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
             />

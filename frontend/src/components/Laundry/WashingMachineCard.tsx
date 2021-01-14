@@ -79,6 +79,19 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       ? '#EB5757'
       : '#002642'
 
+  const calculateRemainingTime = (startTime: number, duration: number) => {
+    console.log(startTime)
+    console.log(duration)
+    // const endUnixTime = duration * 1000 * 60 + startTime
+    // const timeDifferenceInMiliSeconds: number = endUnixTime - new Date().getTime()
+    // const timeDiffInSeconds = timeDifferenceInMiliSeconds / 1000 / 60
+
+    // const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(2)
+    // const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(2)
+    // return `${minutes} mins ${seconds} seconds left`
+    return `${duration} long`
+  }
+
   switch (props.washingMachine.job) {
     case WMStatus.AVAIL:
       label = 'Reserve'
@@ -98,7 +111,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       }
       break
     case WMStatus.RESERVED:
-      label = '14:39 remaining'
+      label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       iconSrc = tickIcon
       washingMachineIcon = wm_reserved
       rightAction = () => {
@@ -107,11 +120,12 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       }
       break
     case WMStatus.INUSE:
-      label = '14:39 remaining'
+      label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
       iconSrc = getUserProfilePic(props.washingMachine.machineID)
       rightAction = () => {
-        //TODO: GO TO USER PROFILE
+        dispatch(SetSelectedMachine(props.washingMachine))
+        history.push(PATHS.VIEW_WASHING_MACHINE)
       }
       break
     case WMStatus.UNCOLLECTED:
