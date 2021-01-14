@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
-import ProfilePicture from '../../../assets/profilePicture.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { handleEditProfileDetails } from '../../../store/profile/action'
@@ -31,20 +30,6 @@ const PersonalInfoSpan = styled.span`
   vertical-align: middle;
   padding-left: 15vw;
 `
-
-interface PersonalInfo {
-  name: string
-  telegram: string
-  block: string
-  bio: string
-}
-
-const personalInfo: PersonalInfo = {
-  name: 'Zhou Maomao',
-  telegram: '@zhoumm',
-  block: 'Block 8',
-  bio: 'This is my bio I’m very cool please be my friend hurhur',
-}
 
 const LongButton = {
   size: 'large',
