@@ -5,9 +5,9 @@ import dayjs from 'dayjs'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input, Upload, Select } from 'antd'
+import { Input, Select } from 'antd'
 import { DatePicker } from 'antd-mobile'
-import { LeftOutlined, CheckOutlined, CameraFilled } from '@ant-design/icons'
+import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
@@ -66,16 +66,6 @@ const StyledTitle = styled.text`
   line-height: 30px;
   margin-right: 20px;
   white-space: nowrap;
-`
-
-const UploadButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 55vw;
-  height: 50px;
-  border: 1px dashed #ddd;
-  border-radius: 5px;
 `
 
 const DatePickerRow = styled.div`
@@ -220,14 +210,6 @@ export default function CreateEvent() {
               </Option>
             ))}
           </StyledSelect>
-        </Row>
-        <Row>
-          <StyledTitle>Upload Image</StyledTitle>
-          <Upload name="Event_Image" showUploadList={false}>
-            <UploadButton>
-              <CameraFilled style={{ fontSize: 20 }} />
-            </UploadButton>
-          </Upload>
         </Row>
       </Background>
     </div>
