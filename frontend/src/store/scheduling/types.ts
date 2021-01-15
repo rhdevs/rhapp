@@ -55,6 +55,7 @@ export type SchedulingEvent = {
   ccaID: number
   userID: string
   image: null | string
+  isPrivate: boolean
 }
 
 /** Actions' types */
