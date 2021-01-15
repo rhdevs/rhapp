@@ -5,9 +5,9 @@ import dayjs from 'dayjs'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input, Upload, Select } from 'antd'
+import { Input, Select } from 'antd'
 import { DatePicker } from 'antd-mobile'
-import { LeftOutlined, CheckOutlined, CameraFilled } from '@ant-design/icons'
+import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
@@ -17,12 +17,13 @@ import {
   editEventName,
   editEventLocation,
   editEventFromDate,
-  editCca,
+  editTargetAudience,
   editDescription,
   handleSubmitCreateEvent,
   getHallEventTypes,
   editHallEventType,
   editEventToDate,
+  getTargetAudienceList,
 } from '../../../store/scheduling/action'
 import { useEffect } from 'react'
 
@@ -68,16 +69,6 @@ const StyledTitle = styled.text`
   white-space: nowrap;
 `
 
-const UploadButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 55vw;
-  height: 50px;
-  border: 1px dashed #ddd;
-  border-radius: 5px;
-`
-
 const DatePickerRow = styled.div`
   width: 100%;
   display: flex;
@@ -100,16 +91,16 @@ const BackIcon = (
 export default function CreateEvent() {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getHallEventTypes())
+    dispatch(getHallEventTypes()), dispatch(getTargetAudienceList())
   }, [dispatch])
 
   const {
     hallEventTypes,
+    targetAudienceList,
     newEventName,
     newEventLocation,
     newEventFromDate,
     newEventToDate,
-    newCca,
     newDescription,
   } = useSelector((state: RootState) => state.scheduling)
 
@@ -196,14 +187,16 @@ export default function CreateEvent() {
           value={newEventLocation}
           setValue={(eventLocation: string) => dispatch(editEventLocation(eventLocation))}
         />
-        <InputRow
-          title="CCA"
-          placeholder="CCA Name"
-          value={newCca}
-          setValue={(newCCA: string) => {
-            dispatch(editCca(newCCA))
-          }}
-        />
+        <Row>
+          <StyledTitle>For who</StyledTitle>
+          <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editTargetAudience(value.toString()))}>
+            {targetAudienceList.map((targetAudience, idx) => (
+              <Option key={idx} value={targetAudience}>
+                {targetAudience}
+              </Option>
+            ))}
+          </StyledSelect>
+        </Row>
         <InputRow
           title="Description"
           placeholder="Tell us what your event is about!"
@@ -220,14 +213,6 @@ export default function CreateEvent() {
               </Option>
             ))}
           </StyledSelect>
-        </Row>
-        <Row>
-          <StyledTitle>Upload Image</StyledTitle>
-          <Upload name="Event_Image" showUploadList={false}>
-            <UploadButton>
-              <CameraFilled style={{ fontSize: 20 }} />
-            </UploadButton>
-          </Upload>
         </Row>
       </Background>
     </div>
