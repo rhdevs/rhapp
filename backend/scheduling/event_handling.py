@@ -1,25 +1,30 @@
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS, cross_origin
-import pymongo, json, os, time
+import pymongo
+import json
+import os
+import time
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type';
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
 # URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
 
 # client = pymongo.MongoClient(URL)
-client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+client = pymongo.MongoClient(
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
+
 
 @app.route("/")
 @cross_origin()
 def hello():
-  return "Welcome the Raffles Hall Events server" 
+    return "Welcome the Raffles Hall Events server"
 
 
 @app.route("/timetable/<userID>")
@@ -31,6 +36,7 @@ def getUserTimetable(userID):
         print(e)
         return {"err": "Action failed"}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
+
 
 @app.route('/event/all')
 @cross_origin()
@@ -334,6 +340,75 @@ def editAttendance():
         return {"err": "Action failed"}, 400
     return {'message': "Attendance edited"}, 200
 
+
+@app.route("/nusmods/<userID>")
+@cross_origin()
+def getMods(userID):
+    try:
+        data = db.NUSMods.find({"userID": userID})
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
+
+@app.route("/nusmods/add", methods=['POST'])
+@cross_origin()
+def addMods():
+    try:
+        data = request.get_json()
+        userID = data.get('userID')
+        mods = data.get('mods')
+
+        body = {
+            "userID": userID,
+            "mods": mods,
+        }
+        db.NUSModsinsert_one(body)
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {'message': "successful"}, 200
+
+
+@app.route("/nusmods/delete/<userID>", methods=['DELETE'])
+@cross_origin()
+def deleteMods(userID):
+    try:
+        db.NUSMods.delete_one({"userID": userID})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {"message": "successful"}, 200
+
+
+@app.route("/nusmods/edit", methods=['PUT'])
+@cross_origin()
+def editMods(userID):
+    try:
+        data = request.get_json()
+        userID = data.get('userID')
+        mods = data.get('mods')
+
+        body = {
+            "userID": userID,
+            "mods": mods,
+        }
+
+        result = db.NUSMods.update_one({"userID": userID}, {'$set': body})
+        if int(result.matched_count) > 0:
+            return {'message': "Changed"}, 200
+        else:
+            return Response(status=204)
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {"message": "successful"}, 200
+
+
 if __name__ == "__main__":
-    app.run(threaded = True, debug = True)
+    app.run(threaded=True, debug=True)
     # app.run('0.0.0.0', port=8080)
