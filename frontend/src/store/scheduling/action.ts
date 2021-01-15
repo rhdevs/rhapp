@@ -10,7 +10,7 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 
 const getEventsFromBackend = async (endpoint, methods) => {
   await fetch(DOMAIN_URL.EVENT + endpoint, {
@@ -364,37 +364,20 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, event: SchedulingEvent) => (dispatch: Dispatch<ActionTypes>) => {
-  // const fetchedUserData = userEventsDummy.map((userEvent) => {
-  //   return convertSchedulingEventToTimetableEvent(userEvent)
-  // })
-  // const fetchedEventsData = eventsDummy.map((event) => {
-  //   return convertSchedulingEventToTimetableEvent(event)
-  // })
-  // let newUserEvents: TimetableEvent[] = []
-
-  const requestBodyForRemove = {
-    userID: event.userID,
-    eventID: event.eventID,
-  }
-
-  const requestBodyForAdd = {
-    userID: event.userID,
-    eventID: event.eventID,
-  }
-
+export const editUserEvents = (action: string, event: SchedulingEvent) => {
   if (action === 'remove') {
-    post(ENDPOINTS.DELETE_EVENT, DOMAINS.EVENT, requestBodyForRemove, {}, String(event.eventID))
-      .then((resp) => {
-        if (resp.status >= 400) {
-          console.log('FAILURE')
-        } else {
-          console.log('SUCCESS!!!')
-        }
-      })
-      .catch(() => {
-        console.log('catch block')
-      })
+    console.log('REMOVE: eventId - ' + event.eventID + '; userId: ' + event.userID)
+    // post(ENDPOINTS.DELETE_EVENT, DOMAINS.EVENT, requestBodyForRemove, {}, String(event.eventID))
+    //   .then((resp) => {
+    //     if (resp.status >= 400) {
+    //       console.log('FAILURE')
+    //     } else {
+    //       console.log('SUCCESS!!!')
+    //     }
+    //   })
+    //   .catch(() => {
+    //     console.log('catch block')
+    //   })
   } else if (action === 'add') {
     console.log('ADD: eventId - ' + event.eventID + '; userId: ' + event.userID)
     // post(ENDPOINTS.ADD_EVENT, DOMAINS.EVENT, requestBody)
