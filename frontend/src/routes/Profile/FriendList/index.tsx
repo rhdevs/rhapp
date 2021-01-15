@@ -8,7 +8,6 @@ import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { fetchUserDetails } from '../../../store/profile/action'
-import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -52,19 +51,11 @@ const FriendLabels = styled.div`
 
 export default function FriendList() {
   const [hasFriends, setHasFriends] = useState(false)
-  const history = useHistory()
   const dispatch = useDispatch()
   const { user } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(fetchUserDetails())
-
-    // Bug because useEffect occurs after render. pass from parent?
-    // if (user.friends.length === 0) {
-    //   setHasFriends(false)
-    // } else {
-    //   setHasFriends(true)
-    // }
   }, [dispatch])
 
   const handleSearch = () => {
