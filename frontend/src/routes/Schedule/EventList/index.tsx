@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { format } from 'date-fns'
@@ -12,7 +12,6 @@ import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-// import { searchedEvents } from '../../../store/stubs'
 import { editUserEvents, fetchAllEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
@@ -22,6 +21,7 @@ const Background = styled.div`
   height: 100vh;
   width: 100vw;
 `
+
 const NoEventDataText = styled.text`
   font-family: Inter;
   color: black;
@@ -30,44 +30,18 @@ const NoEventDataText = styled.text`
   justify-content: center;
 `
 
-type CurrentEvents = {
-  avatar?: string
-  title: string
-  dateTime: string
-  description: string
-  bottomElement: ReactElement
-}
+const TopContainer = styled.div`
+  position: inherit;
+`
 
-const testData: CurrentEvents[] = [
-  {
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    title: 'Block 7 Christmas Event',
-    dateTime: '08-dec-20 01:00',
-    description: 'Only for block 7 members! Follow us @block7 to find out more!',
-    bottomElement: (
-      <Button
-        hasSuccessMessage={true}
-        buttonIsPressed={true}
-        stopPropagation={true}
-        defaultButtonDescription={'Add to Schedule'}
-        updatedButtonDescription={'Remove from Schedule'}
-      />
-    ),
-  },
-  {
-    title: 'dummyEvent',
-    dateTime: 'dd-mm-yyyy hh:mm',
-    description: 'description description description description description description',
-    bottomElement: (
-      <Button
-        hasSuccessMessage={true}
-        stopPropagation={true}
-        defaultButtonDescription={'Add to Schedule'}
-        updatedButtonDescription={'Remove from Schedule'}
-      />
-    ),
-  },
-]
+const SearchBarContainer = styled.div`
+  padding: 0 6.5vw 1vh;
+`
+
+const ResultsContainer = styled.div`
+  overflow: scroll;
+  height: 73vh;
+`
 
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
@@ -148,7 +122,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     })
   }
 
-  const data = testData //eventsToCards(allEvents)
+  const data = currentEvents ?? allEvents
 
   const renderResults = () => {
     if (searchValue) {
@@ -162,26 +136,13 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      console.log(allEvents)
-      return eventsToCards(allEvents)
-      // return data ? (
-      //   data.map((event, index) => {
-      //     return (
-      //       <ImageDescriptionCard
-      //         key={index}
-      //         avatar={event.avatar}
-      //         title={event.title}
-      //         dateTime={event.dateTime}
-      //         description={event.description}
-      //         bottomElement={event.bottomElement}
-      //       />
-      //     )
-      //   })
-      // ) : (
-      //   <>
-      //     <NoEventDataText>No Upcoming Events</NoEventDataText>
-      //   </>
-      // )
+      return data ? (
+        eventsToCards(data)
+      ) : (
+        <>
+          <NoEventDataText>No Upcoming Events</NoEventDataText>
+        </>
+      )
     }
   }
 
@@ -202,9 +163,13 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   console.log(searchedEvents)
   return (
     <Background>
-      <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
-      {renderResults()}
+      <TopContainer>
+        <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
+        <SearchBarContainer>
+          <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
+        </SearchBarContainer>
+      </TopContainer>
+      <ResultsContainer>{renderResults()}</ResultsContainer>
       <BottomNavBar />
     </Background>
   )

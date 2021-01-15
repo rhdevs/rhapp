@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { eventsDummy, userEventsDummy, getHallEventTypesStub } from '../stubs'
+import { getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
