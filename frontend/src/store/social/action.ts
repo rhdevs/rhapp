@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Post, SOCIAL_ACTIONS, User } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
 
 export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const postToEdit: Post = {
@@ -188,5 +188,12 @@ export const SetPostUser = (userId: number) => (dispatch: Dispatch<ActionTypes>)
   dispatch({
     type: SOCIAL_ACTIONS.SET_POST_USER,
     postUser: userDetails,
+  })
+}
+
+export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
+    postsFilter,
   })
 }

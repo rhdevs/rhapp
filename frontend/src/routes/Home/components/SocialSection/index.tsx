@@ -1,22 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { Divider } from 'antd'
 import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
 import { PATHS } from '../../../Routes'
+import { SwitchPostsFilter } from '../../../../store/social/action'
+import { POSTS_FILTER } from '../../../../store/social/types'
+import { RootState } from '../../../../store/types'
 
 type TabProps = {
   active: boolean
 }
 
 type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
-
-enum SOCIAL_TABS {
-  ALL_USERS = 'ALL_USERS',
-  OFFICIAL_USERS = 'OFFICIAL_USERS',
-  FRIEND_USERS = 'FRIEND_USERS',
-}
 
 const Sticky = styled.div`
   position: -webkit-sticky;
@@ -140,11 +138,13 @@ const dummyFriendData = dummyAllData.slice(0, 1)
 
 export default function SocialSection() {
   const history = useHistory()
-  const [isAllSocialPosts, setIsAllSocialPosts] = useState<SOCIAL_TABS>(SOCIAL_TABS.ALL_USERS)
-  const toggleTab = (socialTab: SOCIAL_TABS) => () => setIsAllSocialPosts(socialTab)
+  const dispatch = useDispatch()
+  const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
+
+  const toggleTab = (postsFilter: POSTS_FILTER) => () => dispatch(SwitchPostsFilter(postsFilter))
 
   const renderSocialPosts = () => {
-    const data = isAllSocialPosts ? dummyAllData : dummyFriendData
+    const data = currentPostsFilter ? dummyAllData : dummyFriendData
     return data.map((post: SocialPostCardProps) => <SocialPostCard {...post} key={post.dateTime} />)
   }
 
@@ -159,15 +159,15 @@ export default function SocialSection() {
           />
         </Header>
         <TabBar>
-          <Tab active={isAllSocialPosts === SOCIAL_TABS.ALL_USERS} onClick={toggleTab(SOCIAL_TABS.ALL_USERS)}>
+          <Tab active={currentPostsFilter === POSTS_FILTER.ALL} onClick={toggleTab(POSTS_FILTER.ALL)}>
             All
           </Tab>
           <Divider type="vertical" />
-          <Tab active={isAllSocialPosts === SOCIAL_TABS.OFFICIAL_USERS} onClick={toggleTab(SOCIAL_TABS.OFFICIAL_USERS)}>
+          <Tab active={currentPostsFilter === POSTS_FILTER.OFFICIAL} onClick={toggleTab(POSTS_FILTER.OFFICIAL)}>
             Official
           </Tab>
           <Divider type="vertical" />
-          <Tab active={isAllSocialPosts === SOCIAL_TABS.FRIEND_USERS} onClick={toggleTab(SOCIAL_TABS.FRIEND_USERS)}>
+          <Tab active={currentPostsFilter === POSTS_FILTER.FRIENDS} onClick={toggleTab(POSTS_FILTER.FRIENDS)}>
             Friends
           </Tab>
         </TabBar>

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Post, SOCIAL_ACTIONS, User } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
 
 const initialState = {
   isUploading: false,
@@ -11,6 +11,7 @@ const initialState = {
   warnings: [],
   posts: [],
   postUser: null,
+  postsFilter: POSTS_FILTER.ALL,
 }
 
 type State = {
@@ -23,6 +24,7 @@ type State = {
   warnings: string[]
   posts: Post[]
   postUser: User | null
+  postsFilter: POSTS_FILTER
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -87,6 +89,13 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         postUser: action.postUser,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SWITCH_POSTS_FILTER: {
+      return {
+        ...state,
+        postsFilter: action.postsFilter,
       }
     }
 

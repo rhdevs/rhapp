@@ -17,6 +17,12 @@ export type User = {
   block: string
 }
 
+export enum POSTS_FILTER {
+  ALL = 'ALL',
+  OFFICIAL = 'OFFICIAL',
+  FRIENDS = 'FRIENDS',
+}
+
 export enum SOCIAL_ACTIONS {
   GET_POST_DETAILS_TO_EDIT = 'SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT',
   EDIT_NEW_FIELDS = 'SOCIAL_ACTIONS.EDIT_NEW_FIELDS',
@@ -26,6 +32,7 @@ export enum SOCIAL_ACTIONS {
   GET_POSTS = 'SOCIAL_ACTIONS.GET_POSTS',
   DELETE_POST = 'DELETE_POST',
   SET_POST_USER = 'SET_POST_USER',
+  SWITCH_POSTS_FILTER = 'SWITCH_POSTS_FILTER',
 }
 
 type SetIsUploading = {
@@ -75,6 +82,11 @@ type SetPostUser = {
   postUser: User
 }
 
+type SwitchPostsFilter = {
+  type: typeof SOCIAL_ACTIONS.SWITCH_POSTS_FILTER
+  postsFilter: POSTS_FILTER
+}
+
 export type ActionTypes =
   | GetPostDetailsToEdit
   | EditNewfields
@@ -84,3 +96,4 @@ export type ActionTypes =
   | GetPosts
   | DeletePost
   | SetPostUser
+  | SwitchPostsFilter
