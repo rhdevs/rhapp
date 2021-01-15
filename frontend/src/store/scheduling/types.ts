@@ -87,11 +87,14 @@ type getHallEventTypes = {
   hallEventTypes: string[]
 }
 
+<<<<<<< HEAD
 type getTargetAudienceList = {
   type: typeof SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST
   targetAudienceList: string[]
 }
 
+=======
+>>>>>>> 96136a6e0a6d89338aeef16d1b25e1e9d6df7348
 type GetAllEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_ALL_EVENTS
   allEvents: SchedulingEvent[]
