@@ -32,18 +32,6 @@ def getUserTimetable(userID):
         return {"err": "Action failed"}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
-
-@app.route('/user/all')
-@cross_origin()
-def getAllUsers():
-    try:
-        data = db.User.find()
-        return json.dumps(list(data), default=lambda o: str(o)), 200
-    except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-
-
 @app.route('/event/all')
 @cross_origin()
 def getAllEvents():

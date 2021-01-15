@@ -20,6 +20,16 @@ db = client["RHApp"]
 def hello():
   return "Welcome the Raffles Hall Social server" 
 
+@app.route('/user/all')
+@cross_origin()
+def getAllUsers():
+    try:
+        data = db.User.find()
+        return json.dumps(list(data), default=lambda o: str(o)), 200
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    
 @app.route("/user/<userID>")
 @cross_origin()
 def getUser(userID):
