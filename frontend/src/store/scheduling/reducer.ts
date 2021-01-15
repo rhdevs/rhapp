@@ -11,6 +11,7 @@ const initialState = {
   userEventsEndTime: 2400,
   shareSearchResults: [],
   searchedEvents: [],
+  allEvents: [],
   userNusModsLink: '',
   userNusModsEvents: [],
 
@@ -34,6 +35,7 @@ type State = {
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
+  allEvents: SchedulingEvent[]
   userNusModsLink: string
   userNusModsEvents: TimetableEvent[]
   newEventName: string
@@ -52,6 +54,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         isLoading: action.isLoading,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_ALL_EVENTS: {
+      return {
+        ...state,
+        allEvents: action.allEvents,
       }
     }
     case SCHEDULING_ACTIONS.GET_USER_EVENTS: {
