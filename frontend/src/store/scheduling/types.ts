@@ -62,6 +62,7 @@ export type SchedulingEvent = {
 
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
+  GET_ALL_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_EVENTS',
   GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
   EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
   SET_USER_NUSMODS_LINK = 'SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK',
@@ -89,6 +90,11 @@ type getHallEventTypes = {
 type getTargetAudienceList = {
   type: typeof SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST
   targetAudienceList: string[]
+}
+
+type GetAllEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_EVENTS
+  allEvents: SchedulingEvent[]
 }
 
 type GetUserEvents = {
@@ -165,6 +171,7 @@ type SetHallEventType = {
 }
 
 export type ActionTypes =
+  | GetAllEvents
   | GetUserEvents
   | EditUserEvents
   | SetUserNusModsLink

@@ -12,9 +12,10 @@ import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { eventsDummy } from '../../../store/stubs'
-import { editUserEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
+// import { searchedEvents } from '../../../store/stubs'
+import { editUserEvents, fetchAllEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
+import { SchedulingEvent } from '../../../store/scheduling/types'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -68,18 +69,18 @@ const testData: CurrentEvents[] = [
   },
 ]
 
-export default function EventList({ currentEvents }: { currentEvents: CurrentEvents[] }) {
+export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const data = currentEvents ?? testData
+  const { userEventsList, allEvents } = useSelector((state: RootState) => state.scheduling)
 
   const [searchValue, setSearchValue] = useState('')
-  // const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
-  const { userEventsList } = useSelector((state: RootState) => state.scheduling)
+  const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
 
   useEffect(() => {
     dispatch(fetchUserEvents())
+    dispatch(fetchAllEvents())
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -87,98 +88,100 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
     return format(date, 'dd-MMM-yy kk:mm')
   }
 
+  const eventsToCards = (events) => {
+    return events.map((result, index) => {
+      return (
+        <ImageDescriptionCard
+          key={index}
+          title={result.eventName}
+          dateTime={formatDate(result.startDateTime)}
+          description={result.description}
+          bottomElement={
+            <Button
+              buttonIsPressed={
+                userEventsList.filter((event) => {
+                  return event.eventID === result.eventID
+                }).length !== 0
+              } //check if event is already in schedule
+              hasSuccessMessage={true}
+              stopPropagation={true}
+              defaultButtonDescription={'Add to Schedule'}
+              updatedButtonDescription={'Remove from Schedule'}
+              onButtonClick={(buttonIsPressed) => {
+                if (
+                  userEventsList.filter((event) => {
+                    return event.eventID === result.eventID
+                  }).length !== 0
+                ) {
+                  if (buttonIsPressed) {
+                    // event is in list and button is pressed
+                    // remove event from list
+                    console.log('remove ' + result.eventName + ' from list')
+                    dispatch(editUserEvents('remove', result))
+                  } else {
+                    // event is in list, button is un-pressed
+                    console.log('add ' + result.eventName + ' to list')
+                    dispatch(editUserEvents('add', result))
+                  }
+                } else if (
+                  userEventsList.filter((event) => {
+                    return event.eventID === result.eventID
+                  }).length === 0
+                ) {
+                  if (buttonIsPressed) {
+                    // event is not in list, button is un-pressed
+                    console.log('remove ' + result.eventName + ' from list')
+                    dispatch(editUserEvents('remove', result))
+                  } else {
+                    // event is not in list and button is pressed
+                    // add event to list
+                    console.log('add ' + result.eventName + ' to list')
+                    dispatch(editUserEvents('add', result))
+                  }
+                }
+                return
+              }}
+            />
+          }
+        />
+      )
+    })
+  }
+
+  const data = testData //eventsToCards(allEvents)
+
   const renderResults = () => {
     if (searchValue) {
-      return eventsDummy ? (
-        eventsDummy.filter((events) => {
-          return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
-        }).length === 0 ? (
+      return searchedEvents ? (
+        searchedEvents.length === 0 ? (
           <NoEventDataText>No Events Found</NoEventDataText>
         ) : (
-          eventsDummy
-            .filter((events) => {
-              return events.eventName.toLowerCase().includes(searchValue.toLowerCase())
-            })
-            .map((result, index) => {
-              return (
-                <ImageDescriptionCard
-                  key={index}
-                  title={result.eventName}
-                  dateTime={formatDate(result.startDateTime)}
-                  description={result.description}
-                  bottomElement={
-                    <Button
-                      buttonIsPressed={
-                        userEventsList.filter((event) => {
-                          return event.eventID === result.eventID
-                        }).length !== 0
-                      } //check if event is already in schedule
-                      hasSuccessMessage={true}
-                      stopPropagation={true}
-                      defaultButtonDescription={'Add to Schedule'}
-                      updatedButtonDescription={'Remove from Schedule'}
-                      onButtonClick={(buttonIsPressed) => {
-                        if (
-                          userEventsList.filter((event) => {
-                            return event.eventID === result.eventID
-                          }).length !== 0
-                        ) {
-                          if (buttonIsPressed) {
-                            // event is in list and button is pressed
-                            // remove event from list
-                            console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserEvents('remove', result.eventID, result.userID))
-                          } else {
-                            // event is in list, button is un-pressed
-                            console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserEvents('add', result.eventID, result.userID))
-                          }
-                        } else if (
-                          userEventsList.filter((event) => {
-                            return event.eventID === result.eventID
-                          }).length === 0
-                        ) {
-                          if (buttonIsPressed) {
-                            // event is not in list, button is un-pressed
-                            console.log('remove ' + result.eventName + ' from list')
-                            dispatch(editUserEvents('remove', result.eventID, result.userID))
-                          } else {
-                            // event is not in list and button is pressed
-                            // add event to list
-                            console.log('add ' + result.eventName + ' to list')
-                            dispatch(editUserEvents('add', result.eventID, result.userID))
-                          }
-                        }
-                        return
-                      }}
-                    />
-                  }
-                />
-              )
-            })
+          eventsToCards(searchedEvents)
         )
       ) : (
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      return data ? (
-        data.map((event, index) => {
-          return (
-            <ImageDescriptionCard
-              key={index}
-              avatar={event.avatar}
-              title={event.title}
-              dateTime={event.dateTime}
-              description={event.description}
-              bottomElement={event.bottomElement}
-            />
-          )
-        })
-      ) : (
-        <>
-          <NoEventDataText>No Upcoming Events</NoEventDataText>
-        </>
-      )
+      console.log(allEvents)
+      return eventsToCards(allEvents)
+      // return data ? (
+      //   data.map((event, index) => {
+      //     return (
+      //       <ImageDescriptionCard
+      //         key={index}
+      //         avatar={event.avatar}
+      //         title={event.title}
+      //         dateTime={event.dateTime}
+      //         description={event.description}
+      //         bottomElement={event.bottomElement}
+      //       />
+      //     )
+      //   })
+      // ) : (
+      //   <>
+      //     <NoEventDataText>No Upcoming Events</NoEventDataText>
+      //   </>
+      // )
     }
   }
 
@@ -196,7 +199,7 @@ export default function EventList({ currentEvents }: { currentEvents: CurrentEve
       }}
     />
   )
-
+  console.log(searchedEvents)
   return (
     <Background>
       <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />

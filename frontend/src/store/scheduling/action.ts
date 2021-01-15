@@ -12,10 +12,8 @@ import {
 } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 
-export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  // const fetchedData = userEventsDummy
-  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_EVENTS, {
+const getEventsFromBackend = async (endpoint, methods) => {
+  await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
   })
@@ -23,35 +21,50 @@ export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => 
       return resp.json()
     })
     .then((data) => {
-      const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
-        return convertSchedulingEventToTimetableEvent(singleEvent)
-      })
-      console.log(
-        timetableFormatEvents.filter((s) => {
-          return (
-            s.eventName === 'Donate blood at a local blood center' ||
-            s.eventName.includes('Look at pictures and videos of') ||
-            s.eventName.includes('Learn how to make a website') ||
-            s.eventName.includes('Create a personal website')
-          )
-        }),
-      )
-
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-        userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
-        userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
-        userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
-        userEventsList: timetableFormatEvents,
-      })
-      dispatch(setIsLoading(false))
+      methods(data)
     })
+}
+
+export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const sortDataByDate = (a: SchedulingEvent, b: SchedulingEvent) => {
+    return a.startDateTime - b.startDateTime
+  }
+
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_ALL_EVENTS,
+      allEvents: data.sort(sortDataByDate),
+    })
+    dispatch(setIsLoading(false))
+  }
+  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+}
+
+export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const manipulateData = (data) => {
+    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+      return convertSchedulingEventToTimetableEvent(singleEvent)
+    })
+
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
+      userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
+      userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
+      userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
+      userEventsList: timetableFormatEvents,
+    })
+    dispatch(setIsLoading(false))
+  }
+  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, manipulateData)
 }
 
 // const withNusModsEvents = (userEventsList: TimetableEvent[]) => {
 //   //fetch nusmodsEvents from backend
-//   const nusModsEvent =
-//   userEventsList.concat()
+//   const nusModsEvent: TimetableEvent[] = []
+//   if (nusModsEvent) userEventsList.concat(nusModsEvent)
+//   else return userEventsList
 // }
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
@@ -336,21 +349,22 @@ export const getShareSearchResults = (query: string) => (dispatch: Dispatch<Acti
 // ---------------------- SHARE SEARCH ----------------------
 
 // ---------------------- SEARCH EVENTS ----------------------
-export const getSearchedEvents = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<ActionTypes>) => {
   console.log(query, dispatch)
-  // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SEARCH_EVENTS).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
-  //     searchedEvents: results,
-  //   })
-  // })
-  dispatch(setIsLoading(false))
+  dispatch(setIsLoading(true))
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
+      searchedEvents: data.filter((event) => {
+        return event.eventName.toLowerCase().includes(query)
+      }),
+    })
+    dispatch(setIsLoading(false))
+  }
+  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, eventId: number, userId: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const editUserEvents = (action: string, event: SchedulingEvent) => (dispatch: Dispatch<ActionTypes>) => {
   // const fetchedUserData = userEventsDummy.map((userEvent) => {
   //   return convertSchedulingEventToTimetableEvent(userEvent)
   // })
@@ -359,20 +373,41 @@ export const editUserEvents = (action: string, eventId: number, userId: string) 
   // })
   // let newUserEvents: TimetableEvent[] = []
 
+  const requestBodyForRemove = {
+    userID: event.userID,
+    eventID: event.eventID,
+  }
+
+  const requestBodyForAdd = {
+    userID: event.userID,
+    eventID: event.eventID,
+  }
+
   if (action === 'remove') {
-    console.log('REMOVE: eventId - ' + eventId + '; userId: ' + userId)
-    // newUserEvents = fetchedUserData.filter((userEvent) => {
-    //   return userEvent.eventID !== eventId
-    // })
-    // console.log(newUserEvents)
+    post(ENDPOINTS.DELETE_EVENT, DOMAINS.EVENT, requestBodyForRemove, {}, String(event.eventID))
+      .then((resp) => {
+        if (resp.status >= 400) {
+          console.log('FAILURE')
+        } else {
+          console.log('SUCCESS!!!')
+        }
+      })
+      .catch(() => {
+        console.log('catch block')
+      })
   } else if (action === 'add') {
-    console.log('ADD: eventId - ' + eventId + '; userId: ' + userId)
-    // newUserEvents = fetchedUserData.concat(
-    //   fetchedEventsData.filter((event) => {
-    //     return event.eventID === eventId
-    //   }),
-    // )
-    // console.log(newUserEvents)
+    console.log('ADD: eventId - ' + event.eventID + '; userId: ' + event.userID)
+    // post(ENDPOINTS.ADD_EVENT, DOMAINS.EVENT, requestBody)
+    //   .then((resp) => {
+    //     if (resp.status >= 400) {
+    //       console.log('FAILURE')
+    //     } else {
+    //       console.log('SUCCESS!!!')
+    //     }
+    //   })
+    //   .catch(() => {
+    //     console.log('resp')
+    //   })
   }
   // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
 }
