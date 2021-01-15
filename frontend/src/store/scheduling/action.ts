@@ -23,10 +23,19 @@ export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => 
       return resp.json()
     })
     .then((data) => {
-      console.log(data)
       const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
         return convertSchedulingEventToTimetableEvent(singleEvent)
       })
+      console.log(
+        timetableFormatEvents.filter((s) => {
+          return (
+            s.eventName === 'Donate blood at a local blood center' ||
+            s.eventName.includes('Look at pictures and videos of') ||
+            s.eventName.includes('Learn how to make a website') ||
+            s.eventName.includes('Create a personal website')
+          )
+        }),
+      )
 
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
@@ -41,7 +50,7 @@ export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => 
 
 // const withNusModsEvents = (userEventsList: TimetableEvent[]) => {
 //   //fetch nusmodsEvents from backend
-//   const nusModsEvent = 
+//   const nusModsEvent =
 //   userEventsList.concat()
 // }
 
@@ -50,6 +59,11 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
   let endTime = getTimeStringFromUNIX(singleEvent.endDateTime)
   if (startTime > endTime) {
     endTime = '2400'
+    console.log(singleEvent)
+  }
+  if (endTime > '2400') {
+    endTime = '2400'
+    console.log(singleEvent)
   }
   return {
     eventID: singleEvent.eventID,
@@ -59,7 +73,7 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
     location: singleEvent.location,
     day: getDayStringFromUNIX(singleEvent.startDateTime),
     hasOverlap: false,
-    eventType: 'private', //change!
+    eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
   }
 }
 

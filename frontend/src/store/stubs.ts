@@ -68,6 +68,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
   {
     eventID: 1,
@@ -79,6 +80,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -90,6 +92,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -101,6 +104,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
 ]
 
@@ -115,6 +119,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -126,6 +131,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
   {
     eventID: 1,
@@ -137,6 +143,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -148,6 +155,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
 ]
 

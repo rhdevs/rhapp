@@ -62,7 +62,8 @@ function Timetable(props: Props) {
   }
 
   const daysArray = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-
+  console.log(timetableEndTime + '    ' + timetableStartTime)
+  console.log(((timetableEndTime - timetableStartTime) / 100) * Number(ONE_HOUR_WIDTH.replace('rem', '')))
   return (
     <TimetableContainer>
       <TimetableWithTimeContainer>
