@@ -149,11 +149,18 @@ def getUserCCAs(userID):
 @cross_origin()
 def getUserAttendance(userID):
     try:
-        data = db.Attendance.find({"userID": userID})
+        data = list(db.Attendance.find({"userID": userID}))
+        body = []
+
+        for entry in data:
+            eventID = entry.get('eventID')
+            result = db.Events.find_one({"_id": ObjectId(eventID)})
+            body.append(result)
+
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<eventID>")
