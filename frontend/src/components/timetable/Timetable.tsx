@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { UserEvent } from '../../store/scheduling/types'
+import { TimetableEvent } from '../../store/scheduling/types'
 import TimetableRow from './TimetableRow'
 
 const TimetableContainer = styled.div`
@@ -29,7 +29,7 @@ const IndividualTimeContainer = styled.time`
 type Props = {
   eventsStartTime: number
   eventsEndTime: number
-  events: UserEvent[][][]
+  events: TimetableEvent[][][]
 }
 
 function Timetable(props: Props) {
@@ -40,10 +40,17 @@ function Timetable(props: Props) {
   const DEFAULT_END_TIME = 1800
   const timeArray: Array<string> = []
 
-  const eventsStartTime = Math.round(props.eventsStartTime / 100) * 100
-  const timetableStartTime = DEFAULT_START_TIME < eventsStartTime ? DEFAULT_START_TIME : eventsStartTime
-  const eventsEndTime = Math.round(props.eventsEndTime / 100) * 100
-  const timetableEndTime = DEFAULT_END_TIME < eventsEndTime ? eventsEndTime : DEFAULT_END_TIME
+  const eventsStartTime = Math.floor(props.eventsStartTime / 100) * 100
+  let timetableStartTime = DEFAULT_START_TIME < eventsStartTime ? DEFAULT_START_TIME : eventsStartTime
+  const eventsEndTime = Math.ceil(props.eventsEndTime / 100) * 100
+  let timetableEndTime = DEFAULT_END_TIME < eventsEndTime ? eventsEndTime : DEFAULT_END_TIME
+  if (timetableStartTime < 0) {
+    timetableStartTime = 0
+  }
+  if (timetableEndTime > 2400) {
+    timetableEndTime = 2400
+  }
+
   for (let i = timetableStartTime; i < timetableEndTime; i += 100) {
     if (i === 0) {
       timeArray.push('000' + i)

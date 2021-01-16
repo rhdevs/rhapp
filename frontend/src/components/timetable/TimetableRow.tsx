@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import EventCell from './EventCell'
-import { UserEvent } from '../../store/scheduling/types'
+import { TimetableEvent } from '../../store/scheduling/types'
 
 const TimetableRowContainer = styled.li`
   position: relative;
   display: flex;
-  flex: 1 0 auto;
+  flex-direction: row;
 `
 
 const DayContainer = styled.div`
@@ -38,7 +38,6 @@ const TimetableDayContainer = styled.div`
   min-width: 64rem;
   outline: 1px solid #aeb1b5;
   background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
-  flex: 0 1 auto;
 `
 
 const ChildrenContainer = styled.div`
@@ -48,11 +47,11 @@ const ChildrenContainer = styled.div`
 type Props = {
   oneHourWidth: string
   oneDayMinHeight: string
-  events: UserEvent[][]
+  events: TimetableEvent[][]
   timetableStartTime: number
   timetableEndTime: number
   day: string
-  width?: number
+  width: number
 }
 
 type day = { [day: string]: number }
@@ -67,6 +66,30 @@ export const DAY_TO_NUMBER: day = {
 }
 
 function TimetableRow(props: Props) {
+  const leftMargin = (eventRow, individualEvent, index) => {
+    const individualEventStartHour = individualEvent.startTime.substring(0, 2)
+    const individualEventStartMinute = individualEvent.startTime.substring(2, 4)
+    let leftPosition
+    if (index === 0) {
+      leftPosition =
+        Number(individualEventStartHour) - props.timetableStartTime / 100 + Number(individualEventStartMinute) / 60
+    } else {
+      const prevEventEndHour = eventRow[index - 1].endTime.substring(0, 2)
+      const prevEventEndMinute = eventRow[index - 1].endTime.substring(2, 4)
+      leftPosition =
+        ((Number(individualEventStartHour) - Number(prevEventEndHour)) * 60 +
+          Number(individualEventStartMinute) -
+          Number(prevEventEndMinute)) /
+        60
+    }
+    const margin = leftPosition * Number(props.oneHourWidth.replace('rem', '')) + 0.0625
+    if (margin < 0) {
+      return '0rem'
+    } else {
+      return String(margin) + 'rem'
+    }
+  }
+
   return (
     <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
       <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
@@ -74,7 +97,7 @@ function TimetableRow(props: Props) {
       </DayContainer>
       <TimetableDayContainer
         style={{
-          minWidth: props.width + 'rem',
+          width: props.width + 0.0625 * 14 + 'rem',
           backgroundSize: `calc(${props.oneHourWidth}*2)`,
           minHeight: `${props.oneDayMinHeight}`,
         }}
@@ -87,14 +110,12 @@ function TimetableRow(props: Props) {
                   <div
                     key={index}
                     style={{
-                      marginLeft: `calc((${Number(individualEvent.startTime)} - ${
-                        index === 0 ? props.timetableStartTime : Number(eventRow[index - 1].endTime)
-                      }) / 100 * ${props.oneHourWidth} + 0.0625rem)`,
+                      marginLeft: `${leftMargin(eventRow, individualEvent, index)}`,
                     }}
                   >
                     <EventCell
                       // isSingleEvent={!individualEvent.hasOverlap}
-                      eventType={'mods'}
+                      eventType={individualEvent.eventType}
                       oneHourWidth={props.oneHourWidth}
                       oneDayMinHeight={props.oneDayMinHeight}
                       eventStartTime={individualEvent.startTime}

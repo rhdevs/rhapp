@@ -22,7 +22,6 @@ function MenuDropdown(props: Props) {
 
   const toggleMenu = () => {
     setMenuIsVisible(!menuIsVisible)
-    console.log(menuIsVisible)
   }
 
   return (
