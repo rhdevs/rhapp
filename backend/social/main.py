@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 import pymongo, json, os, time
 from bson.objectid import ObjectId
@@ -274,6 +274,44 @@ def getPostById(userID):
         print(e)
         return {"err": "Action failed"}, 400
     
+def FriendsHelper(userID):
+    query = {
+            "$or" : [{"userIDOne" : userID},{"userIDTwo" : userID}]
+        }
+        
+    result = db.Friends.find(query)
+    response = {'friendList' : []}
+    for friend in result :
+        userOne = friend.get("userIDOne")
+        userTwo = friend.get("userIDTwo")
+        
+        if(userID == userOne):
+            response['friendList'].append(userTwo)
+        else :
+            response['friendList'].append(userOne)
+            
+    return response
+ 
+@app.route("/post/friend", methods = ['GET'])
+@cross_origin()
+def getFriendsPostById():
+    try : 
+        userID = str(request.args.get("userID"))
+        N = int(request.args.get("N"))
+        
+        friends = FriendsHelper(userID).get('friendList')
+    
+        query = {
+            "userID" : {"$in": friends}
+        }
+        
+        result = db.Posts.find(query, sort=[('createdAt', pymongo.DESCENDING )]).limit(N)
+        
+        return make_response(json.dumps(list(result), default=lambda o: str(o)), 200)
+    
+    except Exception as e :
+        return {"err": str(e)}, 400
+    
 @app.route("/post/official", methods = ['GET'])
 @cross_origin()
 def getOfficialPosts():
@@ -319,6 +357,106 @@ def editPost():
         print(e)
         return {"err": "Action failed"}, 400
     return {'message': "Event changed"}, 200
+
+'''
+Friends API 
+'''
+@app.route("/friend", methods = ['DELETE', 'POST'])
+@cross_origin()
+def createDeleteFriend():
+    try :
+        data = request.get_json()   
+        # we store the data as a bidirectional edge
+        userOne = str(data.get('userIDOne'))
+        userTwo = str(data.get('userIDTwo'))
+        if request.method == "POST":
+            body = {
+                "userIDOne" : userOne,
+                "userIDTwo" : userTwo
+            }
+            
+            query = {
+                "$or" : [
+                    {"userIDOne" : userOne,
+                     "userIDTwo" : userTwo
+                    },
+                    {"userIDOne" : userTwo,
+                     "userIDTwo" : userOne
+                    }
+                ]
+            }
+        
+            result = db.Friends.find_one(query)
+
+            if(result == None):
+                receipt = db.Friends.insert_one(body);
+                
+                return make_response({"Insert Succesful"}, 200) 
+            else :  
+                return make_response("Friendship exists", 400);
+            
+        elif request.method == "DELETE" :
+            data = request.get_json()
+            userOne = str(data.get)
+            
+            query = {
+                "$or" : [
+                    {
+                        "userIDOne" : userOne,
+                        "userIDTwo" : userTwo    
+                    }, 
+                    {
+                        "userIDOne" : userTwo,
+                        "userIDTwo" : userOne        
+                    }]
+            }
+            
+            db.Friends.delete_one(query)
+            
+            return make_response("Delete Successful", 200)
+        
+    except Exception as e:
+        return make_response({"err" : str(e)}, 400)
+    
+@app.route("/friend/<userID>", methods = ["GET"])
+def getAllFriends(userID):
+    try :
+        response = FriendsHelper(userID)
+        return make_response(response, 200)
+    
+    except Exception as e:
+        return make_response({"err" : str(e)}, 400)
+    
+@app.route("/friend/check", methods = ["GET"])
+def checkFriend():
+    userOne = request.args.get('userIDOne')
+    userTwo = request.args.get('userIDTwo')
+    
+    query = {
+            "$or" : [{
+                        "userIDOne" : userOne,
+                        "userIDTwo" : userTwo
+                    },
+                    {
+                        "userIDOne" : userTwo,
+                        "userIDTwo" : userOne
+                    }]
+        }
+        
+    result = db.Friends.find_one(query)
+    
+    if(result != None):
+        response = {
+            "message" : "friendship exists", 
+            "status" : True 
+        }
+        return make_response(response, 200)
+    else :
+        response = {
+            "message" : "friendship doesnt exist",
+            "status" : False
+        }
+        return make_response(response, 200)
 
 if __name__ == "__main__":
     app.run(threaded = True, debug = True)
