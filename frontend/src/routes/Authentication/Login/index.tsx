@@ -7,6 +7,7 @@ import axios from 'axios'
 import NavBar from '../../../components/NavBar'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
+import jwt from 'jsonwebtoken'
 
 const LoginContainer = styled.div`
   height: 100%;
@@ -23,6 +24,18 @@ const AccountText = styled.text`
   justify-content: center;
 `
 
+function generateToken(user) {
+  const u = {
+    username: user.username,
+    password: user.password,
+    _id: user._id.toString(),
+    image: user.image,
+  }
+  return jwt.sign(u, process.env.JWT_SECRET, {
+    expiresIn: 60 * 60 * 24, // expires in 24 hours
+  })
+}
+
 export default function Login() {
   const history = useHistory()
 
@@ -31,32 +44,31 @@ export default function Login() {
   const [email, setEmail] = useState('')
 
   const loginHandler = () => {
-    axios.post('/auth/login', {
-      username,
-      password,
-    })
+    axios
+      .post('/auth/login', { username, password })
       .then((res: any) => {
-        console.log(res);
+        console.log(res)
         // HOW TO SET LOGIN=TRUE?
       })
       .catch((err) => {
-        console.log(err.response);
-      });
-  };
+        console.log(err.response)
+      })
+  }
 
   const signupHandler = () => {
-    axios.post('auth/register', {
-      username,
-      password,
-      email
-    })
+    axios
+      .post('auth/register', {
+        username,
+        password,
+        email,
+      })
       .then((res) => {
-        console.log(res);
+        console.log(res)
       })
       .catch((err) => {
-        console.log(err.responser);
-      });
-  };
+        console.log(err.responser)
+      })
+  }
 
   return (
     <>
@@ -79,13 +91,7 @@ export default function Login() {
           }}
         ></Input>
         <br /> <br />
-        <Button
-          type="primary"
-          block
-          onClick={() => {
-            history.push(PATHS.HOME_PAGE)
-          }}
-        >
+        <Button type="primary" block onClick={loginHandler}>
           Sign in
         </Button>
         <AccountText>Do not have an account?</AccountText>

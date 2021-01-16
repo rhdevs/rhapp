@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
+import axios from 'axios'
 
 import { PATHS } from '../../Routes'
 import NavBar from '../../../components/NavBar'
@@ -24,6 +25,25 @@ const SignUpContainer = styled.div`
 
 export default function Signup() {
   const history = useHistory()
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+
+  const signupHandler = () => {
+    axios
+      .post('auth/register', {
+        username,
+        password,
+        email,
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err.responser)
+      })
+  }
 
   return (
     <>
