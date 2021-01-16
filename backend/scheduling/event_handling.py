@@ -93,15 +93,23 @@ def getAllCCA():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<eventID>')
+@app.route('/event')
 @cross_origin()
-def getEventDetails(eventID):
+def getEventsDetails():
     try:
-        data = db.Events.find({"_id": eventID})
+        data = request.get_json()
+        body = []
+
+        for eventID in data:
+
+            result = db.Events.find_one({"_id": ObjectId(eventID)})
+            body.append(result)
+            print(result)
+
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
 @app.route('/event/<int:ccaID>')
