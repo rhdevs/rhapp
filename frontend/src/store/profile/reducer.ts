@@ -13,6 +13,7 @@ export const initialState = {
     ccas: [{ userId: '1', ccaId: 1, ccaName: 'RHDevs' }],
     modules: ['CS1010', 'CFG1000', 'CS2040S'],
     posts: [],
+    friends: [],
   },
   newDisplayName: '',
   newTelegramHandle: '',
