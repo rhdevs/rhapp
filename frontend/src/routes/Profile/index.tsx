@@ -85,7 +85,6 @@ export default function Profile() {
 
   useEffect(() => {
     dispatch(fetchUserDetails())
-    console.log(user)
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
@@ -107,6 +106,11 @@ export default function Profile() {
     </CustomTabs>
   )
 
+  const handleClickFriendList = () => {
+    history.push(PATHS.FRIEND_LIST_PAGE)
+    dispatch(fetchUserDetails())
+  }
+
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
       <AvatarSpan>
@@ -116,8 +120,8 @@ export default function Profile() {
         <NameParagraph>{user?.displayName}</NameParagraph>
         <TelegramParagraph>@{user?.telegramHandle}</TelegramParagraph>
         <BlockParagraph>Block {user?.block}</BlockParagraph>
-        <p>
-          Friends List
+        <p style={{ textDecoration: 'underline', color: '#1890FF' }} onClick={handleClickFriendList}>
+          My Friends
           <img alt="statusDot" style={{ marginLeft: 5, width: 6 }} src={String(statusDot)} />
         </p>
       </PersonalInfoSpan>
