@@ -123,18 +123,18 @@ def addDeleteProfile():
         if request.method == "POST":
             data = request.get_json()
             userID = str(data.get('userID'))
-            name = str(data.get('name'))
+            displayName = str(data.get('displayName'))
             bio = str(data.get('bio'))
-            profilePicture = str(data.get('profilePicture'))
+            profilePictureUrl = str(data.get('profilePictureUrl'))
             block = int(data.get('block'))
             telegramHandle = str(data.get('telegramHandle'))
             modules = data.get('modules')
 
             body = {
                 "userID": userID,
-                "name": name,
+                "displayName": displayName,
                 "bio": bio,
-                "profilePicture": profilePicture,
+                "profilePictureUrl": profilePictureUrl,
                 "block": block,
                 "telegramHandle": telegramHandle,
                 "modules": modules
@@ -172,18 +172,18 @@ def editProfile():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        name = str(data.get('name'))
+        displayName = str(data.get('displayName'))
         bio = str(data.get('bio'))
-        profilePicture = str(data.get('profilePicture'))
+        profilePictureUrl = str(data.get('profilePictureUrl'))
         block = int(data.get('block'))
         telegramHandle = str(data.get('telegramHandle'))
         modules = data.get('modules')
 
         body = {
             "userID": userID,
-            "name": name,
+            "displayName": displayName,
             "bio": bio,
-            "profilePicture": profilePicture,
+            "profilePictureUrl": profilePictureUrl,
             "block": block,
             "telegramHandle": telegramHandle,
             "modules": modules
