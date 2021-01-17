@@ -15,6 +15,7 @@ import { Menu } from 'antd'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import Avatar from '../../../components/Mobile/Avatar'
+import { Post } from '../../../store/social/types'
 
 import { GetPosts, DeletePost, SetPostUser } from '../../../store/social/action'
 
@@ -86,25 +87,25 @@ const DescriptionText = styled.text`
   padding: 20px;
 `
 export default function ViewPost() {
+  // TODO: wait for endpoint that provides individual post data from postId
   const dispatch = useDispatch()
   const history = useHistory()
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const [post, setPost] = useState<Post>({} as Post)
   const [success] = useSnackbar()
 
   // const { postId } = useParams<{ postId: string }>()
-  const postId = '123456789' // To uncomment above line
-  const { posts, postUser } = useSelector((state: RootState) => state.social)
-  let post
+  const postId = '123456789' // TODO: To uncomment above line
+  const { posts, postUser, postsFilter } = useSelector((state: RootState) => state.social)
 
   useEffect(() => {
-    dispatch(GetPosts())
-    post = posts.find((post) => {
-      return post.postId == parseInt(postId)
-    })
+    dispatch(GetPosts(postsFilter))
+    const foundPost = posts.find((post) => post.postId == postId)
+    setPost(foundPost ?? ({} as Post))
     dispatch(SetPostUser(post?.ownerId))
-  }, [dispatch])
+  }, [dispatch, postsFilter])
 
   const title = post?.title
   const ownerId = post?.ownerId
@@ -130,23 +131,22 @@ export default function ViewPost() {
   const handleDeletePost = () => {
     // TODO: Call delete post endpoint
     if (postId) {
-      dispatch(DeletePost(parseInt(postId)))
+      dispatch(DeletePost(postId))
     }
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)
   }
 
   // TODO: change to ownerId == userId
-  const MenuIcon =
-    ownerId == 1 ? (
-      <MenuContainer>
-        <div onClick={onMenuClick}>
-          <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
-        </div>
-      </MenuContainer>
-    ) : (
-      <></>
-    )
+  const MenuIcon = ownerId ? (
+    <MenuContainer>
+      <div onClick={onMenuClick}>
+        <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
+      </div>
+    </MenuContainer>
+  ) : (
+    <></>
+  )
 
   const Topbar = (
     <CenterContainer>

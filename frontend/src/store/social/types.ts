@@ -1,16 +1,16 @@
 export type Post = {
-  postId: number
+  postId: string
   title: string
-  ownerId: number
-  date: number
+  ownerId: string
+  date: Date
   isOfficial: boolean
-  ccaId?: number
+  ccaId?: string
   description: string
   postPics: string[]
 }
 
 export type User = {
-  userId: number
+  userId: string
   avatar?: string
   name: string
   initials: string
@@ -21,6 +21,7 @@ export enum POSTS_FILTER {
   ALL = 'ALL',
   OFFICIAL = 'OFFICIAL',
   FRIENDS = 'FRIENDS',
+  USER = 'USER',
 }
 
 export enum SOCIAL_ACTIONS {
@@ -30,9 +31,9 @@ export enum SOCIAL_ACTIONS {
   ADD_IMAGE = 'SOCIAL_ACTIONS.ADD_IMAGE',
   SET_IS_UPLOADING = 'SOCIAL_ACTIONS.SET_IS_UPLOADING',
   GET_POSTS = 'SOCIAL_ACTIONS.GET_POSTS',
-  DELETE_POST = 'DELETE_POST',
-  SET_POST_USER = 'SET_POST_USER',
-  SWITCH_POSTS_FILTER = 'SWITCH_POSTS_FILTER',
+  DELETE_POST = 'SOCIAL_ACTIONS.DELETE_POST',
+  SET_POST_USER = 'SOCIAL_ACTIONS.SET_POST_USER',
+  SWITCH_POSTS_FILTER = 'SOCIAL_ACTIONS.SWITCH_POSTS_FILTER',
 }
 
 type SetIsUploading = {
@@ -49,7 +50,7 @@ type GetPostDetailsToEdit = {
   newPostOfficial: boolean
 }
 
-type EditNewfields = {
+type EditNewFields = {
   type: typeof SOCIAL_ACTIONS.EDIT_NEW_FIELDS
   newPostTitle: string
   newPostBody: string
@@ -89,7 +90,7 @@ type SwitchPostsFilter = {
 
 export type ActionTypes =
   | GetPostDetailsToEdit
-  | EditNewfields
+  | EditNewFields
   | SetWarnings
   | AddImage
   | SetIsUploading

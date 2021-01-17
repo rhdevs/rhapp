@@ -110,7 +110,7 @@ const DescriptionText = styled.text`
   overflow: hidden;
 `
 
-type Props = {
+type socialPostCardProps = {
   isOwner: boolean
   avatar: string
   name: string
@@ -130,7 +130,7 @@ const getInitials = (name: string) => {
   return initials
 }
 
-function SocialPostCard(props: Props) {
+function SocialPostCard(props: socialPostCardProps) {
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -139,7 +139,7 @@ function SocialPostCard(props: Props) {
 
   const initials = getInitials(props.name)
   //TODO: To change to user's id
-  const postId = 1
+  const postId = '1'
 
   const onExpandClick = () => {
     history.push({
@@ -181,7 +181,7 @@ function SocialPostCard(props: Props) {
             <TimeDateText>{props.dateTime}</TimeDateText>
             <DescriptionText>{props.description}</DescriptionText>
           </TextContainer>
-          {props.postPics && (
+          {props.postPics && props.postPics.length > 0 && (
             <ImageContainer>
               <StyledImg src={props.postPics[0]} />
               <StyledImgShadow />

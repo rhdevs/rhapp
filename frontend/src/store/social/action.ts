@@ -1,14 +1,17 @@
+import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
+import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
+import { cloneDeep } from 'lodash'
 
 export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const postToEdit: Post = {
-    postId: parseInt(postId),
+    postId: postId,
     title: 'Whats up Losers',
-    ownerId: 1,
-    date: 1610332956,
+    ownerId: '1',
+    date: new Date(),
     isOfficial: true,
-    ccaId: 2,
+    ccaId: '2',
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
     postPics: [
@@ -16,6 +19,7 @@ export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<Acti
       'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
     ],
   }
+
   dispatch({
     type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
     postToEdit: postToEdit,
@@ -43,7 +47,7 @@ export const handleCreateEditPost = () => () => {
 export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newPostTitle, newPostBody, newPostOfficial } = getState().social
   let { newPostImages } = getState().social
-  newPostImages = newPostImages.filter((url) => {
+  newPostImages = newPostImages?.filter((url) => {
     return url !== urlToDelete
   })
 
@@ -138,32 +142,43 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
   })
 }
 
-export const GetPosts = () => (dispatch: Dispatch<ActionTypes>) => {
-  // Dummy post
-  // TODO: Use postId to fetch post data from endpoint with user's id
-  const posts: Post[] = [
-    {
-      postId: 123456789,
-      title: 'Whats up Losers',
-      ownerId: 1,
-      date: 1610332956,
-      isOfficial: true,
-      ccaId: 2,
-      description:
-        'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-      postPics: [
-        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-      ],
-    },
-  ]
+export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  let url: string = DOMAIN_URL.SOCIAL
+  switch (postFilter) {
+    case POSTS_FILTER.OFFICIAL:
+      url += ENDPOINTS.OFFICIAL_POSTS
+      break
+    case POSTS_FILTER.ALL:
+      url += ENDPOINTS.ALL_POSTS
+      break
+    case POSTS_FILTER.FRIENDS:
+      url += `${ENDPOINTS.FRIENDS_OF_USER_POSTS}?N=${limit}&userID=${userId}`
+      break
+    default:
+      url += ENDPOINTS.ALL_POSTS
+      break
+  }
+
+  const response = await axios.get(url)
+  const posts = response.data
+  const transformedPost = cloneDeep(posts).map((post) => {
+    post.date = post.createdAt
+    post.postId = post.postID
+    post.ccaId = post.ccaID
+    post.userId = post.userID
+    post.date = new Date(post.createdAt)
+    return post
+  })
+
   dispatch({
     type: SOCIAL_ACTIONS.GET_POSTS,
-    posts: posts,
+    posts: transformedPost,
   })
 }
 
-export const DeletePost = (postIdToDelete: number) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const DeletePost = (postIdToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {
     return post.postId !== postIdToDelete
@@ -175,7 +190,7 @@ export const DeletePost = (postIdToDelete: number) => (dispatch: Dispatch<Action
   })
 }
 
-export const SetPostUser = (userId: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const SetPostUser = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
   // TODO: Fetch user's details from users table
   const userDetails: User = {
     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',

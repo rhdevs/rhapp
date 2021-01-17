@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
@@ -6,7 +6,7 @@ import { PlusCircleFilled } from '@ant-design/icons'
 import { Divider } from 'antd'
 import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
 import { PATHS } from '../../../Routes'
-import { SwitchPostsFilter } from '../../../../store/social/action'
+import { SwitchPostsFilter, GetPosts } from '../../../../store/social/action'
 import { POSTS_FILTER } from '../../../../store/social/types'
 import { RootState } from '../../../../store/types'
 
@@ -62,90 +62,43 @@ const dummyAllData: SocialPostCardProps[] = [
       'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
     ],
   },
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
 ]
-
-const dummyFriendData = dummyAllData.slice(0, 1)
 
 export default function SocialSection() {
   const history = useHistory()
   const dispatch = useDispatch()
   const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
+  const socialPosts = useSelector((state: RootState) => state.social.posts)
+
+  useEffect(() => {
+    if (currentPostsFilter === POSTS_FILTER.FRIENDS) {
+      dispatch(GetPosts(currentPostsFilter, 5, 'cs2040s')) // TODO: Use userId from state
+    } else {
+      dispatch(GetPosts(currentPostsFilter))
+    }
+  }, [currentPostsFilter])
 
   const toggleTab = (postsFilter: POSTS_FILTER) => () => dispatch(SwitchPostsFilter(postsFilter))
 
   const renderSocialPosts = () => {
-    const data = currentPostsFilter ? dummyAllData : dummyFriendData
-    return data.map((post: SocialPostCardProps) => <SocialPostCard {...post} key={post.dateTime} />)
+    // const data = currentPostsFilter ? socialPosts : dummyFriendData
+    return socialPosts.map((post) => {
+      const { title, postId, date, isOfficial, ccaId, description, postPics } = post
+      return (
+        <SocialPostCard
+          key={postId}
+          isOwner={false}
+          avatar={dummyAllData[0].avatar}
+          name={dummyAllData[0].name}
+          title={title}
+          dateTime={date.toISOString()}
+          // dateTime={new Date().toISOString()} // TODO: Wait for fetched posts to include date field
+          description={description}
+          postId={postId}
+          postPics={postPics ?? []}
+        />
+      )
+    })
   }
 
   return (
