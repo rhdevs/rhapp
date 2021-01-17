@@ -1,7 +1,7 @@
 import { Post } from '../social/types'
 
 export type User = {
-  userId: number
+  userID: string
   profilePictureUrl: string
   displayName: string
   telegramHandle: string

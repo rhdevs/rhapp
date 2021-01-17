@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
-// import EditDetailsCard from './EditDetailsCard'
 import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -64,6 +63,12 @@ export default function EditProfile() {
   // Search bar
   const options = [{ value: 'Baa' }, { value: 'Basketball' }, { value: 'Badminton' }]
 
+  const handleInputSelected = (value: string) => {
+    console.log(value)
+    // Doesnt re-render when Badminton etc is added or deleted
+    dispatch(handleCCADetails('Add', value))
+  }
+
   const Complete: React.FC = () => (
     <AutoComplete
       style={{ width: '120px', height: '22px' }}
@@ -71,6 +76,7 @@ export default function EditProfile() {
       placeholder="search info.."
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+      onChange={handleInputSelected}
     />
   )
 

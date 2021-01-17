@@ -1,3 +1,4 @@
+import { DOMAINS, DOMAIN_URL, ENDPOINTS, post, put } from '../endpoints'
 import { userProfileStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User } from './types'
@@ -5,6 +6,14 @@ import { ActionTypes, PROFILE_ACTIONS, User } from './types'
 export const fetchUserDetails = () => (dispatch: Dispatch<ActionTypes>) => {
   const selectedUser = userProfileStub
   dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
+  //   fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/A1234567B', {
+  //     method: 'GET',
+  //   })
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       console.log(data)
+  //       dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+  //     })
 }
 
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
@@ -55,6 +64,10 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 
 export const updateCurrentUser = (newUser: User) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user } = getState().profile
+  console.log(newUser)
+  // put(ENDPOINTS.EDIT_PROFILE, DOMAINS.SOCIAL, newUser).then((data) => {
+  //   console.log(data + 'success')
+  // })
   dispatch({
     type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
     user: {
@@ -75,7 +88,7 @@ export const handleCCADetails = (actionType: 'Delete' | 'Add', newCcaName: strin
   const { user } = getState().profile
   const newCca = {
     // TODO userId string or number?
-    userId: user.userId.toString(),
+    userId: user.userID.toString(),
     //TODO CCA ID
     ccaId: 1,
     ccaName: newCcaName,

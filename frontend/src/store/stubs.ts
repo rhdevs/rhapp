@@ -261,7 +261,7 @@ export const searchResultsStub: SearchResult[] = [
 ]
 
 export const userProfileStub: User = {
-  userId: 1,
+  userID: 'A0987654321',
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',

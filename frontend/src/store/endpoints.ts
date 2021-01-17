@@ -7,6 +7,8 @@ export enum ENDPOINTS {
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
   USER_PROFILE = '/profile',
+  USER_DETAILS = '/user/details',
+  EDIT_PROFILE = '/profile/edit',
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
@@ -48,12 +50,14 @@ export enum DOMAINS {
   FACILITY = 'facility',
   EVENT = 'event',
   LAUNDRY = 'laundry',
+  SOCIAL = 'social',
 }
 
 export enum DOMAIN_URL {
   FACILITY = 'https://rhappfacilities.rhdevs.repl.co',
   EVENT = 'https://rhappevents.rhdevs.repl.co',
   LAUNDRY = 'https://rhapplaundry.rhdevs.repl.co',
+  SOCIAL = 'https://rhappsocial.rhdevs.repl.co',
 }
 
 async function makeRequest(
@@ -73,6 +77,9 @@ async function makeRequest(
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = 'https://rhappsocial.rhdevs.repl.co'
       break
   }
   console.log(DOMAIN_URL + url)
