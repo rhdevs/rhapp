@@ -329,10 +329,7 @@ def editEvent():
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
-            receipt = db.Events.insert_one(body)
-            body["_id"] = str(receipt.inserted_id)
-
-            return {"message": body}, 200
+            return Response(status=204)
 
     except Exception as e:
         print(e)
