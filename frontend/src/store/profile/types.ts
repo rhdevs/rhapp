@@ -10,6 +10,14 @@ export type User = {
   ccas: UserCCA[]
   modules: string[]
   posts: Post[]
+  friends: Friend[]
+}
+
+export type Friend = {
+  friendId: number
+  name: string
+  telegram: string
+  avatar?: string
 }
 
 export type UserCCA = {

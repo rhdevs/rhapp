@@ -1,25 +1,30 @@
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS, cross_origin
-import pymongo, json, os, time
+import pymongo
+import json
+import os
+import time
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type';
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
 # URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
 
 # client = pymongo.MongoClient(URL)
-client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+client = pymongo.MongoClient(
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
+
 
 @app.route("/")
 @cross_origin()
 def hello():
-  return "Welcome the Raffles Hall Events server" 
+    return "Welcome the Raffles Hall Events server"
 
 
 @app.route("/timetable/<userID>")
@@ -31,6 +36,7 @@ def getUserTimetable(userID):
         print(e)
         return {"err": "Action failed"}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
+
 
 @app.route('/event/all')
 @cross_origin()
@@ -87,15 +93,23 @@ def getAllCCA():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<eventID>')
+@app.route('/event')
 @cross_origin()
-def getEventDetails(eventID):
+def getEventsDetails():
     try:
-        data = db.Events.find({"_id": eventID})
+        data = request.get_json()
+        body = []
+
+        for eventID in data:
+
+            result = db.Events.find_one({"_id": ObjectId(eventID)})
+            body.append(result)
+            print(result)
+
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
 @app.route('/event/<int:ccaID>')
@@ -135,11 +149,18 @@ def getUserCCAs(userID):
 @cross_origin()
 def getUserAttendance(userID):
     try:
-        data = db.Attendance.find({"userID": userID})
+        data = list(db.Attendance.find({"userID": userID}))
+        body = []
+
+        for entry in data:
+            eventID = entry.get('eventID')
+            result = db.Events.find_one({"_id": ObjectId(eventID)})
+            body.append(result)
+
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<eventID>")
@@ -334,6 +355,56 @@ def editAttendance():
         return {"err": "Action failed"}, 400
     return {'message': "Attendance edited"}, 200
 
+
+@app.route("/nusmods/<userID>")
+@cross_origin()
+def getMods(userID):
+    try:
+        data = db.NUSMods.find({"userID": userID})
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
+
+@app.route("/nusmods/delete/<userID>", methods=['DELETE'])
+@cross_origin()
+def deleteMods(userID):
+    try:
+        db.NUSMods.delete_one({"userID": userID})
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {"message": "successful"}, 200
+
+
+@app.route("/nusmods", methods=['PUT'])
+@cross_origin()
+def addMods(userID):
+    try:
+        data = request.get_json()
+        userID = data.get('userID')
+        mods = data.get('mods')
+
+        body = {
+            "userID": userID,
+            "mods": mods,
+        }
+
+        result = db.NUSMods.update_one({"userID": userID}, {'$set': body})
+        if int(result.matched_count) > 0:
+            return {'message': "Changed"}, 200
+        else:
+            db.NUSMods.insert_one(body)
+            return {'message': "successful"}, 200
+
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return {"message": "successful"}, 200
+
+
 if __name__ == "__main__":
-    app.run(threaded = True, debug = True)
+    app.run(threaded=True, debug=True)
     # app.run('0.0.0.0', port=8080)
