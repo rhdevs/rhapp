@@ -273,7 +273,11 @@ def getPostSpecific():
         
         if postID : 
             data = db.Posts.find_one({"postID": int(postID)})
-            return make_response(data, 200)
+            if data != None :
+              del data['_id'] # this causes error without str conversion
+              return make_response(data, 200)
+            else :
+              return make_response("No Data Found", 404)
         elif userID : 
             data = db.Posts.find({"userID": str(userID)})
             return json.dumps(list(data), default=lambda o: str(o)), 200
