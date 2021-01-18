@@ -240,6 +240,7 @@ def addDeletePost():
                 "postPics": postPics,
                 "isOfficial": isOfficial
             }
+            
             receipt = db.Posts.insert_one(body)
             body["_id"] = str(receipt.inserted_id)
 
@@ -254,6 +255,23 @@ def addDeletePost():
         print(e)
         return {"err": "Action failed"}, 400
 
+@app.route("/post/search", methods = ['GET'])
+@cross_origin()
+def getPostSpecific():
+    try : 
+        userID = request.args.get("userID")
+        postID = request.args.get("postID")
+        
+        if postID : 
+            data = db.Posts.find_one({"postID": int(postID)})
+            return make_response(data, 200)
+        elif userID : 
+            data = db.Posts.find({"userID": str(userID)})
+            return json.dumps(list(data), default=lambda o: str(o)), 200
+        
+    except Exception as e:
+        return {"err": "Action failed"}, 400
+    
 @app.route("/post/last/<int:last>", methods = ['GET'])
 @cross_origin()
 def getLastN(last):
@@ -263,17 +281,7 @@ def getLastN(last):
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    
-@app.route("/post/<userID>", methods = ['GET'])
-@cross_origin()
-def getPostById(userID):
-    try :         
-        data = db.Posts.find({"userID": str(userID)})
-        return json.dumps(list(data), default=lambda o: str(o)), 200
-    except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    
+        
 def FriendsHelper(userID):
     query = {
             "$or" : [{"userIDOne" : userID},{"userIDTwo" : userID}]
@@ -306,7 +314,6 @@ def getFriendsPostById():
         }
         
         result = db.Posts.find(query, sort=[('createdAt', pymongo.DESCENDING )]).limit(N)
-        
         return make_response(json.dumps(list(result), default=lambda o: str(o)), 200)
     
     except Exception as e :
@@ -347,7 +354,7 @@ def editPost():
             "isOfficial": isOfficial
         }
 
-        result = db.Posts.update_one({"_id": ObjectId(postID)}, {'$set': body})
+        result = db.Posts.update_one({"postID": int(postID)}, {'$set': body})
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
