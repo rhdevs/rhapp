@@ -370,26 +370,6 @@ def getMods(userID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route("/nusmods/add", methods=['POST'])
-@cross_origin()
-def addMods():
-    try:
-        data = request.get_json()
-        userID = data.get('userID')
-        mods = data.get('mods')
-
-        body = {
-            "userID": userID,
-            "mods": mods,
-        }
-        db.NUSModsinsert_one(body)
-
-    except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return {'message': "successful"}, 200
-
-
 @app.route("/nusmods/delete/<userID>", methods=['DELETE'])
 @cross_origin()
 def deleteMods(userID):
@@ -402,9 +382,9 @@ def deleteMods(userID):
     return {"message": "successful"}, 200
 
 
-@app.route("/nusmods/edit", methods=['PUT'])
+@app.route("/nusmods", methods=['PUT'])
 @cross_origin()
-def editMods(userID):
+def addMods(userID):
     try:
         data = request.get_json()
         userID = data.get('userID')
@@ -419,7 +399,7 @@ def editMods(userID):
         if int(result.matched_count) > 0:
             return {'message': "Changed"}, 200
         else:
-            db.NUSModsinsert_one(body)
+            db.NUSMods.insert_one(body)
             return {'message': "successful"}, 200
 
     except Exception as e:
