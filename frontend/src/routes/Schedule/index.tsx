@@ -11,7 +11,7 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserEvents } from '../../store/scheduling/action'
+import { fetchUserEvents, setIsLoading } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
@@ -54,6 +54,7 @@ export default function Schedule() {
   )
 
   useEffect(() => {
+    dispatch(setIsLoading(true))
     dispatch(fetchUserEvents(dummyUserId))
   }, [dispatch])
 

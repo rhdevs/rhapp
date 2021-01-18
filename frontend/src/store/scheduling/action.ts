@@ -14,7 +14,7 @@ import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
-  await fetch(DOMAIN_URL.EVENT + endpoint, {
+  const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
   })
@@ -22,8 +22,10 @@ const getEventsFromBackend = async (endpoint, methods) => {
       return resp.json()
     })
     .then(async (data) => {
-      await methods(data)
+      if (methods) await methods(data)
+      return data
     })
+  return resp
 }
 // ---------------------- GET ----------------------
 
@@ -44,10 +46,10 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 // ---------------------- TIMETABLE ----------------------
-export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  dispatch(getUserNusModsEvents(userId))
-  const { userNusModsEvents } = getState().scheduling
+  const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
+  // const { userNusModsEvents } = getState().scheduling
 
   const manipulateData = (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
@@ -67,9 +69,9 @@ export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<Act
       userEventsEndTime: Number(getTimetableEndTime(allEvents)),
       userEventsList: allEvents,
     })
-    dispatch(setIsLoading(false))
   }
   getEventsFromBackend(ENDPOINTS.USER_EVENT + userId, manipulateData)
+  dispatch(setIsLoading(false))
 }
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
@@ -281,7 +283,7 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
       if (resp.status >= 400) {
         console.log('FAILURE')
       } else {
-        dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
+        // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
         console.log('SUCCESS')
         dispatch(fetchUserEvents(userId))
       }
@@ -289,16 +291,10 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
   })
 }
 
-export const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  const dispatchData = (data) => {
-    console.log(data)
-    dispatch({
-      type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS,
-      userNusModsEvents: data[0].mods,
-    })
-  }
-
-  await getEventsFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
+export const getUserNusModsEvents = (userId: string) => async () => {
+  const resp = await getEventsFromBackend(ENDPOINTS.NUSMODS + userId, null)
+  console.log(resp)
+  return resp[0].mods
 }
 
 /**
