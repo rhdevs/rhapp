@@ -5,6 +5,7 @@ import json
 import os
 import time
 from bson.objectid import ObjectId
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -230,10 +231,9 @@ def addDeletePost():
             title = str(data.get('title'))
             description = str(data.get('description'))
             ccaID = int(data.get('ccaID'))
-            createdAt = int(data.get('createdAt'))
-            postPics = list(data.get('description'))
-            isOfficial = data.get('isOfficial')
-
+            createdAt = int(datetime.now().timestamp())
+            postPics = list(data.get('postPics'))
+            isOfficial = bool(data.get('isOfficial'))
             lastPostID = db.Posts.find_one(
                 sort=[('postID', pymongo.DESCENDING)])
             newPostID = 1 if lastPostID is None else int(
@@ -365,13 +365,18 @@ def editPost():
     try:
         data = request.get_json()
         postID = data.get('postID')
-        userID = str(data.get('userID'))
-        title = str(data.get('title'))
-        description = str(data.get('description'))
-        ccaID = int(data.get('ccaID'))
-        createdAt = int(data.get('createdAt'))
-        postPics = list(data.get('description'))
-        isOfficial = data.get('isOfficial')
+        oldPost = db.Posts.find_one({"postID": int(postID)})
+        
+        if oldPost == None:
+            return make_response("data non existent", 404)
+        
+        userID = str(data.get('userID')) if data.get('userID') else oldPost.get('userID')
+        title = str(data.get('title')) if data.get('title') else oldPost.get('title')
+        description = str(data.get('description')) if data.get('description') else oldPost.get('description')
+        ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
+        createdAt = datetime.now().timestamp()
+        postPics = list(data.get('description')) if data.get('description') else oldPost.get('description')
+        isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
 
         body = {
             "userID": userID,
