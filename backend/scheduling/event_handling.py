@@ -329,7 +329,10 @@ def editEvent():
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
-            return Response(status=204)
+            receipt = db.Events.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
 
     except Exception as e:
         print(e)
@@ -381,7 +384,7 @@ def deleteMods(userID):
 
 @app.route("/nusmods", methods=['PUT'])
 @cross_origin()
-def addMods(userID):
+def addMods():
     try:
         data = request.get_json()
         userID = data.get('userID')
