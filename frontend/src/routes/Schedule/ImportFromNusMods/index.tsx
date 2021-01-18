@@ -67,8 +67,8 @@ export default function ImportFromNusMods() {
             title={'Confirm Import?'}
             hasLeftButton={true}
             leftButtonText={'Import'}
-            onLeftButtonClick={async () => {
-              await dispatch(await setUserNusMods(dummyUserId, link))
+            onLeftButtonClick={() => {
+              dispatch(setUserNusMods(dummyUserId, link))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}

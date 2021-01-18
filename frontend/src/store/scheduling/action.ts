@@ -10,7 +10,7 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, post, put } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
@@ -46,7 +46,7 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
 // ---------------------- TIMETABLE ----------------------
 export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
-  await dispatch(getUserNusModsEvents(userId))
+  dispatch(getUserNusModsEvents(userId))
   const { userNusModsEvents } = getState().scheduling
 
   const manipulateData = (data) => {
@@ -270,18 +270,21 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
       }
 
       console.log(requestBody)
-      put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
+      const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
         .then((resp) => {
-          if (resp.status >= 400) {
-            console.log('FAILURE')
-          } else {
-            dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
-            console.log('SUCCESS')
-          }
+          return resp
         })
         .catch(() => {
           console.log('CATCH FAILURE')
         })
+
+      if (resp.status >= 400) {
+        console.log('FAILURE')
+      } else {
+        dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
+        console.log('SUCCESS')
+        dispatch(fetchUserEvents(userId))
+      }
     }
   })
 }
