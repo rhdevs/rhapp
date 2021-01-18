@@ -78,7 +78,7 @@ def addDeleteUser():
         return {"err": "Action failed"}, 400
 
 
-@app.route("/profile/edit", methods=['PUT'])
+@app.route("/user/edit", methods=['PUT'])
 @cross_origin()
 def editUser():
     try:
@@ -408,7 +408,7 @@ def createDeleteFriend():
             result = db.Friends.find_one(query)
 
             if(result == None):
-                receipt = db.Friends.insert_one(body)
+                db.Friends.insert_one(body)
 
                 return make_response({"Insert Succesful"}, 200)
             else:
@@ -488,6 +488,17 @@ def checkFriend():
             "status": False
         }
         return make_response(response, 200)
+
+
+@app.route("/user_CCA/<userID>")
+@cross_origin()
+def getUserCCAs(userID):
+    try:
+        data = db.UserCCA.find({"userID": userID})
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 if __name__ == "__main__":
