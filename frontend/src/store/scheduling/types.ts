@@ -34,16 +34,15 @@ export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_
 //   weeks: number[]
 // }
 
-export type UserEvent = {
+export type TimetableEvent = {
+  eventID: number
   eventName: string
+  startTime: string
+  endTime: string
   location: string
   day: string
-  date: string | null
-  endTime: string
-  startTime: string
   hasOverlap: boolean
-  eventType?: string
-  eventID: number
+  eventType: string
 }
 
 export type SchedulingEvent = {
@@ -56,12 +55,14 @@ export type SchedulingEvent = {
   ccaID: number
   userID: string
   image: null | string
+  isPrivate: boolean
 }
 
 /** Actions' types */
 
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
+  GET_ALL_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_EVENTS',
   GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
   EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
   SET_USER_NUSMODS_LINK = 'SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK',
@@ -72,30 +73,41 @@ export enum SCHEDULING_ACTIONS {
   SET_EVENT_LOCATION = 'SCHEDULING_ACTIONS.SET_EVENT_LOCATION',
   SET_EVENT_FROM_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_FROM_DATE',
   SET_EVENT_TO_DATE = 'SCHEDULING_ACTIONS.SET_EVENT_TO_DATE',
-  SET_CCA = 'SCHEDULING_ACTIONS.SET_CCA',
+  SET_TARGET_AUDIENCE = 'SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE',
   SET_DESCRIPTION = 'SCHEDULING_ACTIONS.SET_DESCRIPTION',
   GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
+  GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
 }
 
 /** Actions */
 
-type GetHallEventTypes = {
+type getHallEventTypes = {
   type: typeof SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES
   hallEventTypes: string[]
 }
 
+type getTargetAudienceList = {
+  type: typeof SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST
+  targetAudienceList: string[]
+}
+
+type GetAllEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_EVENTS
+  allEvents: SchedulingEvent[]
+}
+
 type GetUserEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
-  userEvents: UserEvent[][][]
+  userEvents: TimetableEvent[][][]
   userEventsStartTime: number
   userEventsEndTime: number
-  userEventsList: UserEvent[]
+  userEventsList: TimetableEvent[]
 }
 
 type EditUserEvents = {
   type: typeof SCHEDULING_ACTIONS.EDIT_USER_EVENTS
-  newUserEvents: UserEvent[]
+  newUserEvents: TimetableEvent[]
 }
 
 type SetUserNusModsLink = {
@@ -105,7 +117,7 @@ type SetUserNusModsLink = {
 
 type GetNusModsEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS
-  userNusModsEvents: UserEvent[]
+  userNusModsEvents: TimetableEvent[]
 }
 
 type GetSearchedEvents = {
@@ -143,9 +155,9 @@ type SetEventToDate = {
   newEventToDate: Date
 }
 
-type SetCca = {
-  type: typeof SCHEDULING_ACTIONS.SET_CCA
-  newCca: string
+type SetTargetAudience = {
+  type: typeof SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE
+  newTargetAudience: string
 }
 
 type SetDescription = {
@@ -159,6 +171,7 @@ type SetHallEventType = {
 }
 
 export type ActionTypes =
+  | GetAllEvents
   | GetUserEvents
   | EditUserEvents
   | SetUserNusModsLink
@@ -167,10 +180,11 @@ export type ActionTypes =
   | SetEventLocation
   | SetEventFromDate
   | SetEventToDate
-  | SetCca
+  | SetTargetAudience
   | SetDescription
   | GetShareSearchResults
-  | SetIsLoading
   | GetSearchedEvents
-  | GetHallEventTypes
+  | SetIsLoading
+  | getHallEventTypes
+  | getTargetAudienceList
   | SetHallEventType

@@ -24,6 +24,8 @@ export const facilityListStub: Facility[] = [
 
 export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Training', 'IHG']
 
+export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
@@ -68,6 +70,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
   {
     eventID: 1,
@@ -79,6 +82,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -90,6 +94,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -101,6 +106,7 @@ export const userEventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
 ]
 
@@ -115,6 +121,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -126,6 +133,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
   {
     eventID: 1,
@@ -137,6 +145,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: true,
   },
   {
     eventID: 1,
@@ -148,6 +157,7 @@ export const eventsDummy: SchedulingEvent[] = [
     ccaID: 1,
     userID: 'A0123456Z',
     image: null,
+    isPrivate: false,
   },
 ]
 
@@ -254,7 +264,7 @@ export const userProfileStub: User = {
   userId: 1,
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
-  displayName: 'Zhang MaoMao',
+  displayName: 'Zhou MaoMao',
   telegramHandle: 'zhoumm',
   block: 8,
   bio: 'This is my bio hur hur',
@@ -264,6 +274,19 @@ export const userProfileStub: User = {
   ],
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
   posts: [],
+  friends: [
+    {
+      friendId: 1,
+      name: 'Zhou MaoM',
+      telegram: '@zhoumm',
+      avatar: 'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+    },
+    {
+      friendId: 2,
+      name: 'Zhou Gougou',
+      telegram: '@woofwoof',
+    },
+  ],
 }
 
 export const dummyNusModsLink =

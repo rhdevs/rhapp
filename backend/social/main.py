@@ -1,24 +1,30 @@
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
-import pymongo, json, os, time
+import pymongo
+import json
+import os
+import time
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type';
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
 # URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
 
 # client = pymongo.MongoClient(URL)
-client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+client = pymongo.MongoClient(
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
+
 
 @app.route("/")
 @cross_origin()
 def hello():
-  return "Welcome the Raffles Hall Social server" 
+    return "Welcome the Raffles Hall Social server"
+
 
 @app.route('/user/all')
 @cross_origin()
@@ -29,7 +35,8 @@ def getAllUsers():
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    
+
+
 @app.route("/user/<userID>")
 @cross_origin()
 def getUser(userID):
@@ -116,18 +123,18 @@ def addDeleteProfile():
         if request.method == "POST":
             data = request.get_json()
             userID = str(data.get('userID'))
-            name = str(data.get('name'))
+            displayName = str(data.get('displayName'))
             bio = str(data.get('bio'))
-            profilePicture = str(data.get('profilePicture'))
+            profilePictureUrl = str(data.get('profilePictureUrl'))
             block = int(data.get('block'))
             telegramHandle = str(data.get('telegramHandle'))
             modules = data.get('modules')
 
             body = {
                 "userID": userID,
-                "name": name,
+                "displayName": displayName,
                 "bio": bio,
-                "profilePicture": profilePicture,
+                "profilePictureUrl": profilePictureUrl,
                 "block": block,
                 "telegramHandle": telegramHandle,
                 "modules": modules
@@ -165,18 +172,18 @@ def editProfile():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        name = str(data.get('name'))
+        displayName = str(data.get('displayName'))
         bio = str(data.get('bio'))
-        profilePicture = str(data.get('profilePicture'))
+        profilePictureUrl = str(data.get('profilePictureUrl'))
         block = int(data.get('block'))
         telegramHandle = str(data.get('telegramHandle'))
         modules = data.get('modules')
 
         body = {
             "userID": userID,
-            "name": name,
+            "displayName": displayName,
             "bio": bio,
-            "profilePicture": profilePicture,
+            "profilePictureUrl": profilePictureUrl,
             "block": block,
             "telegramHandle": telegramHandle,
             "modules": modules
@@ -208,13 +215,13 @@ def getUserDetails(userID):
         return {"err": "Action failed"}, 400
     return json.dumps(data1, default=lambda o: str(o)), 200
 
-    
+
 @app.route("/post", methods=['GET', 'DELETE', 'POST'])
 @cross_origin()
 def addDeletePost():
     try:
-        if request.method == "GET" : 
-            #get last 5 most recent 
+        if request.method == "GET":
+            # get last 5 most recent
             data = db.Posts.find()
             return json.dumps(list(data), default=lambda o: str(o)), 200
         elif request.method == "POST":
@@ -226,12 +233,14 @@ def addDeletePost():
             createdAt = int(data.get('createdAt'))
             postPics = list(data.get('description'))
             isOfficial = data.get('isOfficial')
-            
-            lastPostID = db.Posts.find_one(sort=[('postID', pymongo.DESCENDING )])
-            newPostID = 1 if lastPostID is None else int(lastPostID.get("postID")) + 1
-                
+
+            lastPostID = db.Posts.find_one(
+                sort=[('postID', pymongo.DESCENDING)])
+            newPostID = 1 if lastPostID is None else int(
+                lastPostID.get("postID")) + 1
+
             body = {
-                "postID" : newPostID,
+                "postID": newPostID,
                 "userID": userID,
                 "title": title,
                 "description": description,
@@ -271,64 +280,80 @@ def getPostSpecific():
         
     except Exception as e:
         return {"err": "Action failed"}, 400
-    
-@app.route("/post/last/<int:last>", methods = ['GET'])
+
+@app.route("/post/last/<int:last>", methods=['GET'])
 @cross_origin()
 def getLastN(last):
-    try : 
-        data = db.Posts.find(sort=[('createdAt', pymongo.DESCENDING )]).limit(last)
+    try:
+        data = db.Posts.find(
+            sort=[('createdAt', pymongo.DESCENDING)]).limit(last)
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-        
+    
+@app.route("/post/<userID>", methods=['GET'])
+@cross_origin()
+def getPostById(userID):
+    try:
+        data = db.Posts.find({"userID": str(userID)})
+        return json.dumps(list(data), default=lambda o: str(o)), 200
+    except Exception as e:
+        print(e)
+        return {"err": "Action failed"}, 400
+
+
 def FriendsHelper(userID):
     query = {
-            "$or" : [{"userIDOne" : userID},{"userIDTwo" : userID}]
-        }
-        
+        "$or": [{"userIDOne": userID}, {"userIDTwo": userID}]
+    }
+
     result = db.Friends.find(query)
-    response = {'friendList' : []}
-    for friend in result :
+    response = {'friendList': []}
+    for friend in result:
         userOne = friend.get("userIDOne")
         userTwo = friend.get("userIDTwo")
-        
+
         if(userID == userOne):
             response['friendList'].append(userTwo)
-        else :
+        else:
             response['friendList'].append(userOne)
-            
+
     return response
- 
-@app.route("/post/friend", methods = ['GET'])
+
+
+@app.route("/post/friend", methods=['GET'])
 @cross_origin()
 def getFriendsPostById():
-    try : 
+    try:
         userID = str(request.args.get("userID"))
         N = int(request.args.get("N"))
-        
+
         friends = FriendsHelper(userID).get('friendList')
-    
+
         query = {
-            "userID" : {"$in": friends}
+            "userID": {"$in": friends}
         }
-        
-        result = db.Posts.find(query, sort=[('createdAt', pymongo.DESCENDING )]).limit(N)
+
+        result = db.Posts.find(
+            query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
+
         return make_response(json.dumps(list(result), default=lambda o: str(o)), 200)
-    
-    except Exception as e :
+
+    except Exception as e:
         return {"err": str(e)}, 400
-    
-@app.route("/post/official", methods = ['GET'])
+
+
+@app.route("/post/official", methods=['GET'])
 @cross_origin()
 def getOfficialPosts():
-    try :         
+    try:
         data = db.Posts.find({"isOfficial": True})
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-        
+
 
 @app.route("/post/edit/", methods=['PUT'])
 @cross_origin()
@@ -365,106 +390,122 @@ def editPost():
         return {"err": "Action failed"}, 400
     return {'message': "Event changed"}, 200
 
+
 '''
 Friends API 
 '''
-@app.route("/friend", methods = ['DELETE', 'POST'])
+
+
+@app.route("/friend", methods=['DELETE', 'POST'])
 @cross_origin()
 def createDeleteFriend():
-    try :
-        data = request.get_json()   
+    try:
+        data = request.get_json()
         # we store the data as a bidirectional edge
         userOne = str(data.get('userIDOne'))
         userTwo = str(data.get('userIDTwo'))
         if request.method == "POST":
             body = {
-                "userIDOne" : userOne,
-                "userIDTwo" : userTwo
+                "userIDOne": userOne,
+                "userIDTwo": userTwo
             }
-            
+
             query = {
-                "$or" : [
-                    {"userIDOne" : userOne,
-                     "userIDTwo" : userTwo
-                    },
-                    {"userIDOne" : userTwo,
-                     "userIDTwo" : userOne
-                    }
+                "$or": [
+                    {"userIDOne": userOne,
+                     "userIDTwo": userTwo
+                     },
+                    {"userIDOne": userTwo,
+                     "userIDTwo": userOne
+                     }
                 ]
             }
-        
+
             result = db.Friends.find_one(query)
 
             if(result == None):
-                receipt = db.Friends.insert_one(body);
-                
-                return make_response({"Insert Succesful"}, 200) 
-            else :  
-                return make_response("Friendship exists", 400);
-            
-        elif request.method == "DELETE" :
+                receipt = db.Friends.insert_one(body)
+
+                return make_response({"Insert Succesful"}, 200)
+            else:
+                return make_response("Friendship exists", 400)
+
+        elif request.method == "DELETE":
             data = request.get_json()
             userOne = str(data.get)
-            
+
             query = {
-                "$or" : [
+                "$or": [
                     {
-                        "userIDOne" : userOne,
-                        "userIDTwo" : userTwo    
-                    }, 
+                        "userIDOne": userOne,
+                        "userIDTwo": userTwo
+                    },
                     {
-                        "userIDOne" : userTwo,
-                        "userIDTwo" : userOne        
+                        "userIDOne": userTwo,
+                        "userIDTwo": userOne
                     }]
             }
-            
+
             db.Friends.delete_one(query)
-            
+
             return make_response("Delete Successful", 200)
-        
+
     except Exception as e:
-        return make_response({"err" : str(e)}, 400)
-    
-@app.route("/friend/<userID>", methods = ["GET"])
+        return make_response({"err": str(e)}, 400)
+
+
+@app.route("/friend/<userID>", methods=["GET"])
+@cross_origin()
 def getAllFriends(userID):
-    try :
+    try:
         response = FriendsHelper(userID)
-        return make_response(response, 200)
-    
+        friends = response["friendList"]
+        result = []
+
+        for friendID in friends:
+            entry = db.Profiles.find_one({"userID": friendID})
+            if entry != None:
+                result.append(entry)
+
+        return make_response(json.dumps(result, default=lambda o: str(o)), 200)
+
     except Exception as e:
-        return make_response({"err" : str(e)}, 400)
-    
-@app.route("/friend/check", methods = ["GET"])
+        return make_response({"err": str(e)}, 400)
+
+
+@app.route("/friend/check", methods=["GET"])
+@cross_origin()
 def checkFriend():
     userOne = request.args.get('userIDOne')
     userTwo = request.args.get('userIDTwo')
-    
+
     query = {
-            "$or" : [{
-                        "userIDOne" : userOne,
-                        "userIDTwo" : userTwo
-                    },
-                    {
-                        "userIDOne" : userTwo,
-                        "userIDTwo" : userOne
-                    }]
-        }
-        
+        "$or": [{
+            "userIDOne": userOne,
+            "userIDTwo": userTwo
+        },
+            {
+            "userIDOne": userTwo,
+            "userIDTwo": userOne
+        }]
+    }
+
     result = db.Friends.find_one(query)
-    
+
     if(result != None):
         response = {
-            "message" : "friendship exists", 
-            "status" : True 
+            "message": "friendship exists",
+            "status": True
         }
         return make_response(response, 200)
-    else :
+    else:
         response = {
-            "message" : "friendship doesnt exist",
-            "status" : False
+            "message": "friendship doesnt exist",
+            "status": False
         }
         return make_response(response, 200)
 
+
 if __name__ == "__main__":
-    app.run(threaded = True, debug = True)
+    app.run(threaded=True, debug=True)
     # app.run('0.0.0.0', port=8080)

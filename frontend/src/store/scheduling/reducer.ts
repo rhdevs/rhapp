@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, UserEvent, SchedulingEvent, SCHEDULING_ACTIONS } from './types'
+import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { SearchResult } from '../types'
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
   userEventsEndTime: 2400,
   shareSearchResults: [],
   searchedEvents: [],
+  allEvents: [],
   userNusModsLink: '',
   userNusModsEvents: [],
 
@@ -19,31 +20,34 @@ const initialState = {
   newEventLocation: '',
   newEventFromDate: new Date(),
   newEventToDate: new Date(),
-  newCca: '',
+  newTargetAudience: '',
   newDescription: '',
   newHallEventType: '',
   hallEventTypes: [],
+  targetAudienceList: [],
 }
 
 type State = {
   isLoading: boolean
-  userEvents: UserEvent[][][]
-  userEventsList: UserEvent[]
-  newUserEvents: UserEvent[]
+  userEvents: TimetableEvent[][][]
+  userEventsList: TimetableEvent[]
+  newUserEvents: TimetableEvent[]
   userEventsStartTime: number
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
+  allEvents: SchedulingEvent[]
   userNusModsLink: string
-  userNusModsEvents: UserEvent[]
+  userNusModsEvents: TimetableEvent[]
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
   newEventToDate: Date
-  newCca: string
+  newTargetAudience: string
   newDescription: string
   hallEventTypes: string[]
   newHallEventType: string
+  targetAudienceList: string[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -52,6 +56,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         isLoading: action.isLoading,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_ALL_EVENTS: {
+      return {
+        ...state,
+        allEvents: action.allEvents,
       }
     }
     case SCHEDULING_ACTIONS.GET_USER_EVENTS: {
@@ -117,10 +127,10 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         newEventToDate: action.newEventToDate,
       }
     }
-    case SCHEDULING_ACTIONS.SET_CCA: {
+    case SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE: {
       return {
         ...state,
-        newCca: action.newCca,
+        newTargetAudience: action.newTargetAudience,
       }
     }
     case SCHEDULING_ACTIONS.SET_DESCRIPTION: {
@@ -139,6 +149,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         newHallEventType: action.newHallEventType,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST: {
+      return {
+        ...state,
+        targetAudienceList: action.targetAudienceList,
       }
     }
     default:
