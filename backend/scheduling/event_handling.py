@@ -329,7 +329,10 @@ def editEvent():
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
-            return Response(status=204)
+            receipt = db.Events.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
 
     except Exception as e:
         print(e)
@@ -416,7 +419,8 @@ def editMods(userID):
         if int(result.matched_count) > 0:
             return {'message': "Changed"}, 200
         else:
-            return Response(status=204)
+            db.NUSModsinsert_one(body)
+            return {'message': "successful"}, 200
 
     except Exception as e:
         print(e)
