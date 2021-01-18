@@ -14,21 +14,14 @@ app.config['SECRET_KEY'] = 'secretkeyvalue' # will replace with flaskenv variabl
 CORS(app, origins=CROSS_ORIGINS_LIST, headers=['Content-Type'], 
          expose_headers=['Access-Control-Allow-Origin'], supports_credentials=True)
 
+db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
 
 #for new registration, check if matric already exists
 def userIDAlreadyExists(testID):
-    if db.User.find({'userID': { "$in": testID}}).count() > 0:
+    if db.User.find({'userID': { "$in": testID}}).count(): # entry exists
         return True
     else:
         return False
-
-def tokenHasExpired(token):
-    #if db.Blacklist.find({'token': token}).count():
-    #   return True
-    #else:
-    #   return False
-    pass
-
 
 """
 Decorative function: 
@@ -39,17 +32,29 @@ def check_for_token(func):
     def decorated(*args, **kwargs):
         #extract token; for example here I assume it is passed as query parameter
         token = requests.args.get('token')
-
+        
+        #if request does not have a token
         if not token:
-            return jsonify({'message': 'Token is missing'}), 403
-        #if tokenHasExpired(token):
-        #    return jsonify({'message': 'Token is no longer valid'}), 403
+            return jsonify({'message': 'Token is missing'}), 401
+        
+        #verify the user
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
-            currentUser = db.User.find({'userID': { "$in": username}}).limit(1)
+            currentUser = db.User.find({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}}).limit(1)
+            currentUsername = currentUser['userID']
         except: 
-            return jsonify({'message': 'Token is invalid'}), 403
+            return jsonify({'message': 'Token is invalid'}), 401
         
+        #check if token has expired (compare time now with createdAt field in document + timedelta)
+        oldTime = db.Session.find({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}}, {'_id': 0, 'createdAt': 1})['createdAt']
+        if datetime.datetime.now() > oldTime + timedelta(minutes=2):
+            return jsonify({'message': 'Token has expired'}), 403
+        else:
+            #recreate session (with createdAt updated to now)
+            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+            #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
+            db.Session.update({'userID': data['username'], 'passwordHash': data['passwordHash']}, {'$set': {"createdAt": datetime.datetime.now()}}, {upsert: true})
+
         return f(currentUser, *args, **kwargs)
 
     return decorated
@@ -79,9 +84,9 @@ def register():
 
 
 """
-Register route:
+Login route:
 Within POST request, verify userID and passwordHash are valid.
-If true return JWT to client, else return 500.
+If true, create session, return JWT to client, else return 500.
 """
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -91,16 +96,22 @@ def login():
     #authenticate the credentials
     if not db.User.find({'userID': { "$in": username}, 'passwordHash': { "$in": passwordHash}}).limit(1):
         return jsonify({'message': 'Invalid credentials'}), 403
+    #insert new session into Session table
+    #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
+    db.Session.insert_one({'userID': username, 'passwordHash': passwordHash, 'createdAt': datetime.datetime.now()})
     #generate JWT
-    token = jwt.encode({'user': username,
-                        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60) #to change timedelta to 15 minutes in production
+    token = jwt.encode({'userID': username,
+                        'passwordHash': passwordHash #to change timedelta to 15 minutes in production
                         }, app.config['SECRET_KEY']) 
     
     return jsonify({'token': token.decode('UTF-8')}), 200
 
 
 
-# this route acts as gatekeeper: can only access requested resource if you are authenticated ie valid JWT 
+"""
+Protected route:
+Acts as gatekeeper; can only access requested resource if you are authenticated ie valid session
+"""
 @app.route('/auth/protected', methods=['POST'])
 @check_for_token
 def protected(currentUser):
@@ -108,12 +119,19 @@ def protected(currentUser):
     
 
 
-# this will blacklist the JWT until its expiration
-@app.route('/auth/logout')
+"""
+Logout route:
+Delete the session entry
+"""
+@app.route('/auth/logout', methods=['GET'])
 def logout():
-    pass
-    #extract token, add to a new collection Blacklist (remember to include the TTL)
-    #pass success message
+    userID = request.args.get('userID')
+    try:
+        db.Session.remove({"userID": userID})
+    except:
+        return jsonify({'message': 'An error occurred'}), 500
+    return jsonify({'message': 'You have been successfully logged out'}), 200
+
 
 
 # Run the example
