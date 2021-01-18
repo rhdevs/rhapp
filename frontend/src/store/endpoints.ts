@@ -28,11 +28,15 @@ export enum ENDPOINTS {
   USER_PERMISSION = '/permissions/',
 
   ALL_EVENTS = '/event/all',
-  USER_EVENT = '/user_event',
+  USER_EVENT = '/user_event/',
   ADD_EVENT = '/event/add/',
   DELETE_EVENT = '/event/delete/',
   RSVP_EVENT = '/user_event/',
   EDIT_EVENT = '/event/edit/',
+
+  ADD_MODS = '/nusmods',
+  DELETE_MODS = '/nusmods/delete/',
+  NUSMODS = '/nusmods/',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',

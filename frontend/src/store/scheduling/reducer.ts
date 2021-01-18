@@ -12,7 +12,6 @@ const initialState = {
   shareSearchResults: [],
   searchedEvents: [],
   allEvents: [],
-  userNusModsLink: '',
   userNusModsEvents: [],
 
   // Create new event states
@@ -37,7 +36,6 @@ type State = {
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
   allEvents: SchedulingEvent[]
-  userNusModsLink: string
   userNusModsEvents: TimetableEvent[]
   newEventName: string
   newEventLocation: string
@@ -79,13 +77,7 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         newUserEvents: action.newUserEvents,
       }
     }
-    case SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK: {
-      return {
-        ...state,
-        userNusModsLink: action.userNusModsLink,
-      }
-    }
-    case SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS: {
+    case SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS: {
       return {
         ...state,
         userNusModsEvents: action.userNusModsEvents,

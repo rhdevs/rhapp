@@ -9,9 +9,10 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import Button from '../../../components/Mobile/Button'
 import { useDispatch } from 'react-redux'
-import { setUserNusModsLink, getUserNusModsEvents } from '../../../store/scheduling/action'
+import { setUserNusMods } from '../../../store/scheduling/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PATHS } from '../../Routes'
+import { dummyUserId } from '../../../store/stubs'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -66,9 +67,8 @@ export default function ImportFromNusMods() {
             title={'Confirm Import?'}
             hasLeftButton={true}
             leftButtonText={'Import'}
-            onLeftButtonClick={() => {
-              dispatch(setUserNusModsLink(link))
-              dispatch(getUserNusModsEvents())
+            onLeftButtonClick={async () => {
+              await dispatch(await setUserNusMods(dummyUserId, link))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}

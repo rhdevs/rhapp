@@ -15,6 +15,7 @@ import { fetchUserEvents } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
+import { dummyUserId } from '../../store/stubs'
 // import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
@@ -53,7 +54,7 @@ export default function Schedule() {
   )
 
   useEffect(() => {
-    dispatch(fetchUserEvents())
+    dispatch(fetchUserEvents(dummyUserId))
   }, [dispatch])
 
   const rightIcon = (

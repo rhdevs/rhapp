@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './types'
-import { SchedulingEvent } from './scheduling/types'
+import { SchedulingEvent, TimetableEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -13,6 +13,8 @@ import { SchedulingEvent } from './scheduling/types'
  * 6. Events
  * 7. Search Results
  * 8. NUSModsLink
+ * 9. userId
+ * 10. NUSMods
  */
 
 export const facilityListStub: Facility[] = [
@@ -291,3 +293,78 @@ export const userProfileStub: User = {
 
 export const dummyNusModsLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
+
+export const dummyUserId = 'A1234567B'
+
+export const dummyNusMods: TimetableEvent[] = [
+  {
+    day: 'Wednesday',
+    endTime: '1200',
+    eventID: 1,
+    eventName: 'AC5002 LEC',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'SDE4-EXR1-2',
+    startTime: '0900',
+  },
+  {
+    day: 'Tuesday',
+    endTime: '1200',
+    eventID: 1,
+    eventName: 'CG1112 LAB',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E4A-04-08',
+    startTime: '0900',
+  },
+  {
+    day: 'Thursday',
+    endTime: '1200',
+    eventID: 1,
+    eventName: 'CG1112 LAB',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E4A-04-08',
+    startTime: '0900',
+  },
+  {
+    day: 'Friday',
+    endTime: '1400',
+    eventID: 1,
+    eventName: 'CG1112 TUT',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E-Learn-C',
+    startTime: '1200',
+  },
+  {
+    day: 'Friday',
+    endTime: '1200',
+    eventID: 1,
+    eventName: 'CG2023 LAB',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E4A-06-03',
+    startTime: '0900',
+  },
+  {
+    day: 'Tuesday',
+    endTime: '1800',
+    eventID: 1,
+    eventName: 'CG2023 PTUT',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E1-06-01',
+    startTime: '1600',
+  },
+  {
+    day: 'Thursday',
+    endTime: '1800',
+    eventID: 1,
+    eventName: 'CG2023 PLEC',
+    eventType: 'mods',
+    hasOverlap: false,
+    location: 'E3-06-08',
+    startTime: '1600',
+  },
+]

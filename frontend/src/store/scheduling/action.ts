@@ -10,8 +10,9 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, post, put } from '../endpoints'
 
+// ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
   await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
@@ -20,10 +21,11 @@ const getEventsFromBackend = async (endpoint, methods) => {
     .then((resp) => {
       return resp.json()
     })
-    .then((data) => {
-      methods(data)
+    .then(async (data) => {
+      await methods(data)
     })
 }
+// ---------------------- GET ----------------------
 
 export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -41,31 +43,34 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+// ---------------------- TIMETABLE ----------------------
+export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
+  await dispatch(getUserNusModsEvents(userId))
+  const { userNusModsEvents } = getState().scheduling
+
   const manipulateData = (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
 
+    console.log(userNusModsEvents.length)
+    const allEvents: TimetableEvent[] = userNusModsEvents
+      ? timetableFormatEvents.concat(userNusModsEvents)
+      : timetableFormatEvents
+
+    console.log(allEvents)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-      userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
-      userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
-      userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
-      userEventsList: timetableFormatEvents,
+      userEvents: transformInformationToTimetableFormat(allEvents),
+      userEventsStartTime: Number(getTimetableStartTime(allEvents)),
+      userEventsEndTime: Number(getTimetableEndTime(allEvents)),
+      userEventsList: allEvents,
     })
     dispatch(setIsLoading(false))
   }
-  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, manipulateData)
+  getEventsFromBackend(ENDPOINTS.USER_EVENT + userId, manipulateData)
 }
-
-// const withNusModsEvents = (userEventsList: TimetableEvent[]) => {
-//   //fetch nusmodsEvents from backend
-//   const nusModsEvent: TimetableEvent[] = []
-//   if (nusModsEvent) userEventsList.concat(nusModsEvent)
-//   else return userEventsList
-// }
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
   const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
@@ -89,6 +94,16 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
     eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
   }
 }
+
+/**
+ * Returns the events in the current week
+ *
+ * @param events array of events of type TimetableEvents
+ */
+// const filterCurrentWeekEvents = (events : TimetableEvent) => {
+//   const currentYear = new Date().getFullYear()
+
+// }
 
 const sortEvents = (events: TimetableEvent[]) => {
   return events.sort((a, b) => {
@@ -229,39 +244,58 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 
   return formattedTime
 }
+// ---------------------- TIMETABLE ----------------------
 
 // ---------------------- NUSMODS ----------------------
-export const setUserNusModsLink = (userNusModsLink: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK, userNusModsLink: userNusModsLink })
-  console.log(userNusModsLink)
-}
-
-export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch(setIsLoading(true))
+export const setUserNusMods = (userId: string, userNusModsLink: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const currentYear = new Date().getFullYear()
   const academicYear = String(currentYear - 1) + '-' + String(currentYear)
 
-  const { userNusModsLink } = getState().scheduling
-
-  // const userNusModsLink = dummyNusModsLink //fetch link *include validation!
-
+  console.log(userNusModsLink)
   const dataFromLink = extractDataFromLink(userNusModsLink)
   let retrivedEventInformation: TimetableEvent[] = []
   const temporaryData: TimetableEvent[][] = []
+  let userNusMods: TimetableEvent[] = []
 
   dataFromLink.map(async (oneModuleData) => {
+    console.log(oneModuleData)
     temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
     retrivedEventInformation = temporaryData.flat()
     if (oneModuleData === last(dataFromLink)) {
-      console.log(retrivedEventInformation)
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS,
-        userNusModsEvents: retrivedEventInformation,
-      })
+      userNusMods = retrivedEventInformation
+
+      const requestBody = {
+        userID: userId,
+        mods: userNusMods,
+      }
+
+      console.log(requestBody)
+      put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
+        .then((resp) => {
+          if (resp.status >= 400) {
+            console.log('FAILURE')
+          } else {
+            dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
+            console.log('SUCCESS')
+          }
+        })
+        .catch(() => {
+          console.log('CATCH FAILURE')
+        })
     }
   })
-  //post to userEvents
-  dispatch(setIsLoading(false))
+}
+
+export const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  const dispatchData = (data) => {
+    console.log(data)
+    dispatch({
+      type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS,
+      userNusModsEvents: data[0].mods,
+    })
+  }
+
+  await getEventsFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
 }
 
 /**
@@ -321,8 +355,8 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
             endTime: classInformation.endTime,
             startTime: classInformation.startTime,
             hasOverlap: false,
-            eventID: 1,
-            eventType: 'timetable', //change!
+            eventID: 1, //change!
+            eventType: 'mods', //change!
           }
           events.push(newEvent)
         })
