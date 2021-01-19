@@ -374,7 +374,6 @@ def editPost():
         title = str(data.get('title')) if data.get('title') else oldPost.get('title')
         description = str(data.get('description')) if data.get('description') else oldPost.get('description')
         ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
-        createdAt = datetime.now().timestamp()
         postPics = list(data.get('description')) if data.get('description') else oldPost.get('description')
         isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
 
@@ -383,7 +382,6 @@ def editPost():
             "title": title,
             "description": description,
             "ccaID": ccaID,
-            "createdAt": createdAt,
             "postPics": postPics,
             "isOfficial": isOfficial
         }
