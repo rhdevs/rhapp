@@ -145,7 +145,7 @@ export default function EditProfile() {
             return (
               // eslint-disable-next-line react/jsx-key
               <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                {cca.ccaID}
+                {cca.ccaName}
                 <img
                   alt="deleteIcon"
                   style={{ marginLeft: 5, width: 6 }}
