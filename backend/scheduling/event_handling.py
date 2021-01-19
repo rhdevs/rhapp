@@ -33,8 +33,7 @@ def getUserTimetable(userID):
     try:
         data = db.Lessons.find({"userID": userID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -44,8 +43,7 @@ def getAllEvents():
     try:
         data = db.Events.find()
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -55,8 +53,7 @@ def getAllPrivateEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": True}})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -66,8 +63,7 @@ def getAllPublicEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -77,8 +73,7 @@ def getEventAfterTime(startTime):
     try:
         data = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -88,8 +83,7 @@ def getAllCCA():
     try:
         data = db.CCA.find()
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -107,8 +101,7 @@ def getEventsDetails():
             print(result)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
@@ -118,8 +111,7 @@ def getEventsCCA(ccaID):
     try:
         data = db.Events.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -129,8 +121,7 @@ def getCCADetails(ccaID):
     try:
         data = db.CCA.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -145,8 +136,7 @@ def getUserCCAs(userID):
             response.append(db.CCA.find_one({"ccaID": ccaID}))
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
 
@@ -168,8 +158,7 @@ def getUserAttendance(userID, referenceTime):
                 body.append(result)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(body), default=lambda o: str(o)), 200
 
 
@@ -179,8 +168,7 @@ def getEventAttendees(eventID):
     try:
         data = db.Attendance.find({"eventID": eventID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -190,8 +178,7 @@ def getCCAMembers(ccaID):
     try:
         data = db.UserCCA.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -216,8 +203,7 @@ def addUserCCA(userID):
         return {"message": body}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/permissions/<userID>")
@@ -226,8 +212,7 @@ def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -252,8 +237,7 @@ def addDeletePermissions():
             return Response(status=200)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "Action successful"}, 200
 
 
@@ -290,8 +274,7 @@ def createEvent():
         return {"message": body}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/event/delete/<eventID>", methods=['DELETE'])
@@ -301,8 +284,7 @@ def deleteEvent(eventID):
         db.Events.delete_one({"_id": eventID})
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
@@ -345,8 +327,7 @@ def editEvent():
             return {"message": body}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
@@ -364,8 +345,7 @@ def editAttendance():
         db.Attendance.insert_one(body)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Attendance edited"}, 200
 
 
@@ -386,8 +366,7 @@ def deleteMods(userID):
         db.NUSMods.delete_one({"userID": userID})
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
@@ -412,8 +391,8 @@ def addMods():
             return {'message': "successful"}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
