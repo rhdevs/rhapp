@@ -401,9 +401,9 @@ def getOfficialPosts():
         
         for item in data : 
             name = db.Profiles.find_one({"userID" : item.get('userID')})
-            ccaID = int(item.get('ccaID'))
             
-            item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName')
+            ccaID = int(item.get('ccaID'))            
+            item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName') if ccaID != -1 else None
             item['name'] = name
             response.append(item)
             
