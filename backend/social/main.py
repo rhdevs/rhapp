@@ -38,7 +38,7 @@ def getAllUsers():
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/user/<userID>")
@@ -48,7 +48,7 @@ def getUser(userID):
         data = db.User.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -79,7 +79,7 @@ def addDeleteUser():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/user/edit", methods=['PUT'])
@@ -105,7 +105,7 @@ def editUser():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
@@ -116,7 +116,7 @@ def getUserProfile(userID):
         data = db.Profiles.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -167,7 +167,7 @@ def addDeleteProfile():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/profile/edit/", methods=['PUT'])
@@ -202,7 +202,7 @@ def editProfile():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
@@ -216,7 +216,7 @@ def getUserDetails(userID):
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     
     return json.dumps(data1, default=lambda o: str(o)), 200
 
@@ -232,7 +232,7 @@ def addDeletePost():
             response = []
             for item in data :
                 #add name into the every data using display name
-                name = db.Profiles.find_one({"userID" : item.get('userID')})
+                name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
                 item['name'] = name
                 response.append(item)
                 
@@ -275,7 +275,7 @@ def addDeletePost():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 @app.route("/post/search", methods = ['GET'])
 @cross_origin()
@@ -299,14 +299,14 @@ def getPostSpecific():
             data = db.Posts.find({"userID": str(userID)})
             response = []
             for item in data :
-                name = db.Profiles.find_one({"userID" : item.get('userID')})
+                name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
                 item['name'] = name
                 response.append(item)
             
             return json.dumps(response, default=lambda o: str(o)), 200
         
     except Exception as e:
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 @app.route("/post/last/<int:last>", methods=['GET'])
 @cross_origin()
@@ -318,7 +318,7 @@ def getLastN(last):
         
         response = []
         for item in data : 
-            name = db.Profiles.find_one({"userID" : item.get('userID')})
+            name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
             item['name'] = name
             response.append(item)
             
@@ -326,7 +326,7 @@ def getLastN(last):
     
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     
 @app.route("/post/<userID>", methods=['GET'])
 @cross_origin()
@@ -336,7 +336,7 @@ def getPostById(userID):
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 def FriendsHelper(userID):
@@ -400,7 +400,7 @@ def getOfficialPosts():
                              sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
         
         for item in data : 
-            name = db.Profiles.find_one({"userID" : item.get('userID')})
+            name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
             
             ccaID = int(item.get('ccaID'))            
             item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName') if ccaID != -1 else None
@@ -410,7 +410,7 @@ def getOfficialPosts():
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/post/edit/", methods=['PUT'])
@@ -448,7 +448,7 @@ def editPost():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
@@ -574,7 +574,7 @@ def getUserCCAs(userID):
         data = db.UserCCA.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
