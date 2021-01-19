@@ -8,7 +8,10 @@ from bson.objectid import ObjectId
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*":{"origins" : "*"}})
+# resources allowed to be accessed explicitly 
+# response.headers.add("Access-Control-Allow-Origin", "*"), add this to all responses
+# if the cors still now working
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USERNAME = os.getenv('DB_USERNAME')
@@ -214,6 +217,7 @@ def getUserDetails(userID):
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
+    
     return json.dumps(data1, default=lambda o: str(o)), 200
 
 
@@ -224,7 +228,16 @@ def addDeletePost():
         if request.method == "GET":
             # get last 5 most recent
             data = db.Posts.find()
-            return json.dumps(list(data), default=lambda o: str(o)), 200
+            
+            response = []
+            for item in data :
+                #add name into the every data using display name
+                name = db.Profiles.find_one({"userID" : item.get('userID')})
+                item['name'] = name
+                response.append(item)
+                
+            return json.dumps(response, default=lambda o: str(o)), 200
+        
         elif request.method == "POST":
             data = request.get_json()
             userID = str(data.get('userID'))
@@ -232,7 +245,7 @@ def addDeletePost():
             description = str(data.get('description'))
             ccaID = int(data.get('ccaID')) if data.get('ccaID') else -1
             createdAt = int(datetime.now().timestamp())
-            postPics = list(data.get('postPics'))
+            postPics = data.get('postPics') if data.get('postPics') else []
             isOfficial = bool(data.get('isOfficial'))
             lastPostID = db.Posts.find_one(
                 sort=[('postID', pymongo.DESCENDING)])
@@ -273,14 +286,24 @@ def getPostSpecific():
         
         if postID : 
             data = db.Posts.find_one({"postID": int(postID)})
+            name = db.User.find_one({"userID" : str(data.get("userID"))})
+            
             if data != None :
               del data['_id'] # this causes error without str conversion
+              data['name'] = name
               return make_response(data, 200)
             else :
               return make_response("No Data Found", 404)
+          
         elif userID : 
             data = db.Posts.find({"userID": str(userID)})
-            return json.dumps(list(data), default=lambda o: str(o)), 200
+            response = []
+            for item in data :
+                name = db.Profiles.find_one({"userID" : item.get('userID')})
+                item['name'] = name
+                response.append(item)
+            
+            return json.dumps(response, default=lambda o: str(o)), 200
         
     except Exception as e:
         return {"err": "Action failed"}, 400
@@ -288,10 +311,19 @@ def getPostSpecific():
 @app.route("/post/last/<int:last>", methods=['GET'])
 @cross_origin()
 def getLastN(last):
+    #get all post regardless whether its official or not 
     try:
         data = db.Posts.find(
             sort=[('createdAt', pymongo.DESCENDING)]).limit(last)
-        return json.dumps(list(data), default=lambda o: str(o)), 200
+        
+        response = []
+        for item in data : 
+            name = db.Profiles.find_one({"userID" : item.get('userID')})
+            item['name'] = name
+            response.append(item)
+            
+        return json.dumps(response, default=lambda o: str(o)), 200
+    
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
@@ -313,7 +345,9 @@ def FriendsHelper(userID):
     }
 
     result = db.Friends.find(query)
+    
     response = {'friendList': []}
+    
     for friend in result:
         userOne = friend.get("userIDOne")
         userTwo = friend.get("userIDTwo")
@@ -339,10 +373,17 @@ def getFriendsPostById():
             "userID": {"$in": friends}
         }
 
+        response = []
+        
         result = db.Posts.find(
             query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
 
-        return make_response(json.dumps(list(result), default=lambda o: str(o)), 200)
+        for item in result :
+            name = db.Profiles.find_one({"userID" : item.get('userID')})
+            item['name'] = name
+            response.append(item)
+            
+        return make_response(json.dumps(response, default=lambda o: str(o)), 200)
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -352,8 +393,18 @@ def getFriendsPostById():
 @cross_origin()
 def getOfficialPosts():
     try:
-        data = db.Posts.find({"isOfficial": True})
-        return json.dumps(list(data), default=lambda o: str(o)), 200
+        N = int(request.args.get('N')) if request.args.get('N') else 10
+        
+        response = []
+        data = db.Posts.find({"isOfficial": True}, 
+                             sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
+        
+        for item in data : 
+            name = db.Profiles.find_one({"userID" : item.get('userID')})
+            item['name'] = name
+            response.append(item)
+            
+        return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
@@ -374,7 +425,7 @@ def editPost():
         title = str(data.get('title')) if data.get('title') else oldPost.get('title')
         description = str(data.get('description')) if data.get('description') else oldPost.get('description')
         ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
-        postPics = list(data.get('description')) if data.get('description') else oldPost.get('description')
+        postPics = data.get('description') if data.get('description') else oldPost.get('description')
         isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
 
         body = {
