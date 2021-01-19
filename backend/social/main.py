@@ -230,7 +230,7 @@ def addDeletePost():
             userID = str(data.get('userID'))
             title = str(data.get('title'))
             description = str(data.get('description'))
-            ccaID = int(data.get('ccaID'))
+            ccaID = int(data.get('ccaID')) if data.get('ccaID') else -1
             createdAt = int(datetime.now().timestamp())
             postPics = list(data.get('postPics'))
             isOfficial = bool(data.get('isOfficial'))

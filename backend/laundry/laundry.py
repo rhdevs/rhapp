@@ -314,7 +314,6 @@ def laundry_machine_by_job():
     except Exception as e :
         return make_response({"err" : str(e)}, 400)
 
-@app.route('/')
 if __name__ == "__main__":
     # app.run(debug = True)
   app.run('0.0.0.0', port=8080)
