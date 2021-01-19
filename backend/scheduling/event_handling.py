@@ -150,12 +150,19 @@ def getUserCCAs(userID):
 def getUserAttendance(userID):
     try:
         data = list(db.Attendance.find({"userID": userID}))
+        reference = request.get_json()
+        referenceTime = reference.get('referenceTime')
+        startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
+        endOfWeek = startOfWeek + 604800
         body = []
 
         for entry in data:
             eventID = entry.get('eventID')
             result = db.Events.find_one({"_id": ObjectId(eventID)})
-            body.append(result)
+            startTime = result['startDateTime']
+
+            if startTime < endOfWeek and startTime >= startOfWeek:
+                body.append(result)
 
     except Exception as e:
         print(e)
