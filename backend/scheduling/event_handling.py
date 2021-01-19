@@ -145,17 +145,22 @@ def getUserCCAs(userID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route("/user_event/<userID>")
+@app.route("/user_event/<userID>/<int:referenceTime>")
 @cross_origin()
-def getUserAttendance(userID):
+def getUserAttendance(userID, referenceTime):
     try:
         data = list(db.Attendance.find({"userID": userID}))
+        startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
+        endOfWeek = startOfWeek + 604800
         body = []
 
         for entry in data:
             eventID = entry.get('eventID')
             result = db.Events.find_one({"_id": ObjectId(eventID)})
-            body.append(result)
+            startTime = result['startDateTime']
+
+            if startTime < endOfWeek and startTime >= startOfWeek:
+                body.append(result)
 
     except Exception as e:
         print(e)
@@ -329,7 +334,10 @@ def editEvent():
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
-            return Response(status=204)
+            receipt = db.Events.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
 
     except Exception as e:
         print(e)
@@ -381,7 +389,7 @@ def deleteMods(userID):
 
 @app.route("/nusmods", methods=['PUT'])
 @cross_origin()
-def addMods(userID):
+def addMods():
     try:
         data = request.get_json()
         userID = data.get('userID')
@@ -406,5 +414,5 @@ def addMods(userID):
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)
