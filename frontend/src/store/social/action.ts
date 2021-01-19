@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, del } from '../endpoints'
 import { cloneDeep } from 'lodash'
 
 export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -40,8 +40,25 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleCreateEditPost = () => () => {
+export const handleEditPost = () => () => {
   // TODO: push a snackbar @ homepage. (HOME Reducer)
+}
+
+export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  // TODO: push a snackbar @ homepage. (HOME Reducer)
+  console.log('Creating post')
+  const { newPostTitle, newPostBody, newPostOfficial } = getState().social
+  const requestBody = {
+    title: newPostTitle,
+    description: newPostBody,
+    userID: 'A1234567B',
+    isOfficial: newPostOfficial,
+    // postPics: [],
+    // ccaID: 1,
+    // createdAt: 1500000001,
+  }
+  console.log('Creating post')
+  post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => console.log(res))
 }
 
 export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
@@ -163,6 +180,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
   const response = await axios.get(url)
   const posts = response.data
+  console.log(posts)
   const transformedPost = cloneDeep(posts).map((post) => {
     post.date = post.createdAt
     post.postId = post.postID
@@ -178,12 +196,17 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
-export const DeletePost = (postIdToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {
     return post.postId !== postIdToDelete
   })
 
+  const requestBody = {
+    postId: postIdToDelete
+  }
+  const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, requestBody)
+  console.log(response)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
@@ -210,5 +233,16 @@ export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispa
   dispatch({
     type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
     postsFilter,
+  })
+}
+
+export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
+  const specificPost = response.data
+  console.log('Specific post', specificPost)
+
+  dispatch({
+    type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
+    viewPost: specificPost,
   })
 }

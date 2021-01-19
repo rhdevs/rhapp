@@ -14,7 +14,8 @@ import {
   DeleteImage,
   EditPostDetail,
   GetPostDetailsToEdit,
-  handleCreateEditPost,
+  handleEditPost,
+  handleCreatePost,
   PopWarning,
   ResetPostDetails,
 } from '../../../store/social/action'
@@ -197,6 +198,7 @@ export default function CreateEditPost() {
   const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
+  const isCreatePost = !window.location.href.includes('/post/edit')
 
   useEffect(() => {
     if (window.location.href.includes('/post/edit')) {
@@ -212,7 +214,7 @@ export default function CreateEditPost() {
 
   return (
     <MainContainer>
-      <TopNavBar title={window.location.href.includes('/post/edit') ? 'Edit Post' : 'Create Post'} />
+      <TopNavBar title={isCreatePost ? 'Create Post' : 'Edit Post'} />
       {/* {modal.navModal && (
           <ConfirmationModal
             title={"Discard Changes?"}
@@ -297,11 +299,12 @@ export default function CreateEditPost() {
             <Button
               type="primary"
               onClick={() => {
-                dispatch(handleCreateEditPost())
+                const handleFunction = isCreatePost ? handleCreatePost : handleEditPost
+                dispatch(handleFunction())
                 history.push(PATHS.HOME_PAGE)
               }}
             >
-              {window.location.href.includes('/post/edit') ? 'Save Changes' : 'Create Post'}
+              {isCreatePost ? 'Create Post' : 'Save Changes'}
             </Button>
           </PostButton>
         </form>

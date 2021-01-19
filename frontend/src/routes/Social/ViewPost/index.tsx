@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 // import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import 'antd/dist/antd.css'
@@ -17,7 +17,7 @@ import { RootState } from '../../../store/types'
 import Avatar from '../../../components/Mobile/Avatar'
 import { Post } from '../../../store/social/types'
 
-import { GetPosts, DeletePost, SetPostUser } from '../../../store/social/action'
+import { GetPosts, DeletePost, SetPostUser, GetSpecificPost } from '../../../store/social/action'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -90,30 +90,22 @@ export default function ViewPost() {
   // TODO: wait for endpoint that provides individual post data from postId
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation()
+  const postId = location.pathname.split('/').slice(-1)[0]
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
-  const [post, setPost] = useState<Post>({} as Post)
   const [success] = useSnackbar()
 
-  // const { postId } = useParams<{ postId: string }>()
-  const postId = '123456789' // TODO: To uncomment above line
-  const { posts, postUser, postsFilter } = useSelector((state: RootState) => state.social)
+  const { postUser, viewPost } = useSelector((state: RootState) => state.social)
+  const { ownerId, createdAt, description, title, postPics } = viewPost
 
   useEffect(() => {
-    dispatch(GetPosts(postsFilter))
-    const foundPost = posts.find((post) => post.postId == postId)
-    setPost(foundPost ?? ({} as Post))
-    dispatch(SetPostUser(post?.ownerId))
-  }, [dispatch, postsFilter])
+    dispatch(GetSpecificPost(postId))
+  }, [dispatch, postId])
 
-  const title = post?.title
-  const ownerId = post?.ownerId
-  const date = post?.date
-  const description = post?.description
-  const postPics = post?.postPics
-
-  const formattedDate = date ? dayjs(date).format('D/M/YY, h:mmA') : dayjs().format('D/M/YY, h:mmA')
+  const formattedDate = dayjs.unix(parseInt(createdAt ?? '')).toNow()
+  // const formattedDate = dayjs.unix(parseInt(createdAt ?? '')).format('D/M/YY, h:mmA')
 
   const avatar = postUser?.avatar
   const initials = postUser?.initials
@@ -123,13 +115,10 @@ export default function ViewPost() {
     setMenuIsOpen(!menuIsOpen)
   }
 
-  const onDeleteClick = () => {
-    setMenuIsOpen(false)
-    setIsDeleteModalVisible(true)
-  }
-
   const handleDeletePost = () => {
     // TODO: Call delete post endpoint
+    setMenuIsOpen(false)
+
     if (postId) {
       dispatch(DeletePost(postId))
     }

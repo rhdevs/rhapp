@@ -9,6 +9,7 @@ import { PATHS } from '../../../Routes'
 import { SwitchPostsFilter, GetPosts } from '../../../../store/social/action'
 import { POSTS_FILTER } from '../../../../store/social/types'
 import { RootState } from '../../../../store/types'
+import dayjs from 'dayjs'
 
 type TabProps = {
   active: boolean
@@ -81,18 +82,19 @@ export default function SocialSection() {
   const toggleTab = (postsFilter: POSTS_FILTER) => () => dispatch(SwitchPostsFilter(postsFilter))
 
   const renderSocialPosts = () => {
-    // const data = currentPostsFilter ? socialPosts : dummyFriendData
     return socialPosts.map((post) => {
-      const { title, postId, date, isOfficial, ccaId, description, postPics } = post
+      const { title, postId, createdAt, isOfficial, ccaId, description, postPics } = post
+      const date = dayjs.unix(parseInt(createdAt ?? '')).toNow()
+      // const date = dayjs.unix(parseInt(createdAt ?? '')).format('D/M/YY, h:mmA')
+
       return (
         <SocialPostCard
           key={postId}
-          isOwner={false}
+          isOwner={true}
           avatar={dummyAllData[0].avatar}
           name={dummyAllData[0].name}
           title={title}
-          dateTime={date.toISOString()}
-          // dateTime={new Date().toISOString()} // TODO: Wait for fetched posts to include date field
+          dateTime={date}
           description={description}
           postId={postId}
           postPics={postPics ?? []}
