@@ -10,7 +10,6 @@ export const initialState = {
     telegramHandle: 'zhoumm',
     block: 8,
     bio: 'This is my bio hur hur',
-    ccas: [{ userID: '1', ccaId: 1, ccaName: 'RHDevs' }],
     modules: ['CS1010', 'CFG1000', 'CS2040S'],
     posts: [],
   },
