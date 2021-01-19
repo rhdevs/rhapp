@@ -49,19 +49,16 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
 export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
-  // const { userNusModsEvents } = getState().scheduling
 
   const manipulateData = (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
 
-    console.log(userNusModsEvents.length)
     const allEvents: TimetableEvent[] = userNusModsEvents
       ? timetableFormatEvents.concat(userNusModsEvents)
       : timetableFormatEvents
 
-    console.log(allEvents)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
       userEvents: transformInformationToTimetableFormat(allEvents),
@@ -253,14 +250,12 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
   const currentYear = new Date().getFullYear()
   const academicYear = String(currentYear - 1) + '-' + String(currentYear)
 
-  console.log(userNusModsLink)
   const dataFromLink = extractDataFromLink(userNusModsLink)
   let retrivedEventInformation: TimetableEvent[] = []
   const temporaryData: TimetableEvent[][] = []
   let userNusMods: TimetableEvent[] = []
 
   dataFromLink.map(async (oneModuleData) => {
-    console.log(oneModuleData)
     temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
     retrivedEventInformation = temporaryData.flat()
     if (oneModuleData === last(dataFromLink)) {
@@ -271,23 +266,32 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
         mods: userNusMods,
       }
 
-      console.log(requestBody)
       const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
         .then((resp) => {
           return resp
         })
         .catch(() => {
+          dispatch(setNusModsStatus(false, true))
           console.log('CATCH FAILURE')
         })
 
       if (resp.status >= 400) {
+        dispatch(setNusModsStatus(false, true))
         console.log('FAILURE')
       } else {
-        // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS, userNusModsEvents: userNusMods })
         console.log('SUCCESS')
         dispatch(fetchUserEvents(userId))
+        dispatch(setNusModsStatus(true, false))
       }
     }
+  })
+}
+
+const setNusModsStatus = (isSuccessful: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS,
+    isSuccessful: isSuccessful,
+    isFailure: isFailure,
   })
 }
 

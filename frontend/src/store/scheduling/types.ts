@@ -77,6 +77,7 @@ export enum SCHEDULING_ACTIONS {
   GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
+  HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
 }
 
 /** Actions */
@@ -164,6 +165,12 @@ type SetHallEventType = {
   newHallEventType: string
 }
 
+type HandleNusModsStatus = {
+  type: typeof SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS
+  isSuccessful: boolean
+  isFailure: boolean
+}
+
 export type ActionTypes =
   | GetAllEvents
   | GetUserEvents
@@ -181,3 +188,4 @@ export type ActionTypes =
   | getHallEventTypes
   | getTargetAudienceList
   | SetHallEventType
+  | HandleNusModsStatus

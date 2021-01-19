@@ -13,6 +13,8 @@ const initialState = {
   searchedEvents: [],
   allEvents: [],
   userNusModsEvents: [],
+  isSuccessful: false,
+  isFailure: false,
 
   // Create new event states
   newEventName: '',
@@ -37,6 +39,8 @@ type State = {
   searchedEvents: SchedulingEvent[]
   allEvents: SchedulingEvent[]
   userNusModsEvents: TimetableEvent[]
+  isSuccessful: boolean
+  isFailure: boolean
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -54,6 +58,13 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         isLoading: action.isLoading,
+      }
+    }
+    case SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS: {
+      return {
+        ...state,
+        isSuccessful: action.isSuccessful,
+        isFailure: action.isFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_EVENTS: {
