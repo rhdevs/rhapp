@@ -41,7 +41,7 @@ const SearchBarContainer = styled.div`
 `
 
 const ResultsContainer = styled.div`
-  overflow: scroll;
+  overflow: auto;
   height: 73vh;
 `
 
