@@ -7,7 +7,7 @@ import NoFriends from './NoFriends'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { fetchUserDetails } from '../../../store/profile/action'
+import { fetchUserFriends } from '../../../store/profile/action'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -50,12 +50,12 @@ const FriendLabels = styled.div`
 `
 
 export default function FriendList() {
-  const [hasFriends, setHasFriends] = useState(false)
+  const [hasFriends, setHasFriends] = useState(true)
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.profile)
+  const { user, friends } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    dispatch(fetchUserDetails())
+    dispatch(fetchUserFriends(user.userID))
   }, [dispatch])
 
   const handleSearch = () => {
@@ -66,19 +66,18 @@ export default function FriendList() {
     <>
       <MainContainer>
         <TopNavBar title={'Friends'} />
-        {user.friends.length !== 0 ? (
-          user.friends.map((friend) => {
-            console.log(user)
+        {friends.length !== 0 ? (
+          friends.map((friend) => {
             return (
-              <FriendCard key={friend.friendId}>
-                {friend.avatar ? (
-                  <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.avatar} />
+              <FriendCard key={friend.userID}>
+                {friend.profilePictureUrl ? (
+                  <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.profilePictureUrl} />
                 ) : (
                   <FriendAvatar src={dummyAvatar} />
                 )}
                 <FriendLabels>
-                  <FriendHeader>{friend.name}</FriendHeader>
-                  <FriendSubHeader>{friend.telegram}</FriendSubHeader>
+                  <FriendHeader>{friend.displayName}</FriendHeader>
+                  <FriendSubHeader>{friend.telegramHandle}</FriendSubHeader>
                 </FriendLabels>
               </FriendCard>
             )

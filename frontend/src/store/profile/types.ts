@@ -1,16 +1,14 @@
 import { Post } from '../social/types'
 
 export type User = {
-  userId: number
+  userID: string
   profilePictureUrl: string
   displayName: string
   telegramHandle: string
   block: number
   bio: string
-  ccas: UserCCA[]
   modules: string[]
   posts: Post[]
-  friends: Friend[]
 }
 
 export type Friend = {
@@ -21,13 +19,15 @@ export type Friend = {
 }
 
 export type UserCCA = {
-  userId: string
-  ccaId: number
+  userID: string
+  ccaID: number
   ccaName: string
 }
 
 export enum PROFILE_ACTIONS {
   SET_USER_DETAILS = 'PROFILE_ACTIONS.SET_USER_DETAILS',
+  SET_USER_CCAS = 'PROFILE_ACTIONS.SET_USER_CCAS',
+  SET_USER_FRIENDS = 'PROFILE_ACTIONS.SET_USER_FRIENDS',
   EDIT_USER_DETAILS = 'PROFILE_ACTIONS.EDIT_USER_DETAILS',
   UPDATE_CURRENT_USER = 'PROFILE_ACTIONS.UPDATE_CURRENT_USER',
   UPDATE_USER_MODULES = 'PROFILE_ACTIONS.UPDATE_USER_MODULES',
@@ -37,6 +37,16 @@ export enum PROFILE_ACTIONS {
 type SetUserDetails = {
   type: typeof PROFILE_ACTIONS.SET_USER_DETAILS
   user: User
+}
+
+type SetUserCcas = {
+  type: typeof PROFILE_ACTIONS.SET_USER_CCAS
+  ccas: UserCCA[]
+}
+
+type SetUserFriends = {
+  type: typeof PROFILE_ACTIONS.SET_USER_FRIENDS
+  friends: User[]
 }
 
 type EditUserDetails = {
@@ -51,6 +61,7 @@ type EditUserDetails = {
 type UpdateCurrentUser = {
   type: typeof PROFILE_ACTIONS.UPDATE_CURRENT_USER
   user: User
+  ccas: UserCCA[]
 }
 
 type UpdateUserModules = {
@@ -60,7 +71,14 @@ type UpdateUserModules = {
 
 type UpdateUserCcas = {
   type: typeof PROFILE_ACTIONS.UPDATE_USER_CCAS
-  newCcas: UserCCA[]
+  newCCAs: UserCCA[]
 }
 
-export type ActionTypes = SetUserDetails | EditUserDetails | UpdateCurrentUser | UpdateUserModules | UpdateUserCcas
+export type ActionTypes =
+  | SetUserDetails
+  | EditUserDetails
+  | UpdateCurrentUser
+  | UpdateUserModules
+  | UpdateUserCcas
+  | SetUserCcas
+  | SetUserFriends
