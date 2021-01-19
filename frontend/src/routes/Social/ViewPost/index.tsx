@@ -170,7 +170,7 @@ export default function ViewPost() {
               <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + postId)}>
                 Edit
               </Menu.Item>
-              <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>
+              <Menu.Item key="2" icon={<DeleteFilled />} onClick={handleDeletePost}>
                 Delete
               </Menu.Item>
             </StyledMenuContainer>
