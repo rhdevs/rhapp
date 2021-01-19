@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
-import { Menu } from 'antd'
+import { Alert, Menu } from 'antd'
 import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
@@ -11,10 +11,11 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserEvents } from '../../store/scheduling/action'
+import { fetchUserEvents, setIsLoading } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
+import { dummyUserId } from '../../store/stubs'
 // import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
@@ -43,17 +44,39 @@ const Background = styled.div`
   width: 100%;
 `
 
+const AlertGroup = styled.div`
+  margin: 23px;
+`
+
 const { SubMenu } = Menu
 
 export default function Schedule() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userEvents, userEventsStartTime, userEventsEndTime, isLoading } = useSelector(
+  const { userEvents, userEventsStartTime, userEventsEndTime, isLoading, isSuccessful, isFailure } = useSelector(
     (state: RootState) => state.scheduling,
   )
 
+  const AlertSection = (
+    <AlertGroup>
+      {isSuccessful && !isFailure && (
+        <Alert message="Successfully Imported!" description="Yay yippe doodles" type="success" closable showIcon />
+      )}
+      {isFailure && !isSuccessful && (
+        <Alert
+          message="NUSMods Events not imported!!!"
+          description="Insert error message here"
+          type="error"
+          closable
+          showIcon
+        />
+      )}
+    </AlertGroup>
+  )
+
   useEffect(() => {
-    dispatch(fetchUserEvents())
+    dispatch(setIsLoading(true))
+    dispatch(fetchUserEvents(dummyUserId, false))
   }, [dispatch])
 
   const rightIcon = (
@@ -127,7 +150,7 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {isLoading && <LoadingSpin />}
+      {(isLoading && <LoadingSpin />) || (isSuccessful && !isFailure) || (!isSuccessful && isFailure && AlertSection)}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />

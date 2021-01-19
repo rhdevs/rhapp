@@ -65,8 +65,7 @@ export enum SCHEDULING_ACTIONS {
   GET_ALL_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_EVENTS',
   GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
   EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
-  SET_USER_NUSMODS_LINK = 'SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK',
-  GET_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS',
+  EDIT_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS',
   GET_SEARCHED_EVENTS = 'SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS',
   GET_SHARE_SEARCH_RESULTS = 'SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS',
   SET_EVENT_NAME = 'SCHEDULING_ACTIONS.SET_EVENT_NAME',
@@ -78,6 +77,7 @@ export enum SCHEDULING_ACTIONS {
   GET_HALL_EVENT_TYPES = 'SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES',
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
+  HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
 }
 
 /** Actions */
@@ -110,13 +110,8 @@ type EditUserEvents = {
   newUserEvents: TimetableEvent[]
 }
 
-type SetUserNusModsLink = {
-  type: typeof SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK
-  userNusModsLink: string
-}
-
-type GetNusModsEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS
+type EditUserNusMods = {
+  type: typeof SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS
   userNusModsEvents: TimetableEvent[]
 }
 
@@ -170,12 +165,17 @@ type SetHallEventType = {
   newHallEventType: string
 }
 
+type HandleNusModsStatus = {
+  type: typeof SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS
+  isSuccessful: boolean
+  isFailure: boolean
+}
+
 export type ActionTypes =
   | GetAllEvents
   | GetUserEvents
   | EditUserEvents
-  | SetUserNusModsLink
-  | GetNusModsEvents
+  | EditUserNusMods
   | SetEventName
   | SetEventLocation
   | SetEventFromDate
@@ -188,3 +188,4 @@ export type ActionTypes =
   | getHallEventTypes
   | getTargetAudienceList
   | SetHallEventType
+  | HandleNusModsStatus
