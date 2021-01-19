@@ -139,10 +139,15 @@ def getCCADetails(ccaID):
 def getUserCCAs(userID):
     try:
         data = db.UserCCA.find({"userID": userID})
+        response = []
+        for entry in data:
+            ccaID = entry["ccaID"]
+            response.append(db.CCA.find_one({"ccaID": ccaID}))
+
     except Exception as e:
         print(e)
         return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<userID>/<int:referenceTime>")
@@ -370,8 +375,7 @@ def getMods(userID):
     try:
         data = db.NUSMods.find({"userID": userID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -414,5 +418,5 @@ def addMods():
 
 
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
