@@ -79,7 +79,6 @@ export default function Schedule() {
     dispatch(fetchUserEvents(dummyUserId))
   }, [dispatch])
 
-  console.log('hhhhhhhh = ' + isSuccessful + isFailure)
   const rightIcon = (
     <MenuDropdown
       menuItem={

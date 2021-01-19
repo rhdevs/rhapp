@@ -12,9 +12,10 @@ import { SchedulingEvent, TimetableEvent } from './scheduling/types'
  * 5. Washing Machines
  * 6. Events
  * 7. Search Results
- * 8. NUSModsLink
- * 9. userId
- * 10. NUSMods
+ * 8. dummyNUSModsLink
+ * 9. dummyUserId
+ * 10. dummyCurrentUNIXDate
+ * 11. NUSMods
  */
 
 export const facilityListStub: Facility[] = [
@@ -295,6 +296,8 @@ export const dummyNusModsLink =
   'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
 
 export const dummyUserId = 'A1234567B'
+
+export const dummyCurrentDate = '1677914340'
 
 export const dummyNusMods: TimetableEvent[] = [
   {

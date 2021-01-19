@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { getHallEventTypesStub, targetAudienceListStub } from '../stubs'
+import { dummyCurrentDate, getHallEventTypesStub, targetAudienceListStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -42,6 +42,7 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
     })
     dispatch(setIsLoading(false))
   }
+
   getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
@@ -67,7 +68,10 @@ export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<Act
       userEventsList: allEvents,
     })
   }
-  getEventsFromBackend(ENDPOINTS.USER_EVENT + userId, manipulateData)
+
+  const currentUNIXDate = dummyCurrentDate // change to Date.now()!
+
+  getEventsFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
   dispatch(setIsLoading(false))
 }
 
