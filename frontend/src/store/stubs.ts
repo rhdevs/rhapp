@@ -1,21 +1,14 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './types'
-import { SchedulingEvent, TimetableEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
- * 3. userEvents
- * 4. EventsList
- * 5. Washing Machines
- * 6. Events
- * 7. Search Results
- * 8. dummyNUSModsLink
- * 9. dummyUserId
- * 10. dummyCurrentUNIXDate
- * 11. NUSMods
+ * 3. Washing Machines
+ * 4. Search Results
+ * 5. dummyUserId
  */
 
 export const facilityListStub: Facility[] = [
@@ -59,108 +52,6 @@ export const myBookingsStub: Booking[] = [
     startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
     endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
-  },
-]
-
-export const userEventsDummy: SchedulingEvent[] = [
-  {
-    eventID: 1,
-    eventName: 'dummy event 4',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-  {
-    eventID: 1,
-    eventName: 'bonding camp',
-    startDateTime: 1608654852,
-    endDateTime: 1608658452,
-    description: 'nothing',
-    location: 'upper lounge',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: '2nd bonding camp',
-    startDateTime: 1607342400,
-    endDateTime: 1607349600,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'dummy event 3',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-]
-
-export const eventsDummy: SchedulingEvent[] = [
-  {
-    eventID: 1,
-    eventName: 'Block 7 Christmas Event',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
-    description: 'Only for block 7 members! Follow us @block7 to find out more!',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'New YeaRH Event',
-    startDateTime: 1608654852,
-    endDateTime: 1608658452,
-    description: 'nothing',
-    location: 'Comm Hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-  {
-    eventID: 1,
-    eventName: 'RHdev bonding camp',
-    startDateTime: 1607342400,
-    endDateTime: 1607349600,
-    description: 'nothing',
-    location: 'upper lounge',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'dummy event',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'description description description description description description',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
   },
 ]
 
@@ -292,82 +183,4 @@ export const userProfileStub: User = {
   ],
 }
 
-export const dummyNusModsLink =
-  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
-
 export const dummyUserId = 'A1234567B'
-
-export const dummyCurrentDate = '1677914340'
-
-export const dummyNusMods: TimetableEvent[] = [
-  {
-    day: 'Wednesday',
-    endTime: '1200',
-    eventID: 1,
-    eventName: 'AC5002 LEC',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'SDE4-EXR1-2',
-    startTime: '0900',
-  },
-  {
-    day: 'Tuesday',
-    endTime: '1200',
-    eventID: 1,
-    eventName: 'CG1112 LAB',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E4A-04-08',
-    startTime: '0900',
-  },
-  {
-    day: 'Thursday',
-    endTime: '1200',
-    eventID: 1,
-    eventName: 'CG1112 LAB',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E4A-04-08',
-    startTime: '0900',
-  },
-  {
-    day: 'Friday',
-    endTime: '1400',
-    eventID: 1,
-    eventName: 'CG1112 TUT',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E-Learn-C',
-    startTime: '1200',
-  },
-  {
-    day: 'Friday',
-    endTime: '1200',
-    eventID: 1,
-    eventName: 'CG2023 LAB',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E4A-06-03',
-    startTime: '0900',
-  },
-  {
-    day: 'Tuesday',
-    endTime: '1800',
-    eventID: 1,
-    eventName: 'CG2023 PTUT',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E1-06-01',
-    startTime: '1600',
-  },
-  {
-    day: 'Thursday',
-    endTime: '1800',
-    eventID: 1,
-    eventName: 'CG2023 PLEC',
-    eventType: 'mods',
-    hasOverlap: false,
-    location: 'E3-06-08',
-    startTime: '1600',
-  },
-]

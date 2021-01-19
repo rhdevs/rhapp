@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { dummyCurrentDate, getHallEventTypesStub, targetAudienceListStub } from '../stubs'
+import { getHallEventTypesStub, targetAudienceListStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -72,7 +72,7 @@ export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => 
     if (isSearchEventsPage) dispatch(setIsLoading(false))
   }
 
-  const currentUNIXDate = dummyCurrentDate // change to Date.now()!
+  const currentUNIXDate = Date.now()
 
   getEventsFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
   dispatch(setIsLoading(false))
