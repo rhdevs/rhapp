@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { LeftOutlined } from '@ant-design/icons'
 import nusmodsImportImage from '../../../assets/nusmodsImportImage.svg'
@@ -44,7 +44,6 @@ const ButtonContainer = styled.div`
 export default function ImportFromNusMods() {
   const history = useHistory()
   const dispatch = useDispatch()
-  const location = useLocation()
 
   const [link, setLink] = useState('')
   const [modal, setModal] = useState(false)
@@ -72,7 +71,6 @@ export default function ImportFromNusMods() {
     <Background>
       <TopNavBar title={'NUSMods'} leftIcon={true} leftIconComponent={leftIcon} />
       <img alt="plusCircle" style={{ width: '90vw', display: 'flex', margin: '15px auto' }} src={nusmodsImportImage} />
-      {location.state}
       <BottomContainer>
         {modal && (
           <ConfirmationModal

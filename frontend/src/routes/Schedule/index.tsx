@@ -150,7 +150,7 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(isLoading && <LoadingSpin />) || (isSuccessful && !isFailure && AlertSection)}
+      {(isLoading && <LoadingSpin />) || (isSuccessful && !isFailure) || (!isSuccessful && isFailure && AlertSection)}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable events={userEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />

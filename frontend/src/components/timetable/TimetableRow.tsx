@@ -91,7 +91,6 @@ function TimetableRow(props: Props) {
     }
   }
 
-  console.log(props.width)
   return (
     <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
       <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
