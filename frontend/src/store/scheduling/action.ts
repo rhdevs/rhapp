@@ -43,11 +43,13 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
     dispatch(setIsLoading(false))
   }
 
-  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+  getEventsFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
 // ---------------------- TIMETABLE ----------------------
-export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(setIsLoading(true))
   const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
 
@@ -67,6 +69,7 @@ export const fetchUserEvents = (userId: string) => async (dispatch: Dispatch<Act
       userEventsEndTime: Number(getTimetableEndTime(allEvents)),
       userEventsList: allEvents,
     })
+    if (isSearchEventsPage) dispatch(setIsLoading(false))
   }
 
   const currentUNIXDate = dummyCurrentDate // change to Date.now()!
@@ -284,7 +287,7 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
         console.log('FAILURE')
       } else {
         console.log('SUCCESS')
-        dispatch(fetchUserEvents(userId))
+        dispatch(fetchUserEvents(userId, false))
         dispatch(setNusModsStatus(true, false))
       }
     }

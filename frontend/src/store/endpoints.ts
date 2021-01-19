@@ -28,6 +28,7 @@ export enum ENDPOINTS {
   USER_PERMISSION = '/permissions/',
 
   ALL_EVENTS = '/event/all',
+  ALL_PUBLIC_EVENTS = '/event/public/all',
   USER_EVENT = '/user_event/',
   ADD_EVENT = '/event/add/',
   DELETE_EVENT = '/event/delete/',

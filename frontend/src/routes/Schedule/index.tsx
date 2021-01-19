@@ -76,7 +76,7 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchUserEvents(dummyUserId))
+    dispatch(fetchUserEvents(dummyUserId, false))
   }, [dispatch])
 
   const rightIcon = (

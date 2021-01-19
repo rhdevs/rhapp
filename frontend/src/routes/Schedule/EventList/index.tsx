@@ -54,7 +54,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchUserEvents(dummyUserId))
+    dispatch(fetchUserEvents(dummyUserId, true))
     dispatch(fetchAllEvents())
   }, [dispatch])
 
