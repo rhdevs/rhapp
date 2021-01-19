@@ -35,7 +35,6 @@ const DaySpanContainer = styled.span`
 `
 
 const TimetableDayContainer = styled.div`
-  min-width: 64rem;
   outline: 1px solid #aeb1b5;
   background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
 `
@@ -70,6 +69,7 @@ function TimetableRow(props: Props) {
     const individualEventStartHour = individualEvent.startTime.substring(0, 2)
     const individualEventStartMinute = individualEvent.startTime.substring(2, 4)
     let leftPosition
+
     if (index === 0) {
       leftPosition =
         Number(individualEventStartHour) - props.timetableStartTime / 100 + Number(individualEventStartMinute) / 60
@@ -82,6 +82,7 @@ function TimetableRow(props: Props) {
           Number(prevEventEndMinute)) /
         60
     }
+
     const margin = leftPosition * Number(props.oneHourWidth.replace('rem', '')) + 0.0625
     if (margin < 0) {
       return '0rem'
@@ -90,6 +91,7 @@ function TimetableRow(props: Props) {
     }
   }
 
+  console.log(props.width)
   return (
     <TimetableRowContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
       <DayContainer style={{ minHeight: `${props.oneDayMinHeight}` }}>
@@ -97,7 +99,7 @@ function TimetableRow(props: Props) {
       </DayContainer>
       <TimetableDayContainer
         style={{
-          width: props.width + 0.0625 * 14 + 'rem',
+          minWidth: props.width + 'rem',
           backgroundSize: `calc(${props.oneHourWidth}*2)`,
           minHeight: `${props.oneDayMinHeight}`,
         }}
