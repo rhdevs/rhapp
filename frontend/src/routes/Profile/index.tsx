@@ -9,7 +9,7 @@ import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUserDetails, populateProfileEdits } from '../../store/profile/action'
+import { fetchUserCCAs, fetchUserDetails, fetchUserFriends, populateProfileEdits } from '../../store/profile/action'
 import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
@@ -81,13 +81,17 @@ export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
-  const { user } = useSelector((state: RootState) => state.profile)
+  const { user, ccas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    dispatch(fetchUserDetails())
+    dispatch(fetchUserDetails('A1234567B'))
+    dispatch(fetchUserCCAs('A1234567B'))
+
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
+
+  console.log(user)
 
   const changeUser = () => {
     setIsOwnProfile(!isOwnProfile)
@@ -107,8 +111,8 @@ export default function Profile() {
   )
 
   const handleClickFriendList = () => {
+    dispatch(fetchUserFriends(user.userID))
     history.push(PATHS.FRIEND_LIST_PAGE)
-    dispatch(fetchUserDetails())
   }
 
   const PersonalInfoContainer = () => (
@@ -138,7 +142,7 @@ export default function Profile() {
           style={{ width: '80vw' }}
           size={'small'}
         >
-          {user.ccas.map((cca) => {
+          {ccas.map((cca) => {
             return (
               // eslint-disable-next-line react/jsx-key
               <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{cca.ccaName}</span>

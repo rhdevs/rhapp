@@ -1,35 +1,57 @@
-import { DOMAINS, DOMAIN_URL, ENDPOINTS, post, put } from '../endpoints'
-import { userProfileStub } from '../stubs'
+import { DOMAINS, DOMAIN_URL, ENDPOINTS, put } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User } from './types'
 
-export const fetchUserDetails = () => (dispatch: Dispatch<ActionTypes>) => {
-  const selectedUser = userProfileStub
-  dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
-  //   fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/A1234567B', {
-  //     method: 'GET',
-  //   })
-  //     .then((resp) => resp.json())
-  //     .then((data) => {
-  //       console.log(data)
-  //       dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
-  //     })
+export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
+  // const selectedUser = userProfileStub
+  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
+  fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+    method: 'GET',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+    })
+}
+
+export const fetchUserCCAs = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
+  // const selectedUser = userProfileStub
+  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
+  fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
+    method: 'GET',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+    })
+}
+
+export const fetchUserFriends = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  // const selectedUser = userProfileStub
+  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
+    method: 'GET',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+    })
 }
 
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { user } = getState().profile
+  const { user, ccas } = getState().profile
 
   dispatch({
     type: PROFILE_ACTIONS.EDIT_USER_DETAILS,
     newDisplayName: user.displayName,
     newTelegramHandle: user.telegramHandle,
     newBio: user.bio,
-    newCCAs: user.ccas,
+    newCCAs: ccas,
     newModules: user.modules,
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => (
+export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -39,12 +61,26 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     displayName: displayName,
     telegramHandle: telegramHandle,
     bio: bio,
-    ccas: newCCAs,
     modules: newModules,
   }
-  // Update state
+  dispatch({
+    type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
+    user: newUser,
+    ccas: newCCAs,
+  })
   dispatch(updateCurrentUser(newUser))
-  console.log(newUser)
+  // const newUser = {
+  //   userID: 'A1234567B',
+  //   block: 6,
+  //   displayName: 'abby',
+  //   telegramHandle: 'teleabbyy',
+  //   bio: 'hur hur',
+  //   profilePictureUrl: 'as',
+  //   modules: ['aa'],
+  // }
+
+  // Update state
+  // dispatch(updateCurrentUser(newUser))
   // TODO; do a POST request
 
   // dispatch({
@@ -62,38 +98,45 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
   // console.log(newUserItem.user.bio)
 }
 
-export const updateCurrentUser = (newUser: User) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { user } = getState().profile
-  console.log(newUser)
-  // put(ENDPOINTS.EDIT_PROFILE, DOMAINS.SOCIAL, newUser).then((data) => {
-  //   console.log(data + 'success')
+export const updateCurrentUser = (newUser: User) => () => {
+  // const { user } = getState().profile
+  put(ENDPOINTS.EDIT_PROFILE, DOMAINS.SOCIAL, newUser)
+    .then((resp) => {
+      if (resp.status >= 400) {
+        console.log('FAILURE')
+      } else {
+        console.log('SUCCESS!!!')
+      }
+    })
+    .catch(() => {
+      console.log('catch block')
+    })
+  // dispatch({
+  //   type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
+  //   user: {
+  //     ...user,
+  //     displayName: newUser.displayName,
+  //     telegramHandle: newUser.telegramHandle,
+  //     bio: newUser.bio,
+  //     ccas: newUser.ccas,
+  //     modules: newUser.modules,
+  //   },
   // })
-  dispatch({
-    type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
-    user: {
-      ...user,
-      displayName: newUser.displayName,
-      telegramHandle: newUser.telegramHandle,
-      bio: newUser.bio,
-      ccas: newUser.ccas,
-      modules: newUser.modules,
-    },
-  })
 }
 
 export const handleCCADetails = (actionType: 'Delete' | 'Add', newCcaName: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user } = getState().profile
+  const { user, ccas } = getState().profile
   const newCca = {
     // TODO userId string or number?
-    userId: user.userID.toString(),
+    userID: user.userID.toString(),
     //TODO CCA ID
-    ccaId: 1,
+    ccaID: 1,
     ccaName: newCcaName,
   }
-  const newUserCcas = user.ccas
+  const newUserCcas = ccas
   // user.cca = ["rhdevs", "rhmp"]
   switch (actionType) {
     case 'Delete':
@@ -113,7 +156,7 @@ export const handleCCADetails = (actionType: 'Delete' | 'Add', newCcaName: strin
   // newUserCca (array of new cca) = ["rhdevs","rhmp","voices"] OR = ["rhdevs"]
   // To confirm something/ lock-in:
   // 1. updatestate
-  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_CCAS, newCcas: newUserCcas })
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_CCAS, newCCAs: newUserCcas })
   // 2. backend
   // POST('/SMTHSMTH'), body({ newCCAString }) //refer to backend Documentation OR just ask
 }

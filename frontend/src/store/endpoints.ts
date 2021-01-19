@@ -9,6 +9,8 @@ export enum ENDPOINTS {
   USER_PROFILE = '/profile',
   USER_DETAILS = '/user/details',
   EDIT_PROFILE = '/profile/edit',
+  USER_CCAS = '/user_CCA',
+  FRIEND = '/friend',
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
