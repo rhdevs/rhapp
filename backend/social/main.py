@@ -220,6 +220,11 @@ def getUserDetails(userID):
     
     return json.dumps(data1, default=lambda o: str(o)), 200
 
+def userIDtoName(userID):
+    #helper function
+    profile = db.Profiles.find_one({"userID" : userID})
+    name = profile.get('displayName') if profile else None
+    return name 
 
 @app.route("/post", methods=['GET', 'DELETE', 'POST'])
 @cross_origin()
@@ -232,8 +237,7 @@ def addDeletePost():
             response = []
             for item in data :
                 #add name into the every data using display name
-                name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
-                item['name'] = name
+                item['name'] = userIDtoName(item.get('userID'))
                 response.append(item)
                 
             return json.dumps(response, default=lambda o: str(o)), 200
@@ -299,8 +303,7 @@ def getPostSpecific():
             data = db.Posts.find({"userID": str(userID)})
             response = []
             for item in data :
-                name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
-                item['name'] = name
+                item['name'] = userIDtoName(item.get('userID'))
                 response.append(item)
             
             return json.dumps(response, default=lambda o: str(o)), 200
@@ -318,8 +321,7 @@ def getLastN(last):
         
         response = []
         for item in data : 
-            name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
-            item['name'] = name
+            item['name'] = name = userIDtoName(item.get('userID'))
             response.append(item)
             
         return json.dumps(response, default=lambda o: str(o)), 200
@@ -379,8 +381,7 @@ def getFriendsPostById():
             query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
 
         for item in result :
-            name = db.Profiles.find_one({"userID" : item.get('userID')})
-            item['name'] = name
+            item['name'] = userIDtoName(item.get('userID'))
             response.append(item)
             
         return make_response(json.dumps(response, default=lambda o: str(o)), 200)
@@ -400,11 +401,9 @@ def getOfficialPosts():
                              sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
         
         for item in data : 
-            name = db.Profiles.find_one({"userID" : item.get('userID')}).get('displayName')
-            
+            item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))            
             item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName') if ccaID != -1 else None
-            item['name'] = name
             response.append(item)
             
         return json.dumps(response, default=lambda o: str(o)), 200
