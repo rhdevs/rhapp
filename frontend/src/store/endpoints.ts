@@ -32,7 +32,7 @@ export enum ENDPOINTS {
   USER_EVENT = '/user_event/',
   ADD_EVENT = '/event/add/',
   DELETE_EVENT = '/event/delete/',
-  RSVP_EVENT = '/user_event/',
+  RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit/',
 
   ADD_MODS = '/nusmods',

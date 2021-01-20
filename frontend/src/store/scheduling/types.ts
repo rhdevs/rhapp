@@ -62,7 +62,7 @@ export type SchedulingEvent = {
 
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
-  GET_ALL_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_EVENTS',
+  GET_ALL_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS',
   GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
   EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
   EDIT_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS',
@@ -92,9 +92,9 @@ type getTargetAudienceList = {
   targetAudienceList: string[]
 }
 
-type GetAllEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_ALL_EVENTS
-  allEvents: SchedulingEvent[]
+type GetAllPublicEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS
+  allPublicEvents: SchedulingEvent[]
 }
 
 type GetUserEvents = {
@@ -172,7 +172,7 @@ type HandleNusModsStatus = {
 }
 
 export type ActionTypes =
-  | GetAllEvents
+  | GetAllPublicEvents
   | GetUserEvents
   | EditUserEvents
   | EditUserNusMods
