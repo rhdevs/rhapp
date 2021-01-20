@@ -10,7 +10,7 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, post } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint, methods) => {
