@@ -1,5 +1,7 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { PATHS } from '../../routes/Routes'
 
 const TitleText = styled.text`
   color: black;
@@ -109,8 +111,16 @@ function EventCell(props: Props) {
     0.0625 +
     'rem'
 
+  const history = useHistory()
+
   return (
-    <EventContainer style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}>
+    <EventContainer
+      onClick={() => {
+        history.push(PATHS.VIEW_EVENT)
+        // history.push(""../../scheduling/ViewEvent")
+      }}
+      style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}
+    >
       <ContentContainer
         style={{
           backgroundColor: props.eventCellColor ?? EVENT_CELL_COLOUR,
