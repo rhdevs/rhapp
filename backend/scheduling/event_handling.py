@@ -331,18 +331,21 @@ def editEvent():
     return {'message': "Event changed"}, 200
 
 
-@app.route("/user_event", methods=['POST'])
+@app.route("/user_event", methods=['POST', 'DELETE'])
 @cross_origin()
 def editAttendance():
     try:
         eventID = request.args.get('eventID')
         userID = request.args.get('userID')
-
         body = {
             "eventID": eventID,
             "userID": userID,
         }
-        db.Attendance.insert_one(body)
+        if request.method == "POST":
+            db.Attendance.insert_one(body)
+
+        elif request.method == "DELETE":
+            db.Attendance.delete_many(body)
 
     except Exception as e:
         return {"err": str(e)}, 400
