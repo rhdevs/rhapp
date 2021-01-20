@@ -10,10 +10,10 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, post } from '../endpoints'
 
 // ---------------------- GET ----------------------
-const getEventsFromBackend = async (endpoint, methods) => {
+const getFromBackend = async (endpoint, methods) => {
   const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
@@ -29,21 +29,41 @@ const getEventsFromBackend = async (endpoint, methods) => {
 }
 // ---------------------- GET ----------------------
 
-export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+// ---------------------- POST/DELETE ----------------------
+const postToBackend = (endpoint, method, body, functions) => {
+  fetch(DOMAIN_URL.EVENT + endpoint, {
+    method: method,
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+    .then((resp) => resp)
+    .then((data) => {
+      // if (data.ok) {
+      //   console.log('success')
+      // }
+      // console.log(data)
+      functions(data)
+    })
+}
+// ---------------------- POST/DELETE ----------------------
+
+export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const sortDataByDate = (a: SchedulingEvent, b: SchedulingEvent) => {
     return a.startDateTime - b.startDateTime
   }
 
   const dispatchData = (data) => {
+    console.log(data.sort(sortDataByDate))
     dispatch({
-      type: SCHEDULING_ACTIONS.GET_ALL_EVENTS,
-      allEvents: data.sort(sortDataByDate),
+      type: SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS,
+      allPublicEvents: data.sort(sortDataByDate),
     })
     dispatch(setIsLoading(false))
   }
 
-  getEventsFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
 // ---------------------- TIMETABLE ----------------------
@@ -62,6 +82,7 @@ export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => 
       ? timetableFormatEvents.concat(userNusModsEvents)
       : timetableFormatEvents
 
+    console.log(allEvents)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
       userEvents: transformInformationToTimetableFormat(allEvents),
@@ -74,7 +95,7 @@ export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => 
 
   const currentUNIXDate = Date.now()
 
-  getEventsFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
+  getFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
   dispatch(setIsLoading(false))
 }
 
@@ -303,7 +324,7 @@ const setNusModsStatus = (isSuccessful: boolean, isFailure: boolean) => (dispatc
 }
 
 export const getUserNusModsEvents = (userId: string) => async () => {
-  const resp = await getEventsFromBackend(ENDPOINTS.NUSMODS + userId, null)
+  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
   console.log(resp)
   return resp[0].mods
 }
@@ -405,36 +426,34 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
     })
     dispatch(setIsLoading(false))
   }
-  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+  getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, event: SchedulingEvent) => {
+export const editUserEvents = (action: string, event: SchedulingEvent) => (dispatch: Dispatch<ActionTypes>) => {
+  const requestBody = {
+    userID: event.userID,
+    eventID: event.eventID,
+  }
+
   if (action === 'remove') {
-    console.log('REMOVE: eventId - ' + event.eventID + '; userId: ' + event.userID)
-    // post(ENDPOINTS.DELETE_EVENT, DOMAINS.EVENT, requestBodyForRemove, {}, String(event.eventID))
-    //   .then((resp) => {
-    //     if (resp.status >= 400) {
-    //       console.log('FAILURE')
-    //     } else {
-    //       console.log('SUCCESS!!!')
-    //     }
-    //   })
-    //   .catch(() => {
-    //     console.log('catch block')
-    //   })
+    const updateEventStatus = (data) => {
+      if (data.ok) {
+        console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + event.userID)
+      } else {
+        console.log('FAILURE!!!! ' + data.status)
+      }
+    }
+    postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
   } else if (action === 'add') {
-    console.log('ADD: eventId - ' + event.eventID + '; userId: ' + event.userID)
-    // post(ENDPOINTS.ADD_EVENT, DOMAINS.EVENT, requestBody)
-    //   .then((resp) => {
-    //     if (resp.status >= 400) {
-    //       console.log('FAILURE')
-    //     } else {
-    //       console.log('SUCCESS!!!')
-    //     }
-    //   })
-    //   .catch(() => {
-    //     console.log('resp')
-    //   })
+    const updateEventStatus = (data) => {
+      if (data.ok) {
+        console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + event.userID)
+      } else {
+        console.log('FAILURE!!!! ' + data.status)
+      }
+    }
+
+    postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
   }
   // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
 }

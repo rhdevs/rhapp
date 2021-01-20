@@ -12,7 +12,12 @@ import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { editUserEvents, fetchAllEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
+import {
+  editUserEvents,
+  fetchAllPublicEvents,
+  fetchUserEvents,
+  getSearchedEvents,
+} from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -49,13 +54,15 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const { userEventsList, allEvents, isLoading, searchedEvents } = useSelector((state: RootState) => state.scheduling)
+  const { userEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
+    (state: RootState) => state.scheduling,
+  )
 
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
     dispatch(fetchUserEvents(dummyUserId, true))
-    dispatch(fetchAllEvents())
+    dispatch(fetchAllPublicEvents())
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -123,7 +130,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     })
   }
 
-  const data = currentEvents ?? allEvents
+  const data = currentEvents ?? allPublicEvents
 
   const renderResults = () => {
     if (searchValue) {

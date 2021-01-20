@@ -12,7 +12,7 @@ const initialState = {
   userEventsEndTime: 2400,
   shareSearchResults: [],
   searchedEvents: [],
-  allEvents: [],
+  allPublicEvents: [],
   userNusModsEvents: [],
   isSuccessful: false,
   isFailure: false,
@@ -38,7 +38,7 @@ type State = {
   userEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
-  allEvents: SchedulingEvent[]
+  allPublicEvents: SchedulingEvent[]
   userNusModsEvents: TimetableEvent[]
   isSuccessful: boolean
   isFailure: boolean
@@ -68,10 +68,10 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         isFailure: action.isFailure,
       }
     }
-    case SCHEDULING_ACTIONS.GET_ALL_EVENTS: {
+    case SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS: {
       return {
         ...state,
-        allEvents: action.allEvents,
+        allPublicEvents: action.allPublicEvents,
       }
     }
     case SCHEDULING_ACTIONS.GET_USER_EVENTS: {
