@@ -198,7 +198,7 @@ def addUserCCA(userID):
         }
 
         receipt = db.UserCCA.insert_one(body)
-        body["_id"] = str(receipt.inserted_id)
+        body["eventID"] = str(receipt.inserted_id)
 
         return {"message": body}, 200
 
@@ -269,7 +269,7 @@ def createEvent():
         }
 
         receipt = db.Events.insert_one(body)
-        body["_id"] = str(receipt.inserted_id)
+        body["eventID"] = str(receipt.inserted_id)
 
         return {"message": body}, 200
 
@@ -322,7 +322,7 @@ def editEvent():
             return {'message': "Event changed"}, 200
         else:
             receipt = db.Events.insert_one(body)
-            body["_id"] = str(receipt.inserted_id)
+            body["eventID"] = str(receipt.inserted_id)
 
             return {"message": body}, 200
 
