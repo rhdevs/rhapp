@@ -335,11 +335,12 @@ def editEvent():
 @cross_origin()
 def editAttendance():
     try:
-        eventID = request.args.get('eventID')
-        userID = request.args.get('userID')
+        data = request.get_json()
+        eventID = data.get('eventID')
+        userID = data.get('userID')
         body = {
-            "eventID": eventID,
             "userID": userID,
+            "eventID": eventID
         }
         if request.method == "POST":
             db.Attendance.insert_one(body)
