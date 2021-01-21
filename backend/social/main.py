@@ -25,14 +25,14 @@ db = client["RHApp"]
 
 
 @app.route("/")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def hello():
     return "Welcome the Raffles Hall Social server"
 
 
 @app.route('/user/all')
 @cross_origin()
-def getAllUsers():
+def getAllUsers(supports_credentials=True):
     try:
         data = db.User.find()
         return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -42,7 +42,7 @@ def getAllUsers():
 
 
 @app.route("/user/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUser(userID):
     try:
         data = db.User.find({"userID": userID})
@@ -53,7 +53,7 @@ def getUser(userID):
 
 
 @app.route("/user", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeleteUser():
     try:
         if request.method == "POST":
@@ -83,7 +83,7 @@ def addDeleteUser():
 
 
 @app.route("/user/edit", methods=['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def editUser():
     try:
         data = request.get_json()
@@ -110,7 +110,7 @@ def editUser():
 
 
 @app.route("/profile/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
         data = db.Profiles.find({"userID": userID})
@@ -121,7 +121,7 @@ def getUserProfile(userID):
 
 
 @app.route("/profile", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeleteProfile():
     try:
         if request.method == "POST":
@@ -171,7 +171,7 @@ def addDeleteProfile():
 
 
 @app.route("/profile/edit/", methods=['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def editProfile():
     try:
         data = request.get_json()
@@ -207,7 +207,7 @@ def editProfile():
 
 
 @app.route("/user/details/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserDetails(userID):
     try:
         data1 = db.User.find_one({"userID": userID})
@@ -227,7 +227,7 @@ def userIDtoName(userID):
     return name 
 
 @app.route("/post", methods=['GET', 'DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeletePost():
     try:
         if request.method == "GET":
@@ -274,15 +274,15 @@ def addDeletePost():
 
         elif request.method == "DELETE":
             postID = request.args.get('postID')
-            db.Posts.delete_one({"postID": postID})
-            return Response(status=200)
+            db.Posts.delete_one({"postID": int(postID)})
+            return make_response('deleted sucessfully', 200)
 
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
 
 @app.route("/post/search", methods = ['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getPostSpecific():
     try : 
         userID = request.args.get("userID")
@@ -312,7 +312,7 @@ def getPostSpecific():
         return {"err": str(e)}, 400
 
 @app.route("/post/last/<int:last>", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getLastN(last):
     #get all post regardless whether its official or not 
     try:
@@ -331,7 +331,7 @@ def getLastN(last):
         return {"err": str(e)}, 400
     
 @app.route("/post/<userID>", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
         data = db.Posts.find({"userID": str(userID)})
@@ -363,7 +363,7 @@ def FriendsHelper(userID):
 
 
 @app.route("/post/friend", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getFriendsPostById():
     try:
         userID = str(request.args.get("userID"))
@@ -391,7 +391,7 @@ def getFriendsPostById():
 
 
 @app.route("/post/official", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
         N = int(request.args.get('N')) if request.args.get('N') else 10
@@ -413,7 +413,7 @@ def getOfficialPosts():
 
 
 @app.route("/post/edit/", methods=['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def editPost():
     try:
         data = request.get_json()
@@ -457,7 +457,7 @@ Friends API
 
 
 @app.route("/friend", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def createDeleteFriend():
     try:
         data = request.get_json()
@@ -515,7 +515,7 @@ def createDeleteFriend():
 
 
 @app.route("/friend/<userID>", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getAllFriends(userID):
     try:
         response = FriendsHelper(userID)
@@ -534,7 +534,7 @@ def getAllFriends(userID):
 
 
 @app.route("/friend/check", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def checkFriend():
     userOne = request.args.get('userIDOne')
     userTwo = request.args.get('userIDTwo')
@@ -567,7 +567,7 @@ def checkFriend():
 
 
 @app.route("/user_CCA/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserCCAs(userID):
     try:
         data = db.UserCCA.find({"userID": userID})
