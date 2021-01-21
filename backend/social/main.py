@@ -88,8 +88,10 @@ def editUser():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        passwordHash = str(data.get('passwordHash'))
-        email = str(data.get('email'))
+        
+        oldUser = db.User.find_one({"userID": userID})
+        passwordHash = str(data.get('passwordHash')) if data.get('passwordHash') else oldUser.get('passwordHash')
+        email = str(data.get('email')) if data.get('email') else oldUser.get('email')
 
         body = {
             "userID": userID,
@@ -412,7 +414,7 @@ def getOfficialPosts():
         return {"err": str(e)}, 400
 
 
-@app.route("/post/edit/", methods=['PUT'])
+@app.route("/post/edit", methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def editPost():
     try:
@@ -427,7 +429,7 @@ def editPost():
         title = str(data.get('title')) if data.get('title') else oldPost.get('title')
         description = str(data.get('description')) if data.get('description') else oldPost.get('description')
         ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
-        postPics = data.get('description') if data.get('description') else oldPost.get('description')
+        postPics = data.get('postPics') if data.get('postPics') else oldPost.get('postPics')
         isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
 
         body = {
