@@ -182,6 +182,18 @@ def getCCAMembers(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
+@app.route("/user_CCA")
+@cross_origin()
+def getCCAMembersName():
+    try:
+        ccaName = str(request.args.get('ccaName'))
+        print(ccaName)
+        data = db.UserCCA.find({"ccaName": ccaName})
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
+
 @app.route("/user_CCA/add", methods=['POST'])
 @cross_origin()
 def addUserCCA(userID):
