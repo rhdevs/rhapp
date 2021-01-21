@@ -292,7 +292,7 @@ def getPostSpecific():
         
         if postID : 
             data = db.Posts.find_one({"postID": int(postID)})
-            name = db.User.find_one({"userID" : str(data.get("userID"))})
+            name = db.Profiles.find_one({"userID" : str(data.get("userID"))}).get('displayName')
             
             if data != None :
               del data['_id'] # this causes error without str conversion
@@ -580,5 +580,5 @@ def getUserCCAs(userID):
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)
