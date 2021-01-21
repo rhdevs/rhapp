@@ -376,6 +376,7 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
 
   return returnEventsArray
 }
+
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------

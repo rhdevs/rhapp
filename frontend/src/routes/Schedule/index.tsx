@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Alert, Menu } from 'antd'
-import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
@@ -128,6 +128,15 @@ export default function Schedule() {
             }}
           >
             Events
+          </Menu.Item>
+          <Menu.Item
+            key="6"
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              console.log('remove nusmods!!')
+            }}
+          >
+            Delete my NUSMods events
           </Menu.Item>
         </>
       }
