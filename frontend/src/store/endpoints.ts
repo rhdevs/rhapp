@@ -50,6 +50,9 @@ export enum ENDPOINTS {
   CCA_MEMBER = '/user_CCA',
 
   EVENT_DETAILS = '/event',
+
+  // FRIENDS
+  ALL_FRIENDS = '/friend',
 }
 
 export enum DOMAINS {

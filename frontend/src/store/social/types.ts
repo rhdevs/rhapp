@@ -17,6 +17,16 @@ export type User = {
   block: string
 }
 
+export type Friend = {
+  bio: string
+  block: number
+  displayName: string
+  modules: string[]
+  profilePictureUrl: string
+  telegramHandle: string
+  userID: string
+}
+
 export enum SOCIAL_ACTIONS {
   GET_POST_DETAILS_TO_EDIT = 'SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT',
   EDIT_NEW_FIELDS = 'SOCIAL_ACTIONS.EDIT_NEW_FIELDS',

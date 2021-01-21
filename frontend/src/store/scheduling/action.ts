@@ -10,7 +10,7 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
@@ -379,15 +379,17 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
-export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
+export const getShareSearchResults = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  // const { user } = getState().profile
+  // const { userID } = user
+  const userID = 'A1234567B' // TODO: Revert to previous line after integration of userID
   // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
-  //     shareSearchResults: results,
-  //   })
-  // })
+  get(ENDPOINTS.ALL_FRIENDS, DOMAINS.SOCIAL, `/${userID}`).then((results) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+      shareSearchResults: results,
+    })
+  })
   dispatch(setIsLoading(false))
 }
 // ---------------------- SHARE SEARCH ----------------------
