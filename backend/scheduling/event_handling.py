@@ -52,9 +52,13 @@ def getAllEvents():
 def getAllPrivateEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": True}})
+        response = []
+        for item in data:
+            item['eventID'] = item.pop('_id')
+            response.append(item)
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route('/event/public/all')
@@ -62,9 +66,13 @@ def getAllPrivateEvents():
 def getAllPublicEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}})
+        response = []
+        for item in data:
+            item['eventID'] = item.pop('_id')
+            response.append(item)
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route('/event/afterTime/<startTime>')
@@ -97,6 +105,7 @@ def getEventsDetails():
         for eventID in data:
 
             result = db.Events.find_one({"_id": ObjectId(eventID)})
+            result['eventID'] = result.pop('_id')
             body.append(result)
             print(result)
 
