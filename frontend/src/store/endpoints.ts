@@ -2,7 +2,6 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
-  MOCK_ENDPOINT = 'this/is/fake/endpoint',
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
@@ -33,15 +32,15 @@ export enum ENDPOINTS {
 
   ALL_EVENTS = '/event/all',
   ALL_PUBLIC_EVENTS = '/event/public/all',
-  USER_EVENT = '/user_event/',
-  ADD_EVENT = '/event/add/',
-  DELETE_EVENT = '/event/delete/',
-  RSVP_EVENT = '/user_event/',
-  EDIT_EVENT = '/event/edit/',
+  USER_EVENT = '/user_event',
+  ADD_EVENT = '/event/add',
+  DELETE_EVENT = '/event/delete',
+  RSVP_EVENT = '/user_event',
+  EDIT_EVENT = '/event/edit',
 
   ADD_MODS = '/nusmods',
-  DELETE_MODS = '/nusmods/delete/',
-  NUSMODS = '/nusmods/',
+  DELETE_MODS = '/nusmods/delete',
+  NUSMODS = '/nusmods',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',

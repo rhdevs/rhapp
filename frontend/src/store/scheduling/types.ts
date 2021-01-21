@@ -1,4 +1,5 @@
 import { invert } from 'lodash'
+import { userCCA } from '../facilityBooking/types'
 import { SearchResult } from '../types'
 
 type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
@@ -89,7 +90,7 @@ type getHallEventTypes = {
 
 type getTargetAudienceList = {
   type: typeof SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST
-  targetAudienceList: string[]
+  targetAudienceList: userCCA[]
 }
 
 type GetAllEvents = {

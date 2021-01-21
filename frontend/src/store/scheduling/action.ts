@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { getHallEventTypesStub, targetAudienceListStub } from '../stubs'
+import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -461,21 +461,26 @@ export const editDescription = (newDescription: string) => (dispatch: Dispatch<A
   dispatch({ type: SCHEDULING_ACTIONS.SET_DESCRIPTION, newDescription: newDescription })
 }
 
-export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { newDescription } = getState().scheduling
-  console.log(newDescription)
-}
-
 export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
 }
 
-export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
-    targetAudienceList: targetAudienceListStub,
+
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + dummyUserId, {
+    method: 'GET',
+    mode: 'cors',
   })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({
+        type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
+        targetAudienceList: data,
+      })
+      console.log(data)
+      dispatch(setIsLoading(false))
+    })
 }
 
 export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -489,6 +494,46 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
     type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
     hallEventTypes: getHallEventTypesStub,
   })
+}
+
+export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  dispatch(setIsLoading(true))
+  const {
+    newEventName,
+    newEventLocation,
+    newEventFromDate,
+    newEventToDate,
+    newDescription,
+    newTargetAudience,
+  } = getState().scheduling
+  const isPersonal = newTargetAudience === 'Personal'
+  const newEvent = {
+    eventName: newEventName,
+    startDateTime: newEventFromDate.getTime() / 1000,
+    endDateTime: newEventToDate.getTime() / 1000,
+    description: newDescription,
+    location: newEventLocation,
+    userID: dummyUserId,
+    image: null,
+    ccaID: isPersonal ? null : parseInt(newTargetAudience),
+    isPrivate: isPersonal,
+  }
+  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newEvent),
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(`added successfully: ${data}`)
+      dispatch(setIsLoading(false))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {

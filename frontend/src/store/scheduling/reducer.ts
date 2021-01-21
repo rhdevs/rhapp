@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { SearchResult } from '../types'
+import { userCCA } from '../facilityBooking/types'
 
 const initialState = {
   isLoading: true,
@@ -49,7 +50,7 @@ type State = {
   newDescription: string
   hallEventTypes: string[]
   newHallEventType: string
-  targetAudienceList: string[]
+  targetAudienceList: userCCA[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {

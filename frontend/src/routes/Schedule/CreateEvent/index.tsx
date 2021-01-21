@@ -102,13 +102,8 @@ export default function CreateEvent() {
     newEventFromDate,
     newEventToDate,
     newDescription,
+    newTargetAudience,
   } = useSelector((state: RootState) => state.scheduling)
-
-  const CheckIcon = (
-    <div>
-      <CheckOutlined style={{ color: 'black' }} />
-    </div>
-  )
 
   /** Incomplete functionality for Uploading Image */
 
@@ -156,7 +151,14 @@ export default function CreateEvent() {
 
   return (
     <div>
-      <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={CheckIcon} />
+      <TopNavBar
+        title={`Event Details`}
+        leftIcon
+        leftIconComponent={BackIcon}
+        rightComponent={
+          <CheckOutlined style={{ color: 'black' }} onClick={() => dispatch(handleSubmitCreateEvent())} />
+        }
+      />
       <Background>
         <StyledInput
           placeholder="Event Name"
@@ -176,10 +178,11 @@ export default function CreateEvent() {
               <span>{`${toCustomDateFormat(newEventToDate)}`}</span>
             </DatePickerRow>
           </DatePicker>
-          <div
-            style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}
-            onClick={() => dispatch(handleSubmitCreateEvent())}
-          >{`Duration: ${dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
+            newEventToDate,
+          )
+            .diff(dayjs(newEventFromDate), 'hour', true)
+            .toFixed(1)} hours`}</div>
         </div>
         <InputRow
           title="Location"
@@ -190,9 +193,12 @@ export default function CreateEvent() {
         <Row>
           <StyledTitle>For who</StyledTitle>
           <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editTargetAudience(value.toString()))}>
-            {targetAudienceList.map((targetAudience, idx) => (
-              <Option key={idx} value={targetAudience}>
-                {targetAudience}
+            <Option key={1} value={'Personal'}>
+              Personal
+            </Option>
+            {targetAudienceList.map((cca, idx) => (
+              <Option key={idx} value={cca.ccaID}>
+                {cca.ccaName}
               </Option>
             ))}
           </StyledSelect>
@@ -204,16 +210,18 @@ export default function CreateEvent() {
           setValue={(description: string) => dispatch(editDescription(description))}
           textarea
         />
-        <Row>
-          <StyledTitle>Event Type</StyledTitle>
-          <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
-            {hallEventTypes.map((eventTypes, idx) => (
-              <Option key={idx} value={eventTypes}>
-                {eventTypes}
-              </Option>
-            ))}
-          </StyledSelect>
-        </Row>
+        {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
+          <Row>
+            <StyledTitle>Event Type</StyledTitle>
+            <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
+              {hallEventTypes.map((eventTypes, idx) => (
+                <Option key={idx} value={eventTypes}>
+                  {eventTypes}
+                </Option>
+              ))}
+            </StyledSelect>
+          </Row>
+        )}
       </Background>
     </div>
   )
