@@ -330,6 +330,79 @@ const getUserNusModsEvents = (userId: string) => async () => {
   console.log(resp)
   return resp[0].mods
 }
+<<<<<<< HEAD
+=======
+
+/**
+ * Returns a 2D array, containing module code and lesson information of each module
+ *
+ * @param link NUSMods share link
+ */
+const extractDataFromLink = (link: string) => {
+  const timetableInformation = link.split('?')[1]
+  const timetableData = timetableInformation.split('&')
+  const data: string[][] = []
+  let count = 0
+
+  timetableData.forEach((moduleInformation) => {
+    const moduleCode = moduleInformation.split('=')[0]
+    data[count] = []
+    data[count].push(moduleCode)
+    moduleInformation = moduleInformation.split('=')[1]
+    const moduleLessons = moduleInformation.split(',')
+    moduleLessons.forEach((classes) => {
+      data[count].push(classes)
+    })
+    count++
+  })
+
+  return data
+}
+
+/**
+ * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
+ *
+ * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
+ * @param moduleArray array of lessons selected by user (from link provided)
+ * @param events array of information retrieved from NUSMods of selected events
+ */
+const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => {
+  const moduleCode = moduleArray[0]
+  const returnEventsArray = await axios
+    .get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`)
+    .then((res) => {
+      const events: TimetableEvent[] = []
+      const moduleData = res.data.semesterData[0].timetable
+      moduleArray = moduleArray.splice(1)
+      for (let i = 0; i < moduleArray.length; i++) {
+        const lessonType = moduleArray[i].split(':')[0]
+        const classNo = moduleArray[i].split(':')[1]
+        const correspondingClassInformationArray = moduleData.filter(
+          (moduleClass: { classNo: string; lessonType: string }) => {
+            return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
+          },
+        )
+        correspondingClassInformationArray.map((classInformation) => {
+          const newEvent: TimetableEvent = {
+            eventName: moduleCode + ' ' + LESSON_TO_ABBREV[classInformation.lessonType],
+            location: classInformation.venue,
+            day: classInformation.day,
+            endTime: classInformation.endTime,
+            startTime: classInformation.startTime,
+            hasOverlap: false,
+            eventID: 1, //change!
+            eventType: 'mods', //change!
+          }
+          events.push(newEvent)
+        })
+      }
+      return events
+    })
+
+  return returnEventsArray
+}
+
+>>>>>>> Revert nusmods actions
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
