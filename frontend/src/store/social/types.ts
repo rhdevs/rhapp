@@ -3,13 +3,13 @@ type Timestamp = string // number of milliseconds since January 1, 1970, 00:00:0
 export type Post = {
   postId: string
   title: string
-  ownerId: string
-  date?: Date
   isOfficial: boolean
-  ccaId?: string
+  ccaId: number
   description: string
   postPics: string[]
   createdAt?: Timestamp
+  name: string
+  userId?: string
 }
 
 export type User = {
@@ -35,7 +35,6 @@ export enum SOCIAL_ACTIONS {
   SET_IS_UPLOADING = 'SOCIAL_ACTIONS.SET_IS_UPLOADING',
   GET_POSTS = 'SOCIAL_ACTIONS.GET_POSTS',
   DELETE_POST = 'SOCIAL_ACTIONS.DELETE_POST',
-  SET_POST_USER = 'SOCIAL_ACTIONS.SET_POST_USER',
   SWITCH_POSTS_FILTER = 'SOCIAL_ACTIONS.SWITCH_POSTS_FILTER',
   GET_SPECIFIC_POST = 'SOCIAL_ACTIONS.GET_SPECIFIC_POST',
 }
@@ -52,6 +51,7 @@ type GetPostDetailsToEdit = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
 }
 
 type EditNewFields = {
@@ -60,6 +60,7 @@ type EditNewFields = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
 }
 
 type SetWarnings = {
@@ -82,11 +83,6 @@ type DeletePost = {
   posts: Post[]
 }
 
-type SetPostUser = {
-  type: typeof SOCIAL_ACTIONS.SET_POST_USER
-  postUser: User
-}
-
 type SwitchPostsFilter = {
   type: typeof SOCIAL_ACTIONS.SWITCH_POSTS_FILTER
   postsFilter: POSTS_FILTER
@@ -105,6 +101,5 @@ export type ActionTypes =
   | SetIsUploading
   | GetPosts
   | DeletePost
-  | SetPostUser
   | SwitchPostsFilter
   | GetSpecificPost

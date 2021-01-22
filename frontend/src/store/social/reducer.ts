@@ -8,9 +8,9 @@ const initialState = {
   newPostBody: '',
   newPostImages: [],
   newPostOfficial: false,
+  newPostCca: '',
   warnings: [],
   posts: [],
-  postUser: null,
   postsFilter: POSTS_FILTER.ALL,
   viewPost: {} as Post,
 }
@@ -22,9 +22,9 @@ type State = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
   warnings: string[]
   posts: Post[]
-  postUser: User | null
   postsFilter: POSTS_FILTER
   viewPost: Post
 }
@@ -39,6 +39,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
       }
     }
 
@@ -49,6 +50,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
       }
     }
 
@@ -84,13 +86,6 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         posts: action.posts,
-      }
-    }
-
-    case SOCIAL_ACTIONS.SET_POST_USER: {
-      return {
-        ...state,
-        postUser: action.postUser,
       }
     }
 

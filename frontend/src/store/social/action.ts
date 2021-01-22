@@ -1,68 +1,101 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, del } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
 import { cloneDeep } from 'lodash'
+import useSnackbar from '../../hooks/useSnackbar'
 
-export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
+const [success] = useSnackbar()
+
+export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const postToEdit: Post = {
     postId: postId,
     title: 'Whats up Losers',
-    ownerId: '1',
-    date: new Date(),
+    userId: '1',
     isOfficial: true,
-    ccaId: '2',
+    ccaId: 2,
     description:
       'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
     postPics: [
       'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
       'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
     ],
+    name: 'Zhou Gou Gou',
   }
-
-  dispatch({
-    type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
-    postToEdit: postToEdit,
-    newPostTitle: postToEdit.title,
-    newPostBody: postToEdit.description,
-    newPostImages: postToEdit.postPics,
-    newPostOfficial: postToEdit.isOfficial,
+  dispatch(GetSpecificPost(postId)).then(() => {
+    const { title, description, postPics, isOfficial, ccaId } = getState().social.viewPost
+    dispatch({
+      type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
+      postToEdit: postToEdit,
+      newPostTitle: title,
+      newPostBody: description,
+      newPostImages: postPics ?? [],
+      newPostOfficial: isOfficial,
+      newPostCca: '',
+    })
   })
 }
 
 export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
+  // TODO: Get roles from user
+  const headOfCca = [
+    {
+      ccaName: 'Basketball',
+      ccaID: 2,
+    },
+    {
+      ccaName: 'Tennis',
+      ccaID: 3,
+    },
+  ]
+
   dispatch({
     type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
     newPostTitle: '',
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
+    newPostCca: headOfCca[0].ccaName,
   })
 }
 
-export const handleEditPost = () => () => {
-  // TODO: push a snackbar @ homepage. (HOME Reducer)
+export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  console.log('Editing post')
+  const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages } = getState().social
+  console.log(viewPost)
+  const requestBody = {
+    postID: viewPost.postId,
+    ccaID: 5, // TODO: Change to tags
+    title: newPostTitle,
+    description: newPostBody,
+    isOfficial: newPostOfficial,
+    postPics: newPostImages,
+  }
+  put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
+    success('Post edited!')
+    console.log(res)
+  })
 }
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  // TODO: push a snackbar @ homepage. (HOME Reducer)
   console.log('Creating post')
-  const { newPostTitle, newPostBody, newPostOfficial } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
     userID: 'A1234567B',
     isOfficial: newPostOfficial,
-    // postPics: [],
-    // ccaID: 1,
-    // createdAt: 1500000001,
+    postPics: newPostImages ?? [],
+    ccaID: 1, // TODO: Change to tags
   }
-  console.log('Creating post')
-  post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => console.log(res))
+  post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+    success('Post created!')
+    console.log(res)
+  })
 }
 
 export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { newPostTitle, newPostBody, newPostOfficial } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
   let { newPostImages } = getState().social
   newPostImages = newPostImages?.filter((url) => {
     return url !== urlToDelete
@@ -74,6 +107,7 @@ export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTy
     newPostBody: newPostBody,
     newPostImages: newPostImages,
     newPostOfficial: newPostOfficial,
+    newPostCca: newPostCca,
   })
 }
 
@@ -130,7 +164,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  let { newPostTitle, newPostBody, newPostOfficial } = getState().social
+  let { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
   const { newPostImages } = getState().social
 
   switch (fieldName) {
@@ -148,6 +182,11 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
         newPostImages.push(fieldData)
       }
       break
+    case 'cca':
+      if (fieldData) {
+        newPostCca = fieldData
+      }
+      break
   }
 
   dispatch({
@@ -156,43 +195,48 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
     newPostBody: newPostBody,
     newPostImages: newPostImages,
     newPostOfficial: newPostOfficial,
+    newPostCca: newPostCca,
   })
 }
 
 export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  let url: string = DOMAIN_URL.SOCIAL
+  let endpoint: ENDPOINTS
   switch (postFilter) {
     case POSTS_FILTER.OFFICIAL:
-      url += ENDPOINTS.OFFICIAL_POSTS
+      endpoint = ENDPOINTS.OFFICIAL_POSTS
       break
     case POSTS_FILTER.ALL:
-      url += ENDPOINTS.ALL_POSTS
+      endpoint = ENDPOINTS.ALL_POSTS
       break
     case POSTS_FILTER.FRIENDS:
-      url += `${ENDPOINTS.FRIENDS_OF_USER_POSTS}?N=${limit}&userID=${userId}`
+      endpoint = ENDPOINTS.FRIENDS_OF_USER_POSTS
       break
     default:
-      url += ENDPOINTS.ALL_POSTS
+      endpoint = ENDPOINTS.ALL_POSTS
       break
   }
 
-  const response = await axios.get(url)
-  const posts = response.data
-  console.log(posts)
-  const transformedPost = cloneDeep(posts).map((post) => {
-    post.date = post.createdAt
-    post.postId = post.postID
-    post.ccaId = post.ccaID
-    post.userId = post.userID
-    post.date = new Date(post.createdAt)
-    return post
-  })
+  const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
 
-  dispatch({
-    type: SOCIAL_ACTIONS.GET_POSTS,
-    posts: transformedPost,
+  get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
+    console.log(response)
+    const transformedPost = cloneDeep(response)
+      .reverse()
+      .map((post) => {
+        post.date = post.createdAt
+        post.postId = post.postID
+        post.ccaId = post.ccaID
+        post.userId = post.userID
+        post.date = new Date(post.createdAt)
+        return post
+      })
+
+    dispatch({
+      type: SOCIAL_ACTIONS.GET_POSTS,
+      posts: transformedPost,
+    })
   })
 }
 
@@ -203,29 +247,14 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
   })
 
   const requestBody = {
-    postId: postIdToDelete
+    postId: postIdToDelete,
   }
-  const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, requestBody)
-  console.log(response)
+  console.log(postIdToDelete)
+  const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
+  console.log('DELETE RESPONSE: ', response)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
-  })
-}
-
-export const SetPostUser = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  // TODO: Fetch user's details from users table
-  const userDetails: User = {
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    initials: 'ZGG',
-    name: 'Zhou Gou Gou',
-    userId: userId,
-    block: '8',
-  }
-
-  dispatch({
-    type: SOCIAL_ACTIONS.SET_POST_USER,
-    postUser: userDetails,
   })
 }
 
@@ -241,8 +270,20 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
   const specificPost = response.data
   console.log('Specific post', specificPost)
 
+  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
+  const newPost = {
+    name: name,
+    userId: userID,
+    postId: postID,
+    title: title,
+    isOfficial: isOfficial,
+    ccaId: ccaID,
+    description: description,
+    postPics: postPics,
+    createdAt: createdAt,
+  }
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
-    viewPost: specificPost,
+    viewPost: newPost,
   })
 }

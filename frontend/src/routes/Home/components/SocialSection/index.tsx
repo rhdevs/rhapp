@@ -73,7 +73,7 @@ export default function SocialSection() {
 
   useEffect(() => {
     if (currentPostsFilter === POSTS_FILTER.FRIENDS) {
-      dispatch(GetPosts(currentPostsFilter, 5, 'cs2040s')) // TODO: Use userId from state
+      dispatch(GetPosts(currentPostsFilter, 5, 'A132424')) // TODO: Use userId from state
     } else {
       dispatch(GetPosts(currentPostsFilter))
     }
@@ -83,16 +83,18 @@ export default function SocialSection() {
 
   const renderSocialPosts = () => {
     return socialPosts.map((post) => {
-      const { title, postId, createdAt, isOfficial, ccaId, description, postPics } = post
-      const date = dayjs.unix(parseInt(createdAt ?? '')).toNow()
-      // const date = dayjs.unix(parseInt(createdAt ?? '')).format('D/M/YY, h:mmA')
+      const { title, postId, createdAt, isOfficial, ccaId, description, postPics, name } = post
+      const postDate = dayjs.unix(parseInt(createdAt ?? ''))
+      const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
+
+      const date = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
 
       return (
         <SocialPostCard
           key={postId}
-          isOwner={true}
+          isOwner={true} // TODO: change to userId == current userId
           avatar={dummyAllData[0].avatar}
-          name={dummyAllData[0].name}
+          name={name ?? ''}
           title={title}
           dateTime={date}
           description={description}
