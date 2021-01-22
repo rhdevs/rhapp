@@ -10,12 +10,11 @@ import { SwitchPostsFilter, GetPosts } from '../../../../store/social/action'
 import { POSTS_FILTER } from '../../../../store/social/types'
 import { RootState } from '../../../../store/types'
 import dayjs from 'dayjs'
+import { userProfileStub } from '../../../../store/stubs'
 
 type TabProps = {
   active: boolean
 }
-
-type SocialPostCardProps = React.ComponentProps<typeof SocialPostCard>
 
 const Sticky = styled.div`
   position: -webkit-sticky;
@@ -48,23 +47,6 @@ const Tab = styled.div<TabProps>`
   opacity: ${(props) => (props.active ? 1 : 0.5)};
 `
 
-const dummyAllData: SocialPostCardProps[] = [
-  {
-    isOwner: true,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    postId: '123456789',
-    title: 'Hello',
-    name: 'Zhou Gou Gou',
-    dateTime: '8h ago',
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-  },
-]
-
 export default function SocialSection() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -73,7 +55,7 @@ export default function SocialSection() {
 
   useEffect(() => {
     if (currentPostsFilter === POSTS_FILTER.FRIENDS) {
-      dispatch(GetPosts(currentPostsFilter, 5, 'A132424')) // TODO: Use userId from state
+      dispatch(GetPosts(currentPostsFilter, 5, userProfileStub.userID)) // TODO: Use userId from state
     } else {
       dispatch(GetPosts(currentPostsFilter))
     }
@@ -93,7 +75,7 @@ export default function SocialSection() {
         <SocialPostCard
           key={postId}
           isOwner={true} // TODO: change to userId == current userId
-          avatar={dummyAllData[0].avatar}
+          avatar={userProfileStub.profilePictureUrl}
           name={name ?? ''}
           title={title}
           dateTime={date}

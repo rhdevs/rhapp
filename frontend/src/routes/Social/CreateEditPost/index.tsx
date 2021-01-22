@@ -18,6 +18,7 @@ import {
   handleCreatePost,
   PopWarning,
   ResetPostDetails,
+  SetPostId,
 } from '../../../store/social/action'
 import { PostImage } from './Components/postImage'
 import { PATHS } from '../../Routes'
@@ -220,7 +221,8 @@ export default function CreateEditPost() {
 
   useEffect(() => {
     if (window.location.href.includes('/post/edit')) {
-      dispatch(GetPostDetailsToEdit(params.postId))
+      dispatch(SetPostId(params.postId))
+      dispatch(GetPostDetailsToEdit())
     } else {
       dispatch(ResetPostDetails())
     }

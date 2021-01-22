@@ -13,6 +13,8 @@ const initialState = {
   posts: [],
   postsFilter: POSTS_FILTER.ALL,
   viewPost: {} as Post,
+  userId: '',
+  postId: '',
 }
 
 type State = {
@@ -27,6 +29,8 @@ type State = {
   posts: Post[]
   postsFilter: POSTS_FILTER
   viewPost: Post
+  userId: string
+  postId: string
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -40,6 +44,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
         newPostCca: action.newPostCca,
+        userId: action.userId,
       }
     }
 
@@ -93,6 +98,13 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         postsFilter: action.postsFilter,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SET_POST_ID: {
+      return {
+        ...state,
+        postId: action.postId,
       }
     }
 

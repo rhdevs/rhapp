@@ -1,37 +1,27 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
+import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
 import { cloneDeep } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
+import { userProfileStub } from '../../store/stubs'
 
 const [success] = useSnackbar()
 
-export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const postToEdit: Post = {
-    postId: postId,
-    title: 'Whats up Losers',
-    userId: '1',
-    isOfficial: true,
-    ccaId: 2,
-    description:
-      'Hi I’m a RHapper! I like to eat cheese and fish. My favourite colour is black and blue. Please be my friend thank you!!!',
-    postPics: [
-      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
-    ],
-    name: 'Zhou Gou Gou',
-  }
+export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { postId } = getState().social
   dispatch(GetSpecificPost(postId)).then(() => {
-    const { title, description, postPics, isOfficial } = getState().social.viewPost
+    const { viewPost } = getState().social
+    const { title, description, postPics, isOfficial, userId } = viewPost
     dispatch({
       type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
-      postToEdit: postToEdit,
+      postToEdit: viewPost,
       newPostTitle: title,
       newPostBody: description,
       newPostImages: postPics ?? [],
       newPostOfficial: isOfficial,
       newPostCca: '',
+      userId: userId,
     })
   })
 }
@@ -72,6 +62,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     postPics: newPostImages,
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
+    dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post edited!')
     console.log(res)
   })
@@ -83,12 +74,13 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
-    userID: 'A1234567B',
+    userID: userProfileStub.userID,
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: 1, // TODO: Change to tags + add newPostCca
   }
   post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+    dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
     console.log(res)
   })
@@ -259,6 +251,13 @@ export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispa
   dispatch({
     type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
     postsFilter,
+  })
+}
+
+export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SOCIAL_ACTIONS.SET_POST_ID,
+    postId,
   })
 }
 

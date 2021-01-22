@@ -18,6 +18,7 @@ import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
+import { userProfileStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -101,7 +102,6 @@ export default function ViewPost() {
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost
 
-  console.log(postId)
   useEffect(() => {
     dispatch(GetSpecificPost(postIdFromPath))
   }, [dispatch, postIdFromPath])
@@ -117,7 +117,7 @@ export default function ViewPost() {
   const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
 
   // TODO: to get from response
-  const avatar = ''
+  const avatar = userProfileStub.profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
@@ -132,6 +132,7 @@ export default function ViewPost() {
     }
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)
+    history.goBack()
   }
 
   // TODO: change to current user id == post userId

@@ -9,7 +9,7 @@ export type Post = {
   postPics: string[]
   createdAt?: Timestamp
   name: string
-  userId?: string
+  userId: string
 }
 
 export type User = {
@@ -37,6 +37,7 @@ export enum SOCIAL_ACTIONS {
   DELETE_POST = 'SOCIAL_ACTIONS.DELETE_POST',
   SWITCH_POSTS_FILTER = 'SOCIAL_ACTIONS.SWITCH_POSTS_FILTER',
   GET_SPECIFIC_POST = 'SOCIAL_ACTIONS.GET_SPECIFIC_POST',
+  SET_POST_ID = 'SOCIAL_ACTIONS.SET_POST_ID',
 }
 
 type SetIsUploading = {
@@ -52,6 +53,7 @@ type GetPostDetailsToEdit = {
   newPostImages: string[]
   newPostOfficial: boolean
   newPostCca: string
+  userId: string
 }
 
 type EditNewFields = {
@@ -88,6 +90,11 @@ type SwitchPostsFilter = {
   postsFilter: POSTS_FILTER
 }
 
+type SetPostId = {
+  type: typeof SOCIAL_ACTIONS.SET_POST_ID
+  postId: string
+}
+
 type GetSpecificPost = {
   type: typeof SOCIAL_ACTIONS.GET_SPECIFIC_POST
   viewPost: Post
@@ -102,4 +109,5 @@ export type ActionTypes =
   | GetPosts
   | DeletePost
   | SwitchPostsFilter
+  | SetPostId
   | GetSpecificPost
