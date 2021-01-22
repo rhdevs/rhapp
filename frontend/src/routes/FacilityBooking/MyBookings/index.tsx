@@ -19,6 +19,7 @@ import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { dummyUserId } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -88,7 +89,7 @@ export default function ViewMyBookings() {
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
-    dispatch(getMyBookings('1'))
+    dispatch(getMyBookings(dummyUserId))
   }, [dispatch])
 
   return (

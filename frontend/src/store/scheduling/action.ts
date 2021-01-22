@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { isEmpty, last } from 'lodash'
-import { getHallEventTypesStub, targetAudienceListStub } from '../stubs'
+import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import {
   ActionTypes,
@@ -10,20 +10,24 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
+// ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
-  await fetch(DOMAIN_URL.EVENT + endpoint, {
+  const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => {
       return resp.json()
     })
-    .then((data) => {
-      methods(data)
+    .then(async (data) => {
+      if (methods) await methods(data)
+      return data
     })
+  return resp
 }
+// ---------------------- GET ----------------------
 
 export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -38,34 +42,41 @@ export const fetchAllEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
     })
     dispatch(setIsLoading(false))
   }
-  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+
+  getEventsFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
-export const fetchUserEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
+// ---------------------- TIMETABLE ----------------------
+export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(setIsLoading(true))
+  const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
+
   const manipulateData = (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
 
+    const allEvents: TimetableEvent[] = userNusModsEvents
+      ? timetableFormatEvents.concat(userNusModsEvents)
+      : timetableFormatEvents
+
     dispatch({
       type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-      userEvents: transformInformationToTimetableFormat(timetableFormatEvents),
-      userEventsStartTime: Number(getTimetableStartTime(timetableFormatEvents)),
-      userEventsEndTime: Number(getTimetableEndTime(timetableFormatEvents)),
-      userEventsList: timetableFormatEvents,
+      userEvents: transformInformationToTimetableFormat(allEvents),
+      userEventsStartTime: Number(getTimetableStartTime(allEvents)),
+      userEventsEndTime: Number(getTimetableEndTime(allEvents)),
+      userEventsList: allEvents,
     })
-    dispatch(setIsLoading(false))
+    if (isSearchEventsPage) dispatch(setIsLoading(false))
   }
-  getEventsFromBackend(ENDPOINTS.ALL_EVENTS, manipulateData)
-}
 
-// const withNusModsEvents = (userEventsList: TimetableEvent[]) => {
-//   //fetch nusmodsEvents from backend
-//   const nusModsEvent: TimetableEvent[] = []
-//   if (nusModsEvent) userEventsList.concat(nusModsEvent)
-//   else return userEventsList
-// }
+  const currentUNIXDate = Date.now()
+
+  getEventsFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
+  dispatch(setIsLoading(false))
+}
 
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
   const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
@@ -89,6 +100,16 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
     eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
   }
 }
+
+/**
+ * Returns the events in the current week
+ *
+ * @param events array of events of type TimetableEvents
+ */
+// const filterCurrentWeekEvents = (events : TimetableEvent) => {
+//   const currentYear = new Date().getFullYear()
+
+// }
 
 const sortEvents = (events: TimetableEvent[]) => {
   return events.sort((a, b) => {
@@ -229,39 +250,62 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 
   return formattedTime
 }
+// ---------------------- TIMETABLE ----------------------
 
 // ---------------------- NUSMODS ----------------------
-export const setUserNusModsLink = (userNusModsLink: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK, userNusModsLink: userNusModsLink })
-  console.log(userNusModsLink)
-}
-
-export const getUserNusModsEvents = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch(setIsLoading(true))
+export const setUserNusMods = (userId: string, userNusModsLink: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const currentYear = new Date().getFullYear()
   const academicYear = String(currentYear - 1) + '-' + String(currentYear)
-
-  const { userNusModsLink } = getState().scheduling
-
-  // const userNusModsLink = dummyNusModsLink //fetch link *include validation!
 
   const dataFromLink = extractDataFromLink(userNusModsLink)
   let retrivedEventInformation: TimetableEvent[] = []
   const temporaryData: TimetableEvent[][] = []
+  let userNusMods: TimetableEvent[] = []
 
   dataFromLink.map(async (oneModuleData) => {
     temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
     retrivedEventInformation = temporaryData.flat()
     if (oneModuleData === last(dataFromLink)) {
-      console.log(retrivedEventInformation)
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS,
-        userNusModsEvents: retrivedEventInformation,
-      })
+      userNusMods = retrivedEventInformation
+
+      const requestBody = {
+        userID: userId,
+        mods: userNusMods,
+      }
+
+      const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
+        .then((resp) => {
+          return resp
+        })
+        .catch(() => {
+          dispatch(setNusModsStatus(false, true))
+          console.log('CATCH FAILURE')
+        })
+
+      if (resp.status >= 400) {
+        dispatch(setNusModsStatus(false, true))
+        console.log('FAILURE')
+      } else {
+        console.log('SUCCESS')
+        dispatch(fetchUserEvents(userId, false))
+        dispatch(setNusModsStatus(true, false))
+      }
     }
   })
-  //post to userEvents
-  dispatch(setIsLoading(false))
+}
+
+const setNusModsStatus = (isSuccessful: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS,
+    isSuccessful: isSuccessful,
+    isFailure: isFailure,
+  })
+}
+
+export const getUserNusModsEvents = (userId: string) => async () => {
+  const resp = await getEventsFromBackend(ENDPOINTS.NUSMODS + userId, null)
+  console.log(resp)
+  return resp[0].mods
 }
 
 /**
@@ -321,8 +365,8 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
             endTime: classInformation.endTime,
             startTime: classInformation.startTime,
             hasOverlap: false,
-            eventID: 1,
-            eventType: 'timetable', //change!
+            eventID: 1, //change!
+            eventType: 'mods', //change!
           }
           events.push(newEvent)
         })
@@ -417,21 +461,26 @@ export const editDescription = (newDescription: string) => (dispatch: Dispatch<A
   dispatch({ type: SCHEDULING_ACTIONS.SET_DESCRIPTION, newDescription: newDescription })
 }
 
-export const handleSubmitCreateEvent = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { newDescription } = getState().scheduling
-  console.log(newDescription)
-}
-
 export const editHallEventType = (newHallEventType: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE, newHallEventType: newHallEventType })
 }
 
-export const getTargetAudienceList = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  dispatch({
-    type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
-    targetAudienceList: targetAudienceListStub,
+
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + dummyUserId, {
+    method: 'GET',
+    mode: 'cors',
   })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({
+        type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
+        targetAudienceList: data,
+      })
+      console.log(data)
+      dispatch(setIsLoading(false))
+    })
 }
 
 export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -445,6 +494,46 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
     type: SCHEDULING_ACTIONS.GET_HALL_EVENT_TYPES,
     hallEventTypes: getHallEventTypesStub,
   })
+}
+
+export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  dispatch(setIsLoading(true))
+  const {
+    newEventName,
+    newEventLocation,
+    newEventFromDate,
+    newEventToDate,
+    newDescription,
+    newTargetAudience,
+  } = getState().scheduling
+  const isPersonal = newTargetAudience === 'Personal'
+  const newEvent = {
+    eventName: newEventName,
+    startDateTime: newEventFromDate.getTime() / 1000,
+    endDateTime: newEventToDate.getTime() / 1000,
+    description: newDescription,
+    location: newEventLocation,
+    userID: dummyUserId,
+    image: null,
+    ccaID: isPersonal ? null : parseInt(newTargetAudience),
+    isPrivate: isPersonal,
+  }
+  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newEvent),
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(`added successfully: ${data}`)
+      dispatch(setIsLoading(false))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {

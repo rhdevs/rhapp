@@ -1,6 +1,7 @@
 import { Reducer } from 'redux'
 import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { SearchResult } from '../types'
+import { userCCA } from '../facilityBooking/types'
 
 const initialState = {
   isLoading: true,
@@ -12,8 +13,9 @@ const initialState = {
   shareSearchResults: [],
   searchedEvents: [],
   allEvents: [],
-  userNusModsLink: '',
   userNusModsEvents: [],
+  isSuccessful: false,
+  isFailure: false,
 
   // Create new event states
   newEventName: '',
@@ -37,8 +39,9 @@ type State = {
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
   allEvents: SchedulingEvent[]
-  userNusModsLink: string
   userNusModsEvents: TimetableEvent[]
+  isSuccessful: boolean
+  isFailure: boolean
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -47,7 +50,7 @@ type State = {
   newDescription: string
   hallEventTypes: string[]
   newHallEventType: string
-  targetAudienceList: string[]
+  targetAudienceList: userCCA[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -56,6 +59,13 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         isLoading: action.isLoading,
+      }
+    }
+    case SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS: {
+      return {
+        ...state,
+        isSuccessful: action.isSuccessful,
+        isFailure: action.isFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_EVENTS: {
@@ -79,13 +89,7 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         newUserEvents: action.newUserEvents,
       }
     }
-    case SCHEDULING_ACTIONS.SET_USER_NUSMODS_LINK: {
-      return {
-        ...state,
-        userNusModsLink: action.userNusModsLink,
-      }
-    }
-    case SCHEDULING_ACTIONS.GET_NUSMODS_EVENTS: {
+    case SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS: {
       return {
         ...state,
         userNusModsEvents: action.userNusModsEvents,

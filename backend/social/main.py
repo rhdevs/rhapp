@@ -5,9 +5,13 @@ import json
 import os
 import time
 from bson.objectid import ObjectId
+from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*":{"origins" : "*"}})
+# resources allowed to be accessed explicitly 
+# response.headers.add("Access-Control-Allow-Origin", "*"), add this to all responses
+# if the cors still now working
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 DB_USERNAME = os.getenv('DB_USERNAME')
@@ -21,35 +25,35 @@ db = client["RHApp"]
 
 
 @app.route("/")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def hello():
     return "Welcome the Raffles Hall Social server"
 
 
 @app.route('/user/all')
 @cross_origin()
-def getAllUsers():
+def getAllUsers(supports_credentials=True):
     try:
         data = db.User.find()
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/user/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUser(userID):
     try:
         data = db.User.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route("/user", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeleteUser():
     try:
         if request.method == "POST":
@@ -75,17 +79,19 @@ def addDeleteUser():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/user/edit", methods=['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def editUser():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        passwordHash = str(data.get('passwordHash'))
-        email = str(data.get('email'))
+        
+        oldUser = db.User.find_one({"userID": userID})
+        passwordHash = str(data.get('passwordHash')) if data.get('passwordHash') else oldUser.get('passwordHash')
+        email = str(data.get('email')) if data.get('email') else oldUser.get('email')
 
         body = {
             "userID": userID,
@@ -101,23 +107,23 @@ def editUser():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
 @app.route("/profile/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
         data = db.Profiles.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route("/profile", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeleteProfile():
     try:
         if request.method == "POST":
@@ -163,11 +169,11 @@ def addDeleteProfile():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/profile/edit/", methods=['PUT'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def editProfile():
     try:
         data = request.get_json()
@@ -198,12 +204,12 @@ def editProfile():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
 @app.route("/user/details/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserDetails(userID):
     try:
         data1 = db.User.find_one({"userID": userID})
@@ -212,28 +218,41 @@ def getUserDetails(userID):
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
+    
     return json.dumps(data1, default=lambda o: str(o)), 200
 
+def userIDtoName(userID):
+    #helper function
+    profile = db.Profiles.find_one({"userID" : userID})
+    name = profile.get('displayName') if profile else None
+    return name 
 
 @app.route("/post", methods=['GET', 'DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def addDeletePost():
     try:
         if request.method == "GET":
             # get last 5 most recent
             data = db.Posts.find()
-            return json.dumps(list(data), default=lambda o: str(o)), 200
+            
+            response = []
+            for item in data :
+                #add name into the every data using display name
+                item['name'] = userIDtoName(item.get('userID'))
+                response.append(item)
+                
+            return json.dumps(response, default=lambda o: str(o)), 200
+        
         elif request.method == "POST":
             data = request.get_json()
             userID = str(data.get('userID'))
             title = str(data.get('title'))
             description = str(data.get('description'))
-            ccaID = int(data.get('ccaID'))
-            createdAt = int(data.get('createdAt'))
-            postPics = list(data.get('description'))
-            isOfficial = data.get('isOfficial')
-
+            ccaID = int(data.get('ccaID')) if data.get('ccaID') else -1
+            createdAt = int(datetime.now().timestamp())
+            postPics = data.get('postPics') if data.get('postPics') else []
+            isOfficial = bool(data.get('isOfficial'))
             lastPostID = db.Posts.find_one(
                 sort=[('postID', pymongo.DESCENDING)])
             newPostID = 1 if lastPostID is None else int(
@@ -249,6 +268,7 @@ def addDeletePost():
                 "postPics": postPics,
                 "isOfficial": isOfficial
             }
+            
             receipt = db.Posts.insert_one(body)
             body["_id"] = str(receipt.inserted_id)
 
@@ -256,35 +276,71 @@ def addDeletePost():
 
         elif request.method == "DELETE":
             postID = request.args.get('postID')
-            db.Posts.delete_one({"postID": postID})
-            return Response(status=200)
+            db.Posts.delete_one({"postID": int(postID)})
+            return make_response('deleted sucessfully', 200)
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
+@app.route("/post/search", methods = ['GET'])
+@cross_origin(supports_credentials=True)
+def getPostSpecific():
+    try : 
+        userID = request.args.get("userID")
+        postID = request.args.get("postID")
+        
+        if postID : 
+            data = db.Posts.find_one({"postID": int(postID)})
+            name = db.Profiles.find_one({"userID" : str(data.get("userID"))}).get('displayName')
+            
+            if data != None :
+              del data['_id'] # this causes error without str conversion
+              data['name'] = name
+              return make_response(data, 200)
+            else :
+              return make_response("No Data Found", 404)
+          
+        elif userID : 
+            data = db.Posts.find({"userID": str(userID)})
+            response = []
+            for item in data :
+                item['name'] = userIDtoName(item.get('userID'))
+                response.append(item)
+            
+            return json.dumps(response, default=lambda o: str(o)), 200
+        
+    except Exception as e:
+        return {"err": str(e)}, 400
 
 @app.route("/post/last/<int:last>", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getLastN(last):
+    #get all post regardless whether its official or not 
     try:
         data = db.Posts.find(
             sort=[('createdAt', pymongo.DESCENDING)]).limit(last)
-        return json.dumps(list(data), default=lambda o: str(o)), 200
+        
+        response = []
+        for item in data : 
+            item['name'] = name = userIDtoName(item.get('userID'))
+            response.append(item)
+            
+        return json.dumps(response, default=lambda o: str(o)), 200
+    
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
-
-
+        return {"err": str(e)}, 400
+    
 @app.route("/post/<userID>", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
         data = db.Posts.find({"userID": str(userID)})
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 def FriendsHelper(userID):
@@ -293,7 +349,9 @@ def FriendsHelper(userID):
     }
 
     result = db.Friends.find(query)
+    
     response = {'friendList': []}
+    
     for friend in result:
         userOne = friend.get("userIDOne")
         userTwo = friend.get("userIDTwo")
@@ -307,7 +365,7 @@ def FriendsHelper(userID):
 
 
 @app.route("/post/friend", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getFriendsPostById():
     try:
         userID = str(request.args.get("userID"))
@@ -319,51 +377,71 @@ def getFriendsPostById():
             "userID": {"$in": friends}
         }
 
+        response = []
+        
         result = db.Posts.find(
             query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
 
-        return make_response(json.dumps(list(result), default=lambda o: str(o)), 200)
+        for item in result :
+            item['name'] = userIDtoName(item.get('userID'))
+            response.append(item)
+            
+        return make_response(json.dumps(response, default=lambda o: str(o)), 200)
 
     except Exception as e:
         return {"err": str(e)}, 400
 
 
 @app.route("/post/official", methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
-        data = db.Posts.find({"isOfficial": True})
-        return json.dumps(list(data), default=lambda o: str(o)), 200
+        N = int(request.args.get('N')) if request.args.get('N') else 10
+        
+        response = []
+        data = db.Posts.find({"isOfficial": True}, 
+                             sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
+        
+        for item in data : 
+            item['name'] = userIDtoName(item.get('userID'))
+            ccaID = int(item.get('ccaID'))            
+            item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName') if ccaID != -1 else None
+            response.append(item)
+            
+        return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
-@app.route("/post/edit/", methods=['PUT'])
-@cross_origin()
+@app.route("/post/edit", methods=['PUT'])
+@cross_origin(supports_credentials=True)
 def editPost():
     try:
         data = request.get_json()
         postID = data.get('postID')
-        userID = str(data.get('userID'))
-        title = str(data.get('title'))
-        description = str(data.get('description'))
-        ccaID = int(data.get('ccaID'))
-        createdAt = int(data.get('createdAt'))
-        postPics = list(data.get('description'))
-        isOfficial = data.get('isOfficial')
+        oldPost = db.Posts.find_one({"postID": int(postID)})
+        
+        if oldPost == None:
+            return make_response("data non existent", 404)
+        
+        userID = str(data.get('userID')) if data.get('userID') else oldPost.get('userID')
+        title = str(data.get('title')) if data.get('title') else oldPost.get('title')
+        description = str(data.get('description')) if data.get('description') else oldPost.get('description')
+        ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
+        postPics = data.get('postPics') if data.get('postPics') else oldPost.get('postPics')
+        isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
 
         body = {
             "userID": userID,
             "title": title,
             "description": description,
             "ccaID": ccaID,
-            "createdAt": createdAt,
             "postPics": postPics,
             "isOfficial": isOfficial
         }
 
-        result = db.Posts.update_one({"_id": ObjectId(postID)}, {'$set': body})
+        result = db.Posts.update_one({"postID": int(postID)}, {'$set': body})
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
@@ -371,7 +449,7 @@ def editPost():
 
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
@@ -381,7 +459,7 @@ Friends API
 
 
 @app.route("/friend", methods=['DELETE', 'POST'])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def createDeleteFriend():
     try:
         data = request.get_json()
@@ -439,7 +517,7 @@ def createDeleteFriend():
 
 
 @app.route("/friend/<userID>", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getAllFriends(userID):
     try:
         response = FriendsHelper(userID)
@@ -458,7 +536,7 @@ def getAllFriends(userID):
 
 
 @app.route("/friend/check", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def checkFriend():
     userOne = request.args.get('userIDOne')
     userTwo = request.args.get('userIDTwo')
@@ -491,16 +569,16 @@ def checkFriend():
 
 
 @app.route("/user_CCA/<userID>")
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def getUserCCAs(userID):
     try:
         data = db.UserCCA.find({"userID": userID})
     except Exception as e:
         print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)

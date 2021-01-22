@@ -2,11 +2,14 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
-  MOCK_ENDPOINT = 'this/is/fake/endpoint',
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
   USER_PROFILE = '/profile',
+  USER_DETAILS = '/user/details',
+  EDIT_PROFILE = '/profile/edit',
+  USER_CCAS = '/user_CCA',
+  FRIEND = '/friend',
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
@@ -28,11 +31,16 @@ export enum ENDPOINTS {
   USER_PERMISSION = '/permissions/',
 
   ALL_EVENTS = '/event/all',
+  ALL_PUBLIC_EVENTS = '/event/public/all',
   USER_EVENT = '/user_event',
-  ADD_EVENT = '/event/add/',
-  DELETE_EVENT = '/event/delete/',
-  RSVP_EVENT = '/user_event/',
-  EDIT_EVENT = '/event/edit/',
+  ADD_EVENT = '/event/add',
+  DELETE_EVENT = '/event/delete',
+  RSVP_EVENT = '/user_event',
+  EDIT_EVENT = '/event/edit',
+
+  ADD_MODS = '/nusmods',
+  DELETE_MODS = '/nusmods/delete',
+  NUSMODS = '/nusmods',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',
@@ -48,12 +56,14 @@ export enum DOMAINS {
   FACILITY = 'facility',
   EVENT = 'event',
   LAUNDRY = 'laundry',
+  SOCIAL = 'social',
 }
 
 export enum DOMAIN_URL {
   FACILITY = 'https://rhappfacilities.rhdevs.repl.co',
   EVENT = 'https://rhappevents.rhdevs.repl.co',
   LAUNDRY = 'https://rhapplaundry.rhdevs.repl.co',
+  SOCIAL = 'https://rhappsocial.rhdevs.repl.co',
 }
 
 async function makeRequest(
@@ -73,6 +83,9 @@ async function makeRequest(
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = 'https://rhappsocial.rhdevs.repl.co'
       break
   }
   console.log(DOMAIN_URL + url)

@@ -1,18 +1,14 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './types'
-import { SchedulingEvent } from './scheduling/types'
 
 /**
  * ######### STUBS LIST: #########
  * 1. facilityList
  * 2. myBookings
- * 3. userEvents
- * 4. EventsList
- * 5. Washing Machines
- * 6. Events
- * 7. Search Results
- * 8. NUSModsLink
+ * 3. Washing Machines
+ * 4. Search Results
+ * 5. dummyUserId
  */
 
 export const facilityListStub: Facility[] = [
@@ -56,108 +52,6 @@ export const myBookingsStub: Booking[] = [
     startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
     endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
-  },
-]
-
-export const userEventsDummy: SchedulingEvent[] = [
-  {
-    eventID: 1,
-    eventName: 'dummy event 4',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-  {
-    eventID: 1,
-    eventName: 'bonding camp',
-    startDateTime: 1608654852,
-    endDateTime: 1608658452,
-    description: 'nothing',
-    location: 'upper lounge',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: '2nd bonding camp',
-    startDateTime: 1607342400,
-    endDateTime: 1607349600,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'dummy event 3',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'nothing',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-]
-
-export const eventsDummy: SchedulingEvent[] = [
-  {
-    eventID: 1,
-    eventName: 'Block 7 Christmas Event',
-    startDateTime: 1607418000,
-    endDateTime: 1607428800,
-    description: 'Only for block 7 members! Follow us @block7 to find out more!',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'New YeaRH Event',
-    startDateTime: 1608654852,
-    endDateTime: 1608658452,
-    description: 'nothing',
-    location: 'Comm Hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
-  },
-  {
-    eventID: 1,
-    eventName: 'RHdev bonding camp',
-    startDateTime: 1607342400,
-    endDateTime: 1607349600,
-    description: 'nothing',
-    location: 'upper lounge',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: true,
-  },
-  {
-    eventID: 1,
-    eventName: 'dummy event',
-    startDateTime: 1608723138,
-    endDateTime: 1608726751,
-    description: 'description description description description description description',
-    location: 'hall',
-    ccaID: 1,
-    userID: 'A0123456Z',
-    image: null,
-    isPrivate: false,
   },
 ]
 
@@ -261,33 +155,32 @@ export const searchResultsStub: SearchResult[] = [
 ]
 
 export const userProfileStub: User = {
-  userId: 1,
+  userID: 'A0987654321',
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',
   telegramHandle: 'zhoumm',
   block: 8,
   bio: 'This is my bio hur hur',
-  ccas: [
-    { userId: '1', ccaId: 1, ccaName: 'RHDevs' },
-    { userId: '1', ccaId: 1, ccaName: 'Badminton' },
-  ],
+  // ccas: [
+  //   { userID: '1', ccaId: 1, ccaName: 'RHDevs' },
+  //   { userID: '1', ccaId: 1, ccaName: 'Badminton' },
+  // ],
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
   posts: [],
-  friends: [
-    {
-      friendId: 1,
-      name: 'Zhou MaoM',
-      telegram: '@zhoumm',
-      avatar: 'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
-    },
-    {
-      friendId: 2,
-      name: 'Zhou Gougou',
-      telegram: '@woofwoof',
-    },
-  ],
+  // friends: [
+  //   {
+  //     friendId: 1,
+  //     name: 'Zhou MaoM',
+  //     telegram: '@zhoumm',
+  //     avatar: 'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+  //   },
+  //   {
+  //     friendId: 2,
+  //     name: 'Zhou Gougou',
+  //     telegram: '@woofwoof',
+  //   },
+  // ],
 }
 
-export const dummyNusModsLink =
-  'https://nusmods.com/timetable/sem-2/share?AC5002=LEC:1&CG1112=LAB:04,TUT:01,LEC:01&CG2023=LAB:05,PTUT:03,PLEC:02'
+export const dummyUserId = 'A1234567B'

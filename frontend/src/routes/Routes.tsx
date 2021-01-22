@@ -20,6 +20,7 @@ export enum PATHS {
   EVENT_LIST_PAGE = '/schedule/events',
   CREATE_EVENT = '/schedule/events/create',
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
+  VIEW_EVENT = '/schedule/events/view',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityName',
@@ -56,6 +57,7 @@ const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" 
 const ImportFromNusMods = React.lazy(
   () => import(/* webpackChunckName: "ImportFromNusMods" */ './Schedule/ImportFromNusMods'),
 )
+const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
@@ -94,6 +96,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
             <Route exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
             <Route exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
+            <Route exact path={PATHS.VIEW_EVENT} component={ViewEvent} key={PATHS.VIEW_EVENT} />
 
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />

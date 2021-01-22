@@ -15,6 +15,8 @@ import { RootState } from '../../../store/types'
 import { editUserEvents, fetchAllEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
+import LoadingSpin from '../../../components/LoadingSpin'
+import { dummyUserId } from '../../../store/stubs'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -39,7 +41,7 @@ const SearchBarContainer = styled.div`
 `
 
 const ResultsContainer = styled.div`
-  overflow: scroll;
+  overflow: auto;
   height: 73vh;
 `
 
@@ -47,13 +49,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const { userEventsList, allEvents } = useSelector((state: RootState) => state.scheduling)
+  const { userEventsList, allEvents, isLoading, searchedEvents } = useSelector((state: RootState) => state.scheduling)
 
   const [searchValue, setSearchValue] = useState('')
-  const searchedEvents = useSelector((state: RootState) => state.scheduling.searchedEvents)
 
   useEffect(() => {
-    dispatch(fetchUserEvents())
+    dispatch(fetchUserEvents(dummyUserId, true))
     dispatch(fetchAllEvents())
   }, [dispatch])
 
@@ -136,8 +137,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      return data ? (
-        eventsToCards(data)
+      return data.length ? (
+        isLoading ? (
+          <LoadingSpin />
+        ) : (
+          eventsToCards(data)
+        )
       ) : (
         <>
           <NoEventDataText>No Upcoming Events</NoEventDataText>
@@ -160,7 +165,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
       }}
     />
   )
-  console.log(searchedEvents)
+
   return (
     <Background>
       <TopContainer>

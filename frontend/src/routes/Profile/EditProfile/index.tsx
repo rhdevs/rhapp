@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
-// import EditDetailsCard from './EditDetailsCard'
 import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchUserDetails, handleCCADetails, handleModuleDetails } from '../../../store/profile/action'
+import { fetchUserCCAs, fetchUserDetails, handleCCADetails, handleModuleDetails } from '../../../store/profile/action'
 import { AutoComplete, Card, Select } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import plusCircle from '../../../assets/plusCircle.svg'
+import tickIcon from '../../../assets/tick.svg'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -36,10 +36,11 @@ interface Details {
 
 export default function EditProfile() {
   const dispatch = useDispatch()
-  const { user } = useSelector((state: RootState) => state.profile)
+  const { user, ccas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    dispatch(fetchUserDetails())
+    dispatch(fetchUserDetails(user.userID))
+    dispatch(fetchUserCCAs(user.userID))
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
@@ -64,14 +65,59 @@ export default function EditProfile() {
   // Search bar
   const options = [{ value: 'Baa' }, { value: 'Basketball' }, { value: 'Badminton' }]
 
-  const Complete: React.FC = () => (
-    <AutoComplete
-      style={{ width: '120px', height: '22px' }}
-      options={options}
-      placeholder="search info.."
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-    />
+  let ccaToBeAdded = ''
+  let moduleToBeAdded = ''
+  const handleChangeAutoComplete = (type: string) => (value: string) => {
+    switch (type) {
+      case 'CCAs':
+        ccaToBeAdded = value
+        break
+      case 'Modules':
+        moduleToBeAdded = value
+        break
+      default:
+    }
+  }
+
+  const handleAutoCompleteAdd = (type: string, cca: string, module: string) => {
+    switch (type) {
+      case 'CCAs':
+        if (cca !== '') {
+          dispatch(handleCCADetails('Add', cca))
+        }
+        break
+      case 'Modules':
+        if (module !== '') {
+          dispatch(handleModuleDetails('Add', module))
+        }
+        break
+      default:
+    }
+  }
+
+  interface Props {
+    type: string
+  }
+
+  const Complete: React.FC<Props> = (props) => (
+    <>
+      <AutoComplete
+        style={{ width: '120px', height: '22px' }}
+        options={options}
+        placeholder="search info.."
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+        // eslint-disable-next-line react/prop-types
+        onChange={handleChangeAutoComplete(props.type)}
+      />
+      <img
+        alt="tickIcon"
+        style={{ marginLeft: 10, width: 15, color: 'gray' }}
+        src={String(tickIcon)}
+        // eslint-disable-next-line react/prop-types
+        onClick={() => handleAutoCompleteAdd(props.type, ccaToBeAdded, moduleToBeAdded)}
+      ></img>
+    </>
   )
 
   const EditDetailsItem = (detailsItem: Details) => {
@@ -94,42 +140,40 @@ export default function EditProfile() {
 
     const renderSwitch = (detailsTitle: string) => {
       switch (detailsTitle) {
-        case 'CCAs':
-          {
-            return user.ccas.map((cca) => {
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                  {cca.ccaName}
-                  <img
-                    alt="deleteIcon"
-                    style={{ marginLeft: 5, width: 6 }}
-                    src={String(deleteIcon)}
-                    onClick={() => deleteIconClicked('cca', cca.ccaName)}
-                  />
-                </span>
-              )
-            })
-          }
-          break
-        case 'Modules':
-          {
-            return user.modules.map((module) => {
-              return (
-                // eslint-disable-next-line react/jsx-key
-                <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                  {module}
-                  <img
-                    alt="deleteIcon"
-                    style={{ marginLeft: 5, width: 6 }}
-                    src={String(deleteIcon)}
-                    onClick={() => deleteIconClicked('module', module)}
-                  />
-                </span>
-              )
-            })
-          }
-          break
+        case 'CCAs': {
+          return ccas.map((cca) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
+                {cca.ccaName}
+                <img
+                  alt="deleteIcon"
+                  style={{ marginLeft: 5, width: 6 }}
+                  src={String(deleteIcon)}
+                  onClick={() => deleteIconClicked('cca', cca.ccaName)}
+                />
+              </span>
+            )
+          })
+        }
+
+        case 'Modules': {
+          return user.modules.map((module) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
+                {module}
+                <img
+                  alt="deleteIcon"
+                  style={{ marginLeft: 5, width: 6 }}
+                  src={String(deleteIcon)}
+                  onClick={() => deleteIconClicked('module', module)}
+                />
+              </span>
+            )
+          })
+        }
+
         default:
           return <></>
       }
@@ -152,7 +196,7 @@ export default function EditProfile() {
               </span>
               {searchInfoSelected ? (
                 <span style={{ display: 'block' }}>
-                  <Complete />
+                  <Complete type={detailsItem.title} />
                 </span>
               ) : (
                 <></>
