@@ -205,7 +205,7 @@ def getCCAMembersName():
 
 @app.route("/user_CCA/add", methods=['POST'])
 @cross_origin()
-def addUserCCA(userID):
+def addUserCCA():
     try:
         data = request.get_json()
         userID = data.get('userID')
@@ -217,11 +217,9 @@ def addUserCCA(userID):
             "ccaID": ccaID,
             "ccaName": ccaName,
         }
+        db.UserCCA.insert_one(body)
 
-        receipt = db.UserCCA.insert_one(body)
-        body["eventID"] = str(receipt.inserted_id)
-
-        return {"message": body}, 200
+        return {"message": "Successful"}, 200
 
     except Exception as e:
         return {"err": str(e)}, 400
