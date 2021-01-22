@@ -7,6 +7,7 @@ import os
 import time
 from bson.objectid import ObjectId
 import re
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -421,24 +422,70 @@ def addMods():
 
 @app.route("/nusmods/addNUSMods", methods=['PUT'])
 @cross_origin()
-def addMods():
+def addNUSModsEvents():
+
+    ABBREV_TO_LESSON = {
+        "DLEC": 'Design Lecture',
+        "LAB": 'Laboratory',
+        "LEC": 'Lecture',
+        "PLEC": 'Packaged Lecture',
+        "PTUT": 'Packaged Tutorial',
+        "REC": 'Recitation',
+        "SEC": 'Sectional Teaching',
+        "SEM": 'Seminar-Style Module Class',
+        "TUT": 'Tutorial',
+        "TUT2": 'Tutorial Type 2',
+        "TUT3": 'Tutorial Type 3',
+        "WS": 'Workshop',
+    }
+
     def extractDataFromLink(nusModURL):
         k = re.findall(r"(\w+)=(.*?(?=\&|$))", nusModURL)
         out = []
         for value in k:
-            out.append([(value)[0]] + value[1].split(",") )
+            out.append([(value)[0], value[1].split(",")] )
         return out
 
-    try:
+    
 
-        else:
-            db.NUSMods.insert_one(body)
-            return {'message': "successful"}, 200
+    def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
+        NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(year=academicYear, moduleCode=moduleArray[0])
+        moduleData =requests.get(NUSModsApiURL).json()["semesterData"][currentSemester - 1]["timetable"]
+        out = []
+        for lesson in moduleArray[1]:
+            abbrev, classNo = lesson.split(":")
+            lessonType = ABBREV_TO_LESSON[abbrev]
+            lesson = list(filter(lambda moduleClass: moduleClass["classNo"] == classNo and moduleClass["lessonType"]  == lessonType, moduleData))[0]
+            lesson["abbrev"] = abbrev
+            out.append(lesson)
+
+        out = list(map(lambda classInformation: {"eventName": moduleArray[0] + " " + classInformation["abbrev"], 
+                                                 "location": classInformation["venue"],
+                                                 "day": classInformation["day"],
+                                                 "endTime":classInformation["endTime"],
+                                                 "startTime": classInformation["startTime"],
+                                                 "hasOverlap": False,
+                                                 "eventType": "mods"}
+                    , out))
+
+        return out
+            
+
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        eventID = data.get("eventID")
+
+        oneModuleArray = extractDataFromLink(url)
+
+        output=list(map(lambda x: fetchDataFromNusMods("2020-2021", 2,x), oneModuleArray))
+
+        return {"message":output}
+
 
     except Exception as e:
 
         return {"err": str(e)}, 400
-    return {"message": "successful"}, 200
 
 
 
