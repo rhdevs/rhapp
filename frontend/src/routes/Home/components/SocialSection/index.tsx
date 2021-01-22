@@ -83,7 +83,7 @@ export default function SocialSection() {
 
   const renderSocialPosts = () => {
     return socialPosts.map((post) => {
-      const { title, postId, createdAt, isOfficial, ccaId, description, postPics, name } = post
+      const { title, postId, createdAt, description, postPics, name } = post
       const postDate = dayjs.unix(parseInt(createdAt ?? ''))
       const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
 

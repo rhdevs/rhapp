@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
 import { cloneDeep } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
@@ -23,7 +23,7 @@ export const GetPostDetailsToEdit = (postId: string) => (dispatch: Dispatch<Acti
     name: 'Zhou Gou Gou',
   }
   dispatch(GetSpecificPost(postId)).then(() => {
-    const { title, description, postPics, isOfficial, ccaId } = getState().social.viewPost
+    const { title, description, postPics, isOfficial } = getState().social.viewPost
     dispatch({
       type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
       postToEdit: postToEdit,
@@ -79,14 +79,14 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Creating post')
-  const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, newPostImages } = getState().social
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
     userID: 'A1234567B',
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
-    ccaID: 1, // TODO: Change to tags
+    ccaID: 1, // TODO: Change to tags + add newPostCca
   }
   post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     success('Post created!')
@@ -246,9 +246,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  const requestBody = {
-    postId: postIdToDelete,
-  }
   console.log(postIdToDelete)
   const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   console.log('DELETE RESPONSE: ', response)

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Post, SOCIAL_ACTIONS, User, POSTS_FILTER } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 
 const initialState = {
   isUploading: false,

@@ -193,12 +193,6 @@ const ImageDiv = styled.div`
   justify-content: center;
 `
 
-const CcaContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
 const headOfCca = [
   {
     ccaName: 'Basketball',
