@@ -6,6 +6,7 @@ import json
 import os
 import time
 from bson.objectid import ObjectId
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -417,6 +418,28 @@ def addMods():
 
         return {"err": str(e)}, 400
     return {"message": "successful"}, 200
+
+@app.route("/nusmods/addNUSMods", methods=['PUT'])
+@cross_origin()
+def addMods():
+    def extractDataFromLink(nusModURL):
+        k = re.findall(r"(\w+)=(.*?(?=\&|$))", nusModURL)
+        out = []
+        for value in k:
+            out.append([(value)[0]] + value[1].split(",") )
+        return out
+
+    try:
+
+        else:
+            db.NUSMods.insert_one(body)
+            return {'message': "successful"}, 200
+
+    except Exception as e:
+
+        return {"err": str(e)}, 400
+    return {"message": "successful"}, 200
+
 
 
 if __name__ == "__main__":
