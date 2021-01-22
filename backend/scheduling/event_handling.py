@@ -453,6 +453,8 @@ def addNUSModsEvents():
         moduleData =requests.get(NUSModsApiURL).json()["semesterData"][currentSemester - 1]["timetable"]
         out = []
         for lesson in moduleArray[1]:
+            if lesson == "":
+                break
             abbrev, classNo = lesson.split(":")
             lessonType = ABBREV_TO_LESSON[abbrev]
             lesson = list(filter(lambda moduleClass: moduleClass["classNo"] == classNo and moduleClass["lessonType"]  == lessonType, moduleData))[0]
@@ -465,23 +467,31 @@ def addNUSModsEvents():
                                                  "endTime":classInformation["endTime"],
                                                  "startTime": classInformation["startTime"],
                                                  "hasOverlap": False,
-                                                 "eventType": "mods"}
+                                                 "eventType": "mods",
+                                                 "weeks": classInformation["weeks"]}
                     , out))
-
         return out
             
 
     try:
         data = request.get_json()
         url = data.get('url')
-        eventID = data.get("eventID")
+        userID = data.get('userID')
+        academicYear = data.get('academicYear')
+        currentSemester = data.get('currentSemester')
+
 
         oneModuleArray = extractDataFromLink(url)
 
-        output=list(map(lambda x: fetchDataFromNusMods("2020-2021", 2,x), oneModuleArray))
+        output=list(map(lambda module: fetchDataFromNusMods(academicYear, currentSemester, module), oneModuleArray))
+        output = [item for sublist in output for item in sublist]
 
-        return {"message":output}
+        body = {"userID": userID,
+                "mods": output}
 
+        db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
+
+        return json.dumps(db.NUSMods.find_one({"userID": userID}), default=lambda o: str(o)), 200
 
     except Exception as e:
 
