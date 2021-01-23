@@ -23,6 +23,11 @@ client = pymongo.MongoClient(
 db = client["RHApp"]
 
 
+def rename(event):
+    event['eventID'] = event.pop('_id')
+    return event
+
+
 @app.route("/")
 @cross_origin()
 def hello():
@@ -102,18 +107,13 @@ def getAllCCA():
 def getEventsDetails():
     try:
         data = request.get_json()
-        body = []
-
-        for eventID in data:
-
-            result = db.Events.find_one({"_id": ObjectId(eventID)})
-            result['eventID'] = result.pop('_id')
-            body.append(result)
-            print(result)
+        entries = [ObjectId(w) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
+        response = map(rename, data)
 
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(body), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/event/<int:ccaID>')
@@ -141,14 +141,12 @@ def getCCADetails(ccaID):
 def getUserCCAs(userID):
     try:
         data = db.UserCCA.find({"userID": userID})
-        response = []
-        for entry in data:
-            ccaID = entry["ccaID"]
-            response.append(db.CCA.find_one({"ccaID": ccaID}))
+        entries = [w["ccaID"] for w in data]
+        response = db.CCA.find({"ccaID": {"$in": entries}})
 
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<userID>/<int:referenceTime>")
@@ -158,16 +156,16 @@ def getUserAttendance(userID, referenceTime):
         data = list(db.Attendance.find({"userID": userID}))
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
-        response = []
 
-        for entry in data:
-            eventID = entry.get('eventID')
-            result = db.Events.find_one({"_id": ObjectId(eventID)})
-            startTime = result['startDateTime']
+        entries = [ObjectId(w['eventID']) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
 
-            if startTime < endOfWeek and startTime >= startOfWeek:
-                result['eventID'] = result.pop('_id')
-                response.append(result)
+        def correctWeek(event):
+            startTime = event['startDateTime']
+            return startTime < endOfWeek and startTime >= startOfWeek
+
+        response = filter(correctWeek, data)
+        response = map(rename, response)
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -421,6 +419,7 @@ def addMods():
         return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
+
 @app.route("/nusmods/addNUSMods", methods=['PUT'])
 @cross_origin()
 def addNUSModsEvents():
@@ -444,35 +443,34 @@ def addNUSModsEvents():
         k = re.findall(r"(\w+)=(.*?(?=\&|$))", nusModURL)
         out = []
         for value in k:
-            out.append([(value)[0], value[1].split(",")] )
+            out.append([(value)[0], value[1].split(",")])
         return out
 
-    
-
     def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
-        NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(year=academicYear, moduleCode=moduleArray[0])
-        moduleData =requests.get(NUSModsApiURL).json()["semesterData"][currentSemester - 1]["timetable"]
+        NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(
+            year=academicYear, moduleCode=moduleArray[0])
+        moduleData = requests.get(NUSModsApiURL).json(
+        )["semesterData"][currentSemester - 1]["timetable"]
         out = []
         for lesson in moduleArray[1]:
             if lesson == "":
                 break
             abbrev, classNo = lesson.split(":")
             lessonType = ABBREV_TO_LESSON[abbrev]
-            lesson = list(filter(lambda moduleClass: moduleClass["classNo"] == classNo and moduleClass["lessonType"]  == lessonType, moduleData))[0]
+            lesson = list(filter(
+                lambda moduleClass: moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType, moduleData))[0]
             lesson["abbrev"] = abbrev
             out.append(lesson)
 
-        out = list(map(lambda classInformation: {"eventName": moduleArray[0] + " " + classInformation["abbrev"], 
+        out = list(map(lambda classInformation: {"eventName": moduleArray[0] + " " + classInformation["abbrev"],
                                                  "location": classInformation["venue"],
                                                  "day": classInformation["day"],
-                                                 "endTime":classInformation["endTime"],
+                                                 "endTime": classInformation["endTime"],
                                                  "startTime": classInformation["startTime"],
                                                  "hasOverlap": False,
                                                  "eventType": "mods",
-                                                 "weeks": classInformation["weeks"]}
-                    , out))
+                                                 "weeks": classInformation["weeks"]}, out))
         return out
-            
 
     try:
         data = request.get_json()
@@ -481,10 +479,10 @@ def addNUSModsEvents():
         academicYear = data.get('academicYear')
         currentSemester = data.get('currentSemester')
 
-
         oneModuleArray = extractDataFromLink(url)
 
-        output=list(map(lambda module: fetchDataFromNusMods(academicYear, currentSemester, module), oneModuleArray))
+        output = list(map(lambda module: fetchDataFromNusMods(
+            academicYear, currentSemester, module), oneModuleArray))
         output = [item for sublist in output for item in sublist]
 
         body = {"userID": userID,
@@ -497,7 +495,6 @@ def addNUSModsEvents():
     except Exception as e:
 
         return {"err": str(e)}, 400
-
 
 
 if __name__ == "__main__":
