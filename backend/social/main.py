@@ -573,18 +573,30 @@ def checkFriend():
         }
         return make_response(response, 200)
 
-
-@app.route("/user_CCA/<userID>")
-@cross_origin(supports_credentials=True)
-def getUserCCAs(userID):
-    try:
-        data = db.UserCCA.find({"userID": userID})
+@app.route("/search", methods = ["GET"])
+@cross_origin()
+def search():
+    # a function to search all events, facilities and profiles
+    try : 
+        term = str(request.args.get('term'))
+        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*{}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
+        
+        profiles = db.Profiles.find({"displayName" : regex}, {'_id': False}) # should have done this earlier 
+        events = db.Events.find({"eventName" : regex}, {'_id': False})
+        facilities = db.Facilities.find({"facilityName" : regex}, {'_id': False})
+        
+        response = {
+            "profiles" : list(profiles),
+            "events" : list(events),
+            "facilities" : list(facilities)
+        }
+        
+        return make_response(response, 200);
+         
     except Exception as e:
-        print(e)
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
+        response = {"err" : e};
+        return make_response(response, 400)
+    
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
