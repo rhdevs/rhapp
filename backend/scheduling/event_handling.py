@@ -156,7 +156,7 @@ def getUserAttendance(userID, referenceTime):
         data = list(db.Attendance.find({"userID": userID}))
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
-        body = []
+        response = []
 
         for entry in data:
             eventID = entry.get('eventID')
@@ -164,11 +164,12 @@ def getUserAttendance(userID, referenceTime):
             startTime = result['startDateTime']
 
             if startTime < endOfWeek and startTime >= startOfWeek:
-                body.append(result)
+                result['eventID'] = result.pop('_id')
+                response.append(result)
 
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(body), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<eventID>")
