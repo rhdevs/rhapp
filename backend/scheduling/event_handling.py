@@ -176,20 +176,20 @@ def getUserAttendance(userID, referenceTime):
 @cross_origin()
 def getEventAttendees(eventID):
     try:
-        data = db.Attendance.find({"eventID": eventID})
+        response = db.Attendance.find({"eventID": eventID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA/<int:ccaID>")
 @cross_origin()
 def getCCAMembers(ccaID):
     try:
-        data = db.UserCCA.find({"ccaID": ccaID})
+        response = db.UserCCA.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA")
@@ -198,10 +198,10 @@ def getCCAMembersName():
     try:
         ccaName = str(request.args.get('ccaName'))
         print(ccaName)
-        data = db.UserCCA.find({"ccaName": ccaName})
+        response = db.UserCCA.find({"ccaName": ccaName})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA/add", methods=['POST'])
@@ -231,30 +231,33 @@ def addUserCCA():
 def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
+        response = [pair["donor"] for pair in data]
+
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/permissions", methods=['DELETE', 'POST'])
 @cross_origin()
 def addDeletePermissions():
     try:
-        userID1 = str(request.args.get('userID1'))
-        userID2 = str(request.args.get('userID2'))
+        data = request.get_json()
+        donor = data.get('donor')
+        recipient = data.get('recipient')
+
         if request.method == "POST":
             body = {
-                "donor": userID1,
-                "recipient": userID2
+                "donor": donor,
+                "recipient": recipient
             }
             db.UserPermissions.insert_one(body)
 
         elif request.method == "DELETE":
             db.UserPermissions.delete_one({
-                "donor": userID1,
-                "recipient": userID2
+                "donor": donor,
+                "recipient": recipient
             })
-            return Response(status=200)
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -449,7 +452,7 @@ def addNUSModsEvents():
     def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
         NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(
             year=academicYear, moduleCode=moduleArray[0])
-        moduleData = list(filter(lambda x: x["semester"] == currentSemester,requests.get(NUSModsApiURL).json(
+        moduleData = list(filter(lambda x: x["semester"] == currentSemester, requests.get(NUSModsApiURL).json(
         )["semesterData"]))[0]["timetable"]
         out = []
         for lesson in moduleArray[1]:
