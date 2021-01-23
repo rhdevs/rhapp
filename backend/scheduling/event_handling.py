@@ -231,7 +231,10 @@ def addUserCCA():
 def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
-        response = [pair["donor"] for pair in data]
+        donors = [pair["donor"] for pair in data]
+        results = db.Profiles.find({"userID": {"$in": donors}})
+        response = [{info: profile[info] for info in profile.keys()
+                     & {'userID', 'displayName'}} for profile in results]
 
     except Exception as e:
         return {"err": str(e)}, 400
