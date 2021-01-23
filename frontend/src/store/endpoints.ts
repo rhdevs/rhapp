@@ -38,9 +38,9 @@ export enum ENDPOINTS {
   RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit/',
 
-  ADD_MODS = '/nusmods',
+  ADD_MODS = '/nusmods/addNUSMods',
   DELETE_MODS = '/nusmods/delete',
-  NUSMODS = '/nusmods',
+  NUSMODS = '/nusmods/',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',

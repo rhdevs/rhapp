@@ -1,15 +1,7 @@
-import axios from 'axios'
 import { isEmpty, last } from 'lodash'
 import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
-import {
-  ActionTypes,
-  SchedulingEvent,
-  SCHEDULING_ACTIONS,
-  LESSON_TO_ABBREV,
-  ABBREV_TO_LESSON,
-  TimetableEvent,
-} from './types'
+import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
@@ -93,7 +85,7 @@ export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => 
     if (isSearchEventsPage) dispatch(setIsLoading(false))
   }
 
-  const currentUNIXDate = Date.now()
+  const currentUNIXDate = Math.round(Date.now() / 1000)
 
   getFromBackend(ENDPOINTS.USER_EVENT + userId + '/' + currentUNIXDate, manipulateData)
   dispatch(setIsLoading(false))
@@ -121,16 +113,6 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
     eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
   }
 }
-
-/**
- * Returns the events in the current week
- *
- * @param events array of events of type TimetableEvents
- */
-// const filterCurrentWeekEvents = (events : TimetableEvent) => {
-//   const currentYear = new Date().getFullYear()
-
-// }
 
 const sortEvents = (events: TimetableEvent[]) => {
   return events.sort((a, b) => {
@@ -277,42 +259,35 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 export const setUserNusMods = (userId: string, userNusModsLink: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const currentYear = new Date().getFullYear()
   const academicYear = String(currentYear - 1) + '-' + String(currentYear)
+  const lasPositionOfWordSem = userNusModsLink.indexOf('sem-') + 'sem-'.length
+  const currentSemester = Number(userNusModsLink.substring(lasPositionOfWordSem, lasPositionOfWordSem + 1))
 
-  const dataFromLink = extractDataFromLink(userNusModsLink)
-  let retrivedEventInformation: TimetableEvent[] = []
-  const temporaryData: TimetableEvent[][] = []
-  let userNusMods: TimetableEvent[] = []
+  const requestBody = {
+    userID: userId,
+    url: userNusModsLink,
+    academicYear: academicYear,
+    currentSemester: currentSemester,
+  }
 
-  dataFromLink.map(async (oneModuleData) => {
-    temporaryData.push(await fetchDataFromNusMods(academicYear, oneModuleData))
-    retrivedEventInformation = temporaryData.flat()
-    if (oneModuleData === last(dataFromLink)) {
-      userNusMods = retrivedEventInformation
+  console.log(requestBody)
+  const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
+    .then((resp) => {
+      return resp
+    })
+    .catch(() => {
+      dispatch(setNusModsStatus(false, true))
+      console.log('CATCH FAILURE')
+    })
+  console.log(resp)
 
-      const requestBody = {
-        userID: userId,
-        mods: userNusMods,
-      }
-
-      const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
-        .then((resp) => {
-          return resp
-        })
-        .catch(() => {
-          dispatch(setNusModsStatus(false, true))
-          console.log('CATCH FAILURE')
-        })
-
-      if (resp.status >= 400) {
-        dispatch(setNusModsStatus(false, true))
-        console.log('FAILURE')
-      } else {
-        console.log('SUCCESS')
-        dispatch(fetchUserEvents(userId, false))
-        dispatch(setNusModsStatus(true, false))
-      }
-    }
-  })
+  if (resp.status >= 400) {
+    dispatch(setNusModsStatus(false, true))
+    console.log('FAILURE')
+  } else {
+    console.log('SUCCESS')
+    dispatch(fetchUserEvents(userId, false))
+    dispatch(setNusModsStatus(true, false))
+  }
 }
 
 const setNusModsStatus = (isSuccessful: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
@@ -327,75 +302,6 @@ export const getUserNusModsEvents = (userId: string) => async () => {
   const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
   console.log(resp)
   return resp[0].mods
-}
-
-/**
- * Returns a 2D array, containing module code and lesson information of each module
- *
- * @param link NUSMods share link
- */
-const extractDataFromLink = (link: string) => {
-  const timetableInformation = link.split('?')[1]
-  const timetableData = timetableInformation.split('&')
-  const data: string[][] = []
-  let count = 0
-
-  timetableData.forEach((moduleInformation) => {
-    const moduleCode = moduleInformation.split('=')[0]
-    data[count] = []
-    data[count].push(moduleCode)
-    moduleInformation = moduleInformation.split('=')[1]
-    const moduleLessons = moduleInformation.split(',')
-    moduleLessons.forEach((classes) => {
-      data[count].push(classes)
-    })
-    count++
-  })
-
-  return data
-}
-
-/**
- * Fetches data from NUSMods API, reformats lesson information to RHEvents and pushes events into respective day arrays
- *
- * @param acadYear academicYear of the lesson information is retrieved from NUSMods API
- * @param moduleArray array of lessons selected by user (from link provided)
- * @param events array of information retrieved from NUSMods of selected events
- */
-const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => {
-  const moduleCode = moduleArray[0]
-  const returnEventsArray = await axios
-    .get(`https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`)
-    .then((res) => {
-      const events: TimetableEvent[] = []
-      const moduleData = res.data.semesterData[0].timetable
-      moduleArray = moduleArray.splice(1)
-      for (let i = 0; i < moduleArray.length; i++) {
-        const lessonType = moduleArray[i].split(':')[0]
-        const classNo = moduleArray[i].split(':')[1]
-        const correspondingClassInformationArray = moduleData.filter(
-          (moduleClass: { classNo: string; lessonType: string }) => {
-            return moduleClass.classNo === classNo && moduleClass.lessonType === ABBREV_TO_LESSON[lessonType]
-          },
-        )
-        correspondingClassInformationArray.map((classInformation) => {
-          const newEvent: TimetableEvent = {
-            eventName: moduleCode + ' ' + LESSON_TO_ABBREV[classInformation.lessonType],
-            location: classInformation.venue,
-            day: classInformation.day,
-            endTime: classInformation.endTime,
-            startTime: classInformation.startTime,
-            hasOverlap: false,
-            eventID: 1, //change!
-            eventType: 'mods', //change!
-          }
-          events.push(newEvent)
-        })
-      }
-      return events
-    })
-
-  return returnEventsArray
 }
 // ---------------------- NUSMODS ----------------------
 
@@ -429,16 +335,19 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, event: SchedulingEvent) => (dispatch: Dispatch<ActionTypes>) => {
+export const editUserEvents = (action: string, event: SchedulingEvent, userId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   const requestBody = {
-    userID: event.userID,
+    userID: userId,
     eventID: event.eventID,
   }
 
   if (action === 'remove') {
     const updateEventStatus = (data) => {
       if (data.ok) {
-        console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + event.userID)
+        console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + userId)
+        dispatch(fetchUserEvents(userId, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
       }
@@ -447,7 +356,8 @@ export const editUserEvents = (action: string, event: SchedulingEvent) => (dispa
   } else if (action === 'add') {
     const updateEventStatus = (data) => {
       if (data.ok) {
-        console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + event.userID)
+        console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + userId)
+        dispatch(fetchUserEvents(userId, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
       }

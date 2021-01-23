@@ -99,11 +99,11 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     // event is in list and button is pressed
                     // remove event from list
                     console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result))
+                    dispatch(editUserEvents('remove', result, dummyUserId))
                   } else {
                     // event is in list, button is un-pressed
                     console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result))
+                    dispatch(editUserEvents('add', result, dummyUserId))
                   }
                 } else if (
                   userEventsList.filter((event) => {
@@ -113,12 +113,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   if (buttonIsPressed) {
                     // event is not in list, button is un-pressed
                     console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result))
+                    dispatch(editUserEvents('remove', result, dummyUserId))
                   } else {
                     // event is not in list and button is pressed
                     // add event to list
                     console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result))
+                    dispatch(editUserEvents('add', result, dummyUserId))
                   }
                 }
                 return
