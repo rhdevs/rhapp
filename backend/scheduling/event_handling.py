@@ -209,12 +209,18 @@ def addUserCCA():
         userID = data.get('userID')
         ccaID = data.get('ccaID') # list of integers 
         
+        deleteQuery = {"userID" : userID}
+        db.UserCCA.delete(deleteQuery);
+        
+        #replace
         body = []
         for cca in ccaID : 
             item = {
                 "userID": userID,
                 "ccaID": cca
             }
+            
+            
             body.append(item)
 
         receipt = db.UserCCA.insert_many(body)
