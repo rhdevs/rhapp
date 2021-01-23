@@ -449,8 +449,8 @@ def addNUSModsEvents():
     def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
         NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(
             year=academicYear, moduleCode=moduleArray[0])
-        moduleData = requests.get(NUSModsApiURL).json(
-        )["semesterData"][currentSemester - 1]["timetable"]
+        moduleData = list(filter(lambda x: x["semester"] == currentSemester,requests.get(NUSModsApiURL).json(
+        )["semesterData"]))[0]["timetable"]
         out = []
         for lesson in moduleArray[1]:
             if lesson == "":
