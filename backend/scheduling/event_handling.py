@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
 import json
@@ -16,6 +16,10 @@ DB_PWD = os.getenv('DB_PWD')
 # URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
 
 # client = pymongo.MongoClient(URL)
+# I understand that you do not to expose the implementation when using API when you return the error
+# but i think this causing a lot of confusion because the message is just failed without any proper further messages
+# I think for now its better to refactor the code to use default exception
+
 client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
@@ -134,15 +138,22 @@ def getCCADetails(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA/<userID>")
+@app.route("/user_CCA/<string:userID>", methods = ['GET'])
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        data = db.UserCCA.find({"userID": userID})
+        result = db.UserCCA.find({"userID": userID})
+        response = {
+            'CCA' : []
+        }
+        
+        for data in result :
+            name = db.CCA.find_one({"ccaID" : data.get("ccaID")}).get("ccaName")
+            response['CCA'].append(name)
+            
+        return make_response(response, 200)
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
 
 
 @app.route("/user_event/<userID>/<int:referenceTime>")
@@ -192,27 +203,29 @@ def getCCAMembers(ccaID):
 
 @app.route("/user_CCA/add", methods=['POST'])
 @cross_origin()
-def addUserCCA(userID):
+def addUserCCA():
     try:
         data = request.get_json()
         userID = data.get('userID')
-        ccaID = int(data.get('ccaID'))
-        ccaName = data.get('ccaName')
+        ccaID = data.get('ccaID') # list of integers 
+        
+        body = []
+        for cca in ccaID : 
+            item = {
+                "userID": userID,
+                "ccaID": cca
+            }
+            body.append(item)
 
-        body = {
-            "userID": userID,
-            "ccaID": ccaID,
-            "ccaName": ccaName,
-        }
+        receipt = db.UserCCA.insert_many(body)
+        
+        response = {}
+        response["_id"] = str(receipt.inserted_ids)
 
-        receipt = db.UserCCA.insert_one(body)
-        body["_id"] = str(receipt.inserted_id)
-
-        return {"message": body}, 200
+        return {"message" : response}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/permissions/<userID>")
@@ -414,5 +427,5 @@ def addMods():
 
 
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
