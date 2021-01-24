@@ -4,7 +4,6 @@ import { Menu } from 'antd'
 
 import { ReactComponent as MenuIcon } from '../../assets/MenuButtonIcon.svg'
 import styled from 'styled-components'
-import MenuItem from 'antd/lib/menu/MenuItem'
 
 const MenuContainer = styled.div`
   display: flex;
