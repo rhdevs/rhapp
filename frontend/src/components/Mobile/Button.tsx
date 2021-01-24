@@ -4,7 +4,7 @@ import { message } from 'antd'
 
 type Props = {
   buttonIsPressed?: boolean
-  hasSuccessMessage: boolean
+  hasSuccessMessage?: boolean
   stopPropagation: boolean
   defaultButtonDescription: string
   updatedButtonDescription?: string

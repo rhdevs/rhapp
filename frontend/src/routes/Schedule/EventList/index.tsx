@@ -12,7 +12,12 @@ import Button from '../../../components/Mobile/Button'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { editUserEvents, fetchAllEvents, fetchUserEvents, getSearchedEvents } from '../../../store/scheduling/action'
+import {
+  editUserEvents,
+  fetchAllPublicEvents,
+  fetchAllUserEvents,
+  getSearchedEvents,
+} from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -49,13 +54,15 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const { userEventsList, allEvents, isLoading, searchedEvents } = useSelector((state: RootState) => state.scheduling)
+  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
+    (state: RootState) => state.scheduling,
+  )
 
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchUserEvents(dummyUserId, true))
-    dispatch(fetchAllEvents())
+    dispatch(fetchAllUserEvents(dummyUserId, true))
+    dispatch(fetchAllPublicEvents())
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -74,7 +81,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           bottomElement={
             <Button
               buttonIsPressed={
-                userEventsList.filter((event) => {
+                userAllEventsList.filter((event) => {
                   return event.eventID === result.eventID
                 }).length !== 0
               } //check if event is already in schedule
@@ -84,7 +91,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
               updatedButtonDescription={'Remove from Schedule'}
               onButtonClick={(buttonIsPressed) => {
                 if (
-                  userEventsList.filter((event) => {
+                  userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length !== 0
                 ) {
@@ -92,26 +99,26 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     // event is in list and button is pressed
                     // remove event from list
                     console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result))
+                    dispatch(editUserEvents('remove', result, dummyUserId))
                   } else {
                     // event is in list, button is un-pressed
                     console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result))
+                    dispatch(editUserEvents('add', result, dummyUserId))
                   }
                 } else if (
-                  userEventsList.filter((event) => {
+                  userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length === 0
                 ) {
                   if (buttonIsPressed) {
                     // event is not in list, button is un-pressed
                     console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result))
+                    dispatch(editUserEvents('remove', result, dummyUserId))
                   } else {
                     // event is not in list and button is pressed
                     // add event to list
                     console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result))
+                    dispatch(editUserEvents('add', result, dummyUserId))
                   }
                 }
                 return
@@ -123,7 +130,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     })
   }
 
-  const data = currentEvents ?? allEvents
+  const data = currentEvents ?? allPublicEvents
 
   const renderResults = () => {
     if (searchValue) {

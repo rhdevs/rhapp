@@ -11,7 +11,7 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchUserEvents, setIsLoading } from '../../store/scheduling/action'
+import { fetchCurrentUserEvents, setIsLoading, setNusModsStatus } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
@@ -53,22 +53,39 @@ const { SubMenu } = Menu
 export default function Schedule() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { userEvents, userEventsStartTime, userEventsEndTime, isLoading, isSuccessful, isFailure } = useSelector(
-    (state: RootState) => state.scheduling,
-  )
+  const {
+    userCurrentEvents,
+    userCurrentEventsStartTime,
+    userCurrentEventsEndTime,
+    isLoading,
+    nusModsIsSuccessful,
+    nusModsIsFailure,
+  } = useSelector((state: RootState) => state.scheduling)
+
+  const onClose = () => {
+    dispatch(setNusModsStatus(false, false))
+  }
 
   const AlertSection = (
     <AlertGroup>
-      {isSuccessful && !isFailure && (
-        <Alert message="Successfully Imported!" description="Yay yippe doodles" type="success" closable showIcon />
+      {nusModsIsSuccessful && !nusModsIsFailure && (
+        <Alert
+          message="Successfully Imported!"
+          description="Yay yippe doodles"
+          type="success"
+          closable
+          showIcon
+          onClose={onClose}
+        />
       )}
-      {isFailure && !isSuccessful && (
+      {nusModsIsFailure && !nusModsIsSuccessful && (
         <Alert
           message="NUSMods Events not imported!!!"
           description="Insert error message here"
           type="error"
           closable
           showIcon
+          onClose={onClose}
         />
       )}
     </AlertGroup>
@@ -76,7 +93,7 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchUserEvents(dummyUserId, false))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false))
   }, [dispatch])
 
   const rightIcon = (
@@ -150,10 +167,14 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(isLoading && <LoadingSpin />) || (isSuccessful && !isFailure) || (!isSuccessful && isFailure && AlertSection)}
+      {(isLoading && <LoadingSpin />) || ((nusModsIsSuccessful || nusModsIsFailure) && AlertSection)}
       <TimetableMainContainer>
         <TimetableContainer>
-          <Timetable events={userEvents} eventsStartTime={userEventsStartTime} eventsEndTime={userEventsEndTime} />
+          <Timetable
+            events={userCurrentEvents}
+            eventsStartTime={userCurrentEventsStartTime}
+            eventsEndTime={userCurrentEventsEndTime}
+          />
         </TimetableContainer>
       </TimetableMainContainer>
       <GroupContainer>

@@ -45,13 +45,12 @@ def getAllUsers(supports_credentials=True):
 @cross_origin(supports_credentials=True)
 def getUser(userID):
     try:
-        data = db.User.find({"userID": userID})
+        data = db.User.find_one({"userID": userID})
+        return make_response({"message" : data}, 200)
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
+    
 @app.route("/user", methods=['DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
 def addDeleteUser():
@@ -61,11 +60,13 @@ def addDeleteUser():
             userID = str(data.get('userID'))
             passwordHash = str(data.get('passwordHash'))
             email = str(data.get('email'))
-
+            position = [] # default to be empty, will be added manually from BE 
+            
             body = {
                 "userID": userID,
                 "passwordHash": passwordHash,
                 "email": email,
+                "position" : position
             }
             receipt = db.User.insert_one(body)
             body["_id"] = str(receipt.inserted_id)
@@ -149,13 +150,11 @@ def addDeleteProfile():
             db.UserCCA.insert_many(
                 [{
                     "userID": userID,
-                    "ccaID": 80 + block,
-                    "ccaName": "Block " + str(block)
+                    "ccaID": 80 + block
                 },
                     {
                     "userID": userID,
-                    "ccaID": 89,
-                    "ccaName": "Raffles Hall"
+                    "ccaID": 89
                 }])
 
             body["_id"] = str(receipt.inserted_id)
@@ -172,18 +171,23 @@ def addDeleteProfile():
         return {"err": str(e)}, 400
 
 
-@app.route("/profile/edit/", methods=['PUT'])
+@app.route("/profile/edit", methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def editProfile():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        displayName = str(data.get('displayName'))
-        bio = str(data.get('bio'))
-        profilePictureUrl = str(data.get('profilePictureUrl'))
-        block = int(data.get('block'))
-        telegramHandle = str(data.get('telegramHandle'))
-        modules = data.get('modules')
+        
+        oldResult = db.Profiles.find_one({"userID": userID}, {'$set': body})
+        if result is None:
+            return make_response("data not found", 404)
+        
+        displayName = str(data.get('displayName')) if data.get('displayName') else oldData.get('displayName')
+        bio = str(data.get('bio')) if data.get('bio') else oldData.get('bio')
+        profilePictureUrl = str(data.get('profilePictureUrl')) if data.get('profilePictureUrl') else oldData.get('displayName')
+        block = int(data.get('block')) if data.get('block') else oldData.get('block')
+        telegramHandle = str(data.get('telegramHandle')) if data.get('telegramHandle') else oldData.get('telegramHandle')
+        modules = data.get('modules') if data.get('modules') else oldData.get('modules')
 
         body = {
             "userID": userID,
@@ -257,6 +261,7 @@ def addDeletePost():
                 sort=[('postID', pymongo.DESCENDING)])
             newPostID = 1 if lastPostID is None else int(
                 lastPostID.get("postID")) + 1
+            tags = data.get('tags') if data.get('tags') else []
 
             body = {
                 "postID": newPostID,
@@ -266,7 +271,8 @@ def addDeletePost():
                 "ccaID": ccaID,
                 "createdAt": createdAt,
                 "postPics": postPics,
-                "isOfficial": isOfficial
+                "isOfficial": isOfficial,
+                "tags" : tags
             }
             
             receipt = db.Posts.insert_one(body)
@@ -567,18 +573,30 @@ def checkFriend():
         }
         return make_response(response, 200)
 
-
-@app.route("/user_CCA/<userID>")
-@cross_origin(supports_credentials=True)
-def getUserCCAs(userID):
-    try:
-        data = db.UserCCA.find({"userID": userID})
+@app.route("/search", methods = ["GET"])
+@cross_origin()
+def search():
+    # a function to search all events, facilities and profiles
+    try : 
+        term = str(request.args.get('term'))
+        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*{}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
+        
+        profiles = db.Profiles.find({"displayName" : regex}, {'_id': False}) # should have done this earlier 
+        events = db.Events.find({"eventName" : regex}, {'_id': False})
+        facilities = db.Facilities.find({"facilityName" : regex}, {'_id': False})
+        
+        response = {
+            "profiles" : list(profiles),
+            "events" : list(events),
+            "facilities" : list(facilities)
+        }
+        
+        return make_response(response, 200);
+         
     except Exception as e:
-        print(e)
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
+        response = {"err" : e};
+        return make_response(response, 400)
+    
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
