@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Post, SOCIAL_ACTIONS, User } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 
 const initialState = {
   isUploading: false,
@@ -8,9 +8,13 @@ const initialState = {
   newPostBody: '',
   newPostImages: [],
   newPostOfficial: false,
+  newPostCca: '',
   warnings: [],
   posts: [],
-  postUser: null,
+  postsFilter: POSTS_FILTER.ALL,
+  viewPost: {} as Post,
+  userId: '',
+  postId: '',
 }
 
 type State = {
@@ -20,9 +24,13 @@ type State = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
   warnings: string[]
   posts: Post[]
-  postUser: User | null
+  postsFilter: POSTS_FILTER
+  viewPost: Post
+  userId: string
+  postId: string
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -35,6 +43,8 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
+        userId: action.userId,
       }
     }
 
@@ -45,6 +55,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
       }
     }
 
@@ -83,10 +94,24 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       }
     }
 
-    case SOCIAL_ACTIONS.SET_POST_USER: {
+    case SOCIAL_ACTIONS.SWITCH_POSTS_FILTER: {
       return {
         ...state,
-        postUser: action.postUser,
+        postsFilter: action.postsFilter,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SET_POST_ID: {
+      return {
+        ...state,
+        postId: action.postId,
+      }
+    }
+
+    case SOCIAL_ACTIONS.GET_SPECIFIC_POST: {
+      return {
+        ...state,
+        viewPost: action.viewPost,
       }
     }
 

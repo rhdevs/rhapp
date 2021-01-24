@@ -53,6 +53,14 @@ export enum ENDPOINTS {
 
   // FRIENDS
   ALL_FRIENDS = '/friend',
+
+  // SOCIAL
+  OFFICIAL_POSTS = '/post/official',
+  ALL_POSTS = '/post',
+  FRIENDS_OF_USER_POSTS = '/post/friend',
+  SPECIFIC_POST = '/post/search',
+  DELETE_POST = '/post',
+  EDIT_POST = '/post/edit',
 }
 
 export enum DOMAINS {

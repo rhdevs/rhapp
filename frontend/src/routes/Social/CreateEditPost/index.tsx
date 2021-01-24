@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { FileImageFilled } from '@ant-design/icons'
@@ -14,13 +14,17 @@ import {
   DeleteImage,
   EditPostDetail,
   GetPostDetailsToEdit,
-  handleCreateEditPost,
+  handleEditPost,
+  handleCreatePost,
   PopWarning,
   ResetPostDetails,
+  SetPostId,
 } from '../../../store/social/action'
 import { PostImage } from './Components/postImage'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import DropDownSelector from '../../../components/Mobile/DropDownSelector'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -123,7 +127,7 @@ const InputLabel = styled.label`
 
 const Announcement = styled.div`
   display: flex;
-  margin: 35px 0px 0px 31px;
+  margin: 35px 20px 0px 20px;
   font-family: Inter;
   font-size: 21px;
   font-style: bold;
@@ -131,10 +135,10 @@ const Announcement = styled.div`
   line-height: 14px;
   letter-spacing: 0em;
   text-align: left;
+  justify-content: space-between;
 `
 const SwitchContainer = styled.div`
   position: relative;
-  transform: translate(330%, 0%);
   .ant-switch {
     background-color: #002642;
   }
@@ -190,17 +194,35 @@ const ImageDiv = styled.div`
   justify-content: center;
 `
 
+const headOfCca = [
+  {
+    ccaName: 'Basketball',
+    ccaID: 2,
+  },
+  {
+    ccaName: 'Tennis',
+    ccaID: 3,
+  },
+]
+
+const getCcaNames = headOfCca.map((cca) => cca.ccaName)
+
 export default function CreateEditPost() {
-  const params = useParams<{ editPostId: string }>()
+  const params = useParams<{ postId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
+  const [hasChanges, setHasChanges] = useState(false)
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+
+  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, newPostCca, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
+  const isCreatePost = !window.location.href.includes('/post/edit')
 
   useEffect(() => {
     if (window.location.href.includes('/post/edit')) {
-      dispatch(GetPostDetailsToEdit(params.editPostId))
+      dispatch(SetPostId(params.postId))
+      dispatch(GetPostDetailsToEdit())
     } else {
       dispatch(ResetPostDetails())
     }
@@ -212,27 +234,22 @@ export default function CreateEditPost() {
 
   return (
     <MainContainer>
-      <TopNavBar title={window.location.href.includes('/post/edit') ? 'Edit Post' : 'Create Post'} />
-      {/* {modal.navModal && (
-          <ConfirmationModal
-            title={"Discard Changes?"}
-            hasLeftButton={true}
-            leftButtonText={"Delete"}
-            onLeftButtonClick={() => history.push(PATHS.EVENT_LIST_PAGE)} //change paths in future
-            rightButtonText={"Cancel"}
-            onRightButtonClick={() => setModal({ ...modal, navModal: false })}
-          />
-        )} */}
-      {/* {modal.buttonModal && (
+      <TopNavBar
+        title={isCreatePost ? 'Create Post' : 'Edit Post'}
+        onLeftClick={() => {
+          hasChanges ? setShowConfirmationModal(true) : history.goBack()
+        }}
+      />
+      {showConfirmationModal && (
         <ConfirmationModal
-          title={modal.buttonModalCaption}
+          title={'Discard Changes?'}
           hasLeftButton={true}
-          leftButtonText={modal.buttonModalChoice}
-          onLeftButtonClick={(e) => onSubmit(e)} //change paths in future
+          leftButtonText={'Delete'}
+          onLeftButtonClick={() => history.goBack()}
           rightButtonText={'Cancel'}
-          onRightButtonClick={() => setModal({ ...modal, buttonModal: false })}
+          onRightButtonClick={() => setShowConfirmationModal(false)}
         />
-      )} */}
+      )}
       <PostContainer>
         {warnings.length !== 0 &&
           warnings.map((warning, idx) => (
@@ -254,7 +271,10 @@ export default function CreateEditPost() {
                 type="text"
                 name="title"
                 value={newPostTitle}
-                onChange={(e) => dispatch(EditPostDetail('title', e.target.value))}
+                onChange={(e) => {
+                  setHasChanges(true)
+                  dispatch(EditPostDetail('title', e.target.value))
+                }}
                 placeholder="Title"
                 required
                 maxLength={30}
@@ -264,7 +284,10 @@ export default function CreateEditPost() {
               <Caption
                 name="caption"
                 value={newPostBody}
-                onChange={(e) => dispatch(EditPostDetail('body', e.target.value))}
+                onChange={(e) => {
+                  setHasChanges(true)
+                  dispatch(EditPostDetail('body', e.target.value))
+                }}
                 placeholder="Tap to type your caption!"
                 required
                 maxLength={200}
@@ -273,35 +296,61 @@ export default function CreateEditPost() {
             {isUploading && <LoadingSpin />}
             {!isUploading && newPostImages.length < 3 && (
               <Footer>
-                <InputFile type="file" name="file" id="file" onChange={(e) => dispatch(AddImage(e))} />
+                <InputFile
+                  type="file"
+                  name="file"
+                  id="file"
+                  onChange={(e) => {
+                    setHasChanges(true)
+                    dispatch(AddImage(e))
+                  }}
+                />
                 <InputLabel htmlFor="file">
                   <FileImageFilled style={{ fontSize: '20px' }} />
                 </InputLabel>
               </Footer>
             )}
           </Card>
+          {/* TODO: check if user has a role*/}
           {true && (
             <Announcement>
               <p>Official</p>
               <SwitchContainer>
-                <Switch checked={newPostOfficial} onChange={() => dispatch(EditPostDetail('official', 'null'))} />
+                <Switch
+                  checked={newPostOfficial}
+                  onChange={() => {
+                    setHasChanges(true)
+                    dispatch(EditPostDetail('official', 'null'))
+                  }}
+                />
               </SwitchContainer>
             </Announcement>
           )}
+          <Announcement>
+            <p>CCA</p>
+            <DropDownSelector
+              SelectedValue={newPostCca.toString()}
+              ValueArray={getCcaNames}
+              handleChange={(cca) => EditPostDetail('cca', cca)}
+            />
+          </Announcement>
+
           <ImageDiv>
             {newPostImages.map((url) => (
               <PostImage card={url} key={url} deleteFunc={deleteImage} />
             ))}
           </ImageDiv>
+
           <PostButton>
             <Button
               type="primary"
               onClick={() => {
-                dispatch(handleCreateEditPost())
+                const handleFunction = isCreatePost ? handleCreatePost : handleEditPost
+                dispatch(handleFunction())
                 history.push(PATHS.HOME_PAGE)
               }}
             >
-              {window.location.href.includes('/post/edit') ? 'Save Changes' : 'Create Post'}
+              {isCreatePost ? 'Create Post' : 'Save Changes'}
             </Button>
           </PostButton>
         </form>

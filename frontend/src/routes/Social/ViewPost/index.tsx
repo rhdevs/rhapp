@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 // import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import 'antd/dist/antd.css'
@@ -15,8 +15,10 @@ import { Menu } from 'antd'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import Avatar from '../../../components/Mobile/Avatar'
-
-import { GetPosts, DeletePost, SetPostUser } from '../../../store/social/action'
+import LoadingSpin from '../../../components/LoadingSpin'
+import { DeletePost, GetSpecificPost } from '../../../store/social/action'
+import { getInitials } from '../../../common/getInitials'
+import { userProfileStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -86,67 +88,63 @@ const DescriptionText = styled.text`
   padding: 20px;
 `
 export default function ViewPost() {
+  // TODO: wait for endpoint that provides individual post data from postId
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation()
+  const postIdFromPath = location.pathname.split('/').slice(-1)[0]
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [success] = useSnackbar()
 
-  // const { postId } = useParams<{ postId: string }>()
-  const postId = '123456789' // To uncomment above line
-  const { posts, postUser } = useSelector((state: RootState) => state.social)
-  let post
+  const { viewPost } = useSelector((state: RootState) => state.social)
+  const { userId, createdAt, description, title, postPics, postId, name } = viewPost
 
   useEffect(() => {
-    dispatch(GetPosts())
-    post = posts.find((post) => {
-      return post.postId == parseInt(postId)
-    })
-    dispatch(SetPostUser(post?.ownerId))
-  }, [dispatch])
+    dispatch(GetSpecificPost(postIdFromPath))
+  }, [dispatch, postIdFromPath])
 
-  const title = post?.title
-  const ownerId = post?.ownerId
-  const date = post?.date
-  const description = post?.description
-  const postPics = post?.postPics
+  useEffect(() => {
+    if (postId == postIdFromPath) {
+      setIsLoading(false)
+    }
+  }, [postId])
 
-  const formattedDate = date ? dayjs(date).format('D/M/YY, h:mmA') : dayjs().format('D/M/YY, h:mmA')
+  const postDate = dayjs.unix(parseInt(createdAt ?? ''))
+  const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
+  const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
 
-  const avatar = postUser?.avatar
-  const initials = postUser?.initials
-  const name = postUser?.name
+  // TODO: to get from response
+  const avatar = userProfileStub.profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
   }
 
-  const onDeleteClick = () => {
-    setMenuIsOpen(false)
-    setIsDeleteModalVisible(true)
-  }
-
   const handleDeletePost = () => {
     // TODO: Call delete post endpoint
+    setMenuIsOpen(false)
+
     if (postId) {
-      dispatch(DeletePost(parseInt(postId)))
+      dispatch(DeletePost(postId))
     }
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)
+    history.goBack()
   }
 
-  // TODO: change to ownerId == userId
-  const MenuIcon =
-    ownerId == 1 ? (
-      <MenuContainer>
-        <div onClick={onMenuClick}>
-          <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
-        </div>
-      </MenuContainer>
-    ) : (
-      <></>
-    )
+  // TODO: change to current user id == post userId
+  const MenuIcon = userId ? (
+    <MenuContainer>
+      <div onClick={onMenuClick}>
+        <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />
+      </div>
+    </MenuContainer>
+  ) : (
+    <></>
+  )
 
   const Topbar = (
     <CenterContainer>
@@ -155,7 +153,7 @@ export default function ViewPost() {
         style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
         src={avatar}
       >
-        {initials}
+        {name ? getInitials(name) : ''}
       </Avatar>
       <TextContainer>
         <TitleText>{title}</TitleText>
@@ -172,26 +170,40 @@ export default function ViewPost() {
 
   return (
     <>
-      <TopNavBar centerComponent={Topbar} rightComponent={MenuIcon} />
-
-      <MainContainer>
-        {menuIsOpen && (
-          <>
-            <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + postId)}>
-                Edit
-              </Menu.Item>
-              <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>
-                Delete
-              </Menu.Item>
-            </StyledMenuContainer>
-          </>
-        )}
-        {postPics && renderPhotoCarousel()}
-        <DescriptionText>{description}</DescriptionText>
-        <BottomNavBar />
-      </MainContainer>
-
+      {isLoading ? (
+        <>
+          <TopNavBar />
+          <LoadingSpin />
+        </>
+      ) : (
+        <>
+          <TopNavBar centerComponent={Topbar} rightComponent={MenuIcon} />
+          <MainContainer>
+            {menuIsOpen && (
+              <>
+                <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
+                  <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + postId)}>
+                    Edit
+                  </Menu.Item>
+                  <Menu.Item
+                    key="2"
+                    icon={<DeleteFilled />}
+                    onClick={() => {
+                      setMenuIsOpen(false)
+                      setIsDeleteModalVisible(true)
+                    }}
+                  >
+                    Delete
+                  </Menu.Item>
+                </StyledMenuContainer>
+              </>
+            )}
+            {postPics && renderPhotoCarousel()}
+            <DescriptionText>{description}</DescriptionText>
+            <BottomNavBar />
+          </MainContainer>
+        </>
+      )}
       {isDeleteModalVisible && (
         <ConfirmationModal
           title="Discard Changes?"

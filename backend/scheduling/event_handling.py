@@ -6,6 +6,8 @@ import json
 import os
 import time
 from bson.objectid import ObjectId
+import re
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +27,11 @@ client = pymongo.MongoClient(
 db = client["RHApp"]
 
 
+def rename(event):
+    event['eventID'] = event.pop('_id')
+    return event
+
+
 @app.route("/")
 @cross_origin()
 def hello():
@@ -37,8 +44,7 @@ def getUserTimetable(userID):
     try:
         data = db.Lessons.find({"userID": userID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -48,8 +54,7 @@ def getAllEvents():
     try:
         data = db.Events.find()
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -58,10 +63,13 @@ def getAllEvents():
 def getAllPrivateEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": True}})
+        response = []
+        for item in data:
+            item['eventID'] = item.pop('_id')
+            response.append(item)
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route('/event/public/all')
@@ -69,10 +77,13 @@ def getAllPrivateEvents():
 def getAllPublicEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}})
+        response = []
+        for item in data:
+            item['eventID'] = item.pop('_id')
+            response.append(item)
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route('/event/afterTime/<startTime>')
@@ -81,8 +92,7 @@ def getEventAfterTime(startTime):
     try:
         data = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -92,8 +102,7 @@ def getAllCCA():
     try:
         data = db.CCA.find()
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -102,18 +111,13 @@ def getAllCCA():
 def getEventsDetails():
     try:
         data = request.get_json()
-        body = []
-
-        for eventID in data:
-
-            result = db.Events.find_one({"_id": ObjectId(eventID)})
-            body.append(result)
-            print(result)
+        entries = [ObjectId(w) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
+        response = map(rename, data)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(body), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/event/<int:ccaID>')
@@ -122,8 +126,7 @@ def getEventsCCA(ccaID):
     try:
         data = db.Events.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -133,8 +136,7 @@ def getCCADetails(ccaID):
     try:
         data = db.CCA.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -142,20 +144,30 @@ def getCCADetails(ccaID):
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        result = db.UserCCA.find({"userID": userID})
-        response = {
-            'CCA' : []
-        }
-        
-        for data in result :
-            name = db.CCA.find_one({"ccaID" : data.get("ccaID")}).get("ccaName")
-            response['CCA'].append(name)
-            
-        return make_response(response, 200)
+        data = db.UserCCA.find({"userID": userID})
+        entries = [w["ccaID"] for w in data]
+        response = db.CCA.find({"ccaID": {"$in": entries}})
+      
+        return json.dumps(list(response), default=lambda o: str(o)), 200
+      
     except Exception as e:
         return {"err": str(e)}, 400
+    
+@app.route("/user_event/<string:userID>/all", methods = ['GET'])
+@cross_origin()
+def getUserAttendanceAll(userID):
+    try:
+        data = list(db.Attendance.find({"userID": userID}))
 
-
+        entries = [ObjectId(w['eventID']) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
+        response = map(rename, data)
+        
+        return json.dumps(list(response), default=lambda o: str(o)), 200
+      
+    except Exception as e:
+        return {"err": str(e)}, 400
+    
 @app.route("/user_event/<userID>/<int:referenceTime>")
 @cross_origin()
 def getUserAttendance(userID, referenceTime):
@@ -163,42 +175,52 @@ def getUserAttendance(userID, referenceTime):
         data = list(db.Attendance.find({"userID": userID}))
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
-        body = []
 
-        for entry in data:
-            eventID = entry.get('eventID')
-            result = db.Events.find_one({"_id": ObjectId(eventID)})
-            startTime = result['startDateTime']
+        entries = [ObjectId(w['eventID']) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
 
-            if startTime < endOfWeek and startTime >= startOfWeek:
-                body.append(result)
+        def correctWeek(event):
+            startTime = event['startDateTime']
+            return startTime < endOfWeek and startTime >= startOfWeek
+
+        response = filter(correctWeek, data)
+        response = map(rename, response)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(body), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_event/<eventID>")
 @cross_origin()
 def getEventAttendees(eventID):
     try:
-        data = db.Attendance.find({"eventID": eventID})
+        response = db.Attendance.find({"eventID": eventID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA/<int:ccaID>")
 @cross_origin()
 def getCCAMembers(ccaID):
     try:
-        data = db.UserCCA.find({"ccaID": ccaID})
+        response = db.UserCCA.find({"ccaID": ccaID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
+
+
+@app.route("/user_CCA")
+@cross_origin()
+def getCCAMembersName():
+    try:
+        ccaName = str(request.args.get('ccaName'))
+        print(ccaName)
+        response = db.UserCCA.find({"ccaName": ccaName})
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA/add", methods=['POST'])
@@ -207,6 +229,7 @@ def addUserCCA():
     try:
         data = request.get_json()
         userID = data.get('userID')
+        # db.UserCCA.update(body, {'$set': body}, upsert=True)
         ccaID = data.get('ccaID') # list of integers 
         
         deleteQuery = {"userID" : userID}
@@ -229,7 +252,6 @@ def addUserCCA():
         response["_id"] = str(receipt.inserted_ids)
 
         return {"message" : response}, 200
-
     except Exception as e:
         return {"err": str(e)}, 400
 
@@ -239,35 +261,39 @@ def addUserCCA():
 def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
+        donors = [pair["donor"] for pair in data]
+        results = db.Profiles.find({"userID": {"$in": donors}})
+        response = [{info: profile[info] for info in profile.keys()
+                     & {'userID', 'displayName'}} for profile in results]
+
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/permissions", methods=['DELETE', 'POST'])
 @cross_origin()
 def addDeletePermissions():
     try:
-        userID1 = str(request.args.get('userID1'))
-        userID2 = str(request.args.get('userID2'))
+        data = request.get_json()
+        donor = data.get('donor')
+        recipient = data.get('recipient')
+
         if request.method == "POST":
             body = {
-                "donor": userID1,
-                "recipient": userID2
+                "donor": donor,
+                "recipient": recipient
             }
-            db.UserPermissions.insert_one(body)
+            db.UserPermissions.update(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.UserPermissions.delete_one({
-                "donor": userID1,
-                "recipient": userID2
+                "donor": donor,
+                "recipient": recipient
             })
-            return Response(status=200)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "Action successful"}, 200
 
 
@@ -299,13 +325,12 @@ def createEvent():
         }
 
         receipt = db.Events.insert_one(body)
-        body["_id"] = str(receipt.inserted_id)
+        body["eventID"] = str(receipt.inserted_id)
 
         return {"message": body}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
 
 
 @app.route("/event/delete/<eventID>", methods=['DELETE'])
@@ -315,8 +340,7 @@ def deleteEvent(eventID):
         db.Events.delete_one({"_id": eventID})
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
@@ -354,32 +378,34 @@ def editEvent():
             return {'message': "Event changed"}, 200
         else:
             receipt = db.Events.insert_one(body)
-            body["_id"] = str(receipt.inserted_id)
+            body["eventID"] = str(receipt.inserted_id)
 
             return {"message": body}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
 
-@app.route("/user_event", methods=['POST'])
+@app.route("/user_event", methods=['POST', 'DELETE'])
 @cross_origin()
 def editAttendance():
     try:
-        eventID = request.args.get('eventID')
-        userID = request.args.get('userID')
-
+        data = request.get_json()
+        eventID = data.get('eventID')
+        userID = data.get('userID')
         body = {
-            "eventID": eventID,
             "userID": userID,
+            "eventID": eventID
         }
-        db.Attendance.insert_one(body)
+        if request.method == "POST":
+            db.Attendance.update(body, {'$set': body}, upsert=True)
+
+        elif request.method == "DELETE":
+            db.Attendance.delete_many(body)
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {'message': "Attendance edited"}, 200
 
 
@@ -389,8 +415,7 @@ def getMods(userID):
     try:
         data = db.NUSMods.find({"userID": userID})
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
@@ -401,8 +426,7 @@ def deleteMods(userID):
         db.NUSMods.delete_one({"userID": userID})
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
@@ -419,19 +443,90 @@ def addMods():
             "mods": mods,
         }
 
-        result = db.NUSMods.update_one({"userID": userID}, {'$set': body})
-        if int(result.matched_count) > 0:
-            return {'message': "Changed"}, 200
-        else:
-            db.NUSMods.insert_one(body)
-            return {'message': "successful"}, 200
+        db.NUSMods.update_one(
+            {"userID": userID}, {'$set': body}, upsert=True)
+        return {'message': "successful"}, 200
 
     except Exception as e:
-        print(e)
-        return {"err": "Action failed"}, 400
+
+        return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
 
+@app.route("/nusmods/addNUSMods", methods=['PUT'])
+@cross_origin()
+def addNUSModsEvents():
+
+    ABBREV_TO_LESSON = {
+        "DLEC": 'Design Lecture',
+        "LAB": 'Laboratory',
+        "LEC": 'Lecture',
+        "PLEC": 'Packaged Lecture',
+        "PTUT": 'Packaged Tutorial',
+        "REC": 'Recitation',
+        "SEC": 'Sectional Teaching',
+        "SEM": 'Seminar-Style Module Class',
+        "TUT": 'Tutorial',
+        "TUT2": 'Tutorial Type 2',
+        "TUT3": 'Tutorial Type 3',
+        "WS": 'Workshop',
+    }
+
+    def extractDataFromLink(nusModURL):
+        k = re.findall(r"(\w+)=(.*?(?=\&|$))", nusModURL)
+        return [[value[0], value[1].split(",")] for value in k]
+
+    def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
+        NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(
+            year=academicYear, moduleCode=moduleArray[0])
+        moduleData = next(x for x in requests.get(NUSModsApiURL).json()[
+                          "semesterData"] if x["semester"] == currentSemester)["timetable"]
+        out = []
+        for lesson in moduleArray[1]:
+            if lesson == "":
+                break
+            abbrev, classNo = lesson.split(":")
+            lessonType _TO_LESSON[abbrev]
+            lesson = next(
+                moduleClass for moduleClass in moduleData if moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType)
+            lesson["abbrev"] = abbrev
+            out.append(lesson)
+
+        out = [{"id": index,
+                "eventName": moduleArray[0] + " " + classInformation["abbrev"],
+                "location": classInformation["venue"],
+                "day": classInformation["day"],
+                "endTime": classInformation["endTime"],
+                "startTime": classInformation["startTime"],
+                "hasOverlap": False,
+                "eventType": "mods",
+                "weeks": classInformation["weeks"]} for index, classInformation in enumerate(out)]
+        return out
+
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        userID = data.get('userID')
+        academicYear = data.get('academicYear')
+        currentSemester = data.get('currentSemester')
+
+        oneModuleArray = extractDataFromLink(url)
+
+        output = [lesson for module in oneModuleArray for lesson in fetchDataFromNusMods(
+            academicYear, currentSemester, module)]
+
+        body = {"userID": userID,
+                "mods": output}
+
+        db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
+
+        return json.dumps(db.NUSMods.find_one({"userID": userID}), default=lambda o: str(o)), 200
+
+    except Exception as e:
+
+        return {"err": str(e)}, 400
+
+
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+#     app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)
