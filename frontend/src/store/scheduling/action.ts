@@ -374,7 +374,6 @@ export const editUserEvents = (action: string, event: SchedulingEvent, userId: s
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + userId)
-        // dispatch(fetchCurrentUserEvents(userId, false))
         dispatch(setEventAttendanceStatus(true, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
@@ -385,7 +384,6 @@ export const editUserEvents = (action: string, event: SchedulingEvent, userId: s
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + userId)
-        // dispatch(fetchCurrentUserEvents(userId, false))
         dispatch(setEventAttendanceStatus(false, true))
       } else {
         console.log('FAILURE!!!! ' + data.status)
