@@ -28,7 +28,7 @@ export enum ENDPOINTS {
   // SCHEDULING
   USER_TIMETABLE = '/timetable/all',
   ALL_USERS = '/user/all',
-  USER_PERMISSION = '/permissions/',
+  USER_PERMISSION = '/permissions',
 
   ALL_EVENTS = '/event/all',
   ALL_PUBLIC_EVENTS = '/event/public/all',

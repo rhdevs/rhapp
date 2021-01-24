@@ -10,7 +10,7 @@ import {
   ABBREV_TO_LESSON,
   TimetableEvent,
 } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getEventsFromBackend = async (endpoint, methods) => {
@@ -379,18 +379,32 @@ const fetchDataFromNusMods = async (acadYear: string, moduleArray: string[]) => 
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
-export const getShareSearchResults = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const getShareSearchResults = () => (dispatch: Dispatch<ActionTypes>) => {
   // const { user } = getState().profile
   // const { userID } = user
-  const userID = 'A1234567B' // TODO: Revert to previous line after integration of userID
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
   // Uncomment when endpoint for share search is obtained from backend
-  get(ENDPOINTS.ALL_FRIENDS, DOMAINS.SOCIAL, `/${userID}`).then((results) => {
+  get(ENDPOINTS.ALL_FRIENDS, DOMAINS.SOCIAL, `/${userId}`).then((results) => {
     dispatch({
       type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
       shareSearchResults: results,
     })
   })
   dispatch(setIsLoading(false))
+}
+
+export const giveTimetablePermission = async (recipientUserId: string) => {
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
+  const requestBody = {
+    donor: userId,
+    recipient: recipientUserId,
+  }
+
+  try {
+    const response = await post(ENDPOINTS.USER_PERMISSION, DOMAINS.EVENT, requestBody)
+  } catch (err) {
+    return Promise.reject()
+  }
 }
 // ---------------------- SHARE SEARCH ----------------------
 

@@ -101,6 +101,7 @@ type Props = {
   dateTime?: string
   description: string
   bottomElement?: ReactElement
+  onClick?: () => void
 }
 
 function ImageDescriptionCard(props: Props) {
@@ -112,7 +113,7 @@ function ImageDescriptionCard(props: Props) {
   }
 
   return (
-    <CardContainer onClick={expandCard}>
+    <CardContainer onClick={props.onClick ? props.onClick : expandCard}>
       <ContentContainer>
         <ImageContainer>
           <img

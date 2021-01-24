@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { getShareSearchResults } from '../../../store/scheduling/action'
+import { getShareSearchResults, giveTimetablePermission } from '../../../store/scheduling/action'
+import useSnackbar from '../../../hooks/useSnackbar'
+import { Friend } from '../../../store/social/types'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -45,6 +47,7 @@ type RecentData = {
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const [success] = useSnackbar()
   const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
   const [searchValue, setSearchValue] = useState('')
 
@@ -54,6 +57,12 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
 
   const onChange = (input: string) => {
     setSearchValue(input)
+  }
+
+  const handleClick = (friend: Friend) => () => {
+    giveTimetablePermission(friend.userID)
+      .then(() => success(`You have shared with ${friend.displayName}`))
+      .catch(() => success(`You have failed to share with ${friend.displayName}`)) // TODO: Failure snackbar
   }
 
   const leftIcon = (
@@ -82,6 +91,7 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
                 avatar={friend.profilePictureUrl}
                 title={friend.displayName}
                 description={friend.bio}
+                onClick={handleClick(friend)}
               />
             )
           })
