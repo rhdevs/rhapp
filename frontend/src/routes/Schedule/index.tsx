@@ -151,6 +151,15 @@ export default function Schedule() {
           >
             Events
           </Menu.Item>
+          <Menu.Item
+            key="6"
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              console.log('remove nusmods!!')
+            }}
+          >
+            Delete my NUSMods events
+          </Menu.Item>
         </>
       }
       closableButton={

@@ -374,6 +374,7 @@ export const deleteUserNusModsEvents = (userId: string) => async (
   console.log(userNusModsEventsList)
   if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
 }
+
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
