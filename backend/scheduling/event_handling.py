@@ -218,7 +218,7 @@ def addUserCCA():
             "ccaID": ccaID,
             "ccaName": ccaName,
         }
-        db.UserCCA.insert_one(body)
+        db.UserCCA.update(body, {'$set': body}, upsert=True)
 
         return {"message": "Successful"}, 200
 
@@ -254,7 +254,7 @@ def addDeletePermissions():
                 "donor": donor,
                 "recipient": recipient
             }
-            db.UserPermissions.insert_one(body)
+            db.UserPermissions.update(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.UserPermissions.delete_one({
@@ -369,7 +369,7 @@ def editAttendance():
             "eventID": eventID
         }
         if request.method == "POST":
-            db.Attendance.insert_one(body)
+            db.Attendance.update(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.Attendance.delete_many(body)
@@ -413,12 +413,9 @@ def addMods():
             "mods": mods,
         }
 
-        result = db.NUSMods.update_one({"userID": userID}, {'$set': body})
-        if int(result.matched_count) > 0:
-            return {'message': "Changed"}, 200
-        else:
-            db.NUSMods.insert_one(body)
-            return {'message': "successful"}, 200
+        result = db.NUSMods.update_one(
+            {"userID": userID}, {'$set': body}, upsert=True)
+        return {'message': "successful"}, 200
 
     except Exception as e:
 
