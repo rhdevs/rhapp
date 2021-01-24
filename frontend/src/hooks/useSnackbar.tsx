@@ -23,6 +23,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
+import 'antd/dist/antd.css'
 
 import { message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'

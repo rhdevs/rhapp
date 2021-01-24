@@ -20,6 +20,16 @@ export type User = {
   block: string
 }
 
+export type Friend = {
+  bio: string
+  block: number
+  displayName: string
+  modules: string[]
+  profilePictureUrl: string
+  telegramHandle: string
+  userID: string
+}
+
 export enum POSTS_FILTER {
   ALL = 'ALL',
   OFFICIAL = 'OFFICIAL',

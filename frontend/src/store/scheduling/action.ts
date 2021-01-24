@@ -1,8 +1,8 @@
 import { isEmpty, last } from 'lodash'
 import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
 import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint, methods) => {
@@ -333,16 +333,32 @@ const getUserNusModsEvents = (userId: string) => async () => {
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
-export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
+export const getShareSearchResults = () => (dispatch: Dispatch<ActionTypes>) => {
+  // const { user } = getState().profile
+  // const { userID } = user
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
   // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
-  //     shareSearchResults: results,
-  //   })
-  // })
+  get(ENDPOINTS.ALL_FRIENDS, DOMAINS.SOCIAL, `/${userId}`).then((results) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+      shareSearchResults: results,
+    })
+  })
   dispatch(setIsLoading(false))
+}
+
+export const giveTimetablePermission = async (recipientUserId: string) => {
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
+  const requestBody = {
+    donor: userId,
+    recipient: recipientUserId,
+  }
+
+  try {
+    await post(ENDPOINTS.USER_PERMISSION, DOMAINS.EVENT, requestBody)
+  } catch (err) {
+    return Promise.reject()
+  }
 }
 // ---------------------- SHARE SEARCH ----------------------
 

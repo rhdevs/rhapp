@@ -1,6 +1,6 @@
 import { Reducer } from 'redux'
 import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
-import { SearchResult } from '../types'
+import { Friend } from '../social/types'
 import { userCCA } from '../facilityBooking/types'
 
 const initialState = {
@@ -38,7 +38,7 @@ type State = {
   userAllEventsList: TimetableEvent[]
   userCurrentEventsStartTime: number
   userCurrentEventsEndTime: number
-  shareSearchResults: SearchResult[]
+  shareSearchResults: Friend[]
   searchedEvents: SchedulingEvent[]
   allPublicEvents: SchedulingEvent[]
   userNusModsEvents: TimetableEvent[]

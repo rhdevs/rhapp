@@ -1,10 +1,11 @@
 import { LeftOutlined } from '@ant-design/icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch /** , useSelector */ } from 'react-redux'
-// import { RootState } from '../../../store/types'
-import { getShareSearchResults } from '../../../store/scheduling/action'
-import { searchResultsStub } from '../../../store/stubs'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import { getShareSearchResults, giveTimetablePermission } from '../../../store/scheduling/action'
+import useSnackbar from '../../../hooks/useSnackbar'
+import { Friend } from '../../../store/social/types'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -46,12 +47,22 @@ type RecentData = {
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  // const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
+  const [success] = useSnackbar()
+  const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
   const [searchValue, setSearchValue] = useState('')
+
+  useEffect(() => {
+    dispatch(getShareSearchResults())
+  }, [])
 
   const onChange = (input: string) => {
     setSearchValue(input)
-    input && dispatch(getShareSearchResults(input))
+  }
+
+  const handleClick = (friend: Friend) => () => {
+    giveTimetablePermission(friend.userID)
+      .then(() => success(`You have shared with ${friend.displayName}`))
+      .catch(() => success(`You have failed to share with ${friend.displayName}`)) // TODO: Failure snackbar
   }
 
   const leftIcon = (
@@ -69,17 +80,21 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
    */
   const renderResults = () => {
     if (searchValue) {
-      return searchResultsStub ? (
-        searchResultsStub.map((result, index) => {
-          return (
-            <ImageDescriptionCard
-              key={index}
-              avatar={result.avatar}
-              title={result.title}
-              description={result?.description ?? ''}
-            />
-          )
-        })
+      return searchResults ? (
+        searchResults
+          .filter((friend) => friend.displayName.toLowerCase().includes(searchValue.toLowerCase()))
+          .map((friend, index) => {
+            console.log(friend)
+            return (
+              <ImageDescriptionCard
+                key={index}
+                avatar={friend.profilePictureUrl}
+                title={friend.displayName}
+                description={friend.bio}
+                onClick={handleClick(friend)}
+              />
+            )
+          })
       ) : (
         <NoRecentDataText>No results</NoRecentDataText>
       )

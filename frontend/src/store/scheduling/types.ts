@@ -1,6 +1,6 @@
 import { invert } from 'lodash'
 import { userCCA } from '../facilityBooking/types'
-import { SearchResult } from '../types'
+import { Friend } from '../social/types'
 
 type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
 export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
@@ -124,7 +124,7 @@ type GetSearchedEvents = {
 
 type GetShareSearchResults = {
   type: typeof SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS
-  shareSearchResults: SearchResult[]
+  shareSearchResults: Friend[]
 }
 
 type SetIsLoading = {
