@@ -413,7 +413,7 @@ def addMods():
             "mods": mods,
         }
 
-        result = db.NUSMods.update_one(
+        db.NUSMods.update_one(
             {"userID": userID}, {'$set': body}, upsert=True)
         return {'message': "successful"}, 200
 
