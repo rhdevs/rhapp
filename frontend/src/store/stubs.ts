@@ -1,6 +1,5 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
-import { TimetableEvent } from './scheduling/types'
 import { SearchResult } from './types'
 
 /**

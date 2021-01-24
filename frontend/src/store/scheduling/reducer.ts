@@ -5,17 +5,20 @@ import { userCCA } from '../facilityBooking/types'
 
 const initialState = {
   isLoading: true,
-  userEvents: [],
-  userEventsList: [],
+  userCurrentEvents: [],
+  userCurrentEventsList: [],
+  userAllEventsList: [],
   newUserEvents: [],
-  userEventsStartTime: 1000,
-  userEventsEndTime: 1800,
+  userCurrentEventsStartTime: 1000,
+  userCurrentEventsEndTime: 1800,
   shareSearchResults: [],
   searchedEvents: [],
   allPublicEvents: [],
   userNusModsEvents: [],
-  isSuccessful: false,
-  isFailure: false,
+  nusModsIsSuccessful: false,
+  nusModsIsFailure: false,
+  eventAttendanceIsSuccessful: false,
+  eventAttendanceIsFailure: false,
 
   // Create new event states
   newEventName: '',
@@ -31,17 +34,20 @@ const initialState = {
 
 type State = {
   isLoading: boolean
-  userEvents: TimetableEvent[][][]
-  userEventsList: TimetableEvent[]
+  userCurrentEvents: TimetableEvent[][][]
+  userCurrentEventsList: TimetableEvent[]
+  userAllEventsList: TimetableEvent[]
   newUserEvents: TimetableEvent[]
-  userEventsStartTime: number
-  userEventsEndTime: number
+  userCurrentEventsStartTime: number
+  userCurrentEventsEndTime: number
   shareSearchResults: SearchResult[]
   searchedEvents: SchedulingEvent[]
   allPublicEvents: SchedulingEvent[]
   userNusModsEvents: TimetableEvent[]
-  isSuccessful: boolean
-  isFailure: boolean
+  nusModsIsSuccessful: boolean
+  nusModsIsFailure: boolean
+  eventAttendanceIsSuccessful: boolean
+  eventAttendanceIsFailure: boolean
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -64,8 +70,15 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
     case SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS: {
       return {
         ...state,
-        isSuccessful: action.isSuccessful,
-        isFailure: action.isFailure,
+        nusModsIsSuccessful: action.nusModsIsSuccessful,
+        nusModsIsFailure: action.nusModsIsFailure,
+      }
+    }
+    case SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS: {
+      return {
+        ...state,
+        eventAttendanceIsSuccessful: action.eventAttendanceIsSuccessful,
+        eventAttendanceIsFailure: action.eventAttendanceIsFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS: {
@@ -74,13 +87,19 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         allPublicEvents: action.allPublicEvents,
       }
     }
-    case SCHEDULING_ACTIONS.GET_USER_EVENTS: {
+    case SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS: {
       return {
         ...state,
-        userEvents: action.userEvents,
-        userEventsList: action.userEventsList,
-        userEventsStartTime: action.userEventsStartTime,
-        userEventsEndTime: action.userEventsEndTime,
+        userCurrentEvents: action.userCurrentEvents,
+        userCurrentEventsList: action.userCurrentEventsList,
+        userCurrentEventsStartTime: action.userCurrentEventsStartTime,
+        userCurrentEventsEndTime: action.userCurrentEventsEndTime,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS: {
+      return {
+        ...state,
+        userAllEventsList: action.userAllEventsList,
       }
     }
     case SCHEDULING_ACTIONS.EDIT_USER_EVENTS: {

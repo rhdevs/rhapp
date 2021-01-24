@@ -15,7 +15,7 @@ import { RootState } from '../../../store/types'
 import {
   editUserEvents,
   fetchAllPublicEvents,
-  fetchUserEvents,
+  fetchAllUserEvents,
   getSearchedEvents,
 } from '../../../store/scheduling/action'
 import { PATHS } from '../../Routes'
@@ -54,14 +54,14 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const { userEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
+  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
     (state: RootState) => state.scheduling,
   )
 
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchUserEvents(dummyUserId, true))
+    dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(fetchAllPublicEvents())
   }, [dispatch])
 
@@ -81,17 +81,18 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           bottomElement={
             <Button
               buttonIsPressed={
-                userEventsList.filter((event) => {
+                userAllEventsList.filter((event) => {
                   return event.eventID === result.eventID
                 }).length !== 0
               } //check if event is already in schedule
               hasSuccessMessage={true}
+              hasFailureMessage={true}
               stopPropagation={true}
               defaultButtonDescription={'Add to Schedule'}
               updatedButtonDescription={'Remove from Schedule'}
               onButtonClick={(buttonIsPressed) => {
                 if (
-                  userEventsList.filter((event) => {
+                  userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length !== 0
                 ) {
@@ -106,7 +107,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     dispatch(editUserEvents('add', result, dummyUserId))
                   }
                 } else if (
-                  userEventsList.filter((event) => {
+                  userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length === 0
                 ) {

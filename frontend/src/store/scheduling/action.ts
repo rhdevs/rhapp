@@ -58,17 +58,42 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
   getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
-// ---------------------- TIMETABLE ----------------------
-export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  dispatch(setIsLoading(true))
-  const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
-
-  const manipulateData = (data) => {
+  const manipulateData = async (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
+    let allEvents: TimetableEvent[] = []
+    if (withNusModsEvents) {
+      const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
+      allEvents = userNusModsEvents ? timetableFormatEvents.concat(userNusModsEvents) : timetableFormatEvents
+    } else {
+      allEvents = timetableFormatEvents
+    }
+
+    console.log(allEvents)
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS,
+      userAllEventsList: allEvents,
+    })
+  }
+
+  getFromBackend(ENDPOINTS.USER_EVENT + userId + '/all', manipulateData)
+}
+
+// ---------------------- TIMETABLE ----------------------
+export const fetchCurrentUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch(setIsLoading(true))
+
+  const manipulateData = async (data) => {
+    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+      return convertSchedulingEventToTimetableEvent(singleEvent)
+    })
+    const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
 
     const allEvents: TimetableEvent[] = userNusModsEvents
       ? timetableFormatEvents.concat(userNusModsEvents)
@@ -76,11 +101,11 @@ export const fetchUserEvents = (userId: string, isSearchEventsPage: boolean) => 
 
     console.log(allEvents)
     dispatch({
-      type: SCHEDULING_ACTIONS.GET_USER_EVENTS,
-      userEvents: transformInformationToTimetableFormat(allEvents),
-      userEventsStartTime: Number(getTimetableStartTime(allEvents)),
-      userEventsEndTime: Number(getTimetableEndTime(allEvents)),
-      userEventsList: allEvents,
+      type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
+      userCurrentEvents: transformInformationToTimetableFormat(allEvents),
+      userCurrentEventsStartTime: Number(getTimetableStartTime(allEvents)),
+      userCurrentEventsEndTime: Number(getTimetableEndTime(allEvents)),
+      userCurrentEventsList: allEvents,
     })
     if (isSearchEventsPage) dispatch(setIsLoading(false))
   }
@@ -285,20 +310,22 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
     console.log('FAILURE')
   } else {
     console.log('SUCCESS')
-    dispatch(fetchUserEvents(userId, false))
+    dispatch(fetchCurrentUserEvents(userId, false))
     dispatch(setNusModsStatus(true, false))
   }
 }
 
-const setNusModsStatus = (isSuccessful: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure: boolean) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch({
     type: SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS,
-    isSuccessful: isSuccessful,
-    isFailure: isFailure,
+    nusModsIsSuccessful: nusModsIsSuccessful,
+    nusModsIsFailure: nusModsIsFailure,
   })
 }
 
-export const getUserNusModsEvents = (userId: string) => async () => {
+const getUserNusModsEvents = (userId: string) => async () => {
   const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
   console.log(resp)
   return resp[0].mods
@@ -347,7 +374,8 @@ export const editUserEvents = (action: string, event: SchedulingEvent, userId: s
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + userId)
-        dispatch(fetchUserEvents(userId, false))
+        // dispatch(fetchCurrentUserEvents(userId, false))
+        dispatch(setEventAttendanceStatus(true, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
       }
@@ -357,15 +385,26 @@ export const editUserEvents = (action: string, event: SchedulingEvent, userId: s
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + userId)
-        dispatch(fetchUserEvents(userId, false))
+        // dispatch(fetchCurrentUserEvents(userId, false))
+        dispatch(setEventAttendanceStatus(false, true))
       } else {
         console.log('FAILURE!!!! ' + data.status)
+        dispatch(setEventAttendanceStatus(false, true))
       }
     }
 
     postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
   }
-  // dispatch({ type: SCHEDULING_ACTIONS.EDIT_USER_EVENTS, newUserEvents: newUserEvents })
+}
+
+export const setEventAttendanceStatus = (eventAttendanceIsSuccessful: boolean, eventAttendanceIsFailure: boolean) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS,
+    eventAttendanceIsSuccessful: eventAttendanceIsSuccessful,
+    eventAttendanceIsFailure: eventAttendanceIsFailure,
+  })
 }
 // ---------------------- SEARCH EVENTS ----------------------
 

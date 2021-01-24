@@ -4,7 +4,8 @@ import { message } from 'antd'
 
 type Props = {
   buttonIsPressed?: boolean
-  hasSuccessMessage: boolean
+  hasSuccessMessage?: boolean
+  hasFailureMessage?: boolean
   stopPropagation: boolean
   defaultButtonDescription: string
   updatedButtonDescription?: string
@@ -39,7 +40,7 @@ function Button(props: Props) {
   }
 
   const successfulRemove = () => {
-    if (props.hasSuccessMessage) message.warning('Successfully removed from schedule!')
+    if (props.hasFailureMessage) message.warning('Successfully removed from schedule!')
   }
 
   const buttonColourChooser = (buttonIsPressed: boolean) => {

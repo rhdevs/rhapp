@@ -64,7 +64,8 @@ export type SchedulingEvent = {
 export enum SCHEDULING_ACTIONS {
   SET_IS_LOADING = 'SCHEDULING_ACTIONS.SET_IS_LOADING',
   GET_ALL_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS',
-  GET_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_EVENTS',
+  GET_CURRENT_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS',
+  GET_ALL_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS',
   EDIT_USER_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_EVENTS',
   EDIT_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS',
   GET_SEARCHED_EVENTS = 'SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS',
@@ -79,6 +80,7 @@ export enum SCHEDULING_ACTIONS {
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
+  HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
 }
 
 /** Actions */
@@ -98,12 +100,17 @@ type GetAllPublicEvents = {
   allPublicEvents: SchedulingEvent[]
 }
 
-type GetUserEvents = {
-  type: typeof SCHEDULING_ACTIONS.GET_USER_EVENTS
-  userEvents: TimetableEvent[][][]
-  userEventsStartTime: number
-  userEventsEndTime: number
-  userEventsList: TimetableEvent[]
+type GetCurrentUserEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS
+  userCurrentEvents: TimetableEvent[][][]
+  userCurrentEventsStartTime: number
+  userCurrentEventsEndTime: number
+  userCurrentEventsList: TimetableEvent[]
+}
+
+type GetAllUserEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS
+  userAllEventsList: TimetableEvent[]
 }
 
 type EditUserEvents = {
@@ -168,13 +175,20 @@ type SetHallEventType = {
 
 type HandleNusModsStatus = {
   type: typeof SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS
-  isSuccessful: boolean
-  isFailure: boolean
+  nusModsIsSuccessful: boolean
+  nusModsIsFailure: boolean
+}
+
+type HandleEventAttendanceStatus = {
+  type: typeof SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS
+  eventAttendanceIsSuccessful: boolean
+  eventAttendanceIsFailure: boolean
 }
 
 export type ActionTypes =
   | GetAllPublicEvents
-  | GetUserEvents
+  | GetAllUserEvents
+  | GetCurrentUserEvents
   | EditUserEvents
   | EditUserNusMods
   | SetEventName
@@ -190,3 +204,4 @@ export type ActionTypes =
   | getTargetAudienceList
   | SetHallEventType
   | HandleNusModsStatus
+  | HandleEventAttendanceStatus
