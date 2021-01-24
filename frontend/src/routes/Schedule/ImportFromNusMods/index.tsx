@@ -57,12 +57,12 @@ export default function ImportFromNusMods() {
     />
   )
 
-  // const { isSuccessful, isFailure } = useSelector((state: RootState) => state.scheduling)
+  // const { nusModsIsSuccessful, nusModsIsFailure } = useSelector((state: RootState) => state.scheduling)
 
-  // const getNusModsInputStatusIsSuccessful = () => {
-  //   if (isSuccessful === true && isFailure === false) {
+  // const getNusModsInputStatusnusModsIsSuccessful = () => {
+  //   if (nusModsIsSuccessful === true && nusModsIsFailure === false) {
   //     return true
-  //   } else if (isSuccessful === false && isFailure === true) {
+  //   } else if (nusModsIsSuccessful === false && nusModsIsFailure === true) {
   //     return false
   //   } else return false
   // }
