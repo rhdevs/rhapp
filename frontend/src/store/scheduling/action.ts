@@ -401,7 +401,7 @@ export const giveTimetablePermission = async (recipientUserId: string) => {
   }
 
   try {
-    const response = await post(ENDPOINTS.USER_PERMISSION, DOMAINS.EVENT, requestBody)
+    await post(ENDPOINTS.USER_PERMISSION, DOMAINS.EVENT, requestBody)
   } catch (err) {
     return Promise.reject()
   }
