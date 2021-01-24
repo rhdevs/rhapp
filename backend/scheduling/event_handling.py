@@ -444,35 +444,33 @@ def addNUSModsEvents():
 
     def extractDataFromLink(nusModURL):
         k = re.findall(r"(\w+)=(.*?(?=\&|$))", nusModURL)
-        out = []
-        for value in k:
-            out.append([(value)[0], value[1].split(",")])
-        return out
+        return [[value[0], value[1].split(",")] for value in k]
 
     def fetchDataFromNusMods(academicYear, currentSemester, moduleArray):
         NUSModsApiURL = "https://api.nusmods.com/v2/{year}/modules/{moduleCode}.json".format(
             year=academicYear, moduleCode=moduleArray[0])
-        moduleData = list(filter(lambda x: x["semester"] == currentSemester, requests.get(NUSModsApiURL).json(
-        )["semesterData"]))[0]["timetable"]
+        moduleData = next(x for x in requests.get(NUSModsApiURL).json()[
+                          "semesterData"] if x["semester"] == currentSemester)["timetable"]
         out = []
         for lesson in moduleArray[1]:
             if lesson == "":
                 break
             abbrev, classNo = lesson.split(":")
             lessonType = ABBREV_TO_LESSON[abbrev]
-            lesson = list(filter(
-                lambda moduleClass: moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType, moduleData))[0]
+            lesson = next(
+                moduleClass for moduleClass in moduleData if moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType)
             lesson["abbrev"] = abbrev
             out.append(lesson)
 
-        out = list(map(lambda classInformation: {"eventName": moduleArray[0] + " " + classInformation["abbrev"],
-                                                 "location": classInformation["venue"],
-                                                 "day": classInformation["day"],
-                                                 "endTime": classInformation["endTime"],
-                                                 "startTime": classInformation["startTime"],
-                                                 "hasOverlap": False,
-                                                 "eventType": "mods",
-                                                 "weeks": classInformation["weeks"]}, out))
+        out = [{"id": index,
+                "eventName": moduleArray[0] + " " + classInformation["abbrev"],
+                "location": classInformation["venue"],
+                "day": classInformation["day"],
+                "endTime": classInformation["endTime"],
+                "startTime": classInformation["startTime"],
+                "hasOverlap": False,
+                "eventType": "mods",
+                "weeks": classInformation["weeks"]} for index, classInformation in enumerate(out)]
         return out
 
     try:
@@ -484,9 +482,8 @@ def addNUSModsEvents():
 
         oneModuleArray = extractDataFromLink(url)
 
-        output = list(map(lambda module: fetchDataFromNusMods(
-            academicYear, currentSemester, module), oneModuleArray))
-        output = [item for sublist in output for item in sublist]
+        output = [lesson for module in oneModuleArray for lesson in fetchDataFromNusMods(
+            academicYear, currentSemester, module)]
 
         body = {"userID": userID,
                 "mods": output}
