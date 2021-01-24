@@ -11,7 +11,12 @@ import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchCurrentUserEvents, setIsLoading, setNusModsStatus } from '../../store/scheduling/action'
+import {
+  deleteUserNusModsEvents,
+  fetchCurrentUserEvents,
+  setIsLoading,
+  setNusModsStatus,
+} from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
@@ -146,16 +151,19 @@ export default function Schedule() {
           >
             Events
           </Menu.Item>
-          <Menu.Item
-            key="6"
-            icon={<DeleteOutlined />}
-            onClick={() => {
-              console.log('remove nusmods!!')
-            }}
-          >
-            Delete my NUSMods events
-          </Menu.Item>
         </>
+      }
+      closableButton={
+        <Menu.Item
+          key="6"
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            console.log('remove nusmods!!')
+            dispatch(deleteUserNusModsEvents(dummyUserId))
+          }}
+        >
+          Delete my NUSMods events
+        </Menu.Item>
       }
     />
   )
@@ -176,7 +184,7 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(isLoading && <LoadingSpin />) || ((nusModsIsSuccessful || nusModsIsFailure) && AlertSection)}
+      {(isLoading && <LoadingSpin />) || ((nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection)}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable
