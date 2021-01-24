@@ -69,6 +69,7 @@ export enum SCHEDULING_ACTIONS {
   GET_ALL_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS',
   GET_CURRENT_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS',
   GET_ALL_USER_EVENTS = 'SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS',
+  GET_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS',
   EDIT_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS',
   DELETE_USER_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.DELETE_USER_NUSMODS_EVENTS',
   GET_SEARCHED_EVENTS = 'SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS',
@@ -114,6 +115,11 @@ type GetCurrentUserEvents = {
 type GetAllUserEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS
   userAllEventsList: TimetableEvent[]
+}
+
+type GetUserNusModsEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS
+  userNusModsEventsList: TimetableEvent[]
 }
 
 type EditUserNusMods = {
@@ -186,6 +192,7 @@ type HandleEventAttendanceStatus = {
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
+  | GetUserNusModsEvents
   | GetCurrentUserEvents
   | EditUserNusMods
   | SetEventName

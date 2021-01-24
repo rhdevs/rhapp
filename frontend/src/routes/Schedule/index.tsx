@@ -184,7 +184,8 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(isLoading && <LoadingSpin />) || ((nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection)}
+      {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
+      {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable

@@ -342,30 +342,37 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
 
 const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
+      userNusModsEventsList: data,
+    })
+  }
+  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
   console.log(resp)
   dispatch(setIsLoading(false))
   if (resp.length === 0) return null
   else return resp[0].mods
 }
 
-export const deleteUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
+export const deleteUserNusModsEvents = (userId: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   const updateDeleteStatus = (data) => {
     if (data.ok) {
       console.log('SUCCESSFULY DELETED')
-      dispatch(fetchCurrentUserEvents(userId, true))
       dispatch(setIsLoading(false))
+      dispatch(fetchCurrentUserEvents(userId, false))
     } else {
       console.log('FAILURE!!!! ' + data.status)
-      dispatch(setIsLoading(false))
     }
   }
 
-  const resp = await dispatch(getUserNusModsEvents(userId))
-  console.log(resp)
-  if (resp) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
-  dispatch(setIsLoading(false))
+  const { userNusModsEventsList } = getState().scheduling
+
+  console.log(userNusModsEventsList)
+  if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
 }
 // ---------------------- NUSMODS ----------------------
 
