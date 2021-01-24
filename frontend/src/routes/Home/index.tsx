@@ -11,7 +11,6 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 95vh;
   background-color: #fafaf4;
 `
 

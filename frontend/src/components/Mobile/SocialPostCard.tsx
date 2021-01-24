@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { DeletePost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
+import { getInitials } from '../../common/getInitials'
 
 const CardContainer = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const CenterContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 80%;
 `
 
 const TextContainer = styled.div`
@@ -45,23 +47,27 @@ const StyledMenuContainer = styled(Menu)`
 `
 
 const ImageContainer = styled.div`
-  width: 25%;
+  width: 75px;
+  height: 75px;
   margin: auto 0;
   position: relative;
+  object-fit: cover;
 `
 const StyledImg = styled.img`
-  width: 100%;
-  aspect-ratio: 1;
+  width: 75px;
+  height: 75px;
   top: -3px;
   left: -3px;
   position: relative;
   z-index: 2;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  background-color: white;
 `
 
 const StyledImgShadow = styled.div`
   background-color: #c4c4c4;
-  aspect-ratio: 1;
+  width: 75px;
+  height: 75px;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -72,7 +78,8 @@ const StyledImgShadow = styled.div`
 `
 const StyledImgShadowTwo = styled.div`
   background-color: #c4c4c4;
-  aspect-ratio: 1;
+  width: 75px;
+  height: 75px;
   position: absolute;
   top: 3px;
   bottom: -3px;
@@ -110,7 +117,7 @@ const DescriptionText = styled.text`
   overflow: hidden;
 `
 
-type Props = {
+type socialPostCardProps = {
   isOwner: boolean
   avatar: string
   name: string
@@ -121,25 +128,16 @@ type Props = {
   postPics?: string[]
 }
 
-const getInitials = (name: string) => {
-  const names = name.split(' ')
-  let initials = names[0].substring(0, 1).toUpperCase()
-  if (names.length > 1) {
-    initials += names[names.length - 1].substring(0, 1).toUpperCase()
-  }
-  return initials
-}
-
-function SocialPostCard(props: Props) {
+function SocialPostCard(props: socialPostCardProps) {
   const history = useHistory()
   const dispatch = useDispatch()
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
+  const { isOwner, avatar, name, title, dateTime, description, postId, postPics } = props
+
   const initials = getInitials(props.name)
-  //TODO: To change to user's id
-  const postId = 1
 
   const onExpandClick = () => {
     history.push({
@@ -157,7 +155,6 @@ function SocialPostCard(props: Props) {
   }
 
   const onConfirmDeleteClick = () => {
-    //TODO: To remove post!
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
     dispatch(DeletePost(postId))
@@ -170,33 +167,41 @@ function SocialPostCard(props: Props) {
           <Avatar
             size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
             style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-            src={props.avatar}
+            src={avatar}
           >
             {initials}
           </Avatar>
         </div>
         <CenterContainer onClick={onExpandClick}>
           <TextContainer>
-            <TitleText>{props.title}</TitleText>
-            <TimeDateText>{props.dateTime}</TimeDateText>
-            <DescriptionText>{props.description}</DescriptionText>
+            <TitleText>{title}</TitleText>
+            <TimeDateText>
+              {name}, {dateTime}
+            </TimeDateText>
+            <DescriptionText>{description}</DescriptionText>
           </TextContainer>
-          {props.postPics && (
-            <ImageContainer>
-              <StyledImg src={props.postPics[0]} />
-              <StyledImgShadow />
-              <StyledImgShadowTwo />
-            </ImageContainer>
+          {postPics && postPics.length > 0 && (
+            <>
+              <ImageContainer>
+                <StyledImg src={postPics[0]} />
+                {postPics.length > 1 && (
+                  <>
+                    <StyledImgShadow />
+                    <StyledImgShadowTwo />
+                  </>
+                )}
+              </ImageContainer>
+            </>
           )}
         </CenterContainer>
 
         <MenuContainer>
           <div style={{ width: 16 }}>
-            {props.isOwner && <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} onClick={onMenuClick} />}
+            {isOwner && <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} onClick={onMenuClick} />}
           </div>
           {menuIsOpen && (
             <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + props.postId)}>
+              <Menu.Item key="1" icon={<EditFilled />} onClick={() => history.push(PATHS.EDIT + '/' + postId)}>
                 Edit
               </Menu.Item>
               <Menu.Item key="2" icon={<DeleteFilled />} onClick={onDeleteClick}>
@@ -205,17 +210,18 @@ function SocialPostCard(props: Props) {
             </StyledMenuContainer>
           )}
         </MenuContainer>
-        {deleteConfirmation && (
-          <ConfirmationModal
-            title={'Delete Post?'}
-            hasLeftButton={true}
-            leftButtonText={'Delete'}
-            onLeftButtonClick={onConfirmDeleteClick}
-            rightButtonText={'Cancel'}
-            onRightButtonClick={onDeleteClick}
-          />
-        )}
       </CardContainer>
+      {deleteConfirmation && (
+        <ConfirmationModal
+          title={'Delete Post?'}
+          hasLeftButton={true}
+          leftButtonText={'Delete'}
+          onLeftButtonClick={onConfirmDeleteClick}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={onDeleteClick}
+          bottom={10}
+        />
+      )}
     </>
   )
 }
