@@ -149,6 +149,21 @@ def getUserCCAs(userID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
+@app.route("/user_event/<userID>/all")
+@cross_origin()
+def getUserAttendanceAll(userID):
+    try:
+        data = list(db.Attendance.find({"userID": userID}))
+
+        entries = [ObjectId(w['eventID']) for w in data]
+        data = db.Events.find({"_id": {"$in": entries}})
+        response = map(rename, data)
+
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
+
+
 @app.route("/user_event/<userID>/<int:referenceTime>")
 @cross_origin()
 def getUserAttendance(userID, referenceTime):
