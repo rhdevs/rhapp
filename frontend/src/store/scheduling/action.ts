@@ -32,10 +32,6 @@ const postToBackend = (endpoint, method, body, functions) => {
     })
       .then((resp) => resp)
       .then((data) => {
-        // if (data.ok) {
-        //   console.log('success')
-        // }
-        // console.log(data)
         functions(data)
       })
   } else {
@@ -46,10 +42,6 @@ const postToBackend = (endpoint, method, body, functions) => {
     })
       .then((resp) => resp)
       .then((data) => {
-        // if (data.ok) {
-        //   console.log('success')
-        // }
-        // console.log(data)
         functions(data)
       })
   }
@@ -349,7 +341,6 @@ const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<Actio
     })
   }
   const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
-  console.log(resp)
   dispatch(setIsLoading(false))
   if (resp.length === 0) return null
   else return resp[0].mods
@@ -371,10 +362,8 @@ export const deleteUserNusModsEvents = (userId: string) => async (
 
   const { userNusModsEventsList } = getState().scheduling
 
-  console.log(userNusModsEventsList)
   if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
 }
-
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
