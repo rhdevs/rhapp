@@ -61,6 +61,9 @@ export enum ENDPOINTS {
   SPECIFIC_POST = '/post/search',
   DELETE_POST = '/post',
   EDIT_POST = '/post/edit',
+
+  // HOME
+  SEARCH = '/search',
 }
 
 export enum DOMAINS {
