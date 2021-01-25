@@ -1,6 +1,6 @@
-import { DOMAINS, DOMAIN_URL, ENDPOINTS, put } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, PROFILE_ACTIONS, User } from './types'
+import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
   // const selectedUser = userProfileStub
@@ -23,6 +23,16 @@ export const fetchUserCCAs = (userID: string) => (dispatch: Dispatch<ActionTypes
     .then((resp) => resp.json())
     .then((data) => {
       dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+    })
+}
+
+export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
+  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_CCAS, {
+    method: 'GET',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: data })
     })
 }
 
@@ -63,86 +73,80 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     bio: bio,
     modules: newModules,
   }
+
+  // Update local state
   dispatch({
     type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
     user: newUser,
     ccas: newCCAs,
   })
+
+  // Update database
   dispatch(updateCurrentUser(newUser))
-  // const newUser = {
-  //   userID: 'A1234567B',
-  //   block: 6,
-  //   displayName: 'abby',
-  //   telegramHandle: 'teleabbyy',
-  //   bio: 'hur hur',
-  //   profilePictureUrl: 'as',
-  //   modules: ['aa'],
-  // }
-
-  // Update state
-  // dispatch(updateCurrentUser(newUser))
-  // TODO; do a POST request
-
-  // dispatch({
-  //   type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
-  //   user: {
-  //     ...user,
-  //     displayName: displayName,
-  //     telegramHandle: telegramHandle,
-  //     bio: bio,
-  //     // cca: newCCA,
-  //     // modules: newModules,
-  //   },
-  // })
-  // console.log(newUserItem.toString())
-  // console.log(newUserItem.user.bio)
 }
 
-export const updateCurrentUser = (newUser: User) => () => {
-  // const { user } = getState().profile
-  put(ENDPOINTS.EDIT_PROFILE, DOMAINS.SOCIAL, newUser)
-    .then((resp) => {
-      if (resp.status >= 400) {
-        console.log('FAILURE')
-      } else {
-        console.log('SUCCESS!!!')
+// One shot update database with all changes
+export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { user, ccas } = getState().profile
+  // 1. Update user profile
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
+    method: 'PUT',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newUser),
+  })
+    .then((resp) => resp)
+    .then((data) => {
+      if (data.ok) {
+        console.log('update current user success')
       }
     })
-    .catch(() => {
-      console.log('catch block')
-    })
-  // dispatch({
-  //   type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
-  //   user: {
-  //     ...user,
-  //     displayName: newUser.displayName,
-  //     telegramHandle: newUser.telegramHandle,
-  //     bio: newUser.bio,
-  //     ccas: newUser.ccas,
-  //     modules: newUser.modules,
-  //   },
-  // })
+
+  // 2. Update CCAs
+  const newUserCcasDatabase: number[] = []
+  ccas.map((cca) => {
+    newUserCcasDatabase.push(cca.ccaID)
+  })
+  const updateUserJson = {
+    userID: user.userID,
+    ccaID: newUserCcasDatabase,
+  }
+  console.log(updateUserJson)
+  dispatch(addUserCca(updateUserJson))
 }
 
-export const handleCCADetails = (actionType: 'Delete' | 'Add', newCcaName: string) => (
+export const addUserCca = (cca: { userID: string; ccaID: number[] }) => () => {
+  fetch('https://rhappevents.rhdevs.repl.co/user_CCA/add', {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cca),
+  })
+    .then((resp) => resp)
+    .then((data) => {
+      if (data.ok) {
+        console.log('add CCA success')
+      }
+    })
+}
+
+export const handleCCADetails = (actionType: 'Delete' | 'Add', newCca: UserCCA) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user, ccas } = getState().profile
-  const newCca = {
-    // TODO userId string or number?
-    userID: user.userID.toString(),
-    //TODO CCA ID
-    ccaID: 1,
-    ccaName: newCcaName,
-  }
+  const { ccas } = getState().profile
   const newUserCcas = ccas
+
   // user.cca = ["rhdevs", "rhmp"]
   switch (actionType) {
     case 'Delete':
       // newUserCcas.remove(newCCA)
       for (let i = 0; i < newUserCcas.length; i++)
-        if (newUserCcas[i].ccaName === newCcaName) {
+        if (newUserCcas[i].ccaName === newCca.ccaName) {
           newUserCcas.splice(i, 1)
           break
         }
@@ -153,12 +157,9 @@ export const handleCCADetails = (actionType: 'Delete' | 'Add', newCcaName: strin
       // user.cca = ["rhdevs","rhmp","voices"]
       break
   }
-  // newUserCca (array of new cca) = ["rhdevs","rhmp","voices"] OR = ["rhdevs"]
-  // To confirm something/ lock-in:
+
   // 1. updatestate
   dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_CCAS, newCCAs: newUserCcas })
-  // 2. backend
-  // POST('/SMTHSMTH'), body({ newCCAString }) //refer to backend Documentation OR just ask
 }
 
 export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: string) => (
@@ -183,10 +184,7 @@ export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: str
       // user.cca = ["rhdevs","rhmp","voices"]
       break
   }
-  // newUserCca (array of new cca) = ["rhdevs","rhmp","voices"] OR = ["rhdevs"]
-  // To confirm something/ lock-in:
+
   // 1. updatestate
   dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
-  // 2. backend
-  // POST('/SMTHSMTH'), body({ newCCAString }) //refer to backend Documentation OR just ask
 }

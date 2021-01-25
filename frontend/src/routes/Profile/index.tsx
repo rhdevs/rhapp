@@ -86,12 +86,9 @@ export default function Profile() {
   useEffect(() => {
     dispatch(fetchUserDetails('A1234567B'))
     dispatch(fetchUserCCAs('A1234567B'))
-
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
-
-  console.log(user)
 
   const changeUser = () => {
     setIsOwnProfile(!isOwnProfile)

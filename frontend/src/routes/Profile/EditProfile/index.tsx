@@ -7,7 +7,13 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchUserCCAs, fetchUserDetails, handleCCADetails, handleModuleDetails } from '../../../store/profile/action'
+import {
+  fetchAllCCAs,
+  fetchUserCCAs,
+  fetchUserDetails,
+  handleCCADetails,
+  handleModuleDetails,
+} from '../../../store/profile/action'
 import { AutoComplete, Card, Select } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import plusCircle from '../../../assets/plusCircle.svg'
@@ -36,11 +42,13 @@ interface Details {
 
 export default function EditProfile() {
   const dispatch = useDispatch()
-  const { user, ccas } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(fetchUserDetails(user.userID))
     dispatch(fetchUserCCAs(user.userID))
+    dispatch(fetchAllCCAs())
+    // console.log(user)
     //TODO: change to comparing userId with user.id
     // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
@@ -63,7 +71,12 @@ export default function EditProfile() {
   }
 
   // Search bar
-  const options = [{ value: 'Baa' }, { value: 'Basketball' }, { value: 'Badminton' }]
+  const options = [
+    { value: 'Basketball (MALE)' },
+    { value: 'Badminton (MALE)' },
+    { value: 'Handball (MALE)' },
+    { value: 'Board of Photography' },
+  ]
 
   let ccaToBeAdded = ''
   let moduleToBeAdded = ''
@@ -83,7 +96,10 @@ export default function EditProfile() {
     switch (type) {
       case 'CCAs':
         if (cca !== '') {
-          dispatch(handleCCADetails('Add', cca))
+          const ccaObj = allCcas.find((o) => o.ccaName === cca)
+          if (ccaObj !== undefined) {
+            dispatch(handleCCADetails('Add', ccaObj))
+          }
         }
         break
       case 'Modules':
@@ -130,7 +146,10 @@ export default function EditProfile() {
     const deleteIconClicked = (itemType: 'cca' | 'module', itemToBeDeleted: string) => {
       switch (itemType) {
         case 'cca':
-          dispatch(handleCCADetails('Delete', itemToBeDeleted))
+          const ccaObj = allCcas.find((o) => o.ccaName === itemToBeDeleted)
+          if (ccaObj != undefined) {
+            dispatch(handleCCADetails('Delete', ccaObj))
+          }
           break
         case 'module':
           dispatch(handleModuleDetails('Delete', itemToBeDeleted))

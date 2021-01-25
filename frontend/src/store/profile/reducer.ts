@@ -20,6 +20,7 @@ export const initialState = {
   newCCAs: [],
   newModules: [],
   friends: [],
+  allCcas: [],
 }
 
 type State = {
@@ -31,6 +32,7 @@ type State = {
   newCCAs: UserCCA[]
   newModules: string[]
   friends: User[]
+  allCcas: UserCCA[]
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -45,6 +47,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         ccas: action.ccas,
+      }
+    }
+    case PROFILE_ACTIONS.SET_ALL_CCAS: {
+      return {
+        ...state,
+        allCcas: action.allCcas,
       }
     }
     case PROFILE_ACTIONS.SET_USER_FRIENDS: {
