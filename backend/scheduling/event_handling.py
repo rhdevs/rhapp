@@ -38,7 +38,7 @@ def hello():
     return "Welcome the Raffles Hall Events server"
 
 
-@app.route("/timetable/<userID>")
+@app.route("/timetable/<userID>", methods=["GET"])
 @cross_origin()
 def getUserTimetable(userID):
     try:
@@ -48,7 +48,7 @@ def getUserTimetable(userID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/all')
+@app.route('/event/all', methods=["GET"])
 @cross_origin()
 def getAllEvents():
     try:
@@ -58,7 +58,7 @@ def getAllEvents():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/private/all')
+@app.route('/event/private/all', methods=["GET"])
 @cross_origin()
 def getAllPrivateEvents():
     try:
@@ -72,7 +72,7 @@ def getAllPrivateEvents():
     return json.dumps(response, default=lambda o: str(o)), 200
 
 
-@app.route('/event/public/all')
+@app.route('/event/public/all', methods=["GET"])
 @cross_origin()
 def getAllPublicEvents():
     try:
@@ -86,7 +86,7 @@ def getAllPublicEvents():
     return json.dumps(response, default=lambda o: str(o)), 200
 
 
-@app.route('/event/afterTime/<startTime>')
+@app.route('/event/afterTime/<startTime>', methods=["GET"])
 @cross_origin()
 def getEventAfterTime(startTime):
     try:
@@ -96,7 +96,7 @@ def getEventAfterTime(startTime):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/cca/all')
+@app.route('/cca/all', methods=["GET"])
 @cross_origin()
 def getAllCCA():
     try:
@@ -106,7 +106,7 @@ def getAllCCA():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event')
+@app.route('/event', methods=["GET"])
 @cross_origin()
 def getEventsDetails():
     try:
@@ -120,7 +120,7 @@ def getEventsDetails():
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<int:ccaID>')
+@app.route('/event/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID):
     try:
@@ -130,7 +130,7 @@ def getEventsCCA(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/cca/<int:ccaID>')
+@app.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getCCADetails(ccaID):
     try:
@@ -170,7 +170,7 @@ def getUserAttendanceAll(userID):
         return {"err": str(e)}, 400
 
 
-@app.route("/user_event/<userID>/<int:referenceTime>")
+@app.route("/user_event/<userID>/<int:referenceTime>", methods=["GET"])
 @cross_origin()
 def getUserAttendance(userID, referenceTime):
     try:
@@ -193,7 +193,7 @@ def getUserAttendance(userID, referenceTime):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_event/<eventID>")
+@app.route("/user_event/<eventID>", methods=["GET"])
 @cross_origin()
 def getEventAttendees(eventID):
     try:
@@ -203,7 +203,7 @@ def getEventAttendees(eventID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA/<int:ccaID>")
+@app.route("/user_CCA/<int:ccaID>", methods=["GET"])
 @cross_origin()
 def getCCAMembers(ccaID):
     try:
@@ -213,7 +213,7 @@ def getCCAMembers(ccaID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA")
+@app.route("/user_CCA", methods=["GET"])
 @cross_origin()
 def getCCAMembersName():
     try:
@@ -256,7 +256,7 @@ def addUserCCA():
         return {"err": str(e)}, 400
 
 
-@app.route("/permissions/<userID>")
+@app.route("/permissions/<userID>", methods=["GET"])
 @cross_origin()
 def getUserPermissions(userID):
     try:
@@ -409,7 +409,7 @@ def editAttendance():
     return {'message': "Attendance edited"}, 200
 
 
-@app.route("/nusmods/<userID>")
+@app.route("/nusmods/<userID>", methods=["GET"])
 @cross_origin()
 def getMods(userID):
     try:
