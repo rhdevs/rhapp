@@ -69,19 +69,16 @@ If successful return 200, else return 500
 @app.route('/auth/register', methods=['POST'])
 def register():
     try:
-        #extract userID, password and email
-        print("reached 1")
+    #extract userID, password and email
         formData = request.get_json()
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
         email = formData["email"]
-        print(email)
-        if db.User.find({'userID': { "$in": testID}}).count(): # entry exists
+        if db.User.find({'userID': userID}).count(): # entry exists
             return jsonify({'message': 'User already exists'}), 401
         #add to User table
-        print("reached 2")
+        #note: if the user data does not adhere to defined validation standards, an error will be thrown here
         db.User.insert_one(formData)
-        print("reached 3")
     except:
         return jsonify({'message': 'An error was encountered.'}), 500
     return jsonify({'message': 'User successfully created!'}), 200
