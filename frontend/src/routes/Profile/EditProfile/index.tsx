@@ -48,9 +48,6 @@ export default function EditProfile() {
     dispatch(fetchUserDetails(user.userID))
     dispatch(fetchUserCCAs(user.userID))
     dispatch(fetchAllCCAs())
-    // console.log(user)
-    //TODO: change to comparing userId with user.id
-    // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
   }, [dispatch])
 
   // Visibility dropdown

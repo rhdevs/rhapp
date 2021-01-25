@@ -3,8 +3,6 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  // const selectedUser = userProfileStub
-  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
   fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
     method: 'GET',
   })
@@ -15,8 +13,6 @@ export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTy
 }
 
 export const fetchUserCCAs = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  // const selectedUser = userProfileStub
-  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
   fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
     method: 'GET',
   })
@@ -37,8 +33,6 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const fetchUserFriends = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  // const selectedUser = userProfileStub
-  // dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: selectedUser })
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
     method: 'GET',
   })
@@ -113,7 +107,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     userID: user.userID,
     ccaID: newUserCcasDatabase,
   }
-  console.log(updateUserJson)
   dispatch(addUserCca(updateUserJson))
 }
 
