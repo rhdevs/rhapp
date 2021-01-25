@@ -116,11 +116,13 @@ def editUser():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.Profiles.find({"userID": userID})
+        data = db.Profiles.find_one({"userID": userID})
+        del data['_id']
+        return data
+    
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route("/profile", methods=['DELETE', 'POST'])
