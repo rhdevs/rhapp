@@ -579,7 +579,7 @@ def search():
     # a function to search all events, facilities and profiles
     try : 
         term = str(request.args.get('term'))
-        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*{}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
+        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*(?i){}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
         
         profiles = db.Profiles.find({"displayName" : regex}, {'_id': False}) # should have done this earlier 
         events = db.Events.find({"eventName" : regex}, {'_id': False})
