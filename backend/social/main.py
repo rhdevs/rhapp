@@ -116,13 +116,11 @@ def editUser():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.Profiles.find_one({"userID": userID})
-        del data['_id']
-        return data
-    
+        data = db.Profiles.find({"userID": userID})
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route("/profile", methods=['DELETE', 'POST'])
@@ -172,7 +170,6 @@ def addDeleteProfile():
         print(e)
         return {"err": str(e)}, 400
 
-
 @app.route("/profile/edit", methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def editProfile():
@@ -180,8 +177,8 @@ def editProfile():
         data = request.get_json()
         userID = str(data.get('userID'))
         
-        oldResult = db.Profiles.find_one({"userID": userID})
-        if result is None:
+        oldData = db.Profiles.find_one({"userID": userID})
+        if oldData is None:
             return make_response("data not found", 404)
         
         displayName = str(data.get('displayName')) if data.get('displayName') else oldData.get('displayName')
