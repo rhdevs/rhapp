@@ -8,6 +8,7 @@ const initialState = {
   userCurrentEvents: [],
   userCurrentEventsList: [],
   userAllEventsList: [],
+  userNusModsEventsList: [],
   userCurrentEventsStartTime: 1000,
   userCurrentEventsEndTime: 1800,
   shareSearchResults: [],
@@ -36,6 +37,7 @@ type State = {
   userCurrentEvents: TimetableEvent[][][]
   userCurrentEventsList: TimetableEvent[]
   userAllEventsList: TimetableEvent[]
+  userNusModsEventsList: TimetableEvent[]
   userCurrentEventsStartTime: number
   userCurrentEventsEndTime: number
   shareSearchResults: Friend[]
@@ -98,6 +100,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         userAllEventsList: action.userAllEventsList,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS: {
+      return {
+        ...state,
+        userNusModsEventsList: action.userNusModsEventsList,
       }
     }
     case SCHEDULING_ACTIONS.EDIT_USER_NUSMODS_EVENTS: {

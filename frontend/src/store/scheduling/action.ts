@@ -23,20 +23,28 @@ const getFromBackend = async (endpoint, methods) => {
 
 // ---------------------- POST/DELETE ----------------------
 const postToBackend = (endpoint, method, body, functions) => {
-  fetch(DOMAIN_URL.EVENT + endpoint, {
-    method: method,
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-    .then((resp) => resp)
-    .then((data) => {
-      // if (data.ok) {
-      //   console.log('success')
-      // }
-      // console.log(data)
-      functions(data)
+  if (body) {
+    fetch(DOMAIN_URL.EVENT + endpoint, {
+      method: method,
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
     })
+      .then((resp) => resp)
+      .then((data) => {
+        functions(data)
+      })
+  } else {
+    fetch(DOMAIN_URL.EVENT + endpoint, {
+      method: method,
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((resp) => resp)
+      .then((data) => {
+        functions(data)
+      })
+  }
 }
 // ---------------------- POST/DELETE ----------------------
 
@@ -84,11 +92,10 @@ export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) =
 }
 
 // ---------------------- TIMETABLE ----------------------
-export const fetchCurrentUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+export const fetchCurrentUserEvents = (userId: string, stopIsLoading: boolean) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch(setIsLoading(true))
-
   const manipulateData = async (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
@@ -107,7 +114,7 @@ export const fetchCurrentUserEvents = (userId: string, isSearchEventsPage: boole
       userCurrentEventsEndTime: Number(getTimetableEndTime(allEvents)),
       userCurrentEventsList: allEvents,
     })
-    if (isSearchEventsPage) dispatch(setIsLoading(false))
+    if (stopIsLoading) dispatch(setIsLoading(false))
   }
 
   const currentUNIXDate = Math.round(Date.now() / 1000)
@@ -325,10 +332,37 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
   })
 }
 
-const getUserNusModsEvents = (userId: string) => async () => {
-  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
-  console.log(resp)
-  return resp[0].mods
+const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
+      userNusModsEventsList: data,
+    })
+  }
+  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
+  dispatch(setIsLoading(false))
+  if (resp.length === 0) return null
+  else return resp[0].mods
+}
+
+export const deleteUserNusModsEvents = (userId: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const updateDeleteStatus = (data) => {
+    if (data.ok) {
+      console.log('SUCCESSFULY DELETED')
+      dispatch(setIsLoading(false))
+      dispatch(fetchCurrentUserEvents(userId, false))
+    } else {
+      console.log('FAILURE!!!! ' + data.status)
+    }
+  }
+
+  const { userNusModsEventsList } = getState().scheduling
+
+  if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
 }
 // ---------------------- NUSMODS ----------------------
 
