@@ -1,6 +1,6 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
-import { SearchResult } from './types'
+import { SearchResult } from './home/types'
 
 /**
  * ######### STUBS LIST: #########

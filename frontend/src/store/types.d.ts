@@ -11,10 +11,3 @@ type ThunkAction<R, S, A extends Action> = (dispatch: ThunkDispatch<S, A>, getSt
 
 export type Dispatch<CustomActionTypes extends Action> = ThunkDispatch<RootState, CustomActionTypes>
 export type GetState = () => RootState
-
-export type SearchResult = {
-  id: number
-  title: string
-  description?: string
-  avatar?: string
-}
