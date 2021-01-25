@@ -170,7 +170,6 @@ def addDeleteProfile():
         print(e)
         return {"err": str(e)}, 400
 
-
 @app.route("/profile/edit", methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def editProfile():
@@ -178,8 +177,8 @@ def editProfile():
         data = request.get_json()
         userID = str(data.get('userID'))
         
-        oldResult = db.Profiles.find_one({"userID": userID}, {'$set': body})
-        if result is None:
+        oldData = db.Profiles.find_one({"userID": userID})
+        if oldData is None:
             return make_response("data not found", 404)
         
         displayName = str(data.get('displayName')) if data.get('displayName') else oldData.get('displayName')
@@ -579,7 +578,7 @@ def search():
     # a function to search all events, facilities and profiles
     try : 
         term = str(request.args.get('term'))
-        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*{}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
+        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*(?i){}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
         
         profiles = db.Profiles.find({"displayName" : regex}, {'_id': False}) # should have done this earlier 
         events = db.Events.find({"eventName" : regex}, {'_id': False})

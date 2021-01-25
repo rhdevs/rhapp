@@ -4,14 +4,19 @@ import { useHistory } from 'react-router-dom'
 
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { Alert, Menu } from 'antd'
-import { PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined, SearchOutlined, ShareAltOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
 
-import { fetchCurrentUserEvents, setIsLoading, setNusModsStatus } from '../../store/scheduling/action'
+import {
+  deleteUserNusModsEvents,
+  fetchCurrentUserEvents,
+  setIsLoading,
+  setNusModsStatus,
+} from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
@@ -148,6 +153,18 @@ export default function Schedule() {
           </Menu.Item>
         </>
       }
+      closableButton={
+        <Menu.Item
+          key="6"
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            console.log('remove nusmods!!')
+            dispatch(deleteUserNusModsEvents(dummyUserId))
+          }}
+        >
+          Delete my NUSMods events
+        </Menu.Item>
+      }
     />
   )
 
@@ -167,7 +184,8 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(isLoading && <LoadingSpin />) || ((nusModsIsSuccessful || nusModsIsFailure) && AlertSection)}
+      {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
+      {isLoading && <LoadingSpin />}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable
