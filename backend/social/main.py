@@ -178,7 +178,7 @@ def editProfile():
         data = request.get_json()
         userID = str(data.get('userID'))
         
-        oldResult = db.Profiles.find_one({"userID": userID}, {'$set': body})
+        oldResult = db.Profiles.find_one({"userID": userID})
         if result is None:
             return make_response("data not found", 404)
         
