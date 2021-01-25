@@ -18,13 +18,6 @@ app.config['SECRET_KEY'] = 'secretkeyvalue' # will replace with flaskenv variabl
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
 db.Session.create_index("createdAt", expireAfterSeconds = 120)
 
-#for new registration, check if matric already exists
-def userIDAlreadyExists(testID):
-    if db.User.find({'userID': { "$in": testID}}).count(): # entry exists
-        return True
-    else:
-        return False
-
 """
 Decorative function: 
 checks for and verifies token. Used in /protected
