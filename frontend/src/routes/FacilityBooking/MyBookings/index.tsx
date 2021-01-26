@@ -14,6 +14,8 @@ import {
   editMyBooking,
   SetIsLoading,
   setSelectedBooking,
+  getCCANameFromId,
+  getFacilityNameFromId,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
@@ -92,6 +94,11 @@ export default function ViewMyBookings() {
     dispatch(getMyBookings(dummyUserId))
   }, [dispatch])
 
+  // const getFacilityName = (facilityId: number) => {
+  //   const facilityName = dispatch(getFacilityNameFromId(facilityId))
+  //   return facilityName
+  // }
+
   return (
     <>
       <TopNavBar title={'My Bookings'} />
@@ -99,50 +106,51 @@ export default function ViewMyBookings() {
         {isLoading && <LoadingSpin />}
         {!isLoading && (
           <>
-            {myBookings?.map((event) => (
-              <BookingCard key={event.eventName}>
-                <BookingAvatar src={dummyAvatar} />
-                <BookingLabels
-                  onClick={() => {
-                    history.push('/facility/booking/view/' + event.bookingID)
-                    dispatch(setSelectedBooking(event.bookingID))
-                  }}
-                >
-                  <BookingHeader>{event.eventName}</BookingHeader>
-                  <BookingSubHeader>
-                    {event.ccaID}: {event.facilityID}
-                  </BookingSubHeader>
-                  <BookingTime>
-                    <b>{new Date(event.startTime * 1000).toDateString()}</b> <br />
-                    {new Date(event.startTime * 1000).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}{' '}
-                    to {new Date(event.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </BookingTime>
-                </BookingLabels>
-                <RightActionGroups>
-                  <ActionButton
-                    src={editIcon}
+            {myBookings?.map((booking) => {
+              // const ccaName = dispatch(getCCANameFromId(booking.ccaID))
+              return (
+                <BookingCard key={booking.eventName}>
+                  <BookingAvatar src={dummyAvatar} />
+                  <BookingLabels
                     onClick={() => {
-                      dispatch(editMyBooking(event))
-                      history.push(PATHS.CREATE_FACILITY_BOOKING)
+                      history.push('/facility/booking/view/' + booking.bookingID)
                     }}
-                  />
-                  <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(event.bookingID))} />
-                </RightActionGroups>
-                {isDeleteMyBooking !== -1 && isDeleteMyBooking === event.bookingID && (
-                  <ConfirmationModal
-                    title={'Delete Booking?'}
-                    hasLeftButton={true}
-                    leftButtonText={'Delete'}
-                    onLeftButtonClick={() => dispatch(deleteMyBooking(event.bookingID))}
-                    rightButtonText={'Cancel'}
-                    onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
-                  />
-                )}
-              </BookingCard>
-            ))}
+                  >
+                    {/* <BookingHeader>{getFacilityName(booking.facilityID)}</BookingHeader> */}
+                    <BookingSubHeader>{/* {ccaName}: {booking.eventName} */}</BookingSubHeader>
+                    <BookingTime>
+                      <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
+                      {new Date(booking.startTime * 1000).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}{' '}
+                      to{' '}
+                      {new Date(booking.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </BookingTime>
+                  </BookingLabels>
+                  <RightActionGroups>
+                    <ActionButton
+                      src={editIcon}
+                      onClick={() => {
+                        dispatch(editMyBooking(booking))
+                        history.push(PATHS.CREATE_FACILITY_BOOKING)
+                      }}
+                    />
+                    <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))} />
+                  </RightActionGroups>
+                  {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
+                    <ConfirmationModal
+                      title={'Delete Booking?'}
+                      hasLeftButton={true}
+                      leftButtonText={'Delete'}
+                      onLeftButtonClick={() => dispatch(deleteMyBooking(booking.bookingID))}
+                      rightButtonText={'Cancel'}
+                      onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+                    />
+                  )}
+                </BookingCard>
+              )
+            })}
             {myBookings?.length === 0 && !myBookings && (
               <div>
                 <img src={catIcon} /> <h1>You have no Bookings yet!</h1>

@@ -7,7 +7,12 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import { deleteMyBooking, setIsDeleteMyBooking, SetIsLoading } from '../../../store/facilityBooking/action'
+import {
+  deleteMyBooking,
+  fetchSelectedFacility,
+  setIsDeleteMyBooking,
+  SetIsLoading,
+} from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -106,7 +111,9 @@ export default function ViewBooking() {
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(false))
+    // dispatch(SetIsLoading(false))
+    dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
+    console.log('eventID is: ', params.bookingId)
     console.log(selectedBooking)
   }, [dispatch])
 

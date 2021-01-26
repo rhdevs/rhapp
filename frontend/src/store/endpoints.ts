@@ -16,6 +16,7 @@ export enum ENDPOINTS {
   FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
+  VIEW_BOOKING = '/booking',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY

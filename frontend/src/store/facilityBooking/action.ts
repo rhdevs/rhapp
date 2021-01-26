@@ -53,7 +53,6 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
     .then((resp) => resp)
     .then((data) => {
       const fetchedList: Booking[] = data
-      console.log(fetchedList)
       dispatch({
         type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
         myBookings: fetchedList,
@@ -185,25 +184,55 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
     })
 }
 
-export const setSelectedBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
-  console.log(bookingId)
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId, {
+export const setSelectedBooking = (booking: Booking) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking })
+  // await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId, {
+  //   method: 'GET',
+  //   mode: 'cors',
+  // })
+  //   .then((resp) => resp.json())
+  //   .then((data) => {
+  //     console.log(data)
+  //     dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: data })
+  //     dispatch(SetIsLoading(false))
+  //   })
+}
+
+export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
+}
+
+export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
+}
+
+export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(data)
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: data })
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: data[0] })
       dispatch(SetIsLoading(false))
     })
 }
 
-export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { isLoading } = getState().facilityBooking
-  dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
+export const getCCANameFromId = (ccaID: number) => (dispatch: Dispatch<ActionTypes>) => {
+  const ccaName = fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + ccaID, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch(SetIsLoading(false))
+      data[0].ccaName
+    })
+
+  return ccaName
 }
 
-export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
+export const getFacilityNameFromId = (facilityId: number) => () => {
+  console.log(facilityId)
+  return 'Basketball Court'
 }
