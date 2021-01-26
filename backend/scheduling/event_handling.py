@@ -42,20 +42,20 @@ def hello():
 @cross_origin()
 def getUserTimetable(userID):
     try:
-        data = db.Lessons.find({"userID": userID})
+        response = db.Lessons.find({"userID": userID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/event/all', methods=["GET"])
 @cross_origin()
 def getAllEvents():
     try:
-        data = db.Events.find()
+        response = db.Events.find()
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/event/private/all', methods=["GET"])
@@ -90,20 +90,20 @@ def getAllPublicEvents():
 @cross_origin()
 def getEventAfterTime(startTime):
     try:
-        data = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
+        response = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/cca/all', methods=["GET"])
 @cross_origin()
 def getAllCCA():
     try:
-        data = db.CCA.find()
+        response = db.CCA.find()
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/event', methods=["GET"])
@@ -124,20 +124,20 @@ def getEventsDetails():
 @cross_origin()
 def getEventsCCA(ccaID):
     try:
-        data = db.Events.find({"ccaID": ccaID})
+        response = db.Events.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getCCADetails(ccaID):
     try:
-        data = db.CCA.find({"ccaID": ccaID})
+        response = db.CCA.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
 @app.route("/user_CCA/<string:userID>", methods=['GET'])
