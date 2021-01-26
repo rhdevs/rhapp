@@ -38,7 +38,7 @@ def hello():
     return "Welcome the Raffles Hall Events server"
 
 
-@app.route("/timetable/<userID>")
+@app.route("/timetable/<userID>", methods=["GET"])
 @cross_origin()
 def getUserTimetable(userID):
     try:
@@ -48,7 +48,7 @@ def getUserTimetable(userID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/all')
+@app.route('/event/all', methods=["GET"])
 @cross_origin()
 def getAllEvents():
     try:
@@ -58,7 +58,7 @@ def getAllEvents():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event/private/all')
+@app.route('/event/private/all', methods=["GET"])
 @cross_origin()
 def getAllPrivateEvents():
     try:
@@ -72,7 +72,7 @@ def getAllPrivateEvents():
     return json.dumps(response, default=lambda o: str(o)), 200
 
 
-@app.route('/event/public/all')
+@app.route('/event/public/all', methods=["GET"])
 @cross_origin()
 def getAllPublicEvents():
     try:
@@ -86,7 +86,7 @@ def getAllPublicEvents():
     return json.dumps(response, default=lambda o: str(o)), 200
 
 
-@app.route('/event/afterTime/<startTime>')
+@app.route('/event/afterTime/<startTime>', methods=["GET"])
 @cross_origin()
 def getEventAfterTime(startTime):
     try:
@@ -96,7 +96,7 @@ def getEventAfterTime(startTime):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/cca/all')
+@app.route('/cca/all', methods=["GET"])
 @cross_origin()
 def getAllCCA():
     try:
@@ -106,7 +106,7 @@ def getAllCCA():
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/event')
+@app.route('/event', methods=["GET"])
 @cross_origin()
 def getEventsDetails():
     try:
@@ -120,7 +120,7 @@ def getEventsDetails():
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<int:ccaID>')
+@app.route('/event/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID):
     try:
@@ -130,7 +130,7 @@ def getEventsCCA(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route('/cca/<int:ccaID>')
+@app.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getCCADetails(ccaID):
     try:
@@ -140,20 +140,21 @@ def getCCADetails(ccaID):
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA/<string:userID>", methods = ['GET'])
+@app.route("/user_CCA/<string:userID>", methods=['GET'])
 @cross_origin()
 def getUserCCAs(userID):
     try:
         data = db.UserCCA.find({"userID": userID})
         entries = [w["ccaID"] for w in data]
         response = db.CCA.find({"ccaID": {"$in": entries}})
-      
+
         return json.dumps(list(response), default=lambda o: str(o)), 200
-      
+
     except Exception as e:
         return {"err": str(e)}, 400
-    
-@app.route("/user_event/<string:userID>/all", methods = ['GET'])
+
+
+@app.route("/user_event/<string:userID>/all", methods=['GET'])
 @cross_origin()
 def getUserAttendanceAll(userID):
     try:
@@ -162,13 +163,14 @@ def getUserAttendanceAll(userID):
         entries = [ObjectId(w['eventID']) for w in data]
         data = db.Events.find({"_id": {"$in": entries}})
         response = map(rename, data)
-        
+
         return json.dumps(list(response), default=lambda o: str(o)), 200
-      
+
     except Exception as e:
         return {"err": str(e)}, 400
-    
-@app.route("/user_event/<userID>/<int:referenceTime>")
+
+
+@app.route("/user_event/<userID>/<int:referenceTime>", methods=["GET"])
 @cross_origin()
 def getUserAttendance(userID, referenceTime):
     try:
@@ -191,7 +193,7 @@ def getUserAttendance(userID, referenceTime):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_event/<eventID>")
+@app.route("/user_event/<eventID>", methods=["GET"])
 @cross_origin()
 def getEventAttendees(eventID):
     try:
@@ -201,7 +203,7 @@ def getEventAttendees(eventID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA/<int:ccaID>")
+@app.route("/user_CCA/<int:ccaID>", methods=["GET"])
 @cross_origin()
 def getCCAMembers(ccaID):
     try:
@@ -211,12 +213,11 @@ def getCCAMembers(ccaID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/user_CCA")
+@app.route("/user_CCA", methods=["GET"])
 @cross_origin()
 def getCCAMembersName():
     try:
         ccaName = str(request.args.get('ccaName'))
-        print(ccaName)
         response = db.UserCCA.find({"ccaName": ccaName})
     except Exception as e:
         return {"err": str(e)}, 400
@@ -230,33 +231,32 @@ def addUserCCA():
         data = request.get_json()
         userID = data.get('userID')
         # db.UserCCA.update(body, {'$set': body}, upsert=True)
-        ccaID = data.get('ccaID') # list of integers 
-        
-        deleteQuery = {"userID" : userID}
-        db.UserCCA.delete(deleteQuery);
-        
-        #replace
+        ccaID = data.get('ccaID')  # list of integers
+
+        deleteQuery = {"userID": userID}
+        db.UserCCA.delete_many(deleteQuery)
+
+        # replace
         body = []
-        for cca in ccaID : 
+        for cca in ccaID:
             item = {
                 "userID": userID,
                 "ccaID": cca
             }
-            
-            
+
             body.append(item)
 
         receipt = db.UserCCA.insert_many(body)
-        
+
         response = {}
         response["_id"] = str(receipt.inserted_ids)
 
-        return {"message" : response}, 200
+        return {"message": response}, 200
     except Exception as e:
         return {"err": str(e)}, 400
 
 
-@app.route("/permissions/<userID>")
+@app.route("/permissions/<userID>", methods=["GET"])
 @cross_origin()
 def getUserPermissions(userID):
     try:
@@ -409,7 +409,7 @@ def editAttendance():
     return {'message': "Attendance edited"}, 200
 
 
-@app.route("/nusmods/<userID>")
+@app.route("/nusmods/<userID>", methods=["GET"])
 @cross_origin()
 def getMods(userID):
     try:
@@ -486,7 +486,7 @@ def addNUSModsEvents():
             if lesson == "":
                 break
             abbrev, classNo = lesson.split(":")
-            lessonType _TO_LESSON[abbrev]
+            lessonType = ABBREV_TO_LESSON[abbrev]
             lesson = next(
                 moduleClass for moduleClass in moduleData if moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType)
             lesson["abbrev"] = abbrev
@@ -528,5 +528,5 @@ def addNUSModsEvents():
 
 
 if __name__ == "__main__":
-#     app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
