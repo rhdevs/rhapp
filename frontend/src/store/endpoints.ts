@@ -28,7 +28,7 @@ export enum ENDPOINTS {
   // SCHEDULING
   USER_TIMETABLE = '/timetable/all',
   ALL_USERS = '/user/all',
-  USER_PERMISSION = '/permissions/',
+  USER_PERMISSION = '/permissions',
 
   ALL_EVENTS = '/event/all',
   ALL_PUBLIC_EVENTS = '/event/public/all',
@@ -39,7 +39,7 @@ export enum ENDPOINTS {
   EDIT_EVENT = '/event/edit/',
 
   ADD_MODS = '/nusmods/addNUSMods',
-  DELETE_MODS = '/nusmods/delete',
+  DELETE_MODS = '/nusmods/delete/',
   NUSMODS = '/nusmods/',
 
   USER_LESSON = 'user_lesson',
@@ -50,6 +50,20 @@ export enum ENDPOINTS {
   CCA_MEMBER = '/user_CCA',
 
   EVENT_DETAILS = '/event',
+
+  // FRIENDS
+  ALL_FRIENDS = '/friend',
+
+  // SOCIAL
+  OFFICIAL_POSTS = '/post/official',
+  ALL_POSTS = '/post',
+  FRIENDS_OF_USER_POSTS = '/post/friend',
+  SPECIFIC_POST = '/post/search',
+  DELETE_POST = '/post',
+  EDIT_POST = '/post/edit',
+
+  // HOME
+  SEARCH = '/search',
 }
 
 export enum DOMAINS {

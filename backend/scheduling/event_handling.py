@@ -234,7 +234,7 @@ def addUserCCA():
         ccaID = data.get('ccaID')  # list of integers
 
         deleteQuery = {"userID": userID}
-        db.UserCCA.delete(deleteQuery)
+        db.UserCCA.delete_many(deleteQuery)
 
         # replace
         body = []

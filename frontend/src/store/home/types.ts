@@ -1,5 +1,3 @@
-import { SearchResult } from '../types'
-
 /** Types */
 
 export type Account = {
@@ -10,6 +8,18 @@ export type Account = {
   settings: {
     notifications: boolean
   }
+}
+
+export type SearchResult = {
+  id: number
+  title?: string
+  facilityLocation?: string
+  facilityName?: string
+  description?: string
+  avatar?: string
+  bio?: string
+  displayName?: string
+  profilePictureUrl?: string
 }
 
 /** Actions' types */

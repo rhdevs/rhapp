@@ -1,8 +1,8 @@
 import { isEmpty, last } from 'lodash'
 import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
+import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
 import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
-import { ENDPOINTS, DOMAIN_URL, DOMAINS, put } from '../endpoints'
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint, methods) => {
@@ -23,20 +23,28 @@ const getFromBackend = async (endpoint, methods) => {
 
 // ---------------------- POST/DELETE ----------------------
 const postToBackend = (endpoint, method, body, functions) => {
-  fetch(DOMAIN_URL.EVENT + endpoint, {
-    method: method,
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-    .then((resp) => resp)
-    .then((data) => {
-      // if (data.ok) {
-      //   console.log('success')
-      // }
-      // console.log(data)
-      functions(data)
+  if (body) {
+    fetch(DOMAIN_URL.EVENT + endpoint, {
+      method: method,
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
     })
+      .then((resp) => resp)
+      .then((data) => {
+        functions(data)
+      })
+  } else {
+    fetch(DOMAIN_URL.EVENT + endpoint, {
+      method: method,
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((resp) => resp)
+      .then((data) => {
+        functions(data)
+      })
+  }
 }
 // ---------------------- POST/DELETE ----------------------
 
@@ -84,11 +92,10 @@ export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) =
 }
 
 // ---------------------- TIMETABLE ----------------------
-export const fetchCurrentUserEvents = (userId: string, isSearchEventsPage: boolean) => async (
+export const fetchCurrentUserEvents = (userId: string, stopIsLoading: boolean) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch(setIsLoading(true))
-
   const manipulateData = async (data) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
@@ -107,7 +114,7 @@ export const fetchCurrentUserEvents = (userId: string, isSearchEventsPage: boole
       userCurrentEventsEndTime: Number(getTimetableEndTime(allEvents)),
       userCurrentEventsList: allEvents,
     })
-    if (isSearchEventsPage) dispatch(setIsLoading(false))
+    if (stopIsLoading) dispatch(setIsLoading(false))
   }
 
   const currentUNIXDate = Math.round(Date.now() / 1000)
@@ -325,24 +332,67 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
   })
 }
 
-const getUserNusModsEvents = (userId: string) => async () => {
-  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, null)
-  console.log(resp)
-  return resp[0].mods
+const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
+      userNusModsEventsList: data,
+    })
+  }
+  const resp = await getFromBackend(ENDPOINTS.NUSMODS + userId, dispatchData)
+  dispatch(setIsLoading(false))
+  if (resp.length === 0) return null
+  else return resp[0].mods
+}
+
+export const deleteUserNusModsEvents = (userId: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const updateDeleteStatus = (data) => {
+    if (data.ok) {
+      console.log('SUCCESSFULY DELETED')
+      dispatch(setIsLoading(false))
+      dispatch(fetchCurrentUserEvents(userId, false))
+    } else {
+      console.log('FAILURE!!!! ' + data.status)
+    }
+  }
+
+  const { userNusModsEventsList } = getState().scheduling
+
+  if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
 }
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
-export const getShareSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
+export const getShareSearchResults = () => (dispatch: Dispatch<ActionTypes>) => {
+  // const { user } = getState().profile
+  // const { userID } = user
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
   // Uncomment when endpoint for share search is obtained from backend
-  // get(ENDPOINTS.SHARE_SEARCH).then((results) => {
-  //   dispatch({
-  //     type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
-  //     shareSearchResults: results,
-  //   })
-  // })
+  get(ENDPOINTS.ALL_FRIENDS, DOMAINS.SOCIAL, `/${userId}`).then((results) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SHARE_SEARCH_RESULTS,
+      shareSearchResults: results,
+    })
+  })
   dispatch(setIsLoading(false))
+}
+
+export const giveTimetablePermission = async (recipientUserId: string) => {
+  const userId = 'A1234567B' // TODO: Revert to previous line after integration of userID
+  const requestBody = {
+    donor: userId,
+    recipient: recipientUserId,
+  }
+
+  try {
+    await post(ENDPOINTS.USER_PERMISSION, DOMAINS.EVENT, requestBody)
+  } catch (err) {
+    return Promise.reject()
+  }
 }
 // ---------------------- SHARE SEARCH ----------------------
 

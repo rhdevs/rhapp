@@ -15,6 +15,7 @@ const MenuContainer = styled.div`
 type Props = {
   menuItem: ReactElement
   icon?: ReactElement
+  closableButton?: ReactElement
 }
 
 function MenuDropdown(props: Props) {
@@ -30,6 +31,15 @@ function MenuDropdown(props: Props) {
       {menuIsVisible && (
         <Menu style={{ width: 256, position: 'absolute', top: '60px', right: 0 }} mode="inline">
           {props.menuItem}
+          {props.closableButton && (
+            <Menu.Item
+              onClick={() => {
+                setMenuIsVisible(false)
+              }}
+            >
+              {props.closableButton}
+            </Menu.Item>
+          )}
         </Menu>
       )}
     </MenuContainer>
