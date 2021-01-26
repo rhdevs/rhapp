@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { HexGrid, Layout, Hexagon, Pattern } from 'react-hexgrid'
 import { PATHS } from '../../../Routes'
-import image from '../../../../assets/hexagonIcons/calendarIcon.svg'
+import calendar_icon from '../../../../assets/hexagonIcons/calendarIcon.svg'
 import facilities_icon from '../../../../assets/hexagonIcons/facilitiesIcon.svg'
 import laundry_icon from '../../../../assets/hexagonIcons/laundryIcon.svg'
 import social_icon from '../../../../assets/hexagonIcons/socialIcon.svg'
@@ -80,7 +80,7 @@ export default function HexagonNavigation() {
             </StyledHexagon>
           ))}
         </Layout>
-        <Pattern id="calendar" link={image} size={hexagonSize} />
+        <Pattern id="calendar" link={calendar_icon} size={hexagonSize} />
         <Pattern id="facilities" link={facilities_icon} size={hexagonSize} />
         <Pattern id="laundry" link={laundry_icon} size={hexagonSize} />
         <Pattern id="more" link={more_icon} size={hexagonSize} />
