@@ -68,6 +68,7 @@ const BookingTime = styled.p`
 
 const BookingLabels = styled.div`
   align-self: center;
+  margin-top: 20px;
 `
 
 const RightActionGroups = styled.div`
@@ -88,7 +89,7 @@ export default function ViewMyBookings() {
 
   useEffect(() => {
     dispatch(SetIsLoading(false))
-    dispatch(getMyBookings(dummyUserId))
+    if (!myBookings) dispatch(getMyBookings(dummyUserId))
   }, [dispatch])
 
   return (
@@ -146,7 +147,6 @@ export default function ViewMyBookings() {
                 <img src={catIcon} /> <h1>You have no Bookings yet!</h1>
               </div>
             )}
-            <p onClick={() => console.log(myBookings)}>hello fuck u</p>
           </>
         )}
       </MainContainer>
