@@ -234,7 +234,7 @@ def addUserCCA():
         ccaID = data.get('ccaID')  # list of integers
 
         deleteQuery = {"userID": userID}
-        db.UserCCA.delete_many(deleteQuery)
+        db.UserCCA.delete(deleteQuery)
 
         # replace
         body = []
@@ -492,15 +492,14 @@ def addNUSModsEvents():
             lesson["abbrev"] = abbrev
             out.append(lesson)
 
-        out = [{"id": index,
-                "eventName": moduleArray[0] + " " + classInformation["abbrev"],
+        out = [{"eventName": moduleArray[0] + " " + classInformation["abbrev"],
                 "location": classInformation["venue"],
                 "day": classInformation["day"],
                 "endTime": classInformation["endTime"],
                 "startTime": classInformation["startTime"],
                 "hasOverlap": False,
                 "eventType": "mods",
-                "weeks": classInformation["weeks"]} for index, classInformation in enumerate(out)]
+                "weeks": classInformation["weeks"]} for classInformation in out]
         return out
 
     try:
@@ -515,8 +514,13 @@ def addNUSModsEvents():
         output = [lesson for module in oneModuleArray for lesson in fetchDataFromNusMods(
             academicYear, currentSemester, module)]
 
+        # adds a index for the timetable event. In a seperate line for readability
+        indexed_output = [dict(id=index, **lesson) for index, lesson in enumerate(output)]
+
         body = {"userID": userID,
-                "mods": output}
+                "mods": indexed_output}
+
+        print(indexed_output)
 
         db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
 
