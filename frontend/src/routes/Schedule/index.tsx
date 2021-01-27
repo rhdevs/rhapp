@@ -159,6 +159,7 @@ export default function Schedule() {
           icon={<DeleteOutlined />}
           onClick={() => {
             console.log('remove nusmods!!')
+            dispatch(setIsLoading(true))
             dispatch(deleteUserNusModsEvents(dummyUserId))
           }}
         >

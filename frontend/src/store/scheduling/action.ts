@@ -353,16 +353,17 @@ export const deleteUserNusModsEvents = (userId: string) => async (
   const updateDeleteStatus = (data) => {
     if (data.ok) {
       console.log('SUCCESSFULY DELETED')
-      dispatch(setIsLoading(false))
       dispatch(fetchCurrentUserEvents(userId, false))
     } else {
       console.log('FAILURE!!!! ' + data.status)
     }
+    dispatch(setIsLoading(false))
   }
 
   const { userNusModsEventsList } = getState().scheduling
 
   if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
+  dispatch(setIsLoading(false))
 }
 // ---------------------- NUSMODS ----------------------
 
