@@ -516,7 +516,7 @@ def addNUSModsEvents():
             academicYear, currentSemester, module)]
 
         # adds a index for the timetable event. In a seperate line for readability
-        indexed_output = [dict(eventID=index, **lesson)
+        indexed_output = [dict(eventID=str(index), **lesson)
                           for index, lesson in enumerate(output)]
 
         body = {"userID": userID,
