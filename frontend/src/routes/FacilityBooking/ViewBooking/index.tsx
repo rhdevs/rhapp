@@ -7,12 +7,7 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import {
-  deleteMyBooking,
-  fetchSelectedFacility,
-  setIsDeleteMyBooking,
-  SetIsLoading,
-} from '../../../store/facilityBooking/action'
+import { deleteMyBooking, fetchSelectedFacility, setIsDeleteMyBooking } from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 

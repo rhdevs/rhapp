@@ -103,7 +103,6 @@ async function makeRequest(
       DOMAIN_URL = 'https://rhappsocial.rhdevs.repl.co'
       break
   }
-  console.log(DOMAIN_URL + url)
   return axios({
     method: method,
     url: DOMAIN_URL + url,
