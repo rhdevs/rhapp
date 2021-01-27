@@ -36,7 +36,7 @@ export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_
 // }
 
 export type TimetableEvent = {
-  eventID: number
+  eventID: string
   eventName: string
   startDateTime: number
   endDateTime: number
@@ -55,7 +55,7 @@ export type TimetableEvent = {
 }
 
 export type SchedulingEvent = {
-  eventID: number
+  eventID: string
   eventName: string
   startDateTime: number
   endDateTime: number

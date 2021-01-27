@@ -8,9 +8,10 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getHallEventTypes } from '../../../store/scheduling/action'
+import { fetchAllUserEvents, getHallEventTypes } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { dummyUserId } from '../../../store/stubs'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   display: flex;
@@ -34,7 +35,14 @@ export default function CreateEvent() {
 
   const eventIdFromPath = location.pathname.split('/').slice(-1)[0]
   console.log(eventIdFromPath)
-  const { selectedEvent } = useSelector((state: RootState) => state.scheduling)
+
+  const { userAllEventsList } = useSelector((state: RootState) => state.scheduling)
+
+  const selectedEvent = userAllEventsList.find((indivEvent) => {
+    return indivEvent.eventID === eventIdFromPath
+  })
+
+  console.log(selectedEvent)
   const BackIcon = (
     <LeftOutlined
       style={{ color: 'black', padding: '0 10px 0 0' }}
@@ -45,6 +53,7 @@ export default function CreateEvent() {
   )
 
   useEffect(() => {
+    dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(getHallEventTypes())
   }, [dispatch])
 
@@ -83,19 +92,20 @@ export default function CreateEvent() {
     <MainContainer>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={EditIcon} />
       <BottomContentContainer>
-        <ViewEventDetailCard
-          eventName={selectedEvent?.eventName || 'default event name'}
-          eventCreatedBy={selectedEvent?.userID === dummyUserId ? 'You' : selectedEvent?.userID || 'NUSMods'}
-          startDateAndTime={selectedEvent?.startDateTime || 1608723138}
-          endDateAndTime={selectedEvent?.endDateTime || 1608726751}
-          eventLocation={selectedEvent?.location || 'default event location'}
-          eventCca={String(selectedEvent?.ccaID) || 'default event cca'}
-          eventDescription={
-            selectedEvent?.description ||
-            'default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?'
-          }
-          eventType={selectedEvent?.eventType || 'default event type'}
-        />
+        {selectedEvent ? (
+          <ViewEventDetailCard
+            eventName={selectedEvent.eventName}
+            eventCreatedBy={selectedEvent.userID === dummyUserId ? 'You' : selectedEvent.userID || 'NUSMods'}
+            startDateAndTime={selectedEvent.startDateTime}
+            endDateAndTime={selectedEvent.endDateTime}
+            eventLocation={selectedEvent.location}
+            eventCca={String(selectedEvent.ccaID)}
+            eventDescription={selectedEvent.description}
+            eventType={selectedEvent.eventType}
+          />
+        ) : (
+          <LoadingSpin />
+        )}
       </BottomContentContainer>
     </MainContainer>
   )
