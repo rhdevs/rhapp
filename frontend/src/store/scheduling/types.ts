@@ -36,14 +36,19 @@ export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_
 // }
 
 export type TimetableEvent = {
-  startDate?: number
-  endDate?: number
-  weeks?: number[]
   eventID: number
   eventName: string
+  startDateTime: number
+  endDateTime: number
+  description: string
+  location: string
+  ccaID: number
+  userID: string
+  image: null | string
+
+  weeks?: number[]
   startTime: string
   endTime: string
-  location: string
   day: string
   hasOverlap: boolean
   eventType: string
@@ -85,6 +90,7 @@ export enum SCHEDULING_ACTIONS {
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
   HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
+  SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
 }
 
 /** Actions */
@@ -189,6 +195,10 @@ type HandleEventAttendanceStatus = {
   eventAttendanceIsFailure: boolean
 }
 
+type SetSelectedEvent = {
+  type: typeof SCHEDULING_ACTIONS.SET_SELECTED_EVENT
+  selectedEvent: TimetableEvent | null
+}
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -209,3 +219,4 @@ export type ActionTypes =
   | SetHallEventType
   | HandleNusModsStatus
   | HandleEventAttendanceStatus
+  | SetSelectedEvent

@@ -56,7 +56,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
 
   const leftIcon = (
     <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
+      style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
         history.goBack()
       }}

@@ -1,7 +1,10 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { PATHS } from '../../routes/Routes'
+import { setSelectedEvent } from '../../store/scheduling/action'
+import { TimetableEvent } from '../../store/scheduling/types'
 
 const TitleText = styled.text`
   color: black;
@@ -56,6 +59,7 @@ type Props = {
   onlyShowEventName?: boolean
   eventType?: string
   isSingleEvent?: boolean
+  event: TimetableEvent
 }
 
 function EventCell(props: Props) {
@@ -112,12 +116,13 @@ function EventCell(props: Props) {
     'rem'
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
   return (
     <EventContainer
       onClick={() => {
-        history.push(PATHS.VIEW_EVENT)
-        // history.push(""../../scheduling/ViewEvent")
+        dispatch(setSelectedEvent(props.event))
+        history.push(PATHS.VIEW_EVENT + props.event.eventID)
       }}
       style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}
     >

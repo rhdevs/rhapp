@@ -166,7 +166,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const leftIcon = (
     <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
+      style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
         history.push(PATHS.SCHEDULE_PAGE)
       }}

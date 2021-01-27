@@ -67,7 +67,7 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
 
   const leftIcon = (
     <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
+      style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
         history.goBack()
       }}

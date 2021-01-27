@@ -6,9 +6,7 @@ import 'antd/dist/antd.css'
 
 const Background = styled.div`
   background-color: #fafaf4;
-  height: 100vh;
   width: 100vw;
-  align-items: center;
   padding: 0px 20px;
 `
 
@@ -27,8 +25,7 @@ const MainHeader = styled.div`
   font-size: 30px;
   font-weight: 700;
   line-height: 30px;
-  margin-right: 20px;
-  white-space: nowrap;
+  margin-bottom: 10px;
 `
 const HeaderSubtitle = styled.div`
   font-family: Inter;
@@ -46,10 +43,15 @@ const Row = styled.div`
   justify-content: space-between;
 `
 
+const DescriptionTextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+`
+
 const RowDescription = styled.div`
   display: flex;
   width: 100%;
-  margin: 10px 0px;
   justify-content: flex-start;
 `
 
@@ -78,8 +80,10 @@ const FetchedDescriptionDetails = styled.div`
   font-weight: 200;
   font-size: 17px;
   line-height: 22px;
-  margin: 0px 15px;
+  margin: 0px 10px;
   color: #666666;
+  max-height: 110px;
+  overflow: scroll;
 `
 
 const RemoveRow = styled.div`
@@ -146,12 +150,11 @@ function ViewEventDetailCard({
   }
 
   return (
-    <div>
+    <>
       <HeaderGroup>
         <MainHeader>{eventName}</MainHeader>
         <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>
       </HeaderGroup>
-
       <Background>
         <Row>
           <StyledTitle>From</StyledTitle>
@@ -171,14 +174,12 @@ function ViewEventDetailCard({
           <StyledTitle>CCA</StyledTitle>
           <FetchedDetails>{eventCca}</FetchedDetails>
         </Row>
-        <Row>
-          <Row>
-            <StyledTitle>Description</StyledTitle>
-          </Row>
-        </Row>
-        <RowDescription>
-          <FetchedDescriptionDetails>{eventDescription}</FetchedDescriptionDetails>
-        </RowDescription>
+        <DescriptionTextContainer>
+          <StyledTitle>Description</StyledTitle>
+          <RowDescription>
+            <FetchedDescriptionDetails>{eventDescription}</FetchedDescriptionDetails>
+          </RowDescription>
+        </DescriptionTextContainer>
         <Row>
           <StyledTitle>Event Type</StyledTitle>
           <FetchedDetails>{eventType}</FetchedDetails>
@@ -187,7 +188,7 @@ function ViewEventDetailCard({
           <RemoveEvent>Remove from timetable</RemoveEvent>
         </RemoveRow>
       </Background>
-    </div>
+    </>
   )
 }
 

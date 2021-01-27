@@ -137,9 +137,16 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
   return {
     eventID: singleEvent.eventID,
     eventName: singleEvent.eventName,
+    startDateTime: singleEvent.startDateTime,
+    endDateTime: singleEvent.endDateTime,
+    description: singleEvent.description,
+    location: singleEvent.location,
+    ccaID: singleEvent.ccaID,
+    userID: singleEvent.userID,
+    image: singleEvent.image,
+
     startTime: startTime,
     endTime: endTime,
-    location: singleEvent.location,
     day: getDayStringFromUNIX(singleEvent.startDateTime),
     hasOverlap: false,
     eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
@@ -503,7 +510,6 @@ export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes
 export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE, newTargetAudience: newTargetAudience })
 }
-// ---------------------- CREATE EVENTS ----------------------
 
 export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -552,6 +558,17 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
       console.log(err)
     })
 }
+// ---------------------- CREATE EVENTS ----------------------
+
+// ---------------------- VIEW EVENTS ----------------------
+export const setSelectedEvent = (selectedEvent: TimetableEvent) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(selectedEvent)
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
+    selectedEvent: selectedEvent,
+  })
+}
+// ---------------------- VIEW EVENTS ----------------------
 
 export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isLoading } = getState().scheduling

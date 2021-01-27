@@ -1,18 +1,26 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LeftOutlined, EditOutlined } from '@ant-design/icons'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getHallEventTypes } from '../../../store/scheduling/action'
+import { RootState } from '../../../store/types'
+import { dummyUserId } from '../../../store/stubs'
 
-const Background = styled.div`
-  background-color: #fafaf4;
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  background-color: #fafaf4;
+`
+
+const BottomContentContainer = styled.div`
+  background-color: #fafaf4;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -20,22 +28,22 @@ const Background = styled.div`
   padding: 0px 0px;
 `
 
-const Row = styled.div`
-  display: flex;
-  width: 100%;
-  margin: 8px 0px;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const BackIcon = (
-  <Link to={'/schedule'}>
-    <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-  </Link>
-)
-
 export default function CreateEvent() {
+  const history = useHistory()
   const dispatch = useDispatch()
+
+  const eventIdFromPath = location.pathname.split('/').slice(-1)[0]
+  console.log(eventIdFromPath)
+  const { selectedEvent } = useSelector((state: RootState) => state.scheduling)
+  const BackIcon = (
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px 0 0' }}
+      onClick={() => {
+        history.goBack()
+      }}
+    />
+  )
+
   useEffect(() => {
     dispatch(getHallEventTypes())
   }, [dispatch])
@@ -72,22 +80,23 @@ export default function CreateEvent() {
   // }
 
   return (
-    <div>
+    <MainContainer>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={EditIcon} />
-      <Background>
-        <Row>
-          <ViewEventDetailCard
-            eventName={'Gym Lah'}
-            eventCreatedBy={'You'}
-            startDateAndTime={1608723138}
-            endDateAndTime={1608726751}
-            eventLocation={'Basketball Court'}
-            eventCca={'Basketball'}
-            eventDescription={'Come join us'}
-            eventType={'CCA'}
-          />
-        </Row>
-      </Background>
-    </div>
+      <BottomContentContainer>
+        <ViewEventDetailCard
+          eventName={selectedEvent?.eventName || 'default event name'}
+          eventCreatedBy={selectedEvent?.userID === dummyUserId ? 'You' : selectedEvent?.userID || 'NUSMods'}
+          startDateAndTime={selectedEvent?.startDateTime || 1608723138}
+          endDateAndTime={selectedEvent?.endDateTime || 1608726751}
+          eventLocation={selectedEvent?.location || 'default event location'}
+          eventCca={String(selectedEvent?.ccaID) || 'default event cca'}
+          eventDescription={
+            selectedEvent?.description ||
+            'default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?default description this is a very long text and can be super long i think,, there is probbaly no limit?'
+          }
+          eventType={selectedEvent?.eventType || 'default event type'}
+        />
+      </BottomContentContainer>
+    </MainContainer>
   )
 }
