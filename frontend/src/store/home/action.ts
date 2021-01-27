@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, HOME_PAGE_ACTIONS, Account } from './types'
-// import { get, ENDPOINTS } from '../endpoints'
+import { get, ENDPOINTS, DOMAINS } from '../endpoints'
 
 export const mockActionSetAccount = () => (dispatch: Dispatch<ActionTypes>) => {
   // This is how you call an API
@@ -20,10 +20,20 @@ export const mockActionSetAccount = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { sampleStateText } = getState().home
-  console.log('Hello')
   console.log(getState().home.sampleStateText)
   dispatch({
     type: HOME_PAGE_ACTIONS.SAMPLE_TEXT,
     sampleStateText: sampleStateText + 'n',
+  })
+}
+
+export const getSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
+  get(ENDPOINTS.SEARCH, DOMAINS.SOCIAL, `?term=${query}`).then((results) => {
+    const combinedResults = Object.keys(results).reduce((acc, key) => acc.concat(results[key]), [])
+    console.log(results)
+    dispatch({
+      type: HOME_PAGE_ACTIONS.SEARCH,
+      searchResults: combinedResults,
+    })
   })
 }

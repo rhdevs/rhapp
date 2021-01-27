@@ -73,6 +73,14 @@ const TextContainer = styled.div`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  width: 68vw;
+`
+
+const TextContainerExtended = styled.div`
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
   width: 68vw;
 `
 
@@ -93,6 +101,7 @@ type Props = {
   dateTime?: string
   description: string
   bottomElement?: ReactElement
+  onClick?: () => void
 }
 
 function ImageDescriptionCard(props: Props) {
@@ -104,7 +113,7 @@ function ImageDescriptionCard(props: Props) {
   }
 
   return (
-    <CardContainer onClick={expandCard}>
+    <CardContainer onClick={props.onClick ? props.onClick : expandCard}>
       <ContentContainer>
         <ImageContainer>
           <img
@@ -113,21 +122,19 @@ function ImageDescriptionCard(props: Props) {
             style={{ width: '43px', height: '43px', objectFit: 'scale-down' }}
           />
         </ImageContainer>
-        <TextContainer>
-          {!isExpanded ? (
-            <>
-              <TitleText>{props.title}</TitleText>
-              <DateTimeText>{props.dateTime}</DateTimeText>
-              <DescriptionText>{props.description}</DescriptionText>
-            </>
-          ) : (
-            <>
-              <ExpandTitle>{props.title}</ExpandTitle>
-              <ExpandDateTimeText>{props.dateTime}</ExpandDateTimeText>
-              <ExpandDescriptionText>{props.description}</ExpandDescriptionText>
-            </>
-          )}
-        </TextContainer>
+        {!isExpanded ? (
+          <TextContainer>
+            <TitleText>{props.title}</TitleText>
+            <DateTimeText>{props.dateTime}</DateTimeText>
+            {props.description && <DescriptionText>{props.description}</DescriptionText>}
+          </TextContainer>
+        ) : (
+          <TextContainerExtended>
+            <ExpandTitle>{props.title}</ExpandTitle>
+            <ExpandDateTimeText>{props.dateTime}</ExpandDateTimeText>
+            <ExpandDescriptionText>{props.description}</ExpandDescriptionText>
+          </TextContainerExtended>
+        )}
       </ContentContainer>
       <BottomElementContainer>{isExpanded && props.bottomElement}</BottomElementContainer>
     </CardContainer>

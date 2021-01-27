@@ -1,8 +1,11 @@
 import { LeftOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSearchResults } from '../../../store/home/action'
+import { RootState } from '../../../store/types'
+
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -39,19 +42,15 @@ type RecentData = {
   description: string
 }
 
-const testData: RecentData[] = [
-  { avatar: 'https://i.pravatar.cc/150?img=3', title: 'Zhou Mamam', description: 'Block 1' },
-  { title: 'John', description: 'description' },
-]
-
 export default function Search({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
-  const data = recentSearches ?? testData
+  const dispatch = useDispatch()
+  const searchResults = useSelector((state: RootState) => state.home.searchResults)
   const [searchValue, setSearchValue] = useState('')
 
   const onChange = (input: string) => {
     setSearchValue(input)
-    console.log(searchValue)
+    input && dispatch(getSearchResults(input))
   }
 
   const leftIcon = (
@@ -63,29 +62,52 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
     />
   )
 
-  return (
-    <Background>
-      <TopNavBar title={'Search'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Facility, People, Events etc.'} value={searchValue} onChange={onChange} />
-      {searchValue ? (
+  /**
+   * Renders search results (if any) when there is a search query,
+   * otherwise renders recent searches (if any)
+   */
+  const renderResults = () => {
+    if (searchValue) {
+      return searchResults ? (
+        searchResults.map((result, index) => {
+          return (
+            <ImageDescriptionCard
+              key={index}
+              avatar={result.avatar ?? result.profilePictureUrl}
+              title={result.title ?? result.facilityLocation ?? result.displayName ?? ''}
+              description={result?.description ?? result.facilityName ?? result.bio ?? ''}
+            />
+          )
+        })
+      ) : (
         <NoRecentDataText>No results</NoRecentDataText>
-      ) : data ? (
+      )
+    } else {
+      return recentSearches ? (
         <>
           <RecentDataText>Recent</RecentDataText>
-          {data.map((person, index) => {
+          {recentSearches.map((result, index) => {
             return (
               <ImageDescriptionCard
                 key={index}
-                avatar={person.avatar}
-                title={person.title}
-                description={person.description}
+                avatar={result.avatar}
+                title={result.title}
+                description={result?.description ?? ''}
               />
             )
           })}
         </>
       ) : (
         <NoRecentDataText>No recent searches</NoRecentDataText>
-      )}
+      )
+    }
+  }
+
+  return (
+    <Background>
+      <TopNavBar title={'Search'} leftIcon={true} leftIconComponent={leftIcon} />
+      <SearchBar placeholder={'Facility, People, Events etc.'} value={searchValue} onChange={onChange} />
+      {renderResults()}
       <BottomNavBar></BottomNavBar>
     </Background>
   )

@@ -14,8 +14,8 @@ import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 
 const StyledButton = styled.img`
-  width: 27px;
-  height: 27px;
+  width: 28px;
+  max-height: 28px;
 `
 
 const BottomNav = styled.div`
@@ -44,51 +44,53 @@ function BottomNavBar() {
   }
 
   return (
-    <BottomNav>
-      <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
-        <TabBar.Item
-          key="Home"
-          icon={<StyledButton src={homeIconUnselected} />}
-          selectedIcon={<StyledButton src={homeIconSelected} />}
-          selected={activeTabIndex() === 1}
-          // badge={0}
-          onPress={() => {
-            history.push(PATHS.HOME_PAGE)
-            console.log(location.pathname)
-          }}
-        ></TabBar.Item>
-        <TabBar.Item
-          key="Facilities"
-          icon={<StyledButton src={facilitiesIconUnselected} />}
-          selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
-          selected={activeTabIndex() === 2}
-          // badge={12}
-          onPress={() => {
-            history.push(PATHS.FACILITY_BOOKING_MAIN)
-          }}
-        ></TabBar.Item>
-        <TabBar.Item
-          key="Calender"
-          icon={<StyledButton src={calenderIconUnselected} />}
-          selectedIcon={<StyledButton src={calenderIconSelected} />}
-          selected={activeTabIndex() === 3}
-          // badge={'test'}
-          onPress={() => {
-            history.push(PATHS.SCHEDULE_PAGE)
-          }}
-        ></TabBar.Item>
-        <TabBar.Item
-          key="Profile"
-          icon={<StyledButton src={profileIconUnselected} />}
-          selectedIcon={<StyledButton src={profileIconSelected} />}
-          selected={activeTabIndex() === 4}
-          // badge={1}
-          onPress={() => {
-            history.push(PATHS.PROFILE_PAGE)
-          }}
-        ></TabBar.Item>
-      </TabBar>
-    </BottomNav>
+    <div style={{ height: '55px', backgroundColor: '#fafaf4' }}>
+      <BottomNav>
+        <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
+          <TabBar.Item
+            key="Home"
+            icon={<StyledButton src={homeIconUnselected} />}
+            selectedIcon={<StyledButton src={homeIconSelected} />}
+            selected={activeTabIndex() === 1}
+            // badge={0}
+            onPress={() => {
+              history.push(PATHS.HOME_PAGE)
+              console.log(location.pathname)
+            }}
+          ></TabBar.Item>
+          <TabBar.Item
+            key="Facilities"
+            icon={<StyledButton src={facilitiesIconUnselected} />}
+            selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
+            selected={activeTabIndex() === 2}
+            // badge={12}
+            onPress={() => {
+              history.push(PATHS.FACILITY_BOOKING_MAIN)
+            }}
+          ></TabBar.Item>
+          <TabBar.Item
+            key="Calender"
+            icon={<StyledButton src={calenderIconUnselected} />}
+            selectedIcon={<StyledButton src={calenderIconSelected} />}
+            selected={activeTabIndex() === 3}
+            // badge={'test'}
+            onPress={() => {
+              history.push(PATHS.SCHEDULE_PAGE)
+            }}
+          ></TabBar.Item>
+          <TabBar.Item
+            key="Profile"
+            icon={<StyledButton src={profileIconUnselected} />}
+            selectedIcon={<StyledButton src={profileIconSelected} />}
+            selected={activeTabIndex() === 4}
+            // badge={1}
+            onPress={() => {
+              history.push(PATHS.PROFILE_PAGE)
+            }}
+          ></TabBar.Item>
+        </TabBar>
+      </BottomNav>
+    </div>
   )
 }
 

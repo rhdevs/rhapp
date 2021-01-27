@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Input } from 'antd'
+import { AutoComplete, Input } from 'antd'
 import { DatePicker } from 'antd-mobile'
 import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
@@ -18,8 +18,13 @@ import {
   editBookingFromDate,
   editBookingName,
   editBookingToDate,
+  fetchAllCCAs,
+  getFacilityList,
   handleCreateBooking,
+  SetIsLoading,
+  setSelectedFacility,
 } from '../../../store/facilityBooking/action'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -71,15 +76,24 @@ export default function CreateBooking() {
     newBookingCCA,
     newBookingDescription,
     newBookingFacilityName,
+    selectedFacility,
+    facilityList,
+    isLoading,
+    ccaList,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
+    dispatch(SetIsLoading(true))
     if (newBooking) {
-      dispatch(editBookingFromDate(newBooking.startTime))
-      dispatch(editBookingToDate(newBooking.endTime))
+      dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
+      dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
       dispatch(editBookingDescription(newBooking.description))
       dispatch(editBookingName(newBooking.eventName))
       dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
+    }
+    dispatch(fetchAllCCAs())
+    if (facilityList.length === 0) {
+      dispatch(getFacilityList())
     }
   }, [dispatch])
 
@@ -114,48 +128,83 @@ export default function CreateBooking() {
     dispatch(editBookingDescription(description))
   }
 
+  const setFacility = (newFacilityName: string) => {
+    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
+    if (newSelectedFacilityId) {
+      dispatch(setSelectedFacility(newSelectedFacilityId))
+    }
+  }
+
   const toCustomDateFormat = (date: Date) => {
     return `${dayjs(date).format('ddd, MMM D, YYYY, h:mm A')}`
   }
 
+  const locationOptions = facilityList.map((facility) => ({
+    value: facility.facilityName,
+  }))
+
   return (
     <div>
       <TopNavBar title={newBooking?.bookingID ? `Edit Booking` : `New Booking`} rightComponent={CheckIcon} />
-      <Background>
-        <StyledTitle>{newBookingFacilityName}</StyledTitle>
-        <StyledInput
-          placeholder="Event Name"
-          value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
-          onChange={(e) => dispatch(editBookingName(e.target.value))}
-        />
-        <div style={{ width: '100%' }}>
-          <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
-            <DatePickerRow>
-              <StyledTitle>From</StyledTitle>
-              <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
-            </DatePickerRow>
-          </DatePicker>
-          <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
-            <DatePickerRow>
-              <StyledTitle>To</StyledTitle>
-              <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
-            </DatePickerRow>
-          </DatePicker>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
-            newBookingToDate,
-          )
-            .diff(dayjs(newBookingFromDate), 'hour', true)
-            .toFixed(1)} hours`}</div>
-        </div>
-        <InputRow title="CCA" placeholder="CCA Name" value={newBookingCCA} setValue={setCca} />
-        <InputRow
-          title="Description"
-          placeholder="Tell us what your booking is for!"
-          value={newBookingDescription}
-          setValue={setDescription}
-          textarea
-        />
-      </Background>
+      {isLoading && <LoadingSpin />}
+      {!isLoading && (
+        <Background>
+          <AutoComplete
+            style={{ width: '50%', marginBottom: '23px' }}
+            options={locationOptions}
+            value={selectedFacility?.facilityName}
+            placeholder="Location"
+            onChange={(newFacilityName) => setFacility(newFacilityName)}
+            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+          />
+          <StyledInput
+            placeholder="Event Name"
+            value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
+            onChange={(e) => dispatch(editBookingName(e.target.value))}
+          />
+          <div style={{ width: '100%' }}>
+            <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
+              <DatePickerRow>
+                <StyledTitle>From</StyledTitle>
+                <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
+              </DatePickerRow>
+            </DatePicker>
+            <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
+              <DatePickerRow>
+                <StyledTitle>To</StyledTitle>
+                <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
+              </DatePickerRow>
+            </DatePicker>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
+              newBookingToDate,
+            )
+              .diff(dayjs(newBookingFromDate), 'hour', true)
+              .toFixed(1)} hours`}</div>
+          </div>
+          <div style={{ width: '100%', margin: '10px 0px' }}>
+            <StyledTitle>CCA</StyledTitle>
+            <AutoComplete
+              style={{ width: '100%' }}
+              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                value: cca.ccaName,
+              }))}
+              value={newBookingCCA}
+              placeholder="Select your CCA, else select Personal"
+              onChange={(value) => setCca(value)}
+              filterOption={(inputValue, option) =>
+                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
+            />
+          </div>
+          <InputRow
+            title="Description"
+            placeholder="Tell us what your booking is for!"
+            value={newBookingDescription}
+            setValue={setDescription}
+            textarea
+          />
+        </Background>
+      )}
     </div>
   )
 }

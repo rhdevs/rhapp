@@ -1,12 +1,15 @@
 import dayjs from 'dayjs'
 import { Reducer } from 'redux'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking } from './types'
+import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './types'
 
 const initialState = {
   // MAIN PAGE
+  isLoading: false,
   facilityList: [],
   locationList: [],
   selectedTab: '',
+  selectedFacility: null,
+  selectedBooking: null,
   myBookings: [],
   isDeleteMyBooking: -1,
   newBooking: undefined,
@@ -23,12 +26,18 @@ const initialState = {
   ViewStartDate: new Date(),
   ViewEndDate: dayjs(new Date()).add(3, 'day').toDate(),
   ViewFacilityMode: 'Bookings',
+  selectedFacilityId: 0,
+  ccaList: [],
+  facilityBookings: [],
 }
 
 type State = {
+  isLoading: boolean
   facilityList: Facility[]
   locationList: string[]
   selectedTab: string
+  selectedFacility: Facility | null
+  selectedBooking: Booking | null
   myBookings: Booking[]
   isDeleteMyBooking: number
   newBooking: Booking | undefined
@@ -42,6 +51,9 @@ type State = {
   createFailure: boolean
   ViewStartDate: Date
   ViewEndDate: Date
+  selectedFacilityId: number
+  ccaList: userCCA[]
+  facilityBookings: Booking[]
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -153,6 +165,54 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
+    case FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS: {
+      return {
+        ...state,
+        bookings: action.bookings,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_FACILITY_DETAILS: {
+      return {
+        ...state,
+        selectedFacility: action.selectedFacility,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_VIEW_BOOKING: {
+      return {
+        ...state,
+        selectedBooking: action.selectedBooking,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_SELECTED_FACILITY: {
+      return {
+        ...state,
+        selectedFacilityId: action.selectedFacilityId,
+      }
+    }
+
+    case FACILITY_ACTIONS.GET_ALL_CCA: {
+      return {
+        ...state,
+        ccaList: action.ccaList,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_FACILITY_BOOKINGS: {
+      return {
+        ...state,
+        facilityBookings: action.facilityBookings,
+      }
+    }
     default:
       return state
   }

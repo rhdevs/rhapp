@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import NoFriends from './NoFriends'
 import 'antd/dist/antd.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import { fetchUserFriends } from '../../../store/profile/action'
 
 const MainContainer = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 95vh;
   background-color: #fafaf4;
   align-items: center;
 `
@@ -46,27 +49,14 @@ const FriendLabels = styled.div`
   align-self: center;
 `
 
-interface FriendInfo {
-  friendId: number
-  name: string
-  telegram: string
-}
-
-const friendList: FriendInfo[] = [
-  {
-    friendId: 1,
-    name: 'Zhou Maomao',
-    telegram: '@zhoumm',
-  },
-  {
-    friendId: 2,
-    name: 'Zhou Gougou',
-    telegram: '@woofwoof',
-  },
-]
-
 export default function FriendList() {
-  const [hasFriends, setHasFriends] = useState(false)
+  const [hasFriends, setHasFriends] = useState(true)
+  const dispatch = useDispatch()
+  const { user, friends } = useSelector((state: RootState) => state.profile)
+
+  useEffect(() => {
+    dispatch(fetchUserFriends(user.userID))
+  }, [dispatch])
 
   const handleSearch = () => {
     setHasFriends(!hasFriends)
@@ -76,14 +66,18 @@ export default function FriendList() {
     <>
       <MainContainer>
         <TopNavBar title={'Friends'} />
-        {hasFriends ? (
-          friendList.map((friend) => {
+        {friends.length !== 0 ? (
+          friends.map((friend) => {
             return (
-              <FriendCard key={friend.friendId}>
-                <FriendAvatar src={dummyAvatar} />
+              <FriendCard key={friend.userID}>
+                {friend.profilePictureUrl ? (
+                  <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.profilePictureUrl} />
+                ) : (
+                  <FriendAvatar src={dummyAvatar} />
+                )}
                 <FriendLabels>
-                  <FriendHeader>{friend.name}</FriendHeader>
-                  <FriendSubHeader>{friend.telegram}</FriendSubHeader>
+                  <FriendHeader>{friend.displayName}</FriendHeader>
+                  <FriendSubHeader>{friend.telegramHandle}</FriendSubHeader>
                 </FriendLabels>
               </FriendCard>
             )
@@ -96,27 +90,3 @@ export default function FriendList() {
     </>
   )
 }
-
-// export default function FriendList() {
-//   // const [hasFriends, sethasFriends] = useState(true)
-
-//   return (
-//     <>
-//       <TopNavBar title={'Friends'} />
-//       <MainContainer>
-//         {friendList.map((friend) => {
-//           return (
-//             <FriendCard key={friend.friendId}>
-//               <FriendAvatar src={dummyAvatar} />
-//               <FriendLabels>
-//                 <FriendHeader>{friend.name}</FriendHeader>
-//                 <FriendSubHeader>{friend.telegram}</FriendSubHeader>
-//               </FriendLabels>
-//             </FriendCard>
-//           )
-//         })}
-//       </MainContainer>
-//       <BottomNavBar />
-//     </>
-//   )
-// }

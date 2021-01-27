@@ -38,11 +38,15 @@ function TopNavBar({
   leftIcon,
   leftIconComponent,
   rightComponent,
+  centerComponent,
+  onLeftClick,
 }: {
-  title: string
+  title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement
+  centerComponent?: ReactElement
+  onLeftClick?: () => void
 }) {
   const history = useHistory()
   return (
@@ -55,12 +59,13 @@ function TopNavBar({
             <NavBarIcons
               type="left"
               onClick={() => {
-                history.goBack()
+                onLeftClick ? onLeftClick() : history.goBack()
               }}
               color="#002642"
             />
           )}
           <TitleText>{title}</TitleText>
+          {centerComponent}
         </>
       }
       rightContent={rightComponent}

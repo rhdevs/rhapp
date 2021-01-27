@@ -12,12 +12,15 @@ export enum PATHS {
   SIGNUP_PAGE = '/auth/signup',
   CHANGE_PASSWORD_PAGE = '/auth/changePassword',
   PROFILE_PAGE = '/social/profile',
+  EDIT_PROFILE_PAGE = '/social/editprofile',
   FRIEND_LIST_PAGE = '/social/profile/friendList',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
   EVENT_LIST_PAGE = '/schedule/events',
   CREATE_EVENT = '/schedule/events/create',
+  IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
+  VIEW_EVENT = '/schedule/events/view',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityName',
@@ -27,15 +30,23 @@ export enum PATHS {
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
+  //SOCIAL
+  VIEW_POST = '/social/post/',
+  VIEW_POST_ID = '/social/post/:postId',
+  CREATE_POST = '/social/post/create',
+  EDIT = '/social/post/edit',
+  EDIT_POST = '/social/post/edit/:postId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
+const FallBack = React.lazy(() => import(/* webpackChunckName: "FallBack" */ './ErrorPages/NotFound'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
+const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" */ './Profile/EditProfile'))
 const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePassword" */ './Profile/ChangePassword'))
 const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */ './Profile/FriendList'))
 // SCHEDULING
@@ -43,15 +54,26 @@ const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ '
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
 const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
+const ImportFromNusMods = React.lazy(
+  () => import(/* webpackChunckName: "ImportFromNusMods" */ './Schedule/ImportFromNusMods'),
+)
+const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
-const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking'))
-const ViewFacility = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewFacility'))
-const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/MyBookings'))
-const ViewBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/ViewBooking'))
-const CreateBooking = React.lazy(() => import(/* webpackChunckName: "Signup" */ './FacilityBooking/CreateBooking'))
+const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
+const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
+const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
+const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
+const CreateBooking = React.lazy(
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
+)
 // LAUNDRY
-const LaundryMain = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry'))
-const ViewWashingMachine = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Laundry/ViewWashingMachine'))
+const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
+const ViewWashingMachine = React.lazy(
+  () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
+)
+//SOCIAL
+const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
+const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 export default class Routes extends React.Component {
   render() {
@@ -65,6 +87,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
             <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
+            <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <Route exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <Route exact path={PATHS.FRIEND_LIST_PAGE} component={FriendList} />
 
@@ -72,6 +95,8 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
             <Route exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
             <Route exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
+            <Route exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
+            <Route exact path={PATHS.VIEW_EVENT} component={ViewEvent} key={PATHS.VIEW_EVENT} />
 
             <Route exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <Route exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
@@ -81,6 +106,12 @@ export default class Routes extends React.Component {
 
             <Route exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <Route exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
+
+            <Route exact path={PATHS.CREATE_POST} component={CreateEditPost} />
+            <Route exact path={PATHS.EDIT_POST} component={CreateEditPost} />
+            <Route exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
+
+            <Route component={FallBack} />
           </Switch>
         </Suspense>
       </Root>

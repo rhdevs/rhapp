@@ -4,14 +4,20 @@ export type Facility = {
   facilityLocation: string
 }
 
+export type userCCA = {
+  ccaID: number
+  ccaName: string
+  category: string
+}
+
 export type Booking = {
   bookingID: number
   eventName: string
   facilityID: number
   userID: string
   ccaID: number
-  startTime: Date
-  endTime: Date
+  startTime: number
+  endTime: number
   description: string
 }
 
@@ -26,6 +32,7 @@ export type Event = {
 }
 
 export enum FACILITY_ACTIONS {
+  SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
   CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
@@ -43,6 +50,12 @@ export enum FACILITY_ACTIONS {
   SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
   SET_VIEW_FACILITY_MODE = 'FACILITY_ACTIONS.VIEW_FACILITY_MODE',
   HANDLE_CREATE_BOOKING = 'FACILITY_ACTIONS.HANDLE_CREATE_BOOKING',
+  POPULATE_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS',
+  SET_FACILITY_DETAILS = 'FACILITY_ACTIONS.SET_FACILITY_DETAILS',
+  SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
+  SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
+  GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
+  SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
 }
 
 type GetFacilityList = {
@@ -126,6 +139,41 @@ type HandleCreateBooking = {
   createFailure: boolean
 }
 
+type PopulateFacilityBookings = {
+  type: typeof FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS
+  bookings: Booking[]
+}
+
+type SetFacilityDetails = {
+  type: typeof FACILITY_ACTIONS.SET_FACILITY_DETAILS
+  selectedFacility: Facility
+}
+
+type SetViewBooking = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_BOOKING
+  selectedBooking: Booking
+}
+
+type SetIsLoading = {
+  type: typeof FACILITY_ACTIONS.SET_IS_LOADING
+  isLoading: boolean
+}
+
+type SetSelectedFacility = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_FACILITY
+  selectedFacilityId: number
+}
+
+type GetAllCCA = {
+  type: typeof FACILITY_ACTIONS.GET_ALL_CCA
+  ccaList: userCCA[]
+}
+
+type SetFacilityBookings = {
+  type: typeof FACILITY_ACTIONS.SET_FACILITY_BOOKINGS
+  facilityBookings: Booking[]
+}
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -143,3 +191,10 @@ export type ActionTypes =
   | setViewFacilityMode
   | SetFacilityName
   | HandleCreateBooking
+  | PopulateFacilityBookings
+  | SetFacilityDetails
+  | SetViewBooking
+  | SetIsLoading
+  | SetSelectedFacility
+  | GetAllCCA
+  | SetFacilityBookings

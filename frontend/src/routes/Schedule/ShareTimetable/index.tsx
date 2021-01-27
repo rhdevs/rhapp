@@ -1,6 +1,11 @@
 import { LeftOutlined } from '@ant-design/icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import { getShareSearchResults, giveTimetablePermission } from '../../../store/scheduling/action'
+import useSnackbar from '../../../hooks/useSnackbar'
+import { Friend } from '../../../store/social/types'
 
 import styled from 'styled-components'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
@@ -39,19 +44,25 @@ type RecentData = {
   description: string
 }
 
-const testData: RecentData[] = [
-  { avatar: 'https://i.pravatar.cc/150?img=3', title: 'Zhou Mamam', description: 'Block 1' },
-  { title: 'John', description: 'description' },
-]
-
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
-  const data = recentSearches ?? testData
+  const dispatch = useDispatch()
+  const [success] = useSnackbar()
+  const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
   const [searchValue, setSearchValue] = useState('')
+
+  useEffect(() => {
+    dispatch(getShareSearchResults())
+  }, [])
 
   const onChange = (input: string) => {
     setSearchValue(input)
-    console.log(searchValue)
+  }
+
+  const handleClick = (friend: Friend) => () => {
+    giveTimetablePermission(friend.userID)
+      .then(() => success(`You have shared with ${friend.displayName}`))
+      .catch(() => success(`You have failed to share with ${friend.displayName}`)) // TODO: Failure snackbar
   }
 
   const leftIcon = (
@@ -63,29 +74,56 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
     />
   )
 
-  return (
-    <Background>
-      <TopNavBar title={'Share'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Search user'} value={searchValue} onChange={onChange} />
-      {searchValue ? (
-        <NoRecentDataText>No friends</NoRecentDataText>
-      ) : data ? (
-        <>
-          <RecentDataText>Recent</RecentDataText>
-          {data.map((person, index) => {
+  /**
+   * Renders search results (if any) when there is a search query,
+   * otherwise renders recent searches (if any)
+   */
+  const renderResults = () => {
+    if (searchValue) {
+      return searchResults ? (
+        searchResults
+          .filter((friend) => friend.displayName.toLowerCase().includes(searchValue.toLowerCase()))
+          .map((friend, index) => {
+            console.log(friend)
             return (
               <ImageDescriptionCard
                 key={index}
-                avatar={person.avatar}
-                title={person.title}
-                description={person.description}
+                avatar={friend.profilePictureUrl}
+                title={friend.displayName}
+                description={friend.bio}
+                onClick={handleClick(friend)}
+              />
+            )
+          })
+      ) : (
+        <NoRecentDataText>No results</NoRecentDataText>
+      )
+    } else {
+      return recentSearches ? (
+        <>
+          <RecentDataText>Recent</RecentDataText>
+          {recentSearches.map((result, index) => {
+            return (
+              <ImageDescriptionCard
+                key={index}
+                avatar={result.avatar}
+                title={result.title}
+                description={result?.description ?? ''}
               />
             )
           })}
         </>
       ) : (
         <NoRecentDataText>No recent searches</NoRecentDataText>
-      )}
+      )
+    }
+  }
+
+  return (
+    <Background>
+      <TopNavBar title={'Share'} leftIcon={true} leftIconComponent={leftIcon} />
+      <SearchBar placeholder={'Search user'} value={searchValue} onChange={onChange} />
+      {renderResults()}
       <BottomNavBar></BottomNavBar>
     </Background>
   )
