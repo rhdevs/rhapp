@@ -549,14 +549,11 @@ def getAllFriends(userID):
     try:
         response = FriendsHelper(userID)
         friends = response["friendList"]
-        result = []
+        print(friends)
 
-        for friendID in friends:
-            entry = db.Profiles.find_one({"userID": friendID})
-            if entry != None:
-                result.append(entry)
+        response = db.Profiles.find({"userID": {"$in": friends}})
 
-        return make_response(json.dumps(result, default=lambda o: str(o)), 200)
+        return make_response(json.dumps(list(response), default=lambda o: str(o)), 200)
 
     except Exception as e:
         return make_response({"err": str(e)}, 400)
