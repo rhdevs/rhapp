@@ -515,12 +515,10 @@ def addNUSModsEvents():
             academicYear, currentSemester, module)]
 
         # adds a index for the timetable event. In a seperate line for readability
-        indexed_output = [dict(id=index, **lesson) for index, lesson in enumerate(output)]
+        indexed_output = [dict(EventID=index, **lesson) for index, lesson in enumerate(output)]
 
         body = {"userID": userID,
                 "mods": indexed_output}
-
-        print(indexed_output)
 
         db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
 
