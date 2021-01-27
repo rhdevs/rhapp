@@ -12,6 +12,7 @@ import calenderIconSelected from '../../assets/calenderIconSelected.svg'
 import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
+import 'antd-mobile/dist/antd-mobile.css'
 
 const StyledButton = styled.img`
   width: 28px;
