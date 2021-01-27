@@ -246,7 +246,8 @@ def addUserCCA():
 
             body.append(item)
 
-        receipt = db.UserCCA.insert_many(body)
+        receipt = db.UserPermissions.update_many(
+            body, {'$set': body}, upsert=True)
 
         response = {}
         response["_id"] = str(receipt.inserted_ids)
