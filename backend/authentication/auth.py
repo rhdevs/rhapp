@@ -93,7 +93,7 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 403
     #insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
-    db.Session.insert_one({'userID': username, 'passwordHash': passwordHash, 'createdAt': datetime.datetime.now()})
+    db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     #generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
     token = jwt.encode({'userID': username,
                         'passwordHash': passwordHash #to change timedelta to 15 minutes in production
