@@ -8,7 +8,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchAllUserEvents, getHallEventTypes } from '../../../store/scheduling/action'
+import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -34,15 +34,15 @@ export default function CreateEvent() {
   const dispatch = useDispatch()
 
   const eventIdFromPath = location.pathname.split('/').slice(-1)[0]
-  console.log(eventIdFromPath)
 
-  const { userAllEventsList } = useSelector((state: RootState) => state.scheduling)
+  const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
-  const selectedEvent = userAllEventsList.find((indivEvent) => {
-    return indivEvent.eventID === eventIdFromPath
-  })
+  useEffect(() => {
+    dispatch(fetchAllUserEvents(dummyUserId, true))
+    dispatch(getHallEventTypes())
+    dispatch(setSelectedEvent(null, eventIdFromPath))
+  }, [dispatch])
 
-  console.log(selectedEvent)
   const BackIcon = (
     <LeftOutlined
       style={{ color: 'black', padding: '0 10px 0 0' }}
@@ -52,16 +52,9 @@ export default function CreateEvent() {
     />
   )
 
-  useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
-    dispatch(getHallEventTypes())
-  }, [dispatch])
+  const isNusModsEvent = selectedEvent?.eventType === 'mods' ? true : false
 
-  const EditIcon = (
-    <div>
-      <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
-    </div>
-  )
+  const EditIcon = isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
 
   /** Incomplete functionality for Uploading Image */
 
@@ -99,9 +92,12 @@ export default function CreateEvent() {
             startDateAndTime={selectedEvent.startDateTime}
             endDateAndTime={selectedEvent.endDateTime}
             eventLocation={selectedEvent.location}
-            eventCca={String(selectedEvent.ccaID)}
+            eventCca={isNusModsEvent ? undefined : ccaDetails?.ccaName}
             eventDescription={selectedEvent.description}
             eventType={selectedEvent.eventType}
+            startTime={selectedEvent.startTime}
+            endTime={selectedEvent.endTime}
+            day={selectedEvent.day}
           />
         ) : (
           <LoadingSpin />

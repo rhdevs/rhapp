@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
+import { ActionTypes, CCADetails, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { Friend } from '../social/types'
 import { userCCA } from '../facilityBooking/types'
 
@@ -33,6 +33,7 @@ const initialState = {
 
   //view event state
   selectedEvent: null,
+  ccaDetails: null,
 }
 
 type State = {
@@ -61,6 +62,7 @@ type State = {
   newHallEventType: string
   targetAudienceList: userCCA[]
   selectedEvent: TimetableEvent | null
+  ccaDetails: CCADetails | null
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -188,6 +190,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         selectedEvent: action.selectedEvent,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_CCA_DETAILS: {
+      return {
+        ...state,
+        ccaDetails: action.ccaDetails,
       }
     }
     default:

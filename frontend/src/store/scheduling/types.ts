@@ -52,6 +52,7 @@ export type TimetableEvent = {
   day: string
   hasOverlap: boolean
   eventType: string
+  CCADetails?: CCADetails
 }
 
 export type SchedulingEvent = {
@@ -67,6 +68,11 @@ export type SchedulingEvent = {
   isPrivate: boolean
 }
 
+export type CCADetails = {
+  category: string
+  ccaID: number
+  ccaName: string
+}
 /** Actions' types */
 
 export enum SCHEDULING_ACTIONS {
@@ -91,6 +97,7 @@ export enum SCHEDULING_ACTIONS {
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
   HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
   SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
+  GET_CCA_DETAILS = 'SCHEDULING_ACTIONS.GET_CCA_DETAILS',
 }
 
 /** Actions */
@@ -199,6 +206,12 @@ type SetSelectedEvent = {
   type: typeof SCHEDULING_ACTIONS.SET_SELECTED_EVENT
   selectedEvent: TimetableEvent | null
 }
+
+type GetCCADetails = {
+  type: typeof SCHEDULING_ACTIONS.GET_CCA_DETAILS
+  ccaDetails: CCADetails
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -220,3 +233,4 @@ export type ActionTypes =
   | HandleNusModsStatus
   | HandleEventAttendanceStatus
   | SetSelectedEvent
+  | GetCCADetails

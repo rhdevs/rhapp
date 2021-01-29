@@ -96,7 +96,6 @@ export default function ImportFromNusMods() {
             defaultButtonDescription={'Import'}
             onButtonClick={() => {
               setModal(!modal)
-              console.log(modal)
             }}
             isFlipButton={false}
           />

@@ -121,7 +121,7 @@ function EventCell(props: Props) {
   return (
     <EventContainer
       onClick={() => {
-        dispatch(setSelectedEvent(props.event))
+        dispatch(setSelectedEvent(props.event, null))
         history.push(PATHS.VIEW_EVENT + props.event.eventID)
       }}
       style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}
