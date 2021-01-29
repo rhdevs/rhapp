@@ -65,10 +65,43 @@ def all_facilities():
     return response
 
 
+@app.route('/facility/<facilityID>')
+@cross_origin()
+def get_facility_name(facilityID):
+    try:
+        data = removeObjectID(
+            list(db.Bookings.find({"facilityID": int(facilityID)})))
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
+
+
 @app.route('/bookings/user/<userID>')
 def user_bookings(userID):
     try:
         data = removeObjectID(list(db.Bookings.find({"userID": userID})))
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
+
+
+@app.route('/bookings')
+@cross_origin()
+def get_all_bookings():
+    try:
+        data = removeObjectID(list(db.Bookings.find({})))
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
+
+
+@app.route('/booking/<bookingID>')
+@cross_origin()
+def get_one_booking(bookingID):
+    try:
+        data = removeObjectID(
+            list(db.Bookings.find({"bookingID": int(bookingID)})))
+        print(bookingID)
     except Exception as e:
         return {"err": str(e)}, 400
     return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)

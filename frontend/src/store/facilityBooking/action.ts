@@ -25,7 +25,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   dispatch(SetIsLoading(true))
   const { ViewEndDate, ViewStartDate, selectedFacilityId } = getState().facilityBooking
   const querySubString =
-    '/' +
     selectedFacilityId +
     '?startDate=' +
     parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
