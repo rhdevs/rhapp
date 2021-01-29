@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
 import axios from 'axios'
+import passwordHash from 'password-hash'
 
 import NavBar from '../../../components/NavBar'
 import 'antd/dist/antd.css'
@@ -41,32 +42,17 @@ export default function Login() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
+  const passwordHashed = passwordHash.generate(password)
 
   const loginHandler = () => {
     axios
-      .post('/auth/login', { username, password })
+      .post('/auth/login', { username, passwordHashed })
       .then((res: any) => {
         console.log(res)
-        // HOW TO SET LOGIN=TRUE?
+        history.push(PATHS.HOME_PAGE)
       })
       .catch((err) => {
-        console.log(err.response)
-      })
-  }
-
-  const signupHandler = () => {
-    axios
-      .post('auth/register', {
-        username,
-        password,
-        email,
-      })
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err.responser)
+        window.alert('Incorrect username or password!')
       })
   }
 
@@ -78,7 +64,6 @@ export default function Login() {
           placeholder="Username"
           onChange={() => {
             setUsername(username)
-            console.log(username)
           }}
         ></Input>
         <br />
@@ -87,7 +72,6 @@ export default function Login() {
           placeholder="Password"
           onChange={() => {
             setPassword(password)
-            console.log(password)
           }}
         ></Input>
         <br /> <br />

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
 import axios from 'axios'
+import passwordHash from 'password-hash'
 
 import { PATHS } from '../../Routes'
 import NavBar from '../../../components/NavBar'
@@ -30,18 +31,21 @@ export default function Signup() {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
 
+  const passwordHashed = passwordHash.generate(password)
+
   const signupHandler = () => {
     axios
-      .post('auth/register', {
+      .post('register', {
         username,
-        password,
+        passwordHashed,
         email,
       })
       .then((res) => {
         console.log(res)
+        history.push(PATHS.HOME_PAGE)
       })
       .catch((err) => {
-        console.log(err.responser)
+        window.alert(err.responser)
       })
   }
 
@@ -49,19 +53,29 @@ export default function Signup() {
     <>
       <NavBar text="Sign up" />
       <SignUpContainer>
-        <Input placeholder="Email"></Input>
-        <br /> <br />
-        <Input placeholder="Username"></Input> <br />
-        <br />
-        <Input placeholder="Password"></Input>
-        <br /> <br />
-        <Button
-          type="primary"
-          block
-          onClick={() => {
-            history.push(PATHS.HOME_PAGE)
+        <Input
+          placeholder="Email"
+          onChange={() => {
+            setEmail(email)
           }}
-        >
+        ></Input>
+        <br /> <br />
+        <Input
+          placeholder="Username"
+          onChange={() => {
+            setUsername(username)
+          }}
+        ></Input>{' '}
+        <br />
+        <br />
+        <Input
+          placeholder="Password"
+          onChange={() => {
+            setPassword(password)
+          }}
+        ></Input>
+        <br /> <br />
+        <Button type="primary" block onClick={signupHandler}>
           Sign Up
         </Button>
         <AccountText>Have an account?</AccountText>
