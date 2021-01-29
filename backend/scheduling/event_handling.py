@@ -121,6 +121,7 @@ def getEventsCCA(ccaID):
 def getEventsDetails(eventID):
     try:
         response = db.Events.find_one({"_id": ObjectId(eventID)})
+        response = rename(response)
 
     except Exception as e:
         return {"err": str(e)}, 400
