@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS, cross_origin
 import jwt
 import datetime
 import pymongo
@@ -8,27 +9,20 @@ from functools import wraps
 myclient = client = pymongo.MongoClient("mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = myclient["RHApp"]
 
-app = flask.Flask("rhapp")
+app = Flask("rhapp")
 app.config['SECRET_KEY'] = 'secretkeyvalue' # will replace with flaskenv variable in the future
 
-CORS(app, origins=CROSS_ORIGINS_LIST, headers=['Content-Type'], 
-         expose_headers=['Access-Control-Allow-Origin'], supports_credentials=True)
+#CORS(app, origins=CROSS_ORIGINS_LIST, headers=['Content-Type'], 
+#         expose_headers=['Access-Control-Allow-Origin'], supports_credentials=True)
 
-db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
-
-#for new registration, check if matric already exists
-def userIDAlreadyExists(testID):
-    if db.User.find({'userID': { "$in": testID}}).count(): # entry exists
-        return True
-    else:
-        return False
+# https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
+db.Session.create_index("createdAt", expireAfterSeconds = 120)
 
 """
 Decorative function: 
 checks for and verifies token. Used in /protected
 """
 def check_for_token(func):
-    @wraps(f)
     def decorated(*args, **kwargs):
         #extract token; for example here I assume it is passed as query parameter
         token = requests.args.get('token')
@@ -55,7 +49,7 @@ def check_for_token(func):
             #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
             db.Session.update({'userID': data['username'], 'passwordHash': data['passwordHash']}, {'$set': {"createdAt": datetime.datetime.now()}}, {upsert: true})
 
-        return f(currentUser, *args, **kwargs)
+        return func(currentUser, *args, **kwargs)
 
     return decorated
 
@@ -68,14 +62,15 @@ If successful return 200, else return 500
 @app.route('/auth/register', methods=['POST'])
 def register():
     try:
-        #extract userID, password and email
+    #extract userID, password and email
         formData = request.get_json()
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
         email = formData["email"]
-        if userIDAlreadyExists(userID):
+        if db.User.find({'userID': userID}).count(): # entry exists
             return jsonify({'message': 'User already exists'}), 401
         #add to User table
+        #note: if the user data does not adhere to defined validation standards, an error will be thrown here
         db.User.insert_one(formData)
     except:
         return jsonify({'message': 'An error was encountered.'}), 500
@@ -136,4 +131,4 @@ def logout():
 
 # Run the example
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
