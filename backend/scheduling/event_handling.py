@@ -106,7 +106,7 @@ def getAllCCA():
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<int:ccaID>', methods=["GET"])
+@app.route('/event/ccaID/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID):
     try:
@@ -116,7 +116,7 @@ def getEventsCCA(ccaID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<string:eventID>', methods=["GET"])
+@app.route('/event/eventID/<string:eventID>', methods=["GET"])
 @cross_origin()
 def getEventsDetails(eventID):
     try:
