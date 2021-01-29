@@ -100,20 +100,17 @@ def getEventAfterTime(startTime):
 @cross_origin()
 def getAllCCA():
     try:
-        data = db.CCA.find()
+        response = db.CCA.find()
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event', methods=["GET"])
+@app.route('/event/<eventID>', methods=["GET"])
 @cross_origin()
-def getEventsDetails():
+def getEventsDetails(eventID):
     try:
-        data = request.get_json()
-        entries = [ObjectId(w) for w in data]
-        data = db.Events.find({"_id": {"$in": entries}})
-        response = map(rename, data)
+        response = db.Events.find_one({"_id": ObjectId(eventID)})
 
     except Exception as e:
         return {"err": str(e)}, 400
