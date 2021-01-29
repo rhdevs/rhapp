@@ -74,10 +74,10 @@ export enum DOMAINS {
 }
 
 export enum DOMAIN_URL {
-  FACILITY = 'https://rhappfacilities.rhdevs.repl.co',
-  EVENT = 'https://rhappevents.rhdevs.repl.co',
-  LAUNDRY = 'https://rhapplaundry.rhdevs.repl.co',
-  SOCIAL = 'https://rhappsocial.rhdevs.repl.co',
+  FACILITY = '//rhappfacilities.rhdevs.repl.co',
+  EVENT = '//rhappevents.rhdevs.repl.co',
+  LAUNDRY = '//rhapplaundry.rhdevs.repl.co',
+  SOCIAL = '//rhappsocial.rhdevs.repl.co',
 }
 
 async function makeRequest(
