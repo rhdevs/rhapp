@@ -2,7 +2,7 @@ import { isEmpty, last } from 'lodash'
 import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
-import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
+import { ActionTypes, DAY_NUMBER_TO_STRING, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint, methods) => {
@@ -274,24 +274,9 @@ const doEventsOverlap = (event1: TimetableEvent, event2: TimetableEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (unixDate: number) => {
+export const getDayStringFromUNIX = (unixDate: number) => {
   const dayInInt = new Date(unixDate * 1000).getDay()
-  switch (dayInInt) {
-    case 0:
-      return 'Sunday'
-    case 1:
-      return 'Monday'
-    case 2:
-      return 'Tuesday'
-    case 3:
-      return 'Wednesday'
-    case 4:
-      return 'Thursday'
-    case 5:
-      return 'Friday'
-    default:
-      return 'Saturday'
-  }
+  return DAY_NUMBER_TO_STRING[dayInInt]
 }
 
 // Converts a unix string into date format and returns the time of string type in 24hour format
@@ -608,6 +593,7 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
       }
     }
   }
+  console.log(event)
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
     selectedEvent: event,

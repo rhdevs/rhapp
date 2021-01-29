@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
+import { getDayStringFromUNIX } from '../../store/scheduling/action'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -113,44 +114,25 @@ function ViewEventDetailCard({
   startTime,
   endTime,
   day,
+  date,
   eventLocation,
   eventCca,
   eventDescription,
   eventType,
 }: {
   eventName: string
-  eventCreatedBy: string
+  eventCreatedBy?: string
   startDateAndTime?: number
   endDateAndTime?: number
   startTime?: string
   endTime?: string
   day?: string
+  date?: string
   eventLocation: string
   eventCca?: string
   eventDescription?: string
   eventType: string
 }) {
-  // Converts a unix string into date format and returns the day in string
-  const getDayStringFromUNIX = (unixDate: number) => {
-    const dayInInt = new Date(unixDate * 1000).getDay()
-    switch (dayInInt) {
-      case 0:
-        return 'Sun'
-      case 1:
-        return 'Mon'
-      case 2:
-        return 'Tue'
-      case 3:
-        return 'Wed'
-      case 4:
-        return 'Thu'
-      case 5:
-        return 'Fri'
-      default:
-        return 'Sat'
-    }
-  }
-
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
     return format(date, 'MM/dd/yy hh:mm a')
@@ -163,7 +145,7 @@ function ViewEventDetailCard({
     <>
       <HeaderGroup>
         <MainHeader>{eventName}</MainHeader>
-        <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>
+        {eventCreatedBy && <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>}
       </HeaderGroup>
       <Background>
         {modal && (
@@ -186,7 +168,7 @@ function ViewEventDetailCard({
           <FetchedDetails>
             {startDateAndTime
               ? getDayStringFromUNIX(startDateAndTime) + ', ' + formatDate(startDateAndTime)
-              : day + ', ' + startTime}
+              : day + ', ' + date + ' ' + startTime}
           </FetchedDetails>
         </Row>
         <Row>
@@ -194,7 +176,7 @@ function ViewEventDetailCard({
           <FetchedDetails>
             {endDateAndTime
               ? getDayStringFromUNIX(endDateAndTime) + ', ' + formatDate(endDateAndTime)
-              : day + ', ' + endTime}
+              : day + ', ' + date + ' ' + endTime}
           </FetchedDetails>
         </Row>
         <Row>

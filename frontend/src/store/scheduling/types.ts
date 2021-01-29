@@ -2,24 +2,18 @@ import { invert } from 'lodash'
 import { userCCA } from '../facilityBooking/types'
 import { Friend } from '../social/types'
 
-type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
-export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
-  DLEC: 'Design Lecture',
-  LAB: 'Laboratory',
-  LEC: 'Lecture',
-  PLEC: 'Packaged Lecture',
-  PTUT: 'Packaged Tutorial',
-  REC: 'Recitation',
-  SEC: 'Sectional Teaching',
-  SEM: 'Seminar-Style Module Class',
-  TUT: 'Tutorial',
-  TUT2: 'Tutorial Type 2',
-  TUT3: 'Tutorial Type 3',
-  WS: 'Workshop',
+type dayNumber = { [dayString: string]: number }
+export const DAY_STRING_TO_NUMBER: dayNumber = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
 }
-
-// Reverse lookup map of ABBREV_TO_LESSON
-export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_TO_LESSON)
+// Reverse lookup map of DAY_STRING_TO_NUMBER
+export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
 /** Types */
 

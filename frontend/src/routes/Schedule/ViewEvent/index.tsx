@@ -12,6 +12,8 @@ import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../.
 import { RootState } from '../../../store/types'
 import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
+import NotFound from '../../ErrorPages/NotFound'
+import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 
 const MainContainer = styled.div`
   display: flex;
@@ -81,28 +83,68 @@ export default function CreateEvent() {
   //   }
   // }
 
+  const eventType = (eventType) => {
+    if (eventType === 'private') {
+      return 'Private'
+    } else if (eventType === 'public') {
+      return 'Public'
+    } else if (eventType === 'mods') {
+      return 'NUSMods'
+    } else {
+      return eventType
+    }
+  }
+
+  const getEventTime = (eventTime: string) => {
+    const eventHour = eventTime.substr(0, 2)
+    const eventMinutes = eventTime.substr(2, 4)
+    const timeString = eventHour + ':' + eventMinutes
+    if (Number(eventHour) < 12) {
+      return timeString + ' AM'
+    } else {
+      return timeString + ' PM'
+    }
+  }
+
+  const getEventDate = (eventDay: string) => {
+    const today = new Date()
+    const eventDate = new Date(today)
+    const numberOfdaysSinceToday = DAY_STRING_TO_NUMBER[eventDay] - today.getDay()
+    eventDate.setDate(eventDate.getDate() + numberOfdaysSinceToday)
+    return eventDate.toLocaleDateString()
+  }
+
+  const renderContent = () => {
+    if (selectedEvent) {
+      return (
+        <ViewEventDetailCard
+          eventName={selectedEvent.eventName}
+          eventCreatedBy={
+            selectedEvent.userID === dummyUserId ? 'You' : isNusModsEvent ? 'NUSMods' : selectedEvent.userID
+          }
+          startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
+          endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}
+          eventLocation={selectedEvent.location}
+          eventCca={isNusModsEvent ? undefined : ccaDetails?.ccaName}
+          eventDescription={selectedEvent.description}
+          eventType={eventType(selectedEvent.eventType)}
+          startTime={isNusModsEvent ? getEventTime(selectedEvent.startTime) : undefined} //e.g '01:37 AM'
+          endTime={isNusModsEvent ? getEventTime(selectedEvent.endTime) : undefined}
+          day={isNusModsEvent ? selectedEvent.day : undefined} //e.g 'Thu'
+          date={isNusModsEvent ? getEventDate(selectedEvent.day) : undefined} //e.g '01/28/21
+        />
+      )
+    }
+    if (selectedEvent === undefined) {
+      return <NotFound />
+    } else {
+      return <LoadingSpin />
+    }
+  }
   return (
     <MainContainer>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={EditIcon} />
-      <BottomContentContainer>
-        {selectedEvent ? (
-          <ViewEventDetailCard
-            eventName={selectedEvent.eventName}
-            eventCreatedBy={selectedEvent.userID === dummyUserId ? 'You' : selectedEvent.userID || 'NUSMods'}
-            startDateAndTime={selectedEvent.startDateTime}
-            endDateAndTime={selectedEvent.endDateTime}
-            eventLocation={selectedEvent.location}
-            eventCca={isNusModsEvent ? undefined : ccaDetails?.ccaName}
-            eventDescription={selectedEvent.description}
-            eventType={selectedEvent.eventType}
-            startTime={selectedEvent.startTime}
-            endTime={selectedEvent.endTime}
-            day={selectedEvent.day}
-          />
-        ) : (
-          <LoadingSpin />
-        )}
-      </BottomContentContainer>
+      <BottomContentContainer>{renderContent()}</BottomContentContainer>
     </MainContainer>
   )
 }
