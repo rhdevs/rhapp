@@ -106,7 +106,17 @@ def getAllCCA():
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<eventID>', methods=["GET"])
+@app.route('/event/<int:ccaID>', methods=["GET"])
+@cross_origin()
+def getEventsCCA(ccaID):
+    try:
+        response = db.Events.find({"ccaID": ccaID})
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(response), default=lambda o: str(o)), 200
+
+
+@app.route('/event/<string: eventID>', methods=["GET"])
 @cross_origin()
 def getEventsDetails(eventID):
     try:
@@ -115,16 +125,6 @@ def getEventsDetails(eventID):
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
-
-
-@app.route('/event/<int:ccaID>', methods=["GET"])
-@cross_origin()
-def getEventsCCA(ccaID):
-    try:
-        data = db.Events.find({"ccaID": ccaID})
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route('/cca/<int:ccaID>', methods=["GET"])
