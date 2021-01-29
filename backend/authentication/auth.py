@@ -94,12 +94,12 @@ def login():
     #insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
     db.Session.insert_one({'userID': username, 'passwordHash': passwordHash, 'createdAt': datetime.datetime.now()})
-    #generate JWT
+    #generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
     token = jwt.encode({'userID': username,
                         'passwordHash': passwordHash #to change timedelta to 15 minutes in production
-                        }, app.config['SECRET_KEY']) 
+                        }, app.config['SECRET_KEY'])
     
-    return jsonify({'token': token.decode('UTF-8')}), 200
+    return jsonify({'token': token}), 200
 
 
 
