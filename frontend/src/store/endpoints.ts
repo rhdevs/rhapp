@@ -90,16 +90,16 @@ async function makeRequest(
   let DOMAIN_URL: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'
+      DOMAIN_URL = '//rhappfacilities.rhdevs.repl.co'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL = 'https://rhappevents.rhdevs.repl.co'
+      DOMAIN_URL = '//rhappevents.rhdevs.repl.co'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      DOMAIN_URL = '//rhapplaundry.rhdevs.repl.co'
       break
     case DOMAINS.SOCIAL:
-      DOMAIN_URL = 'https://rhappsocial.rhdevs.repl.co'
+      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
       break
   }
   console.log(DOMAIN_URL + url)
