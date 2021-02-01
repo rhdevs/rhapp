@@ -33,21 +33,25 @@ def check_for_token(func):
         
         #verify the user
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            currentUser = db.User.find({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}}).limit(1)
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            currentUser = db.User.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
             currentUsername = currentUser['userID']
-        except: 
-            return jsonify({'message': 'Token is invalid'}), 401
+        except Exception as e: 
+            print(e)
+            #return jsonify({'message': 'Token is invalid'}), 401
         
         #check if token has expired (compare time now with createdAt field in document + timedelta)
-        oldTime = db.Session.find({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}}, {'_id': 0, 'createdAt': 1})['createdAt']
-        if datetime.datetime.now() > oldTime + timedelta(minutes=2):
+        originalToken = db.Session.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
+        oldTime = originalToken['createdAt']
+        #print(datetime.datetime.now())
+        #print(oldTime)
+        if datetime.datetime.now() > oldTime + datetime.timedelta(minutes=2):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             #recreate session (with createdAt updated to now)
             #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
             #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data['username'], 'passwordHash': data['passwordHash']}, {'$set': {"createdAt": datetime.datetime.now()}}, {upsert: true})
+            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
 
         return func(currentUser, *args, **kwargs)
 
@@ -93,11 +97,13 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 403
     #insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
-    db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
+    db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'userID': username, 'passwordHash': passwordHash,'createdAt': datetime.datetime.now()}}, upsert=True)
+    #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     #generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
     token = jwt.encode({'userID': username,
                         'passwordHash': passwordHash #to change timedelta to 15 minutes in production
-                        }, app.config['SECRET_KEY'])
+                        }, app.config['SECRET_KEY']
+                        , algorithm="HS256")
     
     return jsonify({'token': token}), 200
 
@@ -110,7 +116,7 @@ Acts as gatekeeper; can only access requested resource if you are authenticated 
 @app.route('/auth/protected', methods=['GET'])
 @check_for_token
 def protected(currentUser):
-    return jsonify({'message': 'You need to be logged in to view this'}), 403
+    return jsonify({'message': 'Successfully logged in. Redirecting.'}), 200
     
 
 
