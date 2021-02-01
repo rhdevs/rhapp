@@ -141,6 +141,7 @@ export default function CreateEvent() {
       return <LoadingSpin />
     }
   }
+
   return (
     <MainContainer>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={EditIcon} />
