@@ -25,7 +25,7 @@ checks for and verifies token. Used in /protected
 def check_for_token(func):
     def decorated(*args, **kwargs):
         #extract token; for example here I assume it is passed as query parameter
-        token = requests.args.get('token')
+        token = request.args.get('token')
         
         #if request does not have a token
         if not token:
@@ -107,7 +107,7 @@ def login():
 Protected route:
 Acts as gatekeeper; can only access requested resource if you are authenticated ie valid session
 """
-@app.route('/auth/protected', methods=['POST'])
+@app.route('/auth/protected', methods=['GET'])
 @check_for_token
 def protected(currentUser):
     return jsonify({'message': 'You need to be logged in to view this'}), 403
