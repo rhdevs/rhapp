@@ -113,9 +113,9 @@ def editUser():
         print(e)
         return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
+ 
 
-
-@app.route("/profile/<userID>")
+@app.route("/profile/<string:userID>")
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
@@ -125,6 +125,28 @@ def getUserProfile(userID):
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
+@app.route("/profile/picture/<string:userID>", methods = ['GET'])
+@cross_origin(supports_credentials = True)
+def getUserPicture(userID):
+    response = {}
+    
+    try : 
+        image = db.Profiles.find({"userID" : userID}, {"profilePictureURI" : 1})
+        response['status'] = "success"
+        response['data'] = {
+            'image' : image
+        }
+        
+        return make_response(response, 200)
+    
+    except Exception as e :
+        response['status'] = "failed"
+        response['data'] = {
+            'message ' : 'image not found'
+        }
+        
+        return make_response(response, 404)
+        
 
 @app.route("/profile", methods=['DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -135,7 +157,7 @@ def addDeleteProfile():
             userID = str(data.get('userID'))
             displayName = str(data.get('displayName'))
             bio = str(data.get('bio'))
-            profilePictureUrl = str(data.get('profilePictureUrl'))
+            profilePictureURI = str(data.get('profilePictureURI'))
             block = int(data.get('block'))
             telegramHandle = str(data.get('telegramHandle'))
             modules = data.get('modules')
@@ -144,7 +166,7 @@ def addDeleteProfile():
                 "userID": userID,
                 "displayName": displayName,
                 "bio": bio,
-                "profilePictureUrl": profilePictureUrl,
+                "profilePictureURI": profilePictureURI,
                 "block": block,
                 "telegramHandle": telegramHandle,
                 "modules": modules
@@ -201,7 +223,7 @@ def editProfile():
             "userID": userID,
             "displayName": displayName,
             "bio": bio,
-            "profilePictureUrl": profilePictureUrl,
+            "profilePictureURI": profilePictureURI,
             "block": block,
             "telegramHandle": telegramHandle,
             "modules": modules
@@ -267,10 +289,8 @@ def addDeletePost():
             createdAt = int(datetime.now().timestamp())
             postPics = data.get('postPics') if data.get('postPics') else []
             isOfficial = bool(data.get('isOfficial'))
-            lastPostID = db.Posts.find_one(
-                sort=[('postID', pymongo.DESCENDING)])
-            newPostID = 1 if lastPostID is None else int(
-                lastPostID.get("postID")) + 1
+            lastPostID = db.Posts.find_one(sort=[('postID', pymongo.DESCENDING)])
+            newPostID = 1 if lastPostID else int(lastPostID.get("postID")) + 1
             tags = data.get('tags') if data.get('tags') else []
 
             body = {
@@ -683,5 +703,5 @@ def images(imageName):
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)

@@ -47,39 +47,38 @@ def SweepAll():
     #Also do lazy update when duration + starttime of laundry is finished, change from In Use --> Uncollected
     #I assume since there are only 74 machines, sweeping 74 machines would be pretty fast for each call 
     all_machines = db.LaundryMachine.find();
+    #this one can optimize the query using if else inside the pymongo itself and in instead of update one by one 
     for machine in all_machines:
         # print(machine.get('duration'));
         startTime = 0 if machine.get('startTime') == None else machine.get('startTime');
         expiryTime = startTime + int(machine.get('duration'))
         currentTime = datetime.now().timestamp();
+        
         status = machine.get('job')
-
         myquery = {
                     'machineID' : machine.get("machineID")
                 }
         
-        if(expiryTime > currentTime and status == "Reserved"):
-            try :
+        if(expiryTime < currentTime and status == "Reserved"):
                 #reset the duration 
-                data_body = {'$set' : 
-                                    {'duration' : 0,
-                                     'job' : 'Available'}
-                            }
-                    
+            data_body = {'$set' : 
+                                {'duration' : 0,
+                                    "job" : "Available"}
+                        }
+            try :        
                 result = db.LaundryMachine.update_one(myquery, data_body)
-            except :
-                return make_response("Update " + str(machine.get("machineID")) + " failed", 400)        
-        elif (expiryTime > currentTime and status == "In Use"):
-            try :
+            except Exception as e:
+                return str(e) + " : Update " + str(machine.get("machineID")) + " failed"        
+        elif (expiryTime < currentTime and status == "In Use"):
                 #reset the duration 
-                data_body = {'$set' : 
-                                    {'duration' : 0,
-                                     'job' : 'Uncollected'}
-                            }
-                    
+            data_body = {'$set' : 
+                                {'duration' : 0,
+                                    "job" : "Uncollected"}
+                        }
+            try :
                 result = db.LaundryMachine.update_one(myquery, data_body)
-            except :
-                return make_response("Update " + str(machine.get("machineID")) + " failed", 400)  
+            except Exception as e:
+                return str(e) + " : Update " + str(machine.get("machineID")) + " failed"  
                
     return True 
     
@@ -263,6 +262,35 @@ def laundry_by_location():
     except Exception as e :
         return {"err" : str(e)}, 400
      
+@app.route('/laundry/machine/startTime', methods = ['GET'])
+@cross_origin(supports_credentials=True)
+def getStartTime():
+    response = {} 
+    try : 
+        machineID = request.args.get('machineID')
+        if machineID is None:
+            raise Exception("machine ID not provided as URL parameter, use ?machineID=...")
+        
+        machine = db.LaundryMachine.find_one({'machineID' : machineID}, {'job' : 1, 'startTime' : 1})
+        
+        if machine.get("job") not in ['Reserved', 'In Use']:
+            raise Exception("Only can fetch start time when the machine is Reserved or In Use")
+        
+        response['status'] = 'success'
+        response['data'] = {
+            'startTime' : machine.get("startTime")
+        }
+        
+        return make_response(response, 200)
+    
+    except Exception as e :
+        response['status'] = 'failed'
+        response['data'] = {
+            'message' : str(e)
+        }
+        
+        return make_response(response, 404)
+        
 @app.route('/laundry/machine/editDuration', methods = ['PUT'])
 @cross_origin(supports_credentials=True)
 def change_duration():
