@@ -9,7 +9,6 @@ const TimetableContainer = styled.div`
 
 const TimetableRowsContainer = styled.ol`
   padding: 0;
-  margin: 0;
 `
 
 const TimetableWithTimeContainer = styled.div`

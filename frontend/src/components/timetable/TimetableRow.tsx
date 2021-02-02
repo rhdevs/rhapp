@@ -20,18 +20,13 @@ const DayContainer = styled.div`
   text-transform: uppercase;
   font-weight: 600;
   font-size: 0.85rem;
-  text-orientation: upright;
-  writing-mode: tb;
   background-color: #fff;
   text-align: center;
   z-index: 2;
 `
 
 const DaySpanContainer = styled.span`
-  width: 0.7rem;
-  font-size: 0.85rem;
-  line-height: 1.1;
-  word-break: break-all;
+  width: 3rem;
 `
 
 const TimetableDayContainer = styled.div`
@@ -53,19 +48,8 @@ type Props = {
   width: number
 }
 
-type day = { [day: string]: number }
-export const DAY_TO_NUMBER: day = {
-  mon: 0,
-  tue: 1,
-  wed: 2,
-  thu: 3,
-  fri: 4,
-  sat: 5,
-  sun: 6,
-}
-
 function TimetableRow(props: Props) {
-  const leftMargin = (eventRow, individualEvent, index) => {
+  const leftMargin = (eventRow: TimetableEvent[], individualEvent: TimetableEvent, index: number) => {
     const individualEventStartHour = individualEvent.startTime.substring(0, 2)
     const individualEventStartMinute = individualEvent.startTime.substring(2, 4)
     let leftPosition
@@ -103,15 +87,15 @@ function TimetableRow(props: Props) {
           minHeight: `${props.oneDayMinHeight}`,
         }}
       >
-        {props.events?.map((eventRow, index) => {
+        {props.events?.map((eventRow, indexOne) => {
           return (
-            <ChildrenContainer key={index}>
-              {eventRow.map((individualEvent, index) => {
+            <ChildrenContainer style={{ minHeight: `${props.oneDayMinHeight}` }} key={indexOne}>
+              {eventRow.map((individualEvent, indexTwo) => {
                 return (
                   <div
-                    key={index}
+                    key={indexTwo}
                     style={{
-                      marginLeft: `${leftMargin(eventRow, individualEvent, index)}`,
+                      marginLeft: `${leftMargin(eventRow, individualEvent, indexTwo)}`,
                     }}
                   >
                     <EventCell
@@ -124,6 +108,7 @@ function TimetableRow(props: Props) {
                       eventEndTime={individualEvent.endTime}
                       eventTitle={individualEvent.eventName}
                       eventLocation={individualEvent.location}
+                      isLastRow={props.events.length === indexOne + 1}
                     />
                   </div>
                 )

@@ -60,6 +60,7 @@ type Props = {
   eventType?: string
   isSingleEvent?: boolean
   event: TimetableEvent
+  isLastRow?: boolean
 }
 
 function EventCell(props: Props) {
@@ -97,13 +98,19 @@ function EventCell(props: Props) {
     ? false
     : true
 
-  const EVENT_HEIGHT = props.eventHeight
-    ? props.eventHeight
-    : onlyShowEventName
-    ? Number(props.oneDayMinHeight.replace('rem', '')) / 2 + 'rem'
-    : EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR
-    ? Number(props.oneDayMinHeight.replace('rem', '')) - 0.0625 * 3 + 'rem'
-    : props.oneDayMinHeight
+  const getEventHeight = () => {
+    if (props.eventHeight) {
+      return props.eventHeight
+    } else if (onlyShowEventName) {
+      return Number(props.oneDayMinHeight.replace('rem', '')) / 2 + 'rem'
+    } else if (!props.isLastRow) {
+      return Number(props.oneDayMinHeight.replace('rem', '')) - 0.0625 * 3 + 'rem'
+    } else {
+      return props.oneDayMinHeight
+    }
+  }
+
+  const EVENT_HEIGHT = getEventHeight()
 
   const eventStartTimeHour = Number(props.eventStartTime.substring(0, 2))
   const eventStartTimeMinute = Number(props.eventStartTime.substring(2, 4))
@@ -124,7 +131,7 @@ function EventCell(props: Props) {
         dispatch(setSelectedEvent(props.event, null))
         history.push(PATHS.VIEW_EVENT + props.event.eventID)
       }}
-      style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}
+      style={{ filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))' }}
     >
       <ContentContainer
         style={{
