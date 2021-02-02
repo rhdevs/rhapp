@@ -8,6 +8,7 @@ export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTy
   })
     .then((resp) => resp.json())
     .then((data) => {
+      console.log(data)
       dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
     })
 }

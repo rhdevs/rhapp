@@ -181,6 +181,7 @@ export const userProfileStub: User = {
   //     telegram: '@woofwoof',
   //   },
   // ],
+  position: ['basketball'],
 }
 
 export const dummyUserId = 'A1234567B'

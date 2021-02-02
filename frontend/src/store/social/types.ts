@@ -10,6 +10,7 @@ export type Post = {
   createdAt?: Timestamp
   name: string
   userId: string
+  tag: string | null
 }
 
 export type User = {
@@ -62,7 +63,7 @@ type GetPostDetailsToEdit = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostTag: string | null
   userId: string
 }
 
@@ -72,7 +73,7 @@ type EditNewFields = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostTag: string | null
 }
 
 type SetWarnings = {

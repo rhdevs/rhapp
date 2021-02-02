@@ -12,7 +12,7 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
   const { postId } = getState().social
   dispatch(GetSpecificPost(postId)).then(() => {
     const { viewPost } = getState().social
-    const { title, description, postPics, isOfficial, userId } = viewPost
+    const { title, description, postPics, isOfficial, userId, tag } = viewPost
     dispatch({
       type: SOCIAL_ACTIONS.GET_POST_DETAILS_TO_EDIT,
       postToEdit: viewPost,
@@ -20,24 +20,16 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
       newPostBody: description,
       newPostImages: postPics ?? [],
       newPostOfficial: isOfficial,
-      newPostCca: '',
+      newPostTag: tag,
       userId: userId,
     })
   })
 }
 
-export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
+export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   // TODO: Get roles from user
-  const headOfCca = [
-    {
-      ccaName: 'Basketball',
-      ccaID: 2,
-    },
-    {
-      ccaName: 'Tennis',
-      ccaID: 3,
-    },
-  ]
+
+  const { position } = getState().profile.user
 
   dispatch({
     type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
@@ -45,13 +37,13 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: headOfCca[0].ccaName,
+    newPostTag: position[0] ?? null,
   })
 }
 
 export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Editing post')
-  const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages, newPostTag } = getState().social
   console.log(viewPost)
   const requestBody = {
     postID: viewPost.postId,
@@ -60,6 +52,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     description: newPostBody,
     isOfficial: newPostOfficial,
     postPics: newPostImages,
+    tags: newPostTag,
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
@@ -70,14 +63,15 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Creating post')
-  const { newPostTitle, newPostBody, newPostOfficial, newPostImages } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostTag } = getState().social
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
     userID: userProfileStub.userID,
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
-    ccaID: 1, // TODO: Change to tags + add newPostCca
+    ccaID: 1, // TODO: Remove if ccaId not given
+    tags: newPostTag,
   }
   post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
@@ -87,7 +81,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
 }
 
 export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, newPostTag } = getState().social
   let { newPostImages } = getState().social
   newPostImages = newPostImages?.filter((url) => {
     return url !== urlToDelete
@@ -99,7 +93,7 @@ export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTy
     newPostBody: newPostBody,
     newPostImages: newPostImages,
     newPostOfficial: newPostOfficial,
-    newPostCca: newPostCca,
+    newPostTag: newPostTag,
   })
 }
 
@@ -156,7 +150,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  let { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
+  let { newPostTitle, newPostBody, newPostOfficial, newPostTag } = getState().social
   const { newPostImages } = getState().social
 
   switch (fieldName) {
@@ -176,7 +170,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
       break
     case 'cca':
       if (fieldData) {
-        newPostCca = fieldData
+        newPostTag = fieldData
       }
       break
   }
@@ -187,7 +181,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
     newPostBody: newPostBody,
     newPostImages: newPostImages,
     newPostOfficial: newPostOfficial,
-    newPostCca: newPostCca,
+    newPostTag: newPostTag,
   })
 }
 
@@ -266,7 +260,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
   const specificPost = response.data
   console.log('Specific post', specificPost)
 
-  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
+  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, tags } = specificPost
   const newPost = {
     name: name,
     userId: userID,
@@ -277,6 +271,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
     description: description,
     postPics: postPics,
     createdAt: createdAt,
+    tag: tags[0],
   }
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,

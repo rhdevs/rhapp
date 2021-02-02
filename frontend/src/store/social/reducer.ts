@@ -8,7 +8,7 @@ const initialState = {
   newPostBody: '',
   newPostImages: [],
   newPostOfficial: false,
-  newPostCca: '',
+  newPostTag: null,
   warnings: [],
   posts: [],
   postsFilter: POSTS_FILTER.ALL,
@@ -24,7 +24,7 @@ type State = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostTag: string | null
   warnings: string[]
   posts: Post[]
   postsFilter: POSTS_FILTER
@@ -43,7 +43,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
-        newPostCca: action.newPostCca,
+        newPostTag: action.newPostTag,
         userId: action.userId,
       }
     }
@@ -55,7 +55,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
-        newPostCca: action.newPostCca,
+        newPostTag: action.newPostTag,
       }
     }
 

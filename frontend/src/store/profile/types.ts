@@ -9,6 +9,7 @@ export type User = {
   bio: string
   modules: string[]
   posts: Post[]
+  position: string[]
 }
 
 export type Friend = {

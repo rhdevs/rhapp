@@ -9,6 +9,7 @@ import { PATHS } from '../../routes/Routes'
 import { DeletePost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
 import { getInitials } from '../../common/getInitials'
+import PostTag from '../Mobile/PostTag'
 
 const CardContainer = styled.div`
   display: flex;
@@ -27,7 +28,6 @@ const CenterContainer = styled.div`
 `
 
 const TextContainer = styled.div`
-  display: flex;
   flex-direction: column;
   margin: 0px 10px;
   width: 75%;
@@ -106,6 +106,7 @@ const TimeDateText = styled.text`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
 `
 const DescriptionText = styled.text`
   color: black;
@@ -126,6 +127,7 @@ type socialPostCardProps = {
   description: string
   postId: string
   postPics?: string[]
+  tag?: string
 }
 
 function SocialPostCard(props: socialPostCardProps) {
@@ -135,7 +137,7 @@ function SocialPostCard(props: socialPostCardProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
-  const { isOwner, avatar, name, title, dateTime, description, postId, postPics } = props
+  const { isOwner, avatar, name, title, dateTime, description, postId, postPics, tag } = props
 
   const initials = getInitials(props.name)
 
@@ -178,6 +180,7 @@ function SocialPostCard(props: socialPostCardProps) {
             <TimeDateText>
               {name}, {dateTime}
             </TimeDateText>
+            {tag && <PostTag position={tag} />}
             <DescriptionText>{description}</DescriptionText>
           </TextContainer>
           {postPics && postPics.length > 0 && (

@@ -19,6 +19,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
 import { userProfileStub } from '../../../store/stubs'
+import PostTag from '../../../components/Mobile/PostTag'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -100,7 +101,7 @@ export default function ViewPost() {
   const [success] = useSnackbar()
 
   const { viewPost } = useSelector((state: RootState) => state.social)
-  const { userId, createdAt, description, title, postPics, postId, name } = viewPost
+  const { userId, createdAt, description, title, postPics, postId, name, tag } = viewPost
 
   useEffect(() => {
     dispatch(GetSpecificPost(postIdFromPath))
@@ -160,6 +161,7 @@ export default function ViewPost() {
         <TimeDateText>
           {name}, {formattedDate}
         </TimeDateText>
+        {tag && <PostTag position={tag} />}
       </TextContainer>
     </CenterContainer>
   )

@@ -194,19 +194,6 @@ const ImageDiv = styled.div`
   justify-content: center;
 `
 
-const headOfCca = [
-  {
-    ccaName: 'Basketball',
-    ccaID: 2,
-  },
-  {
-    ccaName: 'Tennis',
-    ccaID: 3,
-  },
-]
-
-const getCcaNames = headOfCca.map((cca) => cca.ccaName)
-
 export default function CreateEditPost() {
   const params = useParams<{ postId: string }>()
   const dispatch = useDispatch()
@@ -214,9 +201,11 @@ export default function CreateEditPost() {
   const [hasChanges, setHasChanges] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
 
-  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, newPostCca, warnings, isUploading } = useSelector(
+  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, newPostTag, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
+  const { position } = useSelector((state: RootState) => state.profile.user)
+
   const isCreatePost = !window.location.href.includes('/post/edit')
 
   useEffect(() => {
@@ -231,6 +220,8 @@ export default function CreateEditPost() {
   const deleteImage = (source: string) => {
     dispatch(DeleteImage(source))
   }
+
+  const userHasRole = position.length > 0
 
   return (
     <MainContainer>
@@ -311,8 +302,7 @@ export default function CreateEditPost() {
               </Footer>
             )}
           </Card>
-          {/* TODO: check if user has a role*/}
-          {true && (
+          {userHasRole && (
             <Announcement>
               <p>Official</p>
               <SwitchContainer>
@@ -326,15 +316,16 @@ export default function CreateEditPost() {
               </SwitchContainer>
             </Announcement>
           )}
-          <Announcement>
-            <p>CCA</p>
-            <DropDownSelector
-              SelectedValue={newPostCca.toString()}
-              ValueArray={getCcaNames}
-              handleChange={(cca) => EditPostDetail('cca', cca)}
-            />
-          </Announcement>
-
+          {newPostOfficial && newPostTag && (
+            <Announcement>
+              <p>CCA</p>
+              <DropDownSelector
+                SelectedValue={newPostTag.toString()}
+                ValueArray={position}
+                handleChange={(cca) => EditPostDetail('cca', cca)}
+              />
+            </Announcement>
+          )}
           <ImageDiv>
             {newPostImages.map((url) => (
               <PostImage card={url} key={url} deleteFunc={deleteImage} />
