@@ -71,6 +71,16 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+@app.route('/event/public/<pagination>', methods=["GET"])
+@cross_origin()
+def getPublicEventsPagination(pagination):
+    try:
+        data = db.Events.find({"isPrivate": {"$eq": False}}, sort=[
+                              ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 5).limit(5)
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
+
 
 @app.route('/event/public/all', methods=["GET"])
 @cross_origin()
