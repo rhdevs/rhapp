@@ -71,17 +71,33 @@ def register():
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
         email = formData["email"]
+        position = formData["position"]
+        displayName = formData["displayName"]
+        bio = formData["bio"]
+        block = formData["block"]
+        telegramHandle = formData["telegramHandle"]
         if db.User.find({'userID': userID}).count(): # entry exists
             return jsonify({'message': 'User already exists'}), 401
         #add to User table
         #note: if the user data does not adhere to defined validation standards, an error will be thrown here
-        db.User.insert_one(formData)
+        db.User.insert_one({"userID": userID, 
+                            "passwordHash": passwordHash, 
+                            "email": email,
+                            "position": position
+                            })
+        db.Profiles.insert_one({"userID": userID,
+                               "displayName": displayName,
+                               "bio": bio, 
+                               "block": block, 
+                               "telegramHandle": telegramHandle, 
+                               "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon" 
+                               })
     except:
         return jsonify({'message': 'An error was encountered.'}), 500
     return jsonify({'message': 'User successfully created!'}), 200
 
 
-
+    
 """
 Login route:
 Within POST request, verify userID and passwordHash are valid.
