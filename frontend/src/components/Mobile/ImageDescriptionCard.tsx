@@ -109,7 +109,6 @@ function ImageDescriptionCard(props: Props) {
 
   const expandCard = () => {
     setIsExpanded(!isExpanded)
-    console.log(isExpanded)
   }
 
   return (

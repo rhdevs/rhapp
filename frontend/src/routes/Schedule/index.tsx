@@ -105,7 +105,7 @@ export default function Schedule() {
     <MenuDropdown
       menuItem={
         <>
-          <SubMenu
+          {/* <SubMenu
             key="sub1"
             icon={<ShareAltOutlined />}
             title="Share"
@@ -123,7 +123,7 @@ export default function Schedule() {
             </Menu.Item>
 
             <Menu.Item key="2">Save as png</Menu.Item>
-          </SubMenu>
+          </SubMenu> */}
           <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
             <Menu.Item
               key="3"
@@ -241,7 +241,7 @@ export default function Schedule() {
               fontFamily: 'Inter',
             }}
           >
-            Groups
+            CCA
           </h1>
           {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
