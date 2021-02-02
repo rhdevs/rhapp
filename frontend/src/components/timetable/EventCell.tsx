@@ -11,7 +11,7 @@ const TitleText = styled.text`
   font-family: Inter;
   font-size: 14px;
   line-height: 14px;
-  font-weight: 200;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -25,7 +25,7 @@ const LocationText = styled.text`
   font-family: Inter;
   font-size: 12px;
   line-height: 14px;
-  font-weight: 500;
+  font-weight: 200;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
