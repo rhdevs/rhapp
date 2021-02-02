@@ -162,7 +162,7 @@ function ViewEventDetailCard({
             hasLeftButton={true}
             leftButtonText={'Delete'}
             onLeftButtonClick={() => {
-              dispatch(editUserEvents('remove', eventID, dummyUserId))
+              dispatch(editUserEvents('remove', eventID, dummyUserId, eventType === 'NUSMods'))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}
@@ -212,9 +212,7 @@ function ViewEventDetailCard({
         <RemoveRow>
           <RemoveEvent
             onClick={() => {
-              console.log('delete')
               setModal(!modal)
-              // dispatch(editUserEvents('remove', eventID, dummyUserId))
             }}
           >
             Remove from timetable

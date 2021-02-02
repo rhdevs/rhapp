@@ -5,7 +5,7 @@ import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
 import { ActionTypes, DAY_NUMBER_TO_STRING, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 
 // ---------------------- GET ----------------------
-const getFromBackend = async (endpoint, methods) => {
+const getFromBackend = async (endpoint: string, methods) => {
   const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
@@ -26,7 +26,7 @@ const getFromBackend = async (endpoint, methods) => {
 // ---------------------- GET ----------------------
 
 // ---------------------- POST/DELETE ----------------------
-const postToBackend = (endpoint, method, body, functions) => {
+const postToBackend = (endpoint: string, method: string, body, functions) => {
   if (body) {
     fetch(DOMAIN_URL.EVENT + endpoint, {
       method: method,
@@ -100,7 +100,7 @@ export const fetchCurrentUserEvents = (userId: string, stopIsLoading: boolean) =
 ) => {
   dispatch(setIsLoading(true))
   const manipulateData = async (data) => {
-    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
     const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
@@ -160,9 +160,9 @@ export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<Action
       ccaDetails: data[0],
     })
   }
-  const ccaDetails = getFromBackend(ENDPOINTS.CCA_DETAILS + ccaID, dispatchData)[0]
+  const ccaDetails = await getFromBackend(ENDPOINTS.CCA_DETAILS + ccaID, dispatchData)
   dispatch(setIsLoading(false))
-  return ccaDetails
+  return ccaDetails[0]
 }
 
 const sortEvents = (events: TimetableEvent[]) => {
@@ -417,7 +417,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, eventID: string, userId: string) => (
+export const editUserEvents = (action: string, eventID: string, userId: string, isNUSModsEvent: boolean) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   const requestBody = {
@@ -437,7 +437,8 @@ export const editUserEvents = (action: string, eventID: string, userId: string) 
         console.log('FAILURE!!!! ' + data.status)
       }
     }
-    postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+    if (isNUSModsEvent) console.log('cannot be deleted!')
+    else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
   } else if (action === 'add') {
     const updateEventStatus = (data) => {
       if (data.ok) {
