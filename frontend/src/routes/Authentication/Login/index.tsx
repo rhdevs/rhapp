@@ -10,19 +10,42 @@ import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import jwt from 'jsonwebtoken'
 
+import logo from '../../../assets/white_logo.png'
+
 const LoginContainer = styled.div`
   height: 100%;
-  width: 75vw;
-  background-color: #f2f7f7;
+  width: 90%;
+  background-color: white;
   margin: 5vh auto;
   padding: 15px;
+  text-align: center;
 `
 
-const AccountText = styled.text`
-  margin-top: 10px;
-  font-size: 21px;
-  display: flex;
-  justify-content: center;
+const InputTextLabel = styled.text`
+  float: left;
+  font-size: 15px;
+  padding: 0px 0px 4px 0px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+`
+
+const Logo = styled.img`
+  width: 70%;
+`
+
+const PostButton = styled.div`
+  text-align: center;
+  .ant-btn-primary {
+    background-color: #de5f4c;
+    border-color: #de5f4c;
+    font-size: 14px;
+    letter-spacing: 0em;
+    text-align: center;
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
 `
 
 function generateToken(user) {
@@ -58,8 +81,10 @@ export default function Login() {
 
   return (
     <>
-      <NavBar text="Sign in" />
       <LoginContainer>
+        <Logo src={logo} />
+        <br />
+        <InputTextLabel>Username: </InputTextLabel>
         <Input
           placeholder="Username"
           onChange={() => {
@@ -68,6 +93,7 @@ export default function Login() {
         ></Input>
         <br />
         <br />
+        <InputTextLabel>Password: </InputTextLabel>
         <Input
           placeholder="Password"
           onChange={() => {
@@ -75,19 +101,23 @@ export default function Login() {
           }}
         ></Input>
         <br /> <br />
-        <Button type="primary" block onClick={loginHandler}>
-          Sign in
-        </Button>
-        <AccountText>Do not have an account?</AccountText>
-        <Button
-          type="primary"
-          block
-          onClick={() => {
-            history.push(PATHS.SIGNUP_PAGE)
-          }}
-        >
-          Sign Up
-        </Button>
+        <PostButton>
+          <Button type="primary" block onClick={loginHandler}>
+            Login
+          </Button>
+        </PostButton>
+        <br />
+        <PostButton>
+          <Button
+            type="dashed"
+            block
+            onClick={() => {
+              history.push(PATHS.SIGNUP_PAGE)
+            }}
+          >
+            Register (Coming Soon)
+          </Button>
+        </PostButton>
       </LoginContainer>
     </>
   )

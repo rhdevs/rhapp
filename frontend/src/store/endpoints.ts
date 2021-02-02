@@ -44,6 +44,7 @@ export enum DOMAINS {
   FACILITY = 'facility',
   EVENT = 'event',
   LAUNDRY = 'laundry',
+  SOCIAL = 'social',
 }
 
 async function makeRequest(
@@ -64,6 +65,8 @@ async function makeRequest(
     case DOMAINS.LAUNDRY:
       DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
       break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
 
   return axios({
