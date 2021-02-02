@@ -11,7 +11,7 @@ const TitleText = styled.text`
   font-family: Inter;
   font-size: 14px;
   line-height: 14px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
