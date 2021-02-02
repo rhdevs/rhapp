@@ -94,6 +94,15 @@ def getEventAfterTime(startTime):
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
+    
+@app.route('/event/public/afterTime/<startTime>', methods=["GET"])
+@cross_origin()
+def getPublicEventAfterTime(startTime):
+    try:
+        data = db.Events.find({"startDateTime": {"$gt": int(startTime)}, "isPrivate": False})
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(list(data), default=lambda o: str(o)), 200
 
 
 @app.route('/cca/all', methods=["GET"])
@@ -428,6 +437,31 @@ def deleteMods(userID):
         return {"err": str(e)}, 400
     return {"message": "successful"}, 200
 
+
+@app.route("/nusmods/deleteMod", methods=['PUT'])
+@cross_origin()
+def deleteOneMod():
+    try:
+        data = request.get_json()
+        userID = data.get('userID')
+        eventID = data.get('eventID')
+
+        NUSModsProfile = db.NUSMods.find({"userID": userID})
+        currentMods = next(NUSModsProfile)["mods"]
+
+        body = {
+            'userID': userID,
+            "mods": [mod for mod in currentMods if mod["eventID"] != eventID]
+        }
+
+        db.NUSMods.update_one(
+            {"userID": userID}, {'$set': body})
+        return {'message': "successful"}, 200
+
+    except Exception as e:
+
+        return {"err": str(e)}, 400
+    return {"message": "successful"}, 200
 
 @app.route("/nusmods", methods=['PUT'])
 @cross_origin()
