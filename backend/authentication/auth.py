@@ -37,8 +37,8 @@ def check_for_token(func):
             currentUser = db.User.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
             currentUsername = currentUser['userID']
         except Exception as e: 
-            print(e)
-            #return jsonify({'message': 'Token is invalid'}), 401
+            #print(e)
+            return jsonify({'message': 'Token is invalid'}), 401
         
         #check if token has expired (compare time now with createdAt field in document + timedelta)
         originalToken = db.Session.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
@@ -90,17 +90,17 @@ If true, create session, return JWT to client, else return 500.
 @app.route('/auth/login', methods=['POST'])
 def login():
     req = request.get_json()
-    username = req['userID']
+    userID = req['userID']
     passwordHash = req['passwordHash']
     #authenticate the credentials
-    if not db.User.find({'userID': { "$in": username}, 'passwordHash': { "$in": passwordHash}}).limit(1):
+    if not db.User.find({'userID': userID, 'passwordHash': passwordHash}).limit(1):
         return jsonify({'message': 'Invalid credentials'}), 403
     #insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
-    db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'userID': username, 'passwordHash': passwordHash,'createdAt': datetime.datetime.now()}}, upsert=True)
+    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {'userID': userID, 'passwordHash': passwordHash,'createdAt': datetime.datetime.now()}}, upsert=True)
     #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     #generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
-    token = jwt.encode({'userID': username,
+    token = jwt.encode({'userID': userID,
                         'passwordHash': passwordHash #to change timedelta to 15 minutes in production
                         }, app.config['SECRET_KEY']
                         , algorithm="HS256")
@@ -112,6 +112,7 @@ def login():
 """
 Protected route:
 Acts as gatekeeper; can only access requested resource if you are authenticated ie valid session
+Successful authentication will return the 200 status code below. Any other errors will be as reflected in the wrapper function.
 """
 @app.route('/auth/protected', methods=['GET'])
 @check_for_token
