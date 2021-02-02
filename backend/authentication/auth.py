@@ -38,7 +38,7 @@ def check_for_token(func):
             currentUsername = currentUser['userID']
         except Exception as e: 
             #print(e)
-            return jsonify({'message': 'Token is invalid'}), 401
+            return jsonify({'message': 'Token is invalid'}), 403
         
         #check if token has expired (compare time now with createdAt field in document + timedelta)
         originalToken = db.Session.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
@@ -154,4 +154,4 @@ def logout():
 
 # Run the example
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
