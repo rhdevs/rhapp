@@ -70,7 +70,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     return format(date, 'dd-MMM-yy kk:mm')
   }
 
-  const eventsToCards = (events) => {
+  const eventsToCards = (events: SchedulingEvent[]) => {
     return events.map((result, index) => {
       return (
         <ImageDescriptionCard

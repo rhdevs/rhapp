@@ -4,7 +4,11 @@ import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
-import { getDayStringFromUNIX } from '../../store/scheduling/action'
+import { editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
+import { PATHS } from '../../routes/Routes'
+import { useHistory } from 'react-router-dom'
+import { dummyUserId } from '../../store/stubs'
+import { useDispatch } from 'react-redux'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -107,6 +111,7 @@ const RemoveEvent = styled.button`
 `
 
 function ViewEventDetailCard({
+  eventID,
   eventName,
   eventCreatedBy,
   startDateAndTime,
@@ -120,6 +125,7 @@ function ViewEventDetailCard({
   eventDescription,
   eventType,
 }: {
+  eventID: string
   eventName: string
   eventCreatedBy?: string
   startDateAndTime?: number
@@ -133,14 +139,16 @@ function ViewEventDetailCard({
   eventDescription?: string
   eventType: string
 }) {
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  const [modal, setModal] = useState(false)
+
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
     return format(date, 'MM/dd/yy hh:mm a')
   }
 
-  const [modal, setModal] = useState(false)
-
-  // const dispatch = useDispatch()
   return (
     <>
       <HeaderGroup>
@@ -154,8 +162,8 @@ function ViewEventDetailCard({
             hasLeftButton={true}
             leftButtonText={'Delete'}
             onLeftButtonClick={() => {
-              // dispatch(setUserNusMods(dummyUserId, link))
-              // history.push(PATHS.SCHEDULE_PAGE)
+              dispatch(editUserEvents('remove', eventID, dummyUserId))
+              history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}
             onRightButtonClick={() => {

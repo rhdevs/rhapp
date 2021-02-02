@@ -429,8 +429,11 @@ export const editUserEvents = (action: string, eventID: string, userId: string) 
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY REMOVED: eventId - ' + eventID + 'for userId: ' + userId)
+        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchAllUserEvents(dummyUserId, true))
         dispatch(setEventAttendanceStatus(true, false))
       } else {
+        dispatch(setEventAttendanceStatus(false, true))
         console.log('FAILURE!!!! ' + data.status)
       }
     }
@@ -439,7 +442,9 @@ export const editUserEvents = (action: string, eventID: string, userId: string) 
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY ADDED: eventId - ' + eventID + 'for userId: ' + userId)
-        dispatch(setEventAttendanceStatus(false, true))
+        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchAllUserEvents(dummyUserId, true))
+        dispatch(setEventAttendanceStatus(true, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
         dispatch(setEventAttendanceStatus(false, true))

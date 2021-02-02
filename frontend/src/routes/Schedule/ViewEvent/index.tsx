@@ -83,7 +83,7 @@ export default function CreateEvent() {
   //   }
   // }
 
-  const eventType = (eventType) => {
+  const eventType = (eventType: string) => {
     if (eventType === 'private') {
       return 'Private'
     } else if (eventType === 'public') {
@@ -118,6 +118,7 @@ export default function CreateEvent() {
     if (selectedEvent) {
       return (
         <ViewEventDetailCard
+          eventID={selectedEvent.eventID}
           eventName={selectedEvent.eventName}
           eventCreatedBy={
             selectedEvent.userID === dummyUserId ? 'You' : isNusModsEvent ? 'NUSMods' : selectedEvent.userID
