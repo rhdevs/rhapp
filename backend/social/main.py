@@ -633,6 +633,55 @@ def search():
         return make_response(response, 400)
 
 
+@app.route("/image/<string:imageName>", methods=['GET', 'PUT', 'DELETE', 'POST'])
+@cross_origin(supports_credentials=True)
+def images(imageName):
+    try:
+        if request.method == "GET":
+            # get last 5 most recent
+            response = db.Images.find({'imageName': imageName})
+            return json.dumps(response, default=lambda o: str(o)), 200
+
+        elif request.method == "POST":
+            data = request.get_json()
+            imageUrl = str(data.get('imageUrl'))
+            imageName = str(data.get('imageName'))
+
+            body = {
+                "imageName": imageName,
+                "imageUrl": imageUrl,
+            }
+
+            receipt = db.Images.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
+
+        elif request.method == "PUT":
+            data = request.get_json()
+            imageUrl = str(data.get('imageUrl'))
+            imageName = str(data.get('imageName'))
+
+            body = {
+                "imageName": imageName,
+                "imageUrl": imageUrl,
+            }
+
+            db.Images.update_one({"imageName": imageName}, {
+                '$set': body}, upsert=True)
+
+            return {'message': "Event changed"}, 200
+
+        elif request.method == "DELETE":
+            imageName = request.args.get('imageName')
+            db.Images.delete_one({"imageName": imageName})
+            return make_response('deleted sucessfully', 200)
+
+    except Exception as e:
+        print(e)
+        return {"err": str(e)}, 400
+
+
 if __name__ == "__main__":
     app.run(threaded=True, debug=True)
     # app.run('0.0.0.0', port=8080)
