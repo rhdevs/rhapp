@@ -8,8 +8,8 @@ from bson.objectid import ObjectId
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, resources={r"/*":{"origins" : "*"}})
-# resources allowed to be accessed explicitly 
+CORS(app, resources={r"/*": {"origins": "*"}})
+# resources allowed to be accessed explicitly
 # response.headers.add("Access-Control-Allow-Origin", "*"), add this to all responses
 # if the cors still now working
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -30,11 +30,11 @@ def hello():
     return "Welcome the Raffles Hall Social server"
 
 
-@app.route('/user/all')
+@app.route('/profile/all')
 @cross_origin()
-def getAllUsers(supports_credentials=True):
+def getAllProfiles(supports_credentials=True):
     try:
-        data = db.User.find()
+        data = db.Profiles.find()
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
@@ -46,11 +46,12 @@ def getAllUsers(supports_credentials=True):
 def getUser(userID):
     try:
         data = db.User.find_one({"userID": userID})
-        return make_response({"message" : data}, 200)
+        return make_response({"message": data}, 200)
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    
+
+
 @app.route("/user", methods=['DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
 def addDeleteUser():
@@ -60,13 +61,13 @@ def addDeleteUser():
             userID = str(data.get('userID'))
             passwordHash = str(data.get('passwordHash'))
             email = str(data.get('email'))
-            position = [] # default to be empty, will be added manually from BE 
-            
+            position = []  # default to be empty, will be added manually from BE
+
             body = {
                 "userID": userID,
                 "passwordHash": passwordHash,
                 "email": email,
-                "position" : position
+                "position": position
             }
             receipt = db.User.insert_one(body)
             body["_id"] = str(receipt.inserted_id)
@@ -89,10 +90,12 @@ def editUser():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        
+
         oldUser = db.User.find_one({"userID": userID})
-        passwordHash = str(data.get('passwordHash')) if data.get('passwordHash') else oldUser.get('passwordHash')
-        email = str(data.get('email')) if data.get('email') else oldUser.get('email')
+        passwordHash = str(data.get('passwordHash')) if data.get(
+            'passwordHash') else oldUser.get('passwordHash')
+        email = str(data.get('email')) if data.get(
+            'email') else oldUser.get('email')
 
         body = {
             "userID": userID,
@@ -192,23 +195,29 @@ def addDeleteProfile():
         print(e)
         return {"err": str(e)}, 400
 
+
 @app.route("/profile/edit", methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def editProfile():
     try:
         data = request.get_json()
         userID = str(data.get('userID'))
-        
+
         oldData = db.Profiles.find_one({"userID": userID})
         if oldData is None:
             return make_response("data not found", 404)
-        
-        displayName = str(data.get('displayName')) if data.get('displayName') else oldData.get('displayName')
+
+        displayName = str(data.get('displayName')) if data.get(
+            'displayName') else oldData.get('displayName')
         bio = str(data.get('bio')) if data.get('bio') else oldData.get('bio')
-        profilePictureURI = str(data.get('profilePictureURI')) if data.get('profilePictureURI') else oldData.get('displayName')
-        block = int(data.get('block')) if data.get('block') else oldData.get('block')
-        telegramHandle = str(data.get('telegramHandle')) if data.get('telegramHandle') else oldData.get('telegramHandle')
-        modules = data.get('modules') if data.get('modules') else oldData.get('modules')
+        profilePictureUrl = str(data.get('profilePictureUrl')) if data.get(
+            'profilePictureUrl') else oldData.get('displayName')
+        block = int(data.get('block')) if data.get(
+            'block') else oldData.get('block')
+        telegramHandle = str(data.get('telegramHandle')) if data.get(
+            'telegramHandle') else oldData.get('telegramHandle')
+        modules = data.get('modules') if data.get(
+            'modules') else oldData.get('modules')
 
         body = {
             "userID": userID,
@@ -244,14 +253,16 @@ def getUserDetails(userID):
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    
+
     return json.dumps(data1, default=lambda o: str(o)), 200
 
+
 def userIDtoName(userID):
-    #helper function
-    profile = db.Profiles.find_one({"userID" : userID})
+    # helper function
+    profile = db.Profiles.find_one({"userID": userID})
     name = profile.get('displayName') if profile else None
-    return name 
+    return name
+
 
 @app.route("/post", methods=['GET', 'DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -260,15 +271,15 @@ def addDeletePost():
         if request.method == "GET":
             # get last 5 most recent
             data = db.Posts.find()
-            
+
             response = []
-            for item in data :
-                #add name into the every data using display name
+            for item in data:
+                # add name into the every data using display name
                 item['name'] = userIDtoName(item.get('userID'))
                 response.append(item)
-                
+
             return json.dumps(response, default=lambda o: str(o)), 200
-        
+
         elif request.method == "POST":
             data = request.get_json()
             userID = str(data.get('userID'))
@@ -291,9 +302,9 @@ def addDeletePost():
                 "createdAt": createdAt,
                 "postPics": postPics,
                 "isOfficial": isOfficial,
-                "tags" : tags
+                "tags": tags
             }
-            
+
             receipt = db.Posts.insert_one(body)
             body["_id"] = str(receipt.inserted_id)
 
@@ -308,60 +319,74 @@ def addDeletePost():
         print(e)
         return {"err": str(e)}, 400
 
-@app.route("/post/search", methods = ['GET'])
+
+@app.route("/post/search", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getPostSpecific():
-    try : 
+    try:
         userID = request.args.get("userID")
         postID = request.args.get("postID")
-        
-        if postID : 
+
+        if postID:
             data = db.Posts.find_one({"postID": int(postID)})
-            name = db.Profiles.find_one({"userID" : str(data.get("userID"))}).get('displayName')
-            
-            if data != None :
-              del data['_id'] # this causes error without str conversion
-              data['name'] = name
-              return make_response(data, 200)
-            else :
-              return make_response("No Data Found", 404)
-          
-        elif userID : 
+            name = db.Profiles.find_one(
+                {"userID": str(data.get("userID"))}).get('displayName')
+
+            if data != None:
+                del data['_id']  # this causes error without str conversion
+                data['name'] = name
+                return make_response(data, 200)
+            else:
+                return make_response("No Data Found", 404)
+
+        elif userID:
             data = db.Posts.find({"userID": str(userID)})
             response = []
-            for item in data :
+            for item in data:
                 item['name'] = userIDtoName(item.get('userID'))
                 response.append(item)
-            
+
             return json.dumps(response, default=lambda o: str(o)), 200
-        
+
     except Exception as e:
         return {"err": str(e)}, 400
 
-@app.route("/post/last/<int:last>", methods=['GET'])
+
+@app.route("/post/all/<string:userID>", methods=['GET'])
 @cross_origin(supports_credentials=True)
-def getLastN(last):
-    #get all post regardless whether its official or not 
+def getLastN(userID):
+    # get all post that a user can view regardless of whether its official or not
     try:
-        data = db.Posts.find(
-            sort=[('createdAt', pymongo.DESCENDING)]).limit(last)
-        
+        N = int(request.args.get('N')) if request.args.get('N') else 0
+
+        friends = FriendsHelper(userID).get('friendList')
+
+        query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}]
+                 }
+
+        data = db.Posts.find(query,
+                             sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
+
         response = []
-        for item in data : 
-            item['name'] = name = userIDtoName(item.get('userID'))
+        for item in data:
+            item['name'] = userIDtoName(item.get('userID'))
             response.append(item)
-            
+
         return json.dumps(response, default=lambda o: str(o)), 200
-    
+
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-    
+
+
 @app.route("/post/<userID>", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
-        data = db.Posts.find({"userID": str(userID)})
+        N = int(request.args.get('N')) if request.args.get('N') else 0
+
+        data = db.Posts.find({"userID": str(userID)}, sort=[
+                             ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
@@ -374,9 +399,9 @@ def FriendsHelper(userID):
     }
 
     result = db.Friends.find(query)
-    
+
     response = {'friendList': []}
-    
+
     for friend in result:
         userOne = friend.get("userIDOne")
         userTwo = friend.get("userIDTwo")
@@ -394,7 +419,7 @@ def FriendsHelper(userID):
 def getFriendsPostById():
     try:
         userID = str(request.args.get("userID"))
-        N = int(request.args.get("N"))
+        N = int(request.args.get('N')) if request.args.get('N') else 0
 
         friends = FriendsHelper(userID).get('friendList')
 
@@ -403,14 +428,14 @@ def getFriendsPostById():
         }
 
         response = []
-        
-        result = db.Posts.find(
-            query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
 
-        for item in result :
+        result = db.Posts.find(query, sort=[
+            ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
+
+        for item in result:
             item['name'] = userIDtoName(item.get('userID'))
             response.append(item)
-            
+
         return make_response(json.dumps(response, default=lambda o: str(o)), 200)
 
     except Exception as e:
@@ -421,18 +446,19 @@ def getFriendsPostById():
 @cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
-        N = int(request.args.get('N')) if request.args.get('N') else 10
-        
+        N = int(request.args.get('N')) if request.args.get('N') else 0
+
         response = []
-        data = db.Posts.find({"isOfficial": True}, 
-                             sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
-        
-        for item in data : 
+        data = db.Posts.find({"isOfficial": True}).sort(
+            'createdAt', pymongo.DESCENDING).skip(N * 5).limit(5)
+
+        for item in data:
             item['name'] = userIDtoName(item.get('userID'))
-            ccaID = int(item.get('ccaID'))            
-            item['ccaName'] = db.CCA.find_one({'ccaID' : ccaID}).get('ccaName') if ccaID != -1 else None
+            ccaID = int(item.get('ccaID'))
+            item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
+                'ccaName') if ccaID != -1 else None
             response.append(item)
-            
+
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
@@ -446,16 +472,22 @@ def editPost():
         data = request.get_json()
         postID = data.get('postID')
         oldPost = db.Posts.find_one({"postID": int(postID)})
-        
+
         if oldPost == None:
             return make_response("data non existent", 404)
-        
-        userID = str(data.get('userID')) if data.get('userID') else oldPost.get('userID')
-        title = str(data.get('title')) if data.get('title') else oldPost.get('title')
-        description = str(data.get('description')) if data.get('description') else oldPost.get('description')
-        ccaID = int(data.get('ccaID')) if data.get('ccaID') else oldPost.get('ccaID')
-        postPics = data.get('postPics') if data.get('postPics') else oldPost.get('postPics')
-        isOfficial = data.get('isOfficial') if data.get('isOfficial') else oldPost.get('isOfficial')
+
+        userID = str(data.get('userID')) if data.get(
+            'userID') else oldPost.get('userID')
+        title = str(data.get('title')) if data.get(
+            'title') else oldPost.get('title')
+        description = str(data.get('description')) if data.get(
+            'description') else oldPost.get('description')
+        ccaID = int(data.get('ccaID')) if data.get(
+            'ccaID') else oldPost.get('ccaID')
+        postPics = data.get('postPics') if data.get(
+            'postPics') else oldPost.get('postPics')
+        isOfficial = data.get('isOfficial') if data.get(
+            'isOfficial') else oldPost.get('isOfficial')
 
         body = {
             "userID": userID,
@@ -592,30 +624,84 @@ def checkFriend():
         }
         return make_response(response, 200)
 
-@app.route("/search", methods = ["GET"])
+
+@app.route("/search", methods=["GET"])
 @cross_origin()
 def search():
     # a function to search all events, facilities and profiles
-    try : 
+    try:
         term = str(request.args.get('term'))
-        regex = {'$regex' : '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*(?i){}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)} 
-        
-        profiles = db.Profiles.find({"displayName" : regex}, {'_id': False}) # should have done this earlier 
-        events = db.Events.find({"eventName" : regex}, {'_id': False})
-        facilities = db.Facilities.find({"facilityName" : regex}, {'_id': False})
-        
+        regex = {
+            '$regex': '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*(?i){}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)}
+
+        # should have done this earlier
+        profiles = db.Profiles.find({"displayName": regex}, {'_id': False})
+        events = db.Events.find({"eventName": regex}, {'_id': False})
+        facilities = db.Facilities.find(
+            {"facilityName": regex}, {'_id': False})
+
         response = {
-            "profiles" : list(profiles),
-            "events" : list(events),
-            "facilities" : list(facilities)
+            "profiles": list(profiles),
+            "events": list(events),
+            "facilities": list(facilities)
         }
-        
-        return make_response(response, 200);
-         
+
+        return make_response(response, 200)
+
     except Exception as e:
-        response = {"err" : e};
+        response = {"err": e}
         return make_response(response, 400)
-    
+
+
+@app.route("/image/<string:imageName>", methods=['GET', 'PUT', 'DELETE', 'POST'])
+@cross_origin(supports_credentials=True)
+def images(imageName):
+    try:
+        if request.method == "GET":
+            # get last 5 most recent
+            response = db.Images.find({'imageName': imageName})
+            return json.dumps(response, default=lambda o: str(o)), 200
+
+        elif request.method == "POST":
+            data = request.get_json()
+            imageUrl = str(data.get('imageUrl'))
+            imageName = str(data.get('imageName'))
+
+            body = {
+                "imageName": imageName,
+                "imageUrl": imageUrl,
+            }
+
+            receipt = db.Images.insert_one(body)
+            body["_id"] = str(receipt.inserted_id)
+
+            return {"message": body}, 200
+
+        elif request.method == "PUT":
+            data = request.get_json()
+            imageUrl = str(data.get('imageUrl'))
+            imageName = str(data.get('imageName'))
+
+            body = {
+                "imageName": imageName,
+                "imageUrl": imageUrl,
+            }
+
+            db.Images.update_one({"imageName": imageName}, {
+                '$set': body}, upsert=True)
+
+            return {'message': "Event changed"}, 200
+
+        elif request.method == "DELETE":
+            imageName = request.args.get('imageName')
+            db.Images.delete_one({"imageName": imageName})
+            return make_response('deleted sucessfully', 200)
+
+    except Exception as e:
+        print(e)
+        return {"err": str(e)}, 400
+
+
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)
