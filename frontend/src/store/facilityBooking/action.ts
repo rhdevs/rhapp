@@ -1,34 +1,64 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { facilityListStub } from '../stubs'
-import { ENDPOINTS, DOMAINS, get, post, del } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import { dummyUserId } from '../stubs'
 
-export const getFacilityList = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(SetIsLoading(true))
-  get(ENDPOINTS.FACILITY_LIST, DOMAINS.FACILITY).then((resp) => {
-    const fetchedList: Facility[] = resp.data
-    console.log(fetchedList)
-    // filters through all locations and gives a unique list
-    const uniqueLocationList = [...new Set(fetchedList.map((item) => item.facilityLocation))]
-    dispatch({
-      type: FACILITY_ACTIONS.GET_FACILITY_LIST,
-      facilityList: facilityListStub,
-      locationList: uniqueLocationList,
-    })
-    dispatch(SetIsLoading(false))
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
+    method: 'GET',
+    mode: 'cors',
   })
+    .then((resp) => resp.json())
+    .then((data) => {
+      const uniqueLocationList = [...new Set(data.map((item: Facility) => item.facilityLocation))]
+      dispatch({
+        type: FACILITY_ACTIONS.GET_FACILITY_LIST,
+        facilityList: data,
+        locationList: ['All'].concat(uniqueLocationList as string[]),
+      })
+      dispatch(SetIsLoading(false))
+    })
 }
 
-export const getMyBookings = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(SetIsLoading(true))
-  get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, userId).then((resp) => {
-    const fetchedList: Booking[] = resp.data
-    dispatch({
-      type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
-      myBookings: fetchedList,
-    })
-    dispatch(SetIsLoading(false))
+  const { ViewEndDate, ViewStartDate, selectedFacilityId } = getState().facilityBooking
+  const querySubString =
+    selectedFacilityId +
+    '?startDate=' +
+    parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
+    '&endDate=' +
+    parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + querySubString, {
+    method: 'GET',
+    mode: 'cors',
   })
+    .then((resp) => resp.json())
+    .then((data) => {
+      dispatch({
+        type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
+        facilityBookings: data,
+      })
+      console.log(data)
+      dispatch(SetIsLoading(false))
+    })
+}
+
+export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetIsLoading(true))
+  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
+    .then((resp) => resp)
+    .then((data) => {
+      const fetchedList: Booking[] = data
+      console.log(fetchedList)
+      dispatch({
+        type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
+        myBookings: fetchedList,
+      })
+      dispatch(SetIsLoading(false))
+    })
 }
 
 // -1 stands for closed, any others means open for that specific ID.
@@ -36,17 +66,23 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
   dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
 }
 
-export const deleteMyBooking = (bookingId: number) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(SetIsLoading(true))
-  del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, bookingId.toString()).then(() => {
-    const { myBookings } = getState().facilityBooking
-    dispatch({
-      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
-    })
-    setIsDeleteMyBooking(-1)
-    dispatch(SetIsLoading(false))
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId.toString(), {
+    method: 'DELETE',
+    mode: 'cors',
   })
+    .then((resp) => resp.json())
+    .then((data) => {
+      const { myBookings } = getState().facilityBooking
+      console.log(data)
+      dispatch({
+        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+      })
+      setIsDeleteMyBooking(-1)
+      dispatch(SetIsLoading(false))
+    })
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
@@ -66,10 +102,12 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
 
 export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
+  getAllBookingsForFacility()
 }
 
 export const editBookingFromDate = (newBookingFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
+  getAllBookingsForFacility()
 }
 
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -78,29 +116,6 @@ export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<Act
 
 export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
-}
-
-export const getAllBookingsForFacility = (facilityName: string) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(SetIsLoading(true))
-  const { ViewEndDate, ViewStartDate } = getState().facilityBooking
-  get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, '?facilityName=' + facilityName).then((resp) => {
-    const fetchedFacility: Facility = resp.data
-    const newSubstring =
-      fetchedFacility.facilityID +
-      '?startDate=' +
-      parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
-      '&endDate=' +
-      parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
-    dispatch({ type: FACILITY_ACTIONS.SET_FACILITY_DETAILS, selectedFacility: fetchedFacility })
-    get(ENDPOINTS.FACILITY, DOMAINS.FACILITY, newSubstring).then((resp) => {
-      const bookings: Booking[] = resp.data
-      dispatch({ type: FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS, bookings: bookings })
-    })
-    dispatch(SetIsLoading(false))
-  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,57 +140,69 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch(SetIsLoading(false))
 }
 
+export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
+  get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
+    dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp })
+    dispatch(SetIsLoading(false))
+  })
+}
+
 export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(SetIsLoading(true))
   const {
     newBookingName,
-    selectedFacility,
+    selectedFacilityId,
     newBookingFromDate,
     newBookingToDate,
     newBookingCCA,
     newBookingDescription,
+    ccaList,
   } = getState().facilityBooking
 
-  get(ENDPOINTS.CCA_DETAILS, DOMAINS.FACILITY, newBookingCCA).then((resp) => {
-    const requestBody = {
-      facilityID: selectedFacility?.facilityID,
-      eventName: newBookingName,
-      userID: 1,
-      ccaID: resp.data.ccaID,
-      startTime: newBookingFromDate,
-      endTime: newBookingToDate,
-      description: newBookingDescription,
-    }
-    post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
-      .then((resp) => {
-        resp.info
+  const requestBody = {
+    facilityID: selectedFacilityId,
+    eventName: newBookingName,
+    userID: dummyUserId,
+    ccaID: ccaList.find((cca) => cca.ccaName === newBookingCCA)?.ccaID,
+    startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
+    endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
+    description: newBookingDescription,
+  }
+  console.log(requestBody)
+  post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+    .then((resp) => {
+      if (resp.status >= 400) {
+        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      } else {
+        console.log(resp)
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
         dispatch(SetIsLoading(false))
-      })
-      .catch(() => {
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      })
-  })
+      }
+    })
+    .catch(() => {
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    })
 }
 
-export const setSelectedBooking = (bookingId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
-  const selectedBooking: Booking = {
-    bookingID: parseInt(bookingId),
-    startTime: new Date(),
-    endTime: new Date(),
-    eventName: 'Training',
-    ccaID: 122,
-    userID: 'you',
-    facilityID: 223,
-    description: 'Backup location! Feel free to PM me',
-  }
-
-  dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: selectedBooking })
-  dispatch(SetIsLoading(false))
+export const setSelectedBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  console.log(bookingId)
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(data)
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: data })
+      dispatch(SetIsLoading(false))
+    })
 }
 
 export const SetIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isLoading } = getState().facilityBooking
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState ? desiredState : !isLoading })
+}
+
+export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
 }

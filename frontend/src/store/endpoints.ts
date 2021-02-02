@@ -2,9 +2,14 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
-  MOCK_ENDPOINT = 'this/is/fake/endpoint',
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
+  USER = '/user',
+  USER_PROFILE = '/profile',
+  USER_DETAILS = '/user/details',
+  EDIT_PROFILE = '/profile/edit',
+  USER_CCAS = '/user_CCA',
+  FRIEND = '/friend',
 
   // FACILITY
   FACILITY_LIST = '/facilities/all',
@@ -14,30 +19,53 @@ export enum ENDPOINTS {
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
-  MACHINE_LIST = '/location/',
-  LAUNDRY_MACHINE = 'laundry/machine',
+  MACHINE_LIST = '/location',
+  LAUNDRY_MACHINE = '/laundry/machine',
+  UPDATE_MACHINE = '/laundry/machine',
   LAUNDRY_JOB = '/laundry/job',
+  EDIT_DURATION = '/laundry/machine/editDuration',
 
   // SCHEDULING
   USER_TIMETABLE = '/timetable/all',
   ALL_USERS = '/user/all',
-  USER_PERMISSION = '/permissions/',
+  USER_PERMISSION = '/permissions',
 
   ALL_EVENTS = '/event/all',
-  USER_EVENT = '/user_event',
+  GET_EVENT_BY_EVENTID = '/event/eventID/',
+  GET_EVENT_BY_CCAID = '/event/ccaID/',
+  ALL_PUBLIC_EVENTS = '/event/public/all',
+  USER_EVENT = '/user_event/',
   ADD_EVENT = '/event/add/',
   DELETE_EVENT = '/event/delete/',
-  RSVP_EVENT = '/user_event/',
+  RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit/',
+
+  ADD_MODS = '/nusmods/addNUSMods',
+  DELETE_MODS = '/nusmods/delete/',
+  NUSMODS = '/nusmods/',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',
 
-  CCA_DETAILS = '/cca',
+  CCA_DETAILS = '/cca/',
   ALL_CCAS = '/cca/all',
   CCA_MEMBER = '/user_CCA',
 
   EVENT_DETAILS = '/event',
+
+  // FRIENDS
+  ALL_FRIENDS = '/friend',
+
+  // SOCIAL
+  OFFICIAL_POSTS = '/post/official',
+  ALL_POSTS = '/post',
+  FRIENDS_OF_USER_POSTS = '/post/friend',
+  SPECIFIC_POST = '/post/search',
+  DELETE_POST = '/post',
+  EDIT_POST = '/post/edit',
+
+  // HOME
+  SEARCH = '/search',
 }
 
 export enum DOMAINS {
@@ -45,6 +73,13 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+}
+
+export enum DOMAIN_URL {
+  FACILITY = '//rhappfacilities.rhdevs.repl.co',
+  EVENT = '//rhappevents.rhdevs.repl.co',
+  LAUNDRY = '//rhapplaundry.rhdevs.repl.co',
+  SOCIAL = '//rhappsocial.rhdevs.repl.co',
 }
 
 async function makeRequest(
@@ -57,26 +92,30 @@ async function makeRequest(
   let DOMAIN_URL: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL = 'https://rhappfacilities.rhdevs.repl.co'
+      DOMAIN_URL = '//rhappfacilities.rhdevs.repl.co'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL = 'https://rhappevents.rhdevs.repl.co'
+      DOMAIN_URL = '//rhappevents.rhdevs.repl.co'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL = 'https://rhapplaundry.rhdevs.repl.co'
+      DOMAIN_URL = '//rhapplaundry.rhdevs.repl.co'
+      break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
       break
     case DOMAINS.SOCIAL:
       DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
-
+  console.log(DOMAIN_URL + url)
   return axios({
-    method,
+    method: method,
     url: DOMAIN_URL + url,
     headers: {
+      'Access-Control-Allow-Origin': '*',
       ...additionalHeaders,
     },
     data: requestBody,
-    withCredentials: true,
+    // withCredentials: true,
     validateStatus: (status) => {
       if (status >= 200 && status < 400) {
         return true

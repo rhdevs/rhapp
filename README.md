@@ -14,7 +14,7 @@
     RHdevs:
     <br/>
     <br/>
-    <a href="https://github.com/github_username/repo_name"><strong>(Coming Soon!) View the App</strong></a>
+    <a href="rhapp.lol"><strong>(Coming Soon!) View the App</strong></a>
     <br />
   </p>
 </p>

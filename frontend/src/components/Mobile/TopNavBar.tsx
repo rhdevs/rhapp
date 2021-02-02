@@ -22,6 +22,9 @@ const StyledNavBar = styled(NavBar)`
   }
   padding: 15px;
   max-width:100%;
+  position: sticky;
+  top:0;
+  z-index:200;
 `
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -39,12 +42,14 @@ function TopNavBar({
   leftIconComponent,
   rightComponent,
   centerComponent,
+  onLeftClick,
 }: {
   title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement
   centerComponent?: ReactElement
+  onLeftClick?: () => void
 }) {
   const history = useHistory()
   return (
@@ -57,7 +62,7 @@ function TopNavBar({
             <NavBarIcons
               type="left"
               onClick={() => {
-                history.goBack()
+                onLeftClick ? onLeftClick() : history.goBack()
               }}
               color="#002642"
             />
@@ -67,7 +72,7 @@ function TopNavBar({
         </>
       }
       rightContent={rightComponent}
-    ></StyledNavBar>
+    />
   )
 }
 

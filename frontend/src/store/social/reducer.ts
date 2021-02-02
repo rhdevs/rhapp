@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Post, SOCIAL_ACTIONS } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 
 const initialState = {
   isUploading: false,
@@ -8,7 +8,13 @@ const initialState = {
   newPostBody: '',
   newPostImages: [],
   newPostOfficial: false,
+  newPostCca: '',
   warnings: [],
+  posts: [],
+  postsFilter: POSTS_FILTER.ALL,
+  viewPost: {} as Post,
+  userId: '',
+  postId: '',
 }
 
 type State = {
@@ -18,7 +24,13 @@ type State = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
   warnings: string[]
+  posts: Post[]
+  postsFilter: POSTS_FILTER
+  viewPost: Post
+  userId: string
+  postId: string
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -31,6 +43,8 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
+        userId: action.userId,
       }
     }
 
@@ -41,6 +55,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         newPostBody: action.newPostBody,
         newPostImages: action.newPostImages,
         newPostOfficial: action.newPostOfficial,
+        newPostCca: action.newPostCca,
       }
     }
 
@@ -62,6 +77,41 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         isUploading: action.isUploading,
+      }
+    }
+
+    case SOCIAL_ACTIONS.GET_POSTS: {
+      return {
+        ...state,
+        posts: action.posts,
+      }
+    }
+
+    case SOCIAL_ACTIONS.DELETE_POST: {
+      return {
+        ...state,
+        posts: action.posts,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SWITCH_POSTS_FILTER: {
+      return {
+        ...state,
+        postsFilter: action.postsFilter,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SET_POST_ID: {
+      return {
+        ...state,
+        postId: action.postId,
+      }
+    }
+
+    case SOCIAL_ACTIONS.GET_SPECIFIC_POST: {
+      return {
+        ...state,
+        viewPost: action.viewPost,
       }
     }
 

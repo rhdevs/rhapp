@@ -1,12 +1,40 @@
+type Timestamp = string // number of milliseconds since January 1, 1970, 00:00:00 UTC
+
 export type Post = {
-  postId: number
+  postId: string
   title: string
-  ownerId: number
-  date: number
   isOfficial: boolean
-  ccaId?: number
+  ccaId: number
   description: string
   postPics: string[]
+  createdAt?: Timestamp
+  name: string
+  userId: string
+}
+
+export type User = {
+  userId: string
+  avatar?: string
+  name: string
+  initials: string
+  block: string
+}
+
+export type Friend = {
+  bio: string
+  block: number
+  displayName: string
+  modules: string[]
+  profilePictureUrl: string
+  telegramHandle: string
+  userID: string
+}
+
+export enum POSTS_FILTER {
+  ALL = 'ALL',
+  OFFICIAL = 'OFFICIAL',
+  FRIENDS = 'FRIENDS',
+  USER = 'USER',
 }
 
 export enum SOCIAL_ACTIONS {
@@ -15,6 +43,11 @@ export enum SOCIAL_ACTIONS {
   SET_WARNINGS = 'SOCIAL_ACTIONS.SET_WARNINGS',
   ADD_IMAGE = 'SOCIAL_ACTIONS.ADD_IMAGE',
   SET_IS_UPLOADING = 'SOCIAL_ACTIONS.SET_IS_UPLOADING',
+  GET_POSTS = 'SOCIAL_ACTIONS.GET_POSTS',
+  DELETE_POST = 'SOCIAL_ACTIONS.DELETE_POST',
+  SWITCH_POSTS_FILTER = 'SOCIAL_ACTIONS.SWITCH_POSTS_FILTER',
+  GET_SPECIFIC_POST = 'SOCIAL_ACTIONS.GET_SPECIFIC_POST',
+  SET_POST_ID = 'SOCIAL_ACTIONS.SET_POST_ID',
 }
 
 type SetIsUploading = {
@@ -29,14 +62,17 @@ type GetPostDetailsToEdit = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
+  userId: string
 }
 
-type EditNewfields = {
+type EditNewFields = {
   type: typeof SOCIAL_ACTIONS.EDIT_NEW_FIELDS
   newPostTitle: string
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
+  newPostCca: string
 }
 
 type SetWarnings = {
@@ -49,4 +85,39 @@ type AddImage = {
   newPostImages: string[]
 }
 
-export type ActionTypes = GetPostDetailsToEdit | EditNewfields | SetWarnings | AddImage | SetIsUploading
+type GetPosts = {
+  type: typeof SOCIAL_ACTIONS.GET_POSTS
+  posts: Post[]
+}
+
+type DeletePost = {
+  type: typeof SOCIAL_ACTIONS.DELETE_POST
+  posts: Post[]
+}
+
+type SwitchPostsFilter = {
+  type: typeof SOCIAL_ACTIONS.SWITCH_POSTS_FILTER
+  postsFilter: POSTS_FILTER
+}
+
+type SetPostId = {
+  type: typeof SOCIAL_ACTIONS.SET_POST_ID
+  postId: string
+}
+
+type GetSpecificPost = {
+  type: typeof SOCIAL_ACTIONS.GET_SPECIFIC_POST
+  viewPost: Post
+}
+
+export type ActionTypes =
+  | GetPostDetailsToEdit
+  | EditNewFields
+  | SetWarnings
+  | AddImage
+  | SetIsUploading
+  | GetPosts
+  | DeletePost
+  | SwitchPostsFilter
+  | SetPostId
+  | GetSpecificPost

@@ -7,12 +7,7 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import {
-  deleteMyBooking,
-  setIsDeleteMyBooking,
-  SetIsLoading,
-  setSelectedBooking,
-} from '../../../store/facilityBooking/action'
+import { deleteMyBooking, setIsDeleteMyBooking, SetIsLoading } from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -111,8 +106,8 @@ export default function ViewBooking() {
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
-    dispatch(setSelectedBooking(params.bookingId))
+    dispatch(SetIsLoading(false))
+    console.log(selectedBooking)
   }, [dispatch])
 
   return (
@@ -120,7 +115,7 @@ export default function ViewBooking() {
       <TopNavBar title={'View Event'} />
       <MainContainer>
         {isLoading && <LoadingSpin />}
-        {!isLoading && (
+        {!isLoading && selectedBooking && (
           <>
             <EventCard key={selectedBooking?.bookingID}>
               <HeaderGroup>
@@ -132,8 +127,12 @@ export default function ViewBooking() {
                 <TimeDetails>
                   <CardDurationLabel>duration here</CardDurationLabel>
                   <DateTimeDetails>
-                    <CardTimeLabel>{selectedBooking?.startTime.toDateString}</CardTimeLabel>
-                    <CardTimeLabel>{selectedBooking?.endTime.toDateString}</CardTimeLabel>
+                    {selectedBooking && (
+                      <>
+                        <CardTimeLabel>{new Date(selectedBooking?.startTime * 1000).toDateString}</CardTimeLabel>
+                        <CardTimeLabel>{new Date(selectedBooking?.endTime * 1000).toDateString}</CardTimeLabel>
+                      </>
+                    )}
                   </DateTimeDetails>
                 </TimeDetails>
                 <EventOwnerDetails>
