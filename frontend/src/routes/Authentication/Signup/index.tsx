@@ -135,9 +135,8 @@ export default function Signup() {
 
   return (
     <>
-      <NavBar text="Sign up" />
       <SignUpContainer>
-        <Logo src={logo} />
+        <p>NUS Email:</p>
         <Input placeholder="Email" name="email" value={formData.email} onChange={(e) => onChange(e)}></Input>
         <br /> <br />
         <Input placeholder="Username" name="userId" value={formData.userId} onChange={(e) => onChange(e)}></Input>{' '}
@@ -182,14 +181,12 @@ export default function Signup() {
         <br />
         <br />
         <PostButton>
-          {' '}
           <Button type="primary" block onClick={onSubmit}>
             Sign Up
           </Button>
         </PostButton>
         <AccountText>Have an account?</AccountText>
         <PostButton>
-          {' '}
           <Button
             type="primary"
             block

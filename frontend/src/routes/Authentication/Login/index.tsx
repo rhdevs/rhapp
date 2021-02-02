@@ -14,23 +14,24 @@ import logo from '../../../assets/white_logo.png'
 
 const LoginContainer = styled.div`
   height: 100%;
-  width: 400px;
+  width: 90%;
   background-color: white;
   margin: 5vh auto;
   padding: 15px;
   text-align: center;
 `
-//box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-const AccountText = styled.text`
-  margin-top: 10px;
-  font-size: 18px;
-  display: flex;
-  justify-content: center;
+const InputTextLabel = styled.text`
+  float: left;
+  font-size: 15px;
+  padding: 0px 0px 4px 0px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
 `
+
 const Logo = styled.img`
-  height: 100px;
-  width: 100px;
+  width: 70%;
 `
 
 const PostButton = styled.div`
@@ -38,29 +39,10 @@ const PostButton = styled.div`
   .ant-btn-primary {
     background-color: #de5f4c;
     border-color: #de5f4c;
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 200;
-    line-height: 23px;
+    font-size: 14px;
     letter-spacing: 0em;
     text-align: center;
-    width: 72;
-    height: 33px;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  .ant-btn-primary:hover,
-  .ant-btn-primary:focus {
-    background-color: #b54c3c;
-    border-color: #b54c3c;
-    font-size: 17px;
-    font-style: normal;
-    font-weight: 200;
-    line-height: 23px;
-    letter-spacing: 0em;
-    text-align: center;
-    width: 72;
-    height: 33px;
+    width: 100%;
     border-radius: 8px;
     margin-top: 10px;
   }
@@ -99,10 +81,10 @@ export default function Login() {
 
   return (
     <>
-      <NavBar text="Sign in" />
-
       <LoginContainer>
         <Logo src={logo} />
+        <br />
+        <InputTextLabel>Username: </InputTextLabel>
         <Input
           placeholder="Username"
           onChange={() => {
@@ -111,6 +93,7 @@ export default function Login() {
         ></Input>
         <br />
         <br />
+        <InputTextLabel>Password: </InputTextLabel>
         <Input
           placeholder="Password"
           onChange={() => {
@@ -119,22 +102,20 @@ export default function Login() {
         ></Input>
         <br /> <br />
         <PostButton>
-          {' '}
           <Button type="primary" block onClick={loginHandler}>
-            Sign in
+            Login
           </Button>
         </PostButton>
-        <AccountText>Do not have an account?</AccountText>
+        <br />
         <PostButton>
-          {' '}
           <Button
-            type="primary"
+            type="dashed"
             block
             onClick={() => {
               history.push(PATHS.SIGNUP_PAGE)
             }}
           >
-            Sign Up
+            Register (Coming Soon)
           </Button>
         </PostButton>
       </LoginContainer>
