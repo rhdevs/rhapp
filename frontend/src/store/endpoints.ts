@@ -103,6 +103,8 @@ async function makeRequest(
     case DOMAINS.SOCIAL:
       DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
       break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
   console.log(DOMAIN_URL + url)
   return axios({
