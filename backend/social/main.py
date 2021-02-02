@@ -332,13 +332,20 @@ def getPostSpecific():
         return {"err": str(e)}, 400
 
 
-@app.route("/post/last/<int:last>", methods=['GET'])
+@app.route("/post/all/<string:userID>", methods=['GET'])
 @cross_origin(supports_credentials=True)
-def getLastN(last):
-    # get all post regardless whether its official or not
+def getLastN(userID):
+    # get all post that a user can view regardless of whether its official or not
     try:
-        data = db.Posts.find(
-            sort=[('createdAt', pymongo.DESCENDING)]).limit(last)
+        N = int(request.args.get('N')) if request.args.get('N') else 0
+
+        friends = FriendsHelper(userID).get('friendList')
+
+        query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}]
+                 }
+
+        data = db.Posts.find(query,
+                             sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
 
         response = []
         for item in data:
@@ -356,7 +363,10 @@ def getLastN(last):
 @cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
-        data = db.Posts.find({"userID": str(userID)})
+        N = int(request.args.get('N')) if request.args.get('N') else 0
+
+        data = db.Posts.find({"userID": str(userID)}, sort=[
+                             ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
@@ -389,7 +399,7 @@ def FriendsHelper(userID):
 def getFriendsPostById():
     try:
         userID = str(request.args.get("userID"))
-        N = int(request.args.get("N"))
+        N = int(request.args.get('N')) if request.args.get('N') else 0
 
         friends = FriendsHelper(userID).get('friendList')
 
@@ -399,8 +409,8 @@ def getFriendsPostById():
 
         response = []
 
-        result = db.Posts.find(
-            query, sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
+        result = db.Posts.find(query, sort=[
+            ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
 
         for item in result:
             item['name'] = userIDtoName(item.get('userID'))
@@ -416,11 +426,11 @@ def getFriendsPostById():
 @cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
-        N = int(request.args.get('N')) if request.args.get('N') else 10
+        N = int(request.args.get('N')) if request.args.get('N') else 0
 
         response = []
-        data = db.Posts.find({"isOfficial": True},
-                             sort=[('createdAt', pymongo.DESCENDING)]).limit(N)
+        data = db.Posts.find({"isOfficial": True}).sort(
+            'createdAt', pymongo.DESCENDING).skip(N * 5).limit(5)
 
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
