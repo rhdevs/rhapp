@@ -27,6 +27,7 @@ export type UserCCA = {
 export enum PROFILE_ACTIONS {
   SET_USER_DETAILS = 'PROFILE_ACTIONS.SET_USER_DETAILS',
   SET_USER_CCAS = 'PROFILE_ACTIONS.SET_USER_CCAS',
+  SET_ALL_CCAS = 'PROFILE_ACTIONS.SET_ALL_CCAS',
   SET_USER_FRIENDS = 'PROFILE_ACTIONS.SET_USER_FRIENDS',
   EDIT_USER_DETAILS = 'PROFILE_ACTIONS.EDIT_USER_DETAILS',
   UPDATE_CURRENT_USER = 'PROFILE_ACTIONS.UPDATE_CURRENT_USER',
@@ -42,6 +43,11 @@ type SetUserDetails = {
 type SetUserCcas = {
   type: typeof PROFILE_ACTIONS.SET_USER_CCAS
   ccas: UserCCA[]
+}
+
+type SetAllCcas = {
+  type: typeof PROFILE_ACTIONS.SET_ALL_CCAS
+  allCcas: UserCCA[]
 }
 
 type SetUserFriends = {
@@ -82,3 +88,4 @@ export type ActionTypes =
   | UpdateUserCcas
   | SetUserCcas
   | SetUserFriends
+  | SetAllCcas

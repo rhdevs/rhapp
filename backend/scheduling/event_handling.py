@@ -100,34 +100,32 @@ def getEventAfterTime(startTime):
 @cross_origin()
 def getAllCCA():
     try:
-        data = db.CCA.find()
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
-@app.route('/event', methods=["GET"])
-@cross_origin()
-def getEventsDetails():
-    try:
-        data = request.get_json()
-        entries = [ObjectId(w) for w in data]
-        data = db.Events.find({"_id": {"$in": entries}})
-        response = map(rename, data)
-
+        response = db.CCA.find()
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route('/event/<int:ccaID>', methods=["GET"])
+@app.route('/event/ccaID/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID):
     try:
-        data = db.Events.find({"ccaID": ccaID})
+        response = db.Events.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+    return json.dumps(list(response), default=lambda o: str(o)), 200
+
+
+@app.route('/event/eventID/<string:eventID>', methods=["GET"])
+@cross_origin()
+def getEventsDetails(eventID):
+    try:
+        response = db.Events.find_one({"_id": ObjectId(eventID)})
+        response = rename(response)
+
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 @app.route('/cca/<int:ccaID>', methods=["GET"])
@@ -234,7 +232,7 @@ def addUserCCA():
         ccaID = data.get('ccaID')  # list of integers
 
         deleteQuery = {"userID": userID}
-        db.UserCCA.delete_many(deleteQuery)
+        db.UserCCA.delete(deleteQuery)
 
         # replace
         body = []
@@ -246,7 +244,8 @@ def addUserCCA():
 
             body.append(item)
 
-        receipt = db.UserCCA.insert_many(body)
+        receipt = db.UserPermissions.update_many(
+            body, {'$set': body}, upsert=True)
 
         response = {}
         response["_id"] = str(receipt.inserted_ids)
@@ -492,15 +491,14 @@ def addNUSModsEvents():
             lesson["abbrev"] = abbrev
             out.append(lesson)
 
-        out = [{"id": index,
-                "eventName": moduleArray[0] + " " + classInformation["abbrev"],
+        out = [{"eventName": moduleArray[0] + " " + classInformation["abbrev"],
                 "location": classInformation["venue"],
                 "day": classInformation["day"],
                 "endTime": classInformation["endTime"],
                 "startTime": classInformation["startTime"],
                 "hasOverlap": False,
                 "eventType": "mods",
-                "weeks": classInformation["weeks"]} for index, classInformation in enumerate(out)]
+                "weeks": classInformation["weeks"]} for classInformation in out]
         return out
 
     try:
@@ -515,8 +513,12 @@ def addNUSModsEvents():
         output = [lesson for module in oneModuleArray for lesson in fetchDataFromNusMods(
             academicYear, currentSemester, module)]
 
+        # adds a index for the timetable event. In a seperate line for readability
+        indexed_output = [dict(eventID=str(index), **lesson)
+                          for index, lesson in enumerate(output)]
+
         body = {"userID": userID,
-                "mods": output}
+                "mods": indexed_output}
 
         db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
 
