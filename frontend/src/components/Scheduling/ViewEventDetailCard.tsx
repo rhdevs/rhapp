@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+import ConfirmationModal from '../Mobile/ConfirmationModal'
+import { editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
+import { PATHS } from '../../routes/Routes'
+import { useHistory } from 'react-router-dom'
+import { dummyUserId } from '../../store/stubs'
+import { useDispatch } from 'react-redux'
 
 const Background = styled.div`
   background-color: #fafaf4;
-  height: 100vh;
   width: 100vw;
-  align-items: center;
   padding: 0px 20px;
 `
 
@@ -27,8 +31,7 @@ const MainHeader = styled.div`
   font-size: 30px;
   font-weight: 700;
   line-height: 30px;
-  margin-right: 20px;
-  white-space: nowrap;
+  margin-bottom: 10px;
 `
 const HeaderSubtitle = styled.div`
   font-family: Inter;
@@ -46,10 +49,15 @@ const Row = styled.div`
   justify-content: space-between;
 `
 
+const DescriptionTextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+`
+
 const RowDescription = styled.div`
   display: flex;
   width: 100%;
-  margin: 10px 0px;
   justify-content: flex-start;
 `
 
@@ -78,8 +86,10 @@ const FetchedDescriptionDetails = styled.div`
   font-weight: 200;
   font-size: 17px;
   line-height: 22px;
-  margin: 0px 15px;
+  margin: 0px 10px;
   color: #666666;
+  max-height: 110px;
+  overflow: scroll;
 `
 
 const RemoveRow = styled.div`
@@ -89,56 +99,50 @@ const RemoveRow = styled.div`
   justify-content: center;
 `
 
-const RemoveEvent = styled.div`
+const RemoveEvent = styled.button`
   font-family: Inter;
   font-style: normal;
   font-weight: 200;
   font-size: 14px;
-  line-height: 14px;
-  text-align: center;
   text-decoration-line: underline;
   color: #1890ff;
+  background: none;
+  border: none;
 `
 
 function ViewEventDetailCard({
+  eventID,
   eventName,
   eventCreatedBy,
   startDateAndTime,
   endDateAndTime,
+  startTime,
+  endTime,
+  day,
+  date,
   eventLocation,
   eventCca,
   eventDescription,
   eventType,
 }: {
+  eventID: string
   eventName: string
-  eventCreatedBy: string
-  startDateAndTime: number
-  endDateAndTime: number
+  eventCreatedBy?: string
+  startDateAndTime?: number
+  endDateAndTime?: number
+  startTime?: string
+  endTime?: string
+  day?: string
+  date?: string
   eventLocation: string
-  eventCca: string
-  eventDescription: string
+  eventCca?: string
+  eventDescription?: string
   eventType: string
 }) {
-  // Converts a unix string into date format and returns the day in string
-  const getDayStringFromUNIX = (unixDate: number) => {
-    const dayInInt = new Date(unixDate * 1000).getDay()
-    switch (dayInInt) {
-      case 0:
-        return 'Sun'
-      case 1:
-        return 'Mon'
-      case 2:
-        return 'Tue'
-      case 3:
-        return 'Wed'
-      case 4:
-        return 'Thu'
-      case 5:
-        return 'Fri'
-      default:
-        return 'Sat'
-    }
-  }
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  const [modal, setModal] = useState(false)
 
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
@@ -146,48 +150,76 @@ function ViewEventDetailCard({
   }
 
   return (
-    <div>
+    <>
       <HeaderGroup>
         <MainHeader>{eventName}</MainHeader>
-        <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>
+        {eventCreatedBy && <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>}
       </HeaderGroup>
-
       <Background>
+        {modal && (
+          <ConfirmationModal
+            title={'Confirm Delete?'}
+            hasLeftButton={true}
+            leftButtonText={'Delete'}
+            onLeftButtonClick={() => {
+              dispatch(editUserEvents('remove', eventID, dummyUserId, eventType === 'NUSMods'))
+              history.push(PATHS.SCHEDULE_PAGE)
+            }}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => {
+              setModal(false)
+            }}
+          />
+        )}
         <Row>
           <StyledTitle>From</StyledTitle>
           <FetchedDetails>
-            {getDayStringFromUNIX(startDateAndTime) + ', ' + formatDate(startDateAndTime)}
+            {startDateAndTime
+              ? getDayStringFromUNIX(startDateAndTime) + ', ' + formatDate(startDateAndTime)
+              : day + ', ' + date + ' ' + startTime}
           </FetchedDetails>
         </Row>
         <Row>
           <StyledTitle>To</StyledTitle>
-          <FetchedDetails>{getDayStringFromUNIX(endDateAndTime) + ', ' + formatDate(endDateAndTime)}</FetchedDetails>
+          <FetchedDetails>
+            {endDateAndTime
+              ? getDayStringFromUNIX(endDateAndTime) + ', ' + formatDate(endDateAndTime)
+              : day + ', ' + date + ' ' + endTime}
+          </FetchedDetails>
         </Row>
         <Row>
           <StyledTitle>Location</StyledTitle>
           <FetchedDetails>{eventLocation}</FetchedDetails>
         </Row>
-        <Row>
-          <StyledTitle>CCA</StyledTitle>
-          <FetchedDetails>{eventCca}</FetchedDetails>
-        </Row>
-        <Row>
+        {eventCca && (
           <Row>
-            <StyledTitle>Description</StyledTitle>
+            <StyledTitle>CCA</StyledTitle>
+            <FetchedDetails>{eventCca}</FetchedDetails>
           </Row>
-        </Row>
-        <RowDescription>
-          <FetchedDescriptionDetails>{eventDescription}</FetchedDescriptionDetails>
-        </RowDescription>
+        )}
+        {eventDescription && (
+          <DescriptionTextContainer>
+            <StyledTitle>Description</StyledTitle>
+            <RowDescription>
+              <FetchedDescriptionDetails>{eventDescription}</FetchedDescriptionDetails>
+            </RowDescription>
+          </DescriptionTextContainer>
+        )}
         <Row>
           <StyledTitle>Event Type</StyledTitle>
           <FetchedDetails>{eventType}</FetchedDetails>
         </Row>
         <RemoveRow>
-          <RemoveEvent>Remove from timetable</RemoveEvent>
+          <RemoveEvent
+            onClick={() => {
+              setModal(!modal)
+            }}
+          >
+            Remove from timetable
+          </RemoveEvent>
         </RemoveRow>
       </Background>
-    </div>
+    </>
   )
 }
 

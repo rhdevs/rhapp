@@ -2,24 +2,18 @@ import { invert } from 'lodash'
 import { userCCA } from '../facilityBooking/types'
 import { Friend } from '../social/types'
 
-type lessonTypeAbbrev = { [abbrevLessonType: string]: string }
-export const ABBREV_TO_LESSON: lessonTypeAbbrev = {
-  DLEC: 'Design Lecture',
-  LAB: 'Laboratory',
-  LEC: 'Lecture',
-  PLEC: 'Packaged Lecture',
-  PTUT: 'Packaged Tutorial',
-  REC: 'Recitation',
-  SEC: 'Sectional Teaching',
-  SEM: 'Seminar-Style Module Class',
-  TUT: 'Tutorial',
-  TUT2: 'Tutorial Type 2',
-  TUT3: 'Tutorial Type 3',
-  WS: 'Workshop',
+type dayNumber = { [dayString: string]: number }
+export const DAY_STRING_TO_NUMBER: dayNumber = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
 }
-
-// Reverse lookup map of ABBREV_TO_LESSON
-export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_TO_LESSON)
+// Reverse lookup map of DAY_STRING_TO_NUMBER
+export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
 /** Types */
 
@@ -36,21 +30,27 @@ export const LESSON_TO_ABBREV: { [lessonType: string]: string } = invert(ABBREV_
 // }
 
 export type TimetableEvent = {
-  startDate?: number
-  endDate?: number
-  weeks?: number[]
-  eventID: number
+  eventID: string
   eventName: string
+  startDateTime: number
+  endDateTime: number
+  description: string
+  location: string
+  ccaID: number
+  userID: string
+  image: null | string
+
+  weeks?: number[]
   startTime: string
   endTime: string
-  location: string
   day: string
   hasOverlap: boolean
   eventType: string
+  CCADetails?: CCADetails
 }
 
 export type SchedulingEvent = {
-  eventID: number
+  eventID: string
   eventName: string
   startDateTime: number
   endDateTime: number
@@ -62,6 +62,11 @@ export type SchedulingEvent = {
   isPrivate: boolean
 }
 
+export type CCADetails = {
+  category: string
+  ccaID: number
+  ccaName: string
+}
 /** Actions' types */
 
 export enum SCHEDULING_ACTIONS {
@@ -85,6 +90,8 @@ export enum SCHEDULING_ACTIONS {
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
   HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
+  SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
+  GET_CCA_DETAILS = 'SCHEDULING_ACTIONS.GET_CCA_DETAILS',
 }
 
 /** Actions */
@@ -189,6 +196,16 @@ type HandleEventAttendanceStatus = {
   eventAttendanceIsFailure: boolean
 }
 
+type SetSelectedEvent = {
+  type: typeof SCHEDULING_ACTIONS.SET_SELECTED_EVENT
+  selectedEvent: TimetableEvent | null
+}
+
+type GetCCADetails = {
+  type: typeof SCHEDULING_ACTIONS.GET_CCA_DETAILS
+  ccaDetails: CCADetails
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -209,3 +226,5 @@ export type ActionTypes =
   | SetHallEventType
   | HandleNusModsStatus
   | HandleEventAttendanceStatus
+  | SetSelectedEvent
+  | GetCCADetails

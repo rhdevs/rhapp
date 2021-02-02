@@ -1,14 +1,17 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { PATHS } from '../../routes/Routes'
+import { setSelectedEvent } from '../../store/scheduling/action'
+import { TimetableEvent } from '../../store/scheduling/types'
 
 const TitleText = styled.text`
   color: black;
   font-family: Inter;
   font-size: 14px;
   line-height: 14px;
-  font-weight: 200;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -22,7 +25,7 @@ const LocationText = styled.text`
   font-family: Inter;
   font-size: 12px;
   line-height: 14px;
-  font-weight: 500;
+  font-weight: 200;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -56,6 +59,8 @@ type Props = {
   onlyShowEventName?: boolean
   eventType?: string
   isSingleEvent?: boolean
+  event: TimetableEvent
+  isLastRow?: boolean
 }
 
 function EventCell(props: Props) {
@@ -93,13 +98,19 @@ function EventCell(props: Props) {
     ? false
     : true
 
-  const EVENT_HEIGHT = props.eventHeight
-    ? props.eventHeight
-    : onlyShowEventName
-    ? Number(props.oneDayMinHeight.replace('rem', '')) / 2 + 'rem'
-    : EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR
-    ? Number(props.oneDayMinHeight.replace('rem', '')) - 0.0625 * 3 + 'rem'
-    : props.oneDayMinHeight
+  const getEventHeight = () => {
+    if (props.eventHeight) {
+      return props.eventHeight
+    } else if (onlyShowEventName) {
+      return Number(props.oneDayMinHeight.replace('rem', '')) / 2 + 'rem'
+    } else if (!props.isLastRow) {
+      return Number(props.oneDayMinHeight.replace('rem', '')) - 0.0625 * 3 + 'rem'
+    } else {
+      return props.oneDayMinHeight
+    }
+  }
+
+  const EVENT_HEIGHT = getEventHeight()
 
   const eventStartTimeHour = Number(props.eventStartTime.substring(0, 2))
   const eventStartTimeMinute = Number(props.eventStartTime.substring(2, 4))
@@ -112,14 +123,15 @@ function EventCell(props: Props) {
     'rem'
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
   return (
     <EventContainer
       onClick={() => {
-        history.push(PATHS.VIEW_EVENT)
-        // history.push(""../../scheduling/ViewEvent")
+        dispatch(setSelectedEvent(props.event, null))
+        history.push(PATHS.VIEW_EVENT + props.event.eventID)
       }}
-      style={{ border: EVENT_CELL_COLOUR === PRIVATE_EVENT_COLOUR ? '1px #000000 solid' : '' }}
+      style={{ filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))' }}
     >
       <ContentContainer
         style={{

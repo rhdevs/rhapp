@@ -70,7 +70,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     return format(date, 'dd-MMM-yy kk:mm')
   }
 
-  const eventsToCards = (events) => {
+  const eventsToCards = (events: SchedulingEvent[]) => {
     return events.map((result, index) => {
       return (
         <ImageDescriptionCard
@@ -98,12 +98,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   if (buttonIsPressed) {
                     // event is in list and button is pressed
                     // remove event from list
-                    console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result, dummyUserId))
+                    console.log('remove ' + result.eventName + ' from list ' + result.eventID)
+                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
                   } else {
                     // event is in list, button is un-pressed
-                    console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result, dummyUserId))
+                    console.log('add ' + result.eventName + ' to list ' + result.eventID)
+                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
                   }
                 } else if (
                   userAllEventsList.filter((event) => {
@@ -112,13 +112,13 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                 ) {
                   if (buttonIsPressed) {
                     // event is not in list, button is un-pressed
-                    console.log('remove ' + result.eventName + ' from list')
-                    dispatch(editUserEvents('remove', result, dummyUserId))
+                    console.log('remove ' + result.eventName + ' from list ' + result.eventID)
+                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
                   } else {
                     // event is not in list and button is pressed
                     // add event to list
-                    console.log('add ' + result.eventName + ' to list')
-                    dispatch(editUserEvents('add', result, dummyUserId))
+                    console.log('add ' + result.eventName + ' to list ' + result.eventID)
+                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
                   }
                 }
                 return
@@ -166,7 +166,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const leftIcon = (
     <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
+      style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
         history.push(PATHS.SCHEDULE_PAGE)
       }}
