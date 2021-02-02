@@ -30,11 +30,11 @@ def hello():
     return "Welcome the Raffles Hall Social server"
 
 
-@app.route('/user/all')
+@app.route('/profile/all')
 @cross_origin()
-def getAllUsers(supports_credentials=True):
+def getAllProfiles(supports_credentials=True):
     try:
-        data = db.User.find()
+        data = db.Profiles.find()
         return json.dumps(list(data), default=lambda o: str(o)), 200
     except Exception as e:
         print(e)
