@@ -2,14 +2,9 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input, Form, Select } from 'antd'
-import axios from 'axios'
-import passwordHash from 'password-hash'
-
+// import passwordHash from 'password-hash'
 import { PATHS } from '../../Routes'
-import NavBar from '../../../components/NavBar'
 import 'antd/dist/antd.css'
-
-import logo from '../../../assets/white_logo.png'
 
 const AccountText = styled.text`
   margin-top: 10px;
@@ -26,11 +21,6 @@ const SignUpContainer = styled.div`
   padding: 15px;
   text-align: center;
   border-radius: 13px 13px 13px 13px;
-`
-//25vw
-const Logo = styled.img`
-  height: 100px;
-  width: 100px;
 `
 
 const PostButton = styled.div`
@@ -72,12 +62,8 @@ const PostButton = styled.div`
 
 export default function Signup() {
   const history = useHistory()
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
-
-  const passwordHashed = passwordHash.generate(password)
+  // const [password] = useState('')
+  // const passwordHashed = passwordHash.generate(password)
 
   const [formData, setFormData] = useState({
     email: '',
@@ -118,19 +104,7 @@ export default function Signup() {
   }
 
   const signupHandler = () => {
-    axios
-      .post('/auth/register', {
-        username,
-        passwordHashed,
-        email,
-      })
-      .then((res) => {
-        console.log(res)
-        history.push(PATHS.HOME_PAGE)
-      })
-      .catch((err) => {
-        window.alert(err.responser)
-      })
+    console.log('signup')
   }
 
   return (
@@ -191,6 +165,7 @@ export default function Signup() {
             type="primary"
             block
             onClick={() => {
+              signupHandler()
               history.push(PATHS.LOGIN_PAGE)
             }}
           >

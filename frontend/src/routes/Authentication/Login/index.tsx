@@ -2,14 +2,10 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
-import axios from 'axios'
-import passwordHash from 'password-hash'
-
-import NavBar from '../../../components/NavBar'
+// import passwordHash from 'password-hash'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
-import jwt from 'jsonwebtoken'
-
+// import jwt from 'jsonwebtoken'
 import logo from '../../../assets/white_logo.png'
 
 const LoginContainer = styled.div`
@@ -48,35 +44,27 @@ const PostButton = styled.div`
   }
 `
 
-function generateToken(user) {
-  const u = {
-    username: user.username,
-    password: user.password,
-    _id: user._id.toString(),
-    image: user.image,
-  }
-  return jwt.sign(u, process.env.JWT_SECRET, {
-    expiresIn: 60 * 60 * 24, // expires in 24 hours
-  })
-}
+// function generateToken(user) {
+//   const u = {
+//     username: user.username,
+//     password: user.password,
+//     _id: user._id.toString(),
+//     image: user.image,
+//   }
+//   return jwt.sign(u, process.env.JWT_SECRET, {
+//     expiresIn: 60 * 60 * 24, // expires in 24 hours
+//   })
+// }
 
 export default function Login() {
   const history = useHistory()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const passwordHashed = passwordHash.generate(password)
+  // const passwordHashed = passwordHash.generate(password)
 
   const loginHandler = () => {
-    axios
-      .post('/auth/login', { username, passwordHashed })
-      .then((res: any) => {
-        console.log(res)
-        history.push(PATHS.HOME_PAGE)
-      })
-      .catch((err) => {
-        window.alert('Incorrect username or password!')
-      })
+    console.log('login')
   }
 
   return (
