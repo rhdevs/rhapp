@@ -8,6 +8,9 @@ import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { fetchUserFriends } from '../../../store/profile/action'
+import { useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -50,12 +53,16 @@ const FriendLabels = styled.div`
 `
 
 export default function FriendList() {
+  const history = useHistory()
   const [hasFriends, setHasFriends] = useState(true)
   const dispatch = useDispatch()
-  const { user, friends } = useSelector((state: RootState) => state.profile)
+  const { friends } = useSelector((state: RootState) => state.profile)
+
+  const params = useParams<{ userId: string }>()
+  const userIdFromPath = params.userId
 
   useEffect(() => {
-    dispatch(fetchUserFriends(user.userID))
+    dispatch(fetchUserFriends(userIdFromPath))
   }, [dispatch])
 
   const handleSearch = () => {
@@ -71,7 +78,13 @@ export default function FriendList() {
             return (
               <FriendCard key={friend.userID}>
                 {friend.profilePictureUrl ? (
-                  <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.profilePictureUrl} />
+                  <FriendAvatar
+                    onClick={() => {
+                      history.push(PATHS.PROFILE_PAGE + `${friend.userID}`)
+                    }}
+                    style={{ width: 85, borderRadius: 100 / 2 }}
+                    src={friend.profilePictureUrl}
+                  />
                 ) : (
                   <FriendAvatar src={dummyAvatar} />
                 )}

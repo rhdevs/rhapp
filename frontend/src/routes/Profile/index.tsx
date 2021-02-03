@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Card, Tabs } from 'antd'
+import { Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
 import ActivitiesCard from './Components/ActivitiesCard'
 import { useHistory } from 'react-router-dom'
@@ -86,17 +86,11 @@ export default function Profile() {
   const params = useParams<{ userId: string }>()
   const userIdFromPath = params.userId
 
-  console.log(params.userId)
-
   useEffect(() => {
     dispatch(fetchUserDetails(userIdFromPath))
     dispatch(fetchUserCCAs(userIdFromPath))
     setIsOwnProfile(userIdFromPath === user.userID)
   }, [dispatch])
-
-  const changeUser = () => {
-    setIsOwnProfile(!isOwnProfile)
-  }
 
   const { TabPane } = Tabs
   const CardTabs = () => (
@@ -114,8 +108,8 @@ export default function Profile() {
   )
 
   const handleClickFriendList = () => {
-    dispatch(fetchUserFriends(user.userID))
-    history.push(PATHS.FRIEND_LIST_PAGE)
+    dispatch(fetchUserFriends(userIdFromPath))
+    history.push(PATHS.FRIEND_LIST_PAGE + `${userIdFromPath}`)
   }
 
   const PersonalInfoContainer = () => (
@@ -180,7 +174,6 @@ export default function Profile() {
     <>
       <MainContainer>
         <TopNavBar title={'Profile'} />
-        <Button onClick={changeUser}>Change Profile Owner</Button>
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (

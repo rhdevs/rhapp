@@ -14,7 +14,8 @@ export enum PATHS {
   PROFILE_PAGE = '/social/profile/',
   VIEW_PROFILE_PAGE = '/social/profile/:userId',
   EDIT_PROFILE_PAGE = '/social/editprofile',
-  FRIEND_LIST_PAGE = '/social/profile/friendList',
+  FRIEND_LIST_PAGE = '/social/profile/friendList/',
+  VIEW_FRIEND_LIST_PAGE = '/social/profile/friendList/:userId',
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -91,7 +92,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
             <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <Route exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
-            <Route exact path={PATHS.FRIEND_LIST_PAGE} component={FriendList} />
+            <Route exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
 
             <Route exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
             <Route exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
