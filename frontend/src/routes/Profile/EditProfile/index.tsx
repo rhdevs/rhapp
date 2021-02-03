@@ -157,35 +157,50 @@ export default function EditProfile() {
     const renderSwitch = (detailsTitle: string) => {
       switch (detailsTitle) {
         case 'CCAs': {
-          return ccas.map((cca) => {
+          return ccas?.map((cca) => {
             return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                {cca.ccaName}
-                <img
-                  alt="deleteIcon"
-                  style={{ marginLeft: 5, width: 6 }}
-                  src={String(deleteIcon)}
+              <div key={cca.ccaID}>
+                <span
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
                   onClick={() => deleteIconClicked('cca', cca.ccaName)}
-                />
-              </span>
+                >
+                  {cca.ccaName}
+                  <img alt="deleteIcon" style={{ marginLeft: 5, width: 6 }} src={String(deleteIcon)} />
+                </span>
+                <br />
+              </div>
             )
           })
         }
 
         case 'Modules': {
-          return user.modules.map((module) => {
+          return user.modules?.map((module) => {
             return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                {module}
-                <img
-                  alt="deleteIcon"
-                  style={{ marginLeft: 5, width: 6 }}
-                  src={String(deleteIcon)}
-                  onClick={() => deleteIconClicked('module', module)}
-                />
-              </span>
+              <div key={module}>
+                <span
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
+                >
+                  {module}
+                  <img
+                    alt="deleteIcon"
+                    style={{ marginLeft: 5, width: 6 }}
+                    src={String(deleteIcon)}
+                    onClick={() => deleteIconClicked('module', module)}
+                  />
+                </span>
+              </div>
             )
           })
         }
