@@ -314,7 +314,7 @@ def addDeletePost():
 
         elif request.method == "DELETE":
             postID = request.args.get('postID')
-            db.Posts.delete_one({"postID": int(postID)})
+            db.Posts.delete_one({"_id": ObjectId(postID)})
             return make_response('deleted sucessfully', 200)
 
     except Exception as e:
@@ -329,7 +329,7 @@ def getPostSpecific():
         postID = request.args.get("postID")
 
         if postID:
-            data = db.Posts.find_one({"postID": int(postID)})
+            data = db.Posts.find_one({"_id": ObjectId(postID)})
             name = db.Profiles.find_one(
                 {"userID": str(data.get("userID"))}).get('displayName')
 
@@ -503,7 +503,7 @@ def editPost():
             "isOfficial": isOfficial
         }
 
-        result = db.Posts.update_one({"postID": int(postID)}, {'$set': body})
+        result = db.Posts.update_one({"_id": ObjectId(postID)}, {'$set': body})
         if int(result.matched_count) > 0:
             return {'message': "Event changed"}, 200
         else:
