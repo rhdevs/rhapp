@@ -32,6 +32,11 @@ const { Option } = Select
 const Background = styled.div`
   background-color: #fafaf4;
   height: 100vh;
+  width: 100;vw
+`
+
+const BottomContainer = styled.div`
+  background-color: #fafaf4;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -87,7 +92,8 @@ export default function CreateEvent() {
   const history = useHistory()
 
   useEffect(() => {
-    dispatch(getHallEventTypes()), dispatch(getTargetAudienceList())
+    dispatch(getHallEventTypes())
+    dispatch(getTargetAudienceList())
   }, [dispatch])
 
   const BackIcon = (
@@ -154,7 +160,7 @@ export default function CreateEvent() {
   }
 
   return (
-    <div>
+    <Background>
       <TopNavBar
         title={`Event Details`}
         leftIcon
@@ -163,7 +169,7 @@ export default function CreateEvent() {
           <CheckOutlined style={{ color: 'black' }} onClick={() => dispatch(handleSubmitCreateEvent())} />
         }
       />
-      <Background>
+      <BottomContainer>
         <StyledInput
           placeholder="Event Name"
           value={newEventName}
@@ -226,7 +232,7 @@ export default function CreateEvent() {
             </StyledSelect>
           </Row>
         )}
-      </Background>
-    </div>
+      </BottomContainer>
+    </Background>
   )
 }

@@ -535,8 +535,8 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
   const isPersonal = newTargetAudience === 'Personal'
   const newEvent = {
     eventName: newEventName,
-    startDateTime: newEventFromDate.getTime() / 1000,
-    endDateTime: newEventToDate.getTime() / 1000,
+    startDateTime: Math.round(newEventFromDate.getTime() / 1000),
+    endDateTime: Math.round(newEventToDate.getTime() / 1000),
     description: newDescription,
     location: newEventLocation,
     userID: dummyUserId,
@@ -567,7 +567,6 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
 export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: string | null) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  // dispatch(setIsLoading(true))
   let event
   if (selectedEvent) event = selectedEvent
   else if (eventID) {
