@@ -9,6 +9,7 @@ import { RootState } from '../../../store/types'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -76,6 +77,12 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
               avatar={result.avatar ?? result.profilePictureUrl}
               title={result.title ?? result.facilityLocation ?? result.displayName ?? ''}
               description={result?.description ?? result.facilityName ?? result.bio ?? ''}
+              onClick={() => {
+                if (!result.title) {
+                  history.push(PATHS.PROFILE_PAGE)
+                  console.log('hello')
+                }
+              }}
             />
           )
         })
