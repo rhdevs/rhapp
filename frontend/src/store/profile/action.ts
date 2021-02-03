@@ -33,13 +33,11 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const fetchUserFriends = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  console.log('started')
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
     method: 'GET',
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(data)
       dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
     })
 }
