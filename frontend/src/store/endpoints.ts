@@ -48,7 +48,7 @@ export enum ENDPOINTS {
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',
 
-  CCA_DETAILS = '/cca/',
+  CCA_DETAILS = '/cca',
   ALL_CCAS = '/cca/all',
   CCA_MEMBER = '/user_CCA',
 

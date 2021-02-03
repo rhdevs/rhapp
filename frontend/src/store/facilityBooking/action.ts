@@ -203,7 +203,27 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: data[0] })
+    .then(async (booking) => {
+      await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + booking[0].facilityID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then(async (facility) => {
+          booking[0].facilityName = facility[0].facilityName
+          await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking[0].ccaID, {
+            method: 'GET',
+            mode: 'cors',
+          })
+            .then((resp) => resp.json())
+            .then((cca) => {
+              booking[0].ccaName = cca[0].ccaName
+            })
+        })
+      console.log(booking)
+
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking[0] })
+      return booking[0]
     })
+  // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
