@@ -137,7 +137,7 @@ def getUserPicture(userID):
     response = {}
 
     try:
-        image = db.Profiles.find({"userID": userID}, {"profilePictureURI": 1})
+        image = db.Profiles.find({"userID": userID}, {"profilePictureUrl": 1})
         response['status'] = "success"
         response['data'] = {
             'image': image
@@ -163,7 +163,7 @@ def addDeleteProfile():
             userID = str(data.get('userID'))
             displayName = str(data.get('displayName'))
             bio = str(data.get('bio'))
-            profilePictureURI = str(data.get('profilePictureURI'))
+            profilePictureUrl = str(data.get('profilePictureUrl'))
             block = int(data.get('block'))
             telegramHandle = str(data.get('telegramHandle'))
             modules = data.get('modules')
@@ -172,7 +172,7 @@ def addDeleteProfile():
                 "userID": userID,
                 "displayName": displayName,
                 "bio": bio,
-                "profilePictureURI": profilePictureURI,
+                "profilePictureUrl": profilePictureUrl,
                 "block": block,
                 "telegramHandle": telegramHandle,
                 "modules": modules
