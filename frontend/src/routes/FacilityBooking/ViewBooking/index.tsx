@@ -117,8 +117,6 @@ export default function ViewBooking() {
   useEffect(() => {
     // dispatch(SetIsLoading(false))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
-    console.log('eventID is: ', params.bookingId)
-    console.log('hello')
     console.log(selectedBooking)
   }, [dispatch])
 
