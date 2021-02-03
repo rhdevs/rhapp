@@ -13,6 +13,7 @@ import { fetchUserCCAs, fetchUserDetails, fetchUserFriends, populateProfileEdits
 import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
+import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -82,12 +83,15 @@ export default function Profile() {
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
   const { user, ccas } = useSelector((state: RootState) => state.profile)
+  const params = useParams<{ userId: string }>()
+  const userIdFromPath = params.userId
+
+  console.log(params.userId)
 
   useEffect(() => {
-    dispatch(fetchUserDetails('A1234567B'))
-    dispatch(fetchUserCCAs('A1234567B'))
-    //TODO: change to comparing userId with user.id
-    // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
+    dispatch(fetchUserDetails(userIdFromPath))
+    dispatch(fetchUserCCAs(userIdFromPath))
+    setIsOwnProfile(userIdFromPath === user.userID)
   }, [dispatch])
 
   const changeUser = () => {

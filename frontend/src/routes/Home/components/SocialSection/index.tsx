@@ -85,6 +85,7 @@ export default function SocialSection() {
           description={description}
           postId={postId}
           postPics={postPics ?? []}
+          userId={userId}
         />
       )
     })
