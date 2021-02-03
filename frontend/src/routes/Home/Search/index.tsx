@@ -79,8 +79,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
               description={result?.description ?? result.facilityName ?? result.bio ?? ''}
               onClick={() => {
                 if (!result.title) {
-                  history.push(PATHS.PROFILE_PAGE)
-                  console.log('hello')
+                  history.push(PATHS.PROFILE_PAGE + '/' + result.id)
                 }
               }}
             />
