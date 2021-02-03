@@ -16,6 +16,7 @@ export enum ENDPOINTS {
   FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
+  VIEW_BOOKING = '/booking',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
@@ -106,7 +107,6 @@ async function makeRequest(
     case DOMAINS.SOCIAL:
       DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
-  console.log(DOMAIN_URL + url)
   return axios({
     method: method,
     url: DOMAIN_URL + url,
