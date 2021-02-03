@@ -113,7 +113,7 @@ def editUser():
         print(e)
         return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
- 
+
 
 @app.route("/profile/<string:userID>")
 @cross_origin(supports_credentials=True)
@@ -125,28 +125,29 @@ def getUserProfile(userID):
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
 
-@app.route("/profile/picture/<string:userID>", methods = ['GET'])
-@cross_origin(supports_credentials = True)
+
+@app.route("/profile/picture/<string:userID>", methods=['GET'])
+@cross_origin(supports_credentials=True)
 def getUserPicture(userID):
     response = {}
-    
-    try : 
-        image = db.Profiles.find({"userID" : userID}, {"profilePictureURI" : 1})
+
+    try:
+        image = db.Profiles.find({"userID": userID}, {"profilePictureURI": 1})
         response['status'] = "success"
         response['data'] = {
-            'image' : image
+            'image': image
         }
-        
+
         return make_response(response, 200)
-    
-    except Exception as e :
+
+    except Exception as e:
         response['status'] = "failed"
         response['data'] = {
-            'message ' : 'image not found'
+            'message ': 'image not found'
         }
-        
-        return make_response(response, 404)
-        
+
+        return {"err": str(e)}, 400
+
 
 @app.route("/profile", methods=['DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -223,7 +224,7 @@ def editProfile():
             "userID": userID,
             "displayName": displayName,
             "bio": bio,
-            "profilePictureURI": profilePictureURI,
+            "profilePictureUrl": profilePictureUrl,
             "block": block,
             "telegramHandle": telegramHandle,
             "modules": modules
@@ -289,7 +290,8 @@ def addDeletePost():
             createdAt = int(datetime.now().timestamp())
             postPics = data.get('postPics') if data.get('postPics') else []
             isOfficial = bool(data.get('isOfficial'))
-            lastPostID = db.Posts.find_one(sort=[('postID', pymongo.DESCENDING)])
+            lastPostID = db.Posts.find_one(
+                sort=[('postID', pymongo.DESCENDING)])
             newPostID = 1 if lastPostID else int(lastPostID.get("postID")) + 1
             tags = data.get('tags') if data.get('tags') else []
 
@@ -352,16 +354,17 @@ def getPostSpecific():
         return {"err": str(e)}, 400
 
 
-@app.route("/post/all/<string:userID>", methods=['GET'])
+@app.route("/post/all", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getLastN(userID):
     # get all post that a user can view regardless of whether its official or not
     try:
+        userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
         friends = FriendsHelper(userID).get('friendList')
 
-        query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}]
+        query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}, {"userID": userID}]
                  }
 
         data = db.Posts.find(query,
@@ -703,5 +706,5 @@ def images(imageName):
 
 
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
