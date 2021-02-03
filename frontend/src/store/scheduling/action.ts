@@ -66,7 +66,7 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
     })
     dispatch(setIsLoading(false))
   }
-
+  //GET_FIVE_PUBLIC_EVENTS
   getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
