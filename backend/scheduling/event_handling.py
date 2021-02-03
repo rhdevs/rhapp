@@ -325,7 +325,7 @@ def createEvent():
         endDateTime = int(data.get('endDateTime'))
         description = str(data.get('description'))
         location = data.get('location')
-        ccaID = int(data.get('ccaID'))
+        ccaID = int(data.get('ccaID')) if data.get('ccaID') else None
         userID = data.get('userID')
         image = data.get('image')
         isPrivate = data.get('isPrivate')
@@ -342,7 +342,8 @@ def createEvent():
             "isPrivate": isPrivate
         }
 
-        receipt = db.Events.insert_one(body)
+        receipt=db.Events.insert_one(body)
+        del body["_id"]
         body["eventID"] = str(receipt.inserted_id)
 
         return {"message": body}, 200
