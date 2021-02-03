@@ -429,7 +429,7 @@ export const editUserEvents = (action: string, eventID: string, userId: string, 
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY REMOVED: eventId - ' + eventID + 'for userId: ' + userId)
-        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchCurrentUserEvents(dummyUserId, true))
         dispatch(fetchAllUserEvents(dummyUserId, true))
         dispatch(setEventAttendanceStatus(true, false))
       } else {
@@ -437,13 +437,15 @@ export const editUserEvents = (action: string, eventID: string, userId: string, 
         console.log('FAILURE!!!! ' + data.status)
       }
     }
-    if (isNUSModsEvent) console.log('cannot be deleted!')
-    else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+    if (isNUSModsEvent) {
+      console.log('cannot be deleted!')
+      postToBackend(ENDPOINTS.DELETE_NUSMODS_EVENT, 'PUT', requestBody, updateEventStatus)
+    } else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
   } else if (action === 'add') {
     const updateEventStatus = (data) => {
       if (data.ok) {
         console.log('SUCCESSFULY ADDED: eventId - ' + eventID + 'for userId: ' + userId)
-        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchCurrentUserEvents(dummyUserId, true))
         dispatch(fetchAllUserEvents(dummyUserId, true))
         dispatch(setEventAttendanceStatus(true, false))
       } else {

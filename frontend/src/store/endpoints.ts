@@ -41,6 +41,7 @@ export enum ENDPOINTS {
   EDIT_EVENT = '/event/edit/',
 
   ADD_MODS = '/nusmods/addNUSMods',
+  DELETE_NUSMODS_EVENT = '/nusmods/deleteMod',
   DELETE_MODS = '/nusmods/delete/',
   NUSMODS = '/nusmods/',
 
