@@ -24,6 +24,11 @@ client = pymongo.MongoClient(
 db = client["RHApp"]
 
 
+def renamePost(post):
+    post['postID'] = post.pop('_id')
+    return post
+
+
 @app.route("/")
 @cross_origin(supports_credentials=True)
 def hello():
@@ -238,7 +243,6 @@ def editProfile():
             return Response(status=204)
 
     except Exception as e:
-        print(e)
         return {"err": str(e)}, 400
     return {'message': "Event changed"}, 200
 
@@ -252,7 +256,6 @@ def getUserDetails(userID):
         data1.update(data2)
 
     except Exception as e:
-        print(e)
         return {"err": str(e)}, 400
 
     return json.dumps(data1, default=lambda o: str(o)), 200
@@ -277,6 +280,7 @@ def addDeletePost():
             for item in data:
                 # add name into the every data using display name
                 item['name'] = userIDtoName(item.get('userID'))
+                item = renamePost(item)
                 response.append(item)
 
             return json.dumps(response, default=lambda o: str(o)), 200
@@ -290,13 +294,9 @@ def addDeletePost():
             createdAt = int(datetime.now().timestamp())
             postPics = data.get('postPics') if data.get('postPics') else []
             isOfficial = bool(data.get('isOfficial'))
-            lastPostID = db.Posts.find_one(
-                sort=[('postID', pymongo.DESCENDING)])
-            newPostID = 1 if lastPostID else int(lastPostID.get("postID")) + 1
-            tags = data.get('tags') if data.get('tags') else []
+            tags = data.get('tags')
 
             body = {
-                "postID": newPostID,
                 "userID": userID,
                 "title": title,
                 "description": description,
@@ -318,7 +318,6 @@ def addDeletePost():
             return make_response('deleted sucessfully', 200)
 
     except Exception as e:
-        print(e)
         return {"err": str(e)}, 400
 
 
@@ -335,7 +334,7 @@ def getPostSpecific():
                 {"userID": str(data.get("userID"))}).get('displayName')
 
             if data != None:
-                del data['_id']  # this causes error without str conversion
+                item = renamePost(item)
                 data['name'] = name
                 return make_response(data, 200)
             else:
@@ -346,6 +345,7 @@ def getPostSpecific():
             response = []
             for item in data:
                 item['name'] = userIDtoName(item.get('userID'))
+                item = renamePost(item)
                 response.append(item)
 
             return json.dumps(response, default=lambda o: str(o)), 200
@@ -373,6 +373,7 @@ def getLastN(userID):
         response = []
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
+            item = renamePost(item)
             response.append(item)
 
         return json.dumps(response, default=lambda o: str(o)), 200
@@ -437,6 +438,7 @@ def getFriendsPostById():
 
         for item in result:
             item['name'] = userIDtoName(item.get('userID'))
+            item = renamePost(item)
             response.append(item)
 
         return make_response(json.dumps(response, default=lambda o: str(o)), 200)
@@ -474,7 +476,7 @@ def editPost():
     try:
         data = request.get_json()
         postID = data.get('postID')
-        oldPost = db.Posts.find_one({"postID": int(postID)})
+        oldPost = db.Posts.find_one({"_id": ObjectId(postID)})
 
         if oldPost == None:
             return make_response("data non existent", 404)
