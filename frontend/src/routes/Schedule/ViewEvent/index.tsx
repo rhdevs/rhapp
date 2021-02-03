@@ -56,7 +56,7 @@ export default function CreateEvent() {
 
   const isNusModsEvent = selectedEvent?.eventType === 'mods' ? true : false
 
-  const EditIcon = isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
+  const EditIcon = undefined //isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
 
   /** Incomplete functionality for Uploading Image */
 
