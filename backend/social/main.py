@@ -334,7 +334,7 @@ def getPostSpecific():
                 {"userID": str(data.get("userID"))}).get('displayName')
 
             if data != None:
-                item = renamePost(item)
+                data = renamePost(data)
                 data['name'] = name
                 return make_response(data, 200)
             else:
