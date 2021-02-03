@@ -19,7 +19,7 @@ Today, we have the following features:
 4. Testing
 
 
-++ 
-5. log management \n
-6. Caching \n 
+### Future TODO 
+5. log management 
+6. Caching 
 7. Getting Started (The end of the sem)
