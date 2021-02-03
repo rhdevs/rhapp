@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -82,18 +82,22 @@ const StyledSelect = styled(Select)`
   }
 `
 
-const BackIcon = (
-  <Link to={'/schedule'}>
-    <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-  </Link>
-)
-
 export default function CreateEvent() {
   const dispatch = useDispatch()
+  const history = useHistory()
+
   useEffect(() => {
     dispatch(getHallEventTypes()), dispatch(getTargetAudienceList())
   }, [dispatch])
 
+  const BackIcon = (
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px 0 0' }}
+      onClick={() => {
+        history.goBack()
+      }}
+    />
+  )
   const {
     hallEventTypes,
     targetAudienceList,

@@ -22,6 +22,9 @@ const StyledNavBar = styled(NavBar)`
   }
   padding: 15px;
   max-width:100%;
+  position: sticky;
+  top:0;
+  z-index:200;
 `
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -69,7 +72,7 @@ function TopNavBar({
         </>
       }
       rightContent={rightComponent}
-    ></StyledNavBar>
+    />
   )
 }
 

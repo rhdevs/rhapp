@@ -1,18 +1,29 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LeftOutlined, EditOutlined } from '@ant-design/icons'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getHallEventTypes } from '../../../store/scheduling/action'
+import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
+import { RootState } from '../../../store/types'
+import { dummyUserId } from '../../../store/stubs'
+import LoadingSpin from '../../../components/LoadingSpin'
+import NotFound from '../../ErrorPages/NotFound'
+import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 
-const Background = styled.div`
-  background-color: #fafaf4;
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  background-color: #fafaf4;
+`
+
+const BottomContentContainer = styled.div`
+  background-color: #fafaf4;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -20,31 +31,32 @@ const Background = styled.div`
   padding: 0px 0px;
 `
 
-const Row = styled.div`
-  display: flex;
-  width: 100%;
-  margin: 8px 0px;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const BackIcon = (
-  <Link to={'/schedule'}>
-    <LeftOutlined style={{ color: 'black', padding: '0 10px' }} />
-  </Link>
-)
-
 export default function CreateEvent() {
+  const history = useHistory()
   const dispatch = useDispatch()
+
+  const eventIdFromPath = location.pathname.split('/').slice(-1)[0]
+
+  const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
+
   useEffect(() => {
+    dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(getHallEventTypes())
+    dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])
 
-  const EditIcon = (
-    <div>
-      <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
-    </div>
+  const BackIcon = (
+    <LeftOutlined
+      style={{ color: 'black', padding: '0 10px 0 0' }}
+      onClick={() => {
+        history.goBack()
+      }}
+    />
   )
+
+  const isNusModsEvent = selectedEvent?.eventType === 'mods' ? true : false
+
+  const EditIcon = isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
 
   /** Incomplete functionality for Uploading Image */
 
@@ -71,23 +83,70 @@ export default function CreateEvent() {
   //   }
   // }
 
+  const eventType = (eventType: string) => {
+    if (eventType === 'private') {
+      return 'Private'
+    } else if (eventType === 'public') {
+      return 'Public'
+    } else if (eventType === 'mods') {
+      return 'NUSMods'
+    } else {
+      return eventType
+    }
+  }
+
+  const getEventTime = (eventTime: string) => {
+    const eventHour = eventTime.substr(0, 2)
+    const eventMinutes = eventTime.substr(2, 4)
+    const timeString = eventHour + ':' + eventMinutes
+    if (Number(eventHour) < 12) {
+      return timeString + ' AM'
+    } else {
+      return timeString + ' PM'
+    }
+  }
+
+  const getEventDate = (eventDay: string) => {
+    const today = new Date()
+    const eventDate = new Date(today)
+    const numberOfdaysSinceToday = DAY_STRING_TO_NUMBER[eventDay] - today.getDay()
+    eventDate.setDate(eventDate.getDate() + numberOfdaysSinceToday)
+    return eventDate.toLocaleDateString()
+  }
+
+  const renderContent = () => {
+    if (selectedEvent) {
+      return (
+        <ViewEventDetailCard
+          eventID={selectedEvent.eventID}
+          eventName={selectedEvent.eventName}
+          eventCreatedBy={
+            selectedEvent.userID === dummyUserId ? 'You' : isNusModsEvent ? 'NUSMods' : selectedEvent.userID
+          }
+          startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
+          endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}
+          eventLocation={selectedEvent.location}
+          eventCca={isNusModsEvent ? undefined : ccaDetails?.ccaName}
+          eventDescription={selectedEvent.description}
+          eventType={eventType(selectedEvent.eventType)}
+          startTime={isNusModsEvent ? getEventTime(selectedEvent.startTime) : undefined} //e.g '01:37 AM'
+          endTime={isNusModsEvent ? getEventTime(selectedEvent.endTime) : undefined}
+          day={isNusModsEvent ? selectedEvent.day : undefined} //e.g 'Thu'
+          date={isNusModsEvent ? getEventDate(selectedEvent.day) : undefined} //e.g '01/28/21
+        />
+      )
+    }
+    if (selectedEvent === undefined) {
+      return <NotFound />
+    } else {
+      return <LoadingSpin />
+    }
+  }
+
   return (
-    <div>
+    <MainContainer>
       <TopNavBar title={`Event Details`} leftIcon leftIconComponent={BackIcon} rightComponent={EditIcon} />
-      <Background>
-        <Row>
-          <ViewEventDetailCard
-            eventName={'Gym Lah'}
-            eventCreatedBy={'You'}
-            startDateAndTime={1608723138}
-            endDateAndTime={1608726751}
-            eventLocation={'Basketball Court'}
-            eventCca={'Basketball'}
-            eventDescription={'Come join us'}
-            eventType={'CCA'}
-          />
-        </Row>
-      </Background>
-    </div>
+      <BottomContentContainer>{renderContent()}</BottomContentContainer>
+    </MainContainer>
   )
 }

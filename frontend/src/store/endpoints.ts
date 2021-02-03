@@ -31,6 +31,8 @@ export enum ENDPOINTS {
   USER_PERMISSION = '/permissions',
 
   ALL_EVENTS = '/event/all',
+  GET_EVENT_BY_EVENTID = '/event/eventID/',
+  GET_EVENT_BY_CCAID = '/event/ccaID/',
   ALL_PUBLIC_EVENTS = '/event/public/all',
   USER_EVENT = '/user_event/',
   ADD_EVENT = '/event/add/',
@@ -45,7 +47,7 @@ export enum ENDPOINTS {
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',
 
-  CCA_DETAILS = '/cca',
+  CCA_DETAILS = '/cca/',
   ALL_CCAS = '/cca/all',
   CCA_MEMBER = '/user_CCA',
 
@@ -101,6 +103,8 @@ async function makeRequest(
     case DOMAINS.SOCIAL:
       DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
       break
+    case DOMAINS.SOCIAL:
+      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
   console.log(DOMAIN_URL + url)
   return axios({

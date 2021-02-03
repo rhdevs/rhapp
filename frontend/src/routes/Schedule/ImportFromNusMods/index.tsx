@@ -50,7 +50,7 @@ export default function ImportFromNusMods() {
 
   const leftIcon = (
     <LeftOutlined
-      style={{ color: 'black', padding: '0 10px' }}
+      style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
         history.goBack()
       }}
@@ -96,7 +96,6 @@ export default function ImportFromNusMods() {
             defaultButtonDescription={'Import'}
             onButtonClick={() => {
               setModal(!modal)
-              console.log(modal)
             }}
             isFlipButton={false}
           />

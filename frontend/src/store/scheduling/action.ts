@@ -2,10 +2,10 @@ import { isEmpty, last } from 'lodash'
 import { dummyUserId, getHallEventTypesStub } from '../stubs'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAIN_URL, DOMAINS, put, get, post } from '../endpoints'
-import { ActionTypes, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
+import { ActionTypes, DAY_NUMBER_TO_STRING, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 
 // ---------------------- GET ----------------------
-const getFromBackend = async (endpoint, methods) => {
+const getFromBackend = async (endpoint: string, methods) => {
   const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
@@ -17,12 +17,16 @@ const getFromBackend = async (endpoint, methods) => {
       if (methods) await methods(data)
       return data
     })
+    .catch(() => {
+      console.log('something went wronggggg')
+      return null
+    })
   return resp
 }
 // ---------------------- GET ----------------------
 
 // ---------------------- POST/DELETE ----------------------
-const postToBackend = (endpoint, method, body, functions) => {
+const postToBackend = (endpoint: string, method: string, body, functions) => {
   if (body) {
     fetch(DOMAIN_URL.EVENT + endpoint, {
       method: method,
@@ -81,7 +85,6 @@ export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) =
       allEvents = timetableFormatEvents
     }
 
-    console.log(allEvents)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS,
       userAllEventsList: allEvents,
@@ -97,7 +100,7 @@ export const fetchCurrentUserEvents = (userId: string, stopIsLoading: boolean) =
 ) => {
   dispatch(setIsLoading(true))
   const manipulateData = async (data) => {
-    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+    const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent)
     })
     const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
@@ -126,24 +129,40 @@ export const fetchCurrentUserEvents = (userId: string, stopIsLoading: boolean) =
 const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) => {
   const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
   let endTime = getTimeStringFromUNIX(singleEvent.endDateTime)
-  if (startTime > endTime) {
+  if (startTime > endTime || endTime > '2400') {
     endTime = '2400'
-    console.log(singleEvent)
-  }
-  if (endTime > '2400') {
-    endTime = '2400'
-    console.log(singleEvent)
   }
   return {
     eventID: singleEvent.eventID,
     eventName: singleEvent.eventName,
+    startDateTime: singleEvent.startDateTime,
+    endDateTime: singleEvent.endDateTime,
+    description: singleEvent.description,
+    location: singleEvent.location,
+    ccaID: singleEvent.ccaID,
+    userID: singleEvent.userID,
+    image: singleEvent.image,
+
     startTime: startTime,
     endTime: endTime,
-    location: singleEvent.location,
     day: getDayStringFromUNIX(singleEvent.startDateTime),
     hasOverlap: false,
     eventType: singleEvent.isPrivate ? 'private' : 'public', //change!
   }
+}
+
+export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const dispatchData = (data) => {
+    console.log(data[0])
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_CCA_DETAILS,
+      ccaDetails: data[0],
+    })
+  }
+  const ccaDetails = await getFromBackend(ENDPOINTS.CCA_DETAILS + ccaID, dispatchData)
+  dispatch(setIsLoading(false))
+  return ccaDetails[0]
 }
 
 const sortEvents = (events: TimetableEvent[]) => {
@@ -255,24 +274,9 @@ const doEventsOverlap = (event1: TimetableEvent, event2: TimetableEvent) => {
 }
 
 // Converts a unix string into date format and returns the day in string
-const getDayStringFromUNIX = (unixDate: number) => {
+export const getDayStringFromUNIX = (unixDate: number) => {
   const dayInInt = new Date(unixDate * 1000).getDay()
-  switch (dayInInt) {
-    case 0:
-      return 'Sunday'
-    case 1:
-      return 'Monday'
-    case 2:
-      return 'Tuesday'
-    case 3:
-      return 'Wednesday'
-    case 4:
-      return 'Thursday'
-    case 5:
-      return 'Friday'
-    default:
-      return 'Saturday'
-  }
+  return DAY_NUMBER_TO_STRING[dayInInt]
 }
 
 // Converts a unix string into date format and returns the time of string type in 24hour format
@@ -353,16 +357,17 @@ export const deleteUserNusModsEvents = (userId: string) => async (
   const updateDeleteStatus = (data) => {
     if (data.ok) {
       console.log('SUCCESSFULY DELETED')
-      dispatch(setIsLoading(false))
       dispatch(fetchCurrentUserEvents(userId, false))
     } else {
       console.log('FAILURE!!!! ' + data.status)
     }
+    dispatch(setIsLoading(false))
   }
 
   const { userNusModsEventsList } = getState().scheduling
 
   if (userNusModsEventsList.length) postToBackend(ENDPOINTS.DELETE_MODS + userId, 'DELETE', null, updateDeleteStatus)
+  dispatch(setIsLoading(false))
 }
 // ---------------------- NUSMODS ----------------------
 
@@ -412,29 +417,35 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
 }
 
-export const editUserEvents = (action: string, event: SchedulingEvent, userId: string) => (
+export const editUserEvents = (action: string, eventID: string, userId: string, isNUSModsEvent: boolean) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   const requestBody = {
     userID: userId,
-    eventID: event.eventID,
+    eventID: eventID,
   }
 
   if (action === 'remove') {
     const updateEventStatus = (data) => {
       if (data.ok) {
-        console.log('SUCCESSFULY REMOVED: eventId - ' + event.eventID + 'for userId: ' + userId)
+        console.log('SUCCESSFULY REMOVED: eventId - ' + eventID + 'for userId: ' + userId)
+        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchAllUserEvents(dummyUserId, true))
         dispatch(setEventAttendanceStatus(true, false))
       } else {
+        dispatch(setEventAttendanceStatus(false, true))
         console.log('FAILURE!!!! ' + data.status)
       }
     }
-    postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+    if (isNUSModsEvent) console.log('cannot be deleted!')
+    else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
   } else if (action === 'add') {
     const updateEventStatus = (data) => {
       if (data.ok) {
-        console.log('SUCCESSFULY ADDED: eventId - ' + event.eventID + 'for userId: ' + userId)
-        dispatch(setEventAttendanceStatus(false, true))
+        console.log('SUCCESSFULY ADDED: eventId - ' + eventID + 'for userId: ' + userId)
+        dispatch(fetchCurrentUserEvents(dummyUserId, false))
+        dispatch(fetchAllUserEvents(dummyUserId, true))
+        dispatch(setEventAttendanceStatus(true, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
         dispatch(setEventAttendanceStatus(false, true))
@@ -502,7 +513,6 @@ export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes
 export const editTargetAudience = (newTargetAudience: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: SCHEDULING_ACTIONS.SET_TARGET_AUDIENCE, newTargetAudience: newTargetAudience })
 }
-// ---------------------- CREATE EVENTS ----------------------
 
 export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -551,6 +561,52 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
       console.log(err)
     })
 }
+// ---------------------- CREATE EVENTS ----------------------
+
+// ---------------------- VIEW EVENTS ----------------------
+export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: string | null) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  // dispatch(setIsLoading(true))
+  let event
+  if (selectedEvent) event = selectedEvent
+  else if (eventID) {
+    const eventFromBackend = await getFromBackend(ENDPOINTS.GET_EVENT_BY_EVENTID + eventID, null)
+    console.log(eventFromBackend)
+    if (eventFromBackend.err) {
+      const userNusModsEvents = await dispatch(getUserNusModsEvents(dummyUserId))
+      event = userNusModsEvents.find((indivEvent) => {
+        return indivEvent.eventID === eventID
+      })
+    } else {
+      const ccaDetails = dispatch(getCCADetails(eventFromBackend.ccaID))
+      event = {
+        eventID: eventFromBackend.eventID,
+        eventName: eventFromBackend.eventName,
+        startDateTime: eventFromBackend.startDateTime,
+        endDateTime: eventFromBackend.endDateTime,
+        description: eventFromBackend.description,
+        location: eventFromBackend.location,
+        ccaID: eventFromBackend.ccaID,
+        userID: eventFromBackend.userID,
+        image: eventFromBackend.image,
+
+        startTime: eventFromBackend.startTime,
+        endTime: eventFromBackend.endTime,
+        day: eventFromBackend.day,
+        eventType: eventFromBackend.isPrivate ? 'private' : 'public',
+        CCADetails: ccaDetails,
+      }
+    }
+  }
+  console.log(event)
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
+    selectedEvent: event,
+  })
+  // dispatch(setIsLoading(false))
+}
+// ---------------------- VIEW EVENTS ----------------------
 
 export const setIsLoading = (desiredState?: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { isLoading } = getState().scheduling
