@@ -24,7 +24,7 @@ export enum PATHS {
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/view/:facilityName',
+  VIEW_FACILITY = '/facility/view/:facilityID',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',

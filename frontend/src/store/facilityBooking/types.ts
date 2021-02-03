@@ -58,6 +58,12 @@ export enum FACILITY_ACTIONS {
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
+  SET_VIEW_FACILITY_NAME = 'FACILITY_ACTION.SET_VIEW_FACILITY_NAME',
+}
+
+type SetViewFacilityName = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME
+  selectedFacilityName: string
 }
 
 type GetFacilityList = {
@@ -200,3 +206,4 @@ export type ActionTypes =
   | SetSelectedFacility
   | GetAllCCA
   | SetFacilityBookings
+  | SetViewFacilityName

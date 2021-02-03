@@ -2,6 +2,9 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
+  // AUTH
+  LOGIN = '/auth/login',
+
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
@@ -36,12 +39,14 @@ export enum ENDPOINTS {
   GET_EVENT_BY_CCAID = '/event/ccaID/',
   ALL_PUBLIC_EVENTS = '/event/public/all',
   USER_EVENT = '/user_event/',
-  ADD_EVENT = '/event/add/',
+  ADD_EVENT = '/event/add',
   DELETE_EVENT = '/event/delete/',
   RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit/',
+  GET_FIVE_PUBLIC_EVENTS = '/event/public/',
 
   ADD_MODS = '/nusmods/addNUSMods',
+  DELETE_NUSMODS_EVENT = '/nusmods/deleteMod',
   DELETE_MODS = '/nusmods/delete/',
   NUSMODS = '/nusmods/',
 
