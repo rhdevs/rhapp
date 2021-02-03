@@ -64,11 +64,12 @@ export enum ENDPOINTS {
 
   // SOCIAL
   OFFICIAL_POSTS = '/post/official',
-  ALL_POSTS = '/post',
+  ALL_POSTS = '/post/all',
   FRIENDS_OF_USER_POSTS = '/post/friend',
   SPECIFIC_POST = '/post/search',
   DELETE_POST = '/post',
   EDIT_POST = '/post/edit',
+  CREATE_POSTS = '/post',
 
   // HOME
   SEARCH = '/search',
