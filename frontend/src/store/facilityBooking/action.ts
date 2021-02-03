@@ -16,6 +16,7 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
         facilityList: data,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
+      dispatch(SetIsLoading(false))
     })
 }
 
@@ -34,7 +35,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(Array.isArray(data) ? data : [])
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: Array.isArray(data) ? data : [],
@@ -46,6 +46,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
+  console.log('started')
   await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
     .then((resp) => resp)
     .then((bookingList) => {
@@ -70,7 +71,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
         return booking
       })
     })
-
+  console.log(newList)
   dispatch({
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
@@ -136,6 +137,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
 export const setViewDates = (newDates: any) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: newDates.ViewDateSelection.startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: newDates.ViewDateSelection.endDate })
+  dispatch(getAllBookingsForFacility())
 }
 
 // currentMode TRUE == view bookings || FALSE == view availabilities
@@ -150,12 +152,28 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
+
+  dispatch(SetIsLoading(false))
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp })
   })
+
+  dispatch(SetIsLoading(false))
+}
+
+export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((facility) => {
+      console.log(facility[0].facilityName)
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME, selectedFacilityName: facility[0].facilityName })
+    })
 }
 
 export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {

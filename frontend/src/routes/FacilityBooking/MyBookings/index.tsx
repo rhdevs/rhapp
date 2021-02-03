@@ -89,7 +89,7 @@ export default function ViewMyBookings() {
 
   useEffect(() => {
     dispatch(SetIsLoading(false))
-    if (!myBookings) dispatch(getMyBookings(dummyUserId))
+    if (myBookings.length === 0) dispatch(getMyBookings(dummyUserId))
   }, [dispatch])
 
   return (

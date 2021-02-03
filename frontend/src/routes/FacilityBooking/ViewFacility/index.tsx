@@ -18,10 +18,10 @@ import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import {
   createNewBookingFromFacility,
+  fetchFacilityNameFromID,
   getAllBookingsForFacility,
   SetIsLoading,
   setViewDates,
-  setViewFacilityMode,
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -125,13 +125,20 @@ const EventRightDisplay = styled.div`
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityName: string }>()
-  const { ViewStartDate, ViewEndDate, createSuccess, createFailure, isLoading, facilityBookings } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
+  const params = useParams<{ facilityID: string }>()
+  const {
+    ViewStartDate,
+    ViewEndDate,
+    createSuccess,
+    createFailure,
+    isLoading,
+    facilityBookings,
+    selectedFacilityName,
+  } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
+    dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility())
   }, [dispatch])
 
@@ -157,7 +164,7 @@ export default function ViewFacility() {
 
   return (
     <>
-      <TopNavBar title={params.facilityName} rightComponent={MyBookingIcon} />
+      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && (
@@ -183,7 +190,7 @@ export default function ViewFacility() {
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
-                  dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, params.facilityName))
+                  dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName))
                   history.push('/facility/booking/create')
                 }}
                 hasSuccessMessage={false}
@@ -247,6 +254,7 @@ export default function ViewFacility() {
                   </EventRightDisplay>
                 </EventCard>
               ))}
+              {facilityBookings.length === 0 && <p>There are no bookings in the selected range!</p>}
             </EventsGroup>
             <BottomNavBar />
           </>

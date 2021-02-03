@@ -29,6 +29,7 @@ const initialState = {
   selectedFacilityId: 0,
   ccaList: [],
   facilityBookings: [],
+  selectedFacilityName: '',
 }
 
 type State = {
@@ -54,10 +55,17 @@ type State = {
   selectedFacilityId: number
   ccaList: userCCA[]
   facilityBookings: Booking[]
+  selectedFacilityName: string
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
+    case FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME: {
+      return {
+        ...state,
+        selectedFacilityName: action.selectedFacilityName,
+      }
+    }
     case FACILITY_ACTIONS.GET_FACILITY_LIST: {
       return {
         ...state,

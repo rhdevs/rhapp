@@ -114,7 +114,7 @@ export default function FacilityBooking() {
                   <FacilityCard
                     key={facility.facilityID}
                     onClick={() => {
-                      history.push('/facility/view/' + facility.facilityName)
+                      history.push('/facility/view/' + facility.facilityID)
                       dispatch(setSelectedFacility(facility.facilityID))
                     }}
                   >
