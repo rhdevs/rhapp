@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Button, Input } from 'antd'
-// import passwordHash from 'password-hash'
+import passwordHash from 'password-hash'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 // import jwt from 'jsonwebtoken'
 import logo from '../../../assets/white_logo.png'
+import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
 const LoginContainer = styled.div`
   height: 100%;
@@ -63,8 +64,24 @@ export default function Login() {
   const [password, setPassword] = useState('')
   // const passwordHashed = passwordHash.generate(password)
 
-  const loginHandler = () => {
-    console.log('login')
+  const loginHandler = async () => {
+    const queryBody = {
+      userID: username,
+      passwordHash: passwordHash.generate(password),
+    }
+
+    await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(queryBody),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data)
+      })
   }
 
   return (

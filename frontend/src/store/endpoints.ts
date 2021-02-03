@@ -2,6 +2,9 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
+  // AUTH
+  LOGIN = '/auth/login',
+
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
