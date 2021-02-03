@@ -11,6 +11,7 @@ interface Activities {
   name: string
   avatar: string
   isOwner: boolean
+  userId: string
 }
 
 const testData: Activities[] = [
@@ -24,6 +25,7 @@ const testData: Activities[] = [
     postId: '12345678',
     name: 'Zhou Gou Gou',
     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    userId: 'A1234567B',
   },
 ]
 
@@ -54,6 +56,7 @@ const ActivitiesItem = (activitiesItem: Activities) => {
       description={activitiesItem.description}
       avatar={activitiesItem.avatar}
       name={activitiesItem.name}
+      userId={activitiesItem.userId}
     />
   )
 }
@@ -71,6 +74,7 @@ const renderActivitiesItems = () => {
         avatar={data.avatar}
         name={data.name}
         isOwner={data.isOwner}
+        userId={data.userId}
       />
     )
   })

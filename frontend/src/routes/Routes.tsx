@@ -11,7 +11,8 @@ export enum PATHS {
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
   CHANGE_PASSWORD_PAGE = '/auth/changePassword',
-  PROFILE_PAGE = '/social/profile',
+  PROFILE_PAGE = '/social/profile/',
+  VIEW_PROFILE_PAGE = '/social/profile/:userId',
   EDIT_PROFILE_PAGE = '/social/editprofile',
   FRIEND_LIST_PAGE = '/social/profile/friendList',
   // SCHEDULING
@@ -87,7 +88,7 @@ export default class Routes extends React.Component {
             <Route exact path={PATHS.LOGIN_PAGE} component={Login} />
             <Route exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
-            <Route exact path={PATHS.PROFILE_PAGE} component={Profile} />
+            <Route exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
             <Route exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <Route exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <Route exact path={PATHS.FRIEND_LIST_PAGE} component={FriendList} />
