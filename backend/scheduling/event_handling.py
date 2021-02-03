@@ -27,7 +27,7 @@ client = pymongo.MongoClient(
 db = client["RHApp"]
 
 
-def rename(event):
+def renameEvent(event):
     event['eventID'] = event.pop('_id')
     return event
 
@@ -71,11 +71,11 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
-@app.route('/event/public/<pagination>', methods=["GET"])
+@app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
-def getPublicEventsPagination(pagination):
+def getPublicEventsPagination(pagination, startTime = 0):
     try:
-        data = db.Events.find({"isPrivate": {"$eq": False}}, sort=[
+        data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime":{"$gte": int(startTime)}}, sort=[
                               ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 5).limit(5)
     except Exception as e:
         return {"err": str(e)}, 400
@@ -140,7 +140,7 @@ def getEventsCCA(ccaID):
 def getEventsDetails(eventID):
     try:
         response = db.Events.find_one({"_id": ObjectId(eventID)})
-        response = rename(response)
+        response = renameEvent(response)
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -179,7 +179,7 @@ def getUserAttendanceAll(userID):
 
         entries = [ObjectId(w['eventID']) for w in data]
         data = db.Events.find({"_id": {"$in": entries}})
-        response = map(rename, data)
+        response = map(renameEvent, data)
 
         return json.dumps(list(response), default=lambda o: str(o)), 200
 
@@ -192,6 +192,7 @@ def getUserAttendanceAll(userID):
 def getUserAttendance(userID, referenceTime):
     try:
         data = list(db.Attendance.find({"userID": userID}))
+        # Gets the the week that contains the given time
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
 
@@ -203,7 +204,7 @@ def getUserAttendance(userID, referenceTime):
             return startTime < endOfWeek and startTime >= startOfWeek
 
         response = filter(correctWeek, data)
-        response = map(rename, response)
+        response = map(renameEvent, response)
 
     except Exception as e:
         return {"err": str(e)}, 400
