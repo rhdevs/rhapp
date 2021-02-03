@@ -10,7 +10,7 @@ export const initialState = {
     telegramHandle: 'zhoumm',
     block: 8,
     bio: 'This is my bio hur hur',
-    modules: ['CS1010', 'CFG1000', 'CS2040S'],
+    modules: [],
     posts: [],
     position: [],
   },

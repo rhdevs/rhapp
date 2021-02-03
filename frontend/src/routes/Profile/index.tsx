@@ -101,8 +101,10 @@ export default function Profile() {
         <ActivitiesCard />
       </TabPane>
       <TabPane tab="Details" key="2">
-        <CCAItem />
-        <ModulesItem />
+        <>
+          <CCAItem />
+          <ModulesItem />
+        </>
       </TabPane>
     </CustomTabs>
   )
@@ -139,12 +141,12 @@ export default function Profile() {
           style={{ width: '80vw' }}
           size={'small'}
         >
-          {ccas.map((cca) => {
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{cca.ccaName}</span>
-            )
-          })}
+          {ccas &&
+            ccas?.map((cca) => (
+              <span key={cca.ccaID} style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
+                {cca.ccaName}
+              </span>
+            ))}
         </Card>
       </div>
     )
@@ -159,12 +161,12 @@ export default function Profile() {
           style={{ width: '80vw' }}
           size={'small'}
         >
-          {user.modules.map((module) => {
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{module}</span>
-            )
-          })}
+          {user.modules &&
+            user.modules?.map((module) => (
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }} key={module}>
+                {module}
+              </span>
+            ))}
         </Card>
       </div>
     )
