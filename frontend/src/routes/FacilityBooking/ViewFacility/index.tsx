@@ -193,7 +193,7 @@ export default function ViewFacility() {
                 updatedButtonColor="#DE5F4C"
                 updatedTextColor="white"
               />
-              <div onClick={() => console.log('pressed')}>
+              {/* <div onClick={() => console.log('pressed')}>
                 <StyledButton
                   onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
                   hasSuccessMessage={false}
@@ -205,7 +205,7 @@ export default function ViewFacility() {
                   defaultTextColor="#DE5F4C"
                   updatedButtonDescription={'🕶 Availabilities ⌄'}
                 />
-              </div>
+              </div> */}
             </ActionButtonGroup>
             <DateDisplayText>
               {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
