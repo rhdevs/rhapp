@@ -32,7 +32,7 @@ const { Option } = Select
 const Background = styled.div`
   background-color: #fafaf4;
   height: 100vh;
-  width: 100;vw
+  width: 100vw;
 `
 
 const BottomContainer = styled.div`
