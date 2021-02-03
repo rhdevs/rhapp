@@ -356,7 +356,7 @@ def getPostSpecific():
 
 @app.route("/post/all", methods=['GET'])
 @cross_origin(supports_credentials=True)
-def getLastN(userID):
+def getLastN():
     # get all post that a user can view regardless of whether its official or not
     try:
         userID = str(request.args.get("userID"))
