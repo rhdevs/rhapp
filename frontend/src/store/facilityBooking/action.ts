@@ -37,11 +37,11 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   })
     .then((resp) => resp.json())
     .then((data) => {
+      console.log(Array.isArray(data) ? data : [])
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
-        facilityBookings: data,
+        facilityBookings: Array.isArray(data) ? data : [],
       })
-      console.log(data)
       dispatch(SetIsLoading(false))
     })
 }
