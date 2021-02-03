@@ -4,7 +4,6 @@ import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
 import { cloneDeep } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
-import { userProfileStub } from '../../store/stubs'
 
 const [success] = useSnackbar()
 
@@ -71,15 +70,17 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Creating post')
   const { newPostTitle, newPostBody, newPostOfficial, newPostImages } = getState().social
+  const { userID } = getState().profile.user
+
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
-    userID: userProfileStub.userID,
+    userID: userID,
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: 1, // TODO: Change to tags + add newPostCca
   }
-  post(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
     console.log(res)
@@ -193,8 +194,12 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
 
 export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
   dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
 ) => {
+  dispatch(SetIsLoading(true))
   let endpoint: ENDPOINTS
+  const { posts } = getState().social
+
   switch (postFilter) {
     case POSTS_FILTER.OFFICIAL:
       endpoint = ENDPOINTS.OFFICIAL_POSTS
@@ -210,13 +215,14 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       break
   }
 
-  const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
+  // const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
+
+  const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     console.log(response)
-    const transformedPost = cloneDeep(response)
-      .reverse()
-      .map((post) => {
+    if (response.length > 0) {
+      const transformedPost = cloneDeep(response).map((post) => {
         post.date = post.createdAt
         post.postId = post.postID
         post.ccaId = post.ccaID
@@ -225,10 +231,17 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         return post
       })
 
-    dispatch({
-      type: SOCIAL_ACTIONS.GET_POSTS,
-      posts: transformedPost,
-    })
+      dispatch({
+        type: SOCIAL_ACTIONS.GET_POSTS,
+        posts: posts.concat(transformedPost),
+      })
+    } else {
+      dispatch({
+        type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,
+        hasNoMorePosts: true,
+      })
+    }
+    dispatch(SetIsLoading(false))
   })
 }
 
@@ -248,9 +261,12 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(SetHasNoMorePosts(false))
   dispatch({
     type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
     postsFilter,
+    pageIndex: 0,
+    posts: [],
   })
 }
 
@@ -281,5 +297,32 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
     viewPost: newPost,
+  })
+}
+
+export const IncreasePageIndex = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { pageIndex, postsFilter } = getState().social
+  const { userID } = getState().profile.user
+
+  const newPageIndex = pageIndex + 1
+
+  dispatch(GetPosts(postsFilter, newPageIndex, userID))
+  dispatch({
+    type: SOCIAL_ACTIONS.INCREASE_PAGE_INDEX,
+    pageIndex: newPageIndex,
+  })
+}
+
+export const SetIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SOCIAL_ACTIONS.SET_IS_LOADING,
+    isLoading: isLoading,
+  })
+}
+
+export const SetHasNoMorePosts = (hasNoMorePosts: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,
+    hasNoMorePosts: hasNoMorePosts,
   })
 }

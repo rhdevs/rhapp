@@ -15,6 +15,9 @@ const initialState = {
   viewPost: {} as Post,
   userId: '',
   postId: '',
+  pageIndex: 0,
+  isLoading: false,
+  hasNoMorePosts: false,
 }
 
 type State = {
@@ -31,6 +34,9 @@ type State = {
   viewPost: Post
   userId: string
   postId: string
+  pageIndex: number
+  isLoading: boolean
+  hasNoMorePosts: boolean
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -98,6 +104,8 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         postsFilter: action.postsFilter,
+        pageIndex: action.pageIndex,
+        posts: action.posts,
       }
     }
 
@@ -115,6 +123,26 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       }
     }
 
+    case SOCIAL_ACTIONS.INCREASE_PAGE_INDEX: {
+      return {
+        ...state,
+        pageIndex: action.pageIndex,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      }
+    }
+
+    case SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS: {
+      return {
+        ...state,
+        hasNoMorePosts: action.hasNoMorePosts,
+      }
+    }
     default:
       return state
   }
