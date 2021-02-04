@@ -359,6 +359,8 @@ def getPostSpecific():
 @cross_origin(supports_credentials=True)
 def getLastN():
     # get all post that a user can view regardless of whether its official or not
+    # argument N will indicate the number of posts to skip, defaults to 0.
+    # Will return 5 most recent posts after skipping N*5 posts.
     try:
         userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
@@ -388,6 +390,8 @@ def getLastN():
 @cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
+        # argument N will indicate the number of posts to skip, defaults to 0.
+        # Will return 5 most recent user posts after skipping N*5 posts.
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
         data = db.Posts.find({"userID": str(userID)}, sort=[
@@ -423,6 +427,8 @@ def FriendsHelper(userID):
 @cross_origin(supports_credentials=True)
 def getFriendsPostById():
     try:
+        # argument N will indicate the number of posts to skip, defaults to 0.
+        # Will return 5 most recent friend posts after skipping N*5 posts.
         userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
@@ -452,6 +458,8 @@ def getFriendsPostById():
 @cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
+        # argument N will indicate the number of entries to skip, defaults to 0.
+        # Will return 5 most recent official entries after skipping N*5 entries.
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
         response = []
