@@ -3,6 +3,7 @@ import { Select } from 'antd'
 
 import 'antd/dist/antd.css'
 import styled from 'styled-components'
+import { CCADetails, Profile } from '../../store/scheduling/types'
 const { Option } = Select
 
 const TagsContainer = styled.div`
@@ -14,9 +15,44 @@ const TagsContainer = styled.div`
   }
 `
 
-function Tags({ options, defaultOptions }: { options: string[]; defaultOptions?: string[] }) {
+function Tags({
+  ccaOptions,
+  profileOptions,
+  options,
+  defaultOptions,
+  onChange,
+}: {
+  ccaOptions?: CCADetails[]
+  profileOptions?: Profile[]
+  options?: string[]
+  defaultOptions?: string[]
+  onChange?: (input: string[]) => void
+}) {
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`)
+    if (onChange) onChange(value)
+  }
+
+  const renderContent = () => {
+    if (ccaOptions) {
+      return ccaOptions.map((option, key) => (
+        <Option value={option.ccaID} key={key}>
+          {option.ccaName}
+        </Option>
+      ))
+    } else if (profileOptions) {
+      return profileOptions.map((option, key) => (
+        <Option value={option.userID} key={key}>
+          {option.displayName}
+        </Option>
+      ))
+    } else if (options) {
+      return options.map((option, key) => (
+        <Option value={option} key={key}>
+          {option}
+        </Option>
+      ))
+    }
   }
 
   return (
@@ -29,11 +65,7 @@ function Tags({ options, defaultOptions }: { options: string[]; defaultOptions?:
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
       >
-        {options.map((option, key) => (
-          <Option value={option} key={key}>
-            {option}
-          </Option>
-        ))}
+        {renderContent()}
       </Select>
     </TagsContainer>
   )

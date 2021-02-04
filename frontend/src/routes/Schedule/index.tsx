@@ -105,7 +105,7 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchCurrentUserEvents(dummyUserId, false))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false, selectedProfileIds))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
   }, [dispatch, selectedProfileIds])
@@ -191,8 +191,16 @@ export default function Schedule() {
   //   console.log(searchGroupValue)
   // }
 
+  const test = () => {
+    const testArr = [[1, 2], [5, 6], [8]]
+    const newArr = testArr.map((num) => {
+      return num
+    })
+    console.log(newArr.flat())
+  }
   return (
     <Background>
+      {test()}
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}

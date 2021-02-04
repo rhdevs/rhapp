@@ -63,6 +63,7 @@ export enum ENDPOINTS {
   ALL_FRIENDS = '/friend',
 
   // SOCIAL
+  ALL_PROFILES = '/profile/all',
   OFFICIAL_POSTS = '/post/official',
   ALL_POSTS = '/post/all',
   FRIENDS_OF_USER_POSTS = '/post/friend',

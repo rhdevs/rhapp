@@ -17,18 +17,6 @@ export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_
 
 /** Types */
 
-// type NUSModsEvent = {
-//   classNo: string
-//   covidZone: string
-//   day: string
-//   endTime: string
-//   lessonType: string
-//   size: number
-//   startTime: string
-//   venue: string
-//   weeks: number[]
-// }
-
 export type TimetableEvent = {
   eventID: string
   eventName: string
@@ -67,6 +55,16 @@ export type CCADetails = {
   ccaID: number
   ccaName: string
 }
+
+export type Profile = {
+  bio: string
+  block: string
+  displayName: string
+  profilePictureURI: string
+  telegramHandle: string
+  userID: string
+}
+
 /** Actions' types */
 
 export enum SCHEDULING_ACTIONS {
@@ -92,6 +90,10 @@ export enum SCHEDULING_ACTIONS {
   HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
   SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
   GET_CCA_DETAILS = 'SCHEDULING_ACTIONS.GET_CCA_DETAILS',
+  GET_ALL_CCA = 'SCHEDULING_ACTIONS.GET_ALL_CCA',
+  GET_ALL_PROFILES = 'SCHEDULING_ACTIONS.GET_ALL_PROFILES',
+  SET_SELECTED_PROFILE_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS',
+  GET_SELECTED_PROFILE_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS',
 }
 
 /** Actions */
@@ -206,6 +208,26 @@ type GetCCADetails = {
   ccaDetails: CCADetails
 }
 
+type GetAllCCA = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_CCA
+  ccaList: CCADetails[]
+}
+
+type GetAllProfiles = {
+  type: typeof SCHEDULING_ACTIONS.GET_ALL_PROFILES
+  profileList: Profile[]
+}
+
+type SetSelectedProfileIds = {
+  type: typeof SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS
+  selectedProfileIds: string[]
+}
+
+type GetSelectedProfileEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS
+  selectedProfileEvents: SchedulingEvent[]
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -228,3 +250,7 @@ export type ActionTypes =
   | HandleEventAttendanceStatus
   | SetSelectedEvent
   | GetCCADetails
+  | GetAllCCA
+  | GetAllProfiles
+  | SetSelectedProfileIds
+  | GetSelectedProfileEvents
