@@ -253,12 +253,13 @@ def getUserDetails(userID):
     try:
         data1 = db.User.find_one({"userID": userID})
         data2 = db.Profiles.find_one({"userID": userID})
-        data1.update(data2)
+        response = data1.update(data2) if data1 else {
+            "message": "User not found."}
 
     except Exception as e:
         return {"err": str(e)}, 400
 
-    return json.dumps(data1, default=lambda o: str(o)), 200
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 
 def userIDtoName(userID):
