@@ -38,8 +38,8 @@ def hello():
 
 
 @app.route('/profile/all')
-@cross_origin()
-def getAllProfiles(supports_credentials=True):
+@cross_origin(supports_credentials=True)
+def getAllProfiles():
     try:
         data = db.Profiles.find()
         return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -642,7 +642,7 @@ def checkFriend():
 
 
 @app.route("/search", methods=["GET"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def search():
     # a function to search all events, facilities and profiles
     try:
