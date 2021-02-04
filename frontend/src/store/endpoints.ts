@@ -2,6 +2,9 @@ import axios from 'axios'
 
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
+  // AUTH
+  LOGIN = '/auth/login',
+
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
@@ -16,6 +19,7 @@ export enum ENDPOINTS {
   FACILITY = '/facility',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
+  VIEW_BOOKING = '/booking',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
@@ -35,19 +39,21 @@ export enum ENDPOINTS {
   GET_EVENT_BY_CCAID = '/event/ccaID/',
   ALL_PUBLIC_EVENTS = '/event/public/all',
   USER_EVENT = '/user_event/',
-  ADD_EVENT = '/event/add/',
+  ADD_EVENT = '/event/add',
   DELETE_EVENT = '/event/delete/',
   RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit/',
+  GET_FIVE_PUBLIC_EVENTS = '/event/public/',
 
   ADD_MODS = '/nusmods/addNUSMods',
+  DELETE_NUSMODS_EVENT = '/nusmods/deleteMod',
   DELETE_MODS = '/nusmods/delete/',
   NUSMODS = '/nusmods/',
 
   USER_LESSON = 'user_lesson',
   LESSON_DETAILS = '/lesson',
 
-  CCA_DETAILS = '/cca/',
+  CCA_DETAILS = '/cca',
   ALL_CCAS = '/cca/all',
   CCA_MEMBER = '/user_CCA',
 
@@ -58,11 +64,12 @@ export enum ENDPOINTS {
 
   // SOCIAL
   OFFICIAL_POSTS = '/post/official',
-  ALL_POSTS = '/post',
+  ALL_POSTS = '/post/all',
   FRIENDS_OF_USER_POSTS = '/post/friend',
   SPECIFIC_POST = '/post/search',
   DELETE_POST = '/post',
   EDIT_POST = '/post/edit',
+  CREATE_POSTS = '/post',
 
   // HOME
   SEARCH = '/search',
@@ -106,7 +113,6 @@ async function makeRequest(
     case DOMAINS.SOCIAL:
       DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
-  console.log(DOMAIN_URL + url)
   return axios({
     method: method,
     url: DOMAIN_URL + url,

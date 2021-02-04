@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import dummyAvatar from '../../../assets/dummyAvatar.svg'
+import { useHistory } from 'react-router-dom'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import NoFriends from './NoFriends'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { fetchUserFriends } from '../../../store/profile/action'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -51,11 +53,12 @@ const FriendLabels = styled.div`
 
 export default function FriendList() {
   const [hasFriends, setHasFriends] = useState(true)
+  const history = useHistory()
   const dispatch = useDispatch()
-  const { user, friends } = useSelector((state: RootState) => state.profile)
+  const { friends } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    dispatch(fetchUserFriends(user.userID))
+    dispatch(fetchUserFriends('A1234567B'))
   }, [dispatch])
 
   const handleSearch = () => {
@@ -69,7 +72,12 @@ export default function FriendList() {
         {friends.length !== 0 ? (
           friends.map((friend) => {
             return (
-              <FriendCard key={friend.userID}>
+              <FriendCard
+                key={friend.userID}
+                onClick={() => {
+                  history.push(PATHS.PROFILE_PAGE + '/' + friend.userID)
+                }}
+              >
                 {friend.profilePictureUrl ? (
                   <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.profilePictureUrl} />
                 ) : (

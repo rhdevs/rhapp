@@ -7,9 +7,10 @@ import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import { deleteMyBooking, setIsDeleteMyBooking, SetIsLoading } from '../../../store/facilityBooking/action'
+import { deleteMyBooking, fetchSelectedFacility, setIsDeleteMyBooking } from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { format } from 'date-fns'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -44,6 +45,13 @@ const IdText = styled.p`
   font-size: 14px;
   color: #666666;
 `
+
+const HeaderText = styled.div`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+`
+
 const DetailsGroup = styled.div`
   padding: 10px;
 `
@@ -72,7 +80,7 @@ const CardDurationLabel = styled.p`
   font-weight: 600;
   font-size: 24px;
   line-height: 14px;
-
+  margin-top: 25px;
   color: #666666;
 `
 
@@ -95,6 +103,7 @@ const DateTimeDetails = styled.div`
   display: grid;
   grid-template-rows: 50% 50%;
   margin: 0px;
+  margin-left: 15px;
 `
 const EventOwnerDetails = styled.div`
   display: grid;
@@ -106,9 +115,23 @@ export default function ViewBooking() {
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(false))
+    // dispatch(SetIsLoading(false))
+    dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
     console.log(selectedBooking)
   }, [dispatch])
+
+  const formatDate = (eventStartTime: number) => {
+    const date = new Date(eventStartTime * 1000)
+    return format(date, 'MM/dd/yy hh:mm a')
+  }
+
+  const timeDuration = (eventStartTime: number, eventEndTime: number) => {
+    const startDate = new Date(eventStartTime * 1000)
+    const endDate = new Date(eventEndTime * 1000)
+    const timeDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600)
+
+    return Math.floor(timeDiff)
+  }
 
   return (
     <>
@@ -119,18 +142,20 @@ export default function ViewBooking() {
           <>
             <EventCard key={selectedBooking?.bookingID}>
               <HeaderGroup>
-                {selectedBooking?.eventName} <br />
-                {selectedBooking?.ccaID}
+                <HeaderText>{selectedBooking?.eventName}</HeaderText>
+                <HeaderText>{selectedBooking?.ccaName}</HeaderText>
                 <IdText>RHEID-{params.bookingId}</IdText>
               </HeaderGroup>
               <DetailsGroup>
                 <TimeDetails>
-                  <CardDurationLabel>duration here</CardDurationLabel>
+                  <CardDurationLabel>
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hrs
+                  </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
-                        <CardTimeLabel>{new Date(selectedBooking?.startTime * 1000).toDateString}</CardTimeLabel>
-                        <CardTimeLabel>{new Date(selectedBooking?.endTime * 1000).toDateString}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.startTime)}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.endTime)}</CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>

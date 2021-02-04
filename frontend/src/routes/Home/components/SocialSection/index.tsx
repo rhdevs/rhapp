@@ -3,18 +3,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { PlusCircleFilled } from '@ant-design/icons'
-import { Divider } from 'antd'
+import { Divider, Button } from 'antd'
 import SocialPostCard from '../../../../components/Mobile/SocialPostCard'
 import { PATHS } from '../../../Routes'
-import { SwitchPostsFilter, GetPosts } from '../../../../store/social/action'
+import { SwitchPostsFilter, GetPosts, IncreasePageIndex } from '../../../../store/social/action'
 import { POSTS_FILTER } from '../../../../store/social/types'
 import { RootState } from '../../../../store/types'
 import dayjs from 'dayjs'
-import { userProfileStub } from '../../../../store/stubs'
+import LoadingSpin from '../../../../components/LoadingSpin'
 
 type TabProps = {
   active: boolean
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
 const Sticky = styled.div`
   position: -webkit-sticky;
@@ -52,20 +57,18 @@ export default function SocialSection() {
   const dispatch = useDispatch()
   const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
   const socialPosts = useSelector((state: RootState) => state.social.posts)
+  const { userID, profilePictureUrl } = useSelector((state: RootState) => state.profile.user)
+  const { pageIndex, isLoading, hasNoMorePosts } = useSelector((state: RootState) => state.social)
 
   useEffect(() => {
-    if (currentPostsFilter === POSTS_FILTER.FRIENDS) {
-      dispatch(GetPosts(currentPostsFilter, 5, userProfileStub.userID)) // TODO: Use userId from state
-    } else {
-      dispatch(GetPosts(currentPostsFilter))
-    }
+    dispatch(GetPosts(currentPostsFilter, pageIndex, userID))
   }, [currentPostsFilter])
 
   const toggleTab = (postsFilter: POSTS_FILTER) => () => dispatch(SwitchPostsFilter(postsFilter))
 
   const renderSocialPosts = () => {
     return socialPosts.map((post) => {
-      const { title, postId, createdAt, description, postPics, name } = post
+      const { title, postId, createdAt, description, postPics, name, userId } = post
       const postDate = dayjs.unix(parseInt(createdAt ?? ''))
       const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
 
@@ -74,8 +77,8 @@ export default function SocialSection() {
       return (
         <SocialPostCard
           key={postId}
-          isOwner={true} // TODO: change to userId == current userId
-          avatar={userProfileStub.profilePictureUrl}
+          isOwner={userID == userId}
+          avatar={profilePictureUrl}
           name={name ?? ''}
           title={title}
           dateTime={date}
@@ -112,6 +115,23 @@ export default function SocialSection() {
         </TabBar>
       </Sticky>
       {renderSocialPosts()}
+      {!hasNoMorePosts && (
+        <StyledContainer>
+          {isLoading ? (
+            <LoadingSpin />
+          ) : (
+            <Button
+              type="text"
+              onClick={() => {
+                console.log('increasing')
+                dispatch(IncreasePageIndex())
+              }}
+            >
+              See more
+            </Button>
+          )}
+        </StyledContainer>
+      )}
     </>
   )
 }

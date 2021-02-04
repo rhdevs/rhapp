@@ -13,7 +13,6 @@ import {
   deleteMyBooking,
   editMyBooking,
   SetIsLoading,
-  setSelectedBooking,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
@@ -69,6 +68,7 @@ const BookingTime = styled.p`
 
 const BookingLabels = styled.div`
   align-self: center;
+  margin-top: 20px;
 `
 
 const RightActionGroups = styled.div`
@@ -88,8 +88,8 @@ export default function ViewMyBookings() {
   const { myBookings, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
-    dispatch(getMyBookings(dummyUserId))
+    dispatch(SetIsLoading(false))
+    if (myBookings.length === 0) dispatch(getMyBookings(dummyUserId))
   }, [dispatch])
 
   return (
@@ -99,44 +99,43 @@ export default function ViewMyBookings() {
         {isLoading && <LoadingSpin />}
         {!isLoading && (
           <>
-            {myBookings?.map((event) => (
-              <BookingCard key={event.eventName}>
+            {myBookings?.map((booking) => (
+              <BookingCard key={booking.bookingID}>
                 <BookingAvatar src={dummyAvatar} />
                 <BookingLabels
                   onClick={() => {
-                    history.push('/facility/booking/view/' + event.bookingID)
-                    dispatch(setSelectedBooking(event.bookingID))
+                    history.push('/facility/booking/view/' + booking.bookingID)
                   }}
                 >
-                  <BookingHeader>{event.eventName}</BookingHeader>
+                  <BookingHeader>{booking.facilityName}</BookingHeader>
                   <BookingSubHeader>
-                    {event.ccaID}: {event.facilityID}
+                    {booking.ccaName}: {booking.eventName}
                   </BookingSubHeader>
                   <BookingTime>
-                    <b>{new Date(event.startTime * 1000).toDateString()}</b> <br />
-                    {new Date(event.startTime * 1000).toLocaleTimeString([], {
+                    <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
+                    {new Date(booking.startTime * 1000).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}{' '}
-                    to {new Date(event.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    to {new Date(booking.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </BookingTime>
                 </BookingLabels>
                 <RightActionGroups>
                   <ActionButton
                     src={editIcon}
                     onClick={() => {
-                      dispatch(editMyBooking(event))
+                      dispatch(editMyBooking(booking))
                       history.push(PATHS.CREATE_FACILITY_BOOKING)
                     }}
                   />
-                  <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(event.bookingID))} />
+                  <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))} />
                 </RightActionGroups>
-                {isDeleteMyBooking !== -1 && isDeleteMyBooking === event.bookingID && (
+                {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
                   <ConfirmationModal
                     title={'Delete Booking?'}
                     hasLeftButton={true}
                     leftButtonText={'Delete'}
-                    onLeftButtonClick={() => dispatch(deleteMyBooking(event.bookingID))}
+                    onLeftButtonClick={() => dispatch(deleteMyBooking(booking.bookingID))}
                     rightButtonText={'Cancel'}
                     onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
                   />

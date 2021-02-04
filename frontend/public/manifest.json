@@ -1,25 +1,32 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "theme_color": "#de5f4c",
+  "background_color": "#fafaf4",
+  "display": "fullscreen",
+  "scope": "/",
+  "start_url": "/",
+  "name": "RHApp",
+  "short_name": "Wrap",
+  "description": "Nobody asked but we delivered",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "../../src/assets/black_logo.png",
+      "sizes": "192x",
+      "type": "image/png"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "../../src/assets/black_logo.png",
+      "sizes": "256x",
+      "type": "image/png"
     },
     {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "../../src/assets/black_logo.png",
+      "sizes": "384x",
+      "type": "image/png"
+    },
+    {
+      "src": "../../src/assets/black_logo.png",
+      "sizes": "512x",
+      "type": "image/png"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  ]
 }

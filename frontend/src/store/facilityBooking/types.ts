@@ -1,3 +1,5 @@
+import { invert } from 'lodash'
+
 export type Facility = {
   facilityID: number
   facilityName: string
@@ -14,8 +16,10 @@ export type Booking = {
   bookingID: number
   eventName: string
   facilityID: number
+  facilityName?: string
   userID: string
   ccaID: number
+  ccaName?: string
   startTime: number
   endTime: number
   description: string
@@ -56,6 +60,12 @@ export enum FACILITY_ACTIONS {
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
+  SET_VIEW_FACILITY_NAME = 'FACILITY_ACTION.SET_VIEW_FACILITY_NAME',
+}
+
+type SetViewFacilityName = {
+  type: typeof FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME
+  selectedFacilityName: string
 }
 
 type GetFacilityList = {
@@ -174,6 +184,19 @@ type SetFacilityBookings = {
   facilityBookings: Booking[]
 }
 
+type dayNumber = { [dayString: string]: number }
+export const DAY_STRING_TO_NUMBER: dayNumber = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+}
+// Reverse lookup map of DAY_STRING_TO_NUMBER
+export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
+
 export type ActionTypes =
   | GetFacilityList
   | ChangeTab
@@ -198,3 +221,4 @@ export type ActionTypes =
   | SetSelectedFacility
   | GetAllCCA
   | SetFacilityBookings
+  | SetViewFacilityName

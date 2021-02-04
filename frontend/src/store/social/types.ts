@@ -48,6 +48,9 @@ export enum SOCIAL_ACTIONS {
   SWITCH_POSTS_FILTER = 'SOCIAL_ACTIONS.SWITCH_POSTS_FILTER',
   GET_SPECIFIC_POST = 'SOCIAL_ACTIONS.GET_SPECIFIC_POST',
   SET_POST_ID = 'SOCIAL_ACTIONS.SET_POST_ID',
+  INCREASE_PAGE_INDEX = 'SOCIAL_ACTIONS.INCREASE_PAGE_INDEX',
+  SET_IS_LOADING = 'SOCIAL_ACTIONS.SET_IS_LOADING',
+  SET_HAS_NO_MORE_POSTS = 'SOCIAL_ACTIONS.HAS_NO_MORE_POSTS',
 }
 
 type SetIsUploading = {
@@ -98,6 +101,8 @@ type DeletePost = {
 type SwitchPostsFilter = {
   type: typeof SOCIAL_ACTIONS.SWITCH_POSTS_FILTER
   postsFilter: POSTS_FILTER
+  pageIndex: number
+  posts: Post[]
 }
 
 type SetPostId = {
@@ -108,6 +113,21 @@ type SetPostId = {
 type GetSpecificPost = {
   type: typeof SOCIAL_ACTIONS.GET_SPECIFIC_POST
   viewPost: Post
+}
+
+type IncreasePageIndex = {
+  type: typeof SOCIAL_ACTIONS.INCREASE_PAGE_INDEX
+  pageIndex: number
+}
+
+type SetIsLoading = {
+  type: typeof SOCIAL_ACTIONS.SET_IS_LOADING
+  isLoading: boolean
+}
+
+type SetHasNoMorePosts = {
+  type: typeof SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS
+  hasNoMorePosts: boolean
 }
 
 export type ActionTypes =
@@ -121,3 +141,6 @@ export type ActionTypes =
   | SwitchPostsFilter
   | SetPostId
   | GetSpecificPost
+  | IncreasePageIndex
+  | SetIsLoading
+  | SetHasNoMorePosts
