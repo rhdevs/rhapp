@@ -9,13 +9,14 @@ type AvatarProps = React.ComponentProps<typeof AntdAvatar> & {
 
 export default function Avatar(props: AvatarProps) {
   const history = useHistory()
+  const { userId, ...rest } = props
 
   const routeToProfile = () => {
-    history.push(PATHS.PROFILE_PAGE + `${props.userId}`)
+    history.push(PATHS.PROFILE_PAGE + `${userId}`)
   }
   return (
     <div onClick={routeToProfile}>
-      <AntdAvatar {...props} />
+      <AntdAvatar {...rest} />
     </div>
   )
 }
