@@ -126,6 +126,7 @@ type socialPostCardProps = {
   description: string
   postId: string
   postPics?: string[]
+  userId: string
 }
 
 function SocialPostCard(props: socialPostCardProps) {
@@ -135,7 +136,7 @@ function SocialPostCard(props: socialPostCardProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
 
-  const { isOwner, avatar, name, title, dateTime, description, postId, postPics } = props
+  const { isOwner, avatar, name, title, dateTime, description, postId, postPics, userId } = props
 
   const initials = getInitials(props.name)
 
@@ -168,6 +169,7 @@ function SocialPostCard(props: socialPostCardProps) {
             size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
             style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
             src={avatar}
+            userId={userId}
           >
             {initials}
           </Avatar>

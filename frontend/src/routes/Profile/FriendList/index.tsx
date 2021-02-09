@@ -9,6 +9,7 @@ import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { fetchUserFriends } from '../../../store/profile/action'
+import { useParams } from 'react-router-dom'
 import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
@@ -52,13 +53,16 @@ const FriendLabels = styled.div`
 `
 
 export default function FriendList() {
-  const [hasFriends, setHasFriends] = useState(true)
   const history = useHistory()
+  const [hasFriends, setHasFriends] = useState(true)
   const dispatch = useDispatch()
   const { friends } = useSelector((state: RootState) => state.profile)
 
+  const params = useParams<{ userId: string }>()
+  const userIdFromPath = params.userId
+
   useEffect(() => {
-    dispatch(fetchUserFriends('A1234567B'))
+    dispatch(fetchUserFriends(userIdFromPath))
   }, [dispatch])
 
   const handleSearch = () => {
@@ -79,7 +83,13 @@ export default function FriendList() {
                 }}
               >
                 {friend.profilePictureUrl ? (
-                  <FriendAvatar style={{ width: 85, borderRadius: 100 / 2 }} src={friend.profilePictureUrl} />
+                  <FriendAvatar
+                    onClick={() => {
+                      history.push(PATHS.PROFILE_PAGE + `${friend.userID}`)
+                    }}
+                    style={{ width: 85, borderRadius: 100 / 2 }}
+                    src={friend.profilePictureUrl}
+                  />
                 ) : (
                   <FriendAvatar src={dummyAvatar} />
                 )}

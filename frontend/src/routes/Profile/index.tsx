@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Card, Tabs } from 'antd'
+import { Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
 import ActivitiesCard from './Components/ActivitiesCard'
 import { useHistory } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { fetchUserCCAs, fetchUserDetails, fetchUserFriends, populateProfileEdits
 import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
+import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -82,17 +83,14 @@ export default function Profile() {
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
   const { user, ccas } = useSelector((state: RootState) => state.profile)
+  const params = useParams<{ userId: string }>()
+  const userIdFromPath = params.userId
 
   useEffect(() => {
-    dispatch(fetchUserDetails('A1234567B'))
-    dispatch(fetchUserCCAs('A1234567B'))
-    //TODO: change to comparing userId with user.id
-    // isOwnProfile  => user.Id === myId (myId will be fetched via whatever backend or session storage,)
+    dispatch(fetchUserDetails(userIdFromPath))
+    dispatch(fetchUserCCAs(userIdFromPath))
+    setIsOwnProfile(userIdFromPath === user.userID)
   }, [dispatch])
-
-  const changeUser = () => {
-    setIsOwnProfile(!isOwnProfile)
-  }
 
   const { TabPane } = Tabs
   const CardTabs = () => (
@@ -101,15 +99,17 @@ export default function Profile() {
         <ActivitiesCard />
       </TabPane>
       <TabPane tab="Details" key="2">
-        <CCAItem />
-        <ModulesItem />
+        <>
+          <CCAItem />
+          <ModulesItem />
+        </>
       </TabPane>
     </CustomTabs>
   )
 
   const handleClickFriendList = () => {
-    dispatch(fetchUserFriends(user.userID))
-    history.push(PATHS.FRIEND_LIST_PAGE)
+    dispatch(fetchUserFriends(userIdFromPath))
+    history.push(PATHS.FRIEND_LIST_PAGE + `${userIdFromPath}`)
   }
 
   const PersonalInfoContainer = () => (
@@ -139,12 +139,12 @@ export default function Profile() {
           style={{ width: '80vw' }}
           size={'small'}
         >
-          {ccas.map((cca) => {
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{cca.ccaName}</span>
-            )
-          })}
+          {ccas &&
+            ccas?.map((cca) => (
+              <span key={cca.ccaID} style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
+                {cca.ccaName}
+              </span>
+            ))}
         </Card>
       </div>
     )
@@ -159,12 +159,12 @@ export default function Profile() {
           style={{ width: '80vw' }}
           size={'small'}
         >
-          {user.modules.map((module) => {
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>{module}</span>
-            )
-          })}
+          {user.modules &&
+            user.modules?.map((module) => (
+              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }} key={module}>
+                {module}
+              </span>
+            ))}
         </Card>
       </div>
     )
@@ -174,7 +174,6 @@ export default function Profile() {
     <>
       <MainContainer>
         <TopNavBar title={'Profile'} />
-        <Button onClick={changeUser}>Change Profile Owner</Button>
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (
