@@ -18,7 +18,6 @@ import {
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
-  setSelectedProfileIds,
 } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
@@ -71,7 +70,6 @@ export default function Schedule() {
     nusModsIsFailure,
     profileList,
     ccaList,
-    selectedProfileIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -105,10 +103,10 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchCurrentUserEvents(dummyUserId, false, selectedProfileIds))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false, undefined))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
-  }, [dispatch, selectedProfileIds])
+  }, [dispatch])
 
   const rightIcon = (
     <MenuDropdown
@@ -183,7 +181,6 @@ export default function Schedule() {
 
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
-    dispatch(setSelectedProfileIds(input))
     dispatch(fetchCurrentUserEvents(dummyUserId, false, input))
   }
 

@@ -109,10 +109,11 @@ export const fetchCurrentUserEvents = (
 ) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
   const manipulateData = async (data: SchedulingEvent[]) => {
-    const { selectedProfileEvents } = getState().scheduling
-    console.log('line 112')
     if (selectedProfileIds) dispatch(fetchFriendTimetables(selectedProfileIds))
+
+    const { selectedProfileEvents } = getState().scheduling
     const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
+
     console.log(allFriendEvents)
     console.log('HELLLLLLLLLOOOOOOOOOO')
     const unformattedEvents: SchedulingEvent[] = isUserEventsOnly ? data : data.concat(allFriendEvents)
@@ -694,11 +695,6 @@ export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
     dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_PROFILES, profileList: resp })
   })
   dispatch(setIsLoading(false))
-}
-
-export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(selectedProfileIds)
-  dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
 }
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
 
