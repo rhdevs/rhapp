@@ -121,12 +121,15 @@ def check_bookings(facilityID):
 
 
 @app.route('/users/telegramID/<userID>')
+@cross_origin(supports_credentials=True)
 def user_telegram(userID):
     try:
-        data = list(db.User.find({"userID": userID}))
-        if len(data) > 0:
-            data = {"telegramHandle": data[0]['telegramHandle']}
-        else:
+        profile = db.Profiles.find_one({"userID": userID})
+        telegramHandle = profile.get(
+            'telegramHandle') if profile else "No User Found"
+        data = {"telegramHandle": telegramHandle}
+
+        if (telegramHandle == "No User Found"):
             return {"err": "No User Found"}, 400
     except Exception as e:
         print(e)
