@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
+// import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { PATHS } from './Routes'
 
 export const isLogined = async () => {
