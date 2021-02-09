@@ -4,6 +4,7 @@ import axios from 'axios'
 export enum ENDPOINTS {
   // AUTH
   LOGIN = '/auth/login',
+  IS_LOGGEDIN = '/auth/protected',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
