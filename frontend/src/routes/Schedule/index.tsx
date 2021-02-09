@@ -72,7 +72,6 @@ export default function Schedule() {
     profileList,
     ccaList,
     selectedProfileIds,
-    selectedProfileEvents,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
