@@ -72,6 +72,7 @@ export default function Schedule() {
     profileList,
     ccaList,
     selectedProfileIds,
+    selectedProfileEvents,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -108,7 +109,7 @@ export default function Schedule() {
     dispatch(fetchCurrentUserEvents(dummyUserId, false, selectedProfileIds))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
-  }, [dispatch, selectedProfileIds])
+  }, [dispatch, selectedProfileIds, selectedProfileEvents])
 
   const rightIcon = (
     <MenuDropdown
@@ -191,16 +192,8 @@ export default function Schedule() {
   //   console.log(searchGroupValue)
   // }
 
-  const test = () => {
-    const testArr = [[1, 2], [5, 6], [8]]
-    const newArr = testArr.map((num) => {
-      return num
-    })
-    console.log(newArr.flat())
-  }
   return (
     <Background>
-      {test()}
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
