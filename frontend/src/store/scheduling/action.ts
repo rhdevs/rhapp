@@ -170,23 +170,34 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent) =>
 
 const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   let allSelectedFriendsEvent: SchedulingEvent[] = []
-  friendIds.forEach(async (friendId) => {
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-    const friendEvents = await getFromBackend(ENDPOINTS.USER_EVENT + friendId + '/' + currentUNIXDate, null)
-    allSelectedFriendsEvent = allSelectedFriendsEvent.concat(friendEvents)
-    if (last(friendIds) === friendId) {
-      console.log(allSelectedFriendsEvent)
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
-        selectedProfileEvents: allSelectedFriendsEvent,
-      })
-    }
-  })
+  // friendIds.forEach(async (friendId) => {
+  //   const currentUNIXDate = Math.round(Date.now() / 1000)
+  //   const friendEvents = await getFromBackend(ENDPOINTS.USER_EVENT + friendId + '/' + currentUNIXDate, null)
+  //   allSelectedFriendsEvent = allSelectedFriendsEvent.concat(friendEvents)
+  //   if (last(friendIds) === friendId) {
+  //     console.log(allSelectedFriendsEvent)
+  //     dispatch({
+  //       type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
+  //       selectedProfileEvents: allSelectedFriendsEvent,
+  //     })
+  //   }
+  // })
   const allFriendEvents = friendIds.map(async (friendId) => {
     const currentUNIXDate = Math.round(Date.now() / 1000)
     const friendEvents = get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, friendId + '/' + currentUNIXDate).then(
       async (resp) => {
-        return resp
+        allSelectedFriendsEvent = allSelectedFriendsEvent.concat(resp)
+        if (friendId === last(friendIds)) {
+          console.log(allSelectedFriendsEvent)
+          dispatch({
+            type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
+            selectedProfileEvents: allSelectedFriendsEvent,
+          })
+        } else {
+          console.log(allSelectedFriendsEvent)
+          return allSelectedFriendsEvent
+        }
+
         // dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_PROFILES, profileList: resp })
       },
     )
