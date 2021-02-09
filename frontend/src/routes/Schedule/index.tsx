@@ -109,7 +109,7 @@ export default function Schedule() {
     dispatch(fetchCurrentUserEvents(dummyUserId, false, selectedProfileIds))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
-  }, [dispatch, selectedProfileIds, selectedProfileEvents])
+  }, [dispatch, selectedProfileIds])
 
   const rightIcon = (
     <MenuDropdown
@@ -185,6 +185,7 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false, input))
   }
 
   // const groupOnChange = (input: string) => {
