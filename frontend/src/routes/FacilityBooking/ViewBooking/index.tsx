@@ -3,13 +3,15 @@ import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
 import { deleteMyBooking, fetchSelectedFacility, setIsDeleteMyBooking } from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { format } from 'date-fns'
+import deletepic from '../../../assets/delete.svg'
+import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -24,6 +26,7 @@ const EventCard = styled.div`
   margin: 23px;
   padding: 15px;
   min-height: 500px;
+  max-height: 600px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   height: 100%;
@@ -44,12 +47,18 @@ const IdText = styled.p`
   font-size: 14px;
   color: #666666;
 `
+
+const HeaderText = styled.div`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+`
+
 const DetailsGroup = styled.div`
   padding: 10px;
 `
 
 const Icon = styled.img`
-  padding: 20px;
   height: 28px;
   width: 28px;
 `
@@ -72,7 +81,7 @@ const CardDurationLabel = styled.p`
   font-weight: 600;
   font-size: 24px;
   line-height: 14px;
-
+  margin-top: 25px;
   color: #666666;
 `
 
@@ -95,23 +104,59 @@ const DateTimeDetails = styled.div`
   display: grid;
   grid-template-rows: 50% 50%;
   margin: 0px;
+  margin-left: 15px;
 `
 const EventOwnerDetails = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
 `
+
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
+  const fetchTelegram = async (booking) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(data.err)
+          } else {
+            tryTelegram(data.telegramHandle)
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const tryTelegram = (userID) => {
+    const site = 'https://telegram.me/' + userID
+    window.open(site)
+  }
   useEffect(() => {
     // dispatch(SetIsLoading(false))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
-    console.log('eventID is: ', params.bookingId)
-    console.log('hello')
     console.log(selectedBooking)
   }, [dispatch])
+
+  const formatDate = (eventStartTime: number) => {
+    const date = new Date(eventStartTime * 1000)
+    return format(date, 'MM/dd/yy hh:mm a')
+  }
+
+  const timeDuration = (eventStartTime: number, eventEndTime: number) => {
+    const startDate = new Date(eventStartTime * 1000)
+    const endDate = new Date(eventEndTime * 1000)
+    const timeDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600)
+
+    return Math.floor(timeDiff)
+  }
 
   return (
     <>
@@ -122,18 +167,20 @@ export default function ViewBooking() {
           <>
             <EventCard key={selectedBooking?.bookingID}>
               <HeaderGroup>
-                {selectedBooking?.eventName} <br />
-                {selectedBooking?.ccaID}
+                <HeaderText>{selectedBooking?.eventName}</HeaderText>
+                <HeaderText>{selectedBooking?.ccaName}</HeaderText>
                 <IdText>RHEID-{params.bookingId}</IdText>
               </HeaderGroup>
               <DetailsGroup>
                 <TimeDetails>
-                  <CardDurationLabel>duration here</CardDurationLabel>
+                  <CardDurationLabel>
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hrs
+                  </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
-                        <CardTimeLabel>{new Date(selectedBooking?.startTime * 1000).toDateString}</CardTimeLabel>
-                        <CardTimeLabel>{new Date(selectedBooking?.endTime * 1000).toDateString}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.startTime)}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.endTime)}</CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>
@@ -149,17 +196,13 @@ export default function ViewBooking() {
               </DetailsGroup>
               {selectedBooking?.userID !== 'you' ? (
                 <ActionButtonGroup>
-                  <Icon
-                    onClick={() => {
-                      console.log('contact yes')
-                    }}
-                    src={messageIcon}
-                  />
+                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                  {/* <Icon onClick={() => tryTelegram('lawweiming')} src={messageIcon} /> */}
                 </ActionButtonGroup>
               ) : (
                 <ActionButtonGroup>
                   <Icon src={editIcon} />
-                  <Icon src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                  <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
                 </ActionButtonGroup>
               )}
             </EventCard>
