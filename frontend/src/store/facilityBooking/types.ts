@@ -1,3 +1,5 @@
+import { invert } from 'lodash'
+
 export type Facility = {
   facilityID: number
   facilityName: string
@@ -175,6 +177,19 @@ type SetFacilityBookings = {
   type: typeof FACILITY_ACTIONS.SET_FACILITY_BOOKINGS
   facilityBookings: Booking[]
 }
+
+type dayNumber = { [dayString: string]: number }
+export const DAY_STRING_TO_NUMBER: dayNumber = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+}
+// Reverse lookup map of DAY_STRING_TO_NUMBER
+export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
 export type ActionTypes =
   | GetFacilityList
