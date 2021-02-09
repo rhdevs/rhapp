@@ -127,7 +127,7 @@ export default function ViewBooking() {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
             console.log(data.err)
           } else {
-            tryTelegram(data.telegramHandle)
+            openTelegram(data.telegramHandle)
           }
         })
     } catch (err) {
@@ -135,7 +135,7 @@ export default function ViewBooking() {
     }
   }
 
-  const tryTelegram = (userID) => {
+  const openTelegram = (userID) => {
     const site = 'https://telegram.me/' + userID
     window.open(site)
   }
