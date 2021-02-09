@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
@@ -11,6 +10,8 @@ import { deleteMyBooking, fetchSelectedFacility, setIsDeleteMyBooking } from '..
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { format } from 'date-fns'
+import deletepic from '../../../assets/delete.svg'
+import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -25,6 +26,7 @@ const EventCard = styled.div`
   margin: 23px;
   padding: 15px;
   min-height: 500px;
+  max-height: 600px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   height: 100%;
@@ -57,7 +59,6 @@ const DetailsGroup = styled.div`
 `
 
 const Icon = styled.img`
-  padding: 20px;
   height: 28px;
   width: 28px;
 `
@@ -109,11 +110,35 @@ const EventOwnerDetails = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
 `
+
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
+  const fetchTelegram = async (booking) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(data.err)
+          } else {
+            tryTelegram(data.telegramHandle)
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const tryTelegram = (userID) => {
+    const site = 'https://telegram.me/' + userID
+    window.open(site)
+  }
   useEffect(() => {
     // dispatch(SetIsLoading(false))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
@@ -171,17 +196,13 @@ export default function ViewBooking() {
               </DetailsGroup>
               {selectedBooking?.userID !== 'you' ? (
                 <ActionButtonGroup>
-                  <Icon
-                    onClick={() => {
-                      console.log('contact yes')
-                    }}
-                    src={messageIcon}
-                  />
+                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                  {/* <Icon onClick={() => tryTelegram('lawweiming')} src={messageIcon} /> */}
                 </ActionButtonGroup>
               ) : (
                 <ActionButtonGroup>
                   <Icon src={editIcon} />
-                  <Icon src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                  <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
                 </ActionButtonGroup>
               )}
             </EventCard>
