@@ -326,14 +326,16 @@ export default function CreateEditPost() {
               </SwitchContainer>
             </Announcement>
           )}
-          <Announcement>
-            <p>CCA</p>
-            <DropDownSelector
-              SelectedValue={newPostCca.toString()}
-              ValueArray={getCcaNames}
-              handleChange={(cca) => EditPostDetail('cca', cca)}
-            />
-          </Announcement>
+          {newPostOfficial && (
+            <Announcement>
+              <p>CCA</p>
+              <DropDownSelector
+                SelectedValue={newPostCca.toString()}
+                ValueArray={getCcaNames}
+                handleChange={(cca) => EditPostDetail('cca', cca)}
+              />
+            </Announcement>
+          )}
 
           <ImageDiv>
             {newPostImages.map((url) => (
