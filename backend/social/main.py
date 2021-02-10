@@ -18,13 +18,10 @@ app.config['SECRET_KEY'] = os.getenv('AUTH_SECRET_KEY')
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
-# URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
+URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
 
-# client = pymongo.MongoClient(URL)
-client = pymongo.MongoClient(
-    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+client = pymongo.MongoClient(URL)
 db = client["RHApp"]
-
 
 def renamePost(post):
     post['postID'] = post.pop('_id')
@@ -255,13 +252,12 @@ def getUserDetails(userID):
     try:
         data1 = db.User.find_one({"userID": userID})
         data2 = db.Profiles.find_one({"userID": userID})
-        response = data1.update(data2) if data1 else {
-            "message": "User not found."}
+        data1.update(data2)
 
     except Exception as e:
         return {"err": str(e)}, 400
 
-    return json.dumps(response, default=lambda o: str(o)), 200
+    return json.dumps(data1, default=lambda o: str(o)), 200
 
 
 def userIDtoName(userID):
@@ -361,8 +357,6 @@ def getPostSpecific():
 @cross_origin(supports_credentials=True)
 def getLastN():
     # get all post that a user can view regardless of whether its official or not
-    # argument N will indicate the number of posts to skip, defaults to 0.
-    # Will return 5 most recent posts after skipping N*5 posts.
     try:
         userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
@@ -392,8 +386,6 @@ def getLastN():
 @cross_origin(supports_credentials=True)
 def getPostById(userID):
     try:
-        # argument N will indicate the number of posts to skip, defaults to 0.
-        # Will return 5 most recent user posts after skipping N*5 posts.
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
         data = db.Posts.find({"userID": str(userID)}, sort=[
@@ -429,8 +421,6 @@ def FriendsHelper(userID):
 @cross_origin(supports_credentials=True)
 def getFriendsPostById():
     try:
-        # argument N will indicate the number of posts to skip, defaults to 0.
-        # Will return 5 most recent friend posts after skipping N*5 posts.
         userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
@@ -460,8 +450,6 @@ def getFriendsPostById():
 @cross_origin(supports_credentials=True)
 def getOfficialPosts():
     try:
-        # argument N will indicate the number of entries to skip, defaults to 0.
-        # Will return 5 most recent official entries after skipping N*5 entries.
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
         response = []
@@ -717,68 +705,19 @@ def images(imageName):
         print(e)
         return {"err": str(e)}, 400
 
-
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
-db.Session.create_index("createdAt", expireAfterSeconds=120)
-
-"""
-Decorative function: 
-checks for and verifies token. Used in /protected
-"""
-
-
-def check_for_token(func):
-    def decorated(*args, **kwargs):
-        # extract token; for example here I assume it is passed as query parameter
-        token = request.args.get('token')
-
-        # if request does not have a token
-        if not token:
-            return jsonify({'message': 'Token is missing'}), 401
-
-        # verify the user
-        try:
-            data = jwt.decode(
-                token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            currentUser = db.User.find_one(
-                {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-            currentUsername = currentUser['userID']
-        except Exception as e:
-            # print(e)
-            return jsonify({'message': 'Token is invalid'}), 403
-
-        # check if token has expired (compare time now with createdAt field in document + timedelta)
-        originalToken = db.Session.find_one(
-            {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-        oldTime = originalToken['createdAt']
-        # print(datetime.datetime.now())
-        # print(oldTime)
-        if datetime.now() > oldTime + timedelta(minutes=2):
-            return jsonify({'message': 'Token has expired'}), 403
-        else:
-            # recreate session (with createdAt updated to now)
-            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
-            #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
-                              '$set': {'createdAt': datetime.now()}}, upsert=True)
-
-        return func(currentUser, *args, **kwargs)
-
-    return decorated
-
+db.Session.create_index("createdAt", expireAfterSeconds = 120)
 
 """
 Register route:
 Within POST request, obtain userID, password and email and add to User table in Mongo, if userID has not been registered previously
 If successful return 200, else return 500
 """
-
-
 @app.route('/auth/register', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def register():
     try:
-        # extract userID, password and email
+    #extract userID, password and email
         formData = request.get_json()
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
@@ -788,78 +727,113 @@ def register():
         bio = formData["bio"]
         block = formData["block"]
         telegramHandle = formData["telegramHandle"]
-        if db.User.find({'userID': userID}).count():  # entry exists
+        #print(list(db.User.find({'userID': userID, 'passwordHash': passwordHash})))
+        if list(db.User.find({'userID': userID, 'passwordHash': passwordHash})): # entry exists
             return jsonify({'message': 'User already exists'}), 401
-        # add to User table
-        # note: if the user data does not adhere to defined validation standards, an error will be thrown here
-        db.User.insert_one({"userID": userID,
-                            "passwordHash": passwordHash,
+        #add to User table
+        #note: if the user data does not adhere to defined validation standards, an error will be thrown here
+        db.User.insert_one({"userID": userID, 
+                            "passwordHash": passwordHash, 
                             "email": email,
                             "position": position
                             })
         db.Profiles.insert_one({"userID": userID,
-                                "displayName": displayName,
-                                "bio": bio,
-                                "block": block,
-                                "telegramHandle": telegramHandle,
-                                "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
-                                })
-    except:
+                               "displayName": displayName,
+                               "bio": bio, 
+                               "block": block, 
+                               "telegramHandle": telegramHandle, 
+                               "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon" 
+                               })
+    except Exception as e:
+        print(e)
         return jsonify({'message': 'An error was encountered.'}), 500
     return jsonify({'message': 'User successfully created!'}), 200
-
-
+   
 """
 Login route:
 Within POST request, verify userID and passwordHash are valid.
 If true, create session, return JWT to client, else return 500.
 """
-
-
 @app.route('/auth/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
     req = request.get_json()
     userID = req['userID']
     passwordHash = req['passwordHash']
-    # authenticate the credentials
-    if not db.User.find({'userID': userID, 'passwordHash': passwordHash}).limit(1):
-        return jsonify({'message': 'Invalid credentials'}), 403
-    # insert new session into Session table
+    #authenticate the credentials
+
+    if not list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):
+      return jsonify({'message': 'Invalid credentials'}), 403 
+    
+    #insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
     creationDate = datetime.now()
-    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
-                      'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
-    # JX HELLO I CHANGED FROM datetime.datetime.now() TO int(datetime.now().timestamp())
+    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {'userID': userID, 'passwordHash': passwordHash,'createdAt': creationDate }}, upsert=True)
 
     #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
-    # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
-    token = jwt.encode({'userID': userID,
+    #generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
+    #pip3 install pyJWT
+    token = jwt.encode({'userID': userID, 
                         'passwordHash': passwordHash
-                        }, app.config['SECRET_KEY'], algorithm="HS256")
+                        }, app.config['SECRET_KEY']
+                        , algorithm="HS256")
     return jsonify({'token': token}), 200
 
+"""
+Decorative function: 
+checks for and verifies token. Used in /protected
+"""
+def check_for_token(func):
+    def decorated(*args, **kwargs):
+        #extract token; for example here I assume it is passed as query parameter
+        token = request.args.get('token')
+        
+        #if request does not have a token
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
+        
+        #verify the user
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            currentUser = db.User.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
+            currentUsername = currentUser['userID']
+        except Exception as e: 
+            #print(e)
+            return jsonify({'message': 'Token is invalid'}), 403
+        
+        #check if token has expired (compare time now with createdAt field in document + timedelta)
+        originalToken = db.Session.find_one({'userID': data['userID'], 'passwordHash': data['passwordHash']})
+        oldTime = originalToken['createdAt']
+        #print(datetime.datetime.now())
+        #print(oldTime)
+        if datetime.now() > oldTime + timedelta(minutes=2):
+            return jsonify({'message': 'Token has expired'}), 403
+        else:
+            #recreate session (with createdAt updated to now)
+            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+            #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
+            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {'$set': {'createdAt': datetime.now()}}, upsert=True)
+
+        return func(currentUser, *args, **kwargs)
+
+    return decorated
 
 """
 Protected route:
 Acts as gatekeeper; can only access requested resource if you are authenticated ie valid session
 Successful authentication will return the 200 status code below. Any other errors will be as reflected in the wrapper function.
 """
-
-
 @app.route('/auth/protected', methods=['GET'])
 @cross_origin(supports_credentials=True)
 @check_for_token
 def protected(currentUser):
     return jsonify({'message': 'Successfully logged in. Redirecting.'}), 200
-
+    
 
 """
 Logout route:
 Delete the session entry
 """
-
-
 @app.route('/auth/logout', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def logout():
