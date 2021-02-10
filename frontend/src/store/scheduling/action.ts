@@ -13,7 +13,7 @@ import {
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint: string, methods) => {
-  const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
+  const resp = await fetch('https://cors-anywhere.herokuapp.com/' + DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
   })
@@ -116,6 +116,8 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
     let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent, false)
     })
+
+    // Adds selected friends' events to current user's list of events
     if (!isUserEventsOnly) {
       const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
         return convertSchedulingEventToTimetableEvent(friendEvent, true)
@@ -172,6 +174,11 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent, is
   }
 }
 
+/**
+ * Fetches each friend's timetable and updates the selectedProfileEvents state
+ *
+ * @param friendIds array of profile IDs selected by the user
+ */
 const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   let allSelectedFriendsEvent: SchedulingEvent[] = []
   let counter = 0
@@ -183,11 +190,10 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
     })
     return
   }
-  friendIds.map(async (friendId, index) => {
+  friendIds.map(async (friendId) => {
     counter++
     const currentUNIXDate = Math.round(Date.now() / 1000)
     get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
-      console.log(index)
       allSelectedFriendsEvent = allSelectedFriendsEvent.concat(resp)
       if (counter === friendIds.length) {
         console.log(allSelectedFriendsEvent)
@@ -663,7 +669,10 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
-    dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_CCA, ccaList: resp })
+    const sortedCCAs = resp.sort((a, b) => {
+      return a.ccaName.localeCompare(b.ccaName)
+    })
+    dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_CCA, ccaList: sortedCCAs })
   })
 
   dispatch(setIsLoading(false))
@@ -671,11 +680,20 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_PROFILES, DOMAINS.SOCIAL).then(async (resp) => {
-    dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_PROFILES, profileList: resp })
+    const sortedProfiles = resp.sort((a, b) => {
+      return a.displayName.localeCompare(b.displayName)
+    })
+    dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_PROFILES, profileList: sortedProfiles })
   })
   dispatch(setIsLoading(false))
 }
 
+/**
+ * Fetches selected friend's timetables from backend, updates the currently displaying timetable
+ * and updates selectedProfileIds state
+ *
+ * @param selectedProfileIds array of profile IDs selected by the user
+ */
 export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(selectedProfileIds)
   dispatch(fetchFriendTimetables(selectedProfileIds))

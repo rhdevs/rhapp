@@ -240,7 +240,12 @@ export default function Schedule() {
             <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
           </div> */}
         </SmallContainer>
-        <Tags profileOptions={profileList} onChange={friendsOnChange} />
+        <Tags
+          profileOptions={profileList.filter((profile) => {
+            return profile.userID !== dummyUserId
+          })}
+          onChange={friendsOnChange}
+        />
       </GroupContainer>
       <GroupContainer>
         <SmallContainer>
