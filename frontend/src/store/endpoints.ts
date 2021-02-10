@@ -5,6 +5,7 @@ export enum ENDPOINTS {
   // AUTH
   LOGIN = '/auth/login',
   IS_LOGGEDIN = '/auth/protected',
+  REGISTER = '/auth/register',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
