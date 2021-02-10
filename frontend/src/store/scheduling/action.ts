@@ -24,8 +24,9 @@ const getFromBackend = async (endpoint: string, methods) => {
       if (methods) await methods(data)
       return data
     })
-    .catch(() => {
+    .catch((err) => {
       console.log('something went wronggggg')
+      console.log(err)
       return null
     })
   return resp
@@ -66,7 +67,6 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
   }
 
   const dispatchData = (data) => {
-    console.log(data.sort(sortDataByDate))
     dispatch({
       type: SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS,
       allPublicEvents: data.sort(sortDataByDate),
@@ -111,8 +111,6 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
     const { selectedProfileEvents } = getState().scheduling
     const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
 
-    console.log(selectedProfileEvents)
-    console.log('HELLLLLLLLLOOOOOOOOOO')
     let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
       return convertSchedulingEventToTimetableEvent(singleEvent, false)
     })
@@ -132,7 +130,6 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
       ? timetableFormatEvents.concat(userNusModsEvents)
       : timetableFormatEvents
 
-    console.log(allEvents)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
       userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -196,7 +193,6 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
     get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
       allSelectedFriendsEvent = allSelectedFriendsEvent.concat(resp)
       if (counter === friendIds.length) {
-        console.log(allSelectedFriendsEvent)
         dispatch({
           type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
           selectedProfileEvents: allSelectedFriendsEvent,
@@ -212,7 +208,6 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
 export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const dispatchData = (data: CCADetails[]) => {
-    console.log(data[0])
     dispatch({
       type: SCHEDULING_ACTIONS.GET_CCA_DETAILS,
       ccaDetails: data[0],
@@ -363,7 +358,6 @@ export const setUserNusMods = (userId: string, userNusModsLink: string) => async
     currentSemester: currentSemester,
   }
 
-  console.log(requestBody)
   const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
     .then((resp) => {
       return resp
@@ -697,7 +691,6 @@ export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
 export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(selectedProfileIds)
   dispatch(fetchFriendTimetables(selectedProfileIds))
-  console.log('this is line 680')
   dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
 }
