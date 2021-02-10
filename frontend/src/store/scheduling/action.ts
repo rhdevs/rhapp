@@ -174,6 +174,7 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent, is
 
 const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   let allSelectedFriendsEvent: SchedulingEvent[] = []
+  let counter = 0
 
   if (friendIds.length === 0) {
     dispatch({
@@ -183,11 +184,12 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
     return
   }
   friendIds.map(async (friendId, index) => {
+    counter++
     const currentUNIXDate = Math.round(Date.now() / 1000)
     get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
       console.log(index)
       allSelectedFriendsEvent = allSelectedFriendsEvent.concat(resp)
-      if (friendId === last(friendIds)) {
+      if (counter === friendIds.length) {
         console.log(allSelectedFriendsEvent)
         dispatch({
           type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
