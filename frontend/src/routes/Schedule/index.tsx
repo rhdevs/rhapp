@@ -185,7 +185,7 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(dummyUserId, false))
+    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0))
   }
 
   // const groupOnChange = (input: string) => {

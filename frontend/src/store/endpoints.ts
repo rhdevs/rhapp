@@ -116,7 +116,7 @@ async function makeRequest(
   }
   return axios({
     method: method,
-    url: 'https://cors-anywhere.herokuapp.com/' + DOMAIN_URL + url,
+    url: DOMAIN_URL + url,
     headers: {
       'Access-Control-Allow-Origin': '*',
       ...additionalHeaders,
