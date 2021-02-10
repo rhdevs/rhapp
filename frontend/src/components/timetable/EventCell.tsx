@@ -67,10 +67,12 @@ function EventCell(props: Props) {
   const MODULE_EVENT = 'mods'
   const PUBLIC_EVENT = 'public'
   const PRIVATE_EVENT = 'private'
+  const FRIENDS_EVENT = 'friends'
 
   const MODULE_EVENT_COLOUR = '#DE5F4C' // red
   const PUBLIC_EVENT_COLOUR = '#002642' // blue
   const PRIVATE_EVENT_COLOUR = '#fafaf4' // cream
+  const FRIENDS_EVENT_COLOUR = '#73D13D' //green
 
   const DEFAULT_EVENT_CELL_COLOUR = '#fafaf4'
   const EVENT_CELL_COLOUR =
@@ -80,6 +82,8 @@ function EventCell(props: Props) {
       ? PUBLIC_EVENT_COLOUR
       : props.eventType === PRIVATE_EVENT
       ? PRIVATE_EVENT_COLOUR
+      : props.eventType === FRIENDS_EVENT
+      ? FRIENDS_EVENT_COLOUR
       : DEFAULT_EVENT_CELL_COLOUR
 
   const DEFAULT_EVENT_CELL_WORDS_COLOUR = 'black'

@@ -37,6 +37,7 @@ const initialState = {
 
   ccaList: [],
   profileList: [],
+  selectedProfileIds: [],
   selectedProfileEvents: [],
 }
 
@@ -69,6 +70,7 @@ type State = {
   ccaDetails: CCADetails | null
   ccaList: CCADetails[]
   profileList: Profile[]
+  selectedProfileIds: string[]
   selectedProfileEvents: SchedulingEvent[]
 }
 
@@ -215,6 +217,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         profileList: action.profileList,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS: {
+      return {
+        ...state,
+        selectedProfileIds: action.selectedProfileIds,
       }
     }
     case SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS: {

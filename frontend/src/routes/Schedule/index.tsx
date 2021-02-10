@@ -18,6 +18,7 @@ import {
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
+  setSelectedProfileIds,
 } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
@@ -70,6 +71,7 @@ export default function Schedule() {
     nusModsIsFailure,
     profileList,
     ccaList,
+    selectedProfileIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -103,7 +105,8 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchCurrentUserEvents(dummyUserId, false, undefined))
+    console.log(selectedProfileIds)
+    dispatch(fetchCurrentUserEvents(dummyUserId, true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
   }, [dispatch])
@@ -181,7 +184,8 @@ export default function Schedule() {
 
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
-    dispatch(fetchCurrentUserEvents(dummyUserId, false, input))
+    dispatch(setSelectedProfileIds(input))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false))
   }
 
   // const groupOnChange = (input: string) => {
