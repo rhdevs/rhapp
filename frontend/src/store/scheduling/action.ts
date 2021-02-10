@@ -671,7 +671,7 @@ export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch
   console.log(selectedProfileIds)
   dispatch(fetchFriendTimetables(selectedProfileIds))
   console.log('this is line 680')
-  dispatch(fetchCurrentUserEvents(dummyUserId, false))
+  dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
 }
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
