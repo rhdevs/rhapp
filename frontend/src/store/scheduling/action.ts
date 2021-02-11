@@ -549,7 +549,7 @@ export const editHallEventType = (newHallEventType: string) => (dispatch: Dispat
 export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + dummyUserId, {
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + `/${dummyUserId}`, {
     method: 'GET',
     mode: 'cors',
   })

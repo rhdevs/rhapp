@@ -36,19 +36,19 @@ function Tags({
   const renderContent = () => {
     if (ccaOptions) {
       return ccaOptions.map((option, key) => (
-        <Option value={option.ccaID} key={key} optionLabelProp="label" label={option.ccaName}>
+        <Option value={option.ccaID} key={key} label={option.ccaName}>
           {option.ccaName}
         </Option>
       ))
     } else if (profileOptions) {
       return profileOptions.map((option, key) => (
-        <Option value={option.userID} key={key}>
+        <Option value={option.userID} key={key} label={option.displayName}>
           {option.displayName}
         </Option>
       ))
     } else if (options) {
       return options.map((option, key) => (
-        <Option value={option} key={key}>
+        <Option value={option} key={key} label={option}>
           {option}
         </Option>
       ))
@@ -64,6 +64,7 @@ function Tags({
         placeholder="Please select"
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
+        optionLabelProp="label"
       >
         {renderContent()}
       </Select>
