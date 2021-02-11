@@ -672,6 +672,10 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
+export const setSelectedCCAIds = (selectedCCAIds: number[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS, selectedCCAIds: selectedCCAIds })
+}
+
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_PROFILES, DOMAINS.SOCIAL).then(async (resp) => {
     const sortedProfiles = resp.sort((a, b) => {
@@ -689,7 +693,6 @@ export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
  * @param selectedProfileIds array of profile IDs selected by the user
  */
 export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(selectedProfileIds)
   dispatch(fetchFriendTimetables(selectedProfileIds))
   dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
