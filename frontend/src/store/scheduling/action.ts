@@ -13,7 +13,7 @@ import {
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint: string, methods) => {
-  const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
+  const resp = await fetch('https://cors-anywhere.herokuapp.com/' + DOMAIN_URL.EVENT + endpoint, {
     method: 'GET',
     mode: 'cors',
   })

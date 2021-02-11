@@ -36,7 +36,7 @@ function Tags({
   const renderContent = () => {
     if (ccaOptions) {
       return ccaOptions.map((option, key) => (
-        <Option value={option.ccaID} key={key}>
+        <Option value={option.ccaID} key={key} optionLabelProp="label" label={option.ccaName}>
           {option.ccaName}
         </Option>
       ))

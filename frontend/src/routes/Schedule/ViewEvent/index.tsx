@@ -84,12 +84,15 @@ export default function CreateEvent() {
   // }
 
   const eventType = (eventType: string) => {
+    console.log(eventType)
     if (eventType === 'private') {
       return 'Private'
     } else if (eventType === 'public') {
       return 'Public'
     } else if (eventType === 'mods') {
       return 'NUSMods'
+    } else if (eventType === 'friends') {
+      return 'Friends Event'
     } else {
       return eventType
     }
