@@ -8,7 +8,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
+import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -40,7 +40,7 @@ export default function CreateEvent() {
   const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
+    // dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])

@@ -64,7 +64,7 @@ function Tags({
         placeholder="Please select"
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
-        optionLabelProp="label"
+        optionFilterProp="label"
       >
         {renderContent()}
       </Select>
