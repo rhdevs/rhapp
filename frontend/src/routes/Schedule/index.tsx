@@ -195,22 +195,16 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
-    console.log('friendsOnChange: ' + input + ',, ' + selectedCCAIds)
-    console.log('friendsOnChange: ' + input.length + ',, ' + selectedCCAIds.length)
-    console.log(input.length && selectedCCAIds.length)
-    console.log(input.length === 0 && selectedCCAIds.length === 0)
-    dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedCCAIds.length) === 0))
+    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedCCAIds.length === 0))
   }
 
   const groupOnChange = (input: string[]) => {
     //   setSearchGroupValue(input)
-    //   console.log(searchGroupValue)
     const numberArr: number[] = input.map((x: string) => {
       return Number(x)
     })
     dispatch(setSelectedCCAIds(numberArr))
-    console.log('CCAsOnChange: ' + input + ',, ' + selectedProfileIds)
-    dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedProfileIds.length) === 0))
+    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedProfileIds.length === 0))
   }
 
   return (
