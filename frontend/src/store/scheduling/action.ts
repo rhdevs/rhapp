@@ -668,25 +668,23 @@ const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) =
       type: SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS,
       selectedCCAEvents: allSelectedCCAEvents,
     })
-    return
-  }
-
-  ccaIds.map((ccaId) => {
-    counter++
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-    get(ENDPOINTS.GET_EVENT_BY_CCAID, DOMAINS.EVENT, `/${ccaId}/` + currentUNIXDate).then(async (resp) => {
-      allSelectedCCAEvents = allSelectedCCAEvents.concat(resp)
-      if (counter === ccaIds.length) {
-        dispatch({
-          type: SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS,
-          selectedCCAEvents: allSelectedCCAEvents,
-        })
-      } else {
-        return allSelectedCCAEvents
-      }
+  } else
+    ccaIds.map((ccaId) => {
+      counter++
+      const currentUNIXDate = Math.round(Date.now() / 1000)
+      get(ENDPOINTS.GET_EVENT_BY_CCAID, DOMAINS.EVENT, `/${ccaId}/` + currentUNIXDate).then(async (resp) => {
+        allSelectedCCAEvents = allSelectedCCAEvents.concat(resp)
+        if (counter === ccaIds.length) {
+          dispatch({
+            type: SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS,
+            selectedCCAEvents: allSelectedCCAEvents,
+          })
+        } else {
+          return allSelectedCCAEvents
+        }
+      })
+      return allSelectedCCAEvents
     })
-    return allSelectedCCAEvents
-  })
 }
 
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
@@ -713,25 +711,23 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
       type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
       selectedProfileEvents: allSelectedFriendsEvents,
     })
-    return
-  }
-
-  friendIds.map(async (friendId) => {
-    counter++
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-    get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
-      allSelectedFriendsEvents = allSelectedFriendsEvents.concat(resp)
-      if (counter === friendIds.length) {
-        dispatch({
-          type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
-          selectedProfileEvents: allSelectedFriendsEvents,
-        })
-      } else {
-        return allSelectedFriendsEvents
-      }
+  } else
+    friendIds.map(async (friendId) => {
+      counter++
+      const currentUNIXDate = Math.round(Date.now() / 1000)
+      get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
+        allSelectedFriendsEvents = allSelectedFriendsEvents.concat(resp)
+        if (counter === friendIds.length) {
+          dispatch({
+            type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
+            selectedProfileEvents: allSelectedFriendsEvents,
+          })
+        } else {
+          return allSelectedFriendsEvents
+        }
+      })
+      return allSelectedFriendsEvents
     })
-    return allSelectedFriendsEvents
-  })
 }
 
 /**

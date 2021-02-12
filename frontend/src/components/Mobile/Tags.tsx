@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Select } from 'antd'
 
 import 'antd/dist/antd.css'
@@ -33,7 +33,7 @@ function Tags({
     if (onChange) onChange(value)
   }
 
-  const [tagsIsOpen, setTagsIsOpen] = useState(false)
+  // const [tagsIsOpen, setTagsIsOpen] = useState(false)
 
   const renderContent = () => {
     if (ccaOptions) {
@@ -67,16 +67,16 @@ function Tags({
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
         optionFilterProp="label"
-        open={tagsIsOpen}
-        onBlur={() => {
-          setTagsIsOpen(false)
-        }}
-        onClick={() => {
-          setTagsIsOpen(!tagsIsOpen)
-        }}
-        onSearch={() => {
-          setTagsIsOpen(true)
-        }}
+        // open={tagsIsOpen}
+        // onBlur={() => {
+        //   setTagsIsOpen(false)
+        // }}
+        // onClick={() => {
+        //   setTagsIsOpen(!tagsIsOpen)
+        // }}
+        // onSearch={() => {
+        //   setTagsIsOpen(true)
+        // }}
       >
         {renderContent()}
       </Select>
