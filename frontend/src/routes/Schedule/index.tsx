@@ -196,6 +196,7 @@ export default function Schedule() {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
     console.log('friendsOnChange: ' + input + ',, ' + selectedCCAIds)
+    console.log((input.length && selectedCCAIds.length) === 0)
     dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedCCAIds.length) === 0))
   }
 
