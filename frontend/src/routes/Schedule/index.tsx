@@ -116,7 +116,7 @@ export default function Schedule() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     console.log(selectedProfileIds)
-    dispatch(fetchCurrentUserEvents(dummyUserId, true))
+    dispatch(fetchCurrentUserEvents(dummyUserId, false))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
   }, [dispatch])
@@ -195,6 +195,7 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
+    console.log('friendsOnChange: ' + input + ',, ' + selectedCCAIds)
     dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedCCAIds.length) === 0))
   }
 
@@ -205,6 +206,7 @@ export default function Schedule() {
       return Number(x)
     })
     dispatch(setSelectedCCAIds(numberArr))
+    console.log('CCAsOnChange: ' + input + ',, ' + selectedProfileIds)
     dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedProfileIds.length) === 0))
   }
 
