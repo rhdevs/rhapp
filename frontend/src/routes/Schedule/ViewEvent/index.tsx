@@ -93,6 +93,8 @@ export default function CreateEvent() {
       return 'NUSMods'
     } else if (eventType === 'friends') {
       return 'Friends Event'
+    } else if (eventType === 'CCA') {
+      return 'CCA Event'
     } else {
       return eventType
     }

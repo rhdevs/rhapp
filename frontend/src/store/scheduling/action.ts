@@ -82,7 +82,7 @@ export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) =
 ) => {
   const manipulateData = async (data: SchedulingEvent[]) => {
     const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
-      return convertSchedulingEventToTimetableEvent(singleEvent, false)
+      return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
     })
     let allEvents: TimetableEvent[] = []
     if (withNusModsEvents) {
@@ -108,19 +108,25 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
 ) => {
   dispatch(setIsLoading(true))
   const manipulateData = async (data: SchedulingEvent[]) => {
-    const { selectedProfileEvents } = getState().scheduling
+    const { selectedProfileEvents, selectedCCAEvents } = getState().scheduling
     const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
+    const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
 
     let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
-      return convertSchedulingEventToTimetableEvent(singleEvent, false)
+      return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
     })
 
-    // Adds selected friends' events to current user's list of events
+    // Add selected friends' & CCA events to current user's list of events
     if (!isUserEventsOnly) {
       const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
-        return convertSchedulingEventToTimetableEvent(friendEvent, true)
+        return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
       })
       timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
+
+      const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
+        return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
+      })
+      timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
     }
 
     //TODO add friend's nusmods events
@@ -146,7 +152,11 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
   dispatch(setIsLoading(false))
 }
 
-const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent, isFriendType: boolean) => {
+const convertSchedulingEventToTimetableEvent = (
+  singleEvent: SchedulingEvent,
+  isFriendType: boolean,
+  isCCAEvent: boolean,
+) => {
   const startTime = getTimeStringFromUNIX(singleEvent.startDateTime)
   let endTime = getTimeStringFromUNIX(singleEvent.endDateTime)
   if (startTime > endTime || endTime > '2400') {
@@ -167,55 +177,8 @@ const convertSchedulingEventToTimetableEvent = (singleEvent: SchedulingEvent, is
     endTime: endTime,
     day: getDayStringFromUNIX(singleEvent.startDateTime),
     hasOverlap: false,
-    eventType: isFriendType ? 'friends' : singleEvent.isPrivate ? 'private' : 'public', //change!
+    eventType: isFriendType ? 'friends' : isCCAEvent ? 'CCA' : singleEvent.isPrivate ? 'private' : 'public', //change!
   }
-}
-
-/**
- * Fetches each friend's timetable and updates the selectedProfileEvents state
- *
- * @param friendIds array of profile IDs selected by the user
- */
-const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
-  let allSelectedFriendsEvent: SchedulingEvent[] = []
-  let counter = 0
-
-  if (friendIds.length === 0) {
-    dispatch({
-      type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
-      selectedProfileEvents: allSelectedFriendsEvent,
-    })
-    return
-  }
-  friendIds.map(async (friendId) => {
-    counter++
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-    get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
-      allSelectedFriendsEvent = allSelectedFriendsEvent.concat(resp)
-      if (counter === friendIds.length) {
-        dispatch({
-          type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
-          selectedProfileEvents: allSelectedFriendsEvent,
-        })
-      } else {
-        return allSelectedFriendsEvent
-      }
-    })
-    return allSelectedFriendsEvent
-  })
-}
-
-export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  const dispatchData = (data: CCADetails[]) => {
-    dispatch({
-      type: SCHEDULING_ACTIONS.GET_CCA_DETAILS,
-      ccaDetails: data[0],
-    })
-  }
-  const ccaDetails = await getFromBackend(ENDPOINTS.CCA_DETAILS + `/${ccaID}`, dispatchData)
-  dispatch(setIsLoading(false))
-  return ccaDetails[0]
 }
 
 const sortEvents = (events: TimetableEvent[]) => {
@@ -672,8 +635,56 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const setSelectedCCAIds = (selectedCCAIds: number[]) => (dispatch: Dispatch<ActionTypes>) => {
+export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  const dispatchData = (data: CCADetails[]) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_CCA_DETAILS,
+      ccaDetails: data[0],
+    })
+  }
+  const ccaDetails = await getFromBackend(ENDPOINTS.CCA_DETAILS + `/${ccaID}`, dispatchData)
+  dispatch(setIsLoading(false))
+  return ccaDetails[0]
+}
+
+export const setSelectedCCAIds = (selectedCCAIds: number[]) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { selectedProfileIds } = getState().scheduling
+
+  dispatch(fetchCCAEvents(selectedCCAIds))
+  dispatch(fetchCurrentUserEvents(dummyUserId, (selectedProfileIds.length && selectedCCAIds.length) === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS, selectedCCAIds: selectedCCAIds })
+}
+
+const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) => {
+  let allSelectedCCAEvents: SchedulingEvent[] = []
+  let counter = 0
+
+  if (ccaIds.length === 0) {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS,
+      selectedCCAEvents: allSelectedCCAEvents,
+    })
+  } else
+    ccaIds.map((ccaId) => {
+      counter++
+      const currentUNIXDate = Math.round(Date.now() / 1000)
+      get(ENDPOINTS.GET_EVENT_BY_CCAID, DOMAINS.EVENT, `/${ccaId}/` + currentUNIXDate).then(async (resp) => {
+        allSelectedCCAEvents = allSelectedCCAEvents.concat(resp)
+        if (counter === ccaIds.length) {
+          dispatch({
+            type: SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS,
+            selectedCCAEvents: allSelectedCCAEvents,
+          })
+        } else {
+          return allSelectedCCAEvents
+        }
+      })
+      return allSelectedCCAEvents
+    })
 }
 
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
@@ -687,14 +698,52 @@ export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 /**
+ * Fetches each friend's timetable and updates the selectedProfileEvents state
+ *
+ * @param friendIds array of profile IDs selected by the user
+ */
+const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
+  let allSelectedFriendsEvents: SchedulingEvent[] = []
+  let counter = 0
+
+  if (friendIds.length === 0) {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
+      selectedProfileEvents: allSelectedFriendsEvents,
+    })
+  } else
+    friendIds.map(async (friendId) => {
+      counter++
+      const currentUNIXDate = Math.round(Date.now() / 1000)
+      get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
+        allSelectedFriendsEvents = allSelectedFriendsEvents.concat(resp)
+        if (counter === friendIds.length) {
+          dispatch({
+            type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
+            selectedProfileEvents: allSelectedFriendsEvents,
+          })
+        } else {
+          return allSelectedFriendsEvents
+        }
+      })
+      return allSelectedFriendsEvents
+    })
+}
+
+/**
  * Fetches selected friend's timetables from backend, updates the currently displaying timetable
  * and updates selectedProfileIds state
  *
  * @param selectedProfileIds array of profile IDs selected by the user
  */
-export const setSelectedProfileIds = (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSelectedProfileIds = (selectedProfileIds: string[]) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { selectedCCAIds } = getState().scheduling
+
   dispatch(fetchFriendTimetables(selectedProfileIds))
-  dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0))
+  dispatch(fetchCurrentUserEvents(dummyUserId, (selectedProfileIds.length && selectedCCAIds.length) === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
 }
 // ---------------------- CCA/FRIENDS(USERS) ----------------------

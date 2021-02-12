@@ -18,6 +18,7 @@ import {
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
+  setSelectedCCAIds,
   setSelectedProfileIds,
 } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
@@ -45,6 +46,14 @@ const GroupContainer = styled.div`
   height: 18vh;
   padding-left: 20px;
   width: 90vw;
+`
+
+const TagTitleText = styled.h1`
+  color: black;
+  padding: 5px 15px 0px 10px;
+  margin: 0px;
+  font-size: 24px;
+  font-family: Inter;
 `
 
 const Background = styled.div`
@@ -188,10 +197,14 @@ export default function Schedule() {
     dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0))
   }
 
-  // const groupOnChange = (input: string) => {
-  //   setSearchGroupValue(input)
-  //   console.log(searchGroupValue)
-  // }
+  const groupOnChange = (input: string[]) => {
+    //   setSearchGroupValue(input)
+    //   console.log(searchGroupValue)
+    const numberArr: number[] = input.map((x: string) => {
+      return Number(x)
+    })
+    dispatch(setSelectedCCAIds(numberArr))
+  }
 
   return (
     <Background>
@@ -225,17 +238,7 @@ export default function Schedule() {
       </TimetableMainContainer>
       <GroupContainer>
         <SmallContainer>
-          <h1
-            style={{
-              color: 'black',
-              padding: '5px 15px 0px 0px',
-              margin: '0px',
-              fontSize: '24px',
-              fontFamily: 'Inter',
-            }}
-          >
-            Friends
-          </h1>
+          <TagTitleText>Friends</TagTitleText>
           {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
           </div> */}
@@ -249,22 +252,12 @@ export default function Schedule() {
       </GroupContainer>
       <GroupContainer>
         <SmallContainer>
-          <h1
-            style={{
-              color: 'black',
-              padding: '5px 15px 0px 0px',
-              margin: '0px',
-              fontSize: '24px',
-              fontFamily: 'Inter',
-            }}
-          >
-            CCA
-          </h1>
+          <TagTitleText>CCA</TagTitleText>
           {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
           </div> */}
         </SmallContainer>
-        <Tags ccaOptions={ccaList} />
+        <Tags ccaOptions={ccaList} onChange={groupOnChange} />
       </GroupContainer>
       <BottomNavBar />
     </Background>
