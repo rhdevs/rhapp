@@ -333,7 +333,9 @@ const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<Actio
   dispatch(setIsLoading(true))
 
   const resp = await get(ENDPOINTS.NUSMODS, DOMAINS.EVENT, `/${userId}`)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
@@ -407,7 +409,9 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   console.log(query, dispatch)
   dispatch(setIsLoading(true))
   get(ENDPOINTS.ALL_EVENTS, DOMAINS.EVENT)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
@@ -505,7 +509,9 @@ export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes
     method: 'GET',
     mode: 'cors',
   })
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
@@ -615,7 +621,9 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       const sortedCCAs = data.sort((a, b) => {
         return a.ccaName.localeCompare(b.ccaName)
@@ -632,7 +640,9 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
 export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const ccaDetails = await get(ENDPOINTS.CCA_DETAILS, DOMAINS.EVENT, `/${ccaID}`)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CCA_DETAILS,
@@ -671,7 +681,9 @@ const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) =
       counter++
       const currentUNIXDate = Math.round(Date.now() / 1000)
       get(ENDPOINTS.GET_EVENT_BY_CCAID, DOMAINS.EVENT, `/${ccaId}/` + currentUNIXDate)
-        .then((resp) => resp.json())
+        .then((resp) => {
+          return resp.json()
+        })
         .then((data) => {
           allSelectedCCAEvents = allSelectedCCAEvents.concat(data)
           if (counter === ccaIds.length) {
@@ -692,7 +704,9 @@ const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) =
 
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_PROFILES, DOMAINS.SOCIAL)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      return resp.json()
+    })
     .then((data) => {
       const sortedProfiles = data.sort((a, b) => {
         return a.displayName.localeCompare(b.displayName)
@@ -724,7 +738,9 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
       counter++
       const currentUNIXDate = Math.round(Date.now() / 1000)
       get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate)
-        .then((resp) => resp.json())
+        .then((resp) => {
+          return resp.json()
+        })
         .then((data) => {
           allSelectedFriendsEvents = allSelectedFriendsEvents.concat(data)
           if (counter === friendIds.length) {
