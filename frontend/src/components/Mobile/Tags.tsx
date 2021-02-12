@@ -30,7 +30,6 @@ function Tags({
 }) {
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`)
-    setTagsIsOpen(false)
     if (onChange) onChange(value)
   }
 
@@ -69,6 +68,15 @@ function Tags({
         onChange={handleChange}
         optionFilterProp="label"
         open={tagsIsOpen}
+        onBlur={() => {
+          setTagsIsOpen(false)
+        }}
+        onClick={() => {
+          setTagsIsOpen(!tagsIsOpen)
+        }}
+        onSearch={() => {
+          setTagsIsOpen(true)
+        }}
       >
         {renderContent()}
       </Select>
