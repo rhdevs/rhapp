@@ -116,7 +116,7 @@ export default function Schedule() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     console.log(selectedProfileIds)
-    dispatch(fetchCurrentUserEvents(dummyUserId, false))
+    dispatch(fetchCurrentUserEvents(dummyUserId, true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
   }, [dispatch])
