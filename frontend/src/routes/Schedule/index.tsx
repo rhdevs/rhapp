@@ -81,6 +81,7 @@ export default function Schedule() {
     profileList,
     ccaList,
     selectedProfileIds,
+    selectedCCAIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -194,7 +195,7 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0))
+    dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedCCAIds.length) === 0))
   }
 
   const groupOnChange = (input: string[]) => {
@@ -204,6 +205,7 @@ export default function Schedule() {
       return Number(x)
     })
     dispatch(setSelectedCCAIds(numberArr))
+    dispatch(fetchCurrentUserEvents(dummyUserId, (input.length && selectedProfileIds.length) === 0))
   }
 
   return (

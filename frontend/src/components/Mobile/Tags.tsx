@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Select } from 'antd'
 
 import 'antd/dist/antd.css'
@@ -30,8 +30,11 @@ function Tags({
 }) {
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`)
+    setTagsIsOpen(false)
     if (onChange) onChange(value)
   }
+
+  const [tagsIsOpen, setTagsIsOpen] = useState(false)
 
   const renderContent = () => {
     if (ccaOptions) {
@@ -65,6 +68,7 @@ function Tags({
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
         optionFilterProp="label"
+        open={tagsIsOpen}
       >
         {renderContent()}
       </Select>
