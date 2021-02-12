@@ -655,7 +655,7 @@ export const setSelectedCCAIds = (selectedCCAIds: number[]) => (
   const { selectedProfileIds } = getState().scheduling
 
   dispatch(fetchCCAEvents(selectedCCAIds))
-  dispatch(fetchCurrentUserEvents(dummyUserId, (selectedProfileIds.length && selectedCCAIds.length) === 0))
+  dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0 && selectedCCAIds.length === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS, selectedCCAIds: selectedCCAIds })
 }
 
@@ -743,7 +743,7 @@ export const setSelectedProfileIds = (selectedProfileIds: string[]) => (
   const { selectedCCAIds } = getState().scheduling
 
   dispatch(fetchFriendTimetables(selectedProfileIds))
-  dispatch(fetchCurrentUserEvents(dummyUserId, (selectedProfileIds.length && selectedCCAIds.length) === 0))
+  dispatch(fetchCurrentUserEvents(dummyUserId, selectedProfileIds.length === 0 && selectedCCAIds.length === 0))
   dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
 }
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
