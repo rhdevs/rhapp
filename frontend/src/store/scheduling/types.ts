@@ -94,6 +94,7 @@ export enum SCHEDULING_ACTIONS {
   GET_ALL_PROFILES = 'SCHEDULING_ACTIONS.GET_ALL_PROFILES',
   SET_SELECTED_PROFILE_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS',
   GET_SELECTED_PROFILE_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS',
+  GET_SELECTED_PROFILE_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS',
   SET_SELECTED_CCA_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS',
   GET_SELECTED_CCA_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS',
 }
@@ -230,6 +231,11 @@ type GetSelectedProfileEvents = {
   selectedProfileEvents: SchedulingEvent[]
 }
 
+type GetSelectedProfileNusModsEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS
+  selectedProfileNusModsEvents: TimetableEvent[]
+}
+
 type SetSelectedCCAIds = {
   type: typeof SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS
   selectedCCAIds: number[]
@@ -266,5 +272,6 @@ export type ActionTypes =
   | GetAllProfiles
   | SetSelectedProfileIds
   | GetSelectedProfileEvents
+  | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents

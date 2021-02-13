@@ -86,7 +86,7 @@ export const fetchAllUserEvents = (userId: string, withNusModsEvents: boolean) =
     })
     let allEvents: TimetableEvent[] = []
     if (withNusModsEvents) {
-      const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
+      const userNusModsEvents = await dispatch(getUserNusModsEvents(userId, false))
       allEvents = userNusModsEvents ? timetableFormatEvents.concat(userNusModsEvents) : timetableFormatEvents
     } else {
       allEvents = timetableFormatEvents
@@ -108,7 +108,7 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
 ) => {
   dispatch(setIsLoading(true))
   const manipulateData = async (data: SchedulingEvent[]) => {
-    const { selectedProfileEvents, selectedCCAEvents } = getState().scheduling
+    const { selectedProfileEvents, selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
     const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
     const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
 
@@ -129,11 +129,15 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
       timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
     }
 
-    //TODO add friend's nusmods events
-    const userNusModsEvents = await dispatch(getUserNusModsEvents(userId))
+    //TODO test friend's nusmods events feature
+    const userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+    const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
+    const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
+      ? userNusModsEvents
+      : userNusModsEvents.concat(friendsNusModsEvents)
 
-    const allEvents: TimetableEvent[] = userNusModsEvents
-      ? timetableFormatEvents.concat(userNusModsEvents)
+    const allEvents: TimetableEvent[] = allNusModsEvents
+      ? timetableFormatEvents.concat(allNusModsEvents)
       : timetableFormatEvents
 
     dispatch({
@@ -351,7 +355,7 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
   })
 }
 
-const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+const getUserNusModsEvents = (userId: string, isFriends: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const dispatchData = (data) => {
     dispatch({
@@ -359,7 +363,7 @@ const getUserNusModsEvents = (userId: string) => async (dispatch: Dispatch<Actio
       userNusModsEventsList: data,
     })
   }
-  const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, dispatchData)
+  const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)
   dispatch(setIsLoading(false))
   if (resp.length === 0) return null
   else return resp[0].mods
@@ -590,7 +594,7 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
     const eventFromBackend = await getFromBackend(ENDPOINTS.GET_EVENT_BY_EVENTID + `/${eventID}`, null)
     console.log(eventFromBackend)
     if (eventFromBackend.err) {
-      const userNusModsEvents = await dispatch(getUserNusModsEvents(dummyUserId))
+      const userNusModsEvents = await dispatch(getUserNusModsEvents(dummyUserId, false))
       event = userNusModsEvents.find((indivEvent) => {
         return indivEvent.eventID === eventID
       })
@@ -700,24 +704,25 @@ export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
 /**
  * Fetches each friend's timetable and updates the selectedProfileEvents state
  *
- * @param friendIds array of profile IDs selected by the user
+ * @param friendsIds array of profile IDs selected by the user
  */
-const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
+const fetchFriendTimetables = (friendsIds: string[]) => (dispatch: Dispatch<ActionTypes>) => {
   let allSelectedFriendsEvents: SchedulingEvent[] = []
   let counter = 0
+  dispatch(fetchFriendsNusModsTimetable(friendsIds))
 
-  if (friendIds.length === 0) {
+  if (friendsIds.length === 0) {
     dispatch({
       type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
       selectedProfileEvents: allSelectedFriendsEvents,
     })
   } else
-    friendIds.map(async (friendId) => {
+    friendsIds.map(async (friendId) => {
       counter++
       const currentUNIXDate = Math.round(Date.now() / 1000)
       get(ENDPOINTS.USER_EVENT, DOMAINS.EVENT, `/${friendId}/` + currentUNIXDate).then(async (resp) => {
         allSelectedFriendsEvents = allSelectedFriendsEvents.concat(resp)
-        if (counter === friendIds.length) {
+        if (counter === friendsIds.length) {
           dispatch({
             type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS,
             selectedProfileEvents: allSelectedFriendsEvents,
@@ -728,6 +733,28 @@ const fetchFriendTimetables = (friendIds: string[]) => (dispatch: Dispatch<Actio
       })
       return allSelectedFriendsEvents
     })
+}
+
+const fetchFriendsNusModsTimetable = (friendsIds: string[]) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  let friendsNusModsEvents: TimetableEvent[] = []
+  let counter = 0
+  friendsIds.map(async (friendsId) => {
+    counter++
+    const friendNusModsEvents = await dispatch(getUserNusModsEvents(friendsId, true))
+    friendsNusModsEvents = friendsNusModsEvents.concat(friendNusModsEvents)
+    if (counter === friendsIds.length) {
+      const reformatFriendsNusModsEvents: TimetableEvent[] = friendsNusModsEvents.map((event) => {
+        return { ...event, eventType: 'friends' }
+      })
+      dispatch({
+        type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS,
+        selectedProfileNusModsEvents: reformatFriendsNusModsEvents,
+      })
+    }
+    return friendNusModsEvents
+  })
+  dispatch(setIsLoading(false))
 }
 
 /**
