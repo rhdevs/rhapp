@@ -5,7 +5,6 @@ import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
 import bcrypt from 'bcryptjs'
 import { PATHS } from '../../Routes'
-// import jwt from 'jsonwebtoken'
 import logo from '../../../assets/white_logo.png'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -58,18 +57,6 @@ const PostButton = styled.div`
 const AlertGroup = styled.div`
   margin: 23px;
 `
-
-// function generateToken(user) {
-//   const u = {
-//     username: user.username,
-//     password: user.password,
-//     _id: user._id.toString(),
-//     image: user.image,
-//   }
-//   return jwt.sign(u, process.env.JWT_SECRET, {
-//     expiresIn: 60 * 60 * 24, // expires in 24 hours
-//   })
-// }
 
 export default function Login() {
   const history = useHistory()

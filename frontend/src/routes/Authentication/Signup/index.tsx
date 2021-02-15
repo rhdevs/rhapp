@@ -57,8 +57,6 @@ const AlertGroup = styled.div`
 
 export default function Signup() {
   const history = useHistory()
-  // const [password] = useState('')
-  // const passwordHashed = passwordHash.generate(password)
 
   const [formData, setFormData] = useState({
     email: '',
@@ -100,13 +98,13 @@ export default function Signup() {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
-      position: 'Resident',
+      position: ['Resident'],
       displayName: formData.display,
       bio: formData.bio,
       block: formData.block,
       telegramHandle: formData.telegram,
     }
-    console.log(newUser)
+
     fetch('https://rhappsocial.rhdevs.repl.co/auth/register', {
       method: 'POST',
       mode: 'cors',

@@ -21,6 +21,8 @@ export const initialState = {
   newModules: [],
   friends: [],
   allCcas: [],
+  token: localStorage.getItem('token'),
+  isLoggedIn: null,
 }
 
 type State = {
@@ -33,6 +35,8 @@ type State = {
   newModules: string[]
   friends: User[]
   allCcas: UserCCA[]
+  token: string | null
+  isLoggedIn: boolean | null
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -88,6 +92,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
         ...state,
         user: action.user,
         ccas: action.ccas,
+      }
+    }
+    case PROFILE_ACTIONS.SET_IS_LOGGED_IN: {
+      return {
+        ...state,
+        isLoggedIn: action.isLoggedIn,
       }
     }
     default:

@@ -33,6 +33,12 @@ export enum PROFILE_ACTIONS {
   UPDATE_CURRENT_USER = 'PROFILE_ACTIONS.UPDATE_CURRENT_USER',
   UPDATE_USER_MODULES = 'PROFILE_ACTIONS.UPDATE_USER_MODULES',
   UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
+  SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
+}
+
+type SetIsLoggedIn = {
+  type: typeof PROFILE_ACTIONS.SET_IS_LOGGED_IN
+  isLoggedIn: boolean | null
 }
 
 type SetUserDetails = {
@@ -89,3 +95,4 @@ export type ActionTypes =
   | SetUserCcas
   | SetUserFriends
   | SetAllCcas
+  | SetIsLoggedIn
