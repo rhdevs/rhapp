@@ -129,7 +129,6 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
       timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
     }
 
-    //TODO test friend's nusmods events feature
     const userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
     const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
     const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
@@ -140,11 +139,23 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
       ? timetableFormatEvents.concat(allNusModsEvents)
       : timetableFormatEvents
 
+    const startTime = allNusModsEvents
+      ? Math.min(
+          Number(getNusModsEventsStartTime(allNusModsEvents)),
+          Number(getTimetableStartTime(timetableFormatEvents)),
+        )
+      : Number(getTimetableStartTime(timetableFormatEvents))
+
+    const endTime = allNusModsEvents
+      ? Math.max(Number(getNusModsEventsEndTime(allNusModsEvents)), Number(getTimetableEndTime(timetableFormatEvents)))
+      : Number(getTimetableEndTime(timetableFormatEvents))
+
+    console.log(startTime, endTime)
     dispatch({
       type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
       userCurrentEvents: transformInformationToTimetableFormat(allEvents),
-      userCurrentEventsStartTime: Number(getTimetableStartTime(allEvents)),
-      userCurrentEventsEndTime: Number(getTimetableEndTime(allEvents)),
+      userCurrentEventsStartTime: startTime,
+      userCurrentEventsEndTime: endTime,
       userCurrentEventsList: allEvents,
     })
     dispatch(setIsLoading(false))
@@ -154,6 +165,26 @@ export const fetchCurrentUserEvents = (userId: string, isUserEventsOnly: boolean
 
   getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/` + currentUNIXDate, manipulateData)
   dispatch(setIsLoading(false))
+}
+
+const getNusModsEventsStartTime = (allNusModsEvents: TimetableEvent[]) => {
+  let startTime = allNusModsEvents[0].startTime
+  allNusModsEvents.map((event) => {
+    if (Number(event.startTime) < Number(startTime)) {
+      startTime = event.startTime
+    } else return
+  })
+  return startTime
+}
+
+const getNusModsEventsEndTime = (allNusModsEvents: TimetableEvent[]) => {
+  let endTime = allNusModsEvents[0].endTime
+  allNusModsEvents.map((event) => {
+    if (Number(event.endTime) > Number(endTime)) {
+      endTime = event.endTime
+    } else return
+  })
+  return endTime
 }
 
 const convertSchedulingEventToTimetableEvent = (
