@@ -93,7 +93,7 @@ export default function Login() {
           return resp.json()
         })
         .then((data) => {
-          console.log(data.token)
+          console.log(data)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
           setIsLoading(false)
