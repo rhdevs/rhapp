@@ -89,6 +89,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         .then((resp) => resp.json())
         .then((data) => {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log('There is an error.')
             console.log(data.err)
           } else {
             console.log(data)
@@ -161,6 +162,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         fetchTelegram(props.washingMachine)
         console.log('Fetch telegram handle.')
+        console.log(props.washingMachine)
         console.log(props.washingMachine.userID)
       }
       break
