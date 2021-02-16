@@ -9,7 +9,6 @@ import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch } from 'react-redux'
-import { fetchUserDetails } from '../../store/profile/action'
 import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
