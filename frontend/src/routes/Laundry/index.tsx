@@ -31,7 +31,6 @@ export default function LaundryMain() {
 
   useEffect(() => {
     dispatch(getLocationList())
-    console.log(filteredMachines)
   }, [dispatch])
 
   return (

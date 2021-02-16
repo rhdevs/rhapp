@@ -89,12 +89,8 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         .then((resp) => resp.json())
         .then((data) => {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-            console.log('There is an error.')
             console.log(data.err)
-            console.log(selectedMachine)
           } else {
-            console.log(data)
-            console.log(selectedMachine)
             openTelegram(data.telegramHandle)
           }
         })
@@ -163,9 +159,6 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         fetchTelegram(props.washingMachine)
-        console.log('Fetch telegram handle.')
-        console.log(props.washingMachine)
-        console.log(props.washingMachine.userID)
       }
       break
     case WMStatus.ALERTED:
