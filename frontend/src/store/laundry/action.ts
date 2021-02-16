@@ -2,6 +2,18 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 import { dummyUserId } from '../stubs'
+import { isString } from 'lodash'
+
+localStorage.setItem('userID', 'A1234567B')
+
+function getStorage(): string {
+  const storageValue = localStorage.getItem('userID')
+  if (isString(storageValue)) {
+    return storageValue
+  } else {
+    return ''
+  }
+}
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
@@ -118,7 +130,7 @@ export const getUserProfilePic = (machineID: string) => {
     .then((resp) => resp.json())
     .then((data) => {
       console.log(data)
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + dummyUserId, {
+      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getStorage(), {
         method: 'GET',
         mode: 'cors',
       })
@@ -163,7 +175,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
   const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
     job: newJob,
     machineID: machineID,
-    userID: dummyUserId, //TODO: Update userId
+    userID: getStorage(), //TODO: Update userId
     currentDuration: duration,
   }
 
