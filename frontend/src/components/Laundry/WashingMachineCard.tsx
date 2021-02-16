@@ -95,7 +95,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
           } else {
             console.log(data)
             console.log(selectedMachine)
-            openTelegram('@wenfeng123')
+            openTelegram(data.telegramHandle)
           }
         })
     } catch (err) {
