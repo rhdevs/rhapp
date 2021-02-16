@@ -1,5 +1,3 @@
-import { Post } from '../social/types'
-
 export type User = {
   _id: string
   userID: string
