@@ -57,9 +57,10 @@ export default function Home() {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          if (data === '' || data === undefined) {
             console.log('test')
             console.log(userID)
+            console.log('above is the userID')
             console.log(data)
             console.log(data.err)
           } else {
@@ -72,8 +73,7 @@ export default function Home() {
     }
   }
 
-  const userId = localStorage.getItem('userID')
-  const userName = fetchUserName(userId)
+  const userName = fetchUserName(localStorage.getItem('userID'))
 
   return (
     <MainContainer>
