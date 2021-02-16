@@ -75,6 +75,7 @@ export default function FacilityBooking() {
   )
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A1234567B')
     dispatch(SetIsLoading(true))
     dispatch(getFacilityList())
   }, [dispatch])
@@ -83,7 +84,8 @@ export default function FacilityBooking() {
     <img
       src={bookingsIcon}
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS)
+        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+        // history.push(PATHS.VIEW_MY_BOOKINGS)
       }}
     />
   )

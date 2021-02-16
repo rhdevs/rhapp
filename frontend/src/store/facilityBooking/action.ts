@@ -1,7 +1,8 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
-import { dummyUserId } from '../stubs'
+// import { dummyUserId } from '../stubs'
+localStorage.setItem('userID', 'A1234567B')
 
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
@@ -190,7 +191,7 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
   const requestBody = {
     facilityID: selectedFacilityId,
     eventName: newBookingName,
-    userID: dummyUserId,
+    userID: localStorage.getItem('userID'),
     ccaID: ccaList.find((cca) => cca.ccaName === newBookingCCA)?.ccaID,
     startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
