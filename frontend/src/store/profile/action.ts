@@ -30,8 +30,8 @@ export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<A
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data)
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+        console.log(data[0])
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data[0] })
       })
   }
 }
