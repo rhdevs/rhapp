@@ -137,6 +137,7 @@ export default function ViewFacility() {
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A1234567B')
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility())
@@ -146,7 +147,7 @@ export default function ViewFacility() {
     <img
       src={bookingsIcon}
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS)
+        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
       }}
     />
   )
