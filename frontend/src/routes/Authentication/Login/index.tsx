@@ -94,6 +94,7 @@ export default function Login() {
           console.log(data.token)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
     } else {
