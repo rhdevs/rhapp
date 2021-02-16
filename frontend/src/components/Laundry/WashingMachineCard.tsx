@@ -91,8 +91,10 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
             console.log('There is an error.')
             console.log(data.err)
+            console.log(selectedMachine)
           } else {
             console.log(data)
+            console.log(selectedMachine)
             openTelegram('@wenfeng123')
           }
         })
