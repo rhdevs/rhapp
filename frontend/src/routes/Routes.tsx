@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
-import { useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import { checkIsLoggedIn } from '../store/profile/action'
+// import { useDispatch } from 'react-redux'
+// import { useEffect } from 'react'
+// import { checkIsLoggedIn } from '../store/profile/action'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -83,11 +83,11 @@ const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 export default function Routes() {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(checkIsLoggedIn())
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(checkIsLoggedIn())
+  // }, [])
 
   return (
     <Root>
