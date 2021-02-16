@@ -51,7 +51,7 @@ export default function Home() {
 
   const fetchUserName = async (userID) => {
     try {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + 'A1234567B', {
         method: 'GET',
         mode: 'cors',
       })
