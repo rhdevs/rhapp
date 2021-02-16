@@ -89,6 +89,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         .then((resp) => resp.json())
         .then((data) => {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(selectedMachine)
             console.log(data.err)
           } else {
             console.log(data)
