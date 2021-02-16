@@ -93,7 +93,7 @@ export default function Login() {
         .then((data) => {
           console.log(data.token)
           localStorage.setItem('token', data.token)
-          localStorage.setItem('userId', username)
+          localStorage.setItem('userID', username)
           setIsLoading(false)
         })
     } else {
