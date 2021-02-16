@@ -14,6 +14,8 @@ import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
+import { convertTypeAcquisitionFromJson } from 'typescript'
 
 const CardContainer = styled.div`
   position: relative;
@@ -79,6 +81,30 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       ? '#EB5757'
       : '#002642'
 
+  const fetchTelegram = async (selectedMachine) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(data.err)
+          } else {
+            openTelegram(data.telegramHandle)
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const openTelegram = (userID) => {
+    const site = 'https://telegram.me/' + userID
+    window.open(site)
+  }
+
   const calculateRemainingTime = (startTime: number, duration: number) => {
     console.log(startTime)
     console.log(duration)
@@ -129,11 +155,13 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       }
       break
     case WMStatus.UNCOLLECTED:
-      label = 'Notify'
+      label = 'Notify test'
       iconSrc = notifyBellIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        dispatch(updateMachine(WMStatus.ALERTED, props.washingMachine.machineID))
+        fetchTelegram(props.washingMachine)
+        console.log('Fetch telegram handle.')
+        console.log(props.washingMachine)
       }
       break
     case WMStatus.ALERTED:
