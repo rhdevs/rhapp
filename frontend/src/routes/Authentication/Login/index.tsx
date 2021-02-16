@@ -69,8 +69,6 @@ export default function Login() {
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
-    console.log(username)
-    console.log(password)
     if (username && password) {
       setError({ message: '' })
       setIsLoading(true)
@@ -78,7 +76,6 @@ export default function Login() {
         userID: username,
         passwordHash: passwordHash,
       }
-      console.log('line 78')
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
@@ -94,7 +91,7 @@ export default function Login() {
           return resp.json()
         })
         .then((data) => {
-          console.log(data)
+          console.log(data.token)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
           setIsLoading(false)
