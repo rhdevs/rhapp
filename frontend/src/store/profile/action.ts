@@ -22,24 +22,28 @@ export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
   }
 }
 
-export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    fetch('https://rhappsocial.rhdevs.repl.co/profile' + '/' + userID, {
+      method: 'GET',
     })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+      })
+  }
 }
 
-export const fetchUserCCAs = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
+      method: 'GET',
     })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+      })
+  }
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
@@ -52,14 +56,16 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
     })
 }
 
-export const fetchUserFriends = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+export const fetchUserFriends = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
+      method: 'GET',
     })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+      })
+  }
 }
 
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
