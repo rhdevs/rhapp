@@ -65,8 +65,8 @@ export default function Home() {
             console.log(data.err)
           } else {
             console.log(data)
-            console.log(data.displayname)
-            return data.displayname
+            console.log(data['displayname'])
+            return data['displayname']
           }
         })
     } catch (err) {
