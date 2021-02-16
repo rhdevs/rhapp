@@ -155,6 +155,7 @@ export const searchResultsStub: SearchResult[] = [
 ]
 
 export const userProfileStub: User = {
+  _id: '0',
   userID: localStorage.username,
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
@@ -167,7 +168,7 @@ export const userProfileStub: User = {
   //   { userID: '1', ccaId: 1, ccaName: 'Badminton' },
   // ],
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
-  posts: [],
+  // posts: [],
   // friends: [
   //   {
   //     friendId: 1,
