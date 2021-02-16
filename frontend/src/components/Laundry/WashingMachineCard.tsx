@@ -91,7 +91,8 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
             console.log(data.err)
           } else {
-            openTelegram(data.telegramHandle)
+            console.log(data)
+            openTelegram('@wenfeng123')
           }
         })
     } catch (err) {
@@ -154,13 +155,13 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       }
       break
     case WMStatus.UNCOLLECTED:
-      label = 'Notify test'
+      label = 'Notify'
       iconSrc = notifyBellIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         fetchTelegram(props.washingMachine)
         console.log('Fetch telegram handle.')
-        console.log(props.washingMachine)
+        console.log(props.washingMachine.userID)
       }
       break
     case WMStatus.ALERTED:
