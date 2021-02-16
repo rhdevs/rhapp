@@ -3,12 +3,12 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { LeftOutlined, EditOutlined } from '@ant-design/icons'
+import { LeftOutlined } from '@ant-design/icons'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
+import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -40,7 +40,6 @@ export default function CreateEvent() {
   const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])
@@ -56,7 +55,7 @@ export default function CreateEvent() {
 
   const isNusModsEvent = selectedEvent?.eventType === 'mods' ? true : false
 
-  const EditIcon = isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
+  const EditIcon = undefined //isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
 
   /** Incomplete functionality for Uploading Image */
 
@@ -84,12 +83,17 @@ export default function CreateEvent() {
   // }
 
   const eventType = (eventType: string) => {
+    console.log(eventType)
     if (eventType === 'private') {
       return 'Private'
     } else if (eventType === 'public') {
       return 'Public'
     } else if (eventType === 'mods') {
       return 'NUSMods'
+    } else if (eventType === 'friends') {
+      return 'Friends Event'
+    } else if (eventType === 'CCA') {
+      return 'CCA Event'
     } else {
       return eventType
     }

@@ -67,10 +67,14 @@ function EventCell(props: Props) {
   const MODULE_EVENT = 'mods'
   const PUBLIC_EVENT = 'public'
   const PRIVATE_EVENT = 'private'
+  const FRIENDS_EVENT = 'friends'
+  const CCA_EVENT = 'CCA'
 
-  const MODULE_EVENT_COLOUR = '#DE5F4C' // red
+  const MODULE_EVENT_COLOUR = '#de5f4c' // red
   const PUBLIC_EVENT_COLOUR = '#002642' // blue
   const PRIVATE_EVENT_COLOUR = '#fafaf4' // cream
+  const FRIENDS_EVENT_COLOUR = '#73d13d' // green
+  const CCA_EVENT_COLOUR = '#722ed1' // purple
 
   const DEFAULT_EVENT_CELL_COLOUR = '#fafaf4'
   const EVENT_CELL_COLOUR =
@@ -80,6 +84,10 @@ function EventCell(props: Props) {
       ? PUBLIC_EVENT_COLOUR
       : props.eventType === PRIVATE_EVENT
       ? PRIVATE_EVENT_COLOUR
+      : props.eventType === FRIENDS_EVENT
+      ? FRIENDS_EVENT_COLOUR
+      : props.eventType === CCA_EVENT
+      ? CCA_EVENT_COLOUR
       : DEFAULT_EVENT_CELL_COLOUR
 
   const DEFAULT_EVENT_CELL_WORDS_COLOUR = 'black'
@@ -90,6 +98,8 @@ function EventCell(props: Props) {
       ? 'white'
       : props.eventType === PRIVATE_EVENT
       ? 'black'
+      : props.eventType === CCA_EVENT
+      ? 'white'
       : DEFAULT_EVENT_CELL_WORDS_COLOUR
 
   const onlyShowEventName = props.onlyShowEventName
@@ -128,8 +138,10 @@ function EventCell(props: Props) {
   return (
     <EventContainer
       onClick={() => {
-        dispatch(setSelectedEvent(props.event, null))
-        history.push(PATHS.VIEW_EVENT + props.event.eventID)
+        if (props.eventType !== FRIENDS_EVENT && props.eventType !== CCA_EVENT) {
+          dispatch(setSelectedEvent(props.event, null))
+          history.push(PATHS.VIEW_EVENT + props.event.eventID)
+        }
       }}
       style={{ filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))' }}
     >
