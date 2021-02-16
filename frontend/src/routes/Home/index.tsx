@@ -58,9 +58,11 @@ export default function Home() {
         .then((resp) => resp.json())
         .then((data) => {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log('test')
             console.log(userID)
             console.log(data.err)
           } else {
+            console.log(data)
             return data.telegramHandle
           }
         })
