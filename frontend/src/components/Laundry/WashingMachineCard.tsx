@@ -146,6 +146,14 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         history.push(PATHS.VIEW_WASHING_MACHINE)
       }
       break
+    case WMStatus.UNCOLLECTED:
+      label = 'Notify'
+      iconSrc = notifyBellIcon
+      washingMachineIcon = wm_uncollected
+      rightAction = () => {
+        fetchTelegram(props.washingMachine)
+      }
+      break
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
@@ -153,14 +161,6 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         dispatch(SetSelectedMachine(props.washingMachine))
         history.push(PATHS.VIEW_WASHING_MACHINE)
-      }
-      break
-    case WMStatus.UNCOLLECTED:
-      label = 'Notify'
-      iconSrc = notifyBellIcon
-      washingMachineIcon = wm_uncollected
-      rightAction = () => {
-        fetchTelegram(props.washingMachine)
       }
       break
     case WMStatus.ALERTED:
