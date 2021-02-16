@@ -87,7 +87,7 @@ export default function Routes() {
 
   useEffect(() => {
     dispatch(checkIsLoggedIn())
-  }, [])
+  }, [dispatch])
 
   return (
     <Root>
