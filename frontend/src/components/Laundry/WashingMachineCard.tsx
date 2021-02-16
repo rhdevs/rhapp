@@ -82,7 +82,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
 
   const fetchTelegram = async (selectedMachine) => {
     try {
-      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + 'A1234567B', {
         method: 'GET',
         mode: 'cors',
       })
