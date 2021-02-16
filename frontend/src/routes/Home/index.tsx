@@ -65,7 +65,7 @@ export default function Home() {
             console.log(data.err)
           } else {
             console.log(data)
-            return data
+            return data.displayname
           }
         })
     } catch (err) {
