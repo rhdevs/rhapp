@@ -62,6 +62,7 @@ export default function FriendList() {
   const userIdFromPath = params.userId
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A12345678B')
     dispatch(fetchUserFriends(userIdFromPath))
   }, [dispatch])
 
