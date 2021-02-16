@@ -60,10 +60,11 @@ export default function Home() {
           if (data.telegramHandle === '' || data.telegramHandle === undefined) {
             console.log('test')
             console.log(userID)
+            console.log(data)
             console.log(data.err)
           } else {
             console.log(data)
-            return data.telegramHandle
+            return data
           }
         })
     } catch (err) {
