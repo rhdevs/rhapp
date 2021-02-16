@@ -124,7 +124,6 @@ export const getUserProfilePic = (machineID: string) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          console.log('console log from action.ts')
           console.log(data)
           return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
           // TODO: remove hardcoded

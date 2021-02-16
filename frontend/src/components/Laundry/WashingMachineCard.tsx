@@ -92,8 +92,6 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
             console.log(selectedMachine)
             console.log(data.err)
           } else {
-            console.log(selectedMachine)
-            console.log(data)
             openTelegram(data.telegramHandle)
           }
         })
@@ -190,7 +188,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       >
         <Header style={{ color: cardPrimaryColor }}>{props.washingMachine.job}</Header>
         <SubHeader style={{ color: cardPrimaryColor }}>
-          S/N{props.washingMachine.userID} ({props.washingMachine.capacity} kg)
+          S/N{props.washingMachine.machineID} ({props.washingMachine.capacity} kg)
         </SubHeader>
       </Labels>
       <RightActionGroups onClick={rightAction}>
