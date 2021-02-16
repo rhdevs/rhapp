@@ -9,7 +9,7 @@ import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { fetchUserFriends } from '../../../store/profile/action'
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
@@ -58,8 +58,8 @@ export default function FriendList() {
   const dispatch = useDispatch()
   const { friends } = useSelector((state: RootState) => state.profile)
 
-  const params = useParams<{ userId: string }>()
-  const userIdFromPath = params.userId
+  // const params = useParams<{ userId: string }>()
+  // const userIdFromPath = params.userId
 
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
