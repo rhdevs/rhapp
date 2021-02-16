@@ -89,8 +89,8 @@ export default function Profile() {
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
     console.log(localStorage.getItem('userID'))
-    console.log(user)
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
+    console.log(user)
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     setIsOwnProfile(userIdFromPath === user.userID)
   }, [dispatch])
