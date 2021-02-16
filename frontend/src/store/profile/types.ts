@@ -1,6 +1,7 @@
 import { Post } from '../social/types'
 
 export type User = {
+  _id: string
   userID: string
   profilePictureUrl: string
   displayName: string
@@ -8,7 +9,7 @@ export type User = {
   block: number
   bio: string
   modules: string[]
-  posts: Post[]
+  // posts: Post[]
 }
 
 export type Friend = {

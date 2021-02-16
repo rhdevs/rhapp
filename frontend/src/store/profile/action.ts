@@ -23,19 +23,21 @@ export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
-  if (userID != null) {
-    fetch('https://rhappsocial.rhdevs.repl.co/profile' + '/' + userID, {
+  if (userID !== null) {
+    console.log('FETCHING!!!!  ' + userID)
+    fetch('https://rhappsocial.rhdevs.repl.co/profile/' + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log(data)
         dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
       })
   }
 }
 
 export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
-  if (userID != null) {
+  if (userID !== null) {
     fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
       method: 'GET',
     })
