@@ -124,12 +124,18 @@ def getAllCCA():
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
-
 @app.route('/event/ccaID/<int:ccaID>', methods=["GET"])
+@app.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
 @cross_origin()
-def getEventsCCA(ccaID):
+def getEventsCCA(ccaID, referenceTime = 0):
     try:
-        response = db.Events.find({"ccaID": ccaID})
+        referenceTime = int(referenceTime)
+        startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
+        endOfWeek = startOfWeek + 604800
+        if referenceTime != 0:
+            response = db.Events.find({"ccaID": ccaID, "startDateTime": {"$gte": int(startOfWeek), "$lte": int(endOfWeek)}})
+        else:
+            response = db.Events.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
