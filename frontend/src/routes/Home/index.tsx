@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
@@ -8,6 +8,9 @@ import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useDispatch } from 'react-redux'
+import { fetchUserDetails } from '../../store/profile/action'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -38,14 +41,42 @@ const Greetings = styled.text`
 
 export default function Home() {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
 
+  useEffect(() => {
+    localStorage.setItem('userID', 'A1234567B')
+  }, [dispatch])
+
+  const fetchUserName = async (userID) => {
+    try {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(userID)
+            console.log(data.err)
+          } else {
+            return data.telegramHandle
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const userId = localStorage.getItem('userID')
+  const userName = fetchUserName(userId)
+
   return (
     <MainContainer>
       <TopBar>
-        <Greetings>{`Good ${partOfTheDay} Mao Mao!`}</Greetings>
+        <Greetings>{`Good ${partOfTheDay} ${userName}!`}</Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />
