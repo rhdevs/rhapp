@@ -87,6 +87,8 @@ export default function Profile() {
   const userIdFromPath = params.userId
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A12345678B')
+    console.log(localStorage.getItem('userID'))
     dispatch(fetchUserDetails(userIdFromPath))
     dispatch(fetchUserCCAs(userIdFromPath))
     setIsOwnProfile(userIdFromPath === user.userID)

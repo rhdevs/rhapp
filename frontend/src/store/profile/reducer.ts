@@ -3,7 +3,7 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const initialState = {
   user: {
-    userID: '0',
+    userID: localStorage.username,
     profilePictureUrl:
       'https://ichef.bbci.co.uk/news/1024/cpsprodpb/151AB/production/_111434468_gettyimages-1143489763.jpg',
     displayName: 'Your Profile is Loading',
