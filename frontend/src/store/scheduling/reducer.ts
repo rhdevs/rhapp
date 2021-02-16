@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, CCADetails, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
+import { ActionTypes, CCADetails, Profile, SchedulingEvent, SCHEDULING_ACTIONS, TimetableEvent } from './types'
 import { Friend } from '../social/types'
 import { userCCA } from '../facilityBooking/types'
 
@@ -34,6 +34,14 @@ const initialState = {
   //view event state
   selectedEvent: null,
   ccaDetails: null,
+
+  ccaList: [],
+  profileList: [],
+  selectedProfileIds: [],
+  selectedProfileEvents: [],
+  selectedProfileNusModsEvents: [],
+  selectedCCAIds: [],
+  selectedCCAEvents: [],
 }
 
 type State = {
@@ -63,6 +71,13 @@ type State = {
   targetAudienceList: userCCA[]
   selectedEvent: TimetableEvent | null
   ccaDetails: CCADetails | null
+  ccaList: CCADetails[]
+  profileList: Profile[]
+  selectedProfileIds: string[]
+  selectedProfileEvents: SchedulingEvent[]
+  selectedProfileNusModsEvents: TimetableEvent[]
+  selectedCCAIds: number[]
+  selectedCCAEvents: SchedulingEvent[]
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -196,6 +211,48 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         ccaDetails: action.ccaDetails,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_ALL_CCA: {
+      return {
+        ...state,
+        ccaList: action.ccaList,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_ALL_PROFILES: {
+      return {
+        ...state,
+        profileList: action.profileList,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS: {
+      return {
+        ...state,
+        selectedProfileIds: action.selectedProfileIds,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_EVENTS: {
+      return {
+        ...state,
+        selectedProfileEvents: action.selectedProfileEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS: {
+      return {
+        ...state,
+        selectedProfileNusModsEvents: action.selectedProfileNusModsEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS: {
+      return {
+        ...state,
+        selectedCCAIds: action.selectedCCAIds,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS: {
+      return {
+        ...state,
+        selectedCCAEvents: action.selectedCCAEvents,
       }
     }
     default:

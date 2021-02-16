@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -13,14 +13,19 @@ import Timetable from '../../components/timetable/Timetable'
 
 import {
   deleteUserNusModsEvents,
+  fetchAllCCAs,
+  fetchAllProfiles,
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
+  setSelectedCCAIds,
+  setSelectedProfileIds,
 } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import { dummyUserId } from '../../store/stubs'
+import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
 // import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
@@ -41,6 +46,14 @@ const GroupContainer = styled.div`
   height: 18vh;
   padding-left: 20px;
   width: 90vw;
+`
+
+const TagTitleText = styled.h1`
+  color: black;
+  padding: 5px 15px 0px 10px;
+  margin: 0px;
+  font-size: 24px;
+  font-family: Inter;
 `
 
 const Background = styled.div`
@@ -65,6 +78,10 @@ export default function Schedule() {
     isLoading,
     nusModsIsSuccessful,
     nusModsIsFailure,
+    profileList,
+    ccaList,
+    selectedProfileIds,
+    selectedCCAIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -98,7 +115,10 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(fetchCurrentUserEvents(dummyUserId, false))
+    console.log(selectedProfileIds)
+    dispatch(fetchCurrentUserEvents(dummyUserId, true))
+    dispatch(fetchAllProfiles())
+    dispatch(fetchAllCCAs())
   }, [dispatch])
 
   const rightIcon = (
@@ -158,9 +178,7 @@ export default function Schedule() {
           key="6"
           icon={<DeleteOutlined />}
           onClick={() => {
-            console.log('remove nusmods!!')
-            dispatch(setIsLoading(true))
-            dispatch(deleteUserNusModsEvents(dummyUserId))
+            setModal(true)
           }}
         >
           Delete my NUSMods events
@@ -169,24 +187,47 @@ export default function Schedule() {
     />
   )
 
+  const [modal, setModal] = useState(false)
+
   // const [searchFriendsValue, setSearchFriendsValue] = useState('')
   // const [searchGroupValue, setSearchGroupValue] = useState('')
 
-  // const friendsOnChange = (input: string) => {
-  //   setSearchFriendsValue(input)
-  //   console.log(searchFriendsValue)
-  // }
+  const friendsOnChange = (input: string[]) => {
+    // setSearchFriendsValue(input)
+    dispatch(setSelectedProfileIds(input))
+    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedCCAIds.length === 0))
+  }
 
-  // const groupOnChange = (input: string) => {
-  //   setSearchGroupValue(input)
-  //   console.log(searchGroupValue)
-  // }
+  const groupOnChange = (input: string[]) => {
+    //   setSearchGroupValue(input)
+    const numberArr: number[] = input.map((x: string) => {
+      return Number(x)
+    })
+    dispatch(setSelectedCCAIds(numberArr))
+    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedProfileIds.length === 0))
+  }
 
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
+      {modal && (
+        <ConfirmationModal
+          title={'Confirm Delete?'}
+          hasLeftButton={true}
+          leftButtonText={'Delete'}
+          onLeftButtonClick={() => {
+            dispatch(setIsLoading(true))
+            dispatch(deleteUserNusModsEvents(dummyUserId))
+            setModal(false)
+          }}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={() => {
+            setModal(false)
+          }}
+        />
+      )}
       <TimetableMainContainer>
         <TimetableContainer>
           <Timetable
@@ -198,56 +239,26 @@ export default function Schedule() {
       </TimetableMainContainer>
       <GroupContainer>
         <SmallContainer>
-          <h1
-            style={{
-              color: 'black',
-              padding: '5px 15px 0px 0px',
-              margin: '0px',
-              fontSize: '24px',
-              fontFamily: 'Inter',
-            }}
-          >
-            Friends
-          </h1>
+          <TagTitleText>Friends</TagTitleText>
           {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
           </div> */}
         </SmallContainer>
         <Tags
-          options={[
-            'friend1',
-            'friend2',
-            'friend3',
-            'friend4',
-            'friend5',
-            'friend6',
-            'friend1',
-            'friend2',
-            'friend1',
-            'friend2',
-            'friend1',
-            'friend2',
-          ]}
+          profileOptions={profileList.filter((profile) => {
+            return profile.userID !== dummyUserId
+          })}
+          onChange={friendsOnChange}
         />
       </GroupContainer>
       <GroupContainer>
         <SmallContainer>
-          <h1
-            style={{
-              color: 'black',
-              padding: '5px 15px 0px 0px',
-              margin: '0px',
-              fontSize: '24px',
-              fontFamily: 'Inter',
-            }}
-          >
-            CCA
-          </h1>
+          <TagTitleText>CCA</TagTitleText>
           {/* <div style={{ width: '25rem' }}>
             <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
           </div> */}
         </SmallContainer>
-        <Tags options={['Group1', 'Group2']} />
+        <Tags ccaOptions={ccaList} onChange={groupOnChange} />
       </GroupContainer>
       <BottomNavBar />
     </Background>
