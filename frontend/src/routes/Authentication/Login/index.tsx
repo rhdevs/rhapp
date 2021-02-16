@@ -68,6 +68,8 @@ export default function Login() {
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
+    console.log(username)
+    console.log(password)
     if (username && password) {
       setError({ message: '' })
       setIsLoading(true)
@@ -75,7 +77,7 @@ export default function Login() {
         userID: username,
         passwordHash: passwordHash,
       }
-
+      console.log('line 78')
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
@@ -111,8 +113,8 @@ export default function Login() {
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             placeholder="Username"
-            onChange={() => {
-              setUsername(username)
+            onChange={(e) => {
+              setUsername(e.target.value)
             }}
           ></Input>
           <br />
@@ -120,8 +122,8 @@ export default function Login() {
           <InputTextLabel>Password: </InputTextLabel>
           <Input
             placeholder="Password"
-            onChange={() => {
-              setPassword(password)
+            onChange={(e) => {
+              setPassword(e.target.value)
             }}
           ></Input>
           <br /> <br />

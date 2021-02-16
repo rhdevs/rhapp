@@ -133,7 +133,7 @@ export default function Signup() {
             .then((data) => {
               console.log(data.token)
               localStorage.setItem('token', data.token)
-              localStorage.setItem('userId', formData.userId)
+              localStorage.setItem('userID', formData.userId)
             })
           history.push(PATHS.HOME_PAGE)
         }
