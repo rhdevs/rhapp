@@ -156,7 +156,7 @@ export default function Signup() {
               <AccountText>NUS Email</AccountText>
               <Input
                 placeholder="NUS Email"
-                name="e0160000@u.nus.edu"
+                name="email"
                 style={{ borderRadius: '10px' }}
                 value={formData.email}
                 onChange={(e) => onChange(e)}
