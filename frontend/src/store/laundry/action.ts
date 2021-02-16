@@ -163,7 +163,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
   const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
     job: newJob,
     machineID: machineID,
-    userID: dummyUserId, //TODO: Update userId
+    userID: 'A1234567B', //TODO: Update userId
     currentDuration: duration,
   }
 
