@@ -92,6 +92,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
             console.log(selectedMachine)
             console.log(data.err)
           } else {
+            console.log(selectedMachine)
             console.log(data)
             openTelegram(data.telegramHandle)
           }
