@@ -21,7 +21,7 @@ import {
 import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { dummyUserId } from '../../../store/stubs'
+// import { dummyUserId } from '../../../store/stubs'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -61,7 +61,8 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
+    localStorage.setItem('userID', 'A1234567B')
+    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllPublicEvents())
   }, [dispatch])
 
@@ -99,11 +100,11 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     // event is in list and button is pressed
                     // remove event from list
                     console.log('remove ' + result.eventName + ' from list ' + result.eventID)
-                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
                   } else {
                     // event is in list, button is un-pressed
                     console.log('add ' + result.eventName + ' to list ' + result.eventID)
-                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
                   }
                 } else if (
                   userAllEventsList.filter((event) => {
@@ -113,12 +114,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   if (buttonIsPressed) {
                     // event is not in list, button is un-pressed
                     console.log('remove ' + result.eventName + ' from list ' + result.eventID)
-                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
                   } else {
                     // event is not in list and button is pressed
                     // add event to list
                     console.log('add ' + result.eventName + ' to list ' + result.eventID)
-                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
                   }
                 }
                 return

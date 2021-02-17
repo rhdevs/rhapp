@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
-import { dummyUserId } from '../../../store/stubs'
+// import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
 import NotFound from '../../ErrorPages/NotFound'
 import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
@@ -40,6 +40,7 @@ export default function CreateEvent() {
   const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A1234567B')
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])
@@ -125,7 +126,11 @@ export default function CreateEvent() {
           eventID={selectedEvent.eventID}
           eventName={selectedEvent.eventName}
           eventCreatedBy={
-            selectedEvent.userID === dummyUserId ? 'You' : isNusModsEvent ? 'NUSMods' : selectedEvent.userID
+            selectedEvent.userID === localStorage.getItem('userID')
+              ? 'You'
+              : isNusModsEvent
+              ? 'NUSMods'
+              : selectedEvent.userID
           }
           startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
           endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}
