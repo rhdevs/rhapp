@@ -51,21 +51,17 @@ export default function Home() {
 
   const fetchUserName = async (userID) => {
     try {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + 'A1234567B', {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
         method: 'GET',
         mode: 'cors',
       })
         .then((resp) => resp.json())
         .then((data) => {
           if (data === '' || data === undefined) {
-            console.log('test')
-            console.log(userID)
-            console.log('above is the userID')
             console.log(data)
             console.log(data.err)
           } else {
             console.log(data)
-            console.log(data['displayname'])
             return data['displayname']
           }
         })
@@ -74,7 +70,7 @@ export default function Home() {
     }
   }
 
-  const userName = fetchUserName(localStorage.getItem('userID'))
+  const userName = await fetchUserName(localStorage.getItem('userID'))
 
   return (
     <MainContainer>
