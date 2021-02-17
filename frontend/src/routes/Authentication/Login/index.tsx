@@ -115,6 +115,7 @@ export default function Login() {
           <br />
           <InputTextLabel>Username: </InputTextLabel>
           <Input
+            type="text"
             placeholder="Username"
             onChange={(e) => {
               setUsername(e.target.value)
@@ -124,6 +125,7 @@ export default function Login() {
           <br />
           <InputTextLabel>Password: </InputTextLabel>
           <Input
+            type="password"
             placeholder="Password"
             onChange={(e) => {
               setPassword(e.target.value)

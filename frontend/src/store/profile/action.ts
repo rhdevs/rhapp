@@ -4,7 +4,7 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
   const token = localStorage.token
-
+  console.log(token)
   if (token) {
     fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
       method: 'GET',
@@ -18,6 +18,7 @@ export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
       }
     })
   } else {
+    console.log('notoken sob')
     dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
   }
 }
