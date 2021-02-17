@@ -47,6 +47,7 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
     console.log('use effect console log')
+    console.log(localStorage.getItem('userID'))
   }, [dispatch])
 
   // const fetchUserName = async (userID) => {
