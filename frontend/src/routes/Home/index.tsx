@@ -70,7 +70,8 @@ export default function Home() {
     }
   }
 
-  const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
+  //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
+  const userName = localStorage.getItem('userID')
 
   return (
     <MainContainer>
