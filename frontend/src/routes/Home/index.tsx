@@ -54,7 +54,7 @@ export default function Home() {
 
   const fetchUserName = (userID) => {
     try {
-      const e = fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
         method: 'GET',
         mode: 'cors',
       })
@@ -66,7 +66,7 @@ export default function Home() {
           } else {
             console.log(data)
             console.log(data.displayName)
-            return e
+            return data.displayName
           }
         })
     } catch (err) {
