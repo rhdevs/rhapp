@@ -46,6 +46,7 @@ export default function Home() {
 
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
+    console.log('use effect console log')
   }, [dispatch])
 
   // const fetchUserName = async (userID) => {
@@ -70,13 +71,13 @@ export default function Home() {
   // }
 
   //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
-  //const userName = localStorage.getItem('userID')
+  const userName = localStorage.getItem('userID')
 
   return (
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {localStorage.getItem('userID')}!
+          Good {partOfTheDay} {userName}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
