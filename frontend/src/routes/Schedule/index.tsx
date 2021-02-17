@@ -25,7 +25,6 @@ import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
-// import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -115,7 +114,6 @@ export default function Schedule() {
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
     dispatch(setIsLoading(true))
-    console.log(selectedProfileIds)
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
@@ -191,17 +189,12 @@ export default function Schedule() {
 
   const [modal, setModal] = useState(false)
 
-  // const [searchFriendsValue, setSearchFriendsValue] = useState('')
-  // const [searchGroupValue, setSearchGroupValue] = useState('')
-
   const friendsOnChange = (input: string[]) => {
-    // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
   }
 
   const groupOnChange = (input: string[]) => {
-    //   setSearchGroupValue(input)
     const numberArr: number[] = input.map((x: string) => {
       return Number(x)
     })
@@ -244,9 +237,6 @@ export default function Schedule() {
       <GroupContainer>
         <SmallContainer>
           <TagTitleText>Friends</TagTitleText>
-          {/* <div style={{ width: '25rem' }}>
-            <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
-          </div> */}
         </SmallContainer>
         <Tags
           profileOptions={profileList.filter((profile) => {
@@ -258,9 +248,6 @@ export default function Schedule() {
       <GroupContainer>
         <SmallContainer>
           <TagTitleText>CCA</TagTitleText>
-          {/* <div style={{ width: '25rem' }}>
-            <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
-          </div> */}
         </SmallContainer>
         <Tags ccaOptions={ccaList} onChange={groupOnChange} />
       </GroupContainer>
