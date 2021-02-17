@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
-// import { checkIsLoggedIn } from '../store/profile/action'
 import { PROFILE_ACTIONS } from '../store/profile/types'
 import { RootState } from '../store/types'
 import { PATHS } from './Routes'
@@ -12,10 +11,11 @@ export const PrivateRoute = (routeProps: any) => {
   const dispatch = useDispatch()
   const { component: Component, ...rest } = routeProps
 
+  const { isLoggedIn } = useSelector((state: RootState) => state.profile)
+
   const checkIsLoggedIn = async () => {
     const token = localStorage.token
-    console.log(token)
-    if (token) {
+    if (token && !isLoggedIn) {
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
         method: 'GET',
         mode: 'no-cors',
@@ -35,11 +35,8 @@ export const PrivateRoute = (routeProps: any) => {
 
   useEffect(() => {
     checkIsLoggedIn()
-  }, [])
+  }, [isLoggedIn])
 
-  const { isLoggedIn } = useSelector((state: RootState) => state.profile)
-
-  console.log(isLoggedIn)
   return (
     <Route
       {...rest}
@@ -62,10 +59,12 @@ export const PublicRoute = (routeProps: any) => {
 export const AuthenticateRoute = (routeProps: any) => {
   const dispatch = useDispatch()
   const { component: Component, ...rest } = routeProps
+
+  const { isLoggedIn } = useSelector((state: RootState) => state.profile)
+
   const checkIsLoggedIn = async () => {
     const token = localStorage.token
-    console.log(token)
-    if (token) {
+    if (token && !isLoggedIn) {
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
         method: 'GET',
         mode: 'no-cors',
@@ -85,11 +84,8 @@ export const AuthenticateRoute = (routeProps: any) => {
 
   useEffect(() => {
     checkIsLoggedIn()
-  }, [])
+  }, [isLoggedIn])
 
-  const { isLoggedIn } = useSelector((state: RootState) => state.profile)
-
-  console.log(isLoggedIn)
   return (
     <Route
       {...rest}

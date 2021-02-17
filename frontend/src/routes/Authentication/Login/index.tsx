@@ -74,7 +74,7 @@ export default function Login() {
   const loginHandler = async () => {
     if (username !== '' && password !== '') {
       setError({ message: '' })
-      setIsLoading(true)
+      // setIsLoading(true)
       const queryBody = {
         userID: username,
         passwordHash: passwordHash,
@@ -89,7 +89,10 @@ export default function Login() {
       })
         .then((resp) => {
           if (!resp.ok) {
-            setError({ message: 'Something is wrong. Try Again!' })
+            console.log(resp)
+            setError({ message: 'Credentials is wrong. Try Again!' })
+            setIsLoading(false)
+            throw new Error('Wrong Credentials')
           }
           return resp.json()
         })
@@ -101,6 +104,7 @@ export default function Login() {
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
+        .catch((err) => console.log(err))
     } else {
       setError({ message: 'Missing Username or Password!' })
     }
