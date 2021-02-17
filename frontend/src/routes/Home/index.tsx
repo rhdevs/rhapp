@@ -80,7 +80,7 @@ export default function Home() {
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {displayName.displayName}!
+          Good {partOfTheDay} {displayName}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
