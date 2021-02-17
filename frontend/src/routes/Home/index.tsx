@@ -75,7 +75,9 @@ export default function Home() {
   return (
     <MainContainer>
       <TopBar>
-        <Greetings>{`Good ${partOfTheDay} ${userName}!`}</Greetings>
+        <Greetings>
+          Good {partOfTheDay} {userName}!
+        </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />
