@@ -1,7 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
-import { dummyUserId } from '../stubs'
+//import { dummyUserId } from '../stubs'
 import { isString } from 'lodash'
 
 localStorage.setItem('userID', 'A1234567B')
