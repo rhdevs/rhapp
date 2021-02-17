@@ -24,7 +24,6 @@ import {
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
-import { dummyUserId } from '../../store/stubs'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
 // import SearchBar from '../../components/Mobile/SearchBar'
 
@@ -114,9 +113,10 @@ export default function Schedule() {
   )
 
   useEffect(() => {
+    localStorage.setItem('userID', 'A1234567B')
     dispatch(setIsLoading(true))
     console.log(selectedProfileIds)
-    dispatch(fetchCurrentUserEvents(dummyUserId, true))
+    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
   }, [dispatch])
@@ -195,7 +195,7 @@ export default function Schedule() {
   const friendsOnChange = (input: string[]) => {
     // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedCCAIds.length === 0))
+    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
   }
 
   const groupOnChange = (input: string[]) => {
@@ -204,7 +204,9 @@ export default function Schedule() {
       return Number(x)
     })
     dispatch(setSelectedCCAIds(numberArr))
-    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedProfileIds.length === 0))
+    dispatch(
+      fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedProfileIds.length === 0),
+    )
   }
 
   return (
@@ -219,7 +221,7 @@ export default function Schedule() {
           leftButtonText={'Delete'}
           onLeftButtonClick={() => {
             dispatch(setIsLoading(true))
-            dispatch(deleteUserNusModsEvents(dummyUserId))
+            dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
             setModal(false)
           }}
           rightButtonText={'Cancel'}
@@ -246,7 +248,7 @@ export default function Schedule() {
         </SmallContainer>
         <Tags
           profileOptions={profileList.filter((profile) => {
-            return profile.userID !== dummyUserId
+            return profile.userID !== localStorage.getItem('userID')
           })}
           onChange={friendsOnChange}
         />

@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import { setUserNusMods } from '../../../store/scheduling/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PATHS } from '../../Routes'
-import { dummyUserId } from '../../../store/stubs'
+// import { dummyUserId } from '../../../store/stubs'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -45,6 +45,7 @@ export default function ImportFromNusMods() {
   const history = useHistory()
   const dispatch = useDispatch()
 
+  localStorage.setItem('userID', 'A1234567B')
   const [link, setLink] = useState('')
   const [modal, setModal] = useState(false)
 
@@ -78,7 +79,7 @@ export default function ImportFromNusMods() {
             hasLeftButton={true}
             leftButtonText={'Import'}
             onLeftButtonClick={() => {
-              dispatch(setUserNusMods(dummyUserId, link))
+              dispatch(setUserNusMods(localStorage.getItem('userID'), link))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}
