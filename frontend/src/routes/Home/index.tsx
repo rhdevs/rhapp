@@ -70,13 +70,13 @@ export default function Home() {
   // }
 
   //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
-  const userName = localStorage.getItem('userID')
+  //const userName = localStorage.getItem('userID')
 
   return (
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {userName}!
+          Good {partOfTheDay} {localStorage.getItem('userID')}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
