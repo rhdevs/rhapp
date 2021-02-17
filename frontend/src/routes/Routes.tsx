@@ -3,9 +3,6 @@ import styled from 'styled-components'
 import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
-import { useDispatch } from 'react-redux'
-import { useEffect } from 'react'
-import { checkIsLoggedIn } from '../store/profile/action'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -82,52 +79,48 @@ const ViewWashingMachine = React.lazy(
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
-export default function Routes() {
-  const dispatch = useDispatch()
+export default class Routes extends React.Component {
+  render() {
+    return (
+      <Root>
+        <Suspense fallback={LoadingSpin}>
+          <Switch>
+            <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
+            <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
+            <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
+            <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
-  useEffect(() => {
-    dispatch(checkIsLoggedIn())
-  }, [dispatch])
+            <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
+            <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
+            <PrivateRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
+            <PrivateRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
 
-  return (
-    <Root>
-      <Suspense fallback={LoadingSpin}>
-        <Switch>
-          <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
-          <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
-          <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
-          <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
+            <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
+            <PrivateRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
+            <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
+            <PrivateRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
+            <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
+            <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
-          <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
-          <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
-          <PrivateRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
-          <PrivateRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
+            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
+            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
-          <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
-          <PrivateRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
-          <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
-          <PrivateRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
-          <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
-          <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
+            <PrivateRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
+            <PrivateRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
-          <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
-          <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
-          <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
-          <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-          <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
+            <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
+            <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
-          <PrivateRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
-          <PrivateRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
-
-          <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
-          <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
-          <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
-
-          <PublicRoute component={FallBack} />
-        </Switch>
-      </Suspense>
-    </Root>
-  )
+            <PublicRoute component={FallBack} />
+          </Switch>
+        </Suspense>
+      </Root>
+    )
+  }
 }
 
 const Root = styled.div`
