@@ -78,7 +78,7 @@ export default function Home() {
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {userName}! localStorage.getItem('userID')
+          Good {partOfTheDay} {userName}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
