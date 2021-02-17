@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
-import bcrypt from 'bcryptjs'
+import sha256 from 'crypto-js/sha256'
+
 import { PATHS } from '../../Routes'
 import logo from '../../../assets/white_logo.png'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
@@ -63,8 +64,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const salt = bcrypt.genSaltSync(10)
-  const passwordHash = bcrypt.hashSync(password, salt)
+  const passwordHash = sha256(password).toString()
+
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
@@ -75,7 +76,6 @@ export default function Login() {
         userID: username,
         passwordHash: passwordHash,
       }
-
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
@@ -93,6 +93,8 @@ export default function Login() {
         .then((data) => {
           console.log(data.token)
           localStorage.setItem('token', data.token)
+          localStorage.setItem('userID', username)
+          history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
     } else {
@@ -110,8 +112,8 @@ export default function Login() {
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             placeholder="Username"
-            onChange={() => {
-              setUsername(username)
+            onChange={(e) => {
+              setUsername(e.target.value)
             }}
           ></Input>
           <br />
@@ -119,8 +121,8 @@ export default function Login() {
           <InputTextLabel>Password: </InputTextLabel>
           <Input
             placeholder="Password"
-            onChange={() => {
-              setPassword(password)
+            onChange={(e) => {
+              setPassword(e.target.value)
             }}
           ></Input>
           <br /> <br />
