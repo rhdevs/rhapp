@@ -43,10 +43,10 @@ export default function Home() {
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
+  localStorage.setItem('userID', 'A1234567B')
   const userName = localStorage.getItem('userID')
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     console.log('use effect console log')
     console.log(localStorage.getItem('userID'))
   }, [dispatch])
