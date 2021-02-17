@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Route, Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 // import { checkIsLoggedIn } from '../store/profile/action'
 import { PROFILE_ACTIONS } from '../store/profile/types'
 import { RootState } from '../store/types'
-import { PATHS } from './Routes'
+// import { PATHS } from './Routes'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PrivateRoute = (routeProps: any) => {
