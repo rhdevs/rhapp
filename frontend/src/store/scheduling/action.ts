@@ -121,13 +121,11 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
 
       // Add selected friends' & CCA events to current user's list of events
       if (!isUserEventsOnly) {
-        console.log(allFriendEvents)
         const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
           return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
         })
         timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
 
-        console.log(allCCAEvents)
         const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
           return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
         })
@@ -158,7 +156,6 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
           )
         : Number(getTimetableEndTime(timetableFormatEvents))
 
-      console.log(startTime, endTime)
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -642,7 +639,6 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
   if (selectedEvent) event = selectedEvent
   else if (eventID) {
     const eventFromBackend = await getFromBackend(ENDPOINTS.GET_EVENT_BY_EVENTID + `/${eventID}`, null)
-    console.log(eventFromBackend)
     if (eventFromBackend.err) {
       const userNusModsEvents = await dispatch(getUserNusModsEvents(localStorage.getItem('userID'), false))
       event = userNusModsEvents.find((indivEvent) => {
