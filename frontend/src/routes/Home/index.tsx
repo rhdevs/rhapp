@@ -45,38 +45,27 @@ export default function Home() {
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
   localStorage.setItem('userID', 'A1234567B')
-  //const userName = localStorage.getItem('userID')
 
   const [username, setUsername] = useState('')
 
   useEffect(() => {
-    console.log('use effect console log')
-    console.log(localStorage.getItem('userID'))
     fetchUserName(localStorage.getItem('userID'))
   }, [dispatch])
 
   const fetchUserName = (userID) => {
-    try {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
-        method: 'GET',
-        mode: 'cors',
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data === '' || data === undefined) {
+          console.log(data.err)
+        } else {
+          setUsername(data.displayName)
+        }
       })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data === '' || data === undefined) {
-            console.log(data)
-            console.log(data.err)
-          } else {
-            console.log(data)
-            console.log(data.displayName)
-            setUsername(data.displayName)
-            console.log(username)
-            return data.displayName
-          }
-        })
-    } catch (err) {
-      console.log(err)
-    }
+      .catch((err) => console.log(err))
   }
 
   return (
