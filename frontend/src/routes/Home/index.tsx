@@ -9,6 +9,7 @@ import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch } from 'react-redux'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -51,26 +52,26 @@ export default function Home() {
     console.log(localStorage.getItem('userID'))
   }, [dispatch])
 
-  // const fetchUserName = async (userID) => {
-  //   try {
-  //     fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
-  //       method: 'GET',
-  //       mode: 'cors',
-  //     })
-  //       .then((resp) => resp.json())
-  //       .then((data) => {
-  //         if (data === '' || data === undefined) {
-  //           console.log(data)
-  //           console.log(data.err)
-  //         } else {
-  //           console.log(data)
-  //           return data['displayname']
-  //         }
-  //       })
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  const fetchUserName = async (userID) => {
+    try {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data === '' || data === undefined) {
+            console.log(data)
+            console.log(data.err)
+          } else {
+            console.log(data)
+            return data['displayname']
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
 
@@ -78,7 +79,7 @@ export default function Home() {
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {userName}!
+          Good {partOfTheDay} {fetchUserName(userName)}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
