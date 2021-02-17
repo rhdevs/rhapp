@@ -119,6 +119,8 @@ export default function Schedule() {
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
+    dispatch(setSelectedProfileIds([]))
+    dispatch(setSelectedCCAIds([]))
   }, [dispatch])
 
   const rightIcon = (
