@@ -9,7 +9,6 @@ import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch } from 'react-redux'
-import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -49,26 +48,26 @@ export default function Home() {
     localStorage.setItem('userID', 'A1234567B')
   }, [dispatch])
 
-  const fetchUserName = async (userID) => {
-    try {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data === '' || data === undefined) {
-            console.log(data)
-            console.log(data.err)
-          } else {
-            console.log(data)
-            return data['displayname']
-          }
-        })
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // const fetchUserName = async (userID) => {
+  //   try {
+  //     fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+  //       method: 'GET',
+  //       mode: 'cors',
+  //     })
+  //       .then((resp) => resp.json())
+  //       .then((data) => {
+  //         if (data === '' || data === undefined) {
+  //           console.log(data)
+  //           console.log(data.err)
+  //         } else {
+  //           console.log(data)
+  //           return data['displayname']
+  //         }
+  //       })
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
   const userName = localStorage.getItem('userID')
