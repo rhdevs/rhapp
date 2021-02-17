@@ -43,6 +43,7 @@ export default function Home() {
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
+  const userName = localStorage.getItem('userID')
 
   useEffect(() => {
     localStorage.setItem('userID', 'A1234567B')
@@ -72,13 +73,12 @@ export default function Home() {
   // }
 
   //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
-  const userName = localStorage.getItem('userID')
 
   return (
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {userName}!
+          Good {partOfTheDay} {userName}! localStorage.getItem('userID')
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
