@@ -45,7 +45,7 @@ export default function Home() {
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
   localStorage.setItem('userID', 'A1234567B')
-  const userName = localStorage.getItem('userID')
+  //const userName = localStorage.getItem('userID')
 
   useEffect(() => {
     console.log('use effect console log')
@@ -54,7 +54,7 @@ export default function Home() {
 
   const fetchUserName = (userID) => {
     try {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      const e = fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
         method: 'GET',
         mode: 'cors',
       })
@@ -65,7 +65,8 @@ export default function Home() {
             console.log(data.err)
           } else {
             console.log(data)
-            return data['displayname']
+            console.log(data.displayName)
+            return e
           }
         })
     } catch (err) {
@@ -73,13 +74,13 @@ export default function Home() {
     }
   }
 
-  //const userName = fetchUserName(localStorage.getItem('userID')).then((value) => console.log(value))
+  const displayName = fetchUserName(localStorage.getItem('userID'))
 
   return (
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {fetchUserName(userName)}!
+          Good {partOfTheDay} {displayName.displayName}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
