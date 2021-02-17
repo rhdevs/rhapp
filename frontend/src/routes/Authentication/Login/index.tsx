@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
@@ -9,6 +10,7 @@ import { PATHS } from '../../Routes'
 import logo from '../../../assets/white_logo.png'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { checkIsLoggedIn } from '../../../store/profile/action'
 
 const LoginContainer = styled.div`
   height: 100%;
@@ -60,6 +62,7 @@ const AlertGroup = styled.div`
 `
 
 export default function Login() {
+  const dispatch = useDispatch()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
@@ -69,7 +72,7 @@ export default function Login() {
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
-    if (username && password) {
+    if (username !== '' && password !== '') {
       setError({ message: '' })
       setIsLoading(true)
       const queryBody = {
@@ -94,6 +97,7 @@ export default function Login() {
           console.log(data.token)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          dispatch(checkIsLoggedIn())
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
@@ -111,6 +115,7 @@ export default function Login() {
           <br />
           <InputTextLabel>Username: </InputTextLabel>
           <Input
+            type="text"
             placeholder="Username"
             onChange={(e) => {
               setUsername(e.target.value)
@@ -120,6 +125,7 @@ export default function Login() {
           <br />
           <InputTextLabel>Password: </InputTextLabel>
           <Input
+            type="password"
             placeholder="Password"
             onChange={(e) => {
               setPassword(e.target.value)
