@@ -47,9 +47,12 @@ export default function Home() {
   localStorage.setItem('userID', 'A1234567B')
   //const userName = localStorage.getItem('userID')
 
+  const [username, setUsername] = useState('')
+
   useEffect(() => {
     console.log('use effect console log')
     console.log(localStorage.getItem('userID'))
+    fetchUserName(localStorage.getItem('userID'))
   }, [dispatch])
 
   const fetchUserName = (userID) => {
@@ -66,6 +69,8 @@ export default function Home() {
           } else {
             console.log(data)
             console.log(data.displayName)
+            setUsername(data.displayName)
+            console.log(username)
             return data.displayName
           }
         })
@@ -74,13 +79,11 @@ export default function Home() {
     }
   }
 
-  const displayName = fetchUserName(localStorage.getItem('userID'))
-
   return (
     <MainContainer>
       <TopBar>
         <Greetings>
-          Good {partOfTheDay} {displayName}!
+          Good {partOfTheDay} {username}!
         </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
