@@ -52,7 +52,7 @@ export default function Home() {
     console.log(localStorage.getItem('userID'))
   }, [dispatch])
 
-  const fetchUserName = async (userID) => {
+  const fetchUserName = (userID) => {
     try {
       fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
         method: 'GET',
