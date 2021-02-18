@@ -176,6 +176,7 @@ export default function Profile() {
       onClick={() => {
         localStorage.removeItem('token')
         localStorage.removeItem('userID')
+        history.push(PATHS.LOGIN_PAGE)
       }}
     />
   )
