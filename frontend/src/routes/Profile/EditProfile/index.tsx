@@ -45,7 +45,6 @@ export default function EditProfile() {
   const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     dispatch(fetchAllCCAs())

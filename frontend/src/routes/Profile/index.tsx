@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
-// import ActivitiesCard from './Components/ActivitiesCard'
 import { useHistory } from 'react-router-dom'
 import EditProfileButton from './Components/EditProfileButton'
 import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
@@ -95,10 +94,7 @@ export default function Profile() {
   const userIdFromPath = params.userId
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
-    console.log(localStorage.getItem('userID'))
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
-    console.log(user)
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     dispatch(fetchUserPosts(localStorage.getItem('userID')))
     setIsOwnProfile(userIdFromPath === user.userID)

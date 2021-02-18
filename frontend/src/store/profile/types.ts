@@ -7,7 +7,6 @@ export type User = {
   block: number
   bio: string
   modules: string[]
-  // posts: Post[]
 }
 
 export type Friend = {
