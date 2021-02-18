@@ -156,6 +156,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
           )
         : Number(getTimetableEndTime(timetableFormatEvents))
 
+      console.log(transformInformationToTimetableFormat(allEvents))
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -782,21 +783,28 @@ const fetchFriendsNusModsTimetable = (friendsIds: string[]) => async (dispatch: 
   dispatch(setIsLoading(true))
   let friendsNusModsEvents: TimetableEvent[] = []
   let counter = 0
-  friendsIds.map(async (friendsId) => {
-    counter++
-    const friendNusModsEvents = await dispatch(getUserNusModsEvents(friendsId, true))
-    friendsNusModsEvents = friendsNusModsEvents.concat(friendNusModsEvents)
-    if (counter === friendsIds.length) {
-      const reformatFriendsNusModsEvents: TimetableEvent[] = friendsNusModsEvents.map((event) => {
-        return { ...event, eventType: 'friends' }
-      })
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS,
-        selectedProfileNusModsEvents: reformatFriendsNusModsEvents,
-      })
-    }
-    return friendNusModsEvents
-  })
+  if (friendsIds.length === 0) {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS,
+      selectedProfileNusModsEvents: [],
+    })
+  } else {
+    friendsIds.map(async (friendsId) => {
+      counter++
+      const friendNusModsEvents = await dispatch(getUserNusModsEvents(friendsId, true))
+      friendsNusModsEvents = friendsNusModsEvents.concat(friendNusModsEvents)
+      if (counter === friendsIds.length) {
+        const reformatFriendsNusModsEvents: TimetableEvent[] = friendsNusModsEvents.map((event) => {
+          return { ...event, eventType: 'friends' }
+        })
+        dispatch({
+          type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS,
+          selectedProfileNusModsEvents: reformatFriendsNusModsEvents,
+        })
+      }
+      return friendNusModsEvents
+    })
+  }
   dispatch(setIsLoading(false))
 }
 
