@@ -129,13 +129,18 @@ export default function Signup() {
             },
             body: JSON.stringify(queryBody),
           })
-            .then((resp) => resp.json())
+            .then((resp) => {
+              if (!resp.ok) {
+                throw new Error('Wrong Credentials')
+              }
+              return resp.json()
+            })
             .then((data) => {
-              console.log(data.token)
               localStorage.setItem('token', data.token)
               localStorage.setItem('userID', formData.userId)
+              history.push(PATHS.HOME_PAGE)
             })
-          history.push(PATHS.HOME_PAGE)
+            .catch((err) => console.log(err))
         }
       })
   }

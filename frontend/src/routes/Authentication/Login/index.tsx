@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
@@ -10,7 +9,6 @@ import { PATHS } from '../../Routes'
 import logo from '../../../assets/white_logo.png'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { checkIsLoggedIn } from '../../../store/profile/action'
 
 const LoginContainer = styled.div`
   height: 100%;
@@ -62,7 +60,6 @@ const AlertGroup = styled.div`
 `
 
 export default function Login() {
-  const dispatch = useDispatch()
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
@@ -89,23 +86,28 @@ export default function Login() {
       })
         .then((resp) => {
           if (!resp.ok) {
-            console.log(resp)
-            setError({ message: 'Credentials is wrong. Try Again!' })
-            setIsLoading(false)
-            throw new Error('Wrong Credentials')
+            if (resp.status >= 500) {
+              setError({ message: 'Server Error! Try again in awhile or approach an administrator!' })
+              setIsLoading(false)
+              throw new Error('Server Error')
+            } else if (resp.status == 403) {
+              setError({ message: 'Credentials is wrong. Try Again!' })
+              setIsLoading(false)
+              throw new Error('Wrong Credentials')
+            }
           }
           return resp.json()
         })
         .then((data) => {
-          console.log(data.token)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
-          dispatch(checkIsLoggedIn())
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
         .catch((err) => console.log(err))
     } else {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userID')
       setError({ message: 'Missing Username or Password!' })
     }
   }
@@ -117,6 +119,8 @@ export default function Login() {
         <LoginContainer>
           <Logo src={logo} />
           <br />
+          <InputTextLabel>{localStorage.token} </InputTextLabel>
+          <InputTextLabel>{localStorage.userId} </InputTextLabel>
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             type="text"

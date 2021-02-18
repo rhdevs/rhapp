@@ -2,26 +2,26 @@ import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
-export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
-  const token = localStorage.token
-  console.log(token)
-  if (token) {
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
-      method: 'GET',
-      mode: 'no-cors',
-    }).then((resp) => {
-      console.log(resp)
-      if (resp.status !== 200) {
-        dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: true })
-      } else {
-        dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
-      }
-    })
-  } else {
-    console.log('notoken sob')
-    dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
-  }
-}
+// export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
+//   const token = localStorage.token
+//   console.log(token)
+//   if (token) {
+//     fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
+//       method: 'GET',
+//       mode: 'no-cors',
+//     }).then((resp) => {
+//       console.log(resp)
+//       if (resp.status !== 200) {
+//         dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: true })
+//       } else {
+//         dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
+//       }
+//     })
+//   } else {
+//     console.log('notoken sob')
+//     dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
+//   }
+// }
 
 export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
   fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
