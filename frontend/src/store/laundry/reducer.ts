@@ -12,6 +12,7 @@ const initialState = {
   filteredMachines: [],
   selectedMachine: null,
   duration: 60,
+  telegramHandle: '',
 }
 
 type State = {
@@ -25,6 +26,7 @@ type State = {
   filteredMachines: WashingMachine[]
   selectedMachine: WashingMachine | null
   duration: number
+  telegramHandle: string
 }
 
 export const laundry: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -78,6 +80,13 @@ export const laundry: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         duration: action.duration,
+      }
+    }
+
+    case LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE: {
+      return {
+        ...state,
+        telegramHandle: action.telegramHandle,
       }
     }
     default:
