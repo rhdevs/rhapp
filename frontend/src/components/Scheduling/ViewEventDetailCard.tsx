@@ -97,7 +97,11 @@ const RemoveRow = styled.div`
   width: 100%;
   margin: 10px 0px;
   justify-content: center;
+<<<<<<< HEAD
   flex-direction: column;
+=======
+  flex-direction: row;
+>>>>>>> Improve button styling
 `
 
 const RemoveEvent = styled.button`
