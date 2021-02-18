@@ -79,6 +79,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: 1, // TODO: Change to tags + add newPostCca
+    createdAt: Math.round(Date.now() / 1000),
   }
   console.log(requestBody)
 
