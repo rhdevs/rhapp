@@ -10,6 +10,8 @@ import { RootState } from '../../store/types'
 import { getLocationList, SetBlockLevelSelections } from '../../store/laundry/action'
 import LoadingSpin from '../../components/LoadingSpin'
 
+localStorage.setItem('userID', 'A1234567B')
+
 const MainContainer = styled.div`
   width: 100%;
   height: 95vh;
