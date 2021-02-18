@@ -7,7 +7,6 @@ import ConfirmationModal from '../Mobile/ConfirmationModal'
 import { deleteSelectedEvent, editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
 import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
-import { dummyUserId } from '../../store/stubs'
 import { useDispatch } from 'react-redux'
 import { Button } from 'antd'
 
@@ -98,7 +97,7 @@ const RemoveRow = styled.div`
   width: 100%;
   margin: 10px 0px;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
 `
 
 const RemoveEvent = styled.button`
@@ -150,7 +149,8 @@ function ViewEventDetailCard({
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const [modal, setModal] = useState(false)
+  const [removeModal, setRemoveModal] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false)
 
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
@@ -164,18 +164,33 @@ function ViewEventDetailCard({
         {eventCreatedBy && <HeaderSubtitle>Event Created by {eventCreatedBy}</HeaderSubtitle>}
       </HeaderGroup>
       <Background>
-        {modal && (
+        {removeModal && (
+          <ConfirmationModal
+            title={'Confirm Remove?'}
+            hasLeftButton={true}
+            leftButtonText={'Remove'}
+            onLeftButtonClick={() => {
+              dispatch(editUserEvents('remove', eventID, localStorage.getItem('userID'), eventType === 'NUSMods'))
+              history.push(PATHS.SCHEDULE_PAGE)
+            }}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => {
+              setRemoveModal(false)
+            }}
+          />
+        )}
+        {deleteModal && (
           <ConfirmationModal
             title={'Confirm Delete?'}
             hasLeftButton={true}
             leftButtonText={'Delete'}
             onLeftButtonClick={() => {
-              dispatch(editUserEvents('remove', eventID, dummyUserId, eventType === 'NUSMods'))
+              dispatch(deleteSelectedEvent(eventID))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}
             onRightButtonClick={() => {
-              setModal(false)
+              setDeleteModal(false)
             }}
           />
         )}
@@ -218,15 +233,17 @@ function ViewEventDetailCard({
           <FetchedDetails>{eventType}</FetchedDetails>
         </Row>
         <RemoveRow>
-          <RemoveEvent
-            onClick={() => {
-              setModal(!modal)
-            }}
-          >
-            Remove event from timetable
-          </RemoveEvent>
-          {eventCreatedBy === 'You' && (
-            <Button type="primary" danger style={LongButton} onClick={() => dispatch(deleteSelectedEvent(eventID))}>
+          {eventCreatedBy !== 'NUSMods' && (
+            <RemoveEvent
+              onClick={() => {
+                setRemoveModal(!removeModal)
+              }}
+            >
+              Remove event from timetable
+            </RemoveEvent>
+          )}
+          {(eventCreatedBy === 'You' || eventCreatedBy === 'NUSMods') && (
+            <Button type="primary" danger style={LongButton} onClick={() => setDeleteModal(!deleteModal)}>
               Delete Event
             </Button>
           )}
