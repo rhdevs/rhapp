@@ -92,7 +92,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
             console.log(selectedMachine)
             console.log(data.err)
           } else {
-            openTelegram(data.telegramHandle)
+            telegramHandle(data.telegramHandle)
           }
         })
     } catch (err) {
@@ -100,7 +100,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     }
   }
 
-  const openTelegram = (userID) => {
+  const telegramHandle = (userID) => {
     const site = 'https://telegram.me/' + userID
     window.open(site)
   }
