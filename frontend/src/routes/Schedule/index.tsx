@@ -171,6 +171,15 @@ export default function Schedule() {
             >
               Import from NUSMods
             </Menu.Item>
+            <Menu.Item
+              key="7"
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                setModal(true)
+              }}
+            >
+              Delete my NUSMods events
+            </Menu.Item>
           </SubMenu>
         </>
       }
