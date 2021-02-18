@@ -221,7 +221,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
 
-export const fetchTelegram = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {
+export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dispatch<ActionTypes>) => {
   fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
     method: 'GET',
     mode: 'cors',

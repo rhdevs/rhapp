@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import reserveIcon from '../../assets/reserveIcon.svg'
 import notifyBellIcon from '../../assets/notifyBellIcon.svg'
@@ -70,9 +70,13 @@ const ActionButtonLabel = styled.p`
 `
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
+  const dispatch = useDispatch()
   const { telegramHandle } = useSelector((state: RootState) => state.laundry)
 
-  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchTelegram(props.washingMachine))
+  }, [dispatch])
+
   let label = ''
   let iconSrc = ''
   let washingMachineIcon = ''
