@@ -121,6 +121,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
 
       // Add selected friends' & CCA events to current user's list of events
       if (!isUserEventsOnly) {
+        console.log(timetableFormatEvents)
         console.log(allFriendEvents)
         const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
           return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
