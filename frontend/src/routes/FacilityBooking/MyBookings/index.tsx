@@ -18,7 +18,6 @@ import { RootState } from '../../../store/types'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { dummyUserId } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -87,9 +86,11 @@ export default function ViewMyBookings() {
   const history = useHistory()
   const { myBookings, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
+  const userIdFromPath = location.pathname.split('/').slice(-1)[0]
+
   useEffect(() => {
     dispatch(SetIsLoading(false))
-    if (myBookings.length === 0) dispatch(getMyBookings(dummyUserId))
+    if (myBookings.length === 0) dispatch(getMyBookings(userIdFromPath))
   }, [dispatch])
 
   return (

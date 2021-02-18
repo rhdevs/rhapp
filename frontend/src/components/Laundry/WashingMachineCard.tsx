@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import reserveIcon from '../../assets/reserveIcon.svg'
 import notifyBellIcon from '../../assets/notifyBellIcon.svg'
@@ -7,13 +7,14 @@ import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
 import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
-import { getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
+import { fetchTelegram, getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
+import { RootState } from '../../store/types'
 
 const CardContainer = styled.div`
   position: relative;
@@ -70,6 +71,12 @@ const ActionButtonLabel = styled.p`
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { telegramHandle } = useSelector((state: RootState) => state.laundry)
+
+  useEffect(() => {
+    dispatch(fetchTelegram(props.washingMachine))
+  }, [dispatch])
+
   let label = ''
   let iconSrc = ''
   let washingMachineIcon = ''
@@ -78,6 +85,12 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     props.washingMachine.job === WMStatus.UNCOLLECTED || props.washingMachine.job === WMStatus.COMPLETED
       ? '#EB5757'
       : '#002642'
+
+  const goToTelegramHandle = (selectedMachine) => {
+    dispatch(fetchTelegram(selectedMachine))
+    const site = 'https://telegram.me/' + telegramHandle
+    window.open(site)
+  }
 
   const calculateRemainingTime = (startTime: number, duration: number) => {
     console.log(startTime)
@@ -119,6 +132,14 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         history.push(PATHS.VIEW_WASHING_MACHINE)
       }
       break
+    case WMStatus.UNCOLLECTED:
+      label = 'Notify'
+      iconSrc = notifyBellIcon
+      washingMachineIcon = wm_uncollected
+      rightAction = () => {
+        goToTelegramHandle(props.washingMachine)
+      }
+      break
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
@@ -126,14 +147,6 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         dispatch(SetSelectedMachine(props.washingMachine))
         history.push(PATHS.VIEW_WASHING_MACHINE)
-      }
-      break
-    case WMStatus.UNCOLLECTED:
-      label = 'Notify'
-      iconSrc = notifyBellIcon
-      washingMachineIcon = wm_uncollected
-      rightAction = () => {
-        dispatch(updateMachine(WMStatus.ALERTED, props.washingMachine.machineID))
       }
       break
     case WMStatus.ALERTED:

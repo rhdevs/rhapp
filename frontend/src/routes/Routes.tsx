@@ -31,6 +31,7 @@ export enum PATHS {
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
+  VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',

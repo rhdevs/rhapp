@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
@@ -10,6 +10,8 @@ import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { RootState } from '../../store/types'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -40,10 +42,34 @@ const Greetings = styled.text`
 
 export default function Home() {
   const history = useHistory()
+  const dispatch = useDispatch()
+  
   const { displayName } = useSelector((state: RootState) => state.profile.user)
-
+  
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
+
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    fetchUserName(localStorage.getItem('userID'))
+  }, [dispatch])
+
+  const fetchUserName = (userID) => {
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data === '' || data === undefined) {
+          console.log(data.err)
+        } else {
+          setUsername(data.displayName)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
     <MainContainer>
