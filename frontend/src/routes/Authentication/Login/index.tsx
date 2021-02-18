@@ -119,14 +119,14 @@ export default function Login() {
         <LoginContainer>
           <Logo src={logo} />
           <br />
-          <InputTextLabel>{localStorage.token} </InputTextLabel>
-          <InputTextLabel>{localStorage.userId} </InputTextLabel>
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             type="text"
             placeholder="Username"
+            value={username}
             onChange={(e) => {
-              setUsername(e.target.value)
+              const newUsername = e.target.value
+              setUsername(newUsername.toUpperCase())
             }}
           ></Input>
           <br />
