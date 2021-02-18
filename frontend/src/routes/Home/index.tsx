@@ -44,7 +44,6 @@ export default function Home() {
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
-  localStorage.setItem('userID', 'A1234567B')
 
   const [username, setUsername] = useState('')
 
