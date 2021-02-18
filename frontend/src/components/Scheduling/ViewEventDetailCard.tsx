@@ -215,7 +215,7 @@ function ViewEventDetailCard({
               setModal(!modal)
             }}
           >
-            Delete Event
+            Remove event from timetable
           </RemoveEvent>
         </RemoveRow>
       </Background>
