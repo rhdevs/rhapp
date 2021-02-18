@@ -1,6 +1,5 @@
-import { Post } from '../social/types'
-
 export type User = {
+  _id: string
   userID: string
   profilePictureUrl: string
   displayName: string
@@ -8,7 +7,6 @@ export type User = {
   block: number
   bio: string
   modules: string[]
-  posts: Post[]
 }
 
 export type Friend = {
@@ -24,6 +22,18 @@ export type UserCCA = {
   ccaName: string
 }
 
+export type Post = {
+  _id: string
+  userID: string
+  title: string
+  description: string
+  ccaID: number
+  createdAt: number
+  postPics: string[]
+  isOfficial: boolean
+  tags: string[]
+}
+
 export enum PROFILE_ACTIONS {
   SET_USER_DETAILS = 'PROFILE_ACTIONS.SET_USER_DETAILS',
   SET_USER_CCAS = 'PROFILE_ACTIONS.SET_USER_CCAS',
@@ -34,6 +44,7 @@ export enum PROFILE_ACTIONS {
   UPDATE_USER_MODULES = 'PROFILE_ACTIONS.UPDATE_USER_MODULES',
   UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
   SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
+  SET_USER_POSTS = 'PROFILE_ACTIONS.SET_USER_POSTS',
 }
 
 type SetIsLoggedIn = {
@@ -59,6 +70,11 @@ type SetAllCcas = {
 type SetUserFriends = {
   type: typeof PROFILE_ACTIONS.SET_USER_FRIENDS
   friends: User[]
+}
+
+type SetUserPosts = {
+  type: typeof PROFILE_ACTIONS.SET_USER_POSTS
+  posts: Post[]
 }
 
 type EditUserDetails = {
@@ -96,3 +112,4 @@ export type ActionTypes =
   | SetUserFriends
   | SetAllCcas
   | SetIsLoggedIn
+  | SetUserPosts
