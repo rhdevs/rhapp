@@ -136,6 +136,7 @@ const Announcement = styled.div`
   letter-spacing: 0em;
   text-align: left;
   justify-content: space-between;
+  align-items: baseline;
 `
 const SwitchContainer = styled.div`
   position: relative;

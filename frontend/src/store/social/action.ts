@@ -81,6 +81,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     ccaID: 1, // TODO: Change to tags + add newPostCca
   }
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+    console.log(requestBody)
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
     console.log(res)
