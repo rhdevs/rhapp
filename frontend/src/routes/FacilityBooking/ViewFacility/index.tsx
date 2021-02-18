@@ -137,7 +137,6 @@ export default function ViewFacility() {
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility())
