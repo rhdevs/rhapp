@@ -33,6 +33,7 @@ export enum LAUNDRY_ACTIONS {
   SET_SELECTED_MACHINE = 'LAUNDRY_ACTIONS.SET_SELECTED_MACHINE',
   SET_EDIT_MODE = 'LAUNDRY_ACTIONS.SET_EDIT_MODE',
   SET_DURATION = 'LAUNDRY_ACTIONS.SET_DURATION',
+  SET_TELEGRAM_HANDLE = 'LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE',
 }
 
 type GetLocationList = {
@@ -73,6 +74,11 @@ type SetDuration = {
   duration: number
 }
 
+type SetTelegramHandle = {
+  type: typeof LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE
+  telegramHandle: string
+}
+
 export type ActionTypes =
   | GetLocationList
   | SetIsLoading
@@ -81,3 +87,4 @@ export type ActionTypes =
   | SetSelectedMachine
   | SetEditMode
   | SetDuration
+  | SetTelegramHandle

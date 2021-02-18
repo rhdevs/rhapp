@@ -230,3 +230,23 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
+
+export const fetchTelegram = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {
+  try {
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          console.log(selectedMachine)
+          console.log(data.err)
+        } else {
+          dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
+        }
+      })
+  } catch (err) {
+    console.log(err)
+  }
+}
