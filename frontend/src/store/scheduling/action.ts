@@ -369,17 +369,14 @@ export const setUserNusMods = (userId: string | null, userNusModsLink: string) =
       .then((resp) => {
         return resp
       })
-      .catch(() => {
+      .catch((err) => {
         dispatch(setNusModsStatus(false, true))
-        console.log('CATCH FAILURE')
+        console.log(err)
       })
-    console.log(resp)
 
     if (resp.status >= 400) {
       dispatch(setNusModsStatus(false, true))
-      console.log('FAILURE')
     } else {
-      console.log('SUCCESS')
       dispatch(fetchCurrentUserEvents(userId, false))
       dispatch(setNusModsStatus(true, false))
     }
@@ -419,7 +416,6 @@ export const deleteUserNusModsEvents = (userId: string | null) => async (
   if (userId !== null) {
     const updateDeleteStatus = (data) => {
       if (data.ok) {
-        console.log('SUCCESSFULY DELETED')
         dispatch(fetchCurrentUserEvents(userId, false))
       } else {
         console.log('FAILURE!!!! ' + data.status)
@@ -468,7 +464,6 @@ export const giveTimetablePermission = async (recipientUserId: string) => {
 
 // ---------------------- SEARCH EVENTS ----------------------
 export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  console.log(query, dispatch)
   dispatch(setIsLoading(true))
   const dispatchData = (data) => {
     dispatch({
@@ -494,7 +489,6 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
     if (action === 'remove') {
       const updateEventStatus = (data) => {
         if (data.ok) {
-          console.log('SUCCESSFULY REMOVED: eventId - ' + eventID + 'for userId: ' + userId)
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
           dispatch(setEventAttendanceStatus(true, false))
@@ -509,7 +503,6 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
     } else if (action === 'add') {
       const updateEventStatus = (data) => {
         if (data.ok) {
-          console.log('SUCCESSFULY ADDED: eventId - ' + eventID + 'for userId: ' + userId)
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
           dispatch(setEventAttendanceStatus(true, false))
@@ -665,7 +658,6 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
       }
     }
   }
-  console.log(event)
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
     selectedEvent: event,

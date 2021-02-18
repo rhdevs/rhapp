@@ -83,7 +83,6 @@ export default function CreateEvent() {
   // }
 
   const eventType = (eventType: string) => {
-    console.log(eventType)
     if (eventType === 'private') {
       return 'Private'
     } else if (eventType === 'public') {
