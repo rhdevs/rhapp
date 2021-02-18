@@ -98,10 +98,14 @@ const RemoveRow = styled.div`
   margin: 10px 0px;
   justify-content: center;
 <<<<<<< HEAD
+<<<<<<< HEAD
   flex-direction: column;
 =======
   flex-direction: row;
 >>>>>>> Improve button styling
+=======
+  flex-direction: column;
+>>>>>>> Debug delete event
 `
 
 const RemoveEvent = styled.button`
