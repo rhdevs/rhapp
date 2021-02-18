@@ -89,7 +89,6 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   const goToTelegramHandle = (selectedMachine) => {
     dispatch(fetchTelegram(selectedMachine))
     const site = 'https://telegram.me/' + telegramHandle
-    console.log(telegramHandle)
     window.open(site)
   }
 
