@@ -79,7 +79,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       ? '#EB5757'
       : '#002642'
 
-  const telegramHandle = (selectedMachine) => {
+  const telegramHandle = async (selectedMachine) => {
     const site = 'https://telegram.me/' + fetchTelegram(selectedMachine)
     window.open(site)
   }
