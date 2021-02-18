@@ -71,6 +71,18 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
   }
 }
 
+export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    await fetch('https://rhappsocial.rhdevs.repl.co/post/' + userID, {
+      method: 'GET',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: data })
+      })
+  }
+}
+
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
 

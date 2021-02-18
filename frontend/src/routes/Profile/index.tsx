@@ -2,18 +2,26 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
-import ActivitiesCard from './Components/ActivitiesCard'
+// import ActivitiesCard from './Components/ActivitiesCard'
 import { useHistory } from 'react-router-dom'
 import EditProfileButton from './Components/EditProfileButton'
 import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUserCCAs, fetchUserDetails, fetchUserFriends, populateProfileEdits } from '../../store/profile/action'
+import {
+  fetchUserCCAs,
+  fetchUserDetails,
+  fetchUserFriends,
+  fetchUserPosts,
+  populateProfileEdits,
+} from '../../store/profile/action'
 import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
+import SocialPostCard from '../../components/Mobile/SocialPostCard'
+import { Post } from '../../store/profile/types'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -82,7 +90,7 @@ export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
-  const { user, ccas } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, posts } = useSelector((state: RootState) => state.profile)
   const params = useParams<{ userId: string }>()
   const userIdFromPath = params.userId
 
@@ -92,8 +100,47 @@ export default function Profile() {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
     console.log(user)
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
+    dispatch(fetchUserPosts(localStorage.getItem('userID')))
     setIsOwnProfile(userIdFromPath === user.userID)
   }, [dispatch])
+
+  const ActivitiesItem = (postItem: Post) => {
+    return (
+      <SocialPostCard
+        isOwner={!postItem.isOfficial}
+        postId={postItem._id}
+        title={postItem.title}
+        dateTime={postItem.createdAt.toString()}
+        description={postItem.description}
+        avatar={user.profilePictureUrl}
+        name={user.displayName}
+        userId={postItem.userID}
+      />
+    )
+  }
+
+  const renderActivitiesItems = () => {
+    return posts.map((postItem) => {
+      return (
+        <ActivitiesItem
+          key={postItem._id}
+          isOfficial={postItem.isOfficial}
+          _id={postItem._id}
+          title={postItem.title}
+          createdAt={postItem.createdAt}
+          description={postItem.description}
+          postPics={postItem.postPics}
+          userID={postItem.userID}
+          ccaID={postItem.ccaID}
+          tags={postItem.tags}
+        />
+      )
+    })
+  }
+
+  const ActivitiesCard = () => {
+    return <div>{renderActivitiesItems()}</div>
+  }
 
   const { TabPane } = Tabs
   const CardTabs = () => (

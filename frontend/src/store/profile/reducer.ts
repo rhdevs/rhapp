@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
+import { ActionTypes, Post, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const initialState = {
   user: {
@@ -14,6 +14,7 @@ export const initialState = {
     modules: [],
     // posts: [],
   },
+  posts: [],
   ccas: [],
   newDisplayName: '',
   newTelegramHandle: '',
@@ -28,6 +29,7 @@ export const initialState = {
 
 type State = {
   user: User
+  posts: Post[]
   ccas: UserCCA[]
   newDisplayName: string
   newTelegramHandle: string
@@ -99,6 +101,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         isLoggedIn: action.isLoggedIn,
+      }
+    }
+    case PROFILE_ACTIONS.SET_USER_POSTS: {
+      return {
+        ...state,
+        posts: action.posts,
       }
     }
     default:
