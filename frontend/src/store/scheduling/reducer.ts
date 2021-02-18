@@ -34,6 +34,8 @@ const initialState = {
   //view event state
   selectedEvent: null,
   ccaDetails: null,
+  deletedEventIsSuccess: false,
+  deletedEventIsFailure: false,
 
   ccaList: [],
   profileList: [],
@@ -71,6 +73,8 @@ type State = {
   targetAudienceList: userCCA[]
   selectedEvent: TimetableEvent | null
   ccaDetails: CCADetails | null
+  deletedEventIsSuccess: boolean
+  deletedEventIsFailure: boolean
   ccaList: CCADetails[]
   profileList: Profile[]
   selectedProfileIds: string[]
@@ -253,6 +257,13 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         selectedCCAEvents: action.selectedCCAEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS: {
+      return {
+        ...state,
+        deletedEventIsSuccess: action.deletedEventIsSuccess,
+        deletedEventIsFailure: action.deletedEventIsFailure,
       }
     }
     default:

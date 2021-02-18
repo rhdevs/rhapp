@@ -4,11 +4,12 @@ import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
-import { editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
+import { deleteSelectedEvent, editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
 import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { dummyUserId } from '../../store/stubs'
 import { useDispatch } from 'react-redux'
+import { Button } from 'antd'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -109,6 +110,12 @@ const RemoveEvent = styled.button`
   background: none;
   border: none;
 `
+
+const LongButton = {
+  backgroundColor: '#DE5F4C',
+  borderColor: '#DE5F4C',
+  borderRadius: '5px',
+}
 
 function ViewEventDetailCard({
   eventID,
@@ -217,6 +224,11 @@ function ViewEventDetailCard({
           >
             Remove event from timetable
           </RemoveEvent>
+          {eventCreatedBy === 'You' && (
+            <Button type="primary" danger style={LongButton} onClick={() => dispatch(deleteSelectedEvent(eventID))}>
+              Delete Event
+            </Button>
+          )}
         </RemoveRow>
       </Background>
     </>
