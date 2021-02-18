@@ -9,11 +9,12 @@ import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
 import { fetchTelegram, getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
+import { RootState } from '../../store/types'
 
 const CardContainer = styled.div`
   position: relative;
@@ -69,6 +70,8 @@ const ActionButtonLabel = styled.p`
 `
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
+  const { telegramHandle } = useSelector((state: RootState) => state.laundry)
+
   const dispatch = useDispatch()
   let label = ''
   let iconSrc = ''
@@ -79,8 +82,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       ? '#EB5757'
       : '#002642'
 
-  const telegramHandle = async (selectedMachine) => {
-    const site = 'https://telegram.me/' + fetchTelegram(selectedMachine)
+  const goToTelegramHandle = async (selectedMachine) => {
+    dispatch(fetchTelegram(selectedMachine))
+    const site = 'https://telegram.me/' + telegramHandle
     window.open(site)
   }
 
@@ -129,7 +133,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = notifyBellIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        telegramHandle(props.washingMachine)
+        goToTelegramHandle(props.washingMachine)
       }
       break
     case WMStatus.INUSE:
