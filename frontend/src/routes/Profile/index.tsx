@@ -14,6 +14,7 @@ import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
+import { LogoutOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -170,10 +171,19 @@ export default function Profile() {
     )
   }
 
+  const logoutButton = (
+    <LogoutOutlined
+      onClick={() => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('userID')
+      }}
+    />
+  )
+
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Profile'} />
+        <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (
