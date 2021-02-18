@@ -51,6 +51,12 @@ const ResultsContainer = styled.div`
   height: 73vh;
 `
 
+const LongButton = {
+  backgroundColor: '#002642',
+  borderColor: '#002642',
+  borderRadius: '5px',
+}
+
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -83,7 +89,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
             <>
               <AntdButton
                 type="primary"
-                block
+                style={LongButton}
                 onClick={() => {
                   history.push(PATHS.VIEW_EVENT + `/${result.eventID}`)
                 }}
