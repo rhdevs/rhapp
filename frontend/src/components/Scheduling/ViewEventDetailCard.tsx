@@ -98,6 +98,7 @@ const RemoveRow = styled.div`
   width: 100%;
   margin: 10px 0px;
   justify-content: center;
+  flex-direction: row;
 `
 
 const RemoveEvent = styled.button`
