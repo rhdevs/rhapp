@@ -83,11 +83,13 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
   }
   console.log(requestBody)
 
-  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
-    dispatch(GetPosts(POSTS_FILTER.ALL))
-    success('Post created!')
-    console.log(res)
-  })
+  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody)
+    .then((res) => {
+      console.log(res)
+      dispatch(GetPosts(POSTS_FILTER.ALL))
+      success('Post created!')
+    })
+    .catch((err) => console.log(err))
 }
 
 export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
