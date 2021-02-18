@@ -14,7 +14,6 @@ import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
-import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const CardContainer = styled.div`
   position: relative;
