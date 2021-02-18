@@ -216,10 +216,23 @@ export default function Profile() {
     )
   }
 
+  const logoutButton = (
+    <div
+      onClick={() => {
+        console.log('im logging out!')
+        localStorage.removeItem('token')
+        localStorage.removeItem('userID')
+        history.push(PATHS.LOGIN_PAGE)
+      }}
+    >
+      Logout
+    </div>
+  )
+
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Profile'} />
+        <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (

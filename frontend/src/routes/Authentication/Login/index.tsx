@@ -138,6 +138,7 @@ export default function Login() {
             onChange={(e) => {
               setPassword(e.target.value)
             }}
+            onPressEnter={loginHandler}
           ></Input>
           <br /> <br />
           {error.message !== '' && (
