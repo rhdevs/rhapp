@@ -4,13 +4,7 @@ import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 //import { dummyUserId } from '../stubs'
 import { isString } from 'lodash'
 
-<<<<<<< HEAD
 function getLocalStorageUserId(): string {
-=======
-localStorage.setItem('userID', 'A1234567B')
-
-function getStorage(): string {
->>>>>>> 93f14c71c44bba00c16eae64301eb1217db90634
   const storageValue = localStorage.getItem('userID')
   if (isString(storageValue)) {
     return storageValue
@@ -134,11 +128,7 @@ export const getUserProfilePic = (machineID: string) => {
     .then((resp) => resp.json())
     .then((data) => {
       console.log(data)
-<<<<<<< HEAD
       fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getLocalStorageUserId(), {
-=======
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getStorage(), {
->>>>>>> 93f14c71c44bba00c16eae64301eb1217db90634
         method: 'GET',
         mode: 'cors',
       })
@@ -183,11 +173,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
   const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
     job: newJob,
     machineID: machineID,
-<<<<<<< HEAD
     userID: getLocalStorageUserId(), //TODO: Update userId
-=======
-    userID: getStorage(), //TODO: Update userId
->>>>>>> 93f14c71c44bba00c16eae64301eb1217db90634
     currentDuration: duration,
   }
 

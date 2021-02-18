@@ -14,8 +14,6 @@ import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { SetDuration, SetEditMode, UpdateJobDuration, updateMachine } from '../../../store/laundry/action'
 
-localStorage.setItem('userID', 'A1234567B')
-
 const MainContainer = styled.div`
   width: 100%;
   height: 95vh;
