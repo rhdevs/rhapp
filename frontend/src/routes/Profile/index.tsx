@@ -19,8 +19,8 @@ import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
-import SocialPostCard from '../../components/Mobile/SocialPostCard'
 import { Post } from '../../store/profile/types'
+import PostCard from './Components/PostCard'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -102,7 +102,7 @@ export default function Profile() {
 
   const ActivitiesItem = (postItem: Post) => {
     return (
-      <SocialPostCard
+      <PostCard
         isOwner={!postItem.isOfficial}
         postId={postItem._id}
         title={postItem.title}
