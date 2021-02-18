@@ -8,6 +8,8 @@ import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { RootState } from '../../store/types'
+import { useSelector } from 'react-redux'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -38,6 +40,7 @@ const Greetings = styled.text`
 
 export default function Home() {
   const history = useHistory()
+  const { displayName } = useSelector((state: RootState) => state.profile.user)
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
@@ -45,7 +48,7 @@ export default function Home() {
   return (
     <MainContainer>
       <TopBar>
-        <Greetings>{`Good ${partOfTheDay} Mao Mao!`}</Greetings>
+        <Greetings>{`Good ${partOfTheDay} ${displayName}!`}</Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />

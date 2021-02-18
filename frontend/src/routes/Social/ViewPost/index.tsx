@@ -18,7 +18,6 @@ import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
-import { userProfileStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -88,7 +87,6 @@ const DescriptionText = styled.text`
   padding: 20px;
 `
 export default function ViewPost() {
-  // TODO: wait for endpoint that provides individual post data from postId
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
@@ -101,7 +99,7 @@ export default function ViewPost() {
 
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost
-  const { userID } = useSelector((state: RootState) => state.profile.user)
+  const { userID, profilePictureUrl } = useSelector((state: RootState) => state.profile.user)
 
   useEffect(() => {
     dispatch(GetSpecificPost(postIdFromPath))
@@ -117,8 +115,7 @@ export default function ViewPost() {
   const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
   const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
 
-  // TODO: to get from response
-  const avatar = userProfileStub.profilePictureUrl
+  const avatar = profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)

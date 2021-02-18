@@ -125,7 +125,6 @@ export const AddImage = (e: React.ChangeEvent<HTMLInputElement>) => (
       if (newPostImages.length > 2) {
         warnings.push('The limit is 3 photos!')
       }
-      // TODO: Upload images to cloud, and delete
       const newUrl =
         reader.result && !(reader.result instanceof ArrayBuffer) && newPostImages.length < 3
           ? [...newPostImages, reader.result]
