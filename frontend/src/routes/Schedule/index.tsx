@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import styled from 'styled-components'
 import { Alert, Menu } from 'antd'
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import styled from 'styled-components'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
@@ -24,9 +24,7 @@ import {
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
-import { dummyUserId } from '../../store/stubs'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
-// import SearchBar from '../../components/Mobile/SearchBar'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -115,10 +113,11 @@ export default function Schedule() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    console.log(selectedProfileIds)
-    dispatch(fetchCurrentUserEvents(dummyUserId, true))
+    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
+    dispatch(setSelectedProfileIds([]))
+    dispatch(setSelectedCCAIds([]))
   }, [dispatch])
 
   const rightIcon = (
@@ -189,22 +188,19 @@ export default function Schedule() {
 
   const [modal, setModal] = useState(false)
 
-  // const [searchFriendsValue, setSearchFriendsValue] = useState('')
-  // const [searchGroupValue, setSearchGroupValue] = useState('')
-
   const friendsOnChange = (input: string[]) => {
-    // setSearchFriendsValue(input)
     dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedCCAIds.length === 0))
+    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
   }
 
   const groupOnChange = (input: string[]) => {
-    //   setSearchGroupValue(input)
     const numberArr: number[] = input.map((x: string) => {
       return Number(x)
     })
     dispatch(setSelectedCCAIds(numberArr))
-    dispatch(fetchCurrentUserEvents(dummyUserId, input.length === 0 && selectedProfileIds.length === 0))
+    dispatch(
+      fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedProfileIds.length === 0),
+    )
   }
 
   return (
@@ -219,7 +215,7 @@ export default function Schedule() {
           leftButtonText={'Delete'}
           onLeftButtonClick={() => {
             dispatch(setIsLoading(true))
-            dispatch(deleteUserNusModsEvents(dummyUserId))
+            dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
             setModal(false)
           }}
           rightButtonText={'Cancel'}
@@ -240,13 +236,10 @@ export default function Schedule() {
       <GroupContainer>
         <SmallContainer>
           <TagTitleText>Friends</TagTitleText>
-          {/* <div style={{ width: '25rem' }}>
-            <SearchBar placeholder={'Add to timetable'} value={searchFriendsValue} onChange={friendsOnChange} />
-          </div> */}
         </SmallContainer>
         <Tags
           profileOptions={profileList.filter((profile) => {
-            return profile.userID !== dummyUserId
+            return profile.userID !== localStorage.getItem('userID')
           })}
           onChange={friendsOnChange}
         />
@@ -254,9 +247,6 @@ export default function Schedule() {
       <GroupContainer>
         <SmallContainer>
           <TagTitleText>CCA</TagTitleText>
-          {/* <div style={{ width: '25rem' }}>
-            <SearchBar placeholder={'Add to timetable'} value={searchGroupValue} onChange={groupOnChange} />
-          </div> */}
         </SmallContainer>
         <Tags ccaOptions={ccaList} onChange={groupOnChange} />
       </GroupContainer>
