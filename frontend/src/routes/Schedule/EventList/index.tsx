@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 
 import styled from 'styled-components'
 import { PATHS } from '../../Routes'
+import { Button as AntdButton } from 'antd'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -80,7 +81,16 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           description={result.description}
           bottomElement={
             <>
-              <Button stopPropagation defaultButtonDescription={'See Details'} />
+              <AntdButton
+                type="primary"
+                block
+                onClick={() => {
+                  history.push(PATHS.VIEW_EVENT + `/${result.eventID}`)
+                }}
+              >
+                See Details
+              </AntdButton>
+              <div style={{ width: '25px' }} />
               <Button
                 buttonIsPressed={
                   userAllEventsList.filter((event) => {
