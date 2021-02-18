@@ -160,10 +160,10 @@ export const updateMachine = (updatedState: string, machineID: string) => (
       newJob = 'None'
   }
 
-  const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
+  const queryBody: { job: string; machineID: string; userID: string | null; currentDuration: number } = {
     job: newJob,
     machineID: machineID,
-    userID: 'A1234567B', //TODO: Update userId
+    userID: localStorage.getItem('userID'), //TODO: Update userId
     currentDuration: duration,
   }
 
