@@ -4,9 +4,7 @@ import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 //import { dummyUserId } from '../stubs'
 import { isString } from 'lodash'
 
-localStorage.setItem('userID', 'A1234567B')
-
-function getStorage(): string {
+function getLocalStorageUserId(): string {
   const storageValue = localStorage.getItem('userID')
   if (isString(storageValue)) {
     return storageValue
@@ -130,7 +128,7 @@ export const getUserProfilePic = (machineID: string) => {
     .then((resp) => resp.json())
     .then((data) => {
       console.log(data)
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getStorage(), {
+      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getLocalStorageUserId(), {
         method: 'GET',
         mode: 'cors',
       })
@@ -175,7 +173,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
   const queryBody: { job: string; machineID: string; userID: string; currentDuration: number } = {
     job: newJob,
     machineID: machineID,
-    userID: getStorage(), //TODO: Update userId
+    userID: getLocalStorageUserId(), //TODO: Update userId
     currentDuration: duration,
   }
 
