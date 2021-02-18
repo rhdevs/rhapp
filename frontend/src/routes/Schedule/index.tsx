@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import styled from 'styled-components'
 import { Alert, Menu } from 'antd'
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import styled from 'styled-components'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
@@ -112,7 +112,6 @@ export default function Schedule() {
   )
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllProfiles())

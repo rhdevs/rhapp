@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
-import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { LeftOutlined } from '@ant-design/icons'
-import 'antd-mobile/dist/antd-mobile.css'
-import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+
+import styled from 'styled-components'
+import { LeftOutlined } from '@ant-design/icons'
 import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
-// import { dummyUserId } from '../../../store/stubs'
+import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
+import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import NotFound from '../../ErrorPages/NotFound'
-import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
+
+import 'antd-mobile/dist/antd-mobile.css'
+import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`
   display: flex;
@@ -40,7 +40,6 @@ export default function CreateEvent() {
   const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])

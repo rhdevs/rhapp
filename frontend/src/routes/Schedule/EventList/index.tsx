@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
 import styled from 'styled-components'
+import { PATHS } from '../../Routes'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
-import 'antd/dist/antd.css'
-import { useDispatch, useSelector } from 'react-redux'
+import LoadingSpin from '../../../components/LoadingSpin'
 import { RootState } from '../../../store/types'
 import {
   editUserEvents,
@@ -18,10 +19,9 @@ import {
   fetchAllUserEvents,
   getSearchedEvents,
 } from '../../../store/scheduling/action'
-import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
-import LoadingSpin from '../../../components/LoadingSpin'
-// import { dummyUserId } from '../../../store/stubs'
+
+import 'antd/dist/antd.css'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -61,7 +61,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    localStorage.setItem('userID', 'A1234567B')
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllPublicEvents())
   }, [dispatch])

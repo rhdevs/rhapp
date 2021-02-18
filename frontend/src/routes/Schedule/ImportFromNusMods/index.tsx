@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
+import styled from 'styled-components'
+import { PATHS } from '../../Routes'
+import { setUserNusMods } from '../../../store/scheduling/action'
 import { LeftOutlined } from '@ant-design/icons'
 import nusmodsImportImage from '../../../assets/nusmodsImportImage.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import Button from '../../../components/Mobile/Button'
-import { useDispatch } from 'react-redux'
-import { setUserNusMods } from '../../../store/scheduling/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { PATHS } from '../../Routes'
-// import { dummyUserId } from '../../../store/stubs'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -45,7 +44,6 @@ export default function ImportFromNusMods() {
   const history = useHistory()
   const dispatch = useDispatch()
 
-  localStorage.setItem('userID', 'A1234567B')
   const [link, setLink] = useState('')
   const [modal, setModal] = useState(false)
 
