@@ -2,30 +2,36 @@
   "theme_color": "#de5f4c",
   "background_color": "#fafaf4",
   "display": "fullscreen",
+  "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
   "name": "RHApp",
-  "short_name": "Wrap",
+  "short_name": "RHApp",
   "description": "Nobody asked but we delivered",
   "icons": [
     {
-      "src": "../../src/assets/black_logo.png",
-      "sizes": "192x",
+      "src": "icons/black_logo_152.png",
+      "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "../../src/assets/black_logo.png",
-      "sizes": "256x",
+      "src": "icons/black_logo_180.png",
+      "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "../../src/assets/black_logo.png",
-      "sizes": "384x",
+      "src": "icons/black_logo_256.png",
+      "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "../../src/assets/black_logo.png",
-      "sizes": "512x",
+      "src": "icons/black_logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/black_logo_1024.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]

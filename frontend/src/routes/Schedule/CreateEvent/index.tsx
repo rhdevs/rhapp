@@ -1,17 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
+import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import InputRow from '../../../components/Mobile/InputRow'
+import styled from 'styled-components'
 import { Input, Select } from 'antd'
 import { DatePicker } from 'antd-mobile'
 import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
-import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
-import 'antd-mobile/dist/antd-mobile.css'
-import 'antd/dist/antd.css'
-import { useDispatch, useSelector } from 'react-redux'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
+import InputRow from '../../../components/Mobile/InputRow'
 import { RootState } from '../../../store/types'
 import {
   editEventName,
@@ -25,7 +23,9 @@ import {
   editEventToDate,
   getTargetAudienceList,
 } from '../../../store/scheduling/action'
-import { useEffect } from 'react'
+
+import 'antd-mobile/dist/antd-mobile.css'
+import 'antd/dist/antd.css'
 
 const { Option } = Select
 

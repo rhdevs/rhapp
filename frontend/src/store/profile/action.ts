@@ -2,44 +2,49 @@ import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
-export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
-  const token = localStorage.token
+// export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
+//   const token = localStorage.token
+//   console.log(token)
+//   if (token) {
+//     fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
+//       method: 'GET',
+//       mode: 'no-cors',
+//     }).then((resp) => {
+//       console.log(resp)
+//       if (resp.status !== 200) {
+//         dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: true })
+//       } else {
+//         dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
+//       }
+//     })
+//   } else {
+//     console.log('notoken sob')
+//     dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
+//   }
+// }
 
-  if (token) {
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
+export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  if (userID !== null) {
+    fetch('https://rhappsocial.rhdevs.repl.co/profile/' + userID, {
       method: 'GET',
-      mode: 'no-cors',
-    }).then((resp) => {
-      console.log(resp)
-      if (resp.status !== 200) {
-        dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: true })
-      } else {
-        dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
-      }
     })
-  } else {
-    dispatch({ type: PROFILE_ACTIONS.SET_IS_LOGGED_IN, isLoggedIn: false })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data[0] })
+      })
   }
 }
 
-export const fetchUserDetails = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data })
+export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  if (userID !== null) {
+    fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
+      method: 'GET',
     })
-}
-
-export const fetchUserCCAs = (userID: string) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
-    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+      })
+  }
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
@@ -52,14 +57,28 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
     })
 }
 
-export const fetchUserFriends = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
-    method: 'GET',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+export const fetchUserFriends = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
+      method: 'GET',
     })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+      })
+  }
+}
+
+export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
+  if (userID != null) {
+    await fetch('https://rhappsocial.rhdevs.repl.co/post/' + userID, {
+      method: 'GET',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: data })
+      })
+  }
 }
 
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {

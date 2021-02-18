@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import reserveIcon from '../../assets/reserveIcon.svg'
 import notifyBellIcon from '../../assets/notifyBellIcon.svg'
@@ -7,14 +7,14 @@ import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
 import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
-import { getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
+import { fetchTelegram, getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
 import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
-import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
+import { RootState } from '../../store/types'
 
 const CardContainer = styled.div`
   position: relative;
@@ -71,6 +71,12 @@ const ActionButtonLabel = styled.p`
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { telegramHandle } = useSelector((state: RootState) => state.laundry)
+
+  useEffect(() => {
+    dispatch(fetchTelegram(props.washingMachine))
+  }, [dispatch])
+
   let label = ''
   let iconSrc = ''
   let washingMachineIcon = ''
@@ -80,28 +86,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       ? '#EB5757'
       : '#002642'
 
-  const fetchTelegram = async (selectedMachine) => {
-    try {
-      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-            console.log(selectedMachine)
-            console.log(data.err)
-          } else {
-            openTelegram(data.telegramHandle)
-          }
-        })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const openTelegram = (userID) => {
-    const site = 'https://telegram.me/' + userID
+  const goToTelegramHandle = (selectedMachine) => {
+    dispatch(fetchTelegram(selectedMachine))
+    const site = 'https://telegram.me/' + telegramHandle
     window.open(site)
   }
 
@@ -150,7 +137,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = notifyBellIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        fetchTelegram(props.washingMachine)
+        goToTelegramHandle(props.washingMachine)
       }
       break
     case WMStatus.INUSE:
