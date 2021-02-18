@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { Alert, Menu } from 'antd'
-import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import { DeleteOutlined, PlusOutlined, SearchOutlined, ImportOutlined, BookOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
@@ -143,24 +143,15 @@ export default function Schedule() {
 
             <Menu.Item key="2">Save as png</Menu.Item>
           </SubMenu> */}
-          <SubMenu key="sub2" icon={<PlusOutlined />} title="Add Events">
-            <Menu.Item
-              key="3"
-              onClick={() => {
-                history.push(PATHS.IMPORT_FROM_NUSMODS)
-              }}
-            >
-              Import from NUSMods
-            </Menu.Item>
-            <Menu.Item
-              key="4"
-              onClick={() => {
-                history.push(PATHS.CREATE_EVENT)
-              }}
-            >
-              Add an event
-            </Menu.Item>
-          </SubMenu>
+          <Menu.Item
+            key="4"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              history.push(PATHS.CREATE_EVENT)
+            }}
+          >
+            Add an event
+          </Menu.Item>
           <Menu.Item
             key="5"
             icon={<SearchOutlined />}
@@ -170,6 +161,17 @@ export default function Schedule() {
           >
             Events
           </Menu.Item>
+          <SubMenu key="sub2" icon={<BookOutlined />} title="My NUSMods">
+            <Menu.Item
+              key="3"
+              icon={<ImportOutlined />}
+              onClick={() => {
+                history.push(PATHS.IMPORT_FROM_NUSMODS)
+              }}
+            >
+              Import from NUSMods
+            </Menu.Item>
+          </SubMenu>
         </>
       }
       closableButton={
