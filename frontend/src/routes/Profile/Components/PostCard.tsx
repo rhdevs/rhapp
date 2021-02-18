@@ -1,13 +1,7 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import styled from 'styled-components'
-import { Menu } from 'antd'
-import { EllipsisOutlined, DeleteFilled } from '@ant-design/icons'
-// import { useHistory } from 'react-router-dom'
 import { getInitials } from '../../../common/getInitials'
-import { DeletePost } from '../../../store/social/action'
 import Avatar from '../../../components/Mobile/Avatar'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 
 const CardContainer = styled.div`
   display: flex;
@@ -30,19 +24,6 @@ const TextContainer = styled.div`
   flex-direction: column;
   margin: 0px 10px;
   width: 75%;
-`
-const MenuContainer = styled.div`
-  position: relative;
-  display: flex;
-  margin-left: 10px;
-`
-const StyledMenuContainer = styled(Menu)`
-  position: absolute;
-  right: 2px;
-  top: 20px;
-  font-family: Inter;
-  z-index: 3;
-  border-radius: 5px;
 `
 
 const ImageContainer = styled.div`
@@ -129,36 +110,9 @@ type PostCardProps = {
 }
 
 function PostCard(props: PostCardProps) {
-  //   const history = useHistory()
-  const dispatch = useDispatch()
-
-  const [menuIsOpen, setMenuIsOpen] = useState(false)
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false)
-
-  const { isOwner, avatar, name, title, dateTime, description, postId, postPics, userId } = props
+  const { avatar, name, title, dateTime, description, postPics, userId } = props
 
   const initials = getInitials(props.name)
-
-  //   const onExpandClick = () => {
-  //     history.push({
-  //       pathname: `${PATHS.VIEW_POST}${props.postId}`,
-  //     })
-  //   }
-
-  const onMenuClick = () => {
-    setMenuIsOpen(!menuIsOpen)
-  }
-
-  const onDeleteClick = () => {
-    setMenuIsOpen(false)
-    setDeleteConfirmation(!deleteConfirmation)
-  }
-
-  const onConfirmDeleteClick = () => {
-    setMenuIsOpen(false)
-    setDeleteConfirmation(!deleteConfirmation)
-    dispatch(DeletePost(postId))
-  }
 
   return (
     <>
@@ -195,31 +149,7 @@ function PostCard(props: PostCardProps) {
             </>
           )}
         </CenterContainer>
-
-        {/* <MenuContainer>
-          <div style={{ width: 16 }}>
-            {isOwner && <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} onClick={onMenuClick} />}
-          </div>
-          {menuIsOpen && (
-            <StyledMenuContainer style={{ boxShadow: '2px 2px lightgrey' }}>
-              <Menu.Item key="1" icon={<DeleteFilled />} onClick={onDeleteClick}>
-                Delete
-              </Menu.Item>
-            </StyledMenuContainer>
-          )}
-        </MenuContainer> */}
       </CardContainer>
-      {deleteConfirmation && (
-        <ConfirmationModal
-          title={'Delete Post?'}
-          hasLeftButton={true}
-          leftButtonText={'Delete'}
-          onLeftButtonClick={onConfirmDeleteClick}
-          rightButtonText={'Cancel'}
-          onRightButtonClick={onDeleteClick}
-          bottom={10}
-        />
-      )}
     </>
   )
 }
