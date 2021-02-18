@@ -24,13 +24,11 @@ export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
-    console.log('FETCHING!!!!  ' + userID)
     fetch('https://rhappsocial.rhdevs.repl.co/profile/' + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data[0])
         dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data[0] })
       })
   }

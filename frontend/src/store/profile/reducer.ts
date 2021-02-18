@@ -12,7 +12,6 @@ export const initialState = {
     block: 8,
     bio: 'This is my bio hur hur',
     modules: [],
-    // posts: [],
   },
   posts: [],
   ccas: [],
