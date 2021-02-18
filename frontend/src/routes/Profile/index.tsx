@@ -14,7 +14,6 @@ import { RootState } from '../../store/types'
 import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
-import { LogoutOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -172,13 +171,16 @@ export default function Profile() {
   }
 
   const logoutButton = (
-    <LogoutOutlined
+    <div
       onClick={() => {
+        console.log('im logging out!')
         localStorage.removeItem('token')
         localStorage.removeItem('userID')
         history.push(PATHS.LOGIN_PAGE)
       }}
-    />
+    >
+      Logout
+    </div>
   )
 
   return (
