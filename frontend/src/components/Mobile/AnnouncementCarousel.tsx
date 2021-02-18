@@ -24,7 +24,7 @@ const CarouselCard = styled.div`
 
 const CarouselCard1 = styled(CarouselCard)`
   &:before {
-    background-image: url('http://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhockfest2019.jpg?sfvrsn=aa9c34b9_2');
+    background-image: url('https://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhockfest2019.jpg?sfvrsn=aa9c34b9_2');
   }
 `
 

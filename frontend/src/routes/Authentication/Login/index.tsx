@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
-import bcrypt from 'bcryptjs'
+import sha256 from 'crypto-js/sha256'
+
 import { PATHS } from '../../Routes'
 import logo from '../../../assets/white_logo.png'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
@@ -63,19 +64,18 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const salt = bcrypt.genSaltSync(10)
-  const passwordHash = bcrypt.hashSync(password, salt)
+  const passwordHash = sha256(password).toString()
+
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
-    if (username && password) {
+    if (username !== '' && password !== '') {
       setError({ message: '' })
-      setIsLoading(true)
+      // setIsLoading(true)
       const queryBody = {
         userID: username,
         passwordHash: passwordHash,
       }
-
       await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
@@ -86,17 +86,28 @@ export default function Login() {
       })
         .then((resp) => {
           if (!resp.ok) {
-            setError({ message: 'Something is wrong. Try Again!' })
+            if (resp.status >= 500) {
+              setError({ message: 'Server Error! Try again in awhile or approach an administrator!' })
+              setIsLoading(false)
+              throw new Error('Server Error')
+            } else if (resp.status == 403) {
+              setError({ message: 'Credentials is wrong. Try Again!' })
+              setIsLoading(false)
+              throw new Error('Wrong Credentials')
+            }
           }
           return resp.json()
         })
         .then((data) => {
-          console.log(data.token)
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
+        .catch((err) => console.log(err))
     } else {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userID')
       setError({ message: 'Missing Username or Password!' })
     }
   }
@@ -108,20 +119,24 @@ export default function Login() {
         <LoginContainer>
           <Logo src={logo} />
           <br />
+          <InputTextLabel>{localStorage.token} </InputTextLabel>
+          <InputTextLabel>{localStorage.userId} </InputTextLabel>
           <InputTextLabel>Username: </InputTextLabel>
           <Input
+            type="text"
             placeholder="Username"
-            onChange={() => {
-              setUsername(username)
+            onChange={(e) => {
+              setUsername(e.target.value)
             }}
           ></Input>
           <br />
           <br />
           <InputTextLabel>Password: </InputTextLabel>
           <Input
+            type="password"
             placeholder="Password"
-            onChange={() => {
-              setPassword(password)
+            onChange={(e) => {
+              setPassword(e.target.value)
             }}
           ></Input>
           <br /> <br />

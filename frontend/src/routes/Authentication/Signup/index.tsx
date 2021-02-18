@@ -129,13 +129,18 @@ export default function Signup() {
             },
             body: JSON.stringify(queryBody),
           })
-            .then((resp) => resp.json())
-            .then((data) => {
-              console.log(data.token)
-              localStorage.setItem('token', data.token)
-              localStorage.setItem('userId', formData.userId)
+            .then((resp) => {
+              if (!resp.ok) {
+                throw new Error('Wrong Credentials')
+              }
+              return resp.json()
             })
-          history.push(PATHS.HOME_PAGE)
+            .then((data) => {
+              localStorage.setItem('token', data.token)
+              localStorage.setItem('userID', formData.userId)
+              history.push(PATHS.HOME_PAGE)
+            })
+            .catch((err) => console.log(err))
         }
       })
   }
@@ -156,7 +161,7 @@ export default function Signup() {
               <AccountText>NUS Email</AccountText>
               <Input
                 placeholder="NUS Email"
-                name="e0160000@u.nus.edu"
+                name="email"
                 style={{ borderRadius: '10px' }}
                 value={formData.email}
                 onChange={(e) => onChange(e)}

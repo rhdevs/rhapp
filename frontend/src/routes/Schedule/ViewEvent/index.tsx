@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
 import styled from 'styled-components'
+import { LeftOutlined } from '@ant-design/icons'
+import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
+import { RootState } from '../../../store/types'
+import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { LeftOutlined, EditOutlined } from '@ant-design/icons'
-import 'antd-mobile/dist/antd-mobile.css'
-import 'antd/dist/antd.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { fetchAllUserEvents, getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
-import { RootState } from '../../../store/types'
-import { dummyUserId } from '../../../store/stubs'
 import LoadingSpin from '../../../components/LoadingSpin'
 import NotFound from '../../ErrorPages/NotFound'
-import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
+
+import 'antd-mobile/dist/antd-mobile.css'
+import 'antd/dist/antd.css'
 
 const MainContainer = styled.div`
   display: flex;
@@ -40,7 +40,6 @@ export default function CreateEvent() {
   const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
   }, [dispatch])
@@ -56,7 +55,7 @@ export default function CreateEvent() {
 
   const isNusModsEvent = selectedEvent?.eventType === 'mods' ? true : false
 
-  const EditIcon = isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
+  const EditIcon = undefined //isNusModsEvent ? undefined : <EditOutlined style={{ color: 'black', fontSize: '30px' }} />
 
   /** Incomplete functionality for Uploading Image */
 
@@ -90,6 +89,10 @@ export default function CreateEvent() {
       return 'Public'
     } else if (eventType === 'mods') {
       return 'NUSMods'
+    } else if (eventType === 'friends') {
+      return 'Friends Event'
+    } else if (eventType === 'CCA') {
+      return 'CCA Event'
     } else {
       return eventType
     }
@@ -121,7 +124,11 @@ export default function CreateEvent() {
           eventID={selectedEvent.eventID}
           eventName={selectedEvent.eventName}
           eventCreatedBy={
-            selectedEvent.userID === dummyUserId ? 'You' : isNusModsEvent ? 'NUSMods' : selectedEvent.userID
+            selectedEvent.userID === localStorage.getItem('userID')
+              ? 'You'
+              : isNusModsEvent
+              ? 'NUSMods'
+              : selectedEvent.userID
           }
           startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
           endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}

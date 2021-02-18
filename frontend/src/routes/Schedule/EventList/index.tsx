@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
 import styled from 'styled-components'
+import { PATHS } from '../../Routes'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
-import 'antd/dist/antd.css'
-import { useDispatch, useSelector } from 'react-redux'
+import LoadingSpin from '../../../components/LoadingSpin'
 import { RootState } from '../../../store/types'
 import {
   editUserEvents,
@@ -18,10 +19,9 @@ import {
   fetchAllUserEvents,
   getSearchedEvents,
 } from '../../../store/scheduling/action'
-import { PATHS } from '../../Routes'
 import { SchedulingEvent } from '../../../store/scheduling/types'
-import LoadingSpin from '../../../components/LoadingSpin'
-import { dummyUserId } from '../../../store/stubs'
+
+import 'antd/dist/antd.css'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -61,7 +61,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(dummyUserId, true))
+    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllPublicEvents())
   }, [dispatch])
 
@@ -98,12 +98,10 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   if (buttonIsPressed) {
                     // event is in list and button is pressed
                     // remove event from list
-                    console.log('remove ' + result.eventName + ' from list ' + result.eventID)
-                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
                   } else {
                     // event is in list, button is un-pressed
-                    console.log('add ' + result.eventName + ' to list ' + result.eventID)
-                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
                   }
                 } else if (
                   userAllEventsList.filter((event) => {
@@ -112,13 +110,11 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                 ) {
                   if (buttonIsPressed) {
                     // event is not in list, button is un-pressed
-                    console.log('remove ' + result.eventName + ' from list ' + result.eventID)
-                    dispatch(editUserEvents('remove', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
                   } else {
                     // event is not in list and button is pressed
                     // add event to list
-                    console.log('add ' + result.eventName + ' to list ' + result.eventID)
-                    dispatch(editUserEvents('add', result.eventID, dummyUserId, false))
+                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
                   }
                 }
                 return
@@ -161,7 +157,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const onChange = (input: string) => {
     setSearchValue(input)
     input && dispatch(getSearchedEvents(input))
-    console.log(searchValue)
   }
 
   const leftIcon = (
