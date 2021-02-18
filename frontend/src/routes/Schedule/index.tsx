@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { Alert, Menu } from 'antd'
+import { Alert, Menu, message } from 'antd'
 import { DeleteOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
@@ -80,6 +80,8 @@ export default function Schedule() {
     ccaList,
     selectedProfileIds,
     selectedCCAIds,
+    deletedEventIsSuccess,
+    deletedEventIsFailure,
   } = useSelector((state: RootState) => state.scheduling)
 
   const onClose = () => {
@@ -111,6 +113,10 @@ export default function Schedule() {
     </AlertGroup>
   )
 
+  const deleteEventStatus = () => {
+    if (deletedEventIsSuccess && !deletedEventIsFailure) message.success('The event has been sucessfully deleted!')
+    else if (deletedEventIsFailure && !deletedEventIsSuccess) message.error('Failed to delete, please try again!')
+  }
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
@@ -206,6 +212,7 @@ export default function Schedule() {
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      {(deletedEventIsSuccess || deletedEventIsFailure) && deleteEventStatus()}
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
