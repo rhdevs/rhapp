@@ -8,15 +8,9 @@ import FriendAndTelegramButtons from './Components/FriendAndTelegramButtons'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  fetchUserCCAs,
-  fetchUserDetails,
-  fetchUserFriends,
-  fetchUserPosts,
-  populateProfileEdits,
-} from '../../store/profile/action'
+import { fetchUserCCAs, fetchUserDetails, fetchUserPosts, populateProfileEdits } from '../../store/profile/action'
 import { RootState } from '../../store/types'
-import statusDot from '../../assets/warning.png'
+// import statusDot from '../../assets/warning.png'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
 import { Post } from '../../store/profile/types'
@@ -97,7 +91,7 @@ export default function Profile() {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     dispatch(fetchUserPosts(localStorage.getItem('userID')))
-    setIsOwnProfile(userIdFromPath === user.userID)
+    setIsOwnProfile(userIdFromPath === localStorage.getItem('userID'))
   }, [dispatch])
 
   const ActivitiesItem = (postItem: Post) => {
@@ -106,7 +100,7 @@ export default function Profile() {
         isOwner={!postItem.isOfficial}
         postId={postItem._id}
         title={postItem.title}
-        dateTime={postItem.createdAt.toString()}
+        dateTime={postItem.createdAt}
         description={postItem.description}
         avatar={user.profilePictureUrl}
         name={user.displayName}
@@ -153,10 +147,11 @@ export default function Profile() {
     </CustomTabs>
   )
 
-  const handleClickFriendList = () => {
-    dispatch(fetchUserFriends(userIdFromPath))
-    history.push(PATHS.FRIEND_LIST_PAGE + `${userIdFromPath}`)
-  }
+  // FRIENDS SECTION PUSHED BACK IN PROD
+  // const handleClickFriendList = () => {
+  //   dispatch(fetchUserFriends(userIdFromPath))
+  //   history.push(PATHS.FRIEND_LIST_PAGE + `${userIdFromPath}`)
+  // }
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
@@ -167,10 +162,11 @@ export default function Profile() {
         <NameParagraph>{user?.displayName}</NameParagraph>
         <TelegramParagraph>@{user?.telegramHandle}</TelegramParagraph>
         <BlockParagraph>Block {user?.block}</BlockParagraph>
-        <p style={{ textDecoration: 'underline', color: '#1890FF' }} onClick={handleClickFriendList}>
+        {/* FRIENDS SECTION PUSHED BACK IN PROD */}
+        {/* <p style={{ textDecoration: 'underline', color: '#1890FF' }} onClick={handleClickFriendList}>
           My Friends
           <img alt="statusDot" style={{ marginLeft: 5, width: 6 }} src={String(statusDot)} />
-        </p>
+        </p> */}
       </PersonalInfoSpan>
       <BioParagraph>{user?.bio}</BioParagraph>
     </ProfileDetailsGroup>
@@ -187,9 +183,21 @@ export default function Profile() {
         >
           {ccas &&
             ccas?.map((cca) => (
-              <span key={cca.ccaID} style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }}>
-                {cca.ccaName}
-              </span>
+              <>
+                <span
+                  key={cca.ccaID}
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
+                >
+                  {cca.ccaName}
+                </span>
+                <br />
+              </>
             ))}
         </Card>
       </div>
@@ -207,9 +215,21 @@ export default function Profile() {
         >
           {user.modules &&
             user.modules?.map((module) => (
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }} key={module}>
-                {module}
-              </span>
+              <>
+                <span
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
+                  key={module}
+                >
+                  {module}
+                </span>{' '}
+                <br />
+              </>
             ))}
         </Card>
       </div>

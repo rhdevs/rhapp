@@ -1,7 +1,9 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { getInitials } from '../../../common/getInitials'
 import Avatar from '../../../components/Mobile/Avatar'
+import { PATHS } from '../../Routes'
 
 const CardContainer = styled.div`
   display: flex;
@@ -102,7 +104,7 @@ type PostCardProps = {
   avatar: string
   name: string
   title: string
-  dateTime: string
+  dateTime: number
   description: string
   postId: string
   postPics?: string[]
@@ -110,13 +112,22 @@ type PostCardProps = {
 }
 
 function PostCard(props: PostCardProps) {
-  const { avatar, name, title, dateTime, description, postPics, userId } = props
-
+  const { avatar, name, title, dateTime, description, postPics, userId, postId } = props
+  const history = useHistory()
   const initials = getInitials(props.name)
+
+  const getHumanDateTime = () => {
+    const date = new Date(dateTime)
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear()
+  }
 
   return (
     <>
-      <CardContainer>
+      <CardContainer
+        onClick={() => {
+          history.push(PATHS.VIEW_POST + postId)
+        }}
+      >
         <div>
           <Avatar
             size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
@@ -131,7 +142,7 @@ function PostCard(props: PostCardProps) {
           <TextContainer>
             <TitleText>{title}</TitleText>
             <TimeDateText>
-              {name}, {dateTime}
+              {name}, {getHumanDateTime()}
             </TimeDateText>
             <DescriptionText>{description}</DescriptionText>
           </TextContainer>
