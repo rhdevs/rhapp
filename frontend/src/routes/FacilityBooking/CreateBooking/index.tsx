@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { AutoComplete, Input } from 'antd'
+import { Alert, AutoComplete, Input } from 'antd'
 import { DatePicker } from 'antd-mobile'
 import { CheckOutlined } from '@ant-design/icons'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
@@ -80,6 +80,7 @@ export default function CreateBooking() {
     facilityList,
     isLoading,
     ccaList,
+    createBookingError,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -109,15 +110,11 @@ export default function CreateBooking() {
   )
 
   const handleFromDateChange = (newDate: Date) => {
-    if (newBookingToDate > newDate) {
-      dispatch(editBookingFromDate(newDate))
-    }
+    dispatch(editBookingFromDate(newDate))
   }
 
   const handleToDateChange = (newDate: Date) => {
-    if (newBookingFromDate < newDate) {
-      dispatch(editBookingToDate(newDate))
-    }
+    dispatch(editBookingToDate(newDate))
   }
 
   const setCca = (newCCA: string) => {
@@ -150,6 +147,16 @@ export default function CreateBooking() {
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
+          {createBookingError !== '' && (
+            <Alert
+              message={createBookingError}
+              // description="You can book up to maximum of 4 hours!"
+              type="error"
+              style={{ margin: '23px 0px 23px 0px' }}
+              closable
+              showIcon
+            />
+          )}
           <AutoComplete
             style={{ width: '50%', marginBottom: '23px' }}
             options={locationOptions}

@@ -156,9 +156,7 @@ export default function ViewFacility() {
       {createSuccess && (
         <Alert message="Successfully Created Event" description="Yay yippe doodles" type="success" closable showIcon />
       )}
-      {createFailure && (
-        <Alert message="Event not created!!!" description="Insert error message here" type="error" closable showIcon />
-      )}
+      {createFailure && <Alert message="Event not created!!!" type="error" closable showIcon />}
     </AlertGroup>
   )
 
