@@ -21,7 +21,6 @@ import {
   fetchAllCCAs,
   getFacilityList,
   handleCreateBooking,
-  SetCreateBookingError,
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
@@ -112,23 +111,10 @@ export default function CreateBooking() {
 
   const handleFromDateChange = (newDate: Date) => {
     dispatch(editBookingFromDate(newDate))
-    checkForDurationError()
   }
 
   const handleToDateChange = (newDate: Date) => {
     dispatch(editBookingToDate(newDate))
-    checkForDurationError()
-  }
-
-  const checkForDurationError = () => {
-    const duration = dayjs(newBookingToDate).diff(dayjs(newBookingFromDate), 'hour', true)
-    if (duration > 4) {
-      dispatch(SetCreateBookingError('Exceeded Maximum Duration!'))
-    } else if (newBookingFromDate > newBookingToDate) {
-      dispatch(SetCreateBookingError('End Date is before Start Date!'))
-    } else if (newBookingFromDate === newBookingToDate) {
-      dispatch(SetCreateBookingError('End Date is the Same as Start Date!'))
-    }
   }
 
   const setCca = (newCCA: string) => {
@@ -166,6 +152,7 @@ export default function CreateBooking() {
               message={createBookingError}
               // description="You can book up to maximum of 4 hours!"
               type="error"
+              style={{ margin: '23px 0px 23px 0px' }}
               closable
               showIcon
             />

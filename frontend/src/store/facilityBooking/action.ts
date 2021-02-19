@@ -1,11 +1,12 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
-    type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME,
-    selectedFacilityName: newError !== '' ? newError : '',
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: newError,
   })
 }
 
@@ -41,7 +42,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(Array.isArray(data) ? data : [])
+      console.log(data)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: Array.isArray(data) ? data : [],
@@ -125,14 +126,40 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
-export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
-  getAllBookingsForFacility()
+  const { newBookingFromDate } = getState().facilityBooking
+  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
 }
 
-export const editBookingFromDate = (newBookingFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+export const editBookingFromDate = (newBookingFromDate: Date) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
-  getAllBookingsForFacility()
+  const { newBookingToDate } = getState().facilityBooking
+  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
+}
+
+const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
+  let newError = ''
+  console.log(duration)
+  if (duration > 4) {
+    console.log('hi')
+    newError = 'Exceeded Maximum Booking Duration of 4 hours!'
+  } else if (duration < 0) {
+    console.log('hi')
+    newError = 'End Date is before Start Date!'
+  } else if (duration === 0) {
+    console.log('hi')
+    newError = 'End Date is the Same as Start Date!'
+  }
+
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: newError,
+  })
 }
 
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
