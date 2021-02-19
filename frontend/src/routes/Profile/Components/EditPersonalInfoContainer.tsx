@@ -78,7 +78,7 @@ const EditPersonalInfoContainer = () => {
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input placeholder={newTelegramHandle} />
           </Form.Item>
-          <BlockParagraph>{user.block}</BlockParagraph>
+          <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
           <Input.TextArea placeholder={newBio} />
