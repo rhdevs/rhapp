@@ -132,7 +132,8 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
       }
 
-      const userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+      let userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+      if (userNusModsEvents === null) userNusModsEvents = []
       const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
       const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
         ? userNusModsEvents
@@ -142,19 +143,21 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         ? timetableFormatEvents.concat(allNusModsEvents)
         : timetableFormatEvents
 
-      const startTime = allNusModsEvents
-        ? Math.min(
-            Number(getNusModsEventsStartTime(allNusModsEvents)),
-            Number(getTimetableStartTime(timetableFormatEvents)),
-          )
-        : Number(getTimetableStartTime(timetableFormatEvents))
+      const startTime =
+        allNusModsEvents.length !== 0
+          ? Math.min(
+              Number(getNusModsEventsStartTime(allNusModsEvents)),
+              Number(getTimetableStartTime(timetableFormatEvents)),
+            )
+          : Number(getTimetableStartTime(timetableFormatEvents))
 
-      const endTime = allNusModsEvents
-        ? Math.max(
-            Number(getNusModsEventsEndTime(allNusModsEvents)),
-            Number(getTimetableEndTime(timetableFormatEvents)),
-          )
-        : Number(getTimetableEndTime(timetableFormatEvents))
+      const endTime =
+        allNusModsEvents.length !== 0
+          ? Math.max(
+              Number(getNusModsEventsEndTime(allNusModsEvents)),
+              Number(getTimetableEndTime(timetableFormatEvents)),
+            )
+          : Number(getTimetableEndTime(timetableFormatEvents))
 
       console.log(transformInformationToTimetableFormat(allEvents))
       dispatch({

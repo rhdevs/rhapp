@@ -118,6 +118,10 @@ export default function Schedule() {
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
+    if (nusModsIsSuccessful || nusModsIsFailure)
+      setTimeout(() => {
+        dispatch(setNusModsStatus(false, false))
+      }, 10000)
   }, [dispatch])
 
   const rightIcon = (
