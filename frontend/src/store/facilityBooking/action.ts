@@ -2,6 +2,13 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 
+export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME,
+    selectedFacilityName: newError !== '' ? newError : '',
+  })
+}
+
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
     method: 'GET',
