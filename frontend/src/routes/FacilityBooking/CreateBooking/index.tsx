@@ -22,6 +22,7 @@ import {
   getFacilityList,
   handleCreateBooking,
   SetIsLoading,
+  setNewBookingFacilityName,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -76,7 +77,6 @@ export default function CreateBooking() {
     newBookingCCA,
     newBookingDescription,
     newBookingFacilityName,
-    selectedFacility,
     facilityList,
     isLoading,
     ccaList,
@@ -129,6 +129,7 @@ export default function CreateBooking() {
   }
 
   const setFacility = (newFacilityName: string) => {
+    dispatch(setNewBookingFacilityName(newFacilityName))
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
     if (newSelectedFacilityId) {
       dispatch(setSelectedFacility(newSelectedFacilityId))
@@ -152,7 +153,7 @@ export default function CreateBooking() {
           <AutoComplete
             style={{ width: '50%', marginBottom: '23px' }}
             options={locationOptions}
-            value={selectedFacility?.facilityName}
+            value={newBookingFacilityName}
             placeholder="Location"
             onChange={(newFacilityName) => setFacility(newFacilityName)}
             filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}

@@ -155,6 +155,10 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch(SetIsLoading(false))
 }
 
+export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
+}
+
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp })
