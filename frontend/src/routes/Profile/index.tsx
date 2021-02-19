@@ -100,7 +100,7 @@ export default function Profile() {
         isOwner={!postItem.isOfficial}
         postId={postItem._id}
         title={postItem.title}
-        dateTime={postItem.createdAt.toString()}
+        dateTime={postItem.createdAt}
         description={postItem.description}
         avatar={user.profilePictureUrl}
         name={user.displayName}

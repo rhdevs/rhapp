@@ -104,7 +104,7 @@ type PostCardProps = {
   avatar: string
   name: string
   title: string
-  dateTime: string
+  dateTime: number
   description: string
   postId: string
   postPics?: string[]
