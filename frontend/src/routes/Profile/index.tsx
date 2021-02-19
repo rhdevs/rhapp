@@ -183,18 +183,21 @@ export default function Profile() {
         >
           {ccas &&
             ccas?.map((cca) => (
-              <span
-                key={cca.ccaID}
-                style={{
-                  backgroundColor: '#F5F5F5',
-                  padding: '9px 16px',
-                  borderRadius: '9px',
-                  lineHeight: '40px',
-                  margin: '10px',
-                }}
-              >
-                {cca.ccaName}
-              </span>
+              <>
+                <span
+                  key={cca.ccaID}
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
+                >
+                  {cca.ccaName}
+                </span>
+                <br />
+              </>
             ))}
         </Card>
       </div>
@@ -212,9 +215,21 @@ export default function Profile() {
         >
           {user.modules &&
             user.modules?.map((module) => (
-              <span style={{ backgroundColor: '#F5F5F5', padding: '1px 8px', borderRadius: '9px' }} key={module}>
-                {module}
-              </span>
+              <>
+                <span
+                  style={{
+                    backgroundColor: '#F5F5F5',
+                    padding: '9px 16px',
+                    borderRadius: '9px',
+                    lineHeight: '40px',
+                    margin: '10px',
+                  }}
+                  key={module}
+                >
+                  {module}
+                </span>{' '}
+                <br />
+              </>
             ))}
         </Card>
       </div>
