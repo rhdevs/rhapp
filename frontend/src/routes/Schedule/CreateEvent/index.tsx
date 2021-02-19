@@ -5,9 +5,9 @@ import dayjs from 'dayjs'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 
 import styled from 'styled-components'
-import { Input, Select } from 'antd'
+import { Input, Select, Switch } from 'antd'
 import { DatePicker } from 'antd-mobile'
-import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
+import { LeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { RootState } from '../../../store/types'
@@ -25,6 +25,7 @@ import {
 
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+import { PATHS } from '../../Routes'
 
 const { Option } = Select
 
@@ -110,6 +111,7 @@ export default function CreateEvent() {
     newEventFromDate,
     newEventToDate,
     newDescription,
+    createdEventID,
   } = useSelector((state: RootState) => state.scheduling)
 
   /** Incomplete functionality for Uploading Image */
@@ -167,7 +169,8 @@ export default function CreateEvent() {
             style={{ color: 'black' }}
             onClick={() => {
               dispatch(handleSubmitCreateEvent())
-              // history.push()
+              console.log(createdEventID)
+              history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
             }}
           />
         }
@@ -235,6 +238,9 @@ export default function CreateEvent() {
             </StyledSelect>
           </Row>
         )} */}
+        <Row>
+          <Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} defaultChecked />
+        </Row>
       </BottomContainer>
     </Background>
   )

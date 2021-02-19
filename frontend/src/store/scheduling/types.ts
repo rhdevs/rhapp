@@ -97,6 +97,7 @@ export enum SCHEDULING_ACTIONS {
   GET_SELECTED_PROFILE_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS',
   SET_SELECTED_CCA_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS',
   GET_SELECTED_CCA_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS',
+  SET_CREATED_EVENT_ID = 'SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID',
 }
 
 /** Actions */
@@ -246,6 +247,11 @@ type GetSelectedCCAEvents = {
   selectedCCAEvents: SchedulingEvent[]
 }
 
+type SetCreatedEventID = {
+  type: typeof SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID
+  createdEventID: string | null
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -275,3 +281,4 @@ export type ActionTypes =
   | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
+  | SetCreatedEventID
