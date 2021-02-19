@@ -113,10 +113,6 @@ export default function Schedule() {
     </AlertGroup>
   )
 
-  const deleteEventStatus = () => {
-    if (deletedEventIsSuccess && !deletedEventIsFailure) message.success('The event has been sucessfully deleted!')
-    else if (deletedEventIsFailure && !deletedEventIsSuccess) message.error('Failed to delete, please try again!')
-  }
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
@@ -217,11 +213,16 @@ export default function Schedule() {
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
 <<<<<<< HEAD
+<<<<<<< HEAD
       {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
       {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
 =======
       {(deletedEventIsSuccess || deletedEventIsFailure) && deleteEventStatus()}
 >>>>>>> Add delete event with redux
+=======
+      {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
+      {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
+>>>>>>> Debug delete event notification
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
