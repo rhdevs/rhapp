@@ -2,16 +2,22 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
-import { deleteMyBooking, fetchSelectedFacility, setIsDeleteMyBooking } from '../../../store/facilityBooking/action'
+import {
+  deleteMyBooking,
+  editMyBooking,
+  fetchSelectedFacility,
+  setIsDeleteMyBooking,
+} from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { format } from 'date-fns'
 import deletepic from '../../../assets/delete.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -114,6 +120,7 @@ const EventOwnerDetails = styled.div`
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   const fetchTelegram = async (booking) => {
@@ -194,14 +201,19 @@ export default function ViewBooking() {
                   <p>{selectedBooking?.description}</p>
                 </>
               </DetailsGroup>
-              {selectedBooking?.userID !== 'you' ? (
+              {selectedBooking?.userID !== localStorage.getItem('userID') ? (
                 <ActionButtonGroup>
                   <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
-                  {/* <Icon onClick={() => tryTelegram('lawweiming')} src={messageIcon} /> */}
                 </ActionButtonGroup>
               ) : (
                 <ActionButtonGroup>
-                  <Icon src={editIcon} />
+                  <Icon
+                    src={editIcon}
+                    onClick={() => {
+                      dispatch(editMyBooking(selectedBooking))
+                      history.push(PATHS.CREATE_FACILITY_BOOKING)
+                    }}
+                  />
                   <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
                 </ActionButtonGroup>
               )}
