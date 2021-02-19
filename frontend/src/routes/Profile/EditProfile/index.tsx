@@ -258,17 +258,15 @@ export default function EditProfile() {
   }
 
   return (
-    <>
-      <MainContainer>
-        <TopNavBar title={'Edit Profile'} />
-        <ProfileComponent>
-          <EditPersonalInfoContainer />
-          <CardContainer>
-            <EditDetailsCard />
-          </CardContainer>
-        </ProfileComponent>
-        <BottomNavBar />
-      </MainContainer>
-    </>
+    <MainContainer>
+      <TopNavBar title={'Edit Profile'} />
+      <ProfileComponent>
+        <EditPersonalInfoContainer />
+        <CardContainer>
+          <EditDetailsCard />
+        </CardContainer>
+      </ProfileComponent>
+      <BottomNavBar />
+    </MainContainer>
   )
 }
