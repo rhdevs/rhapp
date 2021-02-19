@@ -169,8 +169,12 @@ export default function CreateEvent() {
             style={{ color: 'black' }}
             onClick={() => {
               dispatch(handleSubmitCreateEvent())
+<<<<<<< HEAD
               console.log(createdEventID)
               history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
+=======
+              // history.push()
+>>>>>>> Debug create event feature
             }}
           />
         }
