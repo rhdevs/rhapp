@@ -134,7 +134,6 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
 
       let userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
       if (userNusModsEvents === null) userNusModsEvents = []
-      console.log(userNusModsEvents)
       const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
       const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
         ? userNusModsEvents
