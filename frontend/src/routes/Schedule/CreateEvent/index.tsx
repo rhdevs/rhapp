@@ -163,7 +163,13 @@ export default function CreateEvent() {
         leftIcon
         leftIconComponent={BackIcon}
         rightComponent={
-          <CheckOutlined style={{ color: 'black' }} onClick={() => dispatch(handleSubmitCreateEvent())} />
+          <CheckOutlined
+            style={{ color: 'black' }}
+            onClick={() => {
+              dispatch(handleSubmitCreateEvent())
+              // history.push()
+            }}
+          />
         }
       />
       <BottomContainer>
