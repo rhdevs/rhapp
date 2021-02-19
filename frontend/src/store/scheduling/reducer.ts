@@ -30,6 +30,7 @@ const initialState = {
   newHallEventType: '',
   hallEventTypes: [],
   targetAudienceList: [],
+  createdEventID: null,
 
   //view event state
   selectedEvent: null,
@@ -78,6 +79,7 @@ type State = {
   selectedProfileNusModsEvents: TimetableEvent[]
   selectedCCAIds: number[]
   selectedCCAEvents: SchedulingEvent[]
+  createdEventID: string | null
 }
 
 export const scheduling: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -253,6 +255,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         selectedCCAEvents: action.selectedCCAEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID: {
+      return {
+        ...state,
+        createdEventID: action.createdEventID,
       }
     }
     default:
