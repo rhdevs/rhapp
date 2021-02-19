@@ -619,6 +619,7 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
   })
     .then((resp) => resp.json())
     .then((data) => {
+      console.log(data)
       console.log(`added successfully: ${data}`)
       dispatch(setIsLoading(false))
     })
