@@ -616,11 +616,19 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
   })
     .then((resp) => resp.json())
     .then((data) => {
+      console.log('added successfully: ')
       console.log(data)
-      console.log(`added successfully: ${data}`)
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
+        createdEventID: data.eventID,
+      })
       dispatch(setIsLoading(false))
     })
     .catch((err) => {
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
+        createdEventID: null,
+      })
       console.log(err)
     })
 }
