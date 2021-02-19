@@ -23,7 +23,7 @@ export enum PATHS {
   EVENT_LIST_PAGE = '/schedule/events',
   CREATE_EVENT = '/schedule/events/create',
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
-  VIEW_EVENT = '/schedule/events/view/',
+  VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
