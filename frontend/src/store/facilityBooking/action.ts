@@ -104,7 +104,10 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
     type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
     newBooking: oldBooking,
   })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: oldBooking?.eventName })
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
+    newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
+  })
 }
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
