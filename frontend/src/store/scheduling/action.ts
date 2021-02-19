@@ -132,7 +132,8 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
       }
 
-      const userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+      let userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+      if (userNusModsEvents === null) userNusModsEvents = []
       const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
       const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
         ? userNusModsEvents
