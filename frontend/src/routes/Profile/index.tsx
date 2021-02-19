@@ -91,7 +91,7 @@ export default function Profile() {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
     dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     dispatch(fetchUserPosts(localStorage.getItem('userID')))
-    setIsOwnProfile(userIdFromPath === user.userID)
+    setIsOwnProfile(userIdFromPath === localStorage.getItem('userId'))
   }, [dispatch])
 
   const ActivitiesItem = (postItem: Post) => {
