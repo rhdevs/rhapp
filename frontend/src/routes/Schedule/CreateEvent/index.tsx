@@ -19,7 +19,6 @@ import {
   editDescription,
   handleSubmitCreateEvent,
   getHallEventTypes,
-  editHallEventType,
   editEventToDate,
   getTargetAudienceList,
 } from '../../../store/scheduling/action'
@@ -105,14 +104,12 @@ export default function CreateEvent() {
     />
   )
   const {
-    hallEventTypes,
     targetAudienceList,
     newEventName,
     newEventLocation,
     newEventFromDate,
     newEventToDate,
     newDescription,
-    newTargetAudience,
   } = useSelector((state: RootState) => state.scheduling)
 
   /** Incomplete functionality for Uploading Image */
@@ -220,7 +217,7 @@ export default function CreateEvent() {
           setValue={(description: string) => dispatch(editDescription(description))}
           textarea
         />
-        {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
+        {/* {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
           <Row>
             <StyledTitle>Event Type</StyledTitle>
             <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
@@ -231,7 +228,7 @@ export default function CreateEvent() {
               ))}
             </StyledSelect>
           </Row>
-        )}
+        )} */}
       </BottomContainer>
     </Background>
   )
