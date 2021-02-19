@@ -73,15 +73,15 @@ const EditPersonalInfoContainer = () => {
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
-            <Input value={newDisplayName} placeholder={newDisplayName} />
+            <Input defaultValue={newDisplayName} placeholder={newDisplayName} />
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
-            <Input value={newTelegramHandle} placeholder={newTelegramHandle} />
+            <Input defaultValue={newTelegramHandle} placeholder={newTelegramHandle} />
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
-          <Input.TextArea value={newBio} placeholder={newBio} />
+          <Input.TextArea defaultValue={newBio} placeholder={newBio} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={LongButton}>
