@@ -28,13 +28,14 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
     '&endDate=' +
     parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
 
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + querySubString, {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + 'A1234567B', {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
     .then((data) => {
       console.log(Array.isArray(data) ? data : [])
+      console.log(querySubString)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: Array.isArray(data) ? data : [],
