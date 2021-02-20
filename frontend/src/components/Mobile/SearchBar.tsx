@@ -14,7 +14,7 @@ const StyledSearchBar = styled(antdSearchBar)`
   &.am-search {
     background-color: transparent;
   }
-  &.am-search-input .am-search-synthetic-ph {
+  .am-search-input .am-search-synthetic-ph {
     height: 40px;
     line-height: 40px;
   }
