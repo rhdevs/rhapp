@@ -201,7 +201,7 @@ export default function CreateEditPost() {
   const [hasChanges, setHasChanges] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
 
-  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, newPostCca, warnings, isUploading } = useSelector(
+  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
 
