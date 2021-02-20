@@ -97,6 +97,7 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
       .then((resp) => resp.json())
       .then((data) => {
         returnTable = returnTable.concat(data)
+        console.log(data)
       })
   }
   dispatch({
