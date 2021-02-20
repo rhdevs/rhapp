@@ -66,14 +66,14 @@ const BioParagraph = styled.p`
 
 const AvatarSpan = styled.span`
   display: inline-block;
-  height: 27vh;
+  height: 150px;
   width: 30vw;
   vertical-align: middle;
 `
 
 const PersonalInfoSpan = styled.span`
   display: inline-block;
-  height: 27vh;
+  height: 150px;
   width: 50vw;
   vertical-align: middle;
   padding-left: 3vw;
@@ -156,7 +156,11 @@ export default function Profile() {
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
       <AvatarSpan>
-        <img alt="logo" style={{ width: 100, borderRadius: 100 / 2 }} src={user?.profilePictureUrl} />
+        <img
+          alt="logo"
+          style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
+          src={user?.profilePictureUrl}
+        />
       </AvatarSpan>
       <PersonalInfoSpan>
         <NameParagraph>{user?.displayName}</NameParagraph>
