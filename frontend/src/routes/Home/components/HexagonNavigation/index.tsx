@@ -6,8 +6,6 @@ import { PATHS } from '../../../Routes'
 import calendar_icon from '../../../../assets/hexagonIcons/calendarIcon.svg'
 import facilities_icon from '../../../../assets/hexagonIcons/facilitiesIcon.svg'
 import laundry_icon from '../../../../assets/hexagonIcons/laundryIcon.svg'
-import social_icon from '../../../../assets/hexagonIcons/socialIcon.svg'
-import more_icon from '../../../../assets/hexagonIcons/moreIcon.svg'
 
 const StyledHexagon = styled(Hexagon)`
   fill: #de5f4c;
