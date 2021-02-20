@@ -51,7 +51,6 @@ def root_route():
 @cross_origin()
 def all_facilities():
     try:
-        print("testing 1")
         data = removeObjectID(list(db.Facilities.find()))
 
     except Exception as e:
@@ -101,7 +100,6 @@ def get_one_booking(bookingID):
     try:
         data = removeObjectID(
             list(db.Bookings.find({"bookingID": int(bookingID)})))
-        print(bookingID)
     except Exception as e:
         return {"err": str(e)}, 400
     return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
@@ -109,11 +107,9 @@ def get_one_booking(bookingID):
 
 @app.route('/bookings/facility/<facilityID>/')
 def check_bookings(facilityID):
-    #print('TESTING 0')
     try:
-        data = removeObjectID(list(db.Bookings.find({"facilityID": int(facilityID), "startTime": {"$gte": int(
-            request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
-        # print(data)
+        data = removeObjectID(list(db.Bookings.find({"facilityID": int(facilityID),
+            "startTime": {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
     except Exception as e:
         return {"err": str(e)}, 400
 
@@ -140,10 +136,8 @@ def user_telegram(userID):
 @app.route('/bookings', methods=['POST'])
 def add_booking():
     try:
-        print("Testing 2")
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
         formData = request.get_json()
-
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
@@ -155,13 +149,22 @@ def add_booking():
         # else:
         #     return {"err": "Unauthorised Access"}, 401
 
+        # Check for exisiting booking
+        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"), "$or": [
+            {"startTime": {"$gt": formData.get('startTime')}, "startTime": {"$lt": formData.get('endTime')}},
+            {"endTime": {"$gt": formData.get('startTime')}, "endTime": {"$lt": formData.get('endTime')}}
+        ]})))
+
+        if (len(conflict) != 0): 
+            raise Exception("Conflict Booking")
+        
+
         lastbookingID = list(db.Bookings.find().sort(
             [('_id', pymongo.DESCENDING)]).limit(1))
         newBookingID = 1 if len(lastbookingID) == 0 else int(
             lastbookingID[0].get("bookingID")) + 1
 
         formData["bookingID"] = newBookingID
-        print(formData)
         db.Bookings.insert_one(formData)
 
     except Exception as e:
@@ -186,7 +189,6 @@ def get_booking(bookingID):
 def edit_booking(bookingID):
     try:
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
-        print(bookingID, request.get_json(), "Test6")
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
                                "$set": request.get_json()})
 
@@ -204,7 +206,6 @@ def delete_booking(bookingID):
     try:
         # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0].get('userID') :
         db.Bookings.delete_one({"bookingID": int(bookingID)})
-        print(bookingID, "Test7")
         # else:
         #     return {"err": "Unauthorised Access"}, 401
     except Exception as e:
