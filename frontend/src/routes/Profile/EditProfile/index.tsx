@@ -75,6 +75,13 @@ export default function EditProfile() {
     { value: 'Board of Photography' },
   ]
 
+  const test = allCcas.map((cca) => {
+    value: cca.ccaName
+  })
+
+  console.log(options)
+  console.log(test)
+
   let ccaToBeAdded = ''
   let moduleToBeAdded = ''
   const handleChangeAutoComplete = (type: string) => (value: string) => {

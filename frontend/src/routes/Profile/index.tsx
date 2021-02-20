@@ -9,6 +9,7 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  fetchAllCCAs,
   fetchUserCCAs,
   fetchUserDetails,
   fetchUserFriends,
