@@ -52,7 +52,7 @@ export default function HexagonNavigation() {
   const hexagonSize = { x: 27, y: 27 }
   return (
     <Container>
-      <HexGrid style={{ overflow: 'inherit' }} width={'100%'} height={180} viewBox="-70 -67 100 100">
+      <HexGrid style={{ overflow: 'inherit' }} width={'100%'} height={100} viewBox="-70 -70 100 60">
         <Layout size={hexagonSize} flat={false} pointy={true} spacing={1} origin={{ x: 0, y: 0 }}>
           {hexagons.map((hex, i) => (
             <StyledHexagon key={i} q={hex.q} r={hex.r} s={hex.s} onClick={hex.onClick} fill={hex.fill}>
