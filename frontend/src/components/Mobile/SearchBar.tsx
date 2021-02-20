@@ -18,6 +18,13 @@ const StyledSearchBar = styled(antdSearchBar)`
     height: 40px;
     line-height: 40px;
   }
+
+  .am-search-input .am-search-clear {
+    padding: 12.5px;
+  }
+  .am-search-input input[type='search'] {
+    height: 40px;
+  }
 `
 
 function SearchBar({
