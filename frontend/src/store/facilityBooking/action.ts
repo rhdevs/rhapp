@@ -36,7 +36,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
     '&endDate=' +
     parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
 
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + querySubString, {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
     mode: 'cors',
   })
