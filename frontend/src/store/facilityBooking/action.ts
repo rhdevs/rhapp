@@ -28,7 +28,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
     '&endDate=' +
     parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
 
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + 'A1234567B', {
+  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + 'A1234567B', {
     method: 'GET',
     mode: 'cors',
   })
@@ -42,6 +42,9 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
         facilityBookings: Array.isArray(data) ? data : [],
       })
       dispatch(SetIsLoading(false))
+    })
+    .catch((err) => {
+      console.log(err)
     })
 }
 
