@@ -83,8 +83,6 @@ export default function HexagonNavigation() {
         <Pattern id="calendar" link={calendar_icon} size={hexagonSize} />
         <Pattern id="facilities" link={facilities_icon} size={hexagonSize} />
         <Pattern id="laundry" link={laundry_icon} size={hexagonSize} />
-        <Pattern id="more" link={more_icon} size={hexagonSize} />
-        <Pattern id="social" link={social_icon} size={hexagonSize} />
       </HexGrid>
     </Container>
   )
