@@ -36,6 +36,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
     .then((data) => {
       console.log(Array.isArray(data) ? data : [])
       console.log(querySubString)
+      console.log(data)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: Array.isArray(data) ? data : [],
