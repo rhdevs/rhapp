@@ -41,24 +41,6 @@ export default function HexagonNavigation() {
     },
     {
       q: -1,
-      r: 0,
-      s: 1,
-      fill: 'more',
-      onClick: () => {
-        // history.push(PATHS.SCHEDULE_PAGE)
-      },
-    },
-    {
-      q: 0,
-      r: 0,
-      s: 0,
-      fill: 'social',
-      onClick: () => {
-        // history.push(PATHS.FRIEND_LIST_PAGE)
-      },
-    },
-    {
-      q: -1,
       r: -1,
       s: 2,
       fill: 'facilities',
