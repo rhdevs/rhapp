@@ -201,7 +201,7 @@ export default function ViewBooking() {
                   <p>{selectedBooking?.description}</p>
                 </>
               </DetailsGroup>
-              {selectedBooking?.userID !== localStorage.getItem('userID') ? (
+              {selectedBooking?.userID == localStorage.getItem('userID') ? (
                 <ActionButtonGroup>
                   <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
                 </ActionButtonGroup>
