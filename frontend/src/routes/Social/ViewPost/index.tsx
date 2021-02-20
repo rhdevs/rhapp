@@ -18,7 +18,6 @@ import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
-import { userProfileStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -116,9 +115,6 @@ export default function ViewPost() {
   const postDate = dayjs.unix(parseInt(createdAt ?? ''))
   const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
   const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
-
-  // TODO: to get from response
-  const avatar = userProfileStub.profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
