@@ -101,11 +101,11 @@ export default function Signup() {
       position: ['Resident'],
       displayName: formData.display,
       bio: formData.bio,
-      block: formData.block,
+      block: parseInt(formData.block),
       telegramHandle: formData.telegram,
     }
 
-    fetch('https://rhappsocial.rhdevs.repl.co/auth/register', {
+    await fetch('https://rhappsocial.rhdevs.repl.co/auth/register', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -115,7 +115,6 @@ export default function Signup() {
     })
       .then((resp) => resp)
       .then((data) => {
-        console.log(data)
         if (data.ok) {
           const queryBody = {
             userID: formData.userId,
