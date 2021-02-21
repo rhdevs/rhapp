@@ -52,6 +52,10 @@ const Tab = styled.div<TabProps>`
   opacity: ${(props) => (props.active ? 1 : 0.5)};
 `
 
+const NoPostText = styled.text`
+  font-size: 20px;
+`
+
 export default function SocialSection() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -111,7 +115,7 @@ export default function SocialSection() {
           </Tab>
         </TabBar>
       </Sticky>
-      {renderSocialPosts()}
+      {socialPosts.length > 0 ? renderSocialPosts() : <NoPostText>No posts, post something!</NoPostText>}
       {!hasNoMorePosts && (
         <StyledContainer>
           {isLoading ? (
