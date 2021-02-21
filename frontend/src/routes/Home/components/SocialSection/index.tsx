@@ -109,10 +109,6 @@ export default function SocialSection() {
           <Tab active={currentPostsFilter === POSTS_FILTER.OFFICIAL} onClick={toggleTab(POSTS_FILTER.OFFICIAL)}>
             Official
           </Tab>
-          <Divider type="vertical" />
-          <Tab active={currentPostsFilter === POSTS_FILTER.FRIENDS} onClick={toggleTab(POSTS_FILTER.FRIENDS)}>
-            Friends
-          </Tab>
         </TabBar>
       </Sticky>
       {renderSocialPosts()}
