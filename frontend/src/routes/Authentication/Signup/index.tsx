@@ -106,7 +106,7 @@ export default function Signup() {
     }
 
     console.log(newUser)
-    
+
     await fetch('https://rhappsocial.rhdevs.repl.co/auth/register', {
       method: 'POST',
       mode: 'cors',
