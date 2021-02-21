@@ -233,7 +233,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         return post
       })
 
-      //check if action is a repeated call to the same posts
+      //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
       if (intersection(transformedPostID, postLastID).length === 0) {
@@ -242,6 +242,8 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
           posts: posts.concat(transformedPost),
         })
       } else {
+        //do nothing
+        //repeated call so do not concat same posts to existing posts
       }
     } else {
       dispatch({
