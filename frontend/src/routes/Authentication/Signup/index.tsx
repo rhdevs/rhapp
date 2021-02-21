@@ -115,7 +115,6 @@ export default function Signup() {
     })
       .then((resp) => resp)
       .then((data) => {
-        console.log(data)
         if (data.ok) {
           const queryBody = {
             userID: formData.userId,
