@@ -101,7 +101,7 @@ export default function Signup() {
       position: ['Resident'],
       displayName: formData.display,
       bio: formData.bio,
-      block: formData.block,
+      block: parseInt(formData.block),
       telegramHandle: formData.telegram,
     }
 
