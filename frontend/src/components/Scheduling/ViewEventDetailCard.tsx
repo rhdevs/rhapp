@@ -97,15 +97,7 @@ const RemoveRow = styled.div`
   width: 100%;
   margin: 10px 0px;
   justify-content: center;
-<<<<<<< HEAD
-<<<<<<< HEAD
   flex-direction: column;
-=======
-  flex-direction: row;
->>>>>>> Improve button styling
-=======
-  flex-direction: column;
->>>>>>> Debug delete event
 `
 
 const RemoveEvent = styled.button`
@@ -257,11 +249,9 @@ function ViewEventDetailCard({
             </RemoveEvent>
           )}
           {(eventCreatedBy === 'You' || eventCreatedBy === 'NUSMods') && (
-            <>
-              <Button type="primary" danger style={LongButton} onClick={() => setDeleteModal(!deleteModal)}>
-                Delete Event
-              </Button>
-            </>
+            <Button type="primary" danger style={LongButton} onClick={() => setDeleteModal(!deleteModal)}>
+              Delete Event
+            </Button>
           )}
         </RemoveRow>
       </Background>
