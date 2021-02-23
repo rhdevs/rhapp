@@ -16,7 +16,6 @@ import {
   fetchAllCCAs,
   fetchAllProfiles,
   fetchCurrentUserEvents,
-  setDeleteEventStatus,
   setIsLoading,
   setNusModsStatus,
   setSelectedCCAIds,
@@ -217,26 +216,12 @@ export default function Schedule() {
     {
       deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')
     }
-    dispatch(setDeleteEventStatus(false, false))
   }, [])
 
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
       {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
-=======
-      {(deletedEventIsSuccess || deletedEventIsFailure) && deleteEventStatus()}
->>>>>>> Add delete event with redux
-=======
-      {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
-      {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
->>>>>>> Debug delete event notification
-=======
->>>>>>> Update view event ui, Debug notification for delete eevnt sucess/failure
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
