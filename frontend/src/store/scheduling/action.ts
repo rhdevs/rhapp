@@ -698,6 +698,14 @@ export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<Acti
 
   postToBackend(ENDPOINTS.DELETE_EVENT + `/${eventId}`, 'DELETE', null, updateStatus)
 }
+
+export const setDeleteEventStatus = (isSuccess: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+    deletedEventIsSuccess: isSuccess,
+    deletedEventIsFailure: isFailure,
+  })
+}
 // ---------------------- VIEW EVENTS ----------------------
 
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
