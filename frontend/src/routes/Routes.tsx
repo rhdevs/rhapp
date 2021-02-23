@@ -20,12 +20,12 @@ export enum PATHS {
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
-  EVENT_LIST_PAGE = '/schedule/events',
+  EVENT_LIST_PAGE = '/schedule/events/view/public/:pageIndex', //'/schedule/events',
   CREATE_EVENT = '/schedule/events/create',
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
-  VIEW_PUBLIC_EVENT_BY_PAGE = '/schedule/events/view/public/:pageIndex',
+  // VIEW_PUBLIC_EVENT_BY_PAGE = '/schedule/events/view/public/:pageIndex',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityID',
