@@ -478,7 +478,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
     })
     dispatch(setIsLoading(false))
   }
-  getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
@@ -613,7 +613,7 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     isPrivate: isPersonal,
     ownerIsAttending: creatorIsAttending,
   }
-  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  const eventID = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
@@ -625,19 +625,13 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     .then((data) => {
       console.log('added successfully: ')
       console.log(data)
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
-        createdEventID: data.eventID,
-      })
-      dispatch(setIsLoading(false))
+      return data.eventID
     })
     .catch((err) => {
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
-        createdEventID: null,
-      })
       console.log(err)
     })
+  dispatch(setIsLoading(false))
+  return eventID
 }
 // ---------------------- CREATE EVENTS ----------------------
 

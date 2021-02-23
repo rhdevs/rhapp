@@ -115,7 +115,6 @@ export default function CreateEvent() {
     newEventFromDate,
     newEventToDate,
     newDescription,
-    createdEventID,
   } = useSelector((state: RootState) => state.scheduling)
 
   /** Incomplete functionality for Uploading Image */
@@ -171,10 +170,12 @@ export default function CreateEvent() {
         rightComponent={
           <CheckOutlined
             style={{ color: 'black' }}
-            onClick={() => {
-              dispatch(handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending))
-              console.log(createdEventID)
-              history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
+            onClick={async () => {
+              const eventID = await dispatch(
+                handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending),
+              )
+              console.log(eventID)
+              history.push(PATHS.VIEW_EVENT + `/${eventID}`)
             }}
           />
         }
