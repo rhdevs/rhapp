@@ -162,6 +162,8 @@ def getEventsDetails(eventID):
 @cross_origin()
 def getCCADetails(ccaID):
     try:
+        if ccaID == None:
+            return ('', 204)
         data = db.CCA.find({"ccaID": ccaID})
     except Exception as e:
         return {"err": str(e)}, 400
