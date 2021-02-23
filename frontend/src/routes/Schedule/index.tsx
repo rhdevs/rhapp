@@ -16,6 +16,7 @@ import {
   fetchAllCCAs,
   fetchAllProfiles,
   fetchCurrentUserEvents,
+  setDeleteEventStatus,
   setIsLoading,
   setNusModsStatus,
   setSelectedCCAIds,
@@ -216,6 +217,7 @@ export default function Schedule() {
     {
       deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')
     }
+    dispatch(setDeleteEventStatus(false, false))
   }, [])
 
   return (
