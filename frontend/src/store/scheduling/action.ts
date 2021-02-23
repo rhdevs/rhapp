@@ -613,7 +613,7 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     isPrivate: isPersonal,
     ownerIsAttending: creatorIsAttending,
   }
-  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
