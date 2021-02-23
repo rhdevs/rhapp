@@ -171,7 +171,7 @@ export default function Schedule() {
             key="5"
             icon={<SearchOutlined />}
             onClick={() => {
-              history.push(PATHS.EVENT_LIST_PAGE)
+              history.push(`${PATHS.EVENT_LIST_PAGE}/1`)
             }}
           >
             Events
