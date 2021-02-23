@@ -13,6 +13,7 @@ type Props = {
   defaultTextColor?: string
   updatedTextColor?: string
   style?: React.CSSProperties
+  descriptionStyle?: React.CSSProperties
   onButtonClick?: (arg0: boolean) => void
   isFlipButton?: boolean
 }
@@ -95,7 +96,9 @@ function Button(props: Props) {
         if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
       }}
     >
-      {buttonDescriptionChooser(buttonIsPressed)}
+      <text style={props.descriptionStyle ? props.descriptionStyle : undefined}>
+        {buttonDescriptionChooser(buttonIsPressed)}
+      </text>
     </AntdButton>
   )
 }

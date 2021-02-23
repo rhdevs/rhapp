@@ -89,7 +89,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           dateTime={formatDate(result.startDateTime)}
           description={result.description}
           bottomElement={
-            <>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <AntdButton
                 type="primary"
                 style={LongButton}
@@ -99,8 +99,10 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
               >
                 See Details
               </AntdButton>
-              <div style={{ width: '25px' }} />
+              <div style={{ width: '5%' }} />
               <Button
+                descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
+                style={{ width: '9rem', height: 'auto' }}
                 buttonIsPressed={
                   userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
@@ -141,7 +143,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   return
                 }}
               />
-            </>
+            </div>
           }
         />
       )
@@ -170,6 +172,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <>
             {eventsToCards(selectedPageEvents)}
             <Pagination
+              hideOnSinglePage
               style={{ display: 'flex', justifyContent: 'center' }}
               defaultCurrent={1}
               current={pageIndex}
