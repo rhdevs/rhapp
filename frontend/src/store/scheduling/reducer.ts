@@ -19,6 +19,7 @@ const initialState = {
   nusModsIsFailure: false,
   eventAttendanceIsSuccessful: false,
   eventAttendanceIsFailure: false,
+  selectedPageEvents: [],
 
   // Create new event states
   newEventName: '',
@@ -62,6 +63,7 @@ type State = {
   nusModsIsFailure: boolean
   eventAttendanceIsSuccessful: boolean
   eventAttendanceIsFailure: boolean
+  selectedPageEvents: SchedulingEvent[]
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -264,6 +266,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         ...state,
         deletedEventIsSuccess: action.deletedEventIsSuccess,
         deletedEventIsFailure: action.deletedEventIsFailure,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS: {
+      return {
+        ...state,
+        selectedPageEvents: action.selectedPageEvents,
       }
     }
     default:
