@@ -209,11 +209,18 @@ export default function Schedule() {
     )
   }
 
+  useEffect(() => {
+    {
+      deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')
+    }
+    {
+      deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')
+    }
+  }, [])
+
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
-      {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
