@@ -100,7 +100,7 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
             <PrivateRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
-            <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE} component={EventList} />
+            <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE_WITH_PAGE_INDEX} component={EventList} />
             <PrivateRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
             <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
