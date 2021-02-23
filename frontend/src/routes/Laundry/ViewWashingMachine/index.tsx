@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -12,7 +12,15 @@ import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetDuration, SetEditMode, UpdateJobDuration, updateMachine } from '../../../store/laundry/action'
+import {
+  SetDuration,
+  SetEditMode,
+  SetSelectedMachine,
+  SetSelectedMachineFromId,
+  UpdateJobDuration,
+  updateMachine,
+} from '../../../store/laundry/action'
+import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -87,8 +95,18 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
+  const { selectedMachine, isEdit, duration, filteredMachines } = useSelector((state: RootState) => state.laundry)
   const dispatch = useDispatch()
+  const params = useParams<{ machineId: string }>()
+
+  useEffect(() => {
+    dispatch(SetSelectedMachineFromId(params.machineId))
+    const displayMachine = filteredMachines.find((machine) => machine.machineID === params.machineId)
+    dispatch(SetSelectedMachine(displayMachine as WashingMachine))
+    console.log(displayMachine?.startTime)
+    console.log(new Date().getUTCDate())
+  }, [])
+
   const MachineDetails = (machine: WashingMachine | null) => {
     let pageTitle = 'Laundry Time!'
     let actions = <></>
@@ -118,6 +136,7 @@ export default function ViewWashingMachine() {
         imagesrc = wm_inuse
         break
       case WMStatus.COMPLETED:
+      case WMStatus.UNCOLLECTED:
         pageTitle = 'Collect Laundry'
         imagesrc = wm_uncollected
         actions = (

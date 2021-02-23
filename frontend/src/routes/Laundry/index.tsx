@@ -37,6 +37,10 @@ export default function LaundryMain() {
     <>
       <MainContainer>
         <TopNavBar title={'Laundry Time'} />
+        {isLoading && <LoadingSpin />}
+        {selectedLevel === null && selectedBlock !== 'Kuok' && (
+          <h4 style={{ textAlign: 'center', padding: '23px 0px 0px 0px' }}>Select Both Your Block and Level!</h4>
+        )}
         <FilterGroup>
           <DropDownSelector
             SelectedValue={selectedBlock === '' ? 'Block' : (selectedBlock as string)}
@@ -51,10 +55,6 @@ export default function LaundryMain() {
             />
           )}
         </FilterGroup>
-        {isLoading && <LoadingSpin />}
-        {selectedLevel === null && selectedBlock !== 'Kuok' && (
-          <h4 style={{ textAlign: 'center', padding: '23px' }}>Select Both Your Block and Level!</h4>
-        )}
         {!isLoading &&
           filteredMachines.map((item: WashingMachine) => (
             <WashingMachineCard key={item.machineID} washingMachine={item} />

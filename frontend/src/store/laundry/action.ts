@@ -88,7 +88,6 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
   for (let i = 0; i < 3; i++) {
     const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
     const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
-
     const queryUrl = DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
     await fetch(queryUrl, {
       method: 'GET',
@@ -104,6 +103,21 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
     filteredMachines: returnTable,
   })
   dispatch(SetIsLoading(false))
+}
+
+export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  try {
+    const level = machineId[0] === '7' ? '0' : 'Level ' + machineId.split('-')[1][1]
+    const block = machineId[0] === '7' ? 'Kuok' : 'Block ' + machineId[0]
+    dispatch({
+      type: LAUNDRY_ACTIONS.SET_BLOCK_LEVEL_SELECTIONS,
+      selectedBlock: block as string,
+      selectedLevel: level as string,
+    })
+    dispatch(SetFilteredMachines())
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const SetSelectedMachine = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {
