@@ -112,17 +112,23 @@ const RemoveEvent = styled.button`
   font-family: Inter;
   font-style: normal;
   font-weight: 200;
-  font-size: 14px;
+  font-size: 18px;
   text-decoration-line: underline;
   color: #1890ff;
   background: none;
   border: none;
+  margin-top: 15px;
 `
 
 const LongButton = {
+  fontFamily: 'Inter',
+  margin: '35px auto auto',
+  height: '40px',
+  fontSize: '17px',
   backgroundColor: '#DE5F4C',
   borderColor: '#DE5F4C',
   borderRadius: '5px',
+  width: 'clamp(8rem, 60vw, 16rem)',
 }
 
 function ViewEventDetailCard({
@@ -251,9 +257,11 @@ function ViewEventDetailCard({
             </RemoveEvent>
           )}
           {(eventCreatedBy === 'You' || eventCreatedBy === 'NUSMods') && (
-            <Button type="primary" danger style={LongButton} onClick={() => setDeleteModal(!deleteModal)}>
-              Delete Event
-            </Button>
+            <>
+              <Button type="primary" danger style={LongButton} onClick={() => setDeleteModal(!deleteModal)}>
+                Delete Event
+              </Button>
+            </>
           )}
         </RemoveRow>
       </Background>

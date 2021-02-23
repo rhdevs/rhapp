@@ -209,9 +209,19 @@ export default function Schedule() {
     )
   }
 
+  useEffect(() => {
+    {
+      deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')
+    }
+    {
+      deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')
+    }
+  }, [])
+
   return (
     <Background>
       <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
@@ -223,6 +233,8 @@ export default function Schedule() {
       {deletedEventIsSuccess && !deletedEventIsFailure && message.success('The event has been sucessfully deleted!')}
       {deletedEventIsFailure && !deletedEventIsSuccess && message.error('Failed to delete, please try again!')}
 >>>>>>> Debug delete event notification
+=======
+>>>>>>> Update view event ui, Debug notification for delete eevnt sucess/failure
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
