@@ -61,7 +61,7 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const pageIndex = useParams<{ pageIndex: string }>()
+  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex)
 
   const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
@@ -72,7 +72,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   useEffect(() => {
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllPublicEvents())
-    dispatch(getPublicEventsByPage(Number(pageIndex)))
+    dispatch(getPublicEventsByPage(pageIndex))
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -172,7 +172,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
             <Pagination
               style={{ display: 'flex', justifyContent: 'center' }}
               defaultCurrent={1}
-              current={Number(pageIndex)}
+              current={pageIndex}
               total={data.length}
               defaultPageSize={10}
               onChange={(pageNumber) => {
