@@ -18,6 +18,7 @@ import {
   editUserEvents,
   fetchAllPublicEvents,
   fetchAllUserEvents,
+  getPublicEventsByPage,
   getSearchedEvents,
 } from '../../../store/scheduling/action'
 import { SchedulingEvent } from '../../../store/scheduling/types'
@@ -62,7 +63,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const dispatch = useDispatch()
   const pageIndex = useParams<{ pageIndex: string }>()
 
-  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
+  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
   )
 
@@ -71,6 +72,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   useEffect(() => {
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
     dispatch(fetchAllPublicEvents())
+    dispatch(getPublicEventsByPage(Number(pageIndex)))
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
@@ -160,11 +162,23 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      return data.length ? (
+      return selectedPageEvents.length ? (
         isLoading ? (
           <LoadingSpin />
         ) : (
-          eventsToCards(data)
+          <>
+            {eventsToCards(selectedPageEvents)}
+            <Pagination
+              style={{ display: 'flex', justifyContent: 'center' }}
+              defaultCurrent={1}
+              current={Number(pageIndex)}
+              total={data.length}
+              defaultPageSize={10}
+              onChange={(pageNumber) => {
+                history.push(`${PATHS.EVENT_LIST_PAGE}/${pageNumber}`)
+              }}
+            />
+          </>
         )
       ) : (
         <>
@@ -196,17 +210,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
         </SearchBarContainer>
       </TopContainer>
-      <ResultsContainer>
-        {renderResults()}
-        <Pagination
-          defaultCurrent={1}
-          current={Number(pageIndex)}
-          total={data.length}
-          defaultPageSize={10}
-          hideOnSinglePage
-          responsive
-        />
-      </ResultsContainer>
+      <ResultsContainer>{renderResults()}</ResultsContainer>
       <BottomNavBar />
     </Background>
   )
