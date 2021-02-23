@@ -536,25 +536,16 @@ export const setEventAttendanceStatus = (eventAttendanceIsSuccessful: boolean, e
   })
 }
 
-// export const increasePageIndex = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-//   const { pageIndex, postsFilter } = getState().social
-//   const { userID } = getState().profile.user
-
-//   const newPageIndex = pageIndex + 1
-
-//   dispatch(GetPosts(postsFilter, newPageIndex, userID))
-//   dispatch({
-//     type: SOCIAL_ACTIONS.INCREASE_PAGE_INDEX,
-//     pageIndex: newPageIndex,
-//   })
-// }
-
-const getPublicEventsBySection = async (pageIndex: number) => {
+export const getPublicEventsByPage = (pageIndex: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const currentUNIXDate = Math.round(Date.now() / 1000)
 
-  const fiveNewEvents = await getFromBackend(ENDPOINTS.GET_PUBLIC_EVENTS + `/${pageIndex}/${currentUNIXDate}`, null)
-
-  return fiveNewEvents
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS,
+      selectedPageEvents: data,
+    })
+  }
+  await getFromBackend(ENDPOINTS.GET_PUBLIC_EVENTS + `/${pageIndex}/${currentUNIXDate}`, dispatchData)
 }
 
 // ---------------------- SEARCH EVENTS ----------------------

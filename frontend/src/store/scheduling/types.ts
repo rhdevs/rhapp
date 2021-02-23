@@ -98,6 +98,7 @@ export enum SCHEDULING_ACTIONS {
   SET_SELECTED_CCA_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS',
   GET_SELECTED_CCA_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS',
   SET_CREATED_EVENT_ID = 'SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID',
+  GET_SELECTED_PAGE_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS',
 }
 
 /** Actions */
@@ -247,6 +248,11 @@ type GetSelectedCCAEvents = {
   selectedCCAEvents: SchedulingEvent[]
 }
 
+type GetSelectedPagePublicEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS
+  selectedPageEvents: SchedulingEvent[]
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -276,3 +282,4 @@ export type ActionTypes =
   | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
+  | GetSelectedPagePublicEvents

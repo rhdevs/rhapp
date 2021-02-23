@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
 import styled from 'styled-components'
 import { PATHS } from '../../Routes'
-import { Button as AntdButton } from 'antd'
+import { Button as AntdButton, Pagination } from 'antd'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -60,6 +60,7 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const pageIndex = useParams<{ pageIndex: string }>()
 
   const { userAllEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
     (state: RootState) => state.scheduling,
@@ -195,7 +196,17 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
         </SearchBarContainer>
       </TopContainer>
-      <ResultsContainer>{renderResults()}</ResultsContainer>
+      <ResultsContainer>
+        {renderResults()}
+        <Pagination
+          defaultCurrent={1}
+          current={Number(pageIndex)}
+          total={data.length}
+          defaultPageSize={10}
+          hideOnSinglePage
+          responsive
+        />
+      </ResultsContainer>
       <BottomNavBar />
     </Background>
   )
