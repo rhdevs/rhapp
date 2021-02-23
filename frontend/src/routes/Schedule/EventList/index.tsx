@@ -162,6 +162,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
+      console.log(pageIndex)
       return selectedPageEvents.length ? (
         isLoading ? (
           <LoadingSpin />
