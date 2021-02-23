@@ -102,7 +102,8 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
               <div style={{ width: '5%' }} />
               <Button
                 descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
-                style={{ width: '9rem', height: 'auto' }}
+                buttonWidth="9rem"
+                buttonHeight="auto"
                 buttonIsPressed={
                   userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID

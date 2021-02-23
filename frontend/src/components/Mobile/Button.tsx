@@ -12,6 +12,8 @@ type Props = {
   updatedButtonColor?: string
   defaultTextColor?: string
   updatedTextColor?: string
+  buttonWidth?: string
+  buttonHeight?: string
   style?: React.CSSProperties
   descriptionStyle?: React.CSSProperties
   onButtonClick?: (arg0: boolean) => void
@@ -83,6 +85,8 @@ function Button(props: Props) {
           background: buttonColour,
           color: textColour,
           borderRadius: '5px',
+          width: props.buttonWidth ? props.buttonWidth : '',
+          height: props.buttonHeight ? props.buttonHeight : '',
         }
       }
       onClick={(e) => {
