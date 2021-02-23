@@ -650,7 +650,7 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
       })
     } else {
       let ccaDetails
-      if (eventFromBackend.ccaID !== null) ccaDetails = dispatch(getCCADetails(eventFromBackend.ccaID))
+      if (eventFromBackend.ccaID !== null) ccaDetails = await dispatch(getCCADetails(eventFromBackend.ccaID))
       else ccaDetails = null
       event = {
         eventID: eventFromBackend.eventID,
