@@ -133,7 +133,7 @@ export default function CreateEvent() {
           startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
           endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}
           eventLocation={selectedEvent.location}
-          eventCca={isNusModsEvent ? undefined : ccaDetails?.ccaName}
+          eventCca={isNusModsEvent ? undefined : ccaDetails ? ccaDetails.ccaName : undefined}
           eventDescription={selectedEvent.description}
           eventType={eventType(selectedEvent.eventType)}
           startTime={isNusModsEvent ? getEventTime(selectedEvent.startTime) : undefined} //e.g '01:37 AM'
