@@ -108,6 +108,7 @@ export default function CreateEvent() {
   )
 
   const {
+    newTargetAudience,
     targetAudienceList,
     newEventName,
     newEventLocation,
@@ -171,8 +172,7 @@ export default function CreateEvent() {
           <CheckOutlined
             style={{ color: 'black' }}
             onClick={() => {
-              console.log(creatorIsAttending)
-              dispatch(handleSubmitCreateEvent(creatorIsAttending))
+              dispatch(handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending))
               console.log(createdEventID)
               history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
             }}
@@ -242,15 +242,17 @@ export default function CreateEvent() {
             </StyledSelect>
           </Row>
         )} */}
-        <Row>
-          <StyledTitle>Are you attending this event? </StyledTitle>
-          <Switch
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            defaultChecked
-            onClick={() => setCreatorIsAttending(!creatorIsAttending)}
-          />
-        </Row>
+        {newTargetAudience !== 'Personal' && (
+          <Row>
+            <StyledTitle>Are you attending this event? </StyledTitle>
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              defaultChecked
+              onClick={() => setCreatorIsAttending(!creatorIsAttending)}
+            />
+          </Row>
+        )}
       </BottomContainer>
     </Background>
   )
