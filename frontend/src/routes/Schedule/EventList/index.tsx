@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 
 import styled from 'styled-components'
 import { PATHS } from '../../Routes'
+import { Button as AntdButton } from 'antd'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -50,6 +51,12 @@ const ResultsContainer = styled.div`
   height: 73vh;
 `
 
+const LongButton = {
+  backgroundColor: '#002642',
+  borderColor: '#002642',
+  borderRadius: '5px',
+}
+
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -79,47 +86,59 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           dateTime={formatDate(result.startDateTime)}
           description={result.description}
           bottomElement={
-            <Button
-              buttonIsPressed={
-                userAllEventsList.filter((event) => {
-                  return event.eventID === result.eventID
-                }).length !== 0
-              } //check if event is already in schedule
-              hasSuccessMessage={true}
-              stopPropagation={true}
-              defaultButtonDescription={'Add to Schedule'}
-              updatedButtonDescription={'Remove from Schedule'}
-              onButtonClick={(buttonIsPressed) => {
-                if (
+            <>
+              <AntdButton
+                type="primary"
+                style={LongButton}
+                onClick={() => {
+                  history.push(PATHS.VIEW_EVENT + `/${result.eventID}`)
+                }}
+              >
+                See Details
+              </AntdButton>
+              <div style={{ width: '25px' }} />
+              <Button
+                buttonIsPressed={
                   userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length !== 0
-                ) {
-                  if (buttonIsPressed) {
-                    // event is in list and button is pressed
-                    // remove event from list
-                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
-                  } else {
-                    // event is in list, button is un-pressed
-                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
+                } //check if event is already in schedule
+                hasSuccessMessage={true}
+                stopPropagation={true}
+                defaultButtonDescription={'Add to Schedule'}
+                updatedButtonDescription={'Remove from Schedule'}
+                onButtonClick={(buttonIsPressed) => {
+                  if (
+                    userAllEventsList.filter((event) => {
+                      return event.eventID === result.eventID
+                    }).length !== 0
+                  ) {
+                    if (buttonIsPressed) {
+                      // event is in list and button is pressed
+                      // remove event from list
+                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
+                    } else {
+                      // event is in list, button is un-pressed
+                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
+                    }
+                  } else if (
+                    userAllEventsList.filter((event) => {
+                      return event.eventID === result.eventID
+                    }).length === 0
+                  ) {
+                    if (buttonIsPressed) {
+                      // event is not in list, button is un-pressed
+                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
+                    } else {
+                      // event is not in list and button is pressed
+                      // add event to list
+                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
+                    }
                   }
-                } else if (
-                  userAllEventsList.filter((event) => {
-                    return event.eventID === result.eventID
-                  }).length === 0
-                ) {
-                  if (buttonIsPressed) {
-                    // event is not in list, button is un-pressed
-                    dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
-                  } else {
-                    // event is not in list and button is pressed
-                    // add event to list
-                    dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
-                  }
-                }
-                return
-              }}
-            />
+                  return
+                }}
+              />
+            </>
           }
         />
       )

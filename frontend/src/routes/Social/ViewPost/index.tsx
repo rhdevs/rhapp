@@ -18,7 +18,6 @@ import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
-import { userProfileStub } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -101,7 +100,7 @@ export default function ViewPost() {
 
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost
-  const { userID } = useSelector((state: RootState) => state.profile.user)
+  const { userID, profilePictureUrl } = useSelector((state: RootState) => state.profile.user)
 
   useEffect(() => {
     dispatch(GetSpecificPost(postIdFromPath))
@@ -116,9 +115,6 @@ export default function ViewPost() {
   const postDate = dayjs.unix(parseInt(createdAt ?? ''))
   const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
   const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
-
-  // TODO: to get from response
-  const avatar = userProfileStub.profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
@@ -151,7 +147,7 @@ export default function ViewPost() {
       <Avatar
         size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
         style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-        src={avatar}
+        src={profilePictureUrl}
         userId={userId}
       >
         {name ? getInitials(name) : ''}
@@ -179,6 +175,7 @@ export default function ViewPost() {
       ) : (
         <>
           <TopNavBar centerComponent={Topbar} rightComponent={MenuIcon} />
+
           <MainContainer>
             {menuIsOpen && (
               <>

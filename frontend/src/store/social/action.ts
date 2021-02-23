@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar()
@@ -70,16 +70,18 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Creating post')
   const { newPostTitle, newPostBody, newPostOfficial, newPostImages } = getState().social
-  const { userID } = getState().profile.user
+  // const { userID } = getState().profile.user
 
   const requestBody = {
     title: newPostTitle,
     description: newPostBody,
-    userID: userID,
+    userID: localStorage.getItem('userID'),
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: 1, // TODO: Change to tags + add newPostCca
   }
+
+  console.log(requestBody)
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
@@ -231,10 +233,18 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         return post
       })
 
-      dispatch({
-        type: SOCIAL_ACTIONS.GET_POSTS,
-        posts: posts.concat(transformedPost),
-      })
+      //validate if caller made repeated call to the same posts
+      const transformedPostID = transformedPost.map((post) => post.postId)
+      const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
+      if (intersection(transformedPostID, postLastID).length === 0) {
+        dispatch({
+          type: SOCIAL_ACTIONS.GET_POSTS,
+          posts: posts.concat(transformedPost),
+        })
+      } else {
+        //do nothing
+        //repeated call so do not concat same posts to existing posts
+      }
     } else {
       dispatch({
         type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,

@@ -14,7 +14,7 @@ import {
   handleCCADetails,
   handleModuleDetails,
 } from '../../../store/profile/action'
-import { AutoComplete, Card, Select } from 'antd'
+import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import plusCircle from '../../../assets/plusCircle.svg'
 import tickIcon from '../../../assets/tick.svg'
@@ -45,27 +45,30 @@ export default function EditProfile() {
   const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
-    dispatch(fetchUserDetails(user.userID))
-    dispatch(fetchUserCCAs(user.userID))
+    dispatch(fetchUserDetails(localStorage.getItem('userID')))
+    dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     dispatch(fetchAllCCAs())
   }, [dispatch])
 
   // Visibility dropdown
-  const { Option } = Select
+  // POSTPONED DUE TO FRIENDS FEATURE
+  // const { Option } = Select
 
-  function handleChange(value) {
-    console.log(`selected ${value}`)
-  }
+  // POSTPONED DUE TO FRIENDS FEATURE
+  // function handleChange(value) {
+  //   console.log(`selected ${value}`)
+  // }
 
-  const VisibilitySelector = () => {
-    return (
-      <Select defaultValue="Everybody" style={{ width: 120, float: 'right' }} onChange={handleChange}>
-        <Option value="Everybody">Everybody</Option>
-        <Option value="Friends">Friends</Option>
-        <Option value="Only Me">Only Me</Option>
-      </Select>
-    )
-  }
+  // POSTPONED DUE TO FRIENDS FEATURE
+  // const VisibilitySelector = () => {
+  //   return (
+  //     <Select defaultValue="Everybody" style={{ width: 120, float: 'right' }} onChange={handleChange}>
+  //       <Option value="Everybody">Everybody</Option>
+  //       <Option value="Friends">Friends</Option>
+  //       <Option value="Only Me">Only Me</Option>
+  //     </Select>
+  //   )
+  // }
 
   // Search bar
   const options = [
@@ -117,7 +120,7 @@ export default function EditProfile() {
       <AutoComplete
         style={{ width: '120px', height: '22px' }}
         options={options}
-        placeholder="search info.."
+        placeholder="search..."
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
         // eslint-disable-next-line react/prop-types
@@ -223,7 +226,8 @@ export default function EditProfile() {
                   src={String(plusCircle)}
                   onClick={plusCircleClicked}
                 />
-                <VisibilitySelector />
+                {/* VISIBILITY SELECTOR POSTPONED -->  NO FRIENDS FUNCTION */}
+                {/* <VisibilitySelector /> */}
               </span>
               {searchInfoSelected ? (
                 <span style={{ display: 'block' }}>
@@ -254,17 +258,15 @@ export default function EditProfile() {
   }
 
   return (
-    <>
-      <MainContainer>
-        <TopNavBar title={'Edit Profile'} />
-        <ProfileComponent>
-          <EditPersonalInfoContainer />
-          <CardContainer>
-            <EditDetailsCard />
-          </CardContainer>
-        </ProfileComponent>
-        <BottomNavBar />
-      </MainContainer>
-    </>
+    <MainContainer>
+      <TopNavBar title={'Edit Profile'} />
+      <ProfileComponent>
+        <EditPersonalInfoContainer />
+        <CardContainer>
+          <EditDetailsCard />
+        </CardContainer>
+      </ProfileComponent>
+      <BottomNavBar />
+    </MainContainer>
   )
 }

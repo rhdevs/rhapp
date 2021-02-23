@@ -89,7 +89,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
         <NoRecentDataText>No results</NoRecentDataText>
       )
     } else {
-      return recentSearches ? (
+      return (
         <>
           <RecentDataText>Recent</RecentDataText>
           {recentSearches.map((result, index) => {
@@ -103,8 +103,6 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
             )
           })}
         </>
-      ) : (
-        <NoRecentDataText>No recent searches</NoRecentDataText>
       )
     }
   }

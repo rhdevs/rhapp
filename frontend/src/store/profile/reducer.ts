@@ -1,9 +1,10 @@
 import { Reducer } from 'redux'
-import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
+import { ActionTypes, Post, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const initialState = {
   user: {
-    userID: '0',
+    _id: '0',
+    userID: localStorage.username,
     profilePictureUrl:
       'https://ichef.bbci.co.uk/news/1024/cpsprodpb/151AB/production/_111434468_gettyimages-1143489763.jpg',
     displayName: 'Your Profile is Loading',
@@ -11,8 +12,8 @@ export const initialState = {
     block: 8,
     bio: 'This is my bio hur hur',
     modules: [],
-    posts: [],
   },
+  posts: [],
   ccas: [],
   newDisplayName: '',
   newTelegramHandle: '',
@@ -27,6 +28,7 @@ export const initialState = {
 
 type State = {
   user: User
+  posts: Post[]
   ccas: UserCCA[]
   newDisplayName: string
   newTelegramHandle: string
@@ -98,6 +100,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         isLoggedIn: action.isLoggedIn,
+      }
+    }
+    case PROFILE_ACTIONS.SET_USER_POSTS: {
+      return {
+        ...state,
+        posts: action.posts,
       }
     }
     default:

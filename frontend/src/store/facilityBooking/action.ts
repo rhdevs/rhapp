@@ -1,6 +1,14 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import dayjs from 'dayjs'
+
+export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: newError,
+  })
+}
 
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
@@ -23,18 +31,19 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   const { ViewEndDate, ViewStartDate, selectedFacilityId } = getState().facilityBooking
   const querySubString =
     selectedFacilityId +
+    '/' +
     '?startDate=' +
     parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
     '&endDate=' +
     parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
 
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + querySubString, {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(Array.isArray(data) ? data : [])
+      console.log(data)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: Array.isArray(data) ? data : [],
@@ -104,6 +113,10 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
     type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
     newBooking: oldBooking,
   })
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
+    newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
+  })
 }
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -114,14 +127,40 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
-export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
-  getAllBookingsForFacility()
+  const { newBookingFromDate } = getState().facilityBooking
+  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
 }
 
-export const editBookingFromDate = (newBookingFromDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+export const editBookingFromDate = (newBookingFromDate: Date) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
-  getAllBookingsForFacility()
+  const { newBookingToDate } = getState().facilityBooking
+  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
+}
+
+const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
+  let newError = ''
+  console.log(duration)
+  if (duration > 4) {
+    console.log('hi')
+    newError = 'Exceeded Maximum Booking Duration of 4 hours!'
+  } else if (duration < 0) {
+    console.log('hi')
+    newError = 'End Date is before Start Date!'
+  } else if (duration === 0) {
+    console.log('hi')
+    newError = 'End Date is the Same as Start Date!'
+  }
+
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: newError,
+  })
 }
 
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -153,6 +192,10 @@ export const createNewBookingFromFacility = (startDate: Date, endDate: Date, fac
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
 
   dispatch(SetIsLoading(false))
+}
+
+export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
@@ -8,6 +8,8 @@ import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import HexagonNavigation from './components/HexagonNavigation'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import { useDispatch } from 'react-redux'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -38,14 +40,39 @@ const Greetings = styled.text`
 
 export default function Home() {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const hours = new Date(Date.now()).getHours()
   const partOfTheDay = hours < 12 ? 'Morning' : hours < 18 ? 'Afternoon' : 'Evening'
 
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    fetchUserName(localStorage.getItem('userID'))
+  }, [dispatch])
+
+  const fetchUserName = (userID) => {
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_DETAILS + '/' + userID, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data === '' || data === undefined) {
+          console.log(data.err)
+        } else {
+          setUsername(data.displayName)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   return (
     <MainContainer>
       <TopBar>
-        <Greetings>{`Good ${partOfTheDay} Mao Mao!`}</Greetings>
+        <Greetings>
+          Good {partOfTheDay} {username}!
+        </Greetings>
         <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
       </TopBar>
       <AnnouncementCarousel />

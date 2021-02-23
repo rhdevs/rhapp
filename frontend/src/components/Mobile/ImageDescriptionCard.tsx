@@ -88,6 +88,7 @@ const BottomElementContainer = styled.div`
   margin: 0 auto;
   z-index: 10;
   padding-top: 10px;
+  display: flex;
 `
 
 const ImageContainer = styled.div`

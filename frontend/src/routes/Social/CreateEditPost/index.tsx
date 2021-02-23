@@ -20,6 +20,7 @@ import {
   ResetPostDetails,
   SetPostId,
 } from '../../../store/social/action'
+import { fetchUserCCAs } from '../../../store/profile/action'
 import { PostImage } from './Components/postImage'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -193,20 +194,6 @@ const ImageDiv = styled.div`
   text-align: center;
   justify-content: center;
 `
-
-const headOfCca = [
-  {
-    ccaName: 'Basketball',
-    ccaID: 2,
-  },
-  {
-    ccaName: 'Tennis',
-    ccaID: 3,
-  },
-]
-
-const getCcaNames = headOfCca.map((cca) => cca.ccaName)
-
 export default function CreateEditPost() {
   const params = useParams<{ postId: string }>()
   const dispatch = useDispatch()
@@ -214,12 +201,17 @@ export default function CreateEditPost() {
   const [hasChanges, setHasChanges] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
 
-  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, newPostCca, warnings, isUploading } = useSelector(
+  const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
+
+  const { ccas } = useSelector((state: RootState) => state.profile)
+  const getCcaNames = ccas.map((cca) => cca.ccaName)
+
   const isCreatePost = !window.location.href.includes('/post/edit')
 
   useEffect(() => {
+    dispatch(fetchUserCCAs(localStorage.getItem('userId')))
     if (window.location.href.includes('/post/edit')) {
       dispatch(SetPostId(params.postId))
       dispatch(GetPostDetailsToEdit())
@@ -330,9 +322,9 @@ export default function CreateEditPost() {
             <Announcement>
               <p>CCA</p>
               <DropDownSelector
-                SelectedValue={newPostCca.toString()}
+                SelectedValue={getCcaNames[0].toString()}
                 ValueArray={getCcaNames}
-                handleChange={(cca) => EditPostDetail('cca', cca)}
+                handleChange={(cca) => dispatch(EditPostDetail('cca', cca))}
               />
             </Announcement>
           )}
