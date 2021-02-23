@@ -534,6 +534,28 @@ export const setEventAttendanceStatus = (eventAttendanceIsSuccessful: boolean, e
     eventAttendanceIsFailure: eventAttendanceIsFailure,
   })
 }
+
+// export const increasePageIndex = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+//   const { pageIndex, postsFilter } = getState().social
+//   const { userID } = getState().profile.user
+
+//   const newPageIndex = pageIndex + 1
+
+//   dispatch(GetPosts(postsFilter, newPageIndex, userID))
+//   dispatch({
+//     type: SOCIAL_ACTIONS.INCREASE_PAGE_INDEX,
+//     pageIndex: newPageIndex,
+//   })
+// }
+
+const getPublicEventsBySection = async (pageIndex: number) => {
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  const fiveNewEvents = await getFromBackend(ENDPOINTS.GET_PUBLIC_EVENTS + `/${pageIndex}/${currentUNIXDate}`, null)
+
+  return fiveNewEvents
+}
+
 // ---------------------- SEARCH EVENTS ----------------------
 
 // ---------------------- CREATE EVENTS ----------------------
