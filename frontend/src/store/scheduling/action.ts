@@ -60,6 +60,7 @@ const postToBackend = (endpoint: string, method: string, body, functions) => {
 }
 // ---------------------- POST/DELETE ----------------------
 
+// Fetches all public events after current time
 export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const sortDataByDate = (a: SchedulingEvent, b: SchedulingEvent) => {
@@ -74,7 +75,9 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
     dispatch(setIsLoading(false))
   }
 
-  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`, dispatchData)
 }
 
 export const fetchAllUserEvents = (userId: string | null, withNusModsEvents: boolean) => async (
@@ -478,7 +481,9 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
     })
     dispatch(setIsLoading(false))
   }
-  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`, dispatchData)
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
