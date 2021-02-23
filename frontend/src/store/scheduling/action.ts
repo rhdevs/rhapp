@@ -587,7 +587,10 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   dispatch(setIsLoading(true))
   const {
     newEventName,
@@ -608,6 +611,7 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
     image: null,
     ccaID: isPersonal ? null : parseInt(newTargetAudience),
     isPrivate: isPersonal,
+    ownerIsAttending: creatorIsAttending,
   }
   fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',

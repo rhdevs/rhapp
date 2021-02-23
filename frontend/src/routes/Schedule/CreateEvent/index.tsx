@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
@@ -91,6 +91,8 @@ export default function CreateEvent() {
   const dispatch = useDispatch()
   const history = useHistory()
 
+  const [creatorIsAttending, setCreatorIsAttending] = useState(true)
+
   useEffect(() => {
     dispatch(getHallEventTypes())
     dispatch(getTargetAudienceList())
@@ -104,6 +106,7 @@ export default function CreateEvent() {
       }}
     />
   )
+
   const {
     targetAudienceList,
     newEventName,
@@ -168,7 +171,8 @@ export default function CreateEvent() {
           <CheckOutlined
             style={{ color: 'black' }}
             onClick={() => {
-              dispatch(handleSubmitCreateEvent())
+              console.log(creatorIsAttending)
+              dispatch(handleSubmitCreateEvent(creatorIsAttending))
               console.log(createdEventID)
               history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
             }}
@@ -239,7 +243,13 @@ export default function CreateEvent() {
           </Row>
         )} */}
         <Row>
-          <Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} defaultChecked />
+          <StyledTitle>Are you attending this event? </StyledTitle>
+          <Switch
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            defaultChecked
+            onClick={() => setCreatorIsAttending(!creatorIsAttending)}
+          />
         </Row>
       </BottomContainer>
     </Background>
