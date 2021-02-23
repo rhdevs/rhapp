@@ -478,7 +478,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
     })
     dispatch(setIsLoading(false))
   }
-  getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
@@ -587,7 +587,10 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   dispatch(setIsLoading(true))
   const {
     newEventName,
@@ -608,8 +611,9 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
     image: null,
     ccaID: isPersonal ? null : parseInt(newTargetAudience),
     isPrivate: isPersonal,
+    ownerIsAttending: creatorIsAttending,
   }
-  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  const eventID = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
@@ -619,12 +623,15 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(`added successfully: ${data}`)
-      dispatch(setIsLoading(false))
+      console.log('added successfully: ')
+      console.log(data)
+      return data.eventID
     })
     .catch((err) => {
       console.log(err)
     })
+  dispatch(setIsLoading(false))
+  return eventID
 }
 // ---------------------- CREATE EVENTS ----------------------
 
@@ -642,7 +649,9 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
         return indivEvent.eventID === eventID
       })
     } else {
-      const ccaDetails = dispatch(getCCADetails(eventFromBackend.ccaID))
+      let ccaDetails
+      if (eventFromBackend.ccaID !== null) ccaDetails = await dispatch(getCCADetails(eventFromBackend.ccaID))
+      else ccaDetails = null
       event = {
         eventID: eventFromBackend.eventID,
         eventName: eventFromBackend.eventName,
