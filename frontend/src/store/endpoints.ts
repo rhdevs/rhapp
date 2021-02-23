@@ -39,6 +39,7 @@ export enum ENDPOINTS {
   ALL_EVENTS = '/event/all',
   GET_EVENT_BY_EVENTID = '/event/eventID',
   GET_EVENT_BY_CCAID = '/event/ccaID',
+  GET_PUBLIC_EVENTS = '/event/public',
   ALL_PUBLIC_EVENTS = '/event/public/all',
   ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME = '/event/public/afterTime',
   USER_EVENT = '/user_event',
@@ -46,7 +47,6 @@ export enum ENDPOINTS {
   DELETE_EVENT = '/event/delete',
   RSVP_EVENT = '/user_event',
   EDIT_EVENT = '/event/edit',
-  GET_FIVE_PUBLIC_EVENTS = '/event/public',
 
   ADD_MODS = '/nusmods/addNUSMods',
   DELETE_NUSMODS_EVENT = '/nusmods/deleteMod',
