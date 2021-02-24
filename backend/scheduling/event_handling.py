@@ -376,7 +376,7 @@ def createEvent():
 @cross_origin()
 def deleteEvent(eventID):
     try:
-        db.Events.delete_one({"_id": eventID})
+        db.Events.delete_one({"_id": ObjectId(eventID)})
 
     except Exception as e:
         return {"err": str(e)}, 400
