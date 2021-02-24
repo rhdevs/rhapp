@@ -52,6 +52,14 @@ const ResultsContainer = styled.div`
   height: 73vh;
 `
 
+const UpcomingEventsText = styled.text`
+  font-family: Inter;
+  color: black;
+  font-size: 20px;
+  line-height: 30px;
+  padding-left: 5vw;
+`
+
 const LongButton = {
   backgroundColor: '#002642',
   borderColor: '#002642',
@@ -61,7 +69,7 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex - 1)
+  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex) - 1
 
   const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
@@ -171,6 +179,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <LoadingSpin />
         ) : (
           <>
+            <UpcomingEventsText>Upcoming Events</UpcomingEventsText>
             {eventsToCards(selectedPageEvents)}
             <Pagination
               hideOnSinglePage
