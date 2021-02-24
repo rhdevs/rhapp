@@ -45,11 +45,13 @@ const TopContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   padding: 0 6.5vw 1vh;
+  display: flex;
+  flex-direction: column;
 `
 
 const ResultsContainer = styled.div`
   overflow: auto;
-  height: 73vh;
+  height: 70vh;
 `
 
 const UpcomingEventsText = styled.text`
@@ -179,7 +181,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <LoadingSpin />
         ) : (
           <>
-            <UpcomingEventsText>Upcoming Events</UpcomingEventsText>
             {eventsToCards(selectedPageEvents)}
             <Pagination
               hideOnSinglePage
@@ -222,6 +223,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
         <SearchBarContainer>
           <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
+          {!searchValue && selectedPageEvents.length !== 0 && <UpcomingEventsText>Upcoming Events</UpcomingEventsText>}
         </SearchBarContainer>
       </TopContainer>
       <ResultsContainer>{renderResults()}</ResultsContainer>
