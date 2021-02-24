@@ -61,7 +61,7 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex)
+  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex - 1)
 
   const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
@@ -175,7 +175,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
             <Pagination
               hideOnSinglePage
               style={{ display: 'flex', justifyContent: 'center' }}
-              defaultCurrent={1}
+              defaultCurrent={0}
               current={pageIndex}
               total={data.length}
               defaultPageSize={10}
