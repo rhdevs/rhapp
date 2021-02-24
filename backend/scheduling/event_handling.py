@@ -76,7 +76,7 @@ def getAllPrivateEvents():
 def getPublicEventsPagination(pagination, startTime = 0):
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime":{"$gte": int(startTime)}}, sort=[
-                              ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 5).limit(5)
+                              ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 10).limit(10)
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
