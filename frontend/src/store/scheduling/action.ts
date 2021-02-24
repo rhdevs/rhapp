@@ -469,20 +469,29 @@ export const giveTimetablePermission = async (recipientUserId: string) => {
 // ---------------------- SHARE SEARCH ----------------------
 
 // ---------------------- SEARCH EVENTS ----------------------
+// Fetches all private events and public events of a specified user from current time
 export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const dispatchData = (data) => {
-    dispatch({
-      type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
-      searchedEvents: data.filter((event) => {
-        return event.eventName.toLowerCase().includes(query)
-      }),
-    })
-    dispatch(setIsLoading(false))
-  }
   const currentUNIXDate = Math.round(Date.now() / 1000)
 
-  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`, dispatchData)
+  const publicEvents = await getFromBackend(
+    ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`,
+    null,
+  )
+  const privateEvents = await getFromBackend(
+    ENDPOINTS.USER_PRIVATE_EVENTS_AFTER_SPECIFIC_TIME + `/${localStorage.getItem('userID')}/${currentUNIXDate}`,
+    null,
+  )
+
+  const filteredSearchEvents = [...(publicEvents || []), ...(privateEvents || [])].filter((event) => {
+    return event.eventName.toLowerCase().includes(query)
+  })
+
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
+    searchedEvents: filteredSearchEvents,
+  })
+  dispatch(setIsLoading(false))
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (

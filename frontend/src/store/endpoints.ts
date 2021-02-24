@@ -42,6 +42,7 @@ export enum ENDPOINTS {
   GET_PUBLIC_EVENTS = '/event/public',
   ALL_PUBLIC_EVENTS = '/event/public/all',
   ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME = '/event/public/afterTime',
+  USER_PRIVATE_EVENTS_AFTER_SPECIFIC_TIME = '/event/private',
   USER_EVENT = '/user_event',
   ADD_EVENT = '/event/add',
   DELETE_EVENT = '/event/delete',
