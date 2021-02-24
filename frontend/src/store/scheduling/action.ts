@@ -159,7 +159,6 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
-      console.log(transformInformationToTimetableFormat(allEvents))
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -674,6 +673,36 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
     selectedEvent: event,
+  })
+}
+
+export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const updateStatus = (data) => {
+    if (data.ok) {
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+        deletedEventIsSuccess: true,
+        deletedEventIsFailure: false,
+      })
+    } else {
+      console.log('FAILURE!!!! ' + data.status)
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+        deletedEventIsSuccess: false,
+        deletedEventIsFailure: true,
+      })
+    }
+    dispatch(setIsLoading(false))
+  }
+
+  postToBackend(ENDPOINTS.DELETE_EVENT + `/${eventId}`, 'DELETE', null, updateStatus)
+}
+
+export const setDeleteEventStatus = (isSuccess: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+    deletedEventIsSuccess: isSuccess,
+    deletedEventIsFailure: isFailure,
   })
 }
 // ---------------------- VIEW EVENTS ----------------------
