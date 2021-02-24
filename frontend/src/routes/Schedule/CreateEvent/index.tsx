@@ -175,6 +175,7 @@ export default function CreateEvent() {
                 handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending),
               )
               console.log(eventID)
+              history.replace(PATHS.SCHEDULE_PAGE)
               history.push(PATHS.VIEW_EVENT + `/${eventID}`)
             }}
           />
