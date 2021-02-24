@@ -159,7 +159,6 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
-      console.log(transformInformationToTimetableFormat(allEvents))
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
