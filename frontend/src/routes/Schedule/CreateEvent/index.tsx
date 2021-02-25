@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 
 import styled from 'styled-components'
-import { Input, Select } from 'antd'
+import { Input, Select, Switch } from 'antd'
 import { DatePicker } from 'antd-mobile'
-import { LeftOutlined, CheckOutlined } from '@ant-design/icons'
+import { LeftOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { RootState } from '../../../store/types'
@@ -19,13 +19,13 @@ import {
   editDescription,
   handleSubmitCreateEvent,
   getHallEventTypes,
-  editHallEventType,
   editEventToDate,
   getTargetAudienceList,
 } from '../../../store/scheduling/action'
 
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+import { PATHS } from '../../Routes'
 
 const { Option } = Select
 
@@ -91,6 +91,8 @@ export default function CreateEvent() {
   const dispatch = useDispatch()
   const history = useHistory()
 
+  const [creatorIsAttending, setCreatorIsAttending] = useState(true)
+
   useEffect(() => {
     dispatch(getHallEventTypes())
     dispatch(getTargetAudienceList())
@@ -104,15 +106,15 @@ export default function CreateEvent() {
       }}
     />
   )
+
   const {
-    hallEventTypes,
+    newTargetAudience,
     targetAudienceList,
     newEventName,
     newEventLocation,
     newEventFromDate,
     newEventToDate,
     newDescription,
-    newTargetAudience,
   } = useSelector((state: RootState) => state.scheduling)
 
   /** Incomplete functionality for Uploading Image */
@@ -166,7 +168,17 @@ export default function CreateEvent() {
         leftIcon
         leftIconComponent={BackIcon}
         rightComponent={
-          <CheckOutlined style={{ color: 'black' }} onClick={() => dispatch(handleSubmitCreateEvent())} />
+          <CheckOutlined
+            style={{ color: 'black' }}
+            onClick={async () => {
+              const eventID = await dispatch(
+                handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending),
+              )
+              console.log(eventID)
+              history.replace(PATHS.SCHEDULE_PAGE)
+              history.push(PATHS.VIEW_EVENT + `/${eventID}`)
+            }}
+          />
         }
       />
       <BottomContainer>
@@ -220,7 +232,7 @@ export default function CreateEvent() {
           setValue={(description: string) => dispatch(editDescription(description))}
           textarea
         />
-        {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
+        {/* {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
           <Row>
             <StyledTitle>Event Type</StyledTitle>
             <StyledSelect defaultValue="Select" onChange={(value) => dispatch(editHallEventType(value.toString()))}>
@@ -230,6 +242,17 @@ export default function CreateEvent() {
                 </Option>
               ))}
             </StyledSelect>
+          </Row>
+        )} */}
+        {newTargetAudience !== 'Personal' && (
+          <Row>
+            <StyledTitle>Are you attending this event? </StyledTitle>
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              defaultChecked
+              onClick={() => setCreatorIsAttending(!creatorIsAttending)}
+            />
           </Row>
         )}
       </BottomContainer>

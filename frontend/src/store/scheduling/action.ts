@@ -159,7 +159,6 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
-      console.log(transformInformationToTimetableFormat(allEvents))
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -478,7 +477,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
     })
     dispatch(setIsLoading(false))
   }
-  getFromBackend(ENDPOINTS.ALL_EVENTS, dispatchData)
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
@@ -587,7 +586,10 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
   dispatch(setIsLoading(true))
   const {
     newEventName,
@@ -608,8 +610,9 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
     image: null,
     ccaID: isPersonal ? null : parseInt(newTargetAudience),
     isPrivate: isPersonal,
+    ownerIsAttending: creatorIsAttending,
   }
-  fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  const eventID = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
@@ -619,12 +622,15 @@ export const handleSubmitCreateEvent = () => async (dispatch: Dispatch<ActionTyp
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(`added successfully: ${data}`)
-      dispatch(setIsLoading(false))
+      console.log('added successfully: ')
+      console.log(data)
+      return data.eventID
     })
     .catch((err) => {
       console.log(err)
     })
+  dispatch(setIsLoading(false))
+  return eventID
 }
 // ---------------------- CREATE EVENTS ----------------------
 
@@ -642,7 +648,9 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
         return indivEvent.eventID === eventID
       })
     } else {
-      const ccaDetails = dispatch(getCCADetails(eventFromBackend.ccaID))
+      let ccaDetails
+      if (eventFromBackend.ccaID !== null) ccaDetails = await dispatch(getCCADetails(eventFromBackend.ccaID))
+      else ccaDetails = null
       event = {
         eventID: eventFromBackend.eventID,
         eventName: eventFromBackend.eventName,
@@ -665,6 +673,36 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
     selectedEvent: event,
+  })
+}
+
+export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  const updateStatus = (data) => {
+    if (data.ok) {
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+        deletedEventIsSuccess: true,
+        deletedEventIsFailure: false,
+      })
+    } else {
+      console.log('FAILURE!!!! ' + data.status)
+      dispatch({
+        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+        deletedEventIsSuccess: false,
+        deletedEventIsFailure: true,
+      })
+    }
+    dispatch(setIsLoading(false))
+  }
+
+  postToBackend(ENDPOINTS.DELETE_EVENT + `/${eventId}`, 'DELETE', null, updateStatus)
+}
+
+export const setDeleteEventStatus = (isSuccess: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
+    deletedEventIsSuccess: isSuccess,
+    deletedEventIsFailure: isFailure,
   })
 }
 // ---------------------- VIEW EVENTS ----------------------

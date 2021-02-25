@@ -97,6 +97,7 @@ export enum SCHEDULING_ACTIONS {
   GET_SELECTED_PROFILE_NUSMODS_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS',
   SET_SELECTED_CCA_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS',
   GET_SELECTED_CCA_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS',
+  SET_DELETED_EVENT_STATUS = 'SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS',
 }
 
 /** Actions */
@@ -246,6 +247,12 @@ type GetSelectedCCAEvents = {
   selectedCCAEvents: SchedulingEvent[]
 }
 
+type SetDeletedEventStatus = {
+  type: typeof SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS
+  deletedEventIsSuccess: boolean
+  deletedEventIsFailure: boolean
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -275,3 +282,4 @@ export type ActionTypes =
   | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
+  | SetDeletedEventStatus
