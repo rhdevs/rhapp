@@ -71,9 +71,10 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+
 @app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
-def getPublicEventsPagination(pagination, startTime = 0):
+def getPublicEventsPagination(pagination, startTime=0):
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime":{"$gte": int(startTime)}}, sort=[
                               ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 10).limit(10)
@@ -104,12 +105,14 @@ def getEventAfterTime(startTime):
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
-    
+
+
 @app.route('/event/public/afterTime/<startTime>', methods=["GET"])
 @cross_origin()
 def getPublicEventAfterTime(startTime):
     try:
-        data = db.Events.find({"startDateTime": {"$gt": int(startTime)}, "isPrivate": False})
+        data = db.Events.find(
+            {"startDateTime": {"$gt": int(startTime)}, "isPrivate": False})
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
@@ -124,16 +127,18 @@ def getAllCCA():
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
+
 @app.route('/event/ccaID/<int:ccaID>', methods=["GET"])
 @app.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
 @cross_origin()
-def getEventsCCA(ccaID, referenceTime = 0):
+def getEventsCCA(ccaID, referenceTime=0):
     try:
         referenceTime = int(referenceTime)
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
         if referenceTime != 0:
-            response = db.Events.find({"ccaID": ccaID, "startDateTime": {"$gte": int(startOfWeek), "$lte": int(endOfWeek)}})
+            response = db.Events.find({"ccaID": ccaID, "startDateTime": {
+                                      "$gte": int(startOfWeek), "$lte": int(endOfWeek)}})
         else:
             response = db.Events.find({"ccaID": ccaID})
     except Exception as e:
@@ -336,6 +341,7 @@ def createEvent():
         userID = data.get('userID')
         image = data.get('image')
         isPrivate = data.get('isPrivate')
+        ownerIsAttending = data.get('ownerIsAttending')
 
         body = {
             "eventName": eventName,
@@ -349,11 +355,18 @@ def createEvent():
             "isPrivate": isPrivate
         }
 
-        receipt=db.Events.insert_one(body)
+        receipt = db.Events.insert_one(body)
         del body["_id"]
         body["eventID"] = str(receipt.inserted_id)
 
-        return {"message": body}, 200
+        if ownerIsAttending:
+            attendance = {
+                "userID": body["userID"],
+                "eventID": body["eventID"]
+            }
+            db.Attendance.update(attendance, {'$set': attendance}, upsert=True)
+
+        return json.dumps(body, default=lambda o: str(o)), 200
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -363,7 +376,7 @@ def createEvent():
 @cross_origin()
 def deleteEvent(eventID):
     try:
-        db.Events.delete_one({"_id": eventID})
+        db.Events.delete_one({"_id": ObjectId(eventID)})
 
     except Exception as e:
         return {"err": str(e)}, 400
@@ -480,6 +493,7 @@ def deleteOneMod():
 
         return {"err": str(e)}, 400
     return {"message": "successful"}, 200
+
 
 @app.route("/nusmods", methods=['PUT'])
 @cross_origin()
