@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import reserveIcon from '../../assets/reserveIcon.svg'
-import notifyBellIcon from '../../assets/notifyBellIcon.svg'
 import collectIcon from '../../assets/collectIcon.svg'
 import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
@@ -92,17 +91,22 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     window.open(site)
   }
 
-  const calculateRemainingTime = (startTime: number, duration: number) => {
-    console.log(startTime)
+  const calculateRemainingTime = (startUNIX: number, duration: number) => {
+    console.log(startUNIX)
+    console.log(new Date(startUNIX * 1000))
     console.log(duration)
-    // const endUnixTime = duration * 1000 * 60 + startTime
-    // const timeDifferenceInMiliSeconds: number = endUnixTime - new Date().getTime()
-    // const timeDiffInSeconds = timeDifferenceInMiliSeconds / 1000 / 60
 
-    // const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(2)
-    // const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(2)
-    // return `${minutes} mins ${seconds} seconds left`
-    return `${duration} long`
+    const endUNIX = new Date().getTime() / 1000
+    const durationLeftInMiliSeconds: number = endUNIX - startUNIX
+    if (durationLeftInMiliSeconds < 0) {
+      dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID))
+    }
+
+    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000 / 60
+    const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
+    const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(0)
+
+    return `${minutes} mins ${seconds} seconds left`
   }
 
   switch (props.washingMachine.job) {
@@ -134,7 +138,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       break
     case WMStatus.UNCOLLECTED:
       label = 'Notify'
-      iconSrc = notifyBellIcon
+      iconSrc = getUserProfilePic(props.washingMachine.machineID)
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         goToTelegramHandle(props.washingMachine)
@@ -182,7 +186,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         <ActionButton
           src={iconSrc}
           style={
-            props.washingMachine.job === WMStatus.INUSE
+            props.washingMachine.job === WMStatus.INUSE || props.washingMachine.job === WMStatus.UNCOLLECTED
               ? { height: '70px', width: '70px', borderRadius: '40px' }
               : { color: cardPrimaryColor }
           }

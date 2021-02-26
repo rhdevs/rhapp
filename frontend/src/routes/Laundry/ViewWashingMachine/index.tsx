@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   SetDuration,
   SetEditMode,
-  SetSelectedMachine,
   SetSelectedMachineFromId,
   UpdateJobDuration,
   updateMachine,
@@ -95,17 +94,34 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const { selectedMachine, isEdit, duration, filteredMachines } = useSelector((state: RootState) => state.laundry)
+  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
   const dispatch = useDispatch()
   const params = useParams<{ machineId: string }>()
 
   useEffect(() => {
     dispatch(SetSelectedMachineFromId(params.machineId))
-    const displayMachine = filteredMachines.find((machine) => machine.machineID === params.machineId)
-    dispatch(SetSelectedMachine(displayMachine as WashingMachine))
-    console.log(displayMachine?.startTime)
-    console.log(new Date().getUTCDate())
-  }, [])
+  }, [dispatch, selectedMachine])
+
+  const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
+    // console.log(startUNIX)
+    // console.log(new Date(startUNIX * 1000))
+    // console.log(duration)
+
+    const endUNIX = new Date(startUNIX + duration * 60000).getTime()
+    const timeNowInUNIX = new Date().getTime()
+
+    const durationLeftInMiliSeconds: number = timeNowInUNIX - endUNIX
+
+    if (durationLeftInMiliSeconds < 0) {
+      dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
+    }
+
+    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000 / 60
+    const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
+    const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(0)
+
+    return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
+  }
 
   const MachineDetails = (machine: WashingMachine | null) => {
     let pageTitle = 'Laundry Time!'
@@ -115,11 +131,18 @@ export default function ViewWashingMachine() {
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
-          <TimeLeftText>34 </TimeLeftText> <TimeLabel>minutes</TimeLabel>
+          <TimeLeftText>
+            {calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number)}
+          </TimeLeftText>{' '}
+          <TimeLabel>minutes</TimeLabel>
         </TimeUnit>
         <TimeLeftText> : </TimeLeftText>
         <TimeUnit>
-          <TimeLeftText> 59 </TimeLeftText> <TimeLabel>seconds</TimeLabel>
+          <TimeLeftText>
+            {' '}
+            {calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number)}{' '}
+          </TimeLeftText>{' '}
+          <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
         {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
       </TimeLeft>
@@ -147,6 +170,10 @@ export default function ViewWashingMachine() {
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
+            onButtonClick={() => {
+              dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              history.back()
+            }}
           />
         )
         break
@@ -164,6 +191,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              history.back()
             }}
           />
         )
