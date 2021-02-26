@@ -44,9 +44,23 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
     .then((resp) => resp.json())
     .then((data) => {
       console.log(data)
+      const updatedFB: Booking[] = []
+
+      data.forEach((booking: Booking) => {
+        fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
+          method: 'GET',
+          mode: 'cors',
+        })
+          .then((resp) => resp.json())
+          .then((cca) => {
+            booking.ccaName = cca[0].ccaName
+            updatedFB.push(booking)
+          })
+      })
+
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
-        facilityBookings: Array.isArray(data) ? data : [],
+        facilityBookings: updatedFB,
       })
       dispatch(SetIsLoading(false))
     })

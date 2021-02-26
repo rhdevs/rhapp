@@ -104,7 +104,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
             <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
+            <PublicRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
