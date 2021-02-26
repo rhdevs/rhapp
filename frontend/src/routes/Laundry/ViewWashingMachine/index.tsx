@@ -107,7 +107,7 @@ export default function ViewWashingMachine() {
     // console.log(new Date(startUNIX * 1000))
     // console.log(duration)
 
-    const endUNIX = new Date(startUNIX + duration * 60000).getTime()
+    const endUNIX = new Date(startUNIX + duration * 1000).getTime()
     const timeNowInUNIX = new Date().getTime()
 
     const durationLeftInMiliSeconds: number = timeNowInUNIX - endUNIX
