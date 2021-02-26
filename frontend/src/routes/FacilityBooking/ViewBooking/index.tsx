@@ -153,10 +153,16 @@ export default function ViewBooking() {
 
   const getHumanReadableTime = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
-    const hour = date.getHours()
-    const minutes = date.getMinutes()
+    var hour = date.getHours().toString()
+    if (hour.length == 1) {
+      hour = '0' + hour
+    }
+    var minutes = date.getMinutes().toString()
+    if (minutes.length == 1) {
+      minutes = '0' + minutes
+    }
 
-    return hour + '' + minutes
+    return hour + minutes
   }
 
   const timeDuration = (eventStartTime: number, eventEndTime: number) => {
