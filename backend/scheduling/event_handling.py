@@ -71,6 +71,18 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+@app.route('/event/private/<userID>/<startTime>', methods=["GET"])
+@cross_origin()
+def getPrivateEventOfUserAfterTime(userID, startTime):
+    try:
+        data = db.Events.find({"isPrivate": {"$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
+        response = []
+        for item in data:
+            item['eventID'] = item.pop('_id')
+            response.append(item)
+    except Exception as e:
+        return {"err": str(e)}, 400
+    return json.dumps(response, default=lambda o: str(o)), 200
 
 @app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
