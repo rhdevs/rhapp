@@ -14,6 +14,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { format } from 'date-fns'
 import deletepic from '../../../assets/delete.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { PATHS } from '../../Routes'
@@ -151,12 +152,9 @@ export default function ViewBooking() {
     console.log(selectedBooking)
   }, [dispatch])
 
-  const getHumanReadableTime = (eventStartTime: number) => {
+  const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
-    const hour = date.getHours()
-    const minutes = date.getMinutes()
-
-    return hour + '' + minutes
+    return format(date, 'MM/dd/yy hh:mm a')
   }
 
   const timeDuration = (eventStartTime: number, eventEndTime: number) => {
@@ -188,8 +186,8 @@ export default function ViewBooking() {
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
-                        <CardTimeLabel>{getHumanReadableTime(selectedBooking.startTime)}</CardTimeLabel>
-                        <CardTimeLabel>{getHumanReadableTime(selectedBooking.endTime)}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.startTime)}</CardTimeLabel>
+                        <CardTimeLabel>{formatDate(selectedBooking.endTime)}</CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>
