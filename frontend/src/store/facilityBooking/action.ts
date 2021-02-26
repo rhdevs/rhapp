@@ -57,7 +57,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
             updatedFB.push(booking)
           })
       })
-
+      console.log(updatedFB)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: updatedFB,
