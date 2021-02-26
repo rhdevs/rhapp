@@ -80,32 +80,33 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   let iconSrc = ''
   let washingMachineIcon = ''
   let rightAction
+
   const cardPrimaryColor =
     props.washingMachine.job === WMStatus.UNCOLLECTED || props.washingMachine.job === WMStatus.COMPLETED
       ? '#EB5757'
       : '#002642'
 
-  const goToTelegramHandle = (selectedMachine) => {
+  const goToTelegramHandle = (selectedMachine: WashingMachine) => {
     dispatch(fetchTelegram(selectedMachine))
     const site = 'https://telegram.me/' + telegramHandle
     window.open(site)
   }
 
   const calculateRemainingTime = (startUNIX: number, duration: number) => {
-    const endUNIX = new Date(startUNIX + duration * 1000).getTime()
-    const timeNowInUNIX = new Date().getTime()
+    const endDateTime = new Date(startUNIX + duration * 1000)
+    console.log(new Date(startUNIX + duration * 1000))
+    const timeNowDateTime = new Date()
+    console.log(new Date())
 
-    const durationLeftInMiliSeconds: number = timeNowInUNIX - endUNIX
+    const durationLeftInMiliSeconds: number = Math.abs(timeNowDateTime.getTime() - endDateTime.getTime())
 
     if (durationLeftInMiliSeconds < 0) {
       dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID as string))
       return ''
     } else {
-      const timeDiffInSeconds = durationLeftInMiliSeconds / 1000 / 60
-      const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
-      const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(0)
-
-      return `${minutes} mins ${seconds} seconds left`
+      const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+      const minutesLeft: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
+      return `${minutesLeft} mins left`
     }
   }
 
