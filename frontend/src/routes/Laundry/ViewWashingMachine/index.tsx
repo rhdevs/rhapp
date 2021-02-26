@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -12,7 +12,14 @@ import wm_reserved from '../../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetDuration, SetEditMode, UpdateJobDuration, updateMachine } from '../../../store/laundry/action'
+import {
+  SetDuration,
+  SetEditMode,
+  SetSelectedMachineFromId,
+  UpdateJobDuration,
+  updateMachine,
+} from '../../../store/laundry/action'
+import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -89,6 +96,31 @@ const MachineSize = styled.p`
 export default function ViewWashingMachine() {
   const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
   const dispatch = useDispatch()
+  const params = useParams<{ machineId: string }>()
+
+  useEffect(() => {
+    dispatch(SetSelectedMachineFromId(params.machineId))
+  }, [dispatch, selectedMachine])
+
+  const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
+    const endDateTime = new Date(startUNIX + duration * 1000)
+    console.log(new Date(startUNIX + duration * 1000))
+    const timeNowDateTime = new Date()
+    console.log(new Date())
+
+    const durationLeftInMiliSeconds: number = Math.abs(timeNowDateTime.getTime() - endDateTime.getTime())
+
+    if (durationLeftInMiliSeconds < 0) {
+      dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
+    }
+
+    const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+    const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
+    const seconds = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
+
+    return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
+  }
+
   const MachineDetails = (machine: WashingMachine | null) => {
     let pageTitle = 'Laundry Time!'
     let actions = <></>
@@ -97,11 +129,18 @@ export default function ViewWashingMachine() {
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
-          <TimeLeftText>34 </TimeLeftText> <TimeLabel>minutes</TimeLabel>
+          <TimeLeftText>
+            {calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number)}
+          </TimeLeftText>{' '}
+          <TimeLabel>minutes</TimeLabel>
         </TimeUnit>
         <TimeLeftText> : </TimeLeftText>
         <TimeUnit>
-          <TimeLeftText> 59 </TimeLeftText> <TimeLabel>seconds</TimeLabel>
+          <TimeLeftText>
+            {' '}
+            {calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number)}{' '}
+          </TimeLeftText>{' '}
+          <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
         {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
       </TimeLeft>
@@ -118,6 +157,7 @@ export default function ViewWashingMachine() {
         imagesrc = wm_inuse
         break
       case WMStatus.COMPLETED:
+      case WMStatus.UNCOLLECTED:
         pageTitle = 'Collect Laundry'
         imagesrc = wm_uncollected
         actions = (
@@ -128,6 +168,10 @@ export default function ViewWashingMachine() {
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
+            onButtonClick={() => {
+              dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              history.back()
+            }}
           />
         )
         break
@@ -145,6 +189,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              history.back()
             }}
           />
         )

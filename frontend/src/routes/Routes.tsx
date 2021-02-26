@@ -34,6 +34,7 @@ export enum PATHS {
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
+  VIEW_MACHINE = '/facility/laundry/view',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
   //SOCIAL
   VIEW_POST = '/social/post/',
@@ -109,8 +110,8 @@ export default class Routes extends React.Component {
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
-            <PrivateRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
-            <PrivateRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
+            <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
+            <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
             <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
