@@ -80,7 +80,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
+    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), false))
     dispatch(fetchAllPublicEvents())
     dispatch(getPublicEventsByPage(pageIndex))
   }, [dispatch])
@@ -164,6 +164,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const data = currentEvents ?? allPublicEvents
 
+  console.log(selectedPageEvents)
   const renderResults = () => {
     if (searchValue) {
       return searchedEvents ? (

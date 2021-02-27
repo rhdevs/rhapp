@@ -553,6 +553,7 @@ export const getPublicEventsByPage = (pageIndex: number) => async (dispatch: Dis
       selectedPageEvents: data,
     })
   }
+  console.log(pageIndex)
   await getFromBackend(ENDPOINTS.GET_PUBLIC_EVENTS + `/${pageIndex}/${currentUNIXDate}`, dispatchData)
 }
 
