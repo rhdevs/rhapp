@@ -90,6 +90,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     return format(date, 'dd-MMM-yy kk:mm')
   }
 
+  console.log(userAllEventsList)
   const eventsToCards = (events: SchedulingEvent[]) => {
     return events.map((result, index) => {
       return (
@@ -175,7 +176,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      console.log(pageIndex)
       return selectedPageEvents.length ? (
         isLoading ? (
           <LoadingSpin />
@@ -185,8 +185,8 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
             <Pagination
               hideOnSinglePage
               style={{ display: 'flex', justifyContent: 'center' }}
-              defaultCurrent={0}
-              current={pageIndex}
+              defaultCurrent={1}
+              current={pageIndex + 1}
               total={data.length}
               defaultPageSize={10}
               onChange={(pageNumber) => {
