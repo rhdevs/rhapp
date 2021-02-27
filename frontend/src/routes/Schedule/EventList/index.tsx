@@ -90,7 +90,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     return format(date, 'dd-MMM-yy kk:mm')
   }
 
-  console.log(userAllEventsList)
   const eventsToCards = (events: SchedulingEvent[]) => {
     return events.map((result, index) => {
       return (
@@ -164,7 +163,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const data = currentEvents ?? allPublicEvents
 
-  console.log(selectedPageEvents)
   const renderResults = () => {
     if (searchValue) {
       return searchedEvents ? (
