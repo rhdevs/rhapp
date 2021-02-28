@@ -17,8 +17,6 @@ const initialState = {
   userNusModsEvents: [],
   nusModsIsSuccessful: false,
   nusModsIsFailure: false,
-  eventAttendanceIsSuccessful: false,
-  eventAttendanceIsFailure: false,
   selectedPageEvents: [],
 
   // Create new event states
@@ -59,8 +57,6 @@ type State = {
   userNusModsEvents: TimetableEvent[]
   nusModsIsSuccessful: boolean
   nusModsIsFailure: boolean
-  eventAttendanceIsSuccessful: boolean
-  eventAttendanceIsFailure: boolean
   selectedPageEvents: SchedulingEvent[]
   newEventName: string
   newEventLocation: string
@@ -95,13 +91,6 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         ...state,
         nusModsIsSuccessful: action.nusModsIsSuccessful,
         nusModsIsFailure: action.nusModsIsFailure,
-      }
-    }
-    case SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS: {
-      return {
-        ...state,
-        eventAttendanceIsSuccessful: action.eventAttendanceIsSuccessful,
-        eventAttendanceIsFailure: action.eventAttendanceIsFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS: {

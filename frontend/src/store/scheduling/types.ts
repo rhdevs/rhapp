@@ -87,7 +87,6 @@ export enum SCHEDULING_ACTIONS {
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
-  HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
   SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
   GET_CCA_DETAILS = 'SCHEDULING_ACTIONS.GET_CCA_DETAILS',
   GET_ALL_CCA = 'SCHEDULING_ACTIONS.GET_ALL_CCA',
@@ -199,12 +198,6 @@ type HandleNusModsStatus = {
   nusModsIsFailure: boolean
 }
 
-type HandleEventAttendanceStatus = {
-  type: typeof SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS
-  eventAttendanceIsSuccessful: boolean
-  eventAttendanceIsFailure: boolean
-}
-
 type SetSelectedEvent = {
   type: typeof SCHEDULING_ACTIONS.SET_SELECTED_EVENT
   selectedEvent: TimetableEvent | null
@@ -284,7 +277,6 @@ export type ActionTypes =
   | getTargetAudienceList
   | SetHallEventType
   | HandleNusModsStatus
-  | HandleEventAttendanceStatus
   | SetSelectedEvent
   | GetCCADetails
   | GetAllCCA

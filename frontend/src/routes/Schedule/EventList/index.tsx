@@ -126,7 +126,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     return event.eventID === result.eventID
                   }).length !== 0
                 } //check if event is already in schedule
-                hasSuccessMessage={true}
                 stopPropagation={true}
                 defaultButtonDescription={'Add to Schedule'}
                 updatedButtonDescription={'Remove from Schedule'}

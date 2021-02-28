@@ -12,6 +12,8 @@ import {
 } from './types'
 import useSnackbar from '../../hooks/useSnackbar'
 
+const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint: string, methods) => {
   const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
@@ -423,8 +425,10 @@ export const deleteUserNusModsEvents = (userId: string | null) => async (
   if (userId !== null) {
     const updateDeleteStatus = (data) => {
       if (data.ok) {
+        success('NUSMods events deleted!')
         dispatch(fetchCurrentUserEvents(userId, false))
       } else {
+        error('Failed to delete NUSMods events, please try again!')
         console.log('FAILURE!!!! ' + data.status)
       }
       dispatch(setIsLoading(false))
@@ -509,9 +513,9 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
         if (data.ok) {
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
-          dispatch(setEventAttendanceStatus(true, false))
+          success('Successfully removed from schedule!')
         } else {
-          dispatch(setEventAttendanceStatus(false, true))
+          error('Failed to remove event, please try again!')
           console.log('FAILURE!!!! ' + data.status)
         }
       }
@@ -523,26 +527,16 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
         if (data.ok) {
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
-          dispatch(setEventAttendanceStatus(true, false))
+          success('Successfully added to schedule!')
         } else {
           console.log('FAILURE!!!! ' + data.status)
-          dispatch(setEventAttendanceStatus(false, true))
+          error('Failed to add event, please try again!')
         }
       }
 
       postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
     }
   }
-}
-
-export const setEventAttendanceStatus = (eventAttendanceIsSuccessful: boolean, eventAttendanceIsFailure: boolean) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS,
-    eventAttendanceIsSuccessful: eventAttendanceIsSuccessful,
-    eventAttendanceIsFailure: eventAttendanceIsFailure,
-  })
 }
 
 export const getPublicEventsByPage = (pageIndex: number) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -652,10 +646,12 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     .then((data) => {
       console.log('added successfully: ')
       console.log(data)
+      success('Event created!')
       dispatch(resetCreateEventFields())
       return data.eventID
     })
     .catch((err) => {
+      error('Failed to create event, please try again!')
       console.log(err)
     })
   dispatch(setIsLoading(false))
@@ -716,9 +712,6 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
     selectedEvent: event,
   })
 }
-
-const [success] = useSnackbar('success')
-const [error] = useSnackbar('error')
 
 export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const updateStatus = (data) => {
