@@ -26,7 +26,6 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 
 import { message } from 'antd'
-import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 const StyledText = styled.text`
   font-size: 17px;
@@ -38,10 +37,6 @@ export default function useSnackbar(type: string, icon?: ReactElement) {
     const styledContent = <StyledText>{content}</StyledText>
     message.success({
       content: styledContent,
-      icon: <CheckCircleOutlined style={{ color: '#002642', fontSize: 20 }} />,
-      style: {
-        marginTop: 30,
-      },
     })
   }
 
@@ -49,10 +44,6 @@ export default function useSnackbar(type: string, icon?: ReactElement) {
     const styledContent = <StyledText>{content}</StyledText>
     message.error({
       content: styledContent,
-      icon: <CloseCircleOutlined style={{ color: '#002642', fontSize: 20 }} />,
-      style: {
-        marginTop: 30,
-      },
     })
   }
 
@@ -60,23 +51,21 @@ export default function useSnackbar(type: string, icon?: ReactElement) {
     const styledContent = <StyledText>{content}</StyledText>
     message.warning({
       content: styledContent,
-      icon: <ExclamationCircleOutlined style={{ color: '#002642', fontSize: 20 }} />,
-      style: {
-        marginTop: 30,
-      },
     })
   }
 
   const custom = (content: string) => {
     const styledContent = <StyledText>{content}</StyledText>
-    message.warning({
+    message.success({
       content: styledContent,
       icon: <div style={{ color: '#002642', fontSize: 20 }}>{icon}</div>,
-      style: {
-        marginTop: 30,
-      },
     })
   }
+
+  /**
+   * Add more custom types of snackbars over here (e.g. error, warning)
+   * Return them as such: [success, error, warning, etc...]
+   */
 
   if (type === 'success') {
     return [success]
