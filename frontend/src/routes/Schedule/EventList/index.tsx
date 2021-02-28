@@ -79,11 +79,13 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const [searchValue, setSearchValue] = useState('')
 
+  console.log(pageIndex)
+
   useEffect(() => {
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), false))
     dispatch(fetchAllPublicEvents())
     dispatch(getPublicEventsByPage(pageIndex))
-  }, [dispatch])
+  }, [dispatch, pageIndex])
 
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
