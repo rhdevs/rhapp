@@ -263,6 +263,17 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         selectedPageEvents: action.selectedPageEvents,
       }
     }
+    case SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS: {
+      return {
+        ...state,
+        newEventName: action.newEventName,
+        newEventLocation: action.newEventLocation,
+        newEventFromDate: action.newEventFromDate,
+        newEventToDate: action.newEventToDate,
+        newTargetAudience: action.newTargetAudience,
+        newDescription: action.newDescription,
+      }
+    }
     default:
       return state
   }

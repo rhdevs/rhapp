@@ -652,6 +652,7 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     .then((data) => {
       console.log('added successfully: ')
       console.log(data)
+      dispatch(resetCreateEventFields())
       return data.eventID
     })
     .catch((err) => {
@@ -659,6 +660,18 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     })
   dispatch(setIsLoading(false))
   return eventID
+}
+
+const resetCreateEventFields = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS,
+    newEventName: '',
+    newEventLocation: '',
+    newEventFromDate: new Date(),
+    newEventToDate: new Date(),
+    newTargetAudience: '',
+    newDescription: '',
+  })
 }
 // ---------------------- CREATE EVENTS ----------------------
 

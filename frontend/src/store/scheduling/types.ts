@@ -100,6 +100,7 @@ export enum SCHEDULING_ACTIONS {
   SET_DELETED_EVENT_STATUS = 'SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS',
   SET_CREATED_EVENT_ID = 'SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID',
   GET_SELECTED_PAGE_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS',
+  SET_CREATE_EVENT_FIELDS = 'SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS',
 }
 
 /** Actions */
@@ -254,6 +255,16 @@ type GetSelectedPagePublicEvents = {
   selectedPageEvents: SchedulingEvent[]
 }
 
+type SetCreateEventFields = {
+  type: typeof SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS
+  newEventName: string
+  newEventLocation: string
+  newEventFromDate: Date
+  newEventToDate: Date
+  newTargetAudience: string
+  newDescription: string
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -284,3 +295,4 @@ export type ActionTypes =
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
   | GetSelectedPagePublicEvents
+  | SetCreateEventFields
