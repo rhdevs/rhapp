@@ -79,8 +79,6 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
 
   const [searchValue, setSearchValue] = useState('')
 
-  console.log(pageIndex)
-
   useEffect(() => {
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), false))
     dispatch(fetchAllPublicEvents())
@@ -184,8 +182,9 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           <>
             {eventsToCards(selectedPageEvents)}
             <Pagination
+              showSizeChanger={false}
               hideOnSinglePage
-              style={{ display: 'flex', justifyContent: 'center' }}
+              style={{ display: 'flex', justifyContent: 'center', padding: '15px 0' }}
               defaultCurrent={1}
               current={pageIndex + 1}
               total={data.length}
