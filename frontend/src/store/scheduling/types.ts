@@ -249,12 +249,6 @@ type GetSelectedCCAEvents = {
   selectedCCAEvents: SchedulingEvent[]
 }
 
-type SetDeletedEventStatus = {
-  type: typeof SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS
-  deletedEventIsSuccess: boolean
-  deletedEventIsFailure: boolean
-}
-
 type GetSelectedPagePublicEvents = {
   type: typeof SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS
   selectedPageEvents: SchedulingEvent[]
@@ -289,5 +283,4 @@ export type ActionTypes =
   | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
-  | SetDeletedEventStatus
   | GetSelectedPagePublicEvents

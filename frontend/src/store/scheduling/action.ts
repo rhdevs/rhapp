@@ -10,6 +10,7 @@ import {
   SCHEDULING_ACTIONS,
   TimetableEvent,
 } from './types'
+import useSnackbar from '../../hooks/useSnackbar'
 
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint: string, methods) => {
@@ -703,34 +704,21 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
   })
 }
 
+const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
+
 export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const updateStatus = (data) => {
     if (data.ok) {
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-        deletedEventIsSuccess: true,
-        deletedEventIsFailure: false,
-      })
+      success('Event deleted!')
     } else {
       console.log('FAILURE!!!! ' + data.status)
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-        deletedEventIsSuccess: false,
-        deletedEventIsFailure: true,
-      })
+      error('Failed to delete, please try again!')
     }
     dispatch(setIsLoading(false))
   }
 
   postToBackend(ENDPOINTS.DELETE_EVENT + `/${eventId}`, 'DELETE', null, updateStatus)
-}
-
-export const setDeleteEventStatus = (isSuccess: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-    deletedEventIsSuccess: isSuccess,
-    deletedEventIsFailure: isFailure,
-  })
 }
 // ---------------------- VIEW EVENTS ----------------------
 
