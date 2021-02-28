@@ -71,7 +71,7 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  let pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex) - 1
+  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex) - 1
 
   const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
@@ -87,7 +87,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
     dispatch(fetchAllUserEvents(localStorage.getItem('userID'), false))
     dispatch(fetchAllPublicEvents())
     if (!(0 <= pageIndex && pageIndex < numberOfPages - 1)) {
-      pageIndex = 0
+      history.push(`${PATHS.EVENT_LIST_PAGE}/1`)
     }
     dispatch(getPublicEventsByPage(pageIndex))
   }, [dispatch, pageIndex])
