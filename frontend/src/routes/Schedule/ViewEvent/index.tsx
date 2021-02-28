@@ -48,6 +48,7 @@ export default function CreateEvent() {
     <LeftOutlined
       style={{ color: 'black', padding: '0 10px 0 0' }}
       onClick={() => {
+        dispatch(setSelectedEvent(null, null))
         history.goBack()
       }}
     />

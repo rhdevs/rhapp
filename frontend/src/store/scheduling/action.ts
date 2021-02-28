@@ -706,6 +706,9 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
         CCADetails: ccaDetails,
       }
     }
+  } else {
+    //reset selected event
+    event = null
   }
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
