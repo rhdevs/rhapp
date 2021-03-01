@@ -96,7 +96,7 @@ export default function ViewPost() {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [success] = useSnackbar()
+  const [success] = useSnackbar('success')
 
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost

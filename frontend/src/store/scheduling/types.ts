@@ -87,7 +87,6 @@ export enum SCHEDULING_ACTIONS {
   SET_HALL_EVENT_TYPE = 'SCHEDULING_ACTIONS.SET_HALL_EVENT_TYPE',
   GET_TARGET_AUDIENCE_LIST = 'SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST',
   HANDLE_NUSMODS_STATUS = 'SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS',
-  HANDLE_EVENT_ATTENDANCE_STATUS = 'SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS',
   SET_SELECTED_EVENT = 'SCHEDULING_ACTIONS.SET_SELECTED_EVENT',
   GET_CCA_DETAILS = 'SCHEDULING_ACTIONS.GET_CCA_DETAILS',
   GET_ALL_CCA = 'SCHEDULING_ACTIONS.GET_ALL_CCA',
@@ -98,6 +97,9 @@ export enum SCHEDULING_ACTIONS {
   SET_SELECTED_CCA_IDS = 'SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS',
   GET_SELECTED_CCA_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_CCA_EVENTS',
   SET_DELETED_EVENT_STATUS = 'SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS',
+  SET_CREATED_EVENT_ID = 'SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID',
+  GET_SELECTED_PAGE_PUBLIC_EVENTS = 'SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS',
+  SET_CREATE_EVENT_FIELDS = 'SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS',
 }
 
 /** Actions */
@@ -196,12 +198,6 @@ type HandleNusModsStatus = {
   nusModsIsFailure: boolean
 }
 
-type HandleEventAttendanceStatus = {
-  type: typeof SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS
-  eventAttendanceIsSuccessful: boolean
-  eventAttendanceIsFailure: boolean
-}
-
 type SetSelectedEvent = {
   type: typeof SCHEDULING_ACTIONS.SET_SELECTED_EVENT
   selectedEvent: TimetableEvent | null
@@ -247,10 +243,19 @@ type GetSelectedCCAEvents = {
   selectedCCAEvents: SchedulingEvent[]
 }
 
-type SetDeletedEventStatus = {
-  type: typeof SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS
-  deletedEventIsSuccess: boolean
-  deletedEventIsFailure: boolean
+type GetSelectedPagePublicEvents = {
+  type: typeof SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS
+  selectedPageEvents: SchedulingEvent[]
+}
+
+type SetCreateEventFields = {
+  type: typeof SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS
+  newEventName: string
+  newEventLocation: string
+  newEventFromDate: Date
+  newEventToDate: Date
+  newTargetAudience: string
+  newDescription: string
 }
 
 export type ActionTypes =
@@ -272,7 +277,6 @@ export type ActionTypes =
   | getTargetAudienceList
   | SetHallEventType
   | HandleNusModsStatus
-  | HandleEventAttendanceStatus
   | SetSelectedEvent
   | GetCCADetails
   | GetAllCCA
@@ -282,4 +286,5 @@ export type ActionTypes =
   | GetSelectedProfileNusModsEvents
   | SetSelectedCCAIds
   | GetSelectedCCAEvents
-  | SetDeletedEventStatus
+  | GetSelectedPagePublicEvents
+  | SetCreateEventFields

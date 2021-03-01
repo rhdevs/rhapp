@@ -47,7 +47,7 @@ type RecentData = {
 export default function ShareTimetable({ recentSearches }: { recentSearches: RecentData[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const [success] = useSnackbar()
+  const [success] = useSnackbar('success')
   const searchResults = useSelector((state: RootState) => state.scheduling.shareSearchResults)
   const [searchValue, setSearchValue] = useState('')
 

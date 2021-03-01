@@ -5,7 +5,7 @@ import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoint
 import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
-const [success] = useSnackbar()
+const [success] = useSnackbar('success')
 
 export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { postId } = getState().social

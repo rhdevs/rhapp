@@ -17,8 +17,7 @@ const initialState = {
   userNusModsEvents: [],
   nusModsIsSuccessful: false,
   nusModsIsFailure: false,
-  eventAttendanceIsSuccessful: false,
-  eventAttendanceIsFailure: false,
+  selectedPageEvents: [],
 
   // Create new event states
   newEventName: '',
@@ -34,8 +33,6 @@ const initialState = {
   //view event state
   selectedEvent: null,
   ccaDetails: null,
-  deletedEventIsSuccess: false,
-  deletedEventIsFailure: false,
 
   ccaList: [],
   profileList: [],
@@ -60,8 +57,7 @@ type State = {
   userNusModsEvents: TimetableEvent[]
   nusModsIsSuccessful: boolean
   nusModsIsFailure: boolean
-  eventAttendanceIsSuccessful: boolean
-  eventAttendanceIsFailure: boolean
+  selectedPageEvents: SchedulingEvent[]
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -73,8 +69,6 @@ type State = {
   targetAudienceList: userCCA[]
   selectedEvent: TimetableEvent | null
   ccaDetails: CCADetails | null
-  deletedEventIsSuccess: boolean
-  deletedEventIsFailure: boolean
   ccaList: CCADetails[]
   profileList: Profile[]
   selectedProfileIds: string[]
@@ -97,13 +91,6 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         ...state,
         nusModsIsSuccessful: action.nusModsIsSuccessful,
         nusModsIsFailure: action.nusModsIsFailure,
-      }
-    }
-    case SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS: {
-      return {
-        ...state,
-        eventAttendanceIsSuccessful: action.eventAttendanceIsSuccessful,
-        eventAttendanceIsFailure: action.eventAttendanceIsFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS: {
@@ -259,11 +246,21 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         selectedCCAEvents: action.selectedCCAEvents,
       }
     }
-    case SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS: {
+    case SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS: {
       return {
         ...state,
-        deletedEventIsSuccess: action.deletedEventIsSuccess,
-        deletedEventIsFailure: action.deletedEventIsFailure,
+        selectedPageEvents: action.selectedPageEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS: {
+      return {
+        ...state,
+        newEventName: action.newEventName,
+        newEventLocation: action.newEventLocation,
+        newEventFromDate: action.newEventFromDate,
+        newEventToDate: action.newEventToDate,
+        newTargetAudience: action.newTargetAudience,
+        newDescription: action.newDescription,
       }
     }
     default:

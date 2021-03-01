@@ -13,8 +13,6 @@ import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 import 'antd-mobile/dist/antd-mobile.css'
-// import { useSelector } from 'react-redux'
-// import { RootState } from '../../store/types'
 
 const StyledButton = styled.img`
   width: 28px;
@@ -32,7 +30,6 @@ const BottomNav = styled.div`
 function BottomNavBar() {
   const history = useHistory()
   const location = useLocation()
-  // const { userID } = useSelector((state: RootState) => state.profile.user)
 
   const activeTabIndex = () => {
     const pathname = location.pathname
@@ -48,7 +45,7 @@ function BottomNavBar() {
   }
 
   return (
-    <div style={{ height: '75px', backgroundColor: '#fafaf4' }}>
+    <div style={{ height: 'fit-content', backgroundColor: '#fafaf4' }}>
       <BottomNav>
         <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
           <TabBar.Item
@@ -89,7 +86,7 @@ function BottomNavBar() {
             selected={activeTabIndex() === 4}
             // badge={1}
             onPress={() => {
-              history.push(PATHS.PROFILE_PAGE + `${'A1234567B'}`) //TODO: Change out stub
+              history.push(PATHS.PROFILE_PAGE + `${localStorage.getItem('userID')}`)
             }}
           ></TabBar.Item>
         </TabBar>

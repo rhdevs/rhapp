@@ -10,7 +10,10 @@ import {
   SCHEDULING_ACTIONS,
   TimetableEvent,
 } from './types'
+import useSnackbar from '../../hooks/useSnackbar'
 
+const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
 // ---------------------- GET ----------------------
 const getFromBackend = async (endpoint: string, methods) => {
   const resp = await fetch(DOMAIN_URL.EVENT + endpoint, {
@@ -60,6 +63,7 @@ const postToBackend = (endpoint: string, method: string, body, functions) => {
 }
 // ---------------------- POST/DELETE ----------------------
 
+// Fetches all public events after current time
 export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const sortDataByDate = (a: SchedulingEvent, b: SchedulingEvent) => {
@@ -74,7 +78,9 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
     dispatch(setIsLoading(false))
   }
 
-  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`, dispatchData)
 }
 
 export const fetchAllUserEvents = (userId: string | null, withNusModsEvents: boolean) => async (
@@ -419,8 +425,10 @@ export const deleteUserNusModsEvents = (userId: string | null) => async (
   if (userId !== null) {
     const updateDeleteStatus = (data) => {
       if (data.ok) {
+        success('NUSMods events deleted!')
         dispatch(fetchCurrentUserEvents(userId, false))
       } else {
+        error('Failed to delete NUSMods events, please try again!')
         console.log('FAILURE!!!! ' + data.status)
       }
       dispatch(setIsLoading(false))
@@ -466,18 +474,29 @@ export const giveTimetablePermission = async (recipientUserId: string) => {
 // ---------------------- SHARE SEARCH ----------------------
 
 // ---------------------- SEARCH EVENTS ----------------------
+// Fetches all private events and public events of a specified user from current time
 export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const dispatchData = (data) => {
-    dispatch({
-      type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
-      searchedEvents: data.filter((event) => {
-        return event.eventName.toLowerCase().includes(query)
-      }),
-    })
-    dispatch(setIsLoading(false))
-  }
-  getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS, dispatchData)
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  const publicEvents = await getFromBackend(
+    ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`,
+    null,
+  )
+  const privateEvents = await getFromBackend(
+    ENDPOINTS.USER_PRIVATE_EVENTS_AFTER_SPECIFIC_TIME + `/${localStorage.getItem('userID')}/${currentUNIXDate}`,
+    null,
+  )
+
+  const filteredSearchEvents = [...(publicEvents || []), ...(privateEvents || [])].filter((event) => {
+    return event.eventName.toLowerCase().includes(query)
+  })
+
+  dispatch({
+    type: SCHEDULING_ACTIONS.GET_SEARCHED_EVENTS,
+    searchedEvents: filteredSearchEvents,
+  })
+  dispatch(setIsLoading(false))
 }
 
 export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
@@ -494,9 +513,9 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
         if (data.ok) {
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
-          dispatch(setEventAttendanceStatus(true, false))
+          success('Successfully removed from schedule!')
         } else {
-          dispatch(setEventAttendanceStatus(false, true))
+          error('Failed to remove event, please try again!')
           console.log('FAILURE!!!! ' + data.status)
         }
       }
@@ -508,10 +527,10 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
         if (data.ok) {
           dispatch(fetchCurrentUserEvents(userId, false))
           dispatch(fetchAllUserEvents(userId, true))
-          dispatch(setEventAttendanceStatus(true, false))
+          success('Successfully added to schedule!')
         } else {
           console.log('FAILURE!!!! ' + data.status)
-          dispatch(setEventAttendanceStatus(false, true))
+          error('Failed to add event, please try again!')
         }
       }
 
@@ -520,15 +539,18 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
   }
 }
 
-export const setEventAttendanceStatus = (eventAttendanceIsSuccessful: boolean, eventAttendanceIsFailure: boolean) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS,
-    eventAttendanceIsSuccessful: eventAttendanceIsSuccessful,
-    eventAttendanceIsFailure: eventAttendanceIsFailure,
-  })
+export const getPublicEventsByPage = (pageIndex: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  const currentUNIXDate = Math.round(Date.now() / 1000)
+
+  const dispatchData = (data) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS,
+      selectedPageEvents: data,
+    })
+  }
+  await getFromBackend(ENDPOINTS.GET_PUBLIC_EVENTS + `/${pageIndex}/${currentUNIXDate}`, dispatchData)
 }
+
 // ---------------------- SEARCH EVENTS ----------------------
 
 // ---------------------- CREATE EVENTS ----------------------
@@ -624,13 +646,28 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     .then((data) => {
       console.log('added successfully: ')
       console.log(data)
+      success('Event created!')
+      dispatch(resetCreateEventFields())
       return data.eventID
     })
     .catch((err) => {
+      error('Failed to create event, please try again!')
       console.log(err)
     })
   dispatch(setIsLoading(false))
   return eventID
+}
+
+const resetCreateEventFields = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS,
+    newEventName: '',
+    newEventLocation: '',
+    newEventFromDate: new Date(),
+    newEventToDate: new Date(),
+    newTargetAudience: '',
+    newDescription: '',
+  })
 }
 // ---------------------- CREATE EVENTS ----------------------
 
@@ -669,6 +706,9 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
         CCADetails: ccaDetails,
       }
     }
+  } else {
+    //reset selected event
+    event = null
   }
   dispatch({
     type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
@@ -679,31 +719,15 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
 export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const updateStatus = (data) => {
     if (data.ok) {
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-        deletedEventIsSuccess: true,
-        deletedEventIsFailure: false,
-      })
+      success('Event deleted!')
     } else {
       console.log('FAILURE!!!! ' + data.status)
-      dispatch({
-        type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-        deletedEventIsSuccess: false,
-        deletedEventIsFailure: true,
-      })
+      error('Failed to delete, please try again!')
     }
     dispatch(setIsLoading(false))
   }
 
   postToBackend(ENDPOINTS.DELETE_EVENT + `/${eventId}`, 'DELETE', null, updateStatus)
-}
-
-export const setDeleteEventStatus = (isSuccess: boolean, isFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SCHEDULING_ACTIONS.SET_DELETED_EVENT_STATUS,
-    deletedEventIsSuccess: isSuccess,
-    deletedEventIsFailure: isFailure,
-  })
 }
 // ---------------------- VIEW EVENTS ----------------------
 

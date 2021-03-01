@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { LeftOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
 import styled from 'styled-components'
 import { PATHS } from '../../Routes'
-import { Button as AntdButton } from 'antd'
+import { Button as AntdButton, Pagination } from 'antd'
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -18,6 +18,7 @@ import {
   editUserEvents,
   fetchAllPublicEvents,
   fetchAllUserEvents,
+  getPublicEventsByPage,
   getSearchedEvents,
 } from '../../../store/scheduling/action'
 import { SchedulingEvent } from '../../../store/scheduling/types'
@@ -44,11 +45,21 @@ const TopContainer = styled.div`
 
 const SearchBarContainer = styled.div`
   padding: 0 6.5vw 1vh;
+  display: flex;
+  flex-direction: column;
 `
 
 const ResultsContainer = styled.div`
   overflow: auto;
-  height: 73vh;
+  height: 70vh;
+`
+
+const UpcomingEventsText = styled.text`
+  font-family: Inter;
+  color: black;
+  font-size: 20px;
+  line-height: 30px;
+  padding-left: 5vw;
 `
 
 const LongButton = {
@@ -60,17 +71,26 @@ const LongButton = {
 export default function EventList({ currentEvents }: { currentEvents: SchedulingEvent[] }) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const pageIndex = Number(useParams<{ pageIndex: string }>().pageIndex) - 1
 
-  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents } = useSelector(
+  const { userAllEventsList, allPublicEvents, isLoading, searchedEvents, selectedPageEvents } = useSelector(
     (state: RootState) => state.scheduling,
   )
+
+  const data = currentEvents ?? allPublicEvents
+
+  const numberOfPages = Math.ceil(data.length / 10)
 
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), true))
+    dispatch(fetchAllUserEvents(localStorage.getItem('userID'), false))
     dispatch(fetchAllPublicEvents())
-  }, [dispatch])
+    if (!(0 <= pageIndex && pageIndex < numberOfPages)) {
+      history.push(`${PATHS.EVENT_LIST_PAGE}/1`)
+    }
+    dispatch(getPublicEventsByPage(pageIndex))
+  }, [dispatch, pageIndex])
 
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
@@ -86,7 +106,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
           dateTime={formatDate(result.startDateTime)}
           description={result.description}
           bottomElement={
-            <>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <AntdButton
                 type="primary"
                 style={LongButton}
@@ -96,14 +116,16 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
               >
                 See Details
               </AntdButton>
-              <div style={{ width: '25px' }} />
+              <div style={{ width: '5%' }} />
               <Button
+                descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
+                buttonWidth="9rem"
+                buttonHeight="auto"
                 buttonIsPressed={
                   userAllEventsList.filter((event) => {
                     return event.eventID === result.eventID
                   }).length !== 0
                 } //check if event is already in schedule
-                hasSuccessMessage={true}
                 stopPropagation={true}
                 defaultButtonDescription={'Add to Schedule'}
                 updatedButtonDescription={'Remove from Schedule'}
@@ -138,14 +160,12 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   return
                 }}
               />
-            </>
+            </div>
           }
         />
       )
     })
   }
-
-  const data = currentEvents ?? allPublicEvents
 
   const renderResults = () => {
     if (searchValue) {
@@ -159,11 +179,25 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <NoEventDataText>No Events Found</NoEventDataText>
       )
     } else {
-      return data.length ? (
+      return selectedPageEvents.length ? (
         isLoading ? (
           <LoadingSpin />
         ) : (
-          eventsToCards(data)
+          <>
+            {eventsToCards(selectedPageEvents)}
+            <Pagination
+              showSizeChanger={false}
+              hideOnSinglePage
+              style={{ display: 'flex', justifyContent: 'center', padding: '15px 0' }}
+              defaultCurrent={1}
+              current={pageIndex + 1}
+              total={data.length}
+              defaultPageSize={10}
+              onChange={(pageNumber) => {
+                history.push(`${PATHS.EVENT_LIST_PAGE}/${pageNumber}`)
+              }}
+            />
+          </>
         )
       ) : (
         <>
@@ -193,6 +227,7 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
         <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
         <SearchBarContainer>
           <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
+          {!searchValue && selectedPageEvents.length !== 0 && <UpcomingEventsText>Upcoming Events</UpcomingEventsText>}
         </SearchBarContainer>
       </TopContainer>
       <ResultsContainer>{renderResults()}</ResultsContainer>
