@@ -176,7 +176,10 @@ export default function EditProfile() {
                     lineHeight: '40px',
                     margin: '10px',
                   }}
-                  onClick={() => deleteIconClicked('cca', cca.ccaName)}
+                  onClick={() => {
+                    setHasChanges(true)
+                    deleteIconClicked('cca', cca.ccaName)
+                  }}
                 >
                   {cca.ccaName}
                   <img alt="deleteIcon" style={{ marginLeft: 5, width: 6 }} src={String(deleteIcon)} />
@@ -205,7 +208,10 @@ export default function EditProfile() {
                     alt="deleteIcon"
                     style={{ marginLeft: 5, width: 6 }}
                     src={String(deleteIcon)}
-                    onClick={() => deleteIconClicked('module', module)}
+                    onClick={() => {
+                      setHasChanges(true)
+                      deleteIconClicked('module', module)
+                    }}
                   />
                 </span>
               </div>
@@ -229,7 +235,10 @@ export default function EditProfile() {
                   alt="plusCircle"
                   style={{ marginLeft: 10, width: 15 }}
                   src={String(plusCircle)}
-                  onClick={plusCircleClicked}
+                  onClick={() => {
+                    setHasChanges(true)
+                    plusCircleClicked
+                  }}
                 />
                 {/* VISIBILITY SELECTOR POSTPONED -->  NO FRIENDS FUNCTION */}
                 {/* <VisibilitySelector /> */}
@@ -281,7 +290,7 @@ export default function EditProfile() {
         />
       )}
       <ProfileComponent>
-        <EditPersonalInfoContainer />
+        <EditPersonalInfoContainer setHasChanged={setHasChanges} />
         <CardContainer>
           <EditDetailsCard />
         </CardContainer>

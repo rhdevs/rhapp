@@ -56,7 +56,7 @@ const validateMessages = {
   },
 }
 
-const EditPersonalInfoContainer = () => {
+const EditPersonalInfoContainer = (setHasChanged) => {
   const { newDisplayName, newTelegramHandle, newBio, user } = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
 
@@ -73,15 +73,19 @@ const EditPersonalInfoContainer = () => {
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
-            <Input defaultValue={newDisplayName} placeholder={newDisplayName} />
+            <Input defaultValue={newDisplayName} placeholder={newDisplayName} onChange={() => setHasChanged(true)} />
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
-            <Input defaultValue={newTelegramHandle} placeholder={newTelegramHandle} />
+            <Input
+              defaultValue={newTelegramHandle}
+              placeholder={newTelegramHandle}
+              onChange={() => setHasChanged(true)}
+            />
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
-          <Input.TextArea defaultValue={newBio} placeholder={newBio} />
+          <Input.TextArea defaultValue={newBio} placeholder={newBio} onChange={() => setHasChanged(true)} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={LongButton}>
