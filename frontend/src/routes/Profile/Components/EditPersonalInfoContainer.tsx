@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
@@ -59,6 +59,13 @@ const validateMessages = {
 const EditPersonalInfoContainer = (setHasChanged) => {
   const { newDisplayName, newTelegramHandle, newBio, user } = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
+  const oldBio = newBio
+
+  useEffect(() => {
+    if (newBio !== oldBio) {
+      setHasChanged(true)
+    }
+  }, [newBio])
 
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
@@ -85,7 +92,7 @@ const EditPersonalInfoContainer = (setHasChanged) => {
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
-          <Input.TextArea defaultValue={newBio} placeholder={newBio} onChange={() => setHasChanged(true)} />
+          <Input.TextArea defaultValue={newBio} placeholder={newBio} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={LongButton}>
