@@ -4,7 +4,7 @@ import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { handleEditProfileDetails } from '../../../store/profile/action'
+import { handleEditProfileDetails, setHasChanged } from '../../../store/profile/action'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
@@ -56,14 +56,14 @@ const validateMessages = {
   },
 }
 
-const EditPersonalInfoContainer = (setHasChanged) => {
+const EditPersonalInfoContainer = () => {
   const { newDisplayName, newTelegramHandle, newBio, user } = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
   const oldBio = newBio
 
   useEffect(() => {
     if (newBio !== oldBio) {
-      setHasChanged(true)
+      dispatch(setHasChanged(true))
     }
   }, [newBio])
 
@@ -80,13 +80,17 @@ const EditPersonalInfoContainer = (setHasChanged) => {
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
-            <Input defaultValue={newDisplayName} placeholder={newDisplayName} onChange={() => setHasChanged(true)} />
+            <Input
+              defaultValue={newDisplayName}
+              placeholder={newDisplayName}
+              onChange={() => dispatch(setHasChanged(true))}
+            />
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input
               defaultValue={newTelegramHandle}
               placeholder={newTelegramHandle}
-              onChange={() => setHasChanged(true)}
+              onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>

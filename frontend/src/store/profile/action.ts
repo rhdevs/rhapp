@@ -220,3 +220,10 @@ export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: str
   // 1. updatestate
   dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
 }
+
+export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: PROFILE_ACTIONS.SET_HAS_CHANGED,
+    hasChanged: hasChanged,
+  })
+}

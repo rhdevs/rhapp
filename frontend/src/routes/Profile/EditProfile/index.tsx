@@ -14,6 +14,7 @@ import {
   fetchUserDetails,
   handleCCADetails,
   handleModuleDetails,
+  setHasChanged,
 } from '../../../store/profile/action'
 import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
@@ -45,9 +46,8 @@ interface Details {
 export default function EditProfile() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const [hasChanges, setHasChanges] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
-  const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, allCcas, hasChanged } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
@@ -177,7 +177,7 @@ export default function EditProfile() {
                     margin: '10px',
                   }}
                   onClick={() => {
-                    setHasChanges(true)
+                    dispatch(setHasChanged(true))
                     deleteIconClicked('cca', cca.ccaName)
                   }}
                 >
@@ -209,7 +209,7 @@ export default function EditProfile() {
                     style={{ marginLeft: 5, width: 6 }}
                     src={String(deleteIcon)}
                     onClick={() => {
-                      setHasChanges(true)
+                      dispatch(setHasChanged(true))
                       deleteIconClicked('module', module)
                     }}
                   />
@@ -236,7 +236,7 @@ export default function EditProfile() {
                   style={{ marginLeft: 10, width: 15 }}
                   src={String(plusCircle)}
                   onClick={() => {
-                    setHasChanges(true)
+                    dispatch(setHasChanged(true))
                     plusCircleClicked
                   }}
                 />
@@ -276,7 +276,7 @@ export default function EditProfile() {
       <TopNavBar
         title={'Edit Profile'}
         onLeftClick={() => {
-          hasChanges ? setShowConfirmationModal(true) : history.goBack()
+          hasChanged ? setShowConfirmationModal(true) : history.goBack()
         }}
       />
       {showConfirmationModal && (
@@ -290,7 +290,7 @@ export default function EditProfile() {
         />
       )}
       <ProfileComponent>
-        <EditPersonalInfoContainer setHasChanged={setHasChanges} />
+        <EditPersonalInfoContainer />
         <CardContainer>
           <EditDetailsCard />
         </CardContainer>

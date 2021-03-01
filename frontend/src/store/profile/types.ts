@@ -45,6 +45,7 @@ export enum PROFILE_ACTIONS {
   UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
   SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
   SET_USER_POSTS = 'PROFILE_ACTIONS.SET_USER_POSTS',
+  SET_HAS_CHANGED = 'PROFILE_ACTIONS.SET_HAS_CHANGED',
 }
 
 type SetIsLoggedIn = {
@@ -102,6 +103,11 @@ type UpdateUserCcas = {
   newCCAs: UserCCA[]
 }
 
+type SetHasChanged = {
+  type: typeof PROFILE_ACTIONS.SET_HAS_CHANGED
+  hasChanged: boolean
+}
+
 export type ActionTypes =
   | SetUserDetails
   | EditUserDetails
@@ -113,3 +119,4 @@ export type ActionTypes =
   | SetAllCcas
   | SetIsLoggedIn
   | SetUserPosts
+  | SetHasChanged
