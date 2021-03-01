@@ -71,11 +71,13 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+
 @app.route('/event/private/<userID>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPrivateEventOfUserAfterTime(userID, startTime):
     try:
-        data = db.Events.find({"isPrivate": {"$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
+        data = db.Events.find({"isPrivate": {
+                              "$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
         response = []
         for item in data:
             item['eventID'] = item.pop('_id')
@@ -84,11 +86,12 @@ def getPrivateEventOfUserAfterTime(userID, startTime):
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+
 @app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPublicEventsPagination(pagination, startTime=0):
     try:
-        data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime":{"$gte": int(startTime)}}, sort=[
+        data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime": {"$gte": int(startTime)}}, sort=[
                               ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 10).limit(10)
         response = []
         for item in data:
@@ -359,6 +362,9 @@ def createEvent():
         isPrivate = data.get('isPrivate')
         ownerIsAttending = data.get('ownerIsAttending')
 
+        if endDateTime - startDateTime < 3600:
+            return {"error": "Event must end at least 1 hour after it begins!"}, 400
+
         body = {
             "eventName": eventName,
             "startDateTime": startDateTime,
@@ -414,6 +420,9 @@ def editEvent():
         userID = data.get('userID')
         image = data.get('image')
         isPrivate = data.get('isPrivate')
+
+        if endDateTime - startDateTime < 3600:
+            return {"error": "Event must end at least 1 hour after it begins!"}, 400
 
         body = {
             "eventName": eventName,
