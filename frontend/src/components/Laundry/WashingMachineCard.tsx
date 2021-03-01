@@ -104,7 +104,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID as string))
       return ''
     } else {
-      const timeDiffInSeconds = durationLeftInMiliSeconds / 1000;
+      const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
       const minutesLeft: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
       return `${minutesLeft} mins left`
     }

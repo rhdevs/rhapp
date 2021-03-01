@@ -114,7 +114,7 @@ export default function ViewWashingMachine() {
       dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
     }
 
-    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000;
+    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
     const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
     const seconds: string = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
 
