@@ -151,14 +151,26 @@ export default function ViewFacility() {
     />
   )
 
+  const getHumanReadableTime = (eventStartTime: number) => {
+    const date = new Date(eventStartTime * 1000)
+    let hour = date.getHours().toString()
+    if (hour.length == 1) {
+      hour = '0' + hour
+    }
+    let minutes = date.getMinutes().toString()
+    if (minutes.length == 1) {
+      minutes = '0' + minutes
+    }
+
+    return hour + minutes
+  }
+
   const AlertSection = (
     <AlertGroup>
       {createSuccess && (
         <Alert message="Successfully Created Event" description="Yay yippe doodles" type="success" closable showIcon />
       )}
-      {createFailure && (
-        <Alert message="Event not created!!!" description="Insert error message here" type="error" closable showIcon />
-      )}
+      {createFailure && <Alert message="Event not created!!!" type="error" closable showIcon />}
     </AlertGroup>
   )
 
@@ -231,11 +243,11 @@ export default function ViewFacility() {
                     <EventBoldLabel>
                       📅{' '}
                       <b>
-                        {event.startTime} to {event.endTime}
+                        {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
                       </b>
                     </EventBoldLabel>
                     <EventNormalLabel>
-                      <b> {event.ccaID} </b>
+                      <b> {event?.ccaName} </b>
                       {event.eventName}
                     </EventNormalLabel>
                   </EventLabels>

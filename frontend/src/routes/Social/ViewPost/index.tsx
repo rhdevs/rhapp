@@ -95,7 +95,7 @@ export default function ViewPost() {
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [success] = useSnackbar()
+  const [success] = useSnackbar('success')
 
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost
@@ -114,8 +114,6 @@ export default function ViewPost() {
   const postDate = dayjs.unix(parseInt(createdAt ?? ''))
   const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
   const formattedDate = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
-
-  const avatar = profilePictureUrl
 
   const onMenuClick = () => {
     setMenuIsOpen(!menuIsOpen)
@@ -148,7 +146,7 @@ export default function ViewPost() {
       <Avatar
         size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
         style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-        src={avatar}
+        src={profilePictureUrl}
         userId={userId}
       >
         {name ? getInitials(name) : ''}
@@ -176,6 +174,7 @@ export default function ViewPost() {
       ) : (
         <>
           <TopNavBar centerComponent={Topbar} rightComponent={MenuIcon} />
+
           <MainContainer>
             {menuIsOpen && (
               <>

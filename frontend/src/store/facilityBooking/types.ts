@@ -61,6 +61,12 @@ export enum FACILITY_ACTIONS {
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
   SET_VIEW_FACILITY_NAME = 'FACILITY_ACTION.SET_VIEW_FACILITY_NAME',
+  SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTION.SET_CREATE_BOOKING_ERROR',
+}
+
+type SetCreateBookingError = {
+  type: typeof FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR
+  createBookingError: string
 }
 
 type SetViewFacilityName = {
@@ -222,3 +228,4 @@ export type ActionTypes =
   | GetAllCCA
   | SetFacilityBookings
   | SetViewFacilityName
+  | SetCreateBookingError

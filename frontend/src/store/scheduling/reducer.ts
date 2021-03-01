@@ -17,8 +17,7 @@ const initialState = {
   userNusModsEvents: [],
   nusModsIsSuccessful: false,
   nusModsIsFailure: false,
-  eventAttendanceIsSuccessful: false,
-  eventAttendanceIsFailure: false,
+  selectedPageEvents: [],
 
   // Create new event states
   newEventName: '',
@@ -58,8 +57,7 @@ type State = {
   userNusModsEvents: TimetableEvent[]
   nusModsIsSuccessful: boolean
   nusModsIsFailure: boolean
-  eventAttendanceIsSuccessful: boolean
-  eventAttendanceIsFailure: boolean
+  selectedPageEvents: SchedulingEvent[]
   newEventName: string
   newEventLocation: string
   newEventFromDate: Date
@@ -93,13 +91,6 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
         ...state,
         nusModsIsSuccessful: action.nusModsIsSuccessful,
         nusModsIsFailure: action.nusModsIsFailure,
-      }
-    }
-    case SCHEDULING_ACTIONS.HANDLE_EVENT_ATTENDANCE_STATUS: {
-      return {
-        ...state,
-        eventAttendanceIsSuccessful: action.eventAttendanceIsSuccessful,
-        eventAttendanceIsFailure: action.eventAttendanceIsFailure,
       }
     }
     case SCHEDULING_ACTIONS.GET_ALL_PUBLIC_EVENTS: {
@@ -253,6 +244,23 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         selectedCCAEvents: action.selectedCCAEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.GET_SELECTED_PAGE_PUBLIC_EVENTS: {
+      return {
+        ...state,
+        selectedPageEvents: action.selectedPageEvents,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CREATE_EVENT_FIELDS: {
+      return {
+        ...state,
+        newEventName: action.newEventName,
+        newEventLocation: action.newEventLocation,
+        newEventFromDate: action.newEventFromDate,
+        newEventToDate: action.newEventToDate,
+        newTargetAudience: action.newTargetAudience,
+        newDescription: action.newDescription,
       }
     }
     default:

@@ -85,10 +85,11 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 
   dispatch(SetIsLoading(true))
   let returnTable: WashingMachine[] = []
+
+  // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
   for (let i = 0; i < 3; i++) {
     const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
     const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
-
     const queryUrl = DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
     await fetch(queryUrl, {
       method: 'GET',
@@ -104,6 +105,40 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
     filteredMachines: returnTable,
   })
   dispatch(SetIsLoading(false))
+}
+
+export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  try {
+    const selectedLevel = machineId[0] === '7' ? '0' : 'Level ' + machineId.split('-')[1][1]
+    const selectedBlock = machineId[0] === '7' ? 'Kuok' : 'Block ' + machineId[0]
+    dispatch({
+      type: LAUNDRY_ACTIONS.SET_BLOCK_LEVEL_SELECTIONS,
+      selectedBlock: selectedBlock as string,
+      selectedLevel: selectedLevel as string,
+    })
+
+    const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
+    const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
+    let returnTable: WashingMachine[] = []
+    // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
+    for (let i = 0; i < 3; i++) {
+      const queryUrl =
+        DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
+      await fetch(queryUrl, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          returnTable = returnTable.concat(data)
+        })
+    }
+
+    const displayMachine = returnTable.find((machine) => machine.machineID === machineId) as WashingMachine
+    dispatch({ type: LAUNDRY_ACTIONS.SET_SELECTED_MACHINE, selectedMachine: displayMachine })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const SetSelectedMachine = (selectedMachine: WashingMachine) => async (dispatch: Dispatch<ActionTypes>) => {

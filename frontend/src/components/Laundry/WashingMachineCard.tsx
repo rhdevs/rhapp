@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import reserveIcon from '../../assets/reserveIcon.svg'
-import notifyBellIcon from '../../assets/notifyBellIcon.svg'
 import collectIcon from '../../assets/collectIcon.svg'
 import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
@@ -81,28 +80,34 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   let iconSrc = ''
   let washingMachineIcon = ''
   let rightAction
+
   const cardPrimaryColor =
     props.washingMachine.job === WMStatus.UNCOLLECTED || props.washingMachine.job === WMStatus.COMPLETED
       ? '#EB5757'
       : '#002642'
 
-  const goToTelegramHandle = (selectedMachine) => {
+  const goToTelegramHandle = (selectedMachine: WashingMachine) => {
     dispatch(fetchTelegram(selectedMachine))
     const site = 'https://telegram.me/' + telegramHandle
     window.open(site)
   }
 
-  const calculateRemainingTime = (startTime: number, duration: number) => {
-    console.log(startTime)
-    console.log(duration)
-    // const endUnixTime = duration * 1000 * 60 + startTime
-    // const timeDifferenceInMiliSeconds: number = endUnixTime - new Date().getTime()
-    // const timeDiffInSeconds = timeDifferenceInMiliSeconds / 1000 / 60
+  const calculateRemainingTime = (startUNIX: number, duration: number) => {
+    const endDateTime = new Date(startUNIX + duration * 1000)
+    console.log(new Date(startUNIX + duration * 1000))
+    const timeNowDateTime = new Date()
+    console.log(new Date())
 
-    // const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(2)
-    // const seconds = (timeDiffInSeconds - parseInt(minutes) * 60).toFixed(2)
-    // return `${minutes} mins ${seconds} seconds left`
-    return `${duration} long`
+    const durationLeftInMiliSeconds: number = Math.abs(timeNowDateTime.getTime() - endDateTime.getTime())
+
+    if (durationLeftInMiliSeconds < 0) {
+      dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID as string))
+      return ''
+    } else {
+      const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+      const minutesLeft: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
+      return `${minutesLeft} mins left`
+    }
   }
 
   switch (props.washingMachine.job) {
@@ -134,7 +139,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       break
     case WMStatus.UNCOLLECTED:
       label = 'Notify'
-      iconSrc = notifyBellIcon
+      iconSrc = getUserProfilePic(props.washingMachine.machineID)
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         goToTelegramHandle(props.washingMachine)
@@ -164,13 +169,13 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         src={washingMachineIcon}
         onClick={() => {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }}
       />
       <Labels
         onClick={() => {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }}
       >
         <Header style={{ color: cardPrimaryColor }}>{props.washingMachine.job}</Header>
@@ -182,7 +187,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         <ActionButton
           src={iconSrc}
           style={
-            props.washingMachine.job === WMStatus.INUSE
+            props.washingMachine.job === WMStatus.INUSE || props.washingMachine.job === WMStatus.UNCOLLECTED
               ? { height: '70px', width: '70px', borderRadius: '40px' }
               : { color: cardPrimaryColor }
           }

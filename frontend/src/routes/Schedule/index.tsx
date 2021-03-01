@@ -118,6 +118,10 @@ export default function Schedule() {
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
+    if (nusModsIsSuccessful || nusModsIsFailure)
+      setTimeout(() => {
+        dispatch(setNusModsStatus(false, false))
+      }, 10000)
   }, [dispatch])
 
   const rightIcon = (
@@ -165,7 +169,7 @@ export default function Schedule() {
             key="5"
             icon={<SearchOutlined />}
             onClick={() => {
-              history.push(PATHS.EVENT_LIST_PAGE)
+              history.push(`${PATHS.EVENT_LIST_PAGE}/1`)
             }}
           >
             Events

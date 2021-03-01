@@ -22,6 +22,7 @@ const initialState = {
   newBookingDescription: '',
   createSuccess: false,
   createFailure: false,
+  createBookingError: '',
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: dayjs(new Date()).add(3, 'day').toDate(),
@@ -56,6 +57,7 @@ type State = {
   ccaList: userCCA[]
   facilityBookings: Booking[]
   selectedFacilityName: string
+  createBookingError: string
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -64,6 +66,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         selectedFacilityName: action.selectedFacilityName,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR: {
+      return {
+        ...state,
+        createBookingError: action.createBookingError,
       }
     }
     case FACILITY_ACTIONS.GET_FACILITY_LIST: {
