@@ -90,7 +90,12 @@ export default function ViewMyBookings() {
 
   useEffect(() => {
     dispatch(SetIsLoading(false))
-    if (myBookings.length === 0) dispatch(getMyBookings(userIdFromPath))
+    if (myBookings.length === 0) {
+      dispatch(SetIsLoading(true))
+      dispatch(getMyBookings(userIdFromPath))
+      //temp solution
+      setTimeout(() => dispatch(SetIsLoading(false)), 3000)
+    }
   }, [dispatch])
 
   return (
