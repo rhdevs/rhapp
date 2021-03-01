@@ -21,8 +21,13 @@ DB_PWD = os.getenv('DB_PWD')
 URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(
     DB_PWD)
 
-client = pymongo.MongoClient(URL)
+# client = pymongo.MongoClient(URL)
+# db = client["RHApp"]
+
+client = pymongo.MongoClient(
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
+
 
 
 def renamePost(post):
@@ -252,10 +257,20 @@ def editProfile():
 @cross_origin(supports_credentials=True)
 def getUserDetails(userID):
     try:
-        data1 = db.User.find_one({"userID": userID})
-        data2 = db.Profiles.find_one({"userID": userID}, {"email" : 0, "positions" : 1})
-        data2.map(lambda x["test"] : x[0])
+        data1 = db.User.find_one({"userID": userID}, {"passwordHash" : 0, "_id" : 0})
+        data2 = db.Profiles.find_one({"userID": userID}, {"_id" : 0})
+       
+        position = data1.get("position")
         
+        def getCCAName(ccaID):
+            return {
+                "name" : db.CCA.find_one({"ccaID": ccaID}).get("ccaName"),
+                "ccaID" : ccaID
+            }
+        
+        position = list(map(getCCAName, position))
+        data1["position"] = position;
+                   
         data1.update(data2)
 
     except Exception as e:
@@ -362,15 +377,15 @@ def getPostSpecific():
 def getLastN():
     # get all post that a user can view regardless of whether its official or not
     try:
-        userID = str(request.args.get("userID"))
+        # userID = str(request.args.get("userID"))
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
-        friends = FriendsHelper(userID).get('friendList')
+        # friends = FriendsHelper(userID).get('friendList')
 
-        query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}, {"userID": userID}]
-                 }
-
-        data = db.Posts.find(query,
+        # query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}, {"userID": userID}]
+        #          }
+        
+        data = db.Posts.find({},
                              sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
 
         response = []
