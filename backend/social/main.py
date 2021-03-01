@@ -253,7 +253,9 @@ def editProfile():
 def getUserDetails(userID):
     try:
         data1 = db.User.find_one({"userID": userID})
-        data2 = db.Profiles.find_one({"userID": userID}, {"email" : 1, "positions" : 1})
+        data2 = db.Profiles.find_one({"userID": userID}, {"email" : 0, "positions" : 1})
+        data2.map(lambda x["test"] : x[0])
+        
         data1.update(data2)
 
     except Exception as e:

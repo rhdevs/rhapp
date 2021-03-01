@@ -103,6 +103,8 @@ export default function ViewWashingMachine() {
   }, [dispatch, selectedMachine])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
+    console.log(startUNIX)
+    console.log(duration)
     const endDateTime = new Date((startUNIX + duration) * 1000)
     console.log(new Date((startUNIX + duration) * 1000))
     const timeNowDateTime = new Date()
