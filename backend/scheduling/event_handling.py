@@ -333,7 +333,7 @@ def addDeletePermissions():
                 "donor": donor,
                 "recipient": recipient
             }
-            db.UserPermissions.update(body, {'$set': body}, upsert=True)
+            db.UserPermissions.update_one(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.UserPermissions.delete_one({
@@ -463,7 +463,7 @@ def editAttendance():
             "eventID": eventID
         }
         if request.method == "POST":
-            db.Attendance.update(body, {'$set': body}, upsert=True)
+            db.Attendance.update_one(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.Attendance.delete_many(body)
