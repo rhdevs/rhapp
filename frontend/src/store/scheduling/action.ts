@@ -644,11 +644,15 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log('added successfully: ')
-      console.log(data)
-      success('Event created!')
-      dispatch(resetCreateEventFields())
-      return data.eventID
+      if (data.status >= 400) {
+        error(data.error)
+      } else {
+        console.log('added successfully: ')
+        console.log(data)
+        success('Event created!')
+        dispatch(resetCreateEventFields())
+        return data.eventID
+      }
     })
     .catch((err) => {
       error('Failed to create event, please try again!')
