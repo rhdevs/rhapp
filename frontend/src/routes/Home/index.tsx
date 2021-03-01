@@ -58,6 +58,7 @@ export default function Home() {
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log(data)
         if (data === '' || data === undefined) {
           console.log(data.err)
         } else {
