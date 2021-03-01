@@ -122,6 +122,7 @@ export default function SocialSection() {
             <LoadingSpin />
           ) : (
             <Button
+              style={{ marginBottom: '60px' }}
               type="text"
               onClick={() => {
                 console.log('increasing')
