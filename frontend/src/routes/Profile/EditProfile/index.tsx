@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
+import { useHistory } from 'react-router-dom'
 import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -18,6 +19,7 @@ import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import plusCircle from '../../../assets/plusCircle.svg'
 import tickIcon from '../../../assets/tick.svg'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -42,6 +44,9 @@ interface Details {
 
 export default function EditProfile() {
   const dispatch = useDispatch()
+  const history = useHistory()
+  const [hasChanges, setHasChanges] = useState(false)
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
@@ -259,7 +264,22 @@ export default function EditProfile() {
 
   return (
     <MainContainer>
-      <TopNavBar title={'Edit Profile'} />
+      <TopNavBar
+        title={'Edit Profile'}
+        onLeftClick={() => {
+          hasChanges ? setShowConfirmationModal(true) : history.goBack()
+        }}
+      />
+      {showConfirmationModal && (
+        <ConfirmationModal
+          title={'Discard Changes?'}
+          hasLeftButton={true}
+          leftButtonText={'Delete'}
+          onLeftButtonClick={() => history.goBack()}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={() => setShowConfirmationModal(false)}
+        />
+      )}
       <ProfileComponent>
         <EditPersonalInfoContainer />
         <CardContainer>
