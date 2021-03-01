@@ -18,6 +18,7 @@ import {
   SetSelectedMachineFromId,
   UpdateJobDuration,
   updateMachine,
+  SetBlockLevelSelections,
 } from '../../../store/laundry/action'
 import { useParams } from 'react-router-dom'
 
@@ -94,7 +95,9 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
+  const { selectedBlock, selectedLevel, selectedMachine, isEdit, duration } = useSelector(
+    (state: RootState) => state.laundry,
+  )
   const dispatch = useDispatch()
   const params = useParams<{ machineId: string }>()
 
@@ -114,6 +117,7 @@ export default function ViewWashingMachine() {
 
     if (durationLeftInMiliSeconds < 0) {
       dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
+      dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
     }
 
     const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
@@ -172,6 +176,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               history.back()
             }}
           />
@@ -191,6 +196,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               history.back()
             }}
           />
@@ -239,8 +245,10 @@ export default function ViewWashingMachine() {
               if (isEdit) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               } else {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               }
             }}
           />
@@ -285,8 +293,10 @@ export default function ViewWashingMachine() {
               if (isEdit) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               }
             }}
           />
