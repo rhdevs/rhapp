@@ -24,6 +24,7 @@ export const initialState = {
   allCcas: [],
   token: localStorage.getItem('token'),
   isLoggedIn: null,
+  hasChanged: false,
 }
 
 type State = {
@@ -39,6 +40,7 @@ type State = {
   allCcas: UserCCA[]
   token: string | null
   isLoggedIn: boolean | null
+  hasChanged: boolean
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -106,6 +108,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         posts: action.posts,
+      }
+    }
+    case PROFILE_ACTIONS.SET_HAS_CHANGED: {
+      return {
+        ...state,
+        hasChanged: action.hasChanged,
       }
     }
     default:
