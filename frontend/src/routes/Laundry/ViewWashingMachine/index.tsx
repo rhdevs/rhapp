@@ -103,10 +103,10 @@ export default function ViewWashingMachine() {
   }, [dispatch, selectedMachine])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
-    const endDateTime = new Date((startUNIX + duration) * 1000);
-    console.log(new Date((startUNIX + duration) * 1000));
-    const timeNowDateTime = new Date();
-    console.log(new Date());
+    const endDateTime = new Date((startUNIX + duration) * 1000)
+    console.log(new Date((startUNIX + duration) * 1000))
+    const timeNowDateTime = new Date()
+    console.log(new Date())
 
     const durationLeftInMiliSeconds: number = Math.abs(timeNowDateTime.getTime() - endDateTime.getTime())
 
@@ -114,9 +114,9 @@ export default function ViewWashingMachine() {
       dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
     }
 
-    const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000;
     const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
-    const seconds = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
+    const seconds: string = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
 
     return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
   }

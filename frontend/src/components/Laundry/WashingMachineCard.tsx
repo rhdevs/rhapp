@@ -93,8 +93,8 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   }
 
   const calculateRemainingTime = (startUNIX: number, duration: number) => {
-    const endDateTime = new Date(startUNIX + duration * 1000)
-    console.log(new Date(startUNIX + duration * 1000))
+    const endDateTime = new Date((startUNIX + duration) * 1000)
+    console.log(new Date((startUNIX + duration) * 1000))
     const timeNowDateTime = new Date()
     console.log(new Date())
 
@@ -104,7 +104,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID as string))
       return ''
     } else {
-      const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+      const timeDiffInSeconds = durationLeftInMiliSeconds / 1000;
       const minutesLeft: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
       return `${minutesLeft} mins left`
     }
