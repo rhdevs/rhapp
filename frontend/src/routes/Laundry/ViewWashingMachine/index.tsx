@@ -18,6 +18,7 @@ import {
   SetSelectedMachineFromId,
   UpdateJobDuration,
   updateMachine,
+  SetBlockLevelSelections,
 } from '../../../store/laundry/action'
 import { useParams } from 'react-router-dom'
 
@@ -94,7 +95,9 @@ const MachineSize = styled.p`
 `
 
 export default function ViewWashingMachine() {
-  const { selectedMachine, isEdit, duration } = useSelector((state: RootState) => state.laundry)
+  const { selectedBlock, selectedLevel, selectedMachine, isEdit, duration } = useSelector(
+    (state: RootState) => state.laundry,
+  )
   const dispatch = useDispatch()
   const params = useParams<{ machineId: string }>()
 
@@ -103,8 +106,10 @@ export default function ViewWashingMachine() {
   }, [dispatch, selectedMachine])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
-    const endDateTime = new Date(startUNIX + duration * 1000)
-    console.log(new Date(startUNIX + duration * 1000))
+    console.log(startUNIX)
+    console.log(duration)
+    const endDateTime = new Date((startUNIX + duration) * 1000)
+    console.log(new Date((startUNIX + duration) * 1000))
     const timeNowDateTime = new Date()
     console.log(new Date())
 
@@ -112,11 +117,12 @@ export default function ViewWashingMachine() {
 
     if (durationLeftInMiliSeconds < 0) {
       dispatch(updateMachine(WMStatus.AVAIL, selectedMachine?.machineID as string))
+      dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
     }
 
-    const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+    const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
     const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
-    const seconds = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
+    const seconds: string = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
 
     return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
   }
@@ -170,6 +176,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               history.back()
             }}
           />
@@ -189,6 +196,7 @@ export default function ViewWashingMachine() {
             updatedTextColor="white"
             onButtonClick={() => {
               dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+              dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               history.back()
             }}
           />
@@ -237,8 +245,10 @@ export default function ViewWashingMachine() {
               if (isEdit) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               } else {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               }
             }}
           />
@@ -283,8 +293,10 @@ export default function ViewWashingMachine() {
               if (isEdit) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
+                dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               }
             }}
           />
