@@ -22,10 +22,10 @@ import {
   editEventToDate,
   getTargetAudienceList,
 } from '../../../store/scheduling/action'
+import { PATHS } from '../../Routes'
 
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
-import { PATHS } from '../../Routes'
 
 const { Option } = Select
 
@@ -115,7 +115,16 @@ export default function CreateEvent() {
     newEventFromDate,
     newEventToDate,
     newDescription,
+    createdEventID,
   } = useSelector((state: RootState) => state.scheduling)
+
+  // if there is a createdEventID, go to viewevent page
+  useEffect(() => {
+    if (createdEventID !== null) {
+      history.replace(PATHS.SCHEDULE_PAGE)
+      history.push(PATHS.VIEW_EVENT + `/${createdEventID}`)
+    }
+  }, [createdEventID])
 
   /** Incomplete functionality for Uploading Image */
 
@@ -170,13 +179,8 @@ export default function CreateEvent() {
         rightComponent={
           <CheckOutlined
             style={{ color: 'black' }}
-            onClick={async () => {
-              const eventID = await dispatch(
-                handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending),
-              )
-              console.log(eventID)
-              history.replace(PATHS.SCHEDULE_PAGE)
-              history.push(PATHS.VIEW_EVENT + `/${eventID}`)
+            onClick={() => {
+              dispatch(handleSubmitCreateEvent(newTargetAudience === 'Personal' ? true : creatorIsAttending))
             }}
           />
         }

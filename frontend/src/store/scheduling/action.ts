@@ -634,7 +634,7 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     isPrivate: isPersonal,
     ownerIsAttending: creatorIsAttending,
   }
-  const eventID = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
@@ -642,16 +642,17 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     },
     body: JSON.stringify(newEvent),
   })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.status >= 400) {
-        error(data.error)
+    .then((resp) => resp.json().then((data) => ({ status: resp.status, body: data })))
+    .then((resp) => {
+      if (resp.status >= 400) {
+        error(resp.body.error)
+        dispatch(setCreatedEventID(null))
       } else {
         console.log('added successfully: ')
-        console.log(data)
+        console.log(resp.body)
         success('Event created!')
+        dispatch(setCreatedEventID(resp.body.eventID))
         dispatch(resetCreateEventFields())
-        return data.eventID
       }
     })
     .catch((err) => {
@@ -659,7 +660,13 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
       console.log(err)
     })
   dispatch(setIsLoading(false))
-  return eventID
+}
+
+export const setCreatedEventID = (eventID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
+    createdEventID: eventID,
+  })
 }
 
 const resetCreateEventFields = () => (dispatch: Dispatch<ActionTypes>) => {
