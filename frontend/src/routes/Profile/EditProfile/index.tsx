@@ -18,9 +18,9 @@ import {
 } from '../../../store/profile/action'
 import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
-import plusCircle from '../../../assets/plusCircle.svg'
 import tickIcon from '../../../assets/tick.svg'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { PlusCircleFilled } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -231,10 +231,8 @@ export default function EditProfile() {
             <span>
               <span style={{ fontSize: '20px' }}>
                 <span style={{ display: 'inline-flex', flexDirection: 'column' }}>{detailsItem.title}</span>
-                <img
-                  alt="plusCircle"
-                  style={{ marginLeft: 10, width: 15 }}
-                  src={String(plusCircle)}
+                <PlusCircleFilled
+                  style={{ color: '#EB5757', fontSize: '30px', paddingRight: '7px', marginLeft: 10 }}
                   onClick={() => {
                     dispatch(setHasChanged(true))
                     plusCircleClicked
