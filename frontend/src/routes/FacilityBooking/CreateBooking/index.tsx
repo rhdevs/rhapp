@@ -195,7 +195,8 @@ export default function CreateBooking() {
             <AutoComplete
               style={{ width: '100%' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-                value: cca.ccaName,
+                value: cca.ccaID,
+                label: cca.ccaName,
               }))}
               value={newBookingCCA}
               placeholder="Select your CCA, else select Personal"

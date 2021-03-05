@@ -137,7 +137,6 @@ export default function ViewFacility() {
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    console.log(facilityBookings)
     dispatch(SetIsLoading(true))
     console.log(params.facilityID)
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
