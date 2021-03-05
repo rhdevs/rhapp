@@ -80,6 +80,7 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  align-items: baseline;
 `
 
 const EventInput = styled.input`
@@ -87,6 +88,7 @@ const EventInput = styled.input`
   border-radius: 30px;
   padding: 5px 10px;
   margin: 0 0 20px 0;
+  height: 35px;
 `
 
 const RedText = styled.text`
