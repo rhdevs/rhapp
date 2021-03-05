@@ -191,7 +191,7 @@ const getNusModsEventsStartTime = (allNusModsEvents: TimetableEvent[]) => {
   allNusModsEvents.map((event) => {
     if (Number(event.startTime) < Number(startTime)) {
       startTime = event.startTime
-    } else return
+    }
   })
   return startTime
 }
@@ -201,7 +201,7 @@ const getNusModsEventsEndTime = (allNusModsEvents: TimetableEvent[]) => {
   allNusModsEvents.map((event) => {
     if (Number(event.endTime) > Number(endTime)) {
       endTime = event.endTime
-    } else return
+    }
   })
   return endTime
 }
