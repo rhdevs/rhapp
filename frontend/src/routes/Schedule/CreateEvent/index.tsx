@@ -68,12 +68,12 @@ const DatePickerRow = styled.div`
 
 const ErrorText = styled.p`
   margin: -15px 0 0;
-  color: blueviolet;
+  color: #ff837a;
 `
 
 const DateTimeErrorText = styled.p`
   margin: -10px 0 10px 0;
-  color: blueviolet;
+  color: #ff837a;
 `
 
 const InputContainer = styled.div`
@@ -245,15 +245,17 @@ export default function CreateEvent() {
               type="text"
               placeholder="Event Name"
               name="eventName"
-              ref={register({ required: 'EVENT NAME REQUIRED!', validate: (input) => input.trim().length !== 0 })}
+              ref={register({ required: true, validate: (input) => input.trim().length !== 0 })}
               style={{
                 border: errors.eventName ? '1px solid red' : '1px solid #d9d9d9',
                 background: errors.eventName && '#ffd1d1',
               }}
             />
           </InputContainer>
-          {errors.eventName && <ErrorText>{errors.eventName.message}</ErrorText>}
-          {errors.eventName?.type === 'validate' && <ErrorText>EVENT NAME CANNOT BE WHITESPACES!</ErrorText>}
+          {errors.eventName && errors.eventName?.type !== 'validate' && (
+            <ErrorText>Error: Event Name Required!</ErrorText>
+          )}
+          {errors.eventName?.type === 'validate' && <ErrorText>Error: Invalid Event Name!</ErrorText>}
 
           <div style={{ width: '100%' }}>
             <DatePicker mode="datetime" locale={enUs} value={newEventFromDate} onChange={handleFromDateChange}>
@@ -275,8 +277,12 @@ export default function CreateEvent() {
             >{`Duration: ${dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)} hours`}</div>
           </div>
 
-          {Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) <= 0 &&
-            onClickStatus && <DateTimeErrorText>DURATION CANNOT BE LESS THAN 1 HOUR!</DateTimeErrorText>}
+          {Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) < 0.5 &&
+            onClickStatus && (
+              <DateTimeErrorText>
+                Error: Invalid Duration! Event duration should be at least 30 minutes.
+              </DateTimeErrorText>
+            )}
 
           <InputContainer>
             <StyledTitle>Location{RedAsterisk}</StyledTitle>
@@ -284,15 +290,17 @@ export default function CreateEvent() {
               type="text"
               placeholder="Event Location"
               name="eventLocation"
-              ref={register({ required: 'LOCATION REQUIRED!', validate: (input) => input.trim().length !== 0 })}
+              ref={register({ required: true, validate: (input) => input.trim().length !== 0 })}
               style={{
                 border: errors.eventLocation ? '1px solid red' : '1px solid #d9d9d9',
                 background: errors.eventLocation && '#ffd1d1',
               }}
             />
           </InputContainer>
-          {errors.eventLocation && <ErrorText>{errors.eventLocation.message}</ErrorText>}
-          {errors.eventLocation?.type === 'validate' && <ErrorText>LOCATION CANNOT BE WHITESPACES!</ErrorText>}
+          {errors.eventLocation && errors.eventLocation?.type !== 'validate' && (
+            <ErrorText>Error: Event Location Required!</ErrorText>
+          )}
+          {errors.eventLocation?.type === 'validate' && <ErrorText>Error: Invalid Location!</ErrorText>}
 
           <Row>
             <StyledTitle>For who{RedAsterisk}</StyledTitle>
