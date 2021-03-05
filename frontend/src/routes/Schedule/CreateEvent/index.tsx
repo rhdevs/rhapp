@@ -112,7 +112,7 @@ export default function CreateEvent() {
 
   const [selectColor, setSelectColor] = useState('')
   const [selectBorder, setSelectBorder] = useState('#d9d9d9')
-  const [submitStatus, setSubmitStatus] = useState(false)
+  const [onClickStatus, setOnClickStatus] = useState(false)
   const [creatorIsAttending, setCreatorIsAttending] = useState(true)
 
   const RedAsterisk = <RedText>*</RedText>
@@ -120,7 +120,7 @@ export default function CreateEvent() {
   useEffect(() => {
     dispatch(getHallEventTypes())
     dispatch(getTargetAudienceList())
-    setSubmitStatus(false)
+    setOnClickStatus(false)
   }, [dispatch])
 
   const BackIcon = (
@@ -200,7 +200,8 @@ export default function CreateEvent() {
       setSelectBorder('red')
       setSelectColor('#ffd1d1')
     }
-    setSubmitStatus(true)
+    setOnClickStatus(true)
+
     handleSubmit(onSubmit)()
   }
 
@@ -211,7 +212,11 @@ export default function CreateEvent() {
     eventDescription: string
   }) => {
     console.log(errors)
-    if (!errors) {
+    if (
+      !errors.length &&
+      watch('eventTargetAudience') !== 'Select' &&
+      Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) > 0
+    ) {
       dispatch(
         handleSubmitCreateEvent(
           data.eventName,
@@ -271,7 +276,7 @@ export default function CreateEvent() {
           </div>
 
           {Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) <= 0 &&
-            submitStatus && <DateTimeErrorText>DURATION CANNOT BE LESS THAN 1 HOUR!</DateTimeErrorText>}
+            onClickStatus && <DateTimeErrorText>DURATION CANNOT BE LESS THAN 1 HOUR!</DateTimeErrorText>}
 
           <InputContainer>
             <StyledTitle>Location{RedAsterisk}</StyledTitle>
@@ -322,6 +327,7 @@ export default function CreateEvent() {
                 onChange={onChange}
               />
             )}
+            defaultValue={null}
           />
 
           {/* {(newTargetAudience === '' || newTargetAudience !== 'Personal') && (
