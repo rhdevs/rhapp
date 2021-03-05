@@ -165,6 +165,10 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
+      console.log(allNusModsEvents.length)
+      console.log('Start time is: ' + startTime)
+      console.log('End time is: ' + endTime)
+
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
