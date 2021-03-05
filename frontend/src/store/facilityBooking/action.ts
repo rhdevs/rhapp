@@ -159,7 +159,6 @@ export const editBookingFromDate = (newBookingFromDate: Date) => (
 const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
   let newError = ''
-  console.log(duration)
   if (duration > 4) {
     console.log('hi')
     newError = 'Exceeded Maximum Booking Duration of 4 hours!'
