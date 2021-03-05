@@ -45,6 +45,7 @@ export enum PROFILE_ACTIONS {
   UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
   SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
   SET_USER_POSTS = 'PROFILE_ACTIONS.SET_USER_POSTS',
+  SET_IS_LOADING = 'PROFILE_ACTIONS.SET_IS_LOADING',
   SET_HAS_CHANGED = 'PROFILE_ACTIONS.SET_HAS_CHANGED',
 }
 
@@ -108,6 +109,11 @@ type SetHasChanged = {
   hasChanged: boolean
 }
 
+type SetIsLoading = {
+  type: typeof PROFILE_ACTIONS.SET_IS_LOADING
+  isLoading: boolean
+}
+
 export type ActionTypes =
   | SetUserDetails
   | EditUserDetails
@@ -120,3 +126,4 @@ export type ActionTypes =
   | SetIsLoggedIn
   | SetUserPosts
   | SetHasChanged
+  | SetIsLoading
