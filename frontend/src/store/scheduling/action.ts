@@ -608,29 +608,27 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
+export const handleSubmitCreateEvent = (
+  eventName: string,
+  eventLocation: string,
+  eventDescription: string,
+  eventTargetAudience: string,
+  creatorIsAttending: boolean,
+) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
-  const {
-    newEventName,
-    newEventLocation,
-    newEventFromDate,
-    newEventToDate,
-    newDescription,
-    newTargetAudience,
-  } = getState().scheduling
-  const isPersonal = newTargetAudience === 'Personal'
+
+  const { newEventFromDate, newEventToDate } = getState().scheduling
+  const isPersonal = eventTargetAudience === 'Personal'
+
   const newEvent = {
-    eventName: newEventName,
+    eventName: eventName,
     startDateTime: Math.round(newEventFromDate.getTime() / 1000),
     endDateTime: Math.round(newEventToDate.getTime() / 1000),
-    description: newDescription,
-    location: newEventLocation,
+    description: eventDescription,
+    location: eventLocation,
     userID: localStorage.getItem('userID'),
     image: null,
-    ccaID: isPersonal ? null : parseInt(newTargetAudience),
+    ccaID: isPersonal ? null : parseInt(eventTargetAudience),
     isPrivate: isPersonal,
     ownerIsAttending: creatorIsAttending,
   }
