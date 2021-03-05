@@ -232,7 +232,7 @@ export default function EditProfile() {
               <span style={{ fontSize: '20px' }}>
                 <span style={{ display: 'inline-flex', flexDirection: 'column' }}>{detailsItem.title}</span>
                 <PlusCircleFilled
-                  style={{ color: '#EB5757', fontSize: '30px', paddingRight: '7px', marginLeft: 10 }}
+                  style={{ color: '#EB5757', fontSize: '23px', paddingRight: '7px', paddingTop: '3px', marginLeft: 10 }}
                   onClick={() => {
                     dispatch(setHasChanged(true))
                     plusCircleClicked
