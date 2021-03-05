@@ -67,13 +67,17 @@ const DatePickerRow = styled.div`
 `
 
 const ErrorText = styled.p`
-  margin: -15px 0 0;
+  margin: -15px 0 10px 0;
   color: #ff837a;
+  width: 100%;
+  text-align: end;
 `
 
 const DateTimeErrorText = styled.p`
-  margin: -10px 0 10px 0;
+  margin: -10px 0 15px 0;
   color: #ff837a;
+  width: 100%;
+  text-align: end;
 `
 
 const InputContainer = styled.div`
@@ -252,10 +256,8 @@ export default function CreateEvent() {
               }}
             />
           </InputContainer>
-          {errors.eventName && errors.eventName?.type !== 'validate' && (
-            <ErrorText>Error: Event Name Required!</ErrorText>
-          )}
-          {errors.eventName?.type === 'validate' && <ErrorText>Error: Invalid Event Name!</ErrorText>}
+          {errors.eventName && errors.eventName?.type !== 'validate' && <ErrorText>Event Name Required!</ErrorText>}
+          {errors.eventName?.type === 'validate' && <ErrorText>Invalid Event Name!</ErrorText>}
 
           <div style={{ width: '100%' }}>
             <DatePicker mode="datetime" locale={enUs} value={newEventFromDate} onChange={handleFromDateChange}>
@@ -278,11 +280,10 @@ export default function CreateEvent() {
           </div>
 
           {Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) < 0.5 &&
-            onClickStatus && (
-              <DateTimeErrorText>
-                Error: Invalid Duration! Event duration should be at least 30 minutes.
-              </DateTimeErrorText>
-            )}
+            Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) > 0 &&
+            onClickStatus && <DateTimeErrorText>Event duration should be at least 30 minutes!</DateTimeErrorText>}
+          {Number(dayjs(newEventToDate).diff(dayjs(newEventFromDate), 'hour', true).toFixed(1)) <= 0 &&
+            onClickStatus && <DateTimeErrorText>Invalid Duration!</DateTimeErrorText>}
 
           <InputContainer>
             <StyledTitle>Location{RedAsterisk}</StyledTitle>
@@ -298,9 +299,9 @@ export default function CreateEvent() {
             />
           </InputContainer>
           {errors.eventLocation && errors.eventLocation?.type !== 'validate' && (
-            <ErrorText>Error: Event Location Required!</ErrorText>
+            <ErrorText>Event Location Required!</ErrorText>
           )}
-          {errors.eventLocation?.type === 'validate' && <ErrorText>Error: Invalid Location!</ErrorText>}
+          {errors.eventLocation?.type === 'validate' && <ErrorText>Invalid Location!</ErrorText>}
 
           <Row>
             <StyledTitle>For who{RedAsterisk}</StyledTitle>
