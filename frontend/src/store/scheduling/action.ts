@@ -168,14 +168,10 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
       console.log(allNusModsEvents.length)
       console.log('Start time is: ' + startTime)
       console.log(getNusModsEventsStartTime(allNusModsEvents))
-      console.log(Number(getNusModsEventsStartTime(allNusModsEvents)))
       console.log(getTimetableStartTime(timetableFormatEvents))
-      console.log(Number(getTimetableStartTime(timetableFormatEvents)))
       console.log('End time is: ' + endTime)
       console.log(getNusModsEventsEndTime(allNusModsEvents))
-      console.log(Number(getNusModsEventsEndTime(allNusModsEvents)))
       console.log(getTimetableEndTime(timetableFormatEvents))
-      console.log(Number(getTimetableEndTime(timetableFormatEvents)))
 
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
