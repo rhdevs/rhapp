@@ -78,6 +78,9 @@ const PersonalInfoSpan = styled.span`
   vertical-align: middle;
   padding-left: 3vw;
 `
+const LogoutButton = styled.div`
+  color: #de5f4c;
+`
 
 export default function Profile() {
   const dispatch = useDispatch()
@@ -241,7 +244,7 @@ export default function Profile() {
   }
 
   const logoutButton = (
-    <div
+    <LogoutButton
       onClick={() => {
         console.log('im logging out!')
         localStorage.removeItem('token')
@@ -250,7 +253,7 @@ export default function Profile() {
       }}
     >
       Logout
-    </div>
+    </LogoutButton>
   )
 
   return (
