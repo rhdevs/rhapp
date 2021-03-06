@@ -64,7 +64,6 @@ const EditPersonalInfoContainer = () => {
   )
   const dispatch = useDispatch()
   const oldBio = newBio
-  const [base64TextString, setBase64TextStringl] = useState('')
 
   useEffect(() => {
     if (newBio !== oldBio) {
@@ -78,40 +77,11 @@ const EditPersonalInfoContainer = () => {
     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
   }
 
-  // function toDataURL(src, callback, outputFormat) {
-  //   const img = new Image()
-  //   img.crossOrigin = 'Anonymous'
-  //   img.onload = function () {
-  //     const canvas: any = document.createElement('CANVAS')
-  //     const ctx = canvas.getContext('2d')
-  //     canvas.height = src.naturalHeight
-  //     canvas.width = src.naturalWidth
-  //     ctx.drawImage(this, 0, 0)
-  //     const dataURL = canvas.toDataURL(outputFormat)
-  //     console.log('dataurl: ' + dataURL)
-  //     callback(dataURL)
-  //   }
-  //   img.src = src
-  //   if (img.complete || img.complete === undefined) {
-  //     img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
-  //     img.src = src
-  //   }
-  // }
-
-  // toDataURL(
-  //   'https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png',
-  //   function (base64Img) {
-  //     console.log('IMAGE:', base64Img)
-  //   },
-  //   'image/png',
-  // )
-
   // On file select (from the pop up)
   const onFileChange = (event) => {
     // Update the state
     // console.log('file to upload: ' + event.target.files[0])
     const file = event.target.files[0]
-    console.log('file change')
 
     if (file) {
       const reader = new FileReader()
@@ -122,9 +92,7 @@ const EditPersonalInfoContainer = () => {
 
   const handleReaderLoad = (readerEvt) => {
     const binaryString = readerEvt.target.result
-    // setBase64TextStringl(btoa(binaryString))
-    console.log('binary string: ' + base64TextString)
-    console.log('updated')
+    // console.log('binary string: ' + btoa(binaryString))
     dispatch(handleNewProfilePicture(btoa(binaryString)))
     dispatch(setHasChanged(true))
   }
@@ -134,10 +102,6 @@ const EditPersonalInfoContainer = () => {
       <>
         <div className="image-upload">
           <label htmlFor="file-input">
-            {/* <img
-              src={user.profilePictureUrl}
-              style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
-            /> */}
             <img
               src={'data:image/png;base64,' + userProfilePictureBase64}
               style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
