@@ -165,6 +165,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
+      console.log('it works!')
       console.log(allNusModsEvents.length)
       console.log('Start time is: ' + startTime)
       console.log(getNusModsEventsStartTime(allNusModsEvents))
