@@ -92,6 +92,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
               })
           })
         console.log('Date = ' + date)
+        console.log(parseInt((date.getTime() / 1000).toFixed(0)))
         console.log(booking)
         return booking
       })
