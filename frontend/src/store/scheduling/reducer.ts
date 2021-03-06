@@ -29,6 +29,7 @@ const initialState = {
   newHallEventType: '',
   hallEventTypes: [],
   targetAudienceList: [],
+  createdEventID: null,
 
   //view event state
   selectedEvent: null,
@@ -67,6 +68,7 @@ type State = {
   hallEventTypes: string[]
   newHallEventType: string
   targetAudienceList: userCCA[]
+  createdEventID: string | null
   selectedEvent: TimetableEvent | null
   ccaDetails: CCADetails | null
   ccaList: CCADetails[]
@@ -190,6 +192,12 @@ export const scheduling: Reducer<State, ActionTypes> = (state = initialState, ac
       return {
         ...state,
         targetAudienceList: action.targetAudienceList,
+      }
+    }
+    case SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID: {
+      return {
+        ...state,
+        createdEventID: action.createdEventID,
       }
     }
     case SCHEDULING_ACTIONS.SET_SELECTED_EVENT: {

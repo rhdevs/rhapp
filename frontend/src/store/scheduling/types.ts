@@ -258,6 +258,11 @@ type SetCreateEventFields = {
   newDescription: string
 }
 
+type SetCreatedEventID = {
+  type: typeof SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID
+  createdEventID: string | null
+}
+
 export type ActionTypes =
   | GetAllPublicEvents
   | GetAllUserEvents
@@ -288,3 +293,4 @@ export type ActionTypes =
   | GetSelectedCCAEvents
   | GetSelectedPagePublicEvents
   | SetCreateEventFields
+  | SetCreatedEventID
