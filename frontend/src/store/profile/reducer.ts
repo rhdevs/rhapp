@@ -12,7 +12,6 @@ export const initialState = {
     block: 8,
     bio: 'This is my bio hur hur',
     modules: [],
-    position: [],
   },
   posts: [],
   ccas: [],
@@ -45,7 +44,6 @@ type State = {
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
     case PROFILE_ACTIONS.SET_USER_DETAILS: {
-      console.log(action)
       return {
         ...state,
         user: action.user,

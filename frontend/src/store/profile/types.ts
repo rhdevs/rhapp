@@ -7,12 +7,6 @@ export type User = {
   block: number
   bio: string
   modules: string[]
-  position: Position[]
-}
-
-export type Position = {
-  ccaID: number
-  name: string
 }
 
 export type Friend = {
