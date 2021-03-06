@@ -53,9 +53,22 @@ const FacilityLabels = styled.div`
 `
 
 const StyledRadioGroup = styled(Radio.Group)`
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-    color: red;
+  .ant-radio-button-wrapper:hover {
+    color: #de5f4c;
   }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
   .ant-radio-button-wrapper {
     font-family: Inter;
   }
