@@ -866,11 +866,14 @@ const fetchFriendsNusModsTimetable = (friendsIds: string[]) => async (dispatch: 
     friendsIds.map(async (friendsId) => {
       counter++
       const friendNusModsEvents = await dispatch(getUserNusModsEvents(friendsId, true))
-      friendsNusModsEvents = friendsNusModsEvents.concat(friendNusModsEvents)
+      friendsNusModsEvents = friendNusModsEvents
+        ? friendsNusModsEvents.concat(friendNusModsEvents)
+        : friendsNusModsEvents
       if (counter === friendsIds.length) {
         const reformatFriendsNusModsEvents: TimetableEvent[] = friendsNusModsEvents.map((event) => {
           return { ...event, eventType: 'friends' }
         })
+
         dispatch({
           type: SCHEDULING_ACTIONS.GET_SELECTED_PROFILE_NUSMODS_EVENTS,
           selectedProfileNusModsEvents: reformatFriendsNusModsEvents,
