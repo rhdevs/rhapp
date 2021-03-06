@@ -18,17 +18,19 @@ const BlockParagraph = styled.p`
 
 const AvatarSpan = styled.span`
   display: inline-block;
-  height: 27vh;
-  width: 10vw;
+  height: 150px;
+  width: 20vw;
+  // padding-right: 15vw;
   vertical-align: middle;
 `
 
 const PersonalInfoSpan = styled.span`
   display: inline-block;
-  height: 27vh;
-  width: 50vw;
+  height: 150px;
+
+  width: 45vw;
   vertical-align: middle;
-  padding-left: 15vw;
+  padding-left: 5vw;
 `
 
 const LongButton = {
@@ -72,11 +74,28 @@ const EditPersonalInfoContainer = () => {
     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
   }
 
+  const EditProfileImage = () => {
+    return (
+      <>
+        <div className="image-upload">
+          <label htmlFor="file-input">
+            <img
+              src={user.profilePictureUrl}
+              style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
+            />
+          </label>
+
+          <input id="file-input" type="file" style={{ display: 'none' }} />
+        </div>
+      </>
+    )
+  }
+
   return (
     <MainContainer>
       <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
         <AvatarSpan>
-          <img alt="logo" style={{ width: 80, borderRadius: 40 }} src={user.profilePictureUrl} />
+          <EditProfileImage />
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
