@@ -6,7 +6,13 @@ import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
 import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
-import { fetchTelegram, getUserProfilePic, SetSelectedMachine, updateMachine } from '../../store/laundry/action'
+import {
+  fetchTelegram,
+  getUserProfilePic,
+  SetSelectedMachine,
+  updateMachine,
+  SetBlockLevelSelections,
+} from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'
 import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
@@ -70,7 +76,7 @@ const ActionButtonLabel = styled.p`
 export default function WashingMachineCard(props: { washingMachine: WashingMachine }) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const { telegramHandle } = useSelector((state: RootState) => state.laundry)
+  const { selectedLevel, selectedBlock, telegramHandle } = useSelector((state: RootState) => state.laundry)
 
   useEffect(() => {
     dispatch(fetchTelegram(props.washingMachine))
@@ -93,8 +99,8 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
   }
 
   const calculateRemainingTime = (startUNIX: number, duration: number) => {
-    const endDateTime = new Date(startUNIX + duration * 1000)
-    console.log(new Date(startUNIX + duration * 1000))
+    const endDateTime = new Date((startUNIX + duration) * 1000)
+    console.log(new Date((startUNIX + duration) * 1000))
     const timeNowDateTime = new Date()
     console.log(new Date())
 
@@ -102,9 +108,10 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
 
     if (durationLeftInMiliSeconds < 0) {
       dispatch(updateMachine(WMStatus.AVAIL, props.washingMachine?.machineID as string))
+      dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
       return ''
     } else {
-      const timeDiffInSeconds = durationLeftInMiliSeconds / (1000 * 60)
+      const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
       const minutesLeft: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
       return `${minutesLeft} mins left`
     }
@@ -117,6 +124,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       washingMachineIcon = wm_available
       rightAction = () => {
         dispatch(updateMachine(WMStatus.RESERVED, props.washingMachine.machineID))
+        dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
       }
       break
     case WMStatus.COMPLETED:

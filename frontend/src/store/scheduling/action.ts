@@ -608,33 +608,31 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
+export const handleSubmitCreateEvent = (
+  eventName: string,
+  eventLocation: string,
+  eventDescription: string,
+  eventTargetAudience: string,
+  creatorIsAttending: boolean,
+) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
-  const {
-    newEventName,
-    newEventLocation,
-    newEventFromDate,
-    newEventToDate,
-    newDescription,
-    newTargetAudience,
-  } = getState().scheduling
-  const isPersonal = newTargetAudience === 'Personal'
+
+  const { newEventFromDate, newEventToDate } = getState().scheduling
+  const isPersonal = eventTargetAudience === 'Personal'
+
   const newEvent = {
-    eventName: newEventName,
+    eventName: eventName,
     startDateTime: Math.round(newEventFromDate.getTime() / 1000),
     endDateTime: Math.round(newEventToDate.getTime() / 1000),
-    description: newDescription,
-    location: newEventLocation,
+    description: eventDescription,
+    location: eventLocation,
     userID: localStorage.getItem('userID'),
     image: null,
-    ccaID: isPersonal ? null : parseInt(newTargetAudience),
+    ccaID: isPersonal ? null : parseInt(eventTargetAudience),
     isPrivate: isPersonal,
     ownerIsAttending: creatorIsAttending,
   }
-  const eventID = await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
     mode: 'cors',
     method: 'POST',
     headers: {
@@ -642,20 +640,31 @@ export const handleSubmitCreateEvent = (creatorIsAttending: boolean) => async (
     },
     body: JSON.stringify(newEvent),
   })
-    .then((resp) => resp.json())
-    .then((data) => {
-      console.log('added successfully: ')
-      console.log(data)
-      success('Event created!')
-      dispatch(resetCreateEventFields())
-      return data.eventID
+    .then((resp) => resp.json().then((data) => ({ status: resp.status, body: data })))
+    .then((resp) => {
+      if (resp.status >= 400) {
+        error(resp.body.error)
+        dispatch(setCreatedEventID(null))
+      } else {
+        console.log('added successfully: ')
+        console.log(resp.body)
+        success('Event created!')
+        dispatch(setCreatedEventID(resp.body.eventID))
+        dispatch(resetCreateEventFields())
+      }
     })
     .catch((err) => {
       error('Failed to create event, please try again!')
       console.log(err)
     })
   dispatch(setIsLoading(false))
-  return eventID
+}
+
+export const setCreatedEventID = (eventID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_CREATED_EVENT_ID,
+    createdEventID: eventID,
+  })
 }
 
 const resetCreateEventFields = () => (dispatch: Dispatch<ActionTypes>) => {

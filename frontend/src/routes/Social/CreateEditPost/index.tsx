@@ -204,14 +204,13 @@ export default function CreateEditPost() {
   const { newPostTitle, newPostBody, newPostImages, newPostOfficial, warnings, isUploading } = useSelector(
     (state: RootState) => state.social,
   )
-
-  const { ccas } = useSelector((state: RootState) => state.profile)
-  const getCcaNames = ccas.map((cca) => cca.ccaName)
+  const { position } = useSelector((state: RootState) => state.social)
+  const getCcaNames = position.map((cca) => cca.name)
 
   const isCreatePost = !window.location.href.includes('/post/edit')
 
   useEffect(() => {
-    dispatch(fetchUserCCAs(localStorage.getItem('userId')))
+    dispatch(fetchUserCCAs(localStorage.getItem('userID')))
     if (window.location.href.includes('/post/edit')) {
       dispatch(SetPostId(params.postId))
       dispatch(GetPostDetailsToEdit())
@@ -322,7 +321,7 @@ export default function CreateEditPost() {
             <Announcement>
               <p>CCA</p>
               <DropDownSelector
-                SelectedValue={getCcaNames[0].toString()}
+                SelectedValue={getCcaNames.length === 0 ? '' : getCcaNames[0].toString()}
                 ValueArray={getCcaNames}
                 handleChange={(cca) => dispatch(EditPostDetail('cca', cca))}
               />

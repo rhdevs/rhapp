@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
+import { useHistory } from 'react-router-dom'
 import EditPersonalInfoContainer from '../Components/EditPersonalInfoContainer'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -13,11 +14,13 @@ import {
   fetchUserDetails,
   handleCCADetails,
   handleModuleDetails,
+  setHasChanged,
 } from '../../../store/profile/action'
 import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
-import plusCircle from '../../../assets/plusCircle.svg'
 import tickIcon from '../../../assets/tick.svg'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { PlusCircleFilled } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -42,7 +45,10 @@ interface Details {
 
 export default function EditProfile() {
   const dispatch = useDispatch()
-  const { user, ccas, allCcas } = useSelector((state: RootState) => state.profile)
+  const history = useHistory()
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+  const [searchInfoSelected, setSearchInfoSelected] = useState(true)
+  const { user, ccas, allCcas, hasChanged } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
@@ -108,6 +114,7 @@ export default function EditProfile() {
         }
         break
       default:
+        console.log('failed')
     }
   }
 
@@ -137,10 +144,8 @@ export default function EditProfile() {
   )
 
   const EditDetailsItem = (detailsItem: Details) => {
-    const [searchInfoSelected, setSearchInfoSelected] = useState(false)
-
-    function plusCircleClicked() {
-      setSearchInfoSelected(!searchInfoSelected)
+    const plusCircleClicked = () => {
+      setSearchInfoSelected((searchInfoSelected) => !searchInfoSelected)
     }
 
     const deleteIconClicked = (itemType: 'cca' | 'module', itemToBeDeleted: string) => {
@@ -171,7 +176,10 @@ export default function EditProfile() {
                     lineHeight: '40px',
                     margin: '10px',
                   }}
-                  onClick={() => deleteIconClicked('cca', cca.ccaName)}
+                  onClick={() => {
+                    dispatch(setHasChanged(true))
+                    deleteIconClicked('cca', cca.ccaName)
+                  }}
                 >
                   {cca.ccaName}
                   <img alt="deleteIcon" style={{ marginLeft: 5, width: 6 }} src={String(deleteIcon)} />
@@ -200,7 +208,10 @@ export default function EditProfile() {
                     alt="deleteIcon"
                     style={{ marginLeft: 5, width: 6 }}
                     src={String(deleteIcon)}
-                    onClick={() => deleteIconClicked('module', module)}
+                    onClick={() => {
+                      dispatch(setHasChanged(true))
+                      deleteIconClicked('module', module)
+                    }}
                   />
                 </span>
               </div>
@@ -220,11 +231,12 @@ export default function EditProfile() {
             <span>
               <span style={{ fontSize: '20px' }}>
                 <span style={{ display: 'inline-flex', flexDirection: 'column' }}>{detailsItem.title}</span>
-                <img
-                  alt="plusCircle"
-                  style={{ marginLeft: 10, width: 15 }}
-                  src={String(plusCircle)}
-                  onClick={plusCircleClicked}
+                <PlusCircleFilled
+                  style={{ color: '#EB5757', fontSize: '23px', paddingRight: '7px', paddingTop: '3px', marginLeft: 10 }}
+                  onClick={() => {
+                    plusCircleClicked()
+                    dispatch(setHasChanged(true))
+                  }}
                 />
                 {/* VISIBILITY SELECTOR POSTPONED -->  NO FRIENDS FUNCTION */}
                 {/* <VisibilitySelector /> */}
@@ -259,7 +271,22 @@ export default function EditProfile() {
 
   return (
     <MainContainer>
-      <TopNavBar title={'Edit Profile'} />
+      <TopNavBar
+        title={'Edit Profile'}
+        onLeftClick={() => {
+          hasChanged ? setShowConfirmationModal(true) : history.goBack()
+        }}
+      />
+      {showConfirmationModal && (
+        <ConfirmationModal
+          title={'Discard Changes?'}
+          hasLeftButton={true}
+          leftButtonText={'Delete'}
+          onLeftButtonClick={() => history.goBack()}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={() => setShowConfirmationModal(false)}
+        />
+      )}
       <ProfileComponent>
         <EditPersonalInfoContainer />
         <CardContainer>

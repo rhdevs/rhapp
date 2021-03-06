@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
 import { LeftOutlined } from '@ant-design/icons'
-import { getHallEventTypes, setSelectedEvent } from '../../../store/scheduling/action'
+import { getHallEventTypes, setCreatedEventID, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 import ViewEventDetailCard from '../../../components/Scheduling/ViewEventDetailCard'
@@ -42,6 +42,7 @@ export default function CreateEvent() {
   useEffect(() => {
     dispatch(getHallEventTypes())
     dispatch(setSelectedEvent(null, eventIdFromPath))
+    dispatch(setCreatedEventID(null))
   }, [dispatch])
 
   const BackIcon = (

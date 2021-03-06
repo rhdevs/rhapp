@@ -15,6 +15,7 @@ import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
 import { Post } from '../../store/profile/types'
 import PostCard from './Components/PostCard'
+import LoadingSpin from '../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -78,12 +79,15 @@ const PersonalInfoSpan = styled.span`
   vertical-align: middle;
   padding-left: 3vw;
 `
+const LogoutButton = styled.div`
+  color: #de5f4c;
+`
 
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
-  const { user, ccas, posts } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, posts, isLoading } = useSelector((state: RootState) => state.profile)
   const params = useParams<{ userId: string }>()
   const userIdFromPath = params.userId
 
@@ -241,7 +245,7 @@ export default function Profile() {
   }
 
   const logoutButton = (
-    <div
+    <LogoutButton
       onClick={() => {
         console.log('im logging out!')
         localStorage.removeItem('token')
@@ -250,13 +254,14 @@ export default function Profile() {
       }}
     >
       Logout
-    </div>
+    </LogoutButton>
   )
 
   return (
     <>
       <MainContainer>
         <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+        {isLoading && <LoadingSpin />}
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (
