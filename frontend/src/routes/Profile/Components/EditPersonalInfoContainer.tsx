@@ -18,14 +18,14 @@ const BlockParagraph = styled.p`
 
 const AvatarSpan = styled.span`
   display: inline-block;
-  height: 27vh;
+  height: 150px;
   width: 10vw;
   vertical-align: middle;
 `
 
 const PersonalInfoSpan = styled.span`
   display: inline-block;
-  height: 27vh;
+  height: 150px;
   width: 50vw;
   vertical-align: middle;
   padding-left: 15vw;
@@ -76,7 +76,11 @@ const EditPersonalInfoContainer = () => {
     <MainContainer>
       <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
         <AvatarSpan>
-          <img alt="logo" style={{ width: 80, borderRadius: 40 }} src={user.profilePictureUrl} />
+          <img
+            alt="logo"
+            style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
+            src={user.profilePictureUrl}
+          />
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
