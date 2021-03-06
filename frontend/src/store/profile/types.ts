@@ -46,6 +46,7 @@ export enum PROFILE_ACTIONS {
   SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
   SET_USER_POSTS = 'PROFILE_ACTIONS.SET_USER_POSTS',
   SET_HAS_CHANGED = 'PROFILE_ACTIONS.SET_HAS_CHANGED',
+  UPDATE_USER_PROFILE_PICTURE = 'PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE',
 }
 
 type SetIsLoggedIn = {
@@ -108,6 +109,11 @@ type SetHasChanged = {
   hasChanged: boolean
 }
 
+type UpdateUserProfilePicture = {
+  type: typeof PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE
+  userProfilePictureBase64: string
+}
+
 export type ActionTypes =
   | SetUserDetails
   | EditUserDetails
@@ -120,3 +126,4 @@ export type ActionTypes =
   | SetIsLoggedIn
   | SetUserPosts
   | SetHasChanged
+  | UpdateUserProfilePicture
