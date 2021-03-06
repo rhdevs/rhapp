@@ -79,6 +79,9 @@ const StyledRadioGroupDiv = styled.div`
   white-space: nowrap;
   margin-left: 23px;
 `
+const StyledBodyDiv = styled.div`
+  background-color: #fafaf4;
+`
 
 export default function FacilityBooking() {
   const dispatch = useDispatch()
@@ -121,24 +124,26 @@ export default function FacilityBooking() {
                 ))}
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
-            {facilityList.map((facility) => {
-              if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
-                return (
-                  <FacilityCard
-                    key={facility.facilityID}
-                    onClick={() => {
-                      history.push('/facility/view/' + facility.facilityID)
-                      dispatch(setSelectedFacility(facility.facilityID))
-                    }}
-                  >
-                    <FacilityAvatar src={dummyAvatar} />
-                    <FacilityLabels>
-                      <FacilityHeader>{facility.facilityName}</FacilityHeader>
-                      <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
-                    </FacilityLabels>
-                  </FacilityCard>
-                )
-            })}
+            <StyledBodyDiv>
+              {facilityList.map((facility) => {
+                if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
+                  return (
+                    <FacilityCard
+                      key={facility.facilityID}
+                      onClick={() => {
+                        history.push('/facility/view/' + facility.facilityID)
+                        dispatch(setSelectedFacility(facility.facilityID))
+                      }}
+                    >
+                      <FacilityAvatar src={dummyAvatar} />
+                      <FacilityLabels>
+                        <FacilityHeader>{facility.facilityName}</FacilityHeader>
+                        <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
+                      </FacilityLabels>
+                    </FacilityCard>
+                  )
+              })}
+            </StyledBodyDiv>
           </>
         )}
         <BottomNavBar />
