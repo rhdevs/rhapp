@@ -14,6 +14,7 @@ import {
   fetchUserDetails,
   handleCCADetails,
   handleModuleDetails,
+  handleNewProfilePicture,
   setHasChanged,
 } from '../../../store/profile/action'
 import { AutoComplete, Card } from 'antd'

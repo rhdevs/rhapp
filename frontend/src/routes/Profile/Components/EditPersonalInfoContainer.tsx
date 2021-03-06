@@ -122,10 +122,10 @@ const EditPersonalInfoContainer = () => {
 
   const handleReaderLoad = (readerEvt) => {
     const binaryString = readerEvt.target.result
-    setBase64TextStringl(btoa(binaryString))
+    // setBase64TextStringl(btoa(binaryString))
     console.log('binary string: ' + base64TextString)
     console.log('updated')
-    dispatch(handleNewProfilePicture(base64TextString))
+    dispatch(handleNewProfilePicture(btoa(binaryString)))
     dispatch(setHasChanged(true))
   }
 
