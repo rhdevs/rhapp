@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
+import { ActionTypes, Post, SOCIAL_ACTIONS, POSTS_FILTER, Position } from './types'
 
 const initialState = {
   isUploading: false,
@@ -18,6 +18,8 @@ const initialState = {
   pageIndex: 0,
   isLoading: false,
   hasNoMorePosts: false,
+  name: '',
+  position: [],
 }
 
 type State = {
@@ -37,6 +39,8 @@ type State = {
   pageIndex: number
   isLoading: boolean
   hasNoMorePosts: boolean
+  name: string
+  position: Position[]
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -141,6 +145,15 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
       return {
         ...state,
         hasNoMorePosts: action.hasNoMorePosts,
+      }
+    }
+    case SOCIAL_ACTIONS.GET_USER_DETAIL: {
+      return {
+        ...state,
+        userId: action.userId,
+        avatar: action.avatar,
+        name: action.name,
+        position: action.position,
       }
     }
     default:

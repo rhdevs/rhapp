@@ -18,6 +18,12 @@ export type User = {
   name: string
   initials: string
   block: string
+  position: Position[]
+}
+
+export type Position = {
+  ccaID: number
+  name: string
 }
 
 export type Friend = {
@@ -51,6 +57,7 @@ export enum SOCIAL_ACTIONS {
   INCREASE_PAGE_INDEX = 'SOCIAL_ACTIONS.INCREASE_PAGE_INDEX',
   SET_IS_LOADING = 'SOCIAL_ACTIONS.SET_IS_LOADING',
   SET_HAS_NO_MORE_POSTS = 'SOCIAL_ACTIONS.HAS_NO_MORE_POSTS',
+  GET_USER_DETAIL = 'SOCIAL_ACTIONS.GET_USER_DETAIL',
 }
 
 type SetIsUploading = {
@@ -130,6 +137,14 @@ type SetHasNoMorePosts = {
   hasNoMorePosts: boolean
 }
 
+type GetUserDetail = {
+  type: typeof SOCIAL_ACTIONS.GET_USER_DETAIL
+  userId: string
+  avatar?: string
+  name: string
+  position: Position[]
+}
+
 export type ActionTypes =
   | GetPostDetailsToEdit
   | EditNewFields
@@ -144,3 +159,4 @@ export type ActionTypes =
   | IncreasePageIndex
   | SetIsLoading
   | SetHasNoMorePosts
+  | GetUserDetail
