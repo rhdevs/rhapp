@@ -7,6 +7,24 @@ import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar('success')
 
+export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
+  const userID = localStorage.getItem('userID')
+  get(ENDPOINTS.USER_DETAILS, DOMAINS.SOCIAL, '/' + userID).then((response) => {
+    console.log(response)
+    if (response === '' || response === undefined) {
+      console.log(response.err)
+    } else {
+      dispatch({
+        type: SOCIAL_ACTIONS.GET_USER_DETAIL,
+        userId: response.userID,
+        avatar: response.profilePictureUrl,
+        name: response.displayName,
+        position: response.position,
+      })
+    }
+  })
+}
+
 export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { postId } = getState().social
   dispatch(GetSpecificPost(postId)).then(() => {
@@ -25,18 +43,8 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
-  // TODO: Get roles from user
-  const headOfCca = [
-    {
-      ccaName: 'Basketball',
-      ccaID: 2,
-    },
-    {
-      ccaName: 'Tennis',
-      ccaID: 3,
-    },
-  ]
+export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { position } = getState().social
 
   dispatch({
     type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
@@ -44,17 +52,17 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: headOfCca[0].ccaName,
+    newPostCca: position[0]?.name,
   })
 }
 
 export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Editing post')
-  const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages } = getState().social
+  const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages, newPostCca } = getState().social
   console.log(viewPost)
   const requestBody = {
     postID: viewPost.postId,
-    ccaID: 5, // TODO: Change to tags
+    ccaID: newPostCca,
     title: newPostTitle,
     description: newPostBody,
     isOfficial: newPostOfficial,
@@ -69,8 +77,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   console.log('Creating post')
-  const { newPostTitle, newPostBody, newPostOfficial, newPostImages } = getState().social
-  // const { userID } = getState().profile.user
+  const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
 
   const requestBody = {
     title: newPostTitle,
@@ -78,7 +85,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     userID: localStorage.getItem('userID'),
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
-    ccaID: 1, // TODO: Change to tags + add newPostCca
+    ccaID: newPostCca,
   }
 
   console.log(requestBody)

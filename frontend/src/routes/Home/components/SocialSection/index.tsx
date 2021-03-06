@@ -101,7 +101,7 @@ export default function SocialSection() {
         <Header>
           <span>{`What's happening....`}</span>
           <PlusCircleFilled
-            style={{ color: '#EB5757', fontSize: 20 }}
+            style={{ color: '#EB5757', fontSize: '30px', paddingRight: '7px' }}
             onClick={() => history.push(PATHS.CREATE_POST)}
           />
         </Header>

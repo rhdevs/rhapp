@@ -44,7 +44,6 @@ const DateDisplayText = styled.p`
   font-size: 18px;
   text-align: right;
   padding: 10px 23px 0px 0px;
-}
 `
 
 const Icon = styled.img`

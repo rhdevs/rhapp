@@ -45,7 +45,7 @@ function BottomNavBar() {
   }
 
   return (
-    <div style={{ height: 'fit-content', backgroundColor: '#fafaf4' }}>
+    <div style={{ height: '50px', backgroundColor: '#fafaf4' }}>
       <BottomNav>
         <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
           <TabBar.Item

@@ -27,7 +27,6 @@ const AvatarSpan = styled.span`
 const PersonalInfoSpan = styled.span`
   display: inline-block;
   height: 150px;
-
   width: 45vw;
   vertical-align: middle;
   padding-left: 5vw;
