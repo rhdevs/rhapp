@@ -90,6 +90,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
                 booking.facilityName = facility[0].facilityName
               })
           })
+        console.log(booking)
         return booking
       })
     })
