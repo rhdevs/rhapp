@@ -68,6 +68,7 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
+  const date: Date = new Date()
   console.log('started')
   await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
     .then((resp) => resp)
@@ -90,6 +91,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
                 booking.facilityName = facility[0].facilityName
               })
           })
+        console.log('Date = ' + date)
         console.log(booking)
         return booking
       })
