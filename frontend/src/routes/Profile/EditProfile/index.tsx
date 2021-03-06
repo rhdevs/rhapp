@@ -47,6 +47,7 @@ export default function EditProfile() {
   const dispatch = useDispatch()
   const history = useHistory()
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+  const [searchInfoSelected, setSearchInfoSelected] = useState(true)
   const { user, ccas, allCcas, hasChanged } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
@@ -113,6 +114,7 @@ export default function EditProfile() {
         }
         break
       default:
+        console.log('failed')
     }
   }
 
@@ -142,10 +144,8 @@ export default function EditProfile() {
   )
 
   const EditDetailsItem = (detailsItem: Details) => {
-    const [searchInfoSelected, setSearchInfoSelected] = useState(false)
-
-    function plusCircleClicked() {
-      setSearchInfoSelected(!searchInfoSelected)
+    const plusCircleClicked = () => {
+      setSearchInfoSelected((searchInfoSelected) => !searchInfoSelected)
     }
 
     const deleteIconClicked = (itemType: 'cca' | 'module', itemToBeDeleted: string) => {
@@ -234,8 +234,8 @@ export default function EditProfile() {
                 <PlusCircleFilled
                   style={{ color: '#EB5757', fontSize: '23px', paddingRight: '7px', paddingTop: '3px', marginLeft: 10 }}
                   onClick={() => {
+                    plusCircleClicked()
                     dispatch(setHasChanged(true))
-                    plusCircleClicked
                   }}
                 />
                 {/* VISIBILITY SELECTOR POSTPONED -->  NO FRIENDS FUNCTION */}
