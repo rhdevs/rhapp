@@ -68,8 +68,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
-  const date: Date = new Date()
-  const currentTime: number = parseInt((date.getTime() / 1000).toFixed(0))
   console.log('started')
   await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
     .then((resp) => resp)
@@ -92,14 +90,6 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
                 booking.facilityName = facility[0].facilityName
               })
           })
-        console.log('Date = ' + date)
-        console.log(parseInt((date.getTime() / 1000).toFixed(0)))
-        console.log(booking.endTime)
-        if (booking.endTime > currentTime) {
-          console.log('booking end time is greater than current time')
-        } else {
-          console.log('booking end time is smaller than current time')
-        }
         return booking
       })
     })
