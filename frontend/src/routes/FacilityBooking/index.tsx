@@ -15,8 +15,8 @@ import LoadingSpin from '../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 95vh;
   background-color: #fafaf4;
+  height: 88vh;
 `
 const FacilityCard = styled.div`
   cursor: pointer;
@@ -99,9 +99,17 @@ const StyledRadioGroupDiv = styled.div`
   overflow: auto;
   white-space: nowrap;
   margin-left: 23px;
+  position: sticky;
+  left: 0;
+  top: 4.3rem;
+  padding-bottom: 10px;
+  background: #fafaf4;
 `
+
 const StyledBodyDiv = styled.div`
   background-color: #fafaf4;
+  height: 75vh;
+  overflow: scroll;
 `
 
 export default function FacilityBooking() {
