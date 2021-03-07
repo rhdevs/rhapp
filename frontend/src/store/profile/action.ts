@@ -112,13 +112,14 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user, newCCAs, newModules } = getState().profile
+  const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
   const newUser: User = {
     ...user,
     displayName: displayName,
     telegramHandle: telegramHandle,
     bio: bio,
     modules: newModules,
+    profilePictureUrl: userProfilePictureBase64,
   }
 
   // Update local state
@@ -244,6 +245,10 @@ export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<Action
     type: PROFILE_ACTIONS.SET_HAS_CHANGED,
     hasChanged: hasChanged,
   })
+}
+
+export const handleNewProfilePicture = (base64TextString: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE, userProfilePictureBase64: base64TextString })
 }
 
 export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {

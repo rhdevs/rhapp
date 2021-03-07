@@ -26,6 +26,7 @@ export const initialState = {
   isLoggedIn: null,
   isLoading: false,
   hasChanged: false,
+  userProfilePictureBase64: '',
 }
 
 type State = {
@@ -43,6 +44,7 @@ type State = {
   isLoggedIn: boolean | null
   isLoading: boolean
   hasChanged: boolean
+  userProfilePictureBase64: string
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -122,6 +124,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         hasChanged: action.hasChanged,
+      }
+    }
+    case PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE: {
+      return {
+        ...state,
+        userProfilePictureBase64: action.userProfilePictureBase64,
       }
     }
     default:
