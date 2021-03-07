@@ -361,7 +361,7 @@ def createEvent():
         isPrivate = data.get('isPrivate')
         ownerIsAttending = data.get('ownerIsAttending')
 
-        if endDateTime - startDateTime < 3600:
+        if endDateTime - startDateTime < 1800:
             return {"error": "Event must end at least 1 hour after it begins!"}, 400
 
         body = {
@@ -420,7 +420,7 @@ def editEvent():
         image = data.get('image')
         isPrivate = data.get('isPrivate')
 
-        if endDateTime - startDateTime < 3600:
+        if endDateTime - startDateTime < 1800:
             return {"error": "Event must end at least 1 hour after it begins!"}, 400
 
         body = {
