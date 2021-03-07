@@ -53,9 +53,43 @@ const FacilityLabels = styled.div`
 `
 
 const StyledRadioGroup = styled(Radio.Group)`
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-    color: red;
+  .ant-radio-button-wrapper:hover {
+    color: #de5f4c;
   }
+
+  .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+    border-right-color: #de5f4c;
+    border-left-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover:before {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
   .ant-radio-button-wrapper {
     font-family: Inter;
   }
@@ -65,6 +99,9 @@ const StyledRadioGroupDiv = styled.div`
   overflow: auto;
   white-space: nowrap;
   margin-left: 23px;
+`
+const StyledBodyDiv = styled.div`
+  background-color: #fafaf4;
 `
 
 export default function FacilityBooking() {
@@ -108,24 +145,26 @@ export default function FacilityBooking() {
                 ))}
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
-            {facilityList.map((facility) => {
-              if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
-                return (
-                  <FacilityCard
-                    key={facility.facilityID}
-                    onClick={() => {
-                      history.push('/facility/view/' + facility.facilityID)
-                      dispatch(setSelectedFacility(facility.facilityID))
-                    }}
-                  >
-                    <FacilityAvatar src={dummyAvatar} />
-                    <FacilityLabels>
-                      <FacilityHeader>{facility.facilityName}</FacilityHeader>
-                      <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
-                    </FacilityLabels>
-                  </FacilityCard>
-                )
-            })}
+            <StyledBodyDiv>
+              {facilityList.map((facility) => {
+                if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
+                  return (
+                    <FacilityCard
+                      key={facility.facilityID}
+                      onClick={() => {
+                        history.push('/facility/view/' + facility.facilityID)
+                        dispatch(setSelectedFacility(facility.facilityID))
+                      }}
+                    >
+                      <FacilityAvatar src={dummyAvatar} />
+                      <FacilityLabels>
+                        <FacilityHeader>{facility.facilityName}</FacilityHeader>
+                        <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
+                      </FacilityLabels>
+                    </FacilityCard>
+                  )
+              })}
+            </StyledBodyDiv>
           </>
         )}
         <BottomNavBar />
