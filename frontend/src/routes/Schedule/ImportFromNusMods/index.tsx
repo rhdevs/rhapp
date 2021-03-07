@@ -135,7 +135,6 @@ export default function ImportFromNusMods() {
           )}
           {errors.nusmodsLink?.type === 'validate' && <ErrorText>Invalid NUSMods link!</ErrorText>}
 
-          {/* <InputRow placeholder={'Enter link here...'} value={link} setValue={setLink} /> */}
           <ButtonContainer>
             <Button
               stopPropagation={true}
