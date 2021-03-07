@@ -128,18 +128,18 @@ export default function Login() {
               const newUsername = e.target.value
               setUsername(newUsername.toUpperCase())
             }}
-          ></Input>
+          />
           <br />
           <br />
           <InputTextLabel>Password: </InputTextLabel>
-          <Input
+          <Input.Password
             type="password"
             placeholder="Password"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
             onPressEnter={loginHandler}
-          ></Input>
+          />
           <br /> <br />
           {error.message !== '' && (
             <AlertGroup>
