@@ -109,50 +109,60 @@ export default function ViewMyBookings() {
         {!isLoading && (
           <>
             <StyledBodyDiv>
-              {myBookings?.map((booking) => (
-                <BookingCard key={booking.bookingID}>
-                  <BookingAvatar src={dummyAvatar} />
-                  <BookingLabels
-                    onClick={() => {
-                      history.push('/facility/booking/view/' + booking.bookingID)
-                    }}
-                  >
-                    <BookingHeader>{booking.facilityName}</BookingHeader>
-                    <BookingSubHeader>
-                      {booking.ccaName}: {booking.eventName}
-                    </BookingSubHeader>
-                    <BookingTime>
-                      <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
-                      {new Date(booking.startTime * 1000).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}{' '}
-                      to{' '}
-                      {new Date(booking.endTime * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </BookingTime>
-                  </BookingLabels>
-                  <RightActionGroups>
-                    <ActionButton
-                      src={editIcon}
-                      onClick={() => {
-                        dispatch(editMyBooking(booking))
-                        history.push(PATHS.CREATE_FACILITY_BOOKING)
-                      }}
-                    />
-                    <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))} />
-                  </RightActionGroups>
-                  {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
-                    <ConfirmationModal
-                      title={'Delete Booking?'}
-                      hasLeftButton={true}
-                      leftButtonText={'Delete'}
-                      onLeftButtonClick={() => dispatch(deleteMyBooking(booking.bookingID))}
-                      rightButtonText={'Cancel'}
-                      onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
-                    />
-                  )}
-                </BookingCard>
-              ))}
+              {myBookings?.map((booking) => {
+                if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
+                  return (
+                    <BookingCard key={booking.bookingID}>
+                      <BookingAvatar src={dummyAvatar} />
+                      <BookingLabels
+                        onClick={() => {
+                          history.push('/facility/booking/view/' + booking.bookingID)
+                        }}
+                      >
+                        <BookingHeader>{booking.facilityName}</BookingHeader>
+                        <BookingSubHeader>
+                          {booking.ccaName}: {booking.eventName}
+                        </BookingSubHeader>
+                        <BookingTime>
+                          <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
+                          {new Date(booking.startTime * 1000).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}{' '}
+                          to{' '}
+                          {new Date(booking.endTime * 1000).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </BookingTime>
+                      </BookingLabels>
+                      <RightActionGroups>
+                        <ActionButton
+                          src={editIcon}
+                          onClick={() => {
+                            dispatch(editMyBooking(booking))
+                            history.push(PATHS.CREATE_FACILITY_BOOKING)
+                          }}
+                        />
+                        <ActionButton
+                          src={deleteIcon}
+                          onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))}
+                        />
+                      </RightActionGroups>
+                      {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
+                        <ConfirmationModal
+                          title={'Delete Booking?'}
+                          hasLeftButton={true}
+                          leftButtonText={'Delete'}
+                          onLeftButtonClick={() => dispatch(deleteMyBooking(booking.bookingID))}
+                          rightButtonText={'Cancel'}
+                          onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+                        />
+                      )}
+                    </BookingCard>
+                  )
+                }
+              })}
               {myBookings?.length === 0 && !myBookings && (
                 <div>
                   <img src={catIcon} /> <h1>You have no Bookings yet!</h1>
