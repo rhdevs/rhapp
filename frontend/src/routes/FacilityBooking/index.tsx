@@ -57,6 +57,27 @@ const StyledRadioGroup = styled(Radio.Group)`
     color: #de5f4c;
   }
 
+  .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+    border-right-color: #de5f4c;
+    border-left-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover:before {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
+    color: white;
+    background: #de5f4c;
+    border-color: #de5f4c;
+  }
+
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+    border-color: #de5f4c;
+  }
+
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     color: white;
     background: #de5f4c;
