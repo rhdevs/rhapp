@@ -112,13 +112,14 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user, newCCAs, newModules } = getState().profile
+  const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
   const newUser: User = {
     ...user,
     displayName: displayName,
     telegramHandle: telegramHandle,
     bio: bio,
     modules: newModules,
+    profilePictureUrl: userProfilePictureBase64,
   }
 
   // Update local state

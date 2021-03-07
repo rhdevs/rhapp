@@ -20,7 +20,6 @@ const AvatarSpan = styled.span`
   display: inline-block;
   height: 150px;
   width: 20vw;
-  // padding-right: 15vw;
   vertical-align: middle;
 `
 
