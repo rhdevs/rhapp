@@ -99,6 +99,9 @@ const StyledRadioGroupDiv = styled.div`
   overflow: auto;
   white-space: nowrap;
   margin: 0 23px;
+  position: sticky;
+  top: 20px;
+  left: 20px;
 `
 const StyledBodyDiv = styled.div`
   background-color: #fafaf4;
