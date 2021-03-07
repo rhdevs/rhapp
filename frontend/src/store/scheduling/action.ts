@@ -415,9 +415,11 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
     dispatch(setIsLoading(true))
     const currentWeekNum = NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num
     const dispatchData = (data) => {
+      console.log(data[0].mods)
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
-        userNusModsEventsList: data.filter((event) => {
+        userNusModsEventsList: data[0].mods.filter((event) => {
+          console.log(event.weeks)
           return event.weeks.includes(currentWeekNum)
         }),
       })
@@ -425,7 +427,12 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
     const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)
     dispatch(setIsLoading(false))
     if (resp.length === 0) return null
-    else return resp[0].mods
+    else {
+      return resp[0].mods.filter((event) => {
+        console.log(event.weeks)
+        return event.weeks.includes(currentWeekNum)
+      })
+    }
   } else {
     error('Invalid action, you are not logged in!')
   }

@@ -62,7 +62,7 @@ const Background = styled.div`
 `
 
 const NusModsWeeksText = styled.div`
-  width: clamp(9rem, 15vw, 20rem);
+  width: clamp(9rem, 36vw, 40rem);
   font-size: clamp(12px, 2.5vw, 1rem);
   white-space: break-spaces;
   text-align: center;
