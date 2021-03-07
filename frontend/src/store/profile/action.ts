@@ -25,7 +25,6 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
-    dispatch(setIsLoading(true))
     fetch('https://rhappsocial.rhdevs.repl.co/profile/' + userID, {
       method: 'GET',
     })
@@ -33,14 +32,11 @@ export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<A
       .then((data) => {
         dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data[0] })
       })
-      .catch((err) => console.log(err))
   }
-  dispatch(setIsLoading(false))
 }
 
 export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
-    dispatch(setIsLoading(true))
     fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_CCAS + '/' + userID, {
       method: 'GET',
     })
@@ -48,13 +44,10 @@ export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<Acti
       .then((data) => {
         dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
       })
-      .catch((err) => console.log(err))
   }
-  dispatch(setIsLoading(false))
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   fetch(DOMAIN_URL.EVENT + ENDPOINTS.ALL_CCAS, {
     method: 'GET',
   })
@@ -62,12 +55,10 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
     .then((data) => {
       dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: data })
     })
-  dispatch(setIsLoading(false))
 }
 
 export const fetchUserFriends = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userID != null) {
-    dispatch(setIsLoading(true))
     await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
       method: 'GET',
     })
@@ -75,14 +66,11 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
       .then((data) => {
         dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
       })
-      .catch((err) => console.log(err))
   }
-  dispatch(setIsLoading(false))
 }
 
 export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userID != null) {
-    dispatch(setIsLoading(true))
     await fetch('https://rhappsocial.rhdevs.repl.co/post/' + userID, {
       method: 'GET',
     })
@@ -90,9 +78,7 @@ export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispat
       .then((data) => {
         dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: data })
       })
-      .catch((err) => console.log(err))
   }
-  dispatch(setIsLoading(false))
 }
 
 export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
@@ -112,13 +98,14 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user, newCCAs, newModules } = getState().profile
+  const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
   const newUser: User = {
     ...user,
     displayName: displayName,
     telegramHandle: telegramHandle,
     bio: bio,
     modules: newModules,
+    profilePictureUrl: userProfilePictureBase64,
   }
 
   // Update local state
@@ -136,7 +123,6 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
   // 1. Update user profile
-  dispatch(setIsLoading(true))
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
     method: 'PUT',
     mode: 'cors',
@@ -151,7 +137,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
         console.log('update current user success')
       }
     })
-  dispatch(setIsLoading(false))
 
   // 2. Update CCAs
   const newUserCcasDatabase: number[] = []
@@ -165,8 +150,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   dispatch(addUserCca(updateUserJson))
 }
 
-export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
+export const addUserCca = (cca: { userID: string; ccaID: number[] }) => () => {
   fetch('https://rhappevents.rhdevs.repl.co/user_CCA/add', {
     method: 'POST',
     mode: 'cors',
@@ -181,7 +165,6 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
         console.log('add CCA success')
       }
     })
-  dispatch(setIsLoading(false))
 }
 
 export const handleCCADetails = (actionType: 'Delete' | 'Add', newCca: UserCCA) => (
@@ -239,16 +222,13 @@ export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: str
   dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
 }
 
+export const handleNewProfilePicture = (base64TextString: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE, userProfilePictureBase64: base64TextString })
+}
+
 export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: PROFILE_ACTIONS.SET_HAS_CHANGED,
     hasChanged: hasChanged,
-  })
-}
-
-export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: PROFILE_ACTIONS.SET_IS_LOADING,
-    isLoading: isLoading,
   })
 }

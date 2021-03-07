@@ -24,8 +24,8 @@ export const initialState = {
   allCcas: [],
   token: localStorage.getItem('token'),
   isLoggedIn: null,
-  isLoading: false,
   hasChanged: false,
+  userProfilePictureBase64: '',
 }
 
 type State = {
@@ -41,8 +41,8 @@ type State = {
   allCcas: UserCCA[]
   token: string | null
   isLoggedIn: boolean | null
-  isLoading: boolean
   hasChanged: boolean
+  userProfilePictureBase64: string
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -112,16 +112,16 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
         posts: action.posts,
       }
     }
-    case PROFILE_ACTIONS.SET_IS_LOADING: {
-      return {
-        ...state,
-        isLoading: action.isLoading,
-      }
-    }
     case PROFILE_ACTIONS.SET_HAS_CHANGED: {
       return {
         ...state,
         hasChanged: action.hasChanged,
+      }
+    }
+    case PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE: {
+      return {
+        ...state,
+        userProfilePictureBase64: action.userProfilePictureBase64,
       }
     }
     default:
