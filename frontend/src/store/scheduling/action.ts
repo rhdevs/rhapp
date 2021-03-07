@@ -11,6 +11,7 @@ import {
   TimetableEvent,
 } from './types'
 import useSnackbar from '../../hooks/useSnackbar'
+import NUSModerator from 'nusmoderator'
 
 const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
@@ -405,10 +406,13 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
 const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userId !== null) {
     dispatch(setIsLoading(true))
+    const currentWeekNum = NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num
     const dispatchData = (data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
-        userNusModsEventsList: data,
+        userNusModsEventsList: data.filter((event) => {
+          return event.weeks.includes(currentWeekNum)
+        }),
       })
     }
     const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)

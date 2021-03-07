@@ -25,6 +25,7 @@ import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
+import NusModsWeeks from '../../components/Scheduling/NusModsWeeks'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -62,6 +63,13 @@ const Background = styled.div`
 
 const AlertGroup = styled.div`
   margin: 23px;
+`
+
+const NusModsWeeksText = styled.div`
+  width: clamp(9rem, 15vw, 20rem);
+  font-size: clamp(12px, 2.5vw, 1rem);
+  white-space: break-spaces;
+  text-align: center;
 `
 
 export default function Schedule() {
@@ -205,9 +213,11 @@ export default function Schedule() {
     )
   }
 
+  const centerComponent = <NusModsWeeksText>{NusModsWeeks}</NusModsWeeksText>
+
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
+      <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
       {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
       {isLoading && <LoadingSpin />}
       {modal && (
