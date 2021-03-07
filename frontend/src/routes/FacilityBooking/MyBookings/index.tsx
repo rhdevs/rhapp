@@ -106,7 +106,7 @@ export default function ViewMyBookings() {
         {!isLoading && (
           <>
             {myBookings?.map((booking) => {
-              if (booking.startTime < new Date().getTime()) {
+              if (booking.startTime < parseInt((new Date().getTime() / 1000).toFixed(0))) {
                 return (
                   <BookingCard key={booking.bookingID}>
                     <BookingAvatar src={dummyAvatar} />
