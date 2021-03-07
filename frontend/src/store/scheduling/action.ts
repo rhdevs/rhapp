@@ -107,6 +107,8 @@ export const fetchAllUserEvents = (userId: string | null, withNusModsEvents: boo
     }
 
     getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/all`, manipulateData)
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -374,22 +376,27 @@ export const setUserNusMods = (userId: string | null, userNusModsLink: string) =
       academicYear: academicYear,
       currentSemester: currentSemester,
     }
-
+    console.log('hi')
     const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
       .then((resp) => {
         return resp
       })
       .catch((err) => {
+        error('Failed to import, please try again!')
         dispatch(setNusModsStatus(false, true))
         console.log(err)
       })
 
     if (resp.status >= 400) {
+      error('Failed to import, please try again!')
       dispatch(setNusModsStatus(false, true))
     } else {
       dispatch(fetchCurrentUserEvents(userId, false))
       dispatch(setNusModsStatus(true, false))
+      success('NUSMods successfully imported!')
     }
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -419,6 +426,8 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
     dispatch(setIsLoading(false))
     if (resp.length === 0) return null
     else return resp[0].mods
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -443,6 +452,8 @@ export const deleteUserNusModsEvents = (userId: string | null) => async (
     if (userNusModsEventsList.length)
       postToBackend(ENDPOINTS.DELETE_MODS + `/${userId}`, 'DELETE', null, updateDeleteStatus)
     dispatch(setIsLoading(false))
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 // ---------------------- NUSMODS ----------------------
@@ -540,6 +551,8 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
 
       postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
     }
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
