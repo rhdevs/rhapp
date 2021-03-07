@@ -246,6 +246,10 @@ export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<Action
   })
 }
 
+export const handleNewProfilePicture = (base64TextString: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE, userProfilePictureBase64: base64TextString })
+}
+
 export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: PROFILE_ACTIONS.SET_IS_LOADING,
