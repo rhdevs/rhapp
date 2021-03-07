@@ -15,7 +15,6 @@ import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
 import { Post } from '../../store/profile/types'
 import PostCard from './Components/PostCard'
-import LoadingSpin from '../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -79,15 +78,12 @@ const PersonalInfoSpan = styled.span`
   vertical-align: middle;
   padding-left: 3vw;
 `
-const LogoutButton = styled.div`
-  color: #de5f4c;
-`
 
 export default function Profile() {
   const dispatch = useDispatch()
   const history = useHistory()
   const [isOwnProfile, setIsOwnProfile] = useState(true)
-  const { user, ccas, posts, isLoading } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, posts } = useSelector((state: RootState) => state.profile)
   const params = useParams<{ userId: string }>()
   const userIdFromPath = params.userId
 
@@ -163,7 +159,7 @@ export default function Profile() {
         <img
           alt="logo"
           style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
-          src={user?.profilePictureUrl}
+          src={'data:image/png;base64,' + user.profilePictureUrl}
         />
       </AvatarSpan>
       <PersonalInfoSpan>
@@ -245,7 +241,7 @@ export default function Profile() {
   }
 
   const logoutButton = (
-    <LogoutButton
+    <div
       onClick={() => {
         console.log('im logging out!')
         localStorage.removeItem('token')
@@ -254,14 +250,13 @@ export default function Profile() {
       }}
     >
       Logout
-    </LogoutButton>
+    </div>
   )
 
   return (
     <>
       <MainContainer>
         <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
-        {isLoading && <LoadingSpin />}
         <ProfileComponent>
           <PersonalInfoContainer />
           {isOwnProfile ? (
