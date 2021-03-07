@@ -4,7 +4,7 @@ import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { handleEditProfileDetails, setHasChanged } from '../../../store/profile/action'
+import { handleEditProfileDetails, handleNewProfilePicture, setHasChanged } from '../../../store/profile/action'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
@@ -19,16 +19,17 @@ const BlockParagraph = styled.p`
 const AvatarSpan = styled.span`
   display: inline-block;
   height: 150px;
-  width: 10vw;
+  width: 20vw;
+  // padding-right: 15vw;
   vertical-align: middle;
 `
 
 const PersonalInfoSpan = styled.span`
   display: inline-block;
   height: 150px;
-  width: 50vw;
+  width: 45vw;
   vertical-align: middle;
-  padding-left: 15vw;
+  padding-left: 5vw;
 `
 
 const LongButton = {
@@ -57,7 +58,9 @@ const validateMessages = {
 }
 
 const EditPersonalInfoContainer = () => {
-  const { newDisplayName, newTelegramHandle, newBio, user } = useSelector((state: RootState) => state.profile)
+  const { newDisplayName, newTelegramHandle, newBio, user, userProfilePictureBase64 } = useSelector(
+    (state: RootState) => state.profile,
+  )
   const dispatch = useDispatch()
   const oldBio = newBio
 
@@ -65,22 +68,56 @@ const EditPersonalInfoContainer = () => {
     if (newBio !== oldBio) {
       dispatch(setHasChanged(true))
     }
-  }, [newBio])
+    dispatch(handleNewProfilePicture(user.profilePictureUrl))
+  }, [dispatch])
 
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
   }
 
+  // On file select (from the pop up)
+  const onFileChange = (event) => {
+    // Update the state
+    // console.log('file to upload: ' + event.target.files[0])
+    const file = event.target.files[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = handleReaderLoad
+      reader.readAsBinaryString(file)
+    }
+  }
+
+  const handleReaderLoad = (readerEvt) => {
+    const binaryString = readerEvt.target.result
+    // console.log('binary string: ' + btoa(binaryString))
+    dispatch(handleNewProfilePicture(btoa(binaryString)))
+    dispatch(setHasChanged(true))
+  }
+
+  const EditProfileImage = () => {
+    return (
+      <>
+        <div className="image-upload">
+          <label htmlFor="file-input">
+            <img
+              src={'data:image/png;base64,' + userProfilePictureBase64}
+              style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
+            />
+          </label>
+
+          <input id="file-input" type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} />
+        </div>
+      </>
+    )
+  }
+
   return (
     <MainContainer>
       <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
         <AvatarSpan>
-          <img
-            alt="logo"
-            style={{ height: 75, width: 75, objectFit: 'cover', borderRadius: 100 / 2 }}
-            src={user.profilePictureUrl}
-          />
+          <EditProfileImage />
         </AvatarSpan>
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
