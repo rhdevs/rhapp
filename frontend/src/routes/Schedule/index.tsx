@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { Alert, Menu } from 'antd'
+import { Menu } from 'antd'
 import { DeleteOutlined, PlusOutlined, SearchOutlined, ImportOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
@@ -25,6 +25,7 @@ import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
+import NusModsWeeks from '../../components/Scheduling/NusModsWeeks'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
@@ -60,8 +61,11 @@ const Background = styled.div`
   width: 100%;
 `
 
-const AlertGroup = styled.div`
-  margin: 23px;
+const NusModsWeeksText = styled.div`
+  width: clamp(9rem, 36vw, 40rem);
+  font-size: clamp(12px, 2.5vw, 1rem);
+  white-space: break-spaces;
+  text-align: center;
 `
 
 export default function Schedule() {
@@ -79,35 +83,6 @@ export default function Schedule() {
     selectedProfileIds,
     selectedCCAIds,
   } = useSelector((state: RootState) => state.scheduling)
-
-  const onClose = () => {
-    dispatch(setNusModsStatus(false, false))
-  }
-
-  const AlertSection = (
-    <AlertGroup>
-      {nusModsIsSuccessful && !nusModsIsFailure && (
-        <Alert
-          message="Successfully Imported!"
-          description="Yay yippe doodles"
-          type="success"
-          closable
-          showIcon
-          onClose={onClose}
-        />
-      )}
-      {nusModsIsFailure && !nusModsIsSuccessful && (
-        <Alert
-          message="NUSMods Events not imported!!!"
-          description="Insert error message here"
-          type="error"
-          closable
-          showIcon
-          onClose={onClose}
-        />
-      )}
-    </AlertGroup>
-  )
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -205,10 +180,11 @@ export default function Schedule() {
     )
   }
 
+  const centerComponent = <NusModsWeeksText>{NusModsWeeks}</NusModsWeeksText>
+
   return (
     <Background>
-      <TopNavBar title={'Timetable'} leftIcon={true} rightComponent={rightIcon} />
-      {(nusModsIsSuccessful || nusModsIsFailure) && !isLoading && AlertSection}
+      <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
       {isLoading && <LoadingSpin />}
       {modal && (
         <ConfirmationModal

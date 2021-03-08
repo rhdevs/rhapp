@@ -11,6 +11,7 @@ import {
   TimetableEvent,
 } from './types'
 import useSnackbar from '../../hooks/useSnackbar'
+import NUSModerator from 'nusmoderator'
 
 const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
@@ -106,6 +107,8 @@ export const fetchAllUserEvents = (userId: string | null, withNusModsEvents: boo
     }
 
     getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/all`, manipulateData)
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -373,22 +376,27 @@ export const setUserNusMods = (userId: string | null, userNusModsLink: string) =
       academicYear: academicYear,
       currentSemester: currentSemester,
     }
-
+    console.log('hi')
     const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
       .then((resp) => {
         return resp
       })
       .catch((err) => {
+        error('Failed to import, please try again!')
         dispatch(setNusModsStatus(false, true))
         console.log(err)
       })
 
     if (resp.status >= 400) {
+      error('Failed to import, please try again!')
       dispatch(setNusModsStatus(false, true))
     } else {
       dispatch(fetchCurrentUserEvents(userId, false))
       dispatch(setNusModsStatus(true, false))
+      success('NUSMods successfully imported!')
     }
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -405,16 +413,25 @@ export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure:
 const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userId !== null) {
     dispatch(setIsLoading(true))
+    const currentWeekNum = NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num
     const dispatchData = (data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
-        userNusModsEventsList: data,
+        userNusModsEventsList: data[0].mods.filter((event) => {
+          return event.weeks.includes(currentWeekNum)
+        }),
       })
     }
     const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)
     dispatch(setIsLoading(false))
     if (resp.length === 0) return null
-    else return resp[0].mods
+    else {
+      return resp[0].mods.filter((event) => {
+        return event.weeks.includes(currentWeekNum)
+      })
+    }
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 
@@ -439,6 +456,8 @@ export const deleteUserNusModsEvents = (userId: string | null) => async (
     if (userNusModsEventsList.length)
       postToBackend(ENDPOINTS.DELETE_MODS + `/${userId}`, 'DELETE', null, updateDeleteStatus)
     dispatch(setIsLoading(false))
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 // ---------------------- NUSMODS ----------------------
@@ -536,6 +555,8 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
 
       postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
     }
+  } else {
+    error('Invalid action, you are not logged in!')
   }
 }
 

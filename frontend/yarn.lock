@@ -4260,6 +4260,11 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
+date-fns@2.0.0-alpha.27:
+  version "2.0.0-alpha.27"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.27.tgz#5ecd4204ef0e7064264039570f6e8afbc014481c"
+  integrity sha512-cqfVLS+346P/Mpj2RpDrBv0P4p2zZhWWvfY5fuWrXNR/K38HaAGEkeOwb47hIpQP9Jr/TIxjZ2/sNMQwdXuGMg==
+
 date-fns@^2.15.0, date-fns@^2.16.1:
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz"
@@ -8296,6 +8301,13 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/number-is-nan/-/number-is-nan-1.0.1.tgz"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
+
+nusmoderator@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/nusmoderator/-/nusmoderator-3.0.0.tgz#9ab8ad2207d415a12c31f2979fc225dbe992b37d"
+  integrity sha512-kTD12nfQcMj6MI/eMalYt/jzqKfyBP6J4rxtYzrzxlf6EtwnjGdfZBLaFT2nFQwhQLnaulQQzZ2l/OTetSR7+g==
+  dependencies:
+    date-fns "2.0.0-alpha.27"
 
 nwsapi@^2.2.0:
   version "2.2.0"
