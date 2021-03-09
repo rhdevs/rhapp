@@ -158,7 +158,7 @@ export default function Signup() {
       return pass
     }
     if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
-      setError({ message: 'All fields are compulsary!' })
+      setError({ message: 'All fields are compulsory!' })
       pass = false
       return pass
     }
@@ -293,7 +293,7 @@ export default function Signup() {
                   block
                   onClick={(e) => {
                     if (!formData.display || !formData.telegram || !formData.bio) {
-                      setError({ message: 'All fields are compulsary!' })
+                      setError({ message: 'All fields are compulsory!' })
                     } else {
                       onSubmit(e)
                     }
