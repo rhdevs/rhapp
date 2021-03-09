@@ -177,43 +177,44 @@ export default function ViewFacility() {
     <>
       <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
-        {isLoading && <LoadingSpin />}
-        {!isLoading && (
-          <>
-            {AlertSection}
-            <DateSelectorGroup>
-              <DateRange
-                editableDateInputs={true}
-                color="#DE5F4C"
-                onChange={(item) => dispatch(setViewDates(item))}
-                moveRangeOnFirstSelection={false}
-                rangeColors={['#DE5F4C', '#002642']}
-                ranges={[
-                  {
-                    startDate: ViewStartDate,
-                    endDate: ViewEndDate,
-                    key: 'ViewDateSelection',
-                  },
-                ]}
-              />
-            </DateSelectorGroup>
+        <>
+          {AlertSection}
+          <DateSelectorGroup>
+            <DateRange
+              editableDateInputs={true}
+              color="#DE5F4C"
+              onChange={(item) => {
+                dispatch(SetIsLoading(true))
+                dispatch(setViewDates(item))
+              }}
+              moveRangeOnFirstSelection={false}
+              rangeColors={['#DE5F4C', '#002642']}
+              ranges={[
+                {
+                  startDate: ViewStartDate,
+                  endDate: ViewEndDate,
+                  key: 'ViewDateSelection',
+                },
+              ]}
+            />
+          </DateSelectorGroup>
 
-            <ActionButtonGroup>
-              <StyledButton
-                onButtonClick={() => {
-                  dispatch(
-                    createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
-                  )
-                  history.push('/facility/booking/create')
-                }}
-                hasSuccessMessage={false}
-                stopPropagation={false}
-                defaultButtonDescription={'Book Facility'}
-                defaultButtonColor="#DE5F4C"
-                updatedButtonColor="#DE5F4C"
-                updatedTextColor="white"
-              />
-              {/* <div onClick={() => console.log('pressed')}>
+          <ActionButtonGroup>
+            <StyledButton
+              onButtonClick={() => {
+                dispatch(
+                  createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
+                )
+                history.push('/facility/booking/create')
+              }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Book Facility'}
+              defaultButtonColor="#DE5F4C"
+              updatedButtonColor="#DE5F4C"
+              updatedTextColor="white"
+            />
+            {/* <div onClick={() => console.log('pressed')}>
                 <StyledButton
                   onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
                   hasSuccessMessage={false}
@@ -226,11 +227,12 @@ export default function ViewFacility() {
                   updatedButtonDescription={'🕶 Availabilities ⌄'}
                 />
               </div> */}
-            </ActionButtonGroup>
-            <DateDisplayText>
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-            </DateDisplayText>
+          </ActionButtonGroup>
+          <DateDisplayText>
+            {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
+            {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
+          </DateDisplayText>
+          {!isLoading && (
             <EventsGroup>
               {facilityBookings?.map((event) => (
                 <EventCard
@@ -271,9 +273,10 @@ export default function ViewFacility() {
                 <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
               )}
             </EventsGroup>
-            <BottomNavBar />
-          </>
-        )}
+          )}
+          {isLoading && <LoadingSpin />}
+          <BottomNavBar />
+        </>
       </MainContainer>
     </>
   )
