@@ -115,7 +115,7 @@ export default function Login() {
   }
 
   return (
-    <div style={{ backgroundColor: '#fafaf4' }}>
+    <div style={{ backgroundColor: '#ffffff' }}>
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <LoginContainer>

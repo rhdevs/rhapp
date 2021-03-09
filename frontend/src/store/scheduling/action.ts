@@ -29,7 +29,6 @@ const getFromBackend = async (endpoint: string, methods) => {
       return data
     })
     .catch((err) => {
-      console.log('something went wronggggg')
       console.log(err)
       return null
     })
@@ -747,7 +746,6 @@ export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<Acti
     if (data.ok) {
       success('Event deleted!')
     } else {
-      console.log('FAILURE!!!! ' + data.status)
       error('Failed to delete, please try again!')
     }
     dispatch(setIsLoading(false))

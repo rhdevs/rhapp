@@ -68,7 +68,6 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post edited!')
-    console.log(res)
   })
 }
 
@@ -87,7 +86,6 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
-    console.log(res)
   })
 }
 
@@ -263,7 +261,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
   })
 
   const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-  console.log('DELETE RESPONSE: ', response)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
@@ -290,7 +287,6 @@ export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) =
 export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
   const specificPost = response.data
-  console.log('Specific post', specificPost)
 
   const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
   const newPost = {
