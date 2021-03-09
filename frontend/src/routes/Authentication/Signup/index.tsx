@@ -76,7 +76,7 @@ export default function Signup() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value,
     })
   }
 
@@ -98,7 +98,7 @@ export default function Signup() {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
-      position: ['Resident'],
+      position: [0], //0 = 'Resident'
       displayName: formData.display,
       bio: formData.bio,
       block: parseInt(formData.block),
@@ -139,9 +139,40 @@ export default function Signup() {
               localStorage.setItem('userID', formData.userId)
               history.push(PATHS.HOME_PAGE)
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+              setError({ message: 'Failed to create user, please try again' })
+              console.log(err)
+            })
         }
       })
+      .catch(() => {
+        setError({ message: 'Failed to create user, please check and try again' })
+      })
+  }
+
+  const checkRegisterInfo = (formData) => {
+    let pass = true
+    if (formData.password !== formData.password2) {
+      setError({ message: 'Password does not match!' })
+      pass = false
+      return pass
+    }
+    if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
+      setError({ message: 'All fields are compulsory!' })
+      pass = false
+      return pass
+    }
+    if (!formData.email.includes('@u.nus.edu')) {
+      setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu' })
+      pass = false
+      return pass
+    }
+    if (formData.userId.length !== 9 || formData.userId[0] !== 'A' || !formData.userId[8].match(/[A-Z]/i)) {
+      setError({ message: 'Please check that your NUS ID is your matriculation number' })
+      pass = false
+      return pass
+    }
+    return pass
   }
 
   return (
@@ -199,11 +230,8 @@ export default function Signup() {
                   style={{ color: '#de5f4c' }}
                   type="link"
                   onClick={() => {
-                    if (formData.password !== formData.password2) {
-                      setError({ message: 'Password does not match!' })
-                    } else if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
-                      setError({ message: 'All fields are compulsary!' })
-                    } else {
+                    const pass = checkRegisterInfo(formData)
+                    if (pass == true) {
                       setPageNum({ page: 2 })
                       setError({ message: '' })
                     }
@@ -260,7 +288,17 @@ export default function Signup() {
               <br />
               <br />
               <PostButton>
-                <Button type="primary" block onClick={onSubmit}>
+                <Button
+                  type="primary"
+                  block
+                  onClick={(e) => {
+                    if (!formData.display || !formData.telegram || !formData.bio) {
+                      setError({ message: 'All fields are compulsory!' })
+                    } else {
+                      onSubmit(e)
+                    }
+                  }}
+                >
                   Sign Up
                 </Button>
               </PostButton>
