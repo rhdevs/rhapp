@@ -38,6 +38,19 @@ export const PrivateRoute = (routeProps: any) => {
   }
 }
 
+export const HomeRoute = (routeProps: any) => {
+  const { ...rest } = routeProps
+
+  const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
+  const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
+
+  if (localStorage.token) {
+    return getIsLoggedIn() ? <Route {...rest} component={Home} /> : <Route {...rest} component={Login} />
+  } else {
+    return <Route {...rest} component={Login} />
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PublicRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps

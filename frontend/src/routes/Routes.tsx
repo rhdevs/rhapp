@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import styled from 'styled-components'
 import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
-import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import { PrivateRoute, PublicRoute, HomeRoute } from './RouteTypes'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -45,11 +45,9 @@ export enum PATHS {
   EDIT_POST = '/social/post/edit/:postId',
 }
 
-const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
 const FallBack = React.lazy(() => import(/* webpackChunckName: "FallBack" */ './ErrorPages/NotFound'))
 // AUTHENTICATION
-const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
@@ -88,9 +86,11 @@ export default class Routes extends React.Component {
       <Root>
         <Suspense fallback={LoadingSpin}>
           <Switch>
-            <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
+            {/* <HomeRoute exact path={PATHS.HOME_PAGE} component={Home} />
+            <HomeRoute exact path={PATHS.LOGIN_PAGE} component={Login} /> */}
+            <HomeRoute exact path={PATHS.HOME_PAGE} />
+
             <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
-            <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
             <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
