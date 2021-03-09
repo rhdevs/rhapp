@@ -49,22 +49,26 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
       console.log(data)
       const updatedFB: Booking[] = []
 
-      data.forEach((booking: Booking) => {
-        fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then((cca) => {
-            booking.ccaName = cca[0].ccaName
-            updatedFB.push(booking)
+      data
+        .forEach((booking: Booking) => {
+          fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
+            method: 'GET',
+            mode: 'cors',
           })
-      })
-      console.log(updatedFB)
-      dispatch({
-        type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
-        facilityBookings: updatedFB,
-      })
+            .then((resp) => resp.json())
+            .then((cca) => {
+              booking.ccaName = cca[0].ccaName
+              updatedFB.push(booking)
+            })
+        })
+        .then(() => {
+          console.log(updatedFB)
+          dispatch({
+            type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
+            facilityBookings: updatedFB,
+          })
+        })
+
       dispatch(SetIsLoading(false))
     })
 }
