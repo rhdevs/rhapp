@@ -88,7 +88,7 @@ export default class Routes extends React.Component {
       <Root>
         <Suspense fallback={LoadingSpin}>
           <Switch>
-            <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
+            <PublicRoute exact path={PATHS.HOME_PAGE} component={Home} />
             <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
