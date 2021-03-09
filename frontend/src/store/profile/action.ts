@@ -122,15 +122,15 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     profilePictureUrl: userProfilePictureBase64,
   }
 
+  // Update database
+  dispatch(updateCurrentUser(newUser))
+
   // Update local state
   dispatch({
     type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
     user: newUser,
     ccas: newCCAs,
   })
-
-  // Update database
-  dispatch(updateCurrentUser(newUser))
 }
 
 // One shot update database with all changes

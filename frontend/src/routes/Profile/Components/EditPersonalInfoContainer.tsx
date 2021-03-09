@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
@@ -64,6 +64,7 @@ const EditPersonalInfoContainer = () => {
   const dispatch = useDispatch()
   const oldBio = newBio
   const history = useHistory()
+  const [canPush, setCanPush] = useState(false)
 
   useEffect(() => {
     if (newBio !== oldBio) {
@@ -72,10 +73,16 @@ const EditPersonalInfoContainer = () => {
     dispatch(handleNewProfilePicture(user.profilePictureUrl))
   }, [dispatch])
 
+  useEffect(() => {
+    if (canPush == true) {
+      history.push('/social/profile/' + `${user.userID}`)
+    }
+  }, [canPush])
+
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
-    history.push('/social/profile/' + `${user.userID}`)
+    setCanPush(true)
   }
 
   // On file select (from the pop up)
