@@ -73,7 +73,7 @@ const EventCard = styled.div`
 `
 
 const AlertGroup = styled.div`
-  margin: 23px;
+  padding: 23px;
 `
 
 const EventLabels = styled.div`
@@ -105,7 +105,7 @@ const EventDateLabel = styled.p`
 `
 
 const DateSelectorGroup = styled.div`
-  margin: 23px;
+  padding: 23px;
   font-family: inter;
   display: flex;
   place-content: center;
