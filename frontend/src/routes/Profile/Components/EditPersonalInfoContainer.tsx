@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { useHistory } from 'react-router-dom'
 import { handleEditProfileDetails, handleNewProfilePicture, setHasChanged } from '../../../store/profile/action'
-import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
