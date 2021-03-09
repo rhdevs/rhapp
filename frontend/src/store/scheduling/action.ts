@@ -376,7 +376,6 @@ export const setUserNusMods = (userId: string | null, userNusModsLink: string) =
       academicYear: academicYear,
       currentSemester: currentSemester,
     }
-    console.log('hi')
     const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
       .then((resp) => {
         return resp
@@ -612,7 +611,6 @@ export const getTargetAudienceList = () => async (dispatch: Dispatch<ActionTypes
         type: SCHEDULING_ACTIONS.GET_TARGET_AUDIENCE_LIST,
         targetAudienceList: data,
       })
-      console.log(data)
       dispatch(setIsLoading(false))
     })
 }
@@ -667,8 +665,6 @@ export const handleSubmitCreateEvent = (
         error(resp.body.error)
         dispatch(setCreatedEventID(null))
       } else {
-        console.log('added successfully: ')
-        console.log(resp.body)
         success('Event created!')
         dispatch(setCreatedEventID(resp.body.eventID))
         dispatch(resetCreateEventFields())

@@ -125,7 +125,6 @@ export default function SocialSection() {
               style={{ marginBottom: '60px' }}
               type="text"
               onClick={() => {
-                console.log('increasing')
                 dispatch(IncreasePageIndex())
               }}
             >

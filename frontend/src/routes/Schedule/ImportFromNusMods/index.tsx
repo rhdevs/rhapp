@@ -88,8 +88,6 @@ export default function ImportFromNusMods() {
   }
 
   useEffect(() => {
-    console.log(nusModsIsSuccessful)
-    console.log(nusModsIsFailure)
     if (nusModsIsSuccessful === true && nusModsIsFailure === false) {
       history.push(PATHS.SCHEDULE_PAGE)
     }
