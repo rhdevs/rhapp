@@ -201,7 +201,9 @@ export default function ViewFacility() {
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
-                  dispatch(createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName))
+                  dispatch(
+                    createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
+                  )
                   history.push('/facility/booking/create')
                 }}
                 hasSuccessMessage={false}

@@ -108,18 +108,22 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => async (
+export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { user, newCCAs, newModules } = getState().profile
+  const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
   const newUser: User = {
     ...user,
     displayName: displayName,
     telegramHandle: telegramHandle,
     bio: bio,
     modules: newModules,
+    profilePictureUrl: userProfilePictureBase64,
   }
+
+  // Update database
+  dispatch(updateCurrentUser(newUser))
 
   // Update local state
   dispatch({
@@ -127,16 +131,25 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     user: newUser,
     ccas: newCCAs,
   })
-
-  // Update database
-  dispatch(updateCurrentUser(newUser))
 }
 
 // One shot update database with all changes
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
-  // 1. Update user profile
+
   dispatch(setIsLoading(true))
+
+  // 1. Update CCAs
+  const newUserCcasDatabase: number[] = []
+  ccas?.map((cca) => {
+    newUserCcasDatabase.push(cca.ccaID)
+  })
+  const updateUserJson = {
+    userID: user.userID,
+    ccaID: newUserCcasDatabase,
+  }
+
+  // 2. Update user profile
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
     method: 'PUT',
     mode: 'cors',
@@ -149,20 +162,14 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((data) => {
       if (data.ok) {
         console.log('update current user success')
+        // 1b. Update CCAs here
+        dispatch(addUserCca(updateUserJson))
       }
     })
+    .catch(() => {
+      dispatch(setCanPush('error'))
+    })
   dispatch(setIsLoading(false))
-
-  // 2. Update CCAs
-  const newUserCcasDatabase: number[] = []
-  ccas?.map((cca) => {
-    newUserCcasDatabase.push(cca.ccaID)
-  })
-  const updateUserJson = {
-    userID: user.userID,
-    ccaID: newUserCcasDatabase,
-  }
-  dispatch(addUserCca(updateUserJson))
 }
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
@@ -179,7 +186,12 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
     .then((data) => {
       if (data.ok) {
         console.log('add CCA success')
+        // If all updates are done, set canPush to true
+        dispatch(setCanPush('true'))
       }
+    })
+    .catch(() => {
+      dispatch(setCanPush('error'))
     })
   dispatch(setIsLoading(false))
 }
@@ -246,9 +258,20 @@ export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<Action
   })
 }
 
+export const handleNewProfilePicture = (base64TextString: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE, userProfilePictureBase64: base64TextString })
+}
+
 export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: PROFILE_ACTIONS.SET_IS_LOADING,
     isLoading: isLoading,
+  })
+}
+
+export const setCanPush = (canPush: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: PROFILE_ACTIONS.SET_CAN_PUSH,
+    canPush: canPush,
   })
 }

@@ -28,6 +28,8 @@ const InputTextLabel = styled.text`
 
 const Logo = styled.img`
   width: 70%;
+  max-width: 255px;
+  max-height: 255px;
 `
 
 const PostButton = styled.div`
@@ -128,18 +130,18 @@ export default function Login() {
               const newUsername = e.target.value
               setUsername(newUsername.toUpperCase())
             }}
-          ></Input>
+          />
           <br />
           <br />
           <InputTextLabel>Password: </InputTextLabel>
-          <Input
+          <Input.Password
             type="password"
             placeholder="Password"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
             onPressEnter={loginHandler}
-          ></Input>
+          />
           <br /> <br />
           {error.message !== '' && (
             <AlertGroup>

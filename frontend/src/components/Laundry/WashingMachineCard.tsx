@@ -100,9 +100,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
 
   const calculateRemainingTime = (startUNIX: number, duration: number) => {
     const endDateTime = new Date((startUNIX + duration) * 1000)
-    console.log(new Date((startUNIX + duration) * 1000))
     const timeNowDateTime = new Date()
-    console.log(new Date())
 
     const durationLeftInMiliSeconds: number = Math.abs(timeNowDateTime.getTime() - endDateTime.getTime())
 

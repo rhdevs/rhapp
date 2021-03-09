@@ -84,7 +84,6 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
         searchResults
           .filter((friend) => friend.displayName.toLowerCase().includes(searchValue.toLowerCase()))
           .map((friend, index) => {
-            console.log(friend)
             return (
               <ImageDescriptionCard
                 key={index}
