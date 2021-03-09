@@ -198,12 +198,16 @@ export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
 }
 
-export const createNewBookingFromFacility = (startDate: Date, endDate: Date, facilityName: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const createNewBookingFromFacility = (
+  startDate: Date,
+  endDate: Date,
+  facilityName: string,
+  facilityId: string,
+) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: facilityId })
 
   dispatch(SetIsLoading(false))
 }
