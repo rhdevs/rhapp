@@ -288,12 +288,17 @@ export default function Signup() {
               <br />
               <br />
               <PostButton>
-                <Button type="primary" block onClick={(e) => {
-                  if (!formData.display || !formData.telegram || !formData.bio) {
-                    setError({ message: 'All fields are compulsary!' })
-                  } else {
-                    onSubmit(e)
-                  }}>
+                <Button
+                  type="primary"
+                  block
+                  onClick={(e) => {
+                    if (!formData.display || !formData.telegram || !formData.bio) {
+                      setError({ message: 'All fields are compulsary!' })
+                    } else {
+                      onSubmit(e)
+                    }
+                  }}
+                >
                   Sign Up
                 </Button>
               </PostButton>
