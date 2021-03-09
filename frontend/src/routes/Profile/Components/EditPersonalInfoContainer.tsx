@@ -4,7 +4,6 @@ import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { useHistory } from 'react-router-dom'
 import { handleEditProfileDetails, handleNewProfilePicture, setHasChanged } from '../../../store/profile/action'
 
 const MainContainer = styled.div`
@@ -63,7 +62,6 @@ const EditPersonalInfoContainer = () => {
   )
   const dispatch = useDispatch()
   const oldBio = newBio
-  const history = useHistory()
 
   useEffect(() => {
     if (newBio !== oldBio) {
@@ -75,7 +73,6 @@ const EditPersonalInfoContainer = () => {
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
-    history.push('/social/profile/' + `${user.userID}`)
   }
 
   // On file select (from the pop up)

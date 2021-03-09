@@ -1,3 +1,4 @@
+import { useHistory } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
@@ -136,8 +137,22 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 // One shot update database with all changes
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
-  // 1. Update user profile
+  const history = useHistory()
+
   dispatch(setIsLoading(true))
+
+  // 1. Update CCAs
+  const newUserCcasDatabase: number[] = []
+  ccas?.map((cca) => {
+    newUserCcasDatabase.push(cca.ccaID)
+  })
+  const updateUserJson = {
+    userID: user.userID,
+    ccaID: newUserCcasDatabase,
+  }
+  dispatch(addUserCca(updateUserJson))
+
+  // 2. Update user profile
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
     method: 'PUT',
     mode: 'cors',
@@ -150,20 +165,10 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((data) => {
       if (data.ok) {
         console.log('update current user success')
+        history.push('/social/profile/' + `${user.userID}`)
       }
     })
   dispatch(setIsLoading(false))
-
-  // 2. Update CCAs
-  const newUserCcasDatabase: number[] = []
-  ccas?.map((cca) => {
-    newUserCcasDatabase.push(cca.ccaID)
-  })
-  const updateUserJson = {
-    userID: user.userID,
-    ccaID: newUserCcasDatabase,
-  }
-  dispatch(addUserCca(updateUserJson))
 }
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
