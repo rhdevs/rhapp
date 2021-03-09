@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
@@ -64,7 +64,6 @@ const EditPersonalInfoContainer = () => {
   const dispatch = useDispatch()
   const oldBio = newBio
   const history = useHistory()
-  const [canPush, setCanPush] = useState(false)
 
   useEffect(() => {
     if (newBio !== oldBio) {
@@ -73,16 +72,26 @@ const EditPersonalInfoContainer = () => {
     dispatch(handleNewProfilePicture(user.profilePictureUrl))
   }, [dispatch])
 
-  useEffect(() => {
-    if (canPush == true) {
-      history.push('/social/profile/' + `${user.userID}`)
-    }
-  }, [canPush])
+  // useEffect(() => {
+  //   if (canPush == true) {
+  //     history.push('/social/profile/' + `${user.userID}`)
+  //   } else {
+  //     console.log('no push')
+  //   }
+  // }, [canPush])
+
+  const updateBackend = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) =>
+    new Promise<void>((resolve) => {
+      // do anything here
+      dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
+      resolve()
+    })
 
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
-    dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
-    setCanPush(true)
+    updateBackend(values).then(() => {
+      history.push('/social/profile/' + `${user.userID}`)
+    })
   }
 
   // On file select (from the pop up)
