@@ -25,6 +25,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -71,7 +72,7 @@ const EventCard = styled.div`
 `
 
 const AlertGroup = styled.div`
-  margin: 23px;
+  padding: 3px 0px 3px 23px;
 `
 
 const EventLabels = styled.div`
@@ -103,7 +104,7 @@ const EventDateLabel = styled.p`
 `
 
 const DateSelectorGroup = styled.div`
-  margin: 23px;
+  padding: 23px;
   font-family: inter;
   display: flex;
   place-content: center;
@@ -138,8 +139,32 @@ export default function ViewFacility() {
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
-    dispatch(getAllBookingsForFacility())
-  }, [dispatch])
+    dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate))
+  }, [])
+
+  const fetchTelegram = async (booking) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(data.err)
+          } else {
+            openTelegram(data.telegramHandle)
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const openTelegram = (userID) => {
+    const site = 'https://telegram.me/' + userID
+    window.open(site)
+  }
 
   const MyBookingIcon = (
     <img
@@ -164,6 +189,14 @@ export default function ViewFacility() {
     return hour + minutes
   }
 
+  const getHumanReadableDate = (eventTime: number) => {
+    const date = new Date(eventTime * 1000)
+    const day = date.getUTCDate()
+    const monthInt = date.getUTCMonth() + 1
+
+    return day + months[monthInt]
+  }
+
   const AlertSection = (
     <AlertGroup>
       {createSuccess && (
@@ -174,46 +207,47 @@ export default function ViewFacility() {
   )
 
   return (
-    <>
+    <div style={{ backgroundColor: '#fafaf4' }}>
       <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
-        {isLoading && <LoadingSpin />}
-        {!isLoading && (
-          <>
-            {AlertSection}
-            <DateSelectorGroup>
-              <DateRange
-                editableDateInputs={true}
-                color="#DE5F4C"
-                onChange={(item) => dispatch(setViewDates(item))}
-                moveRangeOnFirstSelection={false}
-                rangeColors={['#DE5F4C', '#002642']}
-                ranges={[
-                  {
-                    startDate: ViewStartDate,
-                    endDate: ViewEndDate,
-                    key: 'ViewDateSelection',
-                  },
-                ]}
-              />
-            </DateSelectorGroup>
+        <>
+          {AlertSection}
+          <DateSelectorGroup>
+            <DateRange
+              editableDateInputs={true}
+              color="#DE5F4C"
+              onChange={(item) => {
+                dispatch(SetIsLoading(true))
+                dispatch(setViewDates(item))
+              }}
+              moveRangeOnFirstSelection={false}
+              rangeColors={['#DE5F4C', '#002642']}
+              ranges={[
+                {
+                  startDate: ViewStartDate,
+                  endDate: ViewEndDate,
+                  key: 'ViewDateSelection',
+                },
+              ]}
+            />
+          </DateSelectorGroup>
 
-            <ActionButtonGroup>
-              <StyledButton
-                onButtonClick={() => {
-                  dispatch(
-                    createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
-                  )
-                  history.push('/facility/booking/create')
-                }}
-                hasSuccessMessage={false}
-                stopPropagation={false}
-                defaultButtonDescription={'Book Facility'}
-                defaultButtonColor="#DE5F4C"
-                updatedButtonColor="#DE5F4C"
-                updatedTextColor="white"
-              />
-              {/* <div onClick={() => console.log('pressed')}>
+          <ActionButtonGroup>
+            <StyledButton
+              onButtonClick={() => {
+                dispatch(
+                  createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
+                )
+                history.push('/facility/booking/create')
+              }}
+              hasSuccessMessage={false}
+              stopPropagation={false}
+              defaultButtonDescription={'Book Facility'}
+              defaultButtonColor="#DE5F4C"
+              updatedButtonColor="#DE5F4C"
+              updatedTextColor="white"
+            />
+            {/* <div onClick={() => console.log('pressed')}>
                 <StyledButton
                   onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
                   hasSuccessMessage={false}
@@ -226,17 +260,18 @@ export default function ViewFacility() {
                   updatedButtonDescription={'🕶 Availabilities ⌄'}
                 />
               </div> */}
-            </ActionButtonGroup>
-            <DateDisplayText>
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-            </DateDisplayText>
+          </ActionButtonGroup>
+          <DateDisplayText>
+            {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
+            {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
+          </DateDisplayText>
+          {!isLoading && (
             <EventsGroup>
               {facilityBookings?.map((event) => (
                 <EventCard
                   key={event.bookingID}
                   onClick={() => {
-                    console.log('clicked on event')
+                    history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
                   }}
                 >
                   {/* <EventAvatar src={dummyAvatar} /> */}
@@ -253,26 +288,29 @@ export default function ViewFacility() {
                     </EventNormalLabel>
                   </EventLabels>
                   <EventRightDisplay>
-                    {event.userID === 'you' ? (
+                    {event.userID === localStorage.getItem('userID') ? (
                       <Icon src={adminIcon} />
                     ) : (
                       <Icon
                         onClick={() => {
-                          console.log('contact yes')
+                          fetchTelegram(event)
                         }}
                         src={messageIcon}
                       />
                     )}
-                    <EventDateLabel>{event.startTime}</EventDateLabel>
+                    <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
                   </EventRightDisplay>
                 </EventCard>
               ))}
-              {facilityBookings.length === 0 && <p>There are no bookings in the selected range!</p>}
+              {facilityBookings.length === 0 && (
+                <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
+              )}
             </EventsGroup>
-            <BottomNavBar />
-          </>
-        )}
+          )}
+          {isLoading && <LoadingSpin />}
+          <BottomNavBar />
+        </>
       </MainContainer>
-    </>
+    </div>
   )
 }

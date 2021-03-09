@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
 import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
@@ -65,10 +65,9 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     isOfficial: newPostOfficial,
     postPics: newPostImages,
   }
-  put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
+  put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post edited!')
-    console.log(res)
   })
 }
 
@@ -84,10 +83,9 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     ccaID: newPostCca,
   }
 
-  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
-    console.log(res)
   })
 }
 
@@ -262,8 +260,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-  console.log('DELETE RESPONSE: ', response)
+  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
@@ -290,7 +287,6 @@ export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) =
 export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
   const specificPost = response.data
-  console.log('Specific post', specificPost)
 
   const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
   const newPost = {
