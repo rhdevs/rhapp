@@ -3,7 +3,7 @@
   "background_color": "#fafaf4",
   "display": "fullscreen",
   "orientation": "portrait",
-  "start_url": "./auth/",
+  "start_url": "./",
   "name": "RHApp",
   "short_name": "RHApp",
   "description": "Nobody asked but we delivered",
