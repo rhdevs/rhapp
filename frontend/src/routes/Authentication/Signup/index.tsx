@@ -76,7 +76,7 @@ export default function Signup() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value,
     })
   }
 
@@ -148,6 +148,31 @@ export default function Signup() {
       })
   }
 
+  const checkRegisterInfo = (formData) => {
+    let pass = true
+    if (formData.password !== formData.password2) {
+      setError({ message: 'Password does not match!' })
+      pass = false
+      return pass
+    }
+    if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
+      setError({ message: 'All fields are compulsary!' })
+      pass = false
+      return pass
+    }
+    if (!formData.email.includes('@u.nus.edu')) {
+      setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu' })
+      pass = false
+      return pass
+    }
+    if (formData.userId.length !== 9 || formData.userId[0] !== 'A' || !formData.userId[8].match(/[A-Z]/i)) {
+      setError({ message: 'Please check that your NUS ID is your matriculation number' })
+      pass = false
+      return pass
+    }
+    return pass
+  }
+
   return (
     <>
       <MainContainer>
@@ -203,11 +228,8 @@ export default function Signup() {
                   style={{ color: '#de5f4c' }}
                   type="link"
                   onClick={() => {
-                    if (formData.password !== formData.password2) {
-                      setError({ message: 'Password does not match!' })
-                    } else if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
-                      setError({ message: 'All fields are compulsary!' })
-                    } else {
+                    const pass = checkRegisterInfo(formData)
+                    if (pass == true) {
                       setPageNum({ page: 2 })
                       setError({ message: '' })
                     }
