@@ -25,6 +25,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -141,6 +142,30 @@ export default function ViewFacility() {
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate))
   }, [])
 
+  const fetchTelegram = async (booking) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            console.log(data.err)
+          } else {
+            openTelegram(data.telegramHandle)
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const openTelegram = (userID) => {
+    const site = 'https://telegram.me/' + userID
+    window.open(site)
+  }
+
   const MyBookingIcon = (
     <img
       src={bookingsIcon}
@@ -239,6 +264,7 @@ export default function ViewFacility() {
                   key={event.bookingID}
                   onClick={() => {
                     console.log('clicked on event')
+                    history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
                   }}
                 >
                   {/* <EventAvatar src={dummyAvatar} /> */}
@@ -260,12 +286,12 @@ export default function ViewFacility() {
                     ) : (
                       <Icon
                         onClick={() => {
-                          console.log('contact yes')
+                          fetchTelegram(event)
                         }}
                         src={messageIcon}
                       />
                     )}
-                    <EventDateLabel>{event.startTime}</EventDateLabel>
+                    <EventDateLabel>{getHumanReadableTime(event.startTime)}</EventDateLabel>
                   </EventRightDisplay>
                 </EventCard>
               ))}
