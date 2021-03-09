@@ -139,12 +139,14 @@ export default function Signup() {
               localStorage.setItem('userID', formData.userId)
               history.push(PATHS.HOME_PAGE)
             })
-            .catch(() => console.log('hello'))
+            .catch((err) => {
+              setError({ message: 'Failed to create user, please try again' })
+              console.log(err)
+            })
         }
       })
       .catch(() => {
-        // setError({ messarge: 'Failed to create user, please check and try again' })
-        console.log('bye')
+        setError({ message: 'Failed to create user, please check and try again' })
       })
   }
 
