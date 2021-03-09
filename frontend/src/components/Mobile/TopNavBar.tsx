@@ -68,11 +68,12 @@ function TopNavBar({
             />
           )}
           <TitleText>{title}</TitleText>
-          {centerComponent}
         </>
       }
       rightContent={rightComponent}
-    />
+    >
+      {centerComponent}
+    </StyledNavBar>
   )
 }
 

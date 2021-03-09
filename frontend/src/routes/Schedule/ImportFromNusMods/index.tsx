@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
 import styled from 'styled-components'
 import { PATHS } from '../../Routes'
@@ -9,9 +10,9 @@ import { LeftOutlined } from '@ant-design/icons'
 import nusmodsImportImage from '../../../assets/nusmodsImportImage.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import InputRow from '../../../components/Mobile/InputRow'
 import Button from '../../../components/Mobile/Button'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { RootState } from '../../../store/types'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -40,11 +41,24 @@ const ButtonContainer = styled.div`
   margin-top: 10vh;
 `
 
+const ErrorText = styled.p`
+  color: #ff837a;
+  width: 100%;
+  text-align: center;
+`
+
+const Input = styled.input`
+  width: 100%;
+  border-radius: 30px;
+  padding: 5px 10px;
+  margin: 10px 0;
+  height: 35px;
+`
+
 export default function ImportFromNusMods() {
   const history = useHistory()
   const dispatch = useDispatch()
-
-  const [link, setLink] = useState('')
+  const { nusModsIsSuccessful, nusModsIsFailure } = useSelector((state: RootState) => state.scheduling)
   const [modal, setModal] = useState(false)
 
   const leftIcon = (
@@ -66,39 +80,73 @@ export default function ImportFromNusMods() {
   //   } else return false
   // }
 
+  const { handleSubmit, register, errors, watch } = useForm()
+  const onSubmit = () => {
+    if (!errors.length) {
+      setModal(!modal)
+    }
+  }
+
+  useEffect(() => {
+    console.log(nusModsIsSuccessful)
+    console.log(nusModsIsFailure)
+    if (nusModsIsSuccessful === true && nusModsIsFailure === false) {
+      history.push(PATHS.SCHEDULE_PAGE)
+    }
+  }, [nusModsIsSuccessful, nusModsIsFailure])
+
   return (
     <Background>
       <TopNavBar title={'NUSMods'} leftIcon={true} leftIconComponent={leftIcon} />
       <img alt="plusCircle" style={{ width: '90vw', display: 'flex', margin: '15px auto' }} src={nusmodsImportImage} />
       <BottomContainer>
-        {modal && (
-          <ConfirmationModal
-            title={'Confirm Import?'}
-            hasLeftButton={true}
-            leftButtonText={'Import'}
-            onLeftButtonClick={() => {
-              dispatch(setUserNusMods(localStorage.getItem('userID'), link))
-              history.push(PATHS.SCHEDULE_PAGE)
-            }}
-            rightButtonText={'Cancel'}
-            onRightButtonClick={() => {
-              setModal(false)
+        <form>
+          {modal && (
+            <ConfirmationModal
+              title={'Confirm Import?'}
+              hasLeftButton={true}
+              leftButtonText={'Import'}
+              onLeftButtonClick={() => {
+                dispatch(setUserNusMods(localStorage.getItem('userID'), watch('nusmodsLink')))
+              }}
+              rightButtonText={'Cancel'}
+              onRightButtonClick={() => {
+                setModal(false)
+              }}
+            />
+          )}
+          <LinkText>Copy link from NUSMods below:</LinkText>
+          <Input
+            type="text"
+            placeholder="Enter link here..."
+            name="nusmodsLink"
+            ref={register({
+              required: true,
+              validate: (input) =>
+                input.trim().length !== 0 && input.trim().indexOf('https://nusmods.com/timetable/') !== -1,
+            })}
+            style={{
+              border: errors.nusmodsLink ? '1px solid red' : '1px solid #d9d9d9',
+              background: errors.nusmodsLink && '#ffd1d1',
             }}
           />
-        )}
-        <LinkText>Copy link from NUSMods below:</LinkText>
-        <InputRow placeholder={'Enter link here...'} value={link} setValue={setLink} />
-        <ButtonContainer>
-          <Button
-            stopPropagation={true}
-            hasSuccessMessage={false}
-            defaultButtonDescription={'Import'}
-            onButtonClick={() => {
-              setModal(!modal)
-            }}
-            isFlipButton={false}
-          />
-        </ButtonContainer>
+          {errors.nusmodsLink && errors.nusmodsLink?.type !== 'validate' && (
+            <ErrorText>NUSMods Link Required!</ErrorText>
+          )}
+          {errors.nusmodsLink?.type === 'validate' && <ErrorText>Invalid NUSMods link!</ErrorText>}
+
+          <ButtonContainer>
+            <Button
+              stopPropagation={true}
+              hasSuccessMessage={false}
+              defaultButtonDescription={'Import'}
+              onButtonClick={() => {
+                handleSubmit(onSubmit)()
+              }}
+              isFlipButton={false}
+            />
+          </ButtonContainer>
+        </form>
       </BottomContainer>
       <BottomNavBar />
     </Background>
