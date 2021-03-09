@@ -16,6 +16,7 @@ const initialState = {
   // CREATE NEW BOOKING STATES
   newBookingName: '',
   newBookingFacilityName: '',
+  newBookingFacilityId: '',
   newBookingFromDate: new Date(),
   newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
   newBookingCCA: '',
@@ -44,6 +45,7 @@ type State = {
   isDeleteMyBooking: number
   newBooking: Booking | undefined
   newBookingFacilityName: string
+  newBookingFacilityId: string
   newBookingName: string
   newBookingFromDate: Date
   newBookingToDate: Date
@@ -62,6 +64,12 @@ type State = {
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
+    case FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID: {
+      return {
+        ...state,
+        newBookingFacilityId: action.newBookingFacilityId,
+      }
+    }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME: {
       return {
         ...state,

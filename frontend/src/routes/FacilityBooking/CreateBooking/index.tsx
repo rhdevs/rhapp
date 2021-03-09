@@ -81,6 +81,7 @@ export default function CreateBooking() {
     isLoading,
     ccaList,
     createBookingError,
+    newBookingFacilityId,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -102,7 +103,7 @@ export default function CreateBooking() {
     <div
       onClick={() => {
         dispatch(handleCreateBooking())
-        history.push('/facility/view/' + newBookingFacilityName)
+        history.push('/facility/view/' + newBookingFacilityId)
       }}
     >
       <CheckOutlined style={{ color: 'black' }} />
