@@ -215,7 +215,6 @@ export default function CreateEvent() {
     eventLocation: string
     eventDescription: string
   }) => {
-    console.log(errors)
     if (
       !errors.length &&
       watch('eventTargetAudience') !== 'Select' &&

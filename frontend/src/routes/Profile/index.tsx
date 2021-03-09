@@ -247,7 +247,6 @@ export default function Profile() {
   const logoutButton = (
     <LogoutButton
       onClick={() => {
-        console.log('im logging out!')
         localStorage.removeItem('token')
         localStorage.removeItem('userID')
         history.push(PATHS.LOGIN_PAGE)

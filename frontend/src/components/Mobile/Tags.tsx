@@ -29,7 +29,6 @@ function Tags({
   onChange?: (input: string[]) => void
 }) {
   const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`)
     if (onChange) onChange(value)
   }
 

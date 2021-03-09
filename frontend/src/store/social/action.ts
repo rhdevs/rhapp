@@ -10,7 +10,6 @@ const [success] = useSnackbar('success')
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
   get(ENDPOINTS.USER_DETAILS, DOMAINS.SOCIAL, '/' + userID).then((response) => {
-    console.log(response)
     if (response === '' || response === undefined) {
       console.log(response.err)
     } else {
@@ -57,9 +56,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
 }
 
 export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  console.log('Editing post')
   const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages, newPostCca } = getState().social
-  console.log(viewPost)
   const requestBody = {
     postID: viewPost.postId,
     ccaID: newPostCca,
@@ -76,7 +73,6 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
 }
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  console.log('Creating post')
   const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
 
   const requestBody = {
@@ -88,7 +84,6 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     ccaID: newPostCca,
   }
 
-  console.log(requestBody)
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
@@ -229,7 +224,6 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    console.log(response)
     if (response.length > 0) {
       const transformedPost = cloneDeep(response).map((post) => {
         post.date = post.createdAt
@@ -268,7 +262,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  console.log(postIdToDelete)
   const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   console.log('DELETE RESPONSE: ', response)
   dispatch({

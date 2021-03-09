@@ -43,7 +43,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(data)
       const updatedFB: Booking[] = []
 
       data.forEach((booking: Booking) => {
@@ -57,7 +56,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
             updatedFB.push(booking)
           })
       })
-      console.log(updatedFB)
       dispatch({
         type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
         facilityBookings: updatedFB,
@@ -68,7 +66,6 @@ export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionT
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
-  console.log('started')
   await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
     .then((resp) => resp)
     .then((bookingList) => {
@@ -93,7 +90,6 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
         return booking
       })
     })
-  console.log(newList)
   dispatch({
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
@@ -111,9 +107,8 @@ export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then((data) => {
+    .then(() => {
       const { myBookings } = getState().facilityBooking
-      console.log(data)
       dispatch({
         type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
         myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
@@ -159,15 +154,11 @@ export const editBookingFromDate = (newBookingFromDate: Date) => (
 const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
   let newError = ''
-  console.log(duration)
   if (duration > 4) {
-    console.log('hi')
     newError = 'Exceeded Maximum Booking Duration of 4 hours!'
   } else if (duration < 0) {
-    console.log('hi')
     newError = 'End Date is before Start Date!'
   } else if (duration === 0) {
-    console.log('hi')
     newError = 'End Date is the Same as Start Date!'
   }
 
@@ -231,7 +222,6 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
   })
     .then((resp) => resp.json())
     .then((facility) => {
-      console.log(facility[0].facilityName)
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME, selectedFacilityName: facility[0].facilityName })
     })
 }
@@ -300,7 +290,6 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
               booking[0].ccaName = cca[0].ccaName
             })
         })
-      console.log(booking)
 
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking[0] })
       return booking[0]

@@ -20,7 +20,6 @@ export const mockActionSetAccount = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { sampleStateText } = getState().home
-  console.log(getState().home.sampleStateText)
   dispatch({
     type: HOME_PAGE_ACTIONS.SAMPLE_TEXT,
     sampleStateText: sampleStateText + 'n',
@@ -30,7 +29,6 @@ export const getUpdateMockString = () => (dispatch: Dispatch<ActionTypes>, getSt
 export const getSearchResults = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.SEARCH, DOMAINS.SOCIAL, `?term=${query}`).then((results) => {
     const combinedResults = Object.keys(results).reduce((acc, key) => acc.concat(results[key]), [])
-    console.log(results)
     dispatch({
       type: HOME_PAGE_ACTIONS.SEARCH,
       searchResults: combinedResults,
