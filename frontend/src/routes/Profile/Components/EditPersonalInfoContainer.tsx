@@ -11,6 +11,7 @@ import {
   setHasChanged,
 } from '../../../store/profile/action'
 import { useHistory } from 'react-router-dom'
+import useSnackbar from '../../../hooks/useSnackbar'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
@@ -69,18 +70,21 @@ const EditPersonalInfoContainer = () => {
   const dispatch = useDispatch()
   const oldBio = newBio
   const history = useHistory()
+  const [error] = useSnackbar('error')
 
   useEffect(() => {
     if (newBio !== oldBio) {
       dispatch(setHasChanged(true))
     }
     dispatch(handleNewProfilePicture(user.profilePictureUrl))
-    dispatch(setCanPush(false))
+    dispatch(setCanPush('false'))
   }, [dispatch])
 
   useEffect(() => {
-    if (canPush) {
+    if (canPush == 'true') {
       history.push('/social/profile/' + `${user.userID}`)
+    } else if (canPush == 'error') {
+      error('Failed to update profile')
     }
   }, [canPush])
 

@@ -123,7 +123,7 @@ type UpdateUserProfilePicture = {
 
 type SetCanPush = {
   type: typeof PROFILE_ACTIONS.SET_CAN_PUSH
-  canPush: boolean
+  canPush: string
 }
 
 export type ActionTypes =

@@ -148,7 +148,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     userID: user.userID,
     ccaID: newUserCcasDatabase,
   }
-  dispatch(addUserCca(updateUserJson))
 
   // 2. Update user profile
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
@@ -163,10 +162,14 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((data) => {
       if (data.ok) {
         console.log('update current user success')
+        // 1b. Update CCAs here
+        dispatch(addUserCca(updateUserJson))
       }
     })
+    .catch(() => {
+      dispatch(setCanPush('error'))
+    })
   dispatch(setIsLoading(false))
-  dispatch(setCanPush(true))
 }
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
@@ -183,7 +186,12 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
     .then((data) => {
       if (data.ok) {
         console.log('add CCA success')
+        // If all updates are done, set canPush to true
+        dispatch(setCanPush('true'))
       }
+    })
+    .catch(() => {
+      dispatch(setCanPush('error'))
     })
   dispatch(setIsLoading(false))
 }
@@ -261,7 +269,7 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const setCanPush = (canPush: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setCanPush = (canPush: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: PROFILE_ACTIONS.SET_CAN_PUSH,
     canPush: canPush,
