@@ -742,6 +742,13 @@ export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: 
   })
 }
 
+export const resetSelectedEvent = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
+    selectedEvent: null,
+  })
+}
+
 export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const updateStatus = (data) => {
     if (data.ok) {

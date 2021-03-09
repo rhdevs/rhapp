@@ -19,6 +19,7 @@ import {
   setIsLoading,
   setNusModsStatus,
   setSelectedCCAIds,
+  resetSelectedEvent,
   setSelectedProfileIds,
 } from '../../store/scheduling/action'
 import { RootState } from '../../store/types'
@@ -91,6 +92,7 @@ export default function Schedule() {
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
+    dispatch(resetSelectedEvent())
     if (nusModsIsSuccessful || nusModsIsFailure)
       setTimeout(() => {
         dispatch(setNusModsStatus(false, false))
