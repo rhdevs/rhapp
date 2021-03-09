@@ -48,6 +48,7 @@ export enum PROFILE_ACTIONS {
   SET_IS_LOADING = 'PROFILE_ACTIONS.SET_IS_LOADING',
   SET_HAS_CHANGED = 'PROFILE_ACTIONS.SET_HAS_CHANGED',
   UPDATE_USER_PROFILE_PICTURE = 'PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE',
+  SET_CAN_PUSH = 'PROFILE_ACTIONS.SET_CAN_PUSH',
 }
 
 type SetIsLoggedIn = {
@@ -120,6 +121,11 @@ type UpdateUserProfilePicture = {
   userProfilePictureBase64: string
 }
 
+type SetCanPush = {
+  type: typeof PROFILE_ACTIONS.SET_CAN_PUSH
+  canPush: boolean
+}
+
 export type ActionTypes =
   | SetUserDetails
   | EditUserDetails
@@ -134,3 +140,4 @@ export type ActionTypes =
   | SetHasChanged
   | SetIsLoading
   | UpdateUserProfilePicture
+  | SetCanPush

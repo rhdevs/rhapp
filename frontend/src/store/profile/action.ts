@@ -166,6 +166,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
       }
     })
   dispatch(setIsLoading(false))
+  dispatch(setCanPush(true))
 }
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
@@ -257,5 +258,12 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({
     type: PROFILE_ACTIONS.SET_IS_LOADING,
     isLoading: isLoading,
+  })
+}
+
+export const setCanPush = (canPush: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: PROFILE_ACTIONS.SET_CAN_PUSH,
+    canPush: canPush,
   })
 }

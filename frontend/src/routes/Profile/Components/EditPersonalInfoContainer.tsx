@@ -4,7 +4,12 @@ import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { handleEditProfileDetails, handleNewProfilePicture, setHasChanged } from '../../../store/profile/action'
+import {
+  handleEditProfileDetails,
+  handleNewProfilePicture,
+  setCanPush,
+  setHasChanged,
+} from '../../../store/profile/action'
 import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`
@@ -58,7 +63,7 @@ const validateMessages = {
 }
 
 const EditPersonalInfoContainer = () => {
-  const { newDisplayName, newTelegramHandle, newBio, user, userProfilePictureBase64 } = useSelector(
+  const { newDisplayName, newTelegramHandle, newBio, user, userProfilePictureBase64, canPush } = useSelector(
     (state: RootState) => state.profile,
   )
   const dispatch = useDispatch()
@@ -70,28 +75,29 @@ const EditPersonalInfoContainer = () => {
       dispatch(setHasChanged(true))
     }
     dispatch(handleNewProfilePicture(user.profilePictureUrl))
+    dispatch(setCanPush(false))
   }, [dispatch])
 
-  // useEffect(() => {
-  //   if (canPush == true) {
-  //     history.push('/social/profile/' + `${user.userID}`)
-  //   } else {
-  //     console.log('no push')
-  //   }
-  // }, [canPush])
+  useEffect(() => {
+    if (canPush) {
+      history.push('/social/profile/' + `${user.userID}`)
+    }
+  }, [canPush])
 
-  const updateBackend = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) =>
-    new Promise<void>((resolve) => {
-      // do anything here
-      dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
-      resolve()
-    })
+  // const updateBackend = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) =>
+  //   new Promise<void>((resolve) => {
+  //     // do anything here
+  //     dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
+  //     resolve()
+  //   })
 
   const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
     // ACTION: "SENDS A POST REQUEST"
-    updateBackend(values).then(() => {
-      history.push('/social/profile/' + `${user.userID}`)
-    })
+    dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
+    // history.push('/social/profile/' + `${user.userID}`)
+    // updateBackend(values).then(() => {
+    //   history.push('/social/profile/' + `${user.userID}`)
+    // })
   }
 
   // On file select (from the pop up)
