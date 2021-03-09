@@ -27,3 +27,6 @@ venv.bak/
 # Logs
 */logs/*
 .log
+yarn-error.log/
+/yarn-error.log
+*/yarn-error.log
