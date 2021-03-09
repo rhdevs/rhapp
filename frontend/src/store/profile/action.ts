@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
@@ -109,7 +108,7 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => async (
+export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -137,7 +136,6 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 // One shot update database with all changes
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
-  const history = useHistory()
 
   dispatch(setIsLoading(true))
 
@@ -165,7 +163,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((data) => {
       if (data.ok) {
         console.log('update current user success')
-        history.push('/social/profile/' + `${user.userID}`)
       }
     })
   dispatch(setIsLoading(false))
