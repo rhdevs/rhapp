@@ -204,8 +204,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     }
 
     case FACILITY_ACTIONS.SET_VIEW_BOOKING: {
-      console.log('reducer')
-      console.log(action.selectedBooking)
       return {
         ...state,
         selectedBooking: action.selectedBooking,

@@ -56,7 +56,6 @@ function BottomNavBar() {
             // badge={0}
             onPress={() => {
               history.push(PATHS.HOME_PAGE)
-              console.log(location.pathname)
             }}
           ></TabBar.Item>
           <TabBar.Item

@@ -149,7 +149,6 @@ export default function ViewBooking() {
   useEffect(() => {
     // dispatch(SetIsLoading(false))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
-    console.log(selectedBooking)
   }, [dispatch])
 
   const formatDate = (eventStartTime: number) => {
