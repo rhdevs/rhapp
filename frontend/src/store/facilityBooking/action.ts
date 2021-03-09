@@ -39,37 +39,31 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
     parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
     '&endDate=' +
     parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
-
+  let updatedFB: Booking[] = []
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then((data) => {
-      const updatedFB: Booking[] = []
-      let counter = 0
-      data.forEach((booking: Booking) => {
-        counter++
-        if (counter === data.length) {
-          console.log(updatedFB)
-          dispatch({
-            type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
-            facilityBookings: updatedFB,
-          })
-        }
+    .then(async (data) => {
+      updatedFB = await data.map((booking: Booking) => {
         fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
           method: 'GET',
           mode: 'cors',
         })
           .then((resp) => resp.json())
-          .then((cca) => {
+          .then(async (cca) => {
             booking.ccaName = cca[0].ccaName
-            updatedFB.push(booking)
           })
+        return booking
       })
-
-      dispatch(SetIsLoading(false))
     })
+  console.log(updatedFB)
+  dispatch({
+    type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
+    facilityBookings: updatedFB,
+  })
+  dispatch(SetIsLoading(false))
 }
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {

@@ -139,7 +139,6 @@ export default function ViewFacility() {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate))
-    console.log(facilityBookings)
   }, [])
 
   const MyBookingIcon = (
@@ -268,7 +267,9 @@ export default function ViewFacility() {
                   </EventRightDisplay>
                 </EventCard>
               ))}
-              {facilityBookings.length === 0 && <p>There are no bookings in the selected range!</p>}
+              {facilityBookings.length === 0 && (
+                <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
+              )}
             </EventsGroup>
             <BottomNavBar />
           </>
