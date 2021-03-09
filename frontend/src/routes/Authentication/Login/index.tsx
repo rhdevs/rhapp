@@ -115,7 +115,7 @@ export default function Login() {
   }
 
   return (
-    <>
+    <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <LoginContainer>
@@ -167,6 +167,6 @@ export default function Login() {
           </PostButton>
         </LoginContainer>
       )}
-    </>
+    </div>
   )
 }

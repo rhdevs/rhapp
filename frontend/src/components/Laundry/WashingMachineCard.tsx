@@ -34,6 +34,7 @@ const CardContainer = styled.div`
 const WashingMachineAvatar = styled.img`
   padding: 20px;
   width: 30%;
+  max-width: 135px;
 `
 
 const Labels = styled.div`
