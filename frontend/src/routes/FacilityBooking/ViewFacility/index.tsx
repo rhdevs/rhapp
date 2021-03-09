@@ -26,7 +26,6 @@ import {
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
-import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -73,7 +72,7 @@ const EventCard = styled.div`
 `
 
 const AlertGroup = styled.div`
-  padding: 23px;
+  padding: 3px 0px 3px 23px;
 `
 
 const EventLabels = styled.div`
@@ -193,10 +192,9 @@ export default function ViewFacility() {
   const getHumanReadableDate = (eventTime: number) => {
     const date = new Date(eventTime * 1000)
     const day = date.getUTCDate()
-    const dayOfWeek = date.getDay()
     const monthInt = date.getUTCMonth() + 1
 
-    return day + months[monthInt] + ', ' + DAY_STRING_TO_NUMBER[dayOfWeek]
+    return day + months[monthInt]
   }
 
   const AlertSection = (
