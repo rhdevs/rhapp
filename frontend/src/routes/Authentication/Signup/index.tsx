@@ -98,7 +98,7 @@ export default function Signup() {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
-      position: ['Resident'],
+      position: [0], //0 = 'Resident'
       displayName: formData.display,
       bio: formData.bio,
       block: parseInt(formData.block),
@@ -139,8 +139,12 @@ export default function Signup() {
               localStorage.setItem('userID', formData.userId)
               history.push(PATHS.HOME_PAGE)
             })
-            .catch((err) => console.log(err))
+            .catch(() => console.log('hello'))
         }
+      })
+      .catch(() => {
+        // setError({ messarge: 'Failed to create user, please check and try again' })
+        console.log('bye')
       })
   }
 
