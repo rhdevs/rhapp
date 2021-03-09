@@ -26,6 +26,7 @@ import {
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
+import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -189,6 +190,15 @@ export default function ViewFacility() {
     return hour + minutes
   }
 
+  const getHumanReadableDate = (eventTime: number) => {
+    const date = new Date(eventTime * 1000)
+    const day = date.getUTCDate()
+    const dayOfWeek = date.getDay()
+    const monthInt = date.getUTCMonth() + 1
+
+    return day + months[monthInt] + ', ' + DAY_STRING_TO_NUMBER[dayOfWeek]
+  }
+
   const AlertSection = (
     <AlertGroup>
       {createSuccess && (
@@ -263,7 +273,6 @@ export default function ViewFacility() {
                 <EventCard
                   key={event.bookingID}
                   onClick={() => {
-                    console.log('clicked on event')
                     history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
                   }}
                 >
@@ -281,7 +290,7 @@ export default function ViewFacility() {
                     </EventNormalLabel>
                   </EventLabels>
                   <EventRightDisplay>
-                    {event.userID === 'you' ? (
+                    {event.userID === localStorage.getItem('userID') ? (
                       <Icon src={adminIcon} />
                     ) : (
                       <Icon
@@ -291,7 +300,7 @@ export default function ViewFacility() {
                         src={messageIcon}
                       />
                     )}
-                    <EventDateLabel>{getHumanReadableTime(event.startTime)}</EventDateLabel>
+                    <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
                   </EventRightDisplay>
                 </EventCard>
               ))}
