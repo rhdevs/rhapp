@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, del, get } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
 import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
@@ -65,7 +65,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     isOfficial: newPostOfficial,
     postPics: newPostImages,
   }
-  put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then((res) => {
+  put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post edited!')
   })
@@ -83,7 +83,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     ccaID: newPostCca,
   }
 
-  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then((res) => {
+  post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
   })
@@ -260,7 +260,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
+  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newPosts,
