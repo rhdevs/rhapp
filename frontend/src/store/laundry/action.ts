@@ -212,7 +212,6 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     currentDuration: duration,
   }
 
-  console.log(queryBody)
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
     method: 'POST',
     mode: 'cors',
@@ -245,7 +244,6 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
     duration: duration,
   }
 
-  console.log(queryBody)
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.EDIT_DURATION, {
     method: 'PUT',
     mode: 'cors',

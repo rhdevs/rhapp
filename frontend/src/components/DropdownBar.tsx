@@ -6,7 +6,6 @@ import { DownOutlined, UserOutlined } from '@ant-design/icons'
 
 function handleMenuClick() {
   message.info('Click on menu item.')
-  console.log('click')
 }
 
 function DropDownBar({ menuTitle, menuArray }: { menuTitle: string; menuArray: string[] }) {

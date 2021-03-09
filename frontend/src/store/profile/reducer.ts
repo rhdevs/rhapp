@@ -27,6 +27,7 @@ export const initialState = {
   isLoading: false,
   hasChanged: false,
   userProfilePictureBase64: '',
+  canPush: '',
 }
 
 type State = {
@@ -45,6 +46,7 @@ type State = {
   isLoading: boolean
   hasChanged: boolean
   userProfilePictureBase64: string
+  canPush: string
 }
 
 export const profile: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -130,6 +132,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
       return {
         ...state,
         userProfilePictureBase64: action.userProfilePictureBase64,
+      }
+    }
+    case PROFILE_ACTIONS.SET_CAN_PUSH: {
+      return {
+        ...state,
+        canPush: action.canPush,
       }
     }
     default:

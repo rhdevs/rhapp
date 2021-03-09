@@ -28,6 +28,8 @@ const InputTextLabel = styled.text`
 
 const Logo = styled.img`
   width: 70%;
+  max-width: 255px;
+  max-height: 255px;
 `
 
 const PostButton = styled.div`
