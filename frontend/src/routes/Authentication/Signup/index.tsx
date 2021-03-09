@@ -98,7 +98,7 @@ export default function Signup() {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
-      position: [0], //0 = 'Resident'
+      // position: [0], //0 = 'Resident'
       displayName: formData.display,
       bio: formData.bio,
       block: parseInt(formData.block),
