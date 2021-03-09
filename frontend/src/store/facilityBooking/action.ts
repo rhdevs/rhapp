@@ -58,7 +58,7 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
         return booking
       })
     })
-  console.log(updatedFB)
+
   dispatch({
     type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
     facilityBookings: updatedFB,

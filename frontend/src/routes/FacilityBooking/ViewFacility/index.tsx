@@ -207,7 +207,7 @@ export default function ViewFacility() {
   )
 
   return (
-    <div style={{ backgroundColor: '#f5f5f9' }}>
+    <div style={{ backgroundColor: '#fafaf4' }}>
       <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <MainContainer>
         <>
