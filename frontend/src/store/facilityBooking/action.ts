@@ -27,8 +27,11 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
-export const getAllBookingsForFacility = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { ViewEndDate, ViewStartDate, selectedFacilityId } = getState().facilityBooking
+export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { selectedFacilityId } = getState().facilityBooking
   const querySubString =
     selectedFacilityId +
     '/' +
@@ -189,7 +192,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
 export const setViewDates = (newDates: any) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: newDates.ViewDateSelection.startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: newDates.ViewDateSelection.endDate })
-  dispatch(getAllBookingsForFacility())
+  dispatch(getAllBookingsForFacility(newDates.ViewDateSelection.startDate, newDates.ViewDateSelection.endDate))
 }
 
 // currentMode TRUE == view bookings || FALSE == view availabilities
