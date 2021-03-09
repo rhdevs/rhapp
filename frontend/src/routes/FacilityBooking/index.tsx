@@ -101,7 +101,7 @@ const StyledRadioGroupDiv = styled.div`
   margin: 0 23px;
   position: sticky;
   left: 0;
-  top: 4.3rem;
+  top: 4.4rem;
   padding-bottom: 10px;
   background: #fafaf4;
 `
