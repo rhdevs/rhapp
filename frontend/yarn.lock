@@ -1941,6 +1941,14 @@
     "@types/react" "*"
     csstype "^3.0.2"
 
+"@types/sw-precache@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@types/sw-precache/-/sw-precache-5.2.0.tgz#4314cd3ec8b9ede6c8ee0ad811accf53c5681218"
+  integrity sha512-fQgWDyyUQVo73+JRB8Zftfg4ro25Ai1YE+F/N9Eljq6kIkIw/cSE9UYKL1MV6C2cjuDgOe5dEYnh3b/F6nSRdQ==
+  dependencies:
+    "@types/node" "*"
+    sw-toolbox "*"
+
 "@types/tapable@*", "@types/tapable@^1.0.5":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.6.tgz"
@@ -8751,7 +8759,7 @@ path-to-regexp@0.1.7:
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
 
-path-to-regexp@^1.7.0:
+path-to-regexp@^1.0.1, path-to-regexp@^1.7.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.8.0.tgz"
   integrity sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==
@@ -11323,6 +11331,11 @@ serve-static@1.14.1:
     parseurl "~1.3.3"
     send "0.17.1"
 
+serviceworker-cache-polyfill@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/serviceworker-cache-polyfill/-/serviceworker-cache-polyfill-4.0.0.tgz#de19ee73bef21ab3c0740a37b33db62464babdeb"
+  integrity sha1-3hnuc77yGrPAdAo3sz22JGS6ves=
+
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz"
@@ -11992,6 +12005,14 @@ svgo@^1.0.0, svgo@^1.2.2:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+sw-toolbox@*:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/sw-toolbox/-/sw-toolbox-3.6.0.tgz#26df1d1c70348658e4dea2884319149b7b3183b5"
+  integrity sha1-Jt8dHHA0hljk3qKIQxkUm3sxg7U=
+  dependencies:
+    path-to-regexp "^1.0.1"
+    serviceworker-cache-polyfill "^4.0.0"
 
 symbol-observable@^1.2.0:
   version "1.2.0"

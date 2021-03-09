@@ -20,6 +20,11 @@
       "type": "image/png"
     },
     {
+      "src": "icons/black_logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
       "src": "icons/black_logo_256.png",
       "sizes": "256x256",
       "type": "image/png"
