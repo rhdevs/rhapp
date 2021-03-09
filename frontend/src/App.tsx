@@ -9,6 +9,7 @@ import GlobalStyle from './GlobalStyle'
 import dayjs from 'dayjs'
 import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
+import { OfflineStatus } from './components/OfflineStatus'
 class App extends React.Component {
   render() {
     dayjs.extend(CustomParseFormat)
@@ -18,6 +19,7 @@ class App extends React.Component {
       <Provider store={store}>
         <GlobalStyle />
         <BrowserRouter>
+          <OfflineStatus />
           <Routes />
         </BrowserRouter>
       </Provider>
