@@ -32,7 +32,9 @@ const ProfileComponent = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
-  width: 80vw;
+  position: relative;
+  width: 90%;
+  max-width: 700px;
   margin: 0 auto;
 `
 
