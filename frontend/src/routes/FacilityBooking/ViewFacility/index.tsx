@@ -138,8 +138,9 @@ export default function ViewFacility() {
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
-    dispatch(getAllBookingsForFacility())
-  }, [dispatch])
+    dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate))
+    console.log(facilityBookings)
+  }, [])
 
   const MyBookingIcon = (
     <img
