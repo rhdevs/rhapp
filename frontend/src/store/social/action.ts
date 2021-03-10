@@ -239,6 +239,8 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
       console.log(posts)
+      console.log(postDiff)
+
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
@@ -267,7 +269,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
 
   del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
     .then(() => {
-      success('Your post has been deleted')
+      success('Your post has been deleted!')
       dispatch({
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
