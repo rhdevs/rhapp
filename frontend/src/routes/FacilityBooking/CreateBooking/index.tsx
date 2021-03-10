@@ -67,10 +67,6 @@ const DatePickerRow = styled.div`
   color: #666666;
 `
 
-const AlertContainer = styled.div`
-  margin: 0 23px;
-`
-
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -158,17 +154,15 @@ export default function CreateBooking() {
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {createBookingError === '' && (
-            <AlertContainer>
-              <Alert
-                message={createBookingError}
-                // description="You can book up to maximum of 4 hours!"
-                type="error"
-                style={{ margin: '23px 23px 23px 23px' }}
-                closable
-                showIcon
-              />
-            </AlertContainer>
+          {createBookingError !== '' && (
+            <Alert
+              message={createBookingError}
+              // description="You can book up to maximum of 4 hours!"
+              type="error"
+              style={{ margin: '23px 23px 23px 23px' }}
+              closable
+              showIcon
+            />
           )}
           <AutoComplete
             style={{ width: '50%', marginBottom: '23px' }}
