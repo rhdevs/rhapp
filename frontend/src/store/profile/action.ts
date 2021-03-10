@@ -189,7 +189,7 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        // console.log('add CCA success')
+        // console.log('add CCA success!')
         // If all updates are done, set canPush to true
         dispatch(setCanPush('true'))
       } else {
