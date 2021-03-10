@@ -751,7 +751,7 @@ def register():
         block = formData["block"]
         telegramHandle = formData["telegramHandle"]
         modules = []
-        # print(list(db.User.find({'userID': userID, 'passwordHash': passwordHash})))
+
         if list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):  # entry exists
             return jsonify({'message': 'User already exists'}), 401
         # add to User table
@@ -797,9 +797,6 @@ def login():
     db.Session.update_one({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
         'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
 
-    # db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
-    # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
-    # pip3 install pyJWT
     token = jwt.encode({'userID': userID,
                         'passwordHash': passwordHash
                         }, app.config['SECRET_KEY'], algorithm="HS256")
@@ -836,14 +833,10 @@ def check_for_token(func):
         originalToken = db.Session.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
         oldTime = originalToken['createdAt']
-        # print(datetime.datetime.now())
-        # print(oldTime)
         if datetime.now() > oldTime + timedelta(weeks=2):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
-            # db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
-            # db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
             db.Session.update_one({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
                 '$set': {'createdAt': datetime.now()}}, upsert=True)
 
