@@ -36,7 +36,7 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
       newPostBody: description,
       newPostImages: postPics ?? [],
       newPostOfficial: isOfficial,
-      newPostCca: '',
+      newPostCca: 0,
       userId: userId,
     })
   })
@@ -51,7 +51,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: position[0]?.name,
+    newPostCca: position[0]?.ccaID,
   })
 }
 
@@ -180,7 +180,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
       break
     case 'cca':
       if (fieldData) {
-        newPostCca = fieldData
+        newPostCca = parseInt(fieldData)
       }
       break
   }
