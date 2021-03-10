@@ -273,7 +273,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         posts: newPosts,
       })
     })
-    .catch((e) => {
+    .catch(() => {
       error('Post not deleted. Try again later.')
     })
 }
