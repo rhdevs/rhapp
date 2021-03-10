@@ -157,8 +157,6 @@ def add_booking():
                 "$lt": formData.get('endTime')}}
         ]})))
 
-        print(conflict)
-
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
 
