@@ -37,7 +37,7 @@ export default function CreateEvent() {
 
   const eventIdFromPath = location.pathname.split('/').slice(-1)[0]
 
-  const { ccaDetails, selectedEvent } = useSelector((state: RootState) => state.scheduling)
+  const { selectedEvent } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
     dispatch(getHallEventTypes())
@@ -135,7 +135,9 @@ export default function CreateEvent() {
           startDateAndTime={isNusModsEvent ? undefined : selectedEvent.startDateTime}
           endDateAndTime={isNusModsEvent ? undefined : selectedEvent.endDateTime}
           eventLocation={selectedEvent.location}
-          eventCca={isNusModsEvent ? undefined : ccaDetails ? ccaDetails.ccaName : undefined}
+          eventCca={
+            isNusModsEvent ? undefined : selectedEvent.CCADetails ? selectedEvent.CCADetails.ccaName : undefined
+          }
           eventDescription={selectedEvent.description}
           eventType={eventType(selectedEvent.eventType)}
           startTime={isNusModsEvent ? getEventTime(selectedEvent.startTime) : undefined} //e.g '01:37 AM'
