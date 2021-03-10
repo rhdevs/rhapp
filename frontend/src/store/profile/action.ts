@@ -174,6 +174,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
+  console.log(cca)
   fetch('https://rhappevents.rhdevs.repl.co/user_CCA/add', {
     method: 'POST',
     mode: 'cors',
