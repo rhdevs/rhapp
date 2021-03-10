@@ -120,7 +120,7 @@ export default function EditProfile() {
         style={{ width: '120px', height: '22px' }}
         options={
           props.type === 'CCAs'
-            ? allCcas.map((cca) => ({
+            ? allCcas?.map((cca) => ({
                 value: cca.ccaName,
               }))
             : []
