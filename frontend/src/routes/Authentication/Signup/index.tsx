@@ -148,7 +148,7 @@ export default function Signup() {
         setError({ message: 'Failed to create user, please check and try again' })
       })
   }
-
+  //
   const checkRegisterInfo = (formData) => {
     let pass = true
     if (formData.password !== formData.password2) {
