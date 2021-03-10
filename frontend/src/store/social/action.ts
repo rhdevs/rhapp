@@ -240,7 +240,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: diffTransformedPosts.concat(posts),
+          posts: diffTransformedPosts.concat(posts), //concat to the front
         })
       } else {
         //do nothing
