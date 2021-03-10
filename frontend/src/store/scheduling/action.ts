@@ -433,6 +433,30 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
   }
 }
 
+export const deleteSingleNusModsEvent = async (userId: string | null, eventId: string) => {
+  if (userId !== null) {
+    const requestBody = {
+      userID: userId,
+      eventID: eventId,
+    }
+
+    await put(ENDPOINTS.DELETE_NUSMODS_EVENT, DOMAINS.EVENT, requestBody)
+      .then((resp) => {
+        if (resp.status >= 400) {
+          error('Failed to delete event, please try again!')
+        } else {
+          success('Successfully deleted NUSMods event!')
+        }
+      })
+      .catch((err) => {
+        error('Failed to delete event, please try again!')
+        console.log(err)
+      })
+  } else {
+    error('Invalid action, you are not logged in!')
+  }
+}
+
 export const deleteUserNusModsEvents = (userId: string | null) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
@@ -516,7 +540,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   dispatch(setIsLoading(false))
 }
 
-export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
+export const editUserEvents = (action: string, eventID: string, userId: string | null) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (userId !== null) {
@@ -536,9 +560,7 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
           console.log('FAILURE!!!! ' + data.status)
         }
       }
-      if (isNUSModsEvent) {
-        postToBackend(ENDPOINTS.DELETE_NUSMODS_EVENT, 'PUT', requestBody, updateEventStatus)
-      } else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+      postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
     } else if (action === 'add') {
       const updateEventStatus = (data) => {
         if (data.ok) {
