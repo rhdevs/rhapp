@@ -119,8 +119,8 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
   if (userId !== null) {
     dispatch(setIsLoading(true))
     const manipulateData = async (data: SchedulingEvent[]) => {
-      const { selectedProfileEvents, selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
-      const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
+      const { selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
+      // const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
       const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
 
       let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
@@ -129,10 +129,10 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
 
       // Add selected friends' & CCA events to current user's list of events
       if (!isUserEventsOnly) {
-        const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
-          return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
-        })
-        timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
+        // const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
+        //   return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
+        // })
+        // timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
 
         const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
           return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
@@ -147,7 +147,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         ? userNusModsEvents
         : userNusModsEvents.concat(friendsNusModsEvents)
 
-      const allEvents: TimetableEvent[] = allNusModsEvents
+      const allEvents: TimetableEvent[] = allNusModsEvents.length
         ? timetableFormatEvents.concat(allNusModsEvents)
         : timetableFormatEvents
 
