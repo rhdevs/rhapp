@@ -252,6 +252,9 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
+  if (selectedFacilityId === 0) {
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+  }
   if (!isEdit) {
     post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
       .then((resp) => {
