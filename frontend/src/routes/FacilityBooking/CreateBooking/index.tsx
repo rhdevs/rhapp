@@ -158,7 +158,7 @@ export default function CreateBooking() {
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {createBookingError !== '' && (
+          {createBookingError === '' && (
             <AlertContainer>
               <Alert
                 message={createBookingError}
