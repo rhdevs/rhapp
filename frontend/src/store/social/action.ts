@@ -247,7 +247,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         console.log('diff transformed:', diffTransformedPosts)
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: posts.concat(diffTransformedPosts),
+          posts: diffTransformedPosts.concat(posts),
         })
       } else {
         //do nothing
