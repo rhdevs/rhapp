@@ -4,8 +4,6 @@ import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
 import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
-import { request } from 'https'
-import { PROFILE_ACTIONS } from '../profile/types'
 
 const [success] = useSnackbar('success')
 
