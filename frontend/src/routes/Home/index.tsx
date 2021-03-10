@@ -15,6 +15,7 @@ import laundry_icon from '../../assets/washingMachineIcon.svg'
 import facilities_icon from '../../assets/facilitiesIconSelected.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
 import supper_icon from '../../assets/supperIcon.svg'
+import { invert } from 'lodash'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -79,6 +80,9 @@ export default function Home() {
     {
       name: 'facilities',
       src: facilities_icon,
+      style: {
+        filter: 'brightness(5)',
+      },
       clickHandler: () => {
         history.push(PATHS.FACILITY_BOOKING_MAIN)
       },
@@ -86,6 +90,9 @@ export default function Home() {
     {
       name: 'calendar',
       src: calendar_icon,
+      style: {
+        filter: 'brightness(5)',
+      },
       clickHandler: () => {
         history.push(PATHS.SCHEDULE_PAGE)
       },
@@ -93,6 +100,9 @@ export default function Home() {
     {
       name: 'laundry',
       src: laundry_icon,
+      style: {
+        filter: 'invert',
+      },
       clickHandler: () => {
         history.push(PATHS.LAUNDRY_MAIN)
       },
