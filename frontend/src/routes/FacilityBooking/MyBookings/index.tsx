@@ -24,7 +24,7 @@ const MainContainer = styled.div`
   height: 95vh;
   background-color: #fafaf4;
   position: fixed;
-  top: 71px;
+  top: 70px;
   overflow: scroll;
   padding-bottom: 50px;
 `
