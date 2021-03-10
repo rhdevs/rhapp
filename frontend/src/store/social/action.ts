@@ -82,10 +82,11 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     postPics: newPostImages ?? [],
     ccaID: newPostCca,
   }
-
+  console.log(requestBody)
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
-    success('Post created!')
+    console.log('creating post')
     dispatch(GetPosts(POSTS_FILTER.ALL))
+    success('Post created!')
   })
 }
 
