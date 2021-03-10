@@ -72,7 +72,7 @@ const EventCard = styled.div`
 `
 
 const AlertGroup = styled.div`
-  padding: 3px 0px 3px 23px;
+  padding: 3px 23px 3px 23px;
 `
 
 const EventLabels = styled.div`
