@@ -259,22 +259,21 @@ export const DeleteSocialPost = (postIdToDelete: string) => async (
   getState: GetState,
 ) => {
   const socialState = getState().social
-
-  console.log(socialState.posts)
   const newSocialPosts = socialState.posts.filter((post) => {
     return post.postId !== postIdToDelete
   })
 
-  console.log(newSocialPosts)
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.DELETE_POST + '?postID=' + postIdToDelete, {
     method: 'DELETE',
     mode: 'cors',
-  }).then((resp) => {
-    console.log(resp)
-    resp.json()
   })
+    .then((resp) => {
+      resp.json()
+    })
+    .catch((err) => {
+      err.json()
+    })
 
-  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
     posts: newSocialPosts,

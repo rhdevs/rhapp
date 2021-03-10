@@ -1,3 +1,4 @@
+import useSnackbar from '../../hooks/useSnackbar'
 import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
@@ -288,12 +289,17 @@ export const DeleteProfilePost = (postIdToDelete: string) => async (
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.DELETE_POST + '?postID=' + postIdToDelete, {
     method: 'DELETE',
     mode: 'cors',
-  }).then((resp) => {
-    console.log(resp)
-    resp.json()
   })
+    .then((resp) => {
+      const [success] = useSnackbar('success')
+      success('Successfully deleted!')
+      resp.json()
+    })
+    .catch((err) => {
+      const [error] = useSnackbar('error')
+      error('Error deleting')
+    })
 
-  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   dispatch({
     type: PROFILE_ACTIONS.DELETE_USER_POSTS,
     posts: newProfilePosts,
