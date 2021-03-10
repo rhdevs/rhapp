@@ -11,10 +11,10 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDetail } from '../../store/social/action'
 import { RootState } from '../../store/types'
-import laundry_icon from '../../assets/washingMachineIcon.svg'
-import facilities_icon from '../../assets/facilitiesIconSelected.svg'
+import laundry_icon from '../../assets/newIcons/washer.svg'
+import facilities_icon from '../../assets/newIcons/booking.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
-import supper_icon from '../../assets/supperIcon.svg'
+import supper_icon from '../../assets/newIcons/fast-food.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -63,6 +63,14 @@ const ActionButton = styled(Button)`
 }
 `
 
+const ImageButton = styled.img<{ filter: string }>`
+  fill: #fff;
+  max-height: 35px;
+  max-width: 35px;
+  margin-right: 5px;
+  filter: ${(props) => props.filter};
+`
+
 export default function Home() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -79,6 +87,7 @@ export default function Home() {
     {
       name: 'facilities',
       src: facilities_icon,
+      filter: 'invert(1)',
       clickHandler: () => {
         history.push(PATHS.FACILITY_BOOKING_MAIN)
       },
@@ -86,6 +95,7 @@ export default function Home() {
     {
       name: 'calendar',
       src: calendar_icon,
+      filter: 'brightness(5)',
       clickHandler: () => {
         history.push(PATHS.SCHEDULE_PAGE)
       },
@@ -93,6 +103,7 @@ export default function Home() {
     {
       name: 'laundry',
       src: laundry_icon,
+      filter: 'invert(1)',
       clickHandler: () => {
         history.push(PATHS.LAUNDRY_MAIN)
       },
@@ -100,6 +111,7 @@ export default function Home() {
     {
       name: 'supper',
       src: supper_icon,
+      filter: 'invert(1)',
       clickHandler: () => {
         //
       },
@@ -120,9 +132,7 @@ export default function Home() {
           // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
           <ActionButton
             type="primary"
-            icon={
-              <img style={{ fill: '#fff', maxHeight: '35px', maxWidth: '35px', marginRight: '5px' }} src={button.src} />
-            }
+            icon={<ImageButton filter={button.filter} src={button.src} />}
             key={button.name}
             onClick={button.clickHandler}
           >
