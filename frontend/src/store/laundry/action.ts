@@ -94,21 +94,23 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
-      method: 'GET',
-      mode: 'cors',
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        fetchedWashingMachine.userImage = data.profilePictureUrl
-        returnTableWithImage.push(fetchedWashingMachine)
-        if (returnTable.length === returnTableWithImage.length) {
-          dispatch({
-            type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-            filteredMachines: returnTableWithImage as WashingMachine[],
-          })
-        }
+    if (userId) {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
+        method: 'GET',
+        mode: 'cors',
       })
+        .then((resp) => resp.json())
+        .then((data) => {
+          fetchedWashingMachine.userImage = data.profilePictureUrl
+          returnTableWithImage.push(fetchedWashingMachine)
+          if (returnTable.length === returnTableWithImage.length) {
+            dispatch({
+              type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+              filteredMachines: returnTableWithImage as WashingMachine[],
+            })
+          }
+        })
+    }
   })
 
   dispatch(SetIsLoading(false))
