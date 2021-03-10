@@ -246,6 +246,7 @@ export default function ViewWashingMachine() {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               }
+              location.reload()
             }}
           />
           {isEdit && (
@@ -290,9 +291,11 @@ export default function ViewWashingMachine() {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
+                location.reload()
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
+                history.back()
               }
             }}
           />
