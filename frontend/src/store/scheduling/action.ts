@@ -119,8 +119,8 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
   if (userId !== null) {
     dispatch(setIsLoading(true))
     const manipulateData = async (data: SchedulingEvent[]) => {
-      const { selectedProfileEvents, selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
-      const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
+      const { selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
+      // const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
       const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
 
       let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
@@ -129,10 +129,10 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
 
       // Add selected friends' & CCA events to current user's list of events
       if (!isUserEventsOnly) {
-        const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
-          return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
-        })
-        timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
+        // const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
+        //   return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
+        // })
+        // timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
 
         const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
           return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
@@ -147,7 +147,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         ? userNusModsEvents
         : userNusModsEvents.concat(friendsNusModsEvents)
 
-      const allEvents: TimetableEvent[] = allNusModsEvents
+      const allEvents: TimetableEvent[] = allNusModsEvents.length
         ? timetableFormatEvents.concat(allNusModsEvents)
         : timetableFormatEvents
 
@@ -415,19 +415,46 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
     const dispatchData = (data) => {
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
-        userNusModsEventsList: data[0].mods.filter((event) => {
-          return event.weeks.includes(currentWeekNum)
-        }),
+        userNusModsEventsList: data.length
+          ? data[0].mods.filter((event) => {
+              return event.weeks.includes(currentWeekNum)
+            })
+          : [],
       })
     }
     const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)
     dispatch(setIsLoading(false))
-    if (resp.length === 0) return null
+    if (resp?.length === 0 || resp === undefined || resp === null) return null
     else {
       return resp[0].mods.filter((event) => {
         return event.weeks.includes(currentWeekNum)
       })
     }
+  } else {
+    error('Invalid action, you are not logged in!')
+  }
+}
+
+export const deleteSingleNusModsEvent = async (userId: string | null, eventId: string) => {
+  if (userId !== null) {
+    const requestBody = {
+      userID: userId,
+      eventID: eventId,
+      weekNumber: NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num,
+    }
+
+    await put(ENDPOINTS.DELETE_NUSMODS_EVENT, DOMAINS.EVENT, requestBody)
+      .then((resp) => {
+        if (resp.status >= 400) {
+          error('Failed to delete event, please try again!')
+        } else {
+          success('Successfully deleted NUSMods event!')
+        }
+      })
+      .catch((err) => {
+        error('Failed to delete event, please try again!')
+        console.log(err)
+      })
   } else {
     error('Invalid action, you are not logged in!')
   }
@@ -516,7 +543,7 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   dispatch(setIsLoading(false))
 }
 
-export const editUserEvents = (action: string, eventID: string, userId: string | null, isNUSModsEvent: boolean) => (
+export const editUserEvents = (action: string, eventID: string, userId: string | null) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (userId !== null) {
@@ -536,9 +563,7 @@ export const editUserEvents = (action: string, eventID: string, userId: string |
           console.log('FAILURE!!!! ' + data.status)
         }
       }
-      if (isNUSModsEvent) {
-        postToBackend(ENDPOINTS.DELETE_NUSMODS_EVENT, 'PUT', requestBody, updateEventStatus)
-      } else postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+      postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
     } else if (action === 'add') {
       const updateEventStatus = (data) => {
         if (data.ok) {
