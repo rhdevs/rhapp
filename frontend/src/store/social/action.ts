@@ -243,9 +243,11 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
+        const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
+        console.log(sortedPosts)
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse(),
+          posts: sortedPosts,
         })
       } else {
         //do nothing
