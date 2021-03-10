@@ -246,7 +246,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
       }
     })
   filteredMachines.forEach((machine) => {
-    if (machine.machineID === machineID) machine.duration = duration
+    if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second 
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
