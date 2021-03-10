@@ -148,6 +148,8 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     userID: user.userID,
     ccaID: newUserCcasDatabase,
   }
+  console.log('in update current user')
+  console.log('new user db: ' + newUserCcasDatabase)
 
   // 2. Update user profile
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
@@ -161,8 +163,10 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('update current user success')
+        console.log('update current user success here!!')
         console.log(updateUserJson)
+        console.log('ccaID: ' + updateUserJson.ccaID)
+        console.log(updateUserJson.userID)
         // 1b. Update CCAs here
         dispatch(addUserCca(updateUserJson))
       } else {
