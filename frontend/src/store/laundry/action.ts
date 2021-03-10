@@ -160,6 +160,7 @@ export const getUserProfilePic = (machineID: string) => {
           return data.profilePictureUrl
         })
     })
+  // stub
   return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
 }
 
@@ -209,7 +210,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('success') // TODO: user interaction for successfulyl booked
+        console.log('success') // TODO: user interaction for successfully booked
       }
     })
 
@@ -245,7 +246,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
       }
     })
   filteredMachines.forEach((machine) => {
-    if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second 
+    if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
