@@ -252,7 +252,7 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
-  if (isEdit) {
+  if (!isEdit) {
     post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
       .then((resp) => {
         if (resp.status >= 400) {

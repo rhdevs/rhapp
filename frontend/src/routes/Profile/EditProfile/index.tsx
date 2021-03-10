@@ -79,6 +79,7 @@ export default function EditProfile() {
   let ccaToBeAdded = ''
   let moduleToBeAdded = ''
   const handleChangeAutoComplete = (type: string) => (value: string) => {
+    dispatch(setHasChanged(true))
     switch (type) {
       case 'CCAs':
         ccaToBeAdded = value
