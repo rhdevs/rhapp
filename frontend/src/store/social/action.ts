@@ -238,9 +238,9 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
-      console.log(transformedPostID)
-      console.log(postLastID)
-      console.log(intersection(transformedPostID, postLastID))
+      console.log('transformed:', transformedPostID)
+      console.log('Last post ID:', postLastID)
+      console.log('intersection:', intersection(transformedPostID, postLastID))
       if (intersection(transformedPostID, postLastID).length === 0) {
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
