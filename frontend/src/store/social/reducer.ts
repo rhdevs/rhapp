@@ -8,7 +8,7 @@ const initialState = {
   newPostBody: '',
   newPostImages: [],
   newPostOfficial: false,
-  newPostCca: '',
+  newPostCca: 0,
   warnings: [],
   posts: [],
   postsFilter: POSTS_FILTER.ALL,
@@ -29,7 +29,7 @@ type State = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostCca: number
   warnings: string[]
   posts: Post[]
   postsFilter: POSTS_FILTER

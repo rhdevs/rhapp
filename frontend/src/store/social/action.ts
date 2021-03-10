@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
-import { cloneDeep, intersection } from 'lodash'
+import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar('success')
@@ -36,7 +36,7 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
       newPostBody: description,
       newPostImages: postPics ?? [],
       newPostOfficial: isOfficial,
-      newPostCca: '',
+      newPostCca: 0,
       userId: userId,
     })
   })
@@ -51,7 +51,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: position[0]?.name,
+    newPostCca: position[0]?.ccaID,
   })
 }
 
@@ -64,6 +64,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     description: newPostBody,
     isOfficial: newPostOfficial,
     postPics: newPostImages,
+    tags: [],
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
@@ -81,8 +82,8 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: newPostCca,
+    tags: [],
   }
-
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
@@ -179,7 +180,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
       break
     case 'cca':
       if (fieldData) {
-        newPostCca = fieldData
+        newPostCca = parseInt(fieldData)
       }
       break
   }
@@ -217,9 +218,8 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       break
   }
 
-  // const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
-
-  const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+  // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+  const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     if (response.length > 0) {
@@ -234,11 +234,13 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
       //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
-      const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
-      if (intersection(transformedPostID, postLastID).length === 0) {
+      const postIds = posts.map((post) => post.postId)
+      const postDiff = difference(transformedPostID, postIds)
+      if (postDiff.length > 0) {
+        const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: posts.concat(transformedPost),
+          posts: sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse(),
         })
       } else {
         //do nothing
