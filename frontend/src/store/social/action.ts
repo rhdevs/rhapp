@@ -4,6 +4,8 @@ import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
 import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
+import { request } from 'https'
+import { PROFILE_ACTIONS } from '../profile/types'
 
 const [success] = useSnackbar('success')
 
@@ -254,16 +256,30 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
-export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { posts } = getState().social
-  const newPosts = posts.filter((post) => {
+export const DeleteSocialPost = (postIdToDelete: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const socialState = getState().social
+
+  console.log(socialState.posts)
+  const newSocialPosts = socialState.posts.filter((post) => {
     return post.postId !== postIdToDelete
+  })
+
+  console.log(newSocialPosts)
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.DELETE_POST + '?postID=' + postIdToDelete, {
+    method: 'DELETE',
+    mode: 'cors',
+  }).then((resp) => {
+    console.log(resp)
+    resp.json()
   })
 
   // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
-    posts: newPosts,
+    posts: newSocialPosts,
   })
 }
 

@@ -16,7 +16,7 @@ import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { DeletePost, GetSpecificPost } from '../../../store/social/action'
+import { DeleteSocialPost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
 
 const MainContainer = styled.div`
@@ -124,7 +124,7 @@ export default function ViewPost() {
     setMenuIsOpen(false)
 
     if (postId) {
-      dispatch(DeletePost(postId))
+      dispatch(DeleteSocialPost(postId))
     }
     success('Successfully Deleted!')
     setIsDeleteModalVisible(false)

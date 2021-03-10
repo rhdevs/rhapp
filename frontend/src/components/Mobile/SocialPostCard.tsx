@@ -6,7 +6,8 @@ import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
 import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
-import { DeletePost } from '../../store/social/action'
+import { DeleteProfilePost } from '../../store/profile/action'
+import { DeleteSocialPost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
 import { getInitials } from '../../common/getInitials'
 
@@ -158,7 +159,8 @@ function SocialPostCard(props: socialPostCardProps) {
   const onConfirmDeleteClick = () => {
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
-    dispatch(DeletePost(postId))
+    dispatch(DeleteSocialPost(postId))
+    dispatch(DeleteProfilePost(postId))
   }
 
   return (
