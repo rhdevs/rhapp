@@ -166,7 +166,7 @@ export default function ViewBooking() {
 
   return (
     <>
-      <TopNavBar title={'View Event'} />
+      <TopNavBar title={'View Booking'} />
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && selectedBooking && (
