@@ -281,9 +281,9 @@ export default function EditProfile() {
         <ConfirmationModal
           title={'Discard Changes?'}
           hasLeftButton={true}
-          leftButtonText={'Delete'}
+          leftButtonText={'Discard Edits'}
           onLeftButtonClick={() => history.goBack()}
-          rightButtonText={'Cancel'}
+          rightButtonText={'Back to Edit'}
           onRightButtonClick={() => setShowConfirmationModal(false)}
         />
       )}
