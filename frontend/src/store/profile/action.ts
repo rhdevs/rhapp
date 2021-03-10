@@ -141,9 +141,13 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 
   // 1. Update CCAs
   const newUserCcasDatabase: number[] = []
+  console.log(newUserCcasDatabase)
   ccas?.map((cca) => {
     newUserCcasDatabase.push(cca.ccaID)
   })
+  if (newUserCcasDatabase.length == 0) {
+    newUserCcasDatabase.push(1)
+  }
   const updateUserJson = {
     userID: user.userID,
     ccaID: newUserCcasDatabase,
