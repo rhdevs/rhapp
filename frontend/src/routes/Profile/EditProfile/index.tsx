@@ -35,7 +35,6 @@ const ProfileComponent = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
-  width: 80vw;
   margin: 0 auto;
 `
 

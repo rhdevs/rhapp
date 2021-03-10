@@ -50,7 +50,6 @@ const CustomTabs = styled(Tabs)`
 
 const ProfileDetailsGroup = styled.div`
   margin-left: 10vw;
-  width: 80vw;
 `
 
 const NameParagraph = styled.p`
