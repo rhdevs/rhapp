@@ -218,7 +218,7 @@ export default function ViewWashingMachine() {
   }
 
   const UseWashineMachine = (machine: WashingMachine | null) => {
-    if (machine?.job === WMStatus.RESERVED) {
+    if (machine?.job === WMStatus.AVAIL || machine?.job === WMStatus.RESERVED) {
       return (
         <UseWashingMachineSection>
           <StyledSlider
@@ -242,7 +242,6 @@ export default function ViewWashingMachine() {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
-                location.reload()
               } else {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
@@ -291,11 +290,9 @@ export default function ViewWashingMachine() {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
-                location.reload()
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
-                history.back()
               }
             }}
           />

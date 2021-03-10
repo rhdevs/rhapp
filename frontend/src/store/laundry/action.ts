@@ -160,7 +160,6 @@ export const getUserProfilePic = (machineID: string) => {
           return data.profilePictureUrl
         })
     })
-  // stub
   return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
 }
 
@@ -196,7 +195,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     job: newJob,
     machineID: machineID,
     userID: localStorage.getItem('userID'), //TODO: Update userId
-    currentDuration: duration * 60,
+    currentDuration: duration,
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
@@ -210,7 +209,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('success') // TODO: user interaction for successfully booked
+        console.log('success') // TODO: user interaction for successfulyl booked
       }
     })
 
@@ -228,7 +227,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
   const { duration, filteredMachines } = getState().laundry
   const queryBody: { machineID: string; duration: number } = {
     machineID: machineID,
-    duration: duration * 60, // duration should be in second when send to db
+    duration: duration,
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.EDIT_DURATION, {
@@ -246,7 +245,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
       }
     })
   filteredMachines.forEach((machine) => {
-    if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second
+    if (machine.machineID === machineID) machine.duration = duration
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
