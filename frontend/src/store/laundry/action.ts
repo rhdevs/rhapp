@@ -65,13 +65,12 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
     selectedLevel: newLevel as string,
   })
   dispatch(SetIsLoading(false))
-  dispatch(SetFilteredMachines())
+  dispatch(SetFilteredMachines(newBlock, newLevel))
 }
 
-export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch(SetIsLoading(true))
-  const { selectedBlock, selectedLevel } = getState().laundry
-
+export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(SetIsLoading(true))
   let returnTable: WashingMachine[] = []
 
