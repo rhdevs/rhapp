@@ -119,7 +119,7 @@ const EditPersonalInfoContainer = () => {
       <>
         <div className="image-upload">
           <label htmlFor="file-input">
-            {user.profilePictureUrl.length == 0 ? (
+            {user.profilePictureUrl.length == undefined ? (
               <AvatarSpan>
                 <Avatar
                   size={{ xs: 70 }}

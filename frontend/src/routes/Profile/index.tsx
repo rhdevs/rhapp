@@ -169,7 +169,7 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      {user.profilePictureUrl.length == 0 ? (
+      {user.profilePictureUrl == undefined ? (
         <AvatarSpan>
           <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
             {getInitials(user.displayName)}
