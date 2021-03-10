@@ -726,7 +726,7 @@ def images(imageName):
 
 
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
-# db.Session.create_index("createdAt", expireAfterSeconds=120)
+db.Session.create_index("createdAt", expireAfterSeconds=120)
 
 """
 Register route:
@@ -749,6 +749,7 @@ def register():
         bio = formData["bio"]
         block = formData["block"]
         telegramHandle = formData["telegramHandle"]
+        modules = []
         # print(list(db.User.find({'userID': userID, 'passwordHash': passwordHash})))
         if list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):  # entry exists
             return jsonify({'message': 'User already exists'}), 401
@@ -764,7 +765,8 @@ def register():
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
-                                "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
+                                "profilePictureUrl": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon",
+                                "modules": modules
                                 })
     except Exception as e:
         print(e)
