@@ -64,6 +64,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     description: newPostBody,
     isOfficial: newPostOfficial,
     postPics: newPostImages,
+    tags: [],
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
@@ -81,6 +82,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: newPostCca,
+    tags: [],
   }
   console.log(requestBody)
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
