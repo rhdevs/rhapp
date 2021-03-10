@@ -145,9 +145,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   ccas?.map((cca) => {
     newUserCcasDatabase.push(cca.ccaID)
   })
-  if (newUserCcasDatabase.length == 0) {
-    newUserCcasDatabase.push(1)
-  }
+
   const updateUserJson = {
     userID: user.userID,
     ccaID: newUserCcasDatabase,
