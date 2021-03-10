@@ -18,6 +18,7 @@ app.config['SECRET_KEY'] = os.getenv('AUTH_SECRET_KEY')
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
+DEFAULT_PROFILE_PIC = os.getenv('DEFAULT_PROFILE_PIC')
 URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(
     DB_PWD)
 
@@ -726,7 +727,7 @@ def images(imageName):
 
 
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
-db.Session.create_index("createdAt", expireAfterSeconds=120)
+db.Session.create_index("createdAt", expireAfterSeconds=1210000)
 
 """
 Register route:
@@ -765,7 +766,7 @@ def register():
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
-                                "profilePictureUrl": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon",
+                                "profilePictureUrl": "data:image/png;base64," + DEFAULT_PROFILE_PIC,
                                 "modules": modules
                                 })
     except Exception as e:
@@ -792,11 +793,9 @@ def login():
     if not list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):
         return jsonify({'message': 'Invalid credentials'}), 403
 
-    # insert new session into Session table
-    # db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
     creationDate = datetime.now()
-    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
-                      'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
+    db.Session.update_one({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
+        'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
 
     # db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
@@ -839,14 +838,14 @@ def check_for_token(func):
         oldTime = originalToken['createdAt']
         # print(datetime.datetime.now())
         # print(oldTime)
-        if datetime.now() > oldTime + timedelta(minutes=2):
+        if datetime.now() > oldTime + timedelta(weeks=2):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
             # db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
             # db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
-                              '$set': {'createdAt': datetime.now()}}, upsert=True)
+            db.Session.update_one({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
+                '$set': {'createdAt': datetime.now()}}, upsert=True)
 
         return func(currentUser, *args, **kwargs)
 
