@@ -168,7 +168,7 @@ export default function CreateBooking() {
           />
           <StyledInput
             placeholder="Event Name"
-            value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
+            value={newBookingName}
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
