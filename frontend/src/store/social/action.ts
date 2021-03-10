@@ -84,8 +84,8 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
   }
 
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
-    dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
+    dispatch(GetPosts(POSTS_FILTER.ALL))
   })
 }
 
