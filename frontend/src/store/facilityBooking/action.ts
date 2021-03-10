@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -27,11 +27,9 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
-export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date) => async (
+export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
 ) => {
-  const { selectedFacilityId } = getState().facilityBooking
   const querySubString =
     selectedFacilityId +
     '/' +
@@ -179,10 +177,16 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setViewDates = (newDates: any) => (dispatch: Dispatch<ActionTypes>) => {
+export const setViewDates = (newDates: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: newDates.ViewDateSelection.startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: newDates.ViewDateSelection.endDate })
-  dispatch(getAllBookingsForFacility(newDates.ViewDateSelection.startDate, newDates.ViewDateSelection.endDate))
+  dispatch(
+    getAllBookingsForFacility(
+      newDates.ViewDateSelection.startDate,
+      newDates.ViewDateSelection.endDate,
+      selectedFacilityId,
+    ),
+  )
 }
 
 // currentMode TRUE == view bookings || FALSE == view availabilities
@@ -228,7 +232,7 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
-export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const {
     newBookingName,
     selectedFacilityId,
@@ -248,17 +252,39 @@ export const handleCreateBooking = () => (dispatch: Dispatch<ActionTypes>, getSt
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
-  post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
-    .then((resp) => {
-      if (resp.status >= 400) {
+  if (isEdit) {
+    post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+      .then((resp) => {
+        if (resp.status >= 400) {
+          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+        } else {
+          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+          dispatch({
+            type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+            newBooking: undefined,
+          })
+        }
+      })
+      .catch(() => {
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      } else {
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-      }
-    })
-    .catch(() => {
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    })
+      })
+  } else {
+    put(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+      .then((resp) => {
+        if (resp.status >= 400) {
+          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+        } else {
+          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+          dispatch({
+            type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+            newBooking: undefined,
+          })
+        }
+      })
+      .catch(() => {
+        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      })
+  }
 }
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {

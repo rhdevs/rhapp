@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
 import { Button } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
+// import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import SocialSection from './components/SocialSection'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
@@ -14,6 +14,7 @@ import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/washingMachineIcon.svg'
 import facilities_icon from '../../assets/facilitiesIconSelected.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
+import supper_icon from '../../assets/supperIcon.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -43,17 +44,17 @@ const Greetings = styled.text`
 `
 
 const ButtonGroup = styled.div`
-  width: 90%;
   text-align: -webkit-center;
 `
 
 const ActionButton = styled(Button)`
-  width: 106px !important;
-  height: 106px !important;
+  width: 130px;
+  height: 80px !important;
   border-radius: 28px !important;
-  margin: 0px 23px !important;
-  background: #de5f4c !important;
-  border-color: #de5f4c !important;
+  margin: 7px 18px !important;
+  background: rgb(224 101 83 / 86%) !important;
+  border-color: rgb(224 101 83 / 86%) !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   .ant-btn-icon-only:hover {
     background: #e18375 !important;
@@ -96,6 +97,13 @@ export default function Home() {
         history.push(PATHS.LAUNDRY_MAIN)
       },
     },
+    {
+      name: 'supper',
+      src: supper_icon,
+      clickHandler: () => {
+        //
+      },
+    },
   ]
 
   return (
@@ -104,7 +112,7 @@ export default function Home() {
         <Greetings>
           Good {partOfTheDay} {name}!
         </Greetings>
-        <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} />
+        {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
       </TopBar>
       <AnnouncementCarousel />
       <ButtonGroup>
@@ -112,10 +120,14 @@ export default function Home() {
           // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
           <ActionButton
             type="primary"
-            icon={<img src={button.src} />}
+            icon={
+              <img style={{ fill: '#fff', maxHeight: '35px', maxWidth: '35px', marginRight: '5px' }} src={button.src} />
+            }
             key={button.name}
             onClick={button.clickHandler}
-          />
+          >
+            {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
+          </ActionButton>
         ))}
       </ButtonGroup>
       <SocialSection />

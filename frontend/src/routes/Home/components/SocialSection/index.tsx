@@ -53,7 +53,10 @@ const Tab = styled.div<TabProps>`
 `
 
 const NoPostText = styled.text`
-  font-size: 20px;
+  font-size: 16px;
+  text-align: center;
+  padding: 23px;
+  display: block;
 `
 
 export default function SocialSection() {

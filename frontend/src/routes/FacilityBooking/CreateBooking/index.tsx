@@ -26,6 +26,7 @@ import {
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -91,7 +92,7 @@ export default function CreateBooking() {
       dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
       dispatch(editBookingDescription(newBooking.description))
       dispatch(editBookingName(newBooking.eventName))
-      dispatch(editBookingCCA('RHDevs')) // To fetch CCA Name instead
+      dispatch(editBookingCCA(newBooking.ccaName ? newBooking.ccaName : ''))
     }
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
@@ -102,8 +103,13 @@ export default function CreateBooking() {
   const CheckIcon = (
     <div
       onClick={() => {
-        dispatch(handleCreateBooking())
-        history.push('/facility/view/' + newBookingFacilityId)
+        dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
+        history.replace(PATHS.FACILITY_BOOKING_MAIN)
+        if (newBookingFacilityId) {
+          history.push('/facility/view/' + newBookingFacilityId)
+        } else {
+          history.push('/facility/view/1')
+        }
       }}
     >
       <CheckOutlined style={{ color: 'black' }} />
@@ -153,7 +159,7 @@ export default function CreateBooking() {
               message={createBookingError}
               // description="You can book up to maximum of 4 hours!"
               type="error"
-              style={{ margin: '23px 0px 23px 0px' }}
+              style={{ margin: '23px 23px 23px 23px' }}
               closable
               showIcon
             />
@@ -168,7 +174,7 @@ export default function CreateBooking() {
           />
           <StyledInput
             placeholder="Event Name"
-            value={newBooking?.bookingID ? newBooking.eventName : newBookingName}
+            value={newBookingName}
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
