@@ -5,8 +5,7 @@ export const initialState = {
   user: {
     _id: '0',
     userID: localStorage.username,
-    profilePictureUrl:
-      'https://ichef.bbci.co.uk/news/1024/cpsprodpb/151AB/production/_111434468_gettyimages-1143489763.jpg',
+    profilePictureUrl: '',
     displayName: 'Your Profile is Loading',
     telegramHandle: 'zhoumm',
     block: 8,
