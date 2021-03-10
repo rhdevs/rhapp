@@ -57,6 +57,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
 
 export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages, newPostCca } = getState().social
+  const { userID } = getState().profile.user
   const requestBody = {
     postID: viewPost.postId,
     ccaID: newPostCca,
@@ -67,13 +68,14 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     tags: [],
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
-    dispatch(GetPosts(POSTS_FILTER.ALL))
+    dispatch(GetPosts(POSTS_FILTER.ALL, 5, userID))
     success('Post edited!')
   })
 }
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
+  const { userID } = getState().profile.user
 
   const requestBody = {
     title: newPostTitle,
@@ -84,10 +86,8 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     ccaID: newPostCca,
     tags: [],
   }
-  console.log(requestBody)
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
-    console.log('creating post')
-    dispatch(GetPosts(POSTS_FILTER.ALL))
+    dispatch(GetPosts(POSTS_FILTER.ALL, 5, userID))
     success('Post created!')
   })
 }
