@@ -71,11 +71,13 @@ def getAllPrivateEvents():
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+
 @app.route('/event/private/<userID>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPrivateEventOfUserAfterTime(userID, startTime):
     try:
-        data = db.Events.find({"isPrivate": {"$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
+        data = db.Events.find({"isPrivate": {
+                              "$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
         response = []
         for item in data:
             item['eventID'] = item.pop('_id')
@@ -84,11 +86,12 @@ def getPrivateEventOfUserAfterTime(userID, startTime):
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
 
+
 @app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPublicEventsPagination(pagination, startTime=0):
     try:
-        data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime":{"$gte": int(startTime)}}, sort=[
+        data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime": {"$gte": int(startTime)}}, sort=[
                               ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 10).limit(10)
         response = []
         for item in data:
@@ -275,13 +278,11 @@ def addUserCCA():
     try:
         data = request.get_json()
         userID = data.get('userID')
-        # db.UserCCA.update(body, {'$set': body}, upsert=True)
         ccaID = data.get('ccaID')  # list of integers
 
         deleteQuery = {"userID": userID}
-        db.UserCCA.delete(deleteQuery)
+        db.UserCCA.delete_many(deleteQuery)
 
-        # replace
         body = []
         for cca in ccaID:
             item = {
@@ -291,8 +292,7 @@ def addUserCCA():
 
             body.append(item)
 
-        receipt = db.UserPermissions.update_many(
-            body, {'$set': body}, upsert=True)
+        receipt = db.UserCCA.insert_many(body)
 
         response = {}
         response["_id"] = str(receipt.inserted_ids)
@@ -330,7 +330,7 @@ def addDeletePermissions():
                 "donor": donor,
                 "recipient": recipient
             }
-            db.UserPermissions.update(body, {'$set': body}, upsert=True)
+            db.UserPermissions.update_one(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.UserPermissions.delete_one({
@@ -358,6 +358,9 @@ def createEvent():
         image = data.get('image')
         isPrivate = data.get('isPrivate')
         ownerIsAttending = data.get('ownerIsAttending')
+
+        if endDateTime - startDateTime < 1800:
+            return {"error": "Event must end at least 30 minutes after it begins!"}, 400
 
         body = {
             "eventName": eventName,
@@ -415,6 +418,9 @@ def editEvent():
         image = data.get('image')
         isPrivate = data.get('isPrivate')
 
+        if endDateTime - startDateTime < 1800:
+            return {"error": "Event must end at least 30 minutes after it begins!"}, 400
+
         body = {
             "eventName": eventName,
             "startDateTime": startDateTime,
@@ -454,7 +460,7 @@ def editAttendance():
             "eventID": eventID
         }
         if request.method == "POST":
-            db.Attendance.update(body, {'$set': body}, upsert=True)
+            db.Attendance.update_one(body, {'$set': body}, upsert=True)
 
         elif request.method == "DELETE":
             db.Attendance.delete_many(body)
@@ -491,14 +497,19 @@ def deleteOneMod():
     try:
         data = request.get_json()
         userID = data.get('userID')
-        eventID = data.get('eventID')
+        eventID = str(data.get('eventID'))
+        week = data.get('weekNumber')
 
         NUSModsProfile = db.NUSMods.find({"userID": userID})
         currentMods = next(NUSModsProfile)["mods"]
 
+        def removeWeek(lesson):
+            lesson["weeks"] = [x for x in lesson["weeks"] if x != week]
+            return lesson
+
         body = {
             'userID': userID,
-            "mods": [mod for mod in currentMods if mod["eventID"] != eventID]
+            "mods": [mod if mod["eventID"] != eventID else removeWeek(mod) for mod in currentMods]
         }
 
         db.NUSMods.update_one(
