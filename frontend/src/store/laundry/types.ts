@@ -16,6 +16,7 @@ export type WashingMachine = {
   duration: number
   job: WMStatus
   capacity: number
+  userImage?: string
 }
 
 export type Location = {

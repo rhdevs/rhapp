@@ -89,10 +89,28 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
         returnTable = returnTable.concat(data)
       })
   }
-  dispatch({
-    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-    filteredMachines: returnTable,
+
+  const returnTableWithImage: WashingMachine[] = []
+
+  returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
+    const userId = fetchedWashingMachine.userID
+    fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + userId, {
+      method: 'GET',
+      mode: 'cors',
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        fetchedWashingMachine.userImage = data.profilePictureUrl
+        returnTableWithImage.push(fetchedWashingMachine)
+        if (returnTable.length === returnTableWithImage.length) {
+          dispatch({
+            type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+            filteredMachines: returnTableWithImage as WashingMachine[],
+          })
+        }
+      })
   })
+
   dispatch(SetIsLoading(false))
 }
 
@@ -142,26 +160,6 @@ export const SetEditMode = () => async (dispatch: Dispatch<ActionTypes>, getStat
 
 export const SetManualEditMode = (isEdit: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_EDIT_MODE, isEdit: isEdit })
-}
-
-export const getUserProfilePic = (machineID: string) => {
-  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_JOB + '?machineID=' + machineID, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + data.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          return data.profilePictureUrl
-        })
-    })
-  // stub
-  return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
 }
 
 /**
