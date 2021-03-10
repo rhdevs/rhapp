@@ -174,7 +174,7 @@ function SocialPostCard(props: socialPostCardProps) {
             src={avatar}
             userId={userId}
           >
-            {initials}
+            {avatar ? '' : initials}
           </Avatar>
         </div>
         <CenterContainer onClick={onExpandClick}>

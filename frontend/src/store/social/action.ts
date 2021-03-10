@@ -236,6 +236,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
+      console.log(posts)
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
