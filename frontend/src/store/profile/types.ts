@@ -45,6 +45,8 @@ export enum PROFILE_ACTIONS {
   UPDATE_USER_CCAS = 'PROFILE_ACTIONS.UPDATE_USER_CCAS',
   SET_IS_LOGGED_IN = 'PROFILE_ACTIONS.SET_IS_LOGGED_IN',
   SET_USER_POSTS = 'PROFILE_ACTIONS.SET_USER_POSTS',
+
+  DELETE_USER_POSTS = 'PROFILE_ACTIONS.DELETE_USER_POSTS',
   SET_IS_LOADING = 'PROFILE_ACTIONS.SET_IS_LOADING',
   SET_HAS_CHANGED = 'PROFILE_ACTIONS.SET_HAS_CHANGED',
   UPDATE_USER_PROFILE_PICTURE = 'PROFILE_ACTIONS.UPDATE_USER_PROFILE_PICTURE',
@@ -81,6 +83,10 @@ type SetUserPosts = {
   posts: Post[]
 }
 
+type DeleteUserPosts = {
+  type: typeof PROFILE_ACTIONS.DELETE_USER_POSTS
+  posts: Post[]
+}
 type EditUserDetails = {
   type: typeof PROFILE_ACTIONS.EDIT_USER_DETAILS
   newDisplayName: string
@@ -137,6 +143,7 @@ export type ActionTypes =
   | SetAllCcas
   | SetIsLoggedIn
   | SetUserPosts
+  | DeleteUserPosts
   | SetHasChanged
   | SetIsLoading
   | UpdateUserProfilePicture

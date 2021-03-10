@@ -275,3 +275,27 @@ export const setCanPush = (canPush: string) => (dispatch: Dispatch<ActionTypes>)
     canPush: canPush,
   })
 }
+
+export const DeleteProfilePost = (postIdToDelete: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const profileState = getState().profile
+  const newProfilePosts = profileState.posts.filter((post) => {
+    return post._id !== postIdToDelete
+  })
+
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.DELETE_POST + '?postID=' + postIdToDelete, {
+    method: 'DELETE',
+    mode: 'cors',
+  }).then((resp) => {
+    console.log(resp)
+    resp.json()
+  })
+
+  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
+  dispatch({
+    type: PROFILE_ACTIONS.DELETE_USER_POSTS,
+    posts: newProfilePosts,
+  })
+}

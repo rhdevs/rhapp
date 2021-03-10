@@ -116,6 +116,12 @@ export const profile: Reducer<State, ActionTypes> = (state = initialState, actio
         posts: action.posts,
       }
     }
+    case PROFILE_ACTIONS.DELETE_USER_POSTS: {
+      return {
+        ...state,
+        posts: action.posts,
+      }
+    }
     case PROFILE_ACTIONS.SET_IS_LOADING: {
       return {
         ...state,
