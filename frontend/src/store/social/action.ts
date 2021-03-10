@@ -238,13 +238,9 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
-      console.log('transformed:', transformedPostID)
-      console.log('Last post ID:', postLastID)
-      console.log('diff:', difference(transformedPostID, postLastID))
       const postDiff = difference(transformedPostID, postLastID)
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
-        console.log('diff transformed:', diffTransformedPosts)
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
           posts: diffTransformedPosts.concat(posts),
