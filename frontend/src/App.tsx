@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 
 import store from './store/store'
 import Routes from './routes/Routes'
-
 import GlobalStyle from './GlobalStyle'
 import dayjs from 'dayjs'
 import CustomParseFormat from 'dayjs/plugin/customParseFormat'
