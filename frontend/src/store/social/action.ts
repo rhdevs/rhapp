@@ -242,10 +242,10 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       // console.log('Last post ID:', postLastID)
       // console.log('intersection:', intersection(transformedPostID, postLastID))
       // if (intersection(transformedPostID, postLastID).length === 0) {
-      //   dispatch({
-      //     type: SOCIAL_ACTIONS.GET_POSTS,
-      //     posts: posts.concat(transformedPost),
-      //   })
+      dispatch({
+        type: SOCIAL_ACTIONS.GET_POSTS,
+        posts: posts.concat(transformedPost),
+      })
       // } else {
       //   //do nothing
       //   //repeated call so do not concat same posts to existing posts
