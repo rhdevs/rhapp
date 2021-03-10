@@ -140,7 +140,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       break
     case WMStatus.UNCOLLECTED:
       label = 'Notify'
-      iconSrc = props.washingMachine.userImage ? props.washingMachine.userImage : '' //initials here
+      iconSrc = props.washingMachine.userImage
+        ? props.washingMachine.userImage
+        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         goToTelegramHandle(props.washingMachine)
@@ -149,7 +151,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
-      iconSrc = props.washingMachine.userImage ? props.washingMachine.userImage : ''
+      iconSrc = props.washingMachine.userImage
+        ? props.washingMachine.userImage
+        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
       rightAction = () => {
         dispatch(SetSelectedMachine(props.washingMachine))
         history.push(PATHS.VIEW_WASHING_MACHINE)
