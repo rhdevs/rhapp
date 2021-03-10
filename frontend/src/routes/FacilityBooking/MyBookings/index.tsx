@@ -23,12 +23,17 @@ const MainContainer = styled.div`
   width: 100%;
   height: 95vh;
   background-color: #fafaf4;
+  position: fixed;
+  top: 71px;
+  overflow: scroll;
+  padding-bottom: 50px;
 `
 const BookingCard = styled.div`
   position: relative;
   cursor: pointer;
   background-color: #ffffff;
   margin: 23px;
+  margin-top: 0px;
   min-height: 70px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
