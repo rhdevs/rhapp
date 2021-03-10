@@ -6,7 +6,7 @@ import { Button, Input, Form, Select } from 'antd'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
-import bcrypt from 'bcryptjs'
+import sha256 from 'crypto-js/sha256'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
@@ -91,8 +91,7 @@ export default function Signup() {
   //combit onSubmit and signupHandler
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    const salt = bcrypt.genSaltSync(10)
-    const passwordHash = bcrypt.hashSync(formData.password, salt)
+    const passwordHash = sha256(formData.password).toString()
 
     const newUser = {
       userID: formData.userId,
