@@ -234,6 +234,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
       //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
+      // const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
       if (postDiff.length > 0) {
