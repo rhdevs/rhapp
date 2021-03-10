@@ -195,7 +195,7 @@ export default function Profile() {
         <Card
           title={<span style={{ fontSize: '20px' }}>CCAs</span>}
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {ccas &&
@@ -227,7 +227,7 @@ export default function Profile() {
         <Card
           title={<span style={{ fontSize: '20px' }}>Modules</span>}
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {user.modules &&
