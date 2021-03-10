@@ -241,10 +241,12 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       console.log('transformed:', transformedPostID)
       console.log('Last post ID:', postLastID)
       console.log('diff:', difference(transformedPostID, postLastID))
-      if (difference(transformedPostID, postLastID).length > 0) {
+      const postDiff = difference(transformedPostID, postLastID)
+      if (postDiff.length > 0) {
+        const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: posts.concat(transformedPost),
+          posts: posts.concat(diffTransformedPosts),
         })
       } else {
         //do nothing
