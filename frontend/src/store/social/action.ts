@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
-import { cloneDeep, difference } from 'lodash'
+import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar('success')
@@ -240,7 +240,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: diffTransformedPosts.concat(posts), //concat to the front
+          posts: sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse(),
         })
       } else {
         //do nothing
