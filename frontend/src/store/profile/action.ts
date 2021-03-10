@@ -60,7 +60,10 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   })
     .then((resp) => resp.json())
     .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: data })
+      const ccaNamesOption = data.map((cca: UserCCA) => {
+        value: cca.ccaName
+      })
+      dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: ccaNamesOption })
     })
   dispatch(setIsLoading(false))
 }
