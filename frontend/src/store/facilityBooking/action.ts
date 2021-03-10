@@ -254,6 +254,7 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
   }
   if (selectedFacilityId === 0) {
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    return
   }
   if (!isEdit) {
     post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
@@ -272,7 +273,14 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
       })
   } else {
-    put(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
+      method: 'PUT',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
       .then((resp) => {
         if (resp.status >= 400) {
           dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
@@ -296,6 +304,14 @@ export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
 
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
+}
+
+export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(editBookingFromDate(new Date()))
+  dispatch(editBookingToDate(dayjs(new Date()).add(1, 'hour').toDate()))
+  dispatch(editBookingDescription(''))
+  dispatch(editBookingName(''))
+  dispatch(editBookingCCA(''))
 }
 
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {

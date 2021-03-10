@@ -21,6 +21,7 @@ import {
   fetchAllCCAs,
   getFacilityList,
   handleCreateBooking,
+  resetNewBooking,
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
@@ -93,6 +94,8 @@ export default function CreateBooking() {
       dispatch(editBookingDescription(newBooking.description))
       dispatch(editBookingName(newBooking.eventName))
       dispatch(editBookingCCA(newBooking.ccaName ? newBooking.ccaName : ''))
+    } else {
+      dispatch(resetNewBooking())
     }
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
