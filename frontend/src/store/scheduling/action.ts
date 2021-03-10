@@ -438,6 +438,7 @@ export const deleteSingleNusModsEvent = async (userId: string | null, eventId: s
     const requestBody = {
       userID: userId,
       eventID: eventId,
+      weekNumber: NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num,
     }
 
     await put(ENDPOINTS.DELETE_NUSMODS_EVENT, DOMAINS.EVENT, requestBody)
