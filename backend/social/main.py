@@ -18,7 +18,6 @@ app.config['SECRET_KEY'] = os.getenv('AUTH_SECRET_KEY')
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
-DEFAULT_PROFILE_PIC = os.getenv('DEFAULT_PROFILE_PIC')
 URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(
     DB_PWD)
 
