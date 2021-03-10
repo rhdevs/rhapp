@@ -291,7 +291,7 @@ export default function Signup() {
                   type="primary"
                   block
                   onClick={(e) => {
-                    if (!formData.display || !formData.telegram || !formData.bio) {
+                    if (!formData.display || formData.display.trim() === '' || !formData.telegram || !formData.bio) {
                       setError({ message: 'All fields are compulsory!' })
                     } else {
                       onSubmit(e)
