@@ -195,7 +195,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
   })
 }
 
-export const GetPosts = (postFilter: POSTS_FILTER, limit?: number) => async (
+export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -222,7 +222,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number) => async (
 
   // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
 
-  const subroute = `?N=${limit}`
+  const subroute = userId ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     if (response.length > 0) {
