@@ -227,7 +227,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
   const { duration, filteredMachines } = getState().laundry
   const queryBody: { machineID: string; duration: number } = {
     machineID: machineID,
-    duration: duration,
+    duration: duration * 60, // duration should be in second when send to db
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.EDIT_DURATION, {
