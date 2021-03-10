@@ -167,7 +167,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('update current user success here!!')
+        console.log('update current user success here!')
         console.log(updateUserJson)
         console.log('ccaID: ' + updateUserJson.ccaID)
         console.log(updateUserJson.userID)
