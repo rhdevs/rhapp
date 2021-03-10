@@ -14,8 +14,10 @@ import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import { useParams } from 'react-router-dom'
 import { Post } from '../../store/profile/types'
-import PostCard from './Components/PostCard'
+// import PostCard from './Components/PostCard'
 import LoadingSpin from '../../components/LoadingSpin'
+import SocialPostCard from '../../components/Mobile/SocialPostCard'
+import dayjs from 'dayjs'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -30,7 +32,9 @@ const ProfileComponent = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
-  width: 80vw;
+  position: relative;
+  width: 90%;
+  max-width: 700px;
   margin: 0 auto;
 `
 
@@ -99,16 +103,22 @@ export default function Profile() {
   }, [dispatch])
 
   const ActivitiesItem = (postItem: Post) => {
+    const postDate = dayjs.unix(postItem.createdAt ?? '')
+    const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
+
+    const date = isOlderThanADay ? postDate.format('D/M/YY, h:mmA') : postDate.fromNow()
     return (
-      <PostCard
-        isOwner={!postItem.isOfficial}
-        postId={postItem._id}
-        title={postItem.title}
-        dateTime={postItem.createdAt}
-        description={postItem.description}
+      <SocialPostCard
+        key={postItem._id}
+        isOwner={postItem.userID === params.userId}
         avatar={user.profilePictureUrl}
         name={user.displayName}
-        userId={postItem.userID}
+        title={postItem.title}
+        dateTime={date}
+        description={postItem.description}
+        postId={postItem._id}
+        postPics={[]}
+        userId={params.userId}
       />
     )
   }

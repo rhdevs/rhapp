@@ -1,17 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
-//import { dummyUserId } from '../stubs'
-import { isString } from 'lodash'
-
-function getLocalStorageUserId(): string {
-  const storageValue = localStorage.getItem('userID')
-  if (isString(storageValue)) {
-    return storageValue
-  } else {
-    return ''
-  }
-}
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
@@ -162,16 +151,13 @@ export const getUserProfilePic = (machineID: string) => {
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(data)
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + getLocalStorageUserId(), {
+      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + data.userID, {
         method: 'GET',
         mode: 'cors',
       })
         .then((resp) => resp.json())
         .then((data) => {
-          console.log(data)
-          return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
-          // TODO: remove hardcoded
+          return data.profilePictureUrl
         })
     })
   return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
@@ -272,7 +258,6 @@ export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dis
     .then((resp) => resp.json())
     .then((data) => {
       if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-        console.log(selectedMachine)
         console.log(data.err)
       } else {
         dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
