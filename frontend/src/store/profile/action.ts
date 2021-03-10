@@ -162,8 +162,11 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((data) => {
       if (data.ok) {
         console.log('update current user success')
+        console.log(updateUserJson)
         // 1b. Update CCAs here
         dispatch(addUserCca(updateUserJson))
+      } else {
+        dispatch(setCanPush('error'))
       }
     })
     .catch(() => {
@@ -189,6 +192,8 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
         console.log('add CCA success')
         // If all updates are done, set canPush to true
         dispatch(setCanPush('true'))
+      } else {
+        dispatch(setCanPush('error'))
       }
     })
     .catch(() => {
