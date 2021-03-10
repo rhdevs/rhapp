@@ -251,29 +251,23 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
 }
 
 export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(
+    DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID + ' ' + selectedMachine.machineID,
+  )
   fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(
-        DOMAIN_URL.FACILITY +
-          ENDPOINTS.TELEGRAM_HANDLE +
-          '/' +
-          selectedMachine.userID +
-          ' ' +
-          selectedMachine.machineID,
-      )
-      console.log(selectedMachine.machineID)
       if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-        console.log('ignore' + data.err)
+        console.log(data.err)
       } else {
         dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
         console.log(data.telegramHandle)
       }
     })
     .catch((err) => {
-      console.log('ignore' + err)
+      console.log(err)
     })
 }
