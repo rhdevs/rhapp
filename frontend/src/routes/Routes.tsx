@@ -94,8 +94,8 @@ export default class Routes extends React.Component {
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
-            <PublicRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
-            <PublicRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
+            <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
+            <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <PrivateRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <PrivateRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
 
