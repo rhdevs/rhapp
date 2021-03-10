@@ -195,7 +195,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     job: newJob,
     machineID: machineID,
     userID: localStorage.getItem('userID'), //TODO: Update userId
-    currentDuration: duration,
+    currentDuration: duration * 60,
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
@@ -225,7 +225,6 @@ export const SetDuration = (duration: number) => async (dispatch: Dispatch<Actio
 
 export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { duration, filteredMachines } = getState().laundry
-  console.log(duration * 60);
   const queryBody: { machineID: string; duration: number } = {
     machineID: machineID,
     duration: duration * 60, // duration should be in second when send to db
