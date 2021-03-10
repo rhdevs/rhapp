@@ -149,6 +149,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = getUserProfilePic(props.washingMachine.machineID)
       washingMachineIcon = wm_uncollected
       rightAction = () => {
+        console.log('this washing machine is currently uncollected.')
         goToTelegramHandle(props.washingMachine)
       }
       break
