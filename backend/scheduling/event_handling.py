@@ -278,13 +278,11 @@ def addUserCCA():
     try:
         data = request.get_json()
         userID = data.get('userID')
-        # db.UserCCA.update(body, {'$set': body}, upsert=True)
         ccaID = data.get('ccaID')  # list of integers
 
         deleteQuery = {"userID": userID}
         db.UserCCA.delete_many(deleteQuery)
 
-        # replace
         body = []
         for cca in ccaID:
             item = {
@@ -362,7 +360,7 @@ def createEvent():
         ownerIsAttending = data.get('ownerIsAttending')
 
         if endDateTime - startDateTime < 1800:
-            return {"error": "Event must end at least 1 hour after it begins!"}, 400
+            return {"error": "Event must end at least 30 minutes after it begins!"}, 400
 
         body = {
             "eventName": eventName,
@@ -421,7 +419,7 @@ def editEvent():
         isPrivate = data.get('isPrivate')
 
         if endDateTime - startDateTime < 1800:
-            return {"error": "Event must end at least 1 hour after it begins!"}, 400
+            return {"error": "Event must end at least 30 minutes after it begins!"}, 400
 
         body = {
             "eventName": eventName,
@@ -499,14 +497,19 @@ def deleteOneMod():
     try:
         data = request.get_json()
         userID = data.get('userID')
-        eventID = data.get('eventID')
+        eventID = str(data.get('eventID'))
+        week = data.get('weekNumber')
 
         NUSModsProfile = db.NUSMods.find({"userID": userID})
         currentMods = next(NUSModsProfile)["mods"]
 
+        def removeWeek(lesson):
+            lesson["weeks"] = [x for x in lesson["weeks"] if x != week]
+            return lesson
+
         body = {
             'userID': userID,
-            "mods": [mod for mod in currentMods if mod["eventID"] != eventID]
+            "mods": [mod if mod["eventID"] != eventID else removeWeek(mod) for mod in currentMods]
         }
 
         db.NUSMods.update_one(
