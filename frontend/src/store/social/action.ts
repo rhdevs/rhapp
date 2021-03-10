@@ -218,10 +218,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       break
   }
 
-  // const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
-
   // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
-
   const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
