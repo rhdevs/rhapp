@@ -4,7 +4,12 @@ import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
-import { deleteSelectedEvent, editUserEvents, getDayStringFromUNIX } from '../../store/scheduling/action'
+import {
+  deleteSingleNusModsEvent,
+  deleteSelectedEvent,
+  editUserEvents,
+  getDayStringFromUNIX,
+} from '../../store/scheduling/action'
 import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -176,7 +181,7 @@ function ViewEventDetailCard({
             hasLeftButton={true}
             leftButtonText={'Remove'}
             onLeftButtonClick={() => {
-              dispatch(editUserEvents('remove', eventID, localStorage.getItem('userID'), eventType === 'NUSMods'))
+              dispatch(editUserEvents('remove', eventID, localStorage.getItem('userID')))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}
@@ -191,7 +196,11 @@ function ViewEventDetailCard({
             hasLeftButton={true}
             leftButtonText={'Delete'}
             onLeftButtonClick={() => {
-              dispatch(deleteSelectedEvent(eventID))
+              if (eventType === 'NUSMods') {
+                deleteSingleNusModsEvent(localStorage.getItem('userID'), eventID)
+              } else {
+                dispatch(deleteSelectedEvent(eventID))
+              }
               history.push(PATHS.SCHEDULE_PAGE)
             }}
             rightButtonText={'Cancel'}

@@ -138,10 +138,10 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                     if (buttonIsPressed) {
                       // event is in list and button is pressed
                       // remove event from list
-                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
+                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID')))
                     } else {
                       // event is in list, button is un-pressed
-                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
+                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID')))
                     }
                   } else if (
                     userAllEventsList.filter((event) => {
@@ -150,11 +150,11 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   ) {
                     if (buttonIsPressed) {
                       // event is not in list, button is un-pressed
-                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID'), false))
+                      dispatch(editUserEvents('remove', result.eventID, localStorage.getItem('userID')))
                     } else {
                       // event is not in list and button is pressed
                       // add event to list
-                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID'), false))
+                      dispatch(editUserEvents('add', result.eventID, localStorage.getItem('userID')))
                     }
                   }
                   return
