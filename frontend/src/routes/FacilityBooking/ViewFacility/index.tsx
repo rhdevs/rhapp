@@ -139,7 +139,7 @@ export default function ViewFacility() {
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
-    dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate))
+    dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
   }, [])
 
   const fetchTelegram = async (booking) => {
@@ -218,7 +218,7 @@ export default function ViewFacility() {
               color="#DE5F4C"
               onChange={(item) => {
                 dispatch(SetIsLoading(true))
-                dispatch(setViewDates(item))
+                dispatch(setViewDates(item, parseInt(params.facilityID)))
               }}
               moveRangeOnFirstSelection={false}
               rangeColors={['#DE5F4C', '#002642']}
