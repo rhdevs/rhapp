@@ -104,7 +104,7 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
     newTelegramHandle: user.telegramHandle,
     newBio: user.bio,
     newCCAs: ccas,
-    newModules: user.modules,
+    newModules: user.modules ?? [],
   })
 }
 
@@ -234,21 +234,21 @@ export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: str
   switch (actionType) {
     case 'Delete':
       // newUserModules.delete(newModule)
-      const index = newUserModules.indexOf(newModule)
-      if (index > -1) {
-        newUserModules.splice(index, 1)
+      const index = newUserModules?.indexOf(newModule)
+      if (index !== undefined) {
+        newUserModules?.splice(index, 1)
       }
 
       // user.cca = ["rhdevs"]
       break
     case 'Add':
-      newUserModules.push(newModule)
+      newUserModules?.push(newModule)
       // user.cca = ["rhdevs","rhmp","voices"]
       break
   }
 
   // 1. updatestate
-  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
+  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules ?? [] })
 }
 
 export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<ActionTypes>) => {

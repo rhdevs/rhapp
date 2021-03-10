@@ -6,7 +6,7 @@ export type User = {
   telegramHandle: string
   block: number
   bio: string
-  modules: string[]
+  modules?: string[]
 }
 
 export type Friend = {
