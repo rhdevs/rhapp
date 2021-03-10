@@ -141,7 +141,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 
   // 1. Update CCAs
   const newUserCcasDatabase: number[] = []
-  console.log(newUserCcasDatabase)
   ccas?.map((cca) => {
     newUserCcasDatabase.push(cca.ccaID)
   })
@@ -150,8 +149,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     userID: user.userID,
     ccaID: newUserCcasDatabase,
   }
-  console.log('in update current user')
-  console.log('new user db: ' + newUserCcasDatabase)
 
   // 2. Update user profile
   await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
@@ -165,10 +162,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('update current user success here!!')
-        console.log(updateUserJson)
-        console.log('ccaID: ' + updateUserJson.ccaID)
-        console.log(updateUserJson.userID)
+        // console.log('update current user success')
         // 1b. Update CCAs here
         dispatch(addUserCca(updateUserJson))
       } else {
@@ -195,7 +189,7 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('add CCA success')
+        // console.log('add CCA success')
         // If all updates are done, set canPush to true
         dispatch(setCanPush('true'))
       } else {
