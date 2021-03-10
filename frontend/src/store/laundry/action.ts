@@ -94,7 +94,7 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
-    fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE_PICTURE + userId, {
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + userId, {
       method: 'GET',
       mode: 'cors',
     })
