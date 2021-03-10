@@ -307,11 +307,10 @@ export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<A
 }
 
 export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(editBookingFromDate(new Date()))
-  dispatch(editBookingToDate(dayjs(new Date()).add(1, 'hour').toDate()))
-  dispatch(editBookingDescription(''))
-  dispatch(editBookingName(''))
-  dispatch(editBookingCCA(''))
+  dispatch({
+    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+    newBooking: undefined,
+  })
 }
 
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
