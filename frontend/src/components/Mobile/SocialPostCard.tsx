@@ -163,19 +163,26 @@ function SocialPostCard(props: socialPostCardProps) {
 
   console.log('avatar', avatar)
   console.log(initials)
-
   return (
     <>
       <CardContainer>
         <div>
-          <Avatar
-            size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
-            style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-            src={avatar}
-            userId={userId}
-          >
-            {avatar ? null : initials}
-          </Avatar>
+          {avatar ? (
+            <Avatar
+              size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
+              style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+              src={avatar}
+              userId={userId}
+            />
+          ) : (
+            <Avatar
+              size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
+              style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+              userId={userId}
+            >
+              {initials}
+            </Avatar>
+          )}
         </div>
         <CenterContainer onClick={onExpandClick}>
           <TextContainer>
