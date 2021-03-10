@@ -257,10 +257,12 @@ export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dis
   })
     .then((resp) => resp.json())
     .then((data) => {
+      console.log(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID)
       if (data.telegramHandle === '' || data.telegramHandle === undefined) {
         console.log(data.err)
       } else {
         dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
+        console.log(data.telegramHandle)
       }
     })
     .catch((err) => {
