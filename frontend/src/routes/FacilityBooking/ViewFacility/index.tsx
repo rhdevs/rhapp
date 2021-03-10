@@ -110,6 +110,11 @@ const DateSelectorGroup = styled.div`
   place-content: center;
   align-self: center;
   background-color: #fafaf4;
+  border-radius: 15px !important;
+
+  .rdrDateDisplayWrapper {
+    border-radius: 9px !important;
+  }
 `
 
 const EventRightDisplay = styled.div`
