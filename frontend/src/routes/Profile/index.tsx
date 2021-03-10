@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Card, Tabs } from 'antd'
+import { Avatar, Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
 import { useHistory } from 'react-router-dom'
 import EditProfileButton from './Components/EditProfileButton'
@@ -18,6 +18,7 @@ import { Post } from '../../store/profile/types'
 import LoadingSpin from '../../components/LoadingSpin'
 import SocialPostCard from '../../components/Mobile/SocialPostCard'
 import dayjs from 'dayjs'
+import { getInitials } from '../../common/getInitials'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -168,13 +169,21 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      <AvatarSpan>
-        <img
-          alt="logo"
-          style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
-          src={'data:image/png;base64,' + user?.profilePictureUrl}
-        />
-      </AvatarSpan>
+      {user.profilePictureUrl.length == 0 ? (
+        <AvatarSpan>
+          <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+            {getInitials(user.displayName)}
+          </Avatar>
+        </AvatarSpan>
+      ) : (
+        <AvatarSpan>
+          <img
+            alt="logo"
+            style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
+            src={'data:image/png;base64,' + user?.profilePictureUrl}
+          />
+        </AvatarSpan>
+      )}
       <PersonalInfoSpan>
         <NameParagraph>{user?.displayName}</NameParagraph>
         <TelegramParagraph>@{user?.telegramHandle}</TelegramParagraph>
