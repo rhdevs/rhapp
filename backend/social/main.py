@@ -766,7 +766,7 @@ def register():
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
-                                "profilePictureUrl": "data:image/png;base64," + DEFAULT_PROFILE_PIC,
+                                "profilePictureUrl": "",
                                 "modules": modules
                                 })
     except Exception as e:
