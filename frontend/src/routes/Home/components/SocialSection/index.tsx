@@ -64,7 +64,7 @@ export default function SocialSection() {
   const dispatch = useDispatch()
   const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
   const socialPosts = useSelector((state: RootState) => state.social.posts)
-  const { userID, profilePictureUrl } = useSelector((state: RootState) => state.profile.user)
+  const { userID } = useSelector((state: RootState) => state.profile.user)
   const { pageIndex, isLoading, hasNoMorePosts } = useSelector((state: RootState) => state.social)
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function SocialSection() {
 
   const renderSocialPosts = () => {
     return socialPosts.map((post) => {
-      const { title, postId, createdAt, description, postPics, name, userId } = post
+      const { title, postId, createdAt, description, postPics, name, userId, profilePic } = post
       const postDate = dayjs.unix(parseInt(createdAt ?? ''))
       const isOlderThanADay = dayjs().diff(postDate, 'day') > 0
 
@@ -85,7 +85,7 @@ export default function SocialSection() {
         <SocialPostCard
           key={postId}
           isOwner={userID == userId}
-          avatar={profilePictureUrl}
+          avatar={profilePic}
           name={name ?? ''}
           title={title}
           dateTime={date}
