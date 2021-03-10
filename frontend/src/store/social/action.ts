@@ -57,7 +57,6 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
 
 export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newPostTitle, newPostBody, newPostOfficial, viewPost, newPostImages, newPostCca } = getState().social
-  const { userID } = getState().profile.user
   const requestBody = {
     postID: viewPost.postId,
     ccaID: newPostCca,
@@ -68,14 +67,13 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     tags: [],
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
-    dispatch(GetPosts(POSTS_FILTER.ALL, 5, userID))
+    dispatch(GetPosts(POSTS_FILTER.ALL, 5))
     success('Post edited!')
   })
 }
 
 export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { newPostTitle, newPostBody, newPostOfficial, newPostImages, newPostCca } = getState().social
-  const { userID } = getState().profile.user
 
   const requestBody = {
     title: newPostTitle,
@@ -87,7 +85,7 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     tags: [],
   }
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
-    dispatch(GetPosts(POSTS_FILTER.ALL, 5, userID))
+    dispatch(GetPosts(POSTS_FILTER.ALL, 5))
     success('Post created!')
   })
 }
@@ -197,7 +195,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
   })
 }
 
-export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
+export const GetPosts = (postFilter: POSTS_FILTER, limit?: number) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -222,7 +220,9 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
   // const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
 
-  const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+  // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+
+  const subroute = `?N=${limit}`
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     if (response.length > 0) {
