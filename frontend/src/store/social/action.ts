@@ -238,13 +238,13 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
-      console.log(posts)
-      console.log(postDiff)
+      console.log('posts', posts)
+      console.log('post diff', postDiff)
 
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
-        console.log(sortedPosts)
+        console.log('sorted', sortedPosts)
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
           posts: sortedPosts,
