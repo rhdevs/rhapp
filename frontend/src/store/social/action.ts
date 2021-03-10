@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
-import { cloneDeep, intersection } from 'lodash'
+import { cloneDeep, difference } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar('success')
@@ -236,20 +236,20 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       })
 
       //validate if caller made repeated call to the same posts
-      // const transformedPostID = transformedPost.map((post) => post.postId)
-      // const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
-      // console.log('transformed:', transformedPostID)
-      // console.log('Last post ID:', postLastID)
-      // console.log('intersection:', intersection(transformedPostID, postLastID))
-      // if (intersection(transformedPostID, postLastID).length === 0) {
-      dispatch({
-        type: SOCIAL_ACTIONS.GET_POSTS,
-        posts: posts.concat(transformedPost),
-      })
-      // } else {
-      //   //do nothing
-      //   //repeated call so do not concat same posts to existing posts
-      // }
+      const transformedPostID = transformedPost.map((post) => post.postId)
+      const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
+      console.log('transformed:', transformedPostID)
+      console.log('Last post ID:', postLastID)
+      console.log('diff:', difference(transformedPostID, postLastID))
+      if (difference(transformedPostID, postLastID).length > 0) {
+        dispatch({
+          type: SOCIAL_ACTIONS.GET_POSTS,
+          posts: posts.concat(transformedPost),
+        })
+      } else {
+        //do nothing
+        //repeated call so do not concat same posts to existing posts
+      }
     } else {
       dispatch({
         type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,
