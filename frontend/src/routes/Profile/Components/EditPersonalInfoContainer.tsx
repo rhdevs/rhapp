@@ -5,6 +5,7 @@ import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import {
+  fetchUserDetails,
   handleEditProfileDetails,
   handleNewProfilePicture,
   setCanPush,
@@ -64,9 +65,7 @@ const validateMessages = {
 }
 
 const EditPersonalInfoContainer = () => {
-  const { newDisplayName, newTelegramHandle, newBio, user, userProfilePictureBase64, canPush } = useSelector(
-    (state: RootState) => state.profile,
-  )
+  const { newBio, user, canPush } = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
   const oldBio = newBio
   const history = useHistory()
@@ -76,6 +75,8 @@ const EditPersonalInfoContainer = () => {
     if (newBio !== oldBio) {
       dispatch(setHasChanged(true))
     }
+    dispatch(fetchUserDetails(localStorage.getItem('userID')))
+    // Puts current user picture in state's base64TextString field, for local updates before user sends changes to BE
     dispatch(handleNewProfilePicture(user.profilePictureUrl))
     dispatch(setCanPush('false'))
   }, [dispatch])
@@ -119,7 +120,7 @@ const EditPersonalInfoContainer = () => {
         <div className="image-upload">
           <label htmlFor="file-input">
             <img
-              src={'data:image/png;base64,' + userProfilePictureBase64}
+              src={'data:image/png;base64,' + user.profilePictureUrl}
               style={{
                 height: 75,
                 width: 75,
@@ -147,22 +148,22 @@ const EditPersonalInfoContainer = () => {
         <PersonalInfoSpan>
           <Form.Item name={['user', 'displayName']} style={{ width: '55vw' }}>
             <Input
-              defaultValue={newDisplayName}
-              placeholder={newDisplayName}
+              defaultValue={user.displayName}
+              placeholder={user.displayName}
               onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input
-              defaultValue={'@' + newTelegramHandle}
-              placeholder={'@' + newTelegramHandle}
+              defaultValue={user.telegramHandle}
+              placeholder={user.telegramHandle}
               onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
-          <Input.TextArea defaultValue={newBio} placeholder={newBio} />
+          <Input.TextArea defaultValue={user.bio} placeholder={user.bio} />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={LongButton}>
