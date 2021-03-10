@@ -147,6 +147,9 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
         ? userNusModsEvents
         : userNusModsEvents.concat(friendsNusModsEvents)
 
+      console.log(timetableFormatEvents)
+      console.log(allNusModsEvents)
+      console.log(allNusModsEvents.length)
       const allEvents: TimetableEvent[] = allNusModsEvents.length
         ? timetableFormatEvents.concat(allNusModsEvents)
         : timetableFormatEvents
@@ -167,6 +170,7 @@ export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: 
             )
           : Number(getTimetableEndTime(timetableFormatEvents))
 
+      console.log(allEvents)
       dispatch({
         type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
         userCurrentEvents: transformInformationToTimetableFormat(allEvents),
@@ -413,16 +417,19 @@ const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => asyn
     dispatch(setIsLoading(true))
     const currentWeekNum = NUSModerator.academicCalendar.getAcadWeekInfo(new Date()).num
     const dispatchData = (data) => {
+      console.log(data)
       dispatch({
         type: SCHEDULING_ACTIONS.GET_USER_NUSMODS_EVENTS,
-        userNusModsEventsList: data[0].mods.filter((event) => {
-          return event.weeks.includes(currentWeekNum)
-        }),
+        userNusModsEventsList: data.length
+          ? data[0].mods.filter((event) => {
+              return event.weeks.includes(currentWeekNum)
+            })
+          : [],
       })
     }
     const resp = await getFromBackend(ENDPOINTS.NUSMODS + `/${userId}`, isFriends ? null : dispatchData)
     dispatch(setIsLoading(false))
-    if (resp.length === 0) return null
+    if (resp?.length === 0 || resp === undefined || resp === null) return null
     else {
       return resp[0].mods.filter((event) => {
         return event.weeks.includes(currentWeekNum)

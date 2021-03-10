@@ -14,7 +14,7 @@ import Timetable from '../../components/timetable/Timetable'
 import {
   deleteUserNusModsEvents,
   fetchAllCCAs,
-  fetchAllProfiles,
+  // fetchAllProfiles,
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
@@ -87,7 +87,7 @@ export default function Schedule() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
-    dispatch(fetchAllProfiles())
+    // dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
