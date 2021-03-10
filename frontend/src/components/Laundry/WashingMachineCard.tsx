@@ -176,13 +176,15 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         src={washingMachineIcon}
         onClick={() => {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
+          if (props.washingMachine.job != WMStatus.AVAIL)
+            history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }}
       />
       <Labels
         onClick={() => {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
+          if (props.washingMachine.job != WMStatus.AVAIL)
+            history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }}
       >
         <Header style={{ color: cardPrimaryColor }}>{props.washingMachine.job}</Header>

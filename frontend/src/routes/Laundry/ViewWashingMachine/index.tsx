@@ -218,7 +218,7 @@ export default function ViewWashingMachine() {
   }
 
   const UseWashineMachine = (machine: WashingMachine | null) => {
-    if (machine?.job === WMStatus.AVAIL || machine?.job === WMStatus.RESERVED) {
+    if (machine?.job === WMStatus.RESERVED) {
       return (
         <UseWashingMachineSection>
           <StyledSlider
