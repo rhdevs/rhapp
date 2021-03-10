@@ -94,14 +94,12 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + userId, {
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
       method: 'GET',
       mode: 'cors',
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log('fuck')
-        console.log(data)
         fetchedWashingMachine.userImage = data.profilePictureUrl
         returnTableWithImage.push(fetchedWashingMachine)
         if (returnTable.length === returnTableWithImage.length) {
