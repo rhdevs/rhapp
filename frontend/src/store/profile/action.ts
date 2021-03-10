@@ -298,6 +298,7 @@ export const DeleteProfilePost = (postIdToDelete: string) => async (
     .catch((err) => {
       const [error] = useSnackbar('error')
       error('Error deleting')
+      err.json()
     })
 
   dispatch({
