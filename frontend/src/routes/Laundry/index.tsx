@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { getLocationList, SetBlockLevelSelections } from '../../store/laundry/action'
 import LoadingSpin from '../../components/LoadingSpin'
+import { onRefresh } from '../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -36,29 +38,31 @@ export default function LaundryMain() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Laundry Time'} />
-        {isLoading && <LoadingSpin />}
-        {selectedLevel === null && selectedBlock !== 'Kuok' && (
-          <h4 style={{ textAlign: 'center', padding: '23px 0px 0px 0px' }}>Select Both Your Block and Level!</h4>
-        )}
-        <FilterGroup>
-          <DropDownSelector
-            SelectedValue={selectedBlock === '' ? 'Block' : (selectedBlock as string)}
-            ValueArray={blocks}
-            handleChange={(newBlock) => dispatch(SetBlockLevelSelections(newBlock, ''))}
-          />
-          {selectedBlock !== 'Kuok' && (
-            <DropDownSelector
-              SelectedValue={selectedLevel === '' ? 'Block' : (selectedLevel as string)}
-              ValueArray={levels}
-              handleChange={(newLevel) => dispatch(SetBlockLevelSelections('', newLevel))}
-            />
+        <PullToRefresh onRefresh={onRefresh}>
+          <TopNavBar title={'Laundry Time'} />
+          {isLoading && <LoadingSpin />}
+          {selectedLevel === null && selectedBlock !== 'Kuok' && (
+            <h4 style={{ textAlign: 'center', padding: '23px 0px 0px 0px' }}>Select Both Your Block and Level!</h4>
           )}
-        </FilterGroup>
-        {!isLoading &&
-          filteredMachines.map((item: WashingMachine) => (
-            <WashingMachineCard key={item.machineID} washingMachine={item} />
-          ))}
+          <FilterGroup>
+            <DropDownSelector
+              SelectedValue={selectedBlock === '' ? 'Block' : (selectedBlock as string)}
+              ValueArray={blocks}
+              handleChange={(newBlock) => dispatch(SetBlockLevelSelections(newBlock, ''))}
+            />
+            {selectedBlock !== 'Kuok' && (
+              <DropDownSelector
+                SelectedValue={selectedLevel === '' ? 'Block' : (selectedLevel as string)}
+                ValueArray={levels}
+                handleChange={(newLevel) => dispatch(SetBlockLevelSelections('', newLevel))}
+              />
+            )}
+          </FilterGroup>
+          {!isLoading &&
+            filteredMachines.map((item: WashingMachine) => (
+              <WashingMachineCard key={item.machineID} washingMachine={item} />
+            ))}
+        </PullToRefresh>
         <BottomNavBar />
       </MainContainer>
     </>

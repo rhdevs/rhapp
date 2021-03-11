@@ -21,6 +21,8 @@ import {
   SetBlockLevelSelections,
 } from '../../../store/laundry/action'
 import { useParams } from 'react-router-dom'
+import { onRefresh } from '../../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -318,8 +320,10 @@ export default function ViewWashingMachine() {
 
   return (
     <MainContainer>
-      {MachineDetails(selectedMachine)}
-      {UseWashineMachine(selectedMachine)}
+      <PullToRefresh onRefresh={onRefresh}>
+        {MachineDetails(selectedMachine)}
+        {UseWashineMachine(selectedMachine)}
+      </PullToRefresh>
       <BottomNavBar />
     </MainContainer>
   )

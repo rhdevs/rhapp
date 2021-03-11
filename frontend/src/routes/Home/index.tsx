@@ -14,7 +14,9 @@ import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/newIcons/washer.svg'
 import facilities_icon from '../../assets/newIcons/booking.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
-import supper_icon from '../../assets/newIcons/fast-food.svg'
+import supper_icon from '../../assets/supperIcon.svg'
+import PullToRefresh from 'pull-to-refresh-react'
+import { onRefresh } from '../../common/reloadPage'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -120,28 +122,30 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <TopBar>
-        <Greetings>
-          Good {partOfTheDay} {name}!
-        </Greetings>
-        {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
-      </TopBar>
-      <AnnouncementCarousel />
-      <ButtonGroup>
-        {buttons.map((button) => (
-          // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
-          <ActionButton
-            type="primary"
-            icon={<ImageButton filter={button.filter} src={button.src} />}
-            key={button.name}
-            onClick={button.clickHandler}
-          >
-            {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
-          </ActionButton>
-        ))}
-      </ButtonGroup>
-      <SocialSection />
-      <BottomNavBar />
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopBar>
+          <Greetings>
+            Good {partOfTheDay} {name}!
+          </Greetings>
+          {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
+        </TopBar>
+        <AnnouncementCarousel />
+        <ButtonGroup>
+          {buttons.map((button) => (
+            // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
+            <ActionButton
+              type="primary"
+              icon={<ImageButton filter={button.filter} src={button.src} />}
+              key={button.name}
+              onClick={button.clickHandler}
+            >
+              {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
+            </ActionButton>
+          ))}
+        </ButtonGroup>
+        <SocialSection />
+        <BottomNavBar />
+      </PullToRefresh>
     </MainContainer>
   )
 }

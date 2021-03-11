@@ -26,6 +26,8 @@ import {
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
+import { onRefresh } from '../../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -211,46 +213,47 @@ export default function ViewFacility() {
 
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
-      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
-      <MainContainer>
-        <>
-          {AlertSection}
-          <DateSelectorGroup>
-            <DateRange
-              editableDateInputs={true}
-              color="#DE5F4C"
-              onChange={(item) => {
-                dispatch(SetIsLoading(true))
-                dispatch(setViewDates(item, parseInt(params.facilityID)))
-              }}
-              moveRangeOnFirstSelection={false}
-              rangeColors={['#DE5F4C', '#002642']}
-              ranges={[
-                {
-                  startDate: ViewStartDate,
-                  endDate: ViewEndDate,
-                  key: 'ViewDateSelection',
-                },
-              ]}
-            />
-          </DateSelectorGroup>
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
+        <MainContainer>
+          <>
+            {AlertSection}
+            <DateSelectorGroup>
+              <DateRange
+                editableDateInputs={true}
+                color="#DE5F4C"
+                onChange={(item) => {
+                  dispatch(SetIsLoading(true))
+                  dispatch(setViewDates(item, parseInt(params.facilityID)))
+                }}
+                moveRangeOnFirstSelection={false}
+                rangeColors={['#DE5F4C', '#002642']}
+                ranges={[
+                  {
+                    startDate: ViewStartDate,
+                    endDate: ViewEndDate,
+                    key: 'ViewDateSelection',
+                  },
+                ]}
+              />
+            </DateSelectorGroup>
 
-          <ActionButtonGroup>
-            <StyledButton
-              onButtonClick={() => {
-                dispatch(
-                  createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
-                )
-                history.push('/facility/booking/create')
-              }}
-              hasSuccessMessage={false}
-              stopPropagation={false}
-              defaultButtonDescription={'Book Facility'}
-              defaultButtonColor="#DE5F4C"
-              updatedButtonColor="#DE5F4C"
-              updatedTextColor="white"
-            />
-            {/* <div onClick={() => console.log('pressed')}>
+            <ActionButtonGroup>
+              <StyledButton
+                onButtonClick={() => {
+                  dispatch(
+                    createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
+                  )
+                  history.push('/facility/booking/create')
+                }}
+                hasSuccessMessage={false}
+                stopPropagation={false}
+                defaultButtonDescription={'Book Facility'}
+                defaultButtonColor="#DE5F4C"
+                updatedButtonColor="#DE5F4C"
+                updatedTextColor="white"
+              />
+              {/* <div onClick={() => console.log('pressed')}>
                 <StyledButton
                   onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
                   hasSuccessMessage={false}
@@ -263,57 +266,58 @@ export default function ViewFacility() {
                   updatedButtonDescription={'🕶 Availabilities ⌄'}
                 />
               </div> */}
-          </ActionButtonGroup>
-          <DateDisplayText>
-            {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-            {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-          </DateDisplayText>
-          {!isLoading && (
-            <EventsGroup>
-              {facilityBookings?.map((event) => (
-                <EventCard
-                  key={event.bookingID}
-                  onClick={() => {
-                    history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
-                  }}
-                >
-                  {/* <EventAvatar src={dummyAvatar} /> */}
-                  <EventLabels>
-                    <EventBoldLabel>
-                      📅{' '}
-                      <b>
-                        {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
-                      </b>
-                    </EventBoldLabel>
-                    <EventNormalLabel>
-                      <b> {event?.ccaName} </b>
-                      {event.eventName}
-                    </EventNormalLabel>
-                  </EventLabels>
-                  <EventRightDisplay>
-                    {event.userID === localStorage.getItem('userID') ? (
-                      <Icon src={adminIcon} />
-                    ) : (
-                      <Icon
-                        onClick={() => {
-                          fetchTelegram(event)
-                        }}
-                        src={messageIcon}
-                      />
-                    )}
-                    <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
-                  </EventRightDisplay>
-                </EventCard>
-              ))}
-              {facilityBookings.length === 0 && (
-                <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
-              )}
-            </EventsGroup>
-          )}
-          {isLoading && <LoadingSpin />}
-          <BottomNavBar />
-        </>
-      </MainContainer>
+            </ActionButtonGroup>
+            <DateDisplayText>
+              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
+              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
+            </DateDisplayText>
+            {!isLoading && (
+              <EventsGroup>
+                {facilityBookings?.map((event) => (
+                  <EventCard
+                    key={event.bookingID}
+                    onClick={() => {
+                      history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
+                    }}
+                  >
+                    {/* <EventAvatar src={dummyAvatar} /> */}
+                    <EventLabels>
+                      <EventBoldLabel>
+                        📅{' '}
+                        <b>
+                          {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
+                        </b>
+                      </EventBoldLabel>
+                      <EventNormalLabel>
+                        <b> {event?.ccaName} </b>
+                        {event.eventName}
+                      </EventNormalLabel>
+                    </EventLabels>
+                    <EventRightDisplay>
+                      {event.userID === localStorage.getItem('userID') ? (
+                        <Icon src={adminIcon} />
+                      ) : (
+                        <Icon
+                          onClick={() => {
+                            fetchTelegram(event)
+                          }}
+                          src={messageIcon}
+                        />
+                      )}
+                      <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
+                    </EventRightDisplay>
+                  </EventCard>
+                ))}
+                {facilityBookings.length === 0 && (
+                  <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
+                )}
+              </EventsGroup>
+            )}
+            {isLoading && <LoadingSpin />}
+            <BottomNavBar />
+          </>
+        </MainContainer>
+      </PullToRefresh>
     </div>
   )
 }
