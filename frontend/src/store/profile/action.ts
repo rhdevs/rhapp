@@ -88,7 +88,6 @@ export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispat
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log('fetching user', data)
         dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: data })
       })
       .catch((err) => console.log(err))

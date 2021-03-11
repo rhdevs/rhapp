@@ -244,7 +244,6 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
         const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
-        console.log('sorted', sortedPosts)
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
           posts: sortedPosts,
@@ -277,7 +276,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
       })
-      console.log('fetching', localStorage.getItem('userID'))
       dispatch(fetchUserPosts(localStorage.getItem('userID')))
     })
     .catch(() => {
