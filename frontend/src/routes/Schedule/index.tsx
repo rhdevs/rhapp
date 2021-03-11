@@ -10,6 +10,8 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
+import { onRefresh } from '../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 import {
   deleteUserNusModsEvents,
@@ -184,51 +186,53 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
-      {isLoading && <LoadingSpin />}
-      {modal && (
-        <ConfirmationModal
-          title={'Confirm Delete?'}
-          hasLeftButton={true}
-          leftButtonText={'Delete'}
-          onLeftButtonClick={() => {
-            dispatch(setIsLoading(true))
-            dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
-            setModal(false)
-          }}
-          rightButtonText={'Cancel'}
-          onRightButtonClick={() => {
-            setModal(false)
-          }}
-        />
-      )}
-      <TimetableMainContainer>
-        <TimetableContainer>
-          <Timetable
-            events={userCurrentEvents}
-            eventsStartTime={userCurrentEventsStartTime}
-            eventsEndTime={userCurrentEventsEndTime}
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
+        {isLoading && <LoadingSpin />}
+        {modal && (
+          <ConfirmationModal
+            title={'Confirm Delete?'}
+            hasLeftButton={true}
+            leftButtonText={'Delete'}
+            onLeftButtonClick={() => {
+              dispatch(setIsLoading(true))
+              dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
+              setModal(false)
+            }}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => {
+              setModal(false)
+            }}
           />
-        </TimetableContainer>
-      </TimetableMainContainer>
-      {/* <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>Friends</TagTitleText>
-        </SmallContainer>
-        <Tags
-          profileOptions={profileList.filter((profile) => {
-            return profile.userID !== localStorage.getItem('userID')
-          })}
-          onChange={friendsOnChange}
-        />
-      </GroupContainer> */}
-      <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>CCA</TagTitleText>
-        </SmallContainer>
-        <Tags ccaOptions={ccaList} onChange={groupOnChange} />
-      </GroupContainer>
-      <BottomNavBar />
+        )}
+        <TimetableMainContainer>
+          <TimetableContainer>
+            <Timetable
+              events={userCurrentEvents}
+              eventsStartTime={userCurrentEventsStartTime}
+              eventsEndTime={userCurrentEventsEndTime}
+            />
+          </TimetableContainer>
+        </TimetableMainContainer>
+        {/* <GroupContainer>
+          <SmallContainer>
+            <TagTitleText>Friends</TagTitleText>
+          </SmallContainer>
+          <Tags
+            profileOptions={profileList.filter((profile) => {
+              return profile.userID !== localStorage.getItem('userID')
+            })}
+            onChange={friendsOnChange}
+          />
+        </GroupContainer> */}
+        <GroupContainer>
+          <SmallContainer>
+            <TagTitleText>CCA</TagTitleText>
+          </SmallContainer>
+          <Tags ccaOptions={ccaList} onChange={groupOnChange} />
+        </GroupContainer>
+        <BottomNavBar />
+      </PullToRefresh>
     </Background>
   )
 }

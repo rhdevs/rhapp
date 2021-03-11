@@ -19,6 +19,8 @@ import LoadingSpin from '../../components/LoadingSpin'
 import SocialPostCard from '../../components/Mobile/SocialPostCard'
 import dayjs from 'dayjs'
 import { getInitials } from '../../common/getInitials'
+import { onRefresh } from '../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -277,24 +279,26 @@ export default function Profile() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
-        {isLoading && <LoadingSpin />}
-        <ProfileComponent>
-          <PersonalInfoContainer />
-          {isOwnProfile ? (
-            <EditProfileButton
-              handleClick={() => {
-                history.push(PATHS.EDIT_PROFILE_PAGE)
-                dispatch(populateProfileEdits())
-              }}
-            />
-          ) : (
-            <FriendAndTelegramButtons user={user} />
-          )}
-          <CardContainer>
-            <CardTabs />
-          </CardContainer>
-        </ProfileComponent>
+        <PullToRefresh onRefresh={onRefresh}>
+          <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+          {isLoading && <LoadingSpin />}
+          <ProfileComponent>
+            <PersonalInfoContainer />
+            {isOwnProfile ? (
+              <EditProfileButton
+                handleClick={() => {
+                  history.push(PATHS.EDIT_PROFILE_PAGE)
+                  dispatch(populateProfileEdits())
+                }}
+              />
+            ) : (
+              <FriendAndTelegramButtons user={user} />
+            )}
+            <CardContainer>
+              <CardTabs />
+            </CardContainer>
+          </ProfileComponent>
+        </PullToRefresh>
         <BottomNavBar />
       </MainContainer>
     </>
