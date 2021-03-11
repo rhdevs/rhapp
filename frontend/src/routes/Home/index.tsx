@@ -109,7 +109,7 @@ export default function Home() {
       },
     },
     {
-      name: 'supper',
+      name: 'supper (WIP)',
       src: supper_icon,
       filter: 'invert(1)',
       clickHandler: () => {
