@@ -266,7 +266,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
-export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {
     return post.postId !== postIdToDelete
@@ -285,8 +285,8 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     })
 
   console.log('fetching', localStorage.getItem('userID'))
-  const dispatchHook = useDispatch()
-  dispatchHook(fetchUserPosts(localStorage.getItem('userID')))
+  // const dispatchHook = useDispatch()
+  dispatch(fetchUserPosts(localStorage.getItem('userID')))
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
