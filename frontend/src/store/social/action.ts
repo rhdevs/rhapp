@@ -224,7 +224,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    console.log(response)
+    console.log('responsee', response)
     if (response.length > 0) {
       const transformedPost = cloneDeep(response).map((post) => {
         post.date = post.createdAt
@@ -278,6 +278,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
       })
+      console.log('fetching', localStorage.getItem('userID'))
       fetchUserPosts(localStorage.getItem('userID'))
     })
     .catch(() => {
