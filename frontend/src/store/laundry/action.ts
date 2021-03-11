@@ -103,6 +103,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
           fetchedWashingMachine.userImage = data.profilePictureUrl
           returnTableWithImage.push(fetchedWashingMachine)
           if (returnTable.length === returnTableWithImage.length) {
+            console.log('here')
             dispatch({
               type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
               filteredMachines: returnTableWithImage as WashingMachine[],
