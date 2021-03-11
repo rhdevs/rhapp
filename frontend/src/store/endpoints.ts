@@ -88,11 +88,23 @@ export enum DOMAINS {
   SOCIAL = 'social',
 }
 
-export enum DOMAIN_URL {
-  FACILITY = '//rhappfacilities.rhdevs.repl.co',
-  EVENT = '//rhappevents.rhdevs.repl.co',
-  LAUNDRY = '//rhapplaundry.rhdevs.repl.co',
-  SOCIAL = '//rhappsocial.rhdevs.repl.co',
+export const DOMAIN_URL = {
+  FACILITY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappfacilities.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+  EVENT:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappevents.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappevents',
+  LAUNDRY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapplaundry.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhapplaundry',
+  SOCIAL:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappsocial.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappsocial',
 }
 
 async function makeRequest(
@@ -102,26 +114,36 @@ async function makeRequest(
   additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
-  let DOMAIN_URL: string
+  let DOMAIN_URL_REQ: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL = '//rhappfacilities.rhdevs.repl.co'
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappfacilities.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL = '//rhappevents.rhdevs.repl.co'
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappevents.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL = '//rhapplaundry.rhdevs.repl.co'
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapplaundry.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhapplaundry'
       break
     case DOMAINS.SOCIAL:
-      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappsocial.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
-    case DOMAINS.SOCIAL:
-      DOMAIN_URL = '//rhappsocial.rhdevs.repl.co'
   }
   return axios({
     method: method,
-    url: DOMAIN_URL + url,
+    url: DOMAIN_URL_REQ + url,
     headers: {
       'Access-Control-Allow-Origin': '*',
       ...additionalHeaders,
