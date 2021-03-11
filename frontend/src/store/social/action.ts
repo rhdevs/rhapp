@@ -279,14 +279,14 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
       })
-      console.log('fetching', localStorage.getItem('userID'))
-
-      const dispatchHook = useDispatch()
-      dispatchHook(fetchUserPosts(localStorage.getItem('userID')))
     })
     .catch(() => {
       error('Post not deleted. Try again later.')
     })
+
+  console.log('fetching', localStorage.getItem('userID'))
+  const dispatchHook = useDispatch()
+  dispatchHook(fetchUserPosts(localStorage.getItem('userID')))
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
