@@ -178,7 +178,7 @@ export default function Profile() {
       ) : (
         <AvatarSpan>
           <img
-            alt="logo"
+            alt="Profile Photo"
             style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
             src={'data:image/png;base64,' + user?.profilePictureUrl}
           />
