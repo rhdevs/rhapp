@@ -179,7 +179,7 @@ const EditPersonalInfoContainer = () => {
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
-        <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
+        <Form.Item name={['user', 'bio']} style={{ margin: '23px', borderRadius: '20px' }}>
           <Input.TextArea defaultValue={newBio} placeholder={newBio} />
         </Form.Item>
         <Form.Item>

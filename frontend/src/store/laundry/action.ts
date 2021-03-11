@@ -92,9 +92,8 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
   const returnTableWithImage: WashingMachine[] = []
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
-    const userId = fetchedWashingMachine.userID
-    if (userId) {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
+    if (fetchedWashingMachine.jobID !== undefined) {
+      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + fetchedWashingMachine.userID, {
         method: 'GET',
         mode: 'cors',
       })
