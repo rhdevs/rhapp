@@ -93,7 +93,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
-    if (userId) {
+    try {
       fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
         method: 'GET',
         mode: 'cors',
@@ -103,13 +103,14 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
           fetchedWashingMachine.userImage = data.profilePictureUrl
           returnTableWithImage.push(fetchedWashingMachine)
           if (returnTable.length === returnTableWithImage.length) {
-            console.log('here')
             dispatch({
               type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
               filteredMachines: returnTableWithImage as WashingMachine[],
             })
           }
         })
+    } catch (err) {
+      console.log('error when fetching images, hence cant update filtered machine')
     }
   })
 
