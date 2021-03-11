@@ -122,28 +122,30 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <TopBar>
-        <Greetings>
-          Good {partOfTheDay} {name}!
-        </Greetings>
-        {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
-      </TopBar>
-      <AnnouncementCarousel />
-      <ButtonGroup>
-        {buttons.map((button) => (
-          // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
-          <ActionButton
-            type="primary"
-            icon={<ImageButton filter={button.filter} src={button.src} />}
-            key={button.name}
-            onClick={button.clickHandler}
-          >
-            {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
-          </ActionButton>
-        ))}
-      </ButtonGroup>
-      <SocialSection />
-      <BottomNavBar />
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopBar>
+          <Greetings>
+            Good {partOfTheDay} {name}!
+          </Greetings>
+          {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
+        </TopBar>
+        <AnnouncementCarousel />
+        <ButtonGroup>
+          {buttons.map((button) => (
+            // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
+            <ActionButton
+              type="primary"
+              icon={<ImageButton filter={button.filter} src={button.src} />}
+              key={button.name}
+              onClick={button.clickHandler}
+            >
+              {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
+            </ActionButton>
+          ))}
+        </ButtonGroup>
+        <SocialSection />
+        <BottomNavBar />
+      </PullToRefresh>
     </MainContainer>
   )
 }

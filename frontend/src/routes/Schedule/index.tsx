@@ -214,7 +214,7 @@ export default function Schedule() {
             />
           </TimetableContainer>
         </TimetableMainContainer>
-        <GroupContainer>
+        {/* <GroupContainer>
           <SmallContainer>
             <TagTitleText>Friends</TagTitleText>
           </SmallContainer>
@@ -224,29 +224,7 @@ export default function Schedule() {
             })}
             onChange={friendsOnChange}
           />
-<<<<<<< HEAD
-        </TimetableContainer>
-      </TimetableMainContainer>
-      {/* <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>Friends</TagTitleText>
-        </SmallContainer>
-        <Tags
-          profileOptions={profileList.filter((profile) => {
-            return profile.userID !== localStorage.getItem('userID')
-          })}
-          onChange={friendsOnChange}
-        />
-      </GroupContainer> */}
-      <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>CCA</TagTitleText>
-        </SmallContainer>
-        <Tags ccaOptions={ccaList} onChange={groupOnChange} />
-      </GroupContainer>
-      <BottomNavBar />
-=======
-        </GroupContainer>
+        </GroupContainer> */}
         <GroupContainer>
           <SmallContainer>
             <TagTitleText>CCA</TagTitleText>
@@ -255,7 +233,6 @@ export default function Schedule() {
         </GroupContainer>
         <BottomNavBar />
       </PullToRefresh>
->>>>>>> Abstract and add refresh to more pages
     </Background>
   )
 }
