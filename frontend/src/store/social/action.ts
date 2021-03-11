@@ -266,6 +266,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {

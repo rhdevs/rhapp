@@ -64,7 +64,7 @@ export default function SocialSection() {
   const dispatch = useDispatch()
   const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
   const socialPosts = useSelector((state: RootState) => state.social.posts)
-  const { pageIndex, isLoading, hasNoMorePosts } = useSelector((state: RootState) => state.social)
+  const { pageIndex, isLoading, hasNoMorePosts, postsFilter } = useSelector((state: RootState) => state.social)
 
   const userID = localStorage.getItem('userID') ?? undefined
 
@@ -72,7 +72,9 @@ export default function SocialSection() {
     dispatch(GetPosts(currentPostsFilter, pageIndex, userID))
   }, [currentPostsFilter])
 
-  const toggleTab = (postsFilter: POSTS_FILTER) => () => dispatch(SwitchPostsFilter(postsFilter))
+  const toggleTab = (newPostsFilter: POSTS_FILTER) => () => {
+    if (postsFilter != newPostsFilter) dispatch(SwitchPostsFilter(newPostsFilter))
+  }
 
   const renderSocialPosts = () => {
     return socialPosts.map((post) => {
