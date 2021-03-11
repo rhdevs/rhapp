@@ -150,12 +150,13 @@ def add_booking():
         #     return {"err": "Unauthorised Access"}, 401
 
         # Check for exisiting booking
-        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"), "$or": [
-            {"startTime": {"$gt": formData.get('startTime')}, "startTime": {
-                "$lt": formData.get('endTime')}},
-            {"endTime": {"$gt": formData.get('startTime')}, "endTime": {
-                "$lt": formData.get('endTime')}}
-        ]})))
+        # x1 <= y2 && y1 <= x2 because ranges are well-formed
+        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"),
+                                                         "endTime": {
+                                                             "$gte": formData.get('startTime')},
+                                                         "startTime": {
+                                                             "$lte": formData.get('endTime')}
+                                                         })))
 
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
