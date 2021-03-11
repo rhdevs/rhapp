@@ -139,7 +139,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       }
       break
     case WMStatus.UNCOLLECTED:
-      label = 'Notify'
+      label = props.washingMachine.userID === localStorage.getItem('userID') ? '' : 'Notify'
       iconSrc = props.washingMachine.userImage
         ? props.washingMachine.userImage
         : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
