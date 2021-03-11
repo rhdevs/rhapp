@@ -33,6 +33,7 @@
     "less-loader": "^7.1.0",
     "nusmoderator": "^3.0.0",
     "password-hash": "^1.2.2",
+    "pull-to-refresh-react": "^1.2.4",
     "react": "^17.0.1",
     "react-app-rewired": "^2.1.7",
     "react-date-range": "^1.1.3",
