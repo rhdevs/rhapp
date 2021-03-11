@@ -4,6 +4,7 @@ import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
 import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get, del } from '../endpoints'
 import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
+import { fetchUserPosts } from '../profile/action'
 
 const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
@@ -269,6 +270,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
+  fetchUserPosts(localStorage.getItem('userID'))
   del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
     .then(() => {
       success('Your post has been deleted!')

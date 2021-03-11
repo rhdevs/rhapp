@@ -172,7 +172,7 @@ function SocialPostCard(props: socialPostCardProps) {
             <Avatar
               size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
               style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-              src={<Image src={'data:image/png;base64,' + avatar} />}
+              src={<Image src={'data:image/png;base64,' + avatar} height={40} width={40} />}
               userId={userId}
             />
           ) : (
