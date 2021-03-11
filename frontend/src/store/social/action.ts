@@ -270,7 +270,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  fetchUserPosts(localStorage.getItem('userID'))
   del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
     .then(() => {
       success('Your post has been deleted!')
@@ -278,6 +277,7 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
       })
+      fetchUserPosts(localStorage.getItem('userID'))
     })
     .catch(() => {
       error('Post not deleted. Try again later.')
