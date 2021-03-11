@@ -72,7 +72,7 @@ type GetPostDetailsToEdit = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostCca: number
   userId: string
 }
 
@@ -82,7 +82,7 @@ type EditNewFields = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostCca: number
 }
 
 type SetWarnings = {

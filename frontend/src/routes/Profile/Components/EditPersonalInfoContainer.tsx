@@ -172,7 +172,7 @@ const EditPersonalInfoContainer = () => {
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input
-              defaultValue={'@' + newTelegramHandle}
+              defaultValue={newTelegramHandle}
               placeholder={'@' + newTelegramHandle}
               onChange={() => dispatch(setHasChanged(true))}
             />

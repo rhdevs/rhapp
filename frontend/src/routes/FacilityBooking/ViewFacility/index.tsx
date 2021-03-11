@@ -204,10 +204,8 @@ export default function ViewFacility() {
 
   const AlertSection = (
     <AlertGroup>
-      {createSuccess && (
-        <Alert message="Successfully Created Event" description="Yay yippe doodles" type="success" closable showIcon />
-      )}
-      {createFailure && <Alert message="Event not created!!!" type="error" closable showIcon />}
+      {createSuccess && <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />}
+      {createFailure && <Alert message="Not Successful Boohoo :-(" type="error" closable showIcon />}
     </AlertGroup>
   )
 

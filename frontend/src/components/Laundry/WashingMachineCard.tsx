@@ -6,13 +6,7 @@ import rightArrowIcon from '../../assets/rightArrowIcon.svg'
 import { useHistory } from 'react-router-dom'
 import tickIcon from '../../assets/tickIcon.svg'
 import { WashingMachine, WMStatus } from '../../store/laundry/types'
-import {
-  fetchTelegram,
-  getUserProfilePic,
-  SetSelectedMachine,
-  updateMachine,
-  SetBlockLevelSelections,
-} from '../../store/laundry/action'
+import { fetchTelegram, SetSelectedMachine, updateMachine, SetBlockLevelSelections } from '../../store/laundry/action'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'
 import wm_inuse from '../../assets/washing-machines/wm_inuse.gif'
@@ -146,7 +140,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       break
     case WMStatus.UNCOLLECTED:
       label = 'Notify'
-      iconSrc = getUserProfilePic(props.washingMachine.machineID)
+      iconSrc = props.washingMachine.userImage
+        ? props.washingMachine.userImage
+        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         goToTelegramHandle(props.washingMachine)
@@ -155,7 +151,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
-      iconSrc = getUserProfilePic(props.washingMachine.machineID)
+      iconSrc = props.washingMachine.userImage
+        ? props.washingMachine.userImage
+        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
       rightAction = () => {
         dispatch(SetSelectedMachine(props.washingMachine))
         history.push(PATHS.VIEW_WASHING_MACHINE)
