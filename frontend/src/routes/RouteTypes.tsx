@@ -31,8 +31,6 @@ const getIsLoggedIn = async () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PrivateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
-  console.log(process.env.REACT_APP_MODE)
-
   if (process.env.REACT_APP_MODE == 'development') {
     localStorage.setItem('token', 'fuck')
     localStorage.setItem('userID', 'A1234567B')
