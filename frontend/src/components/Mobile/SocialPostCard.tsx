@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
@@ -10,6 +10,7 @@ import { DeleteProfilePost } from '../../store/profile/action'
 import { DeleteSocialPost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
 import { getInitials } from '../../common/getInitials'
+import { RootState } from '../../../src/store/types'
 
 const CardContainer = styled.div`
   display: flex;
@@ -133,6 +134,8 @@ type socialPostCardProps = {
 function SocialPostCard(props: socialPostCardProps) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const SocialState = useSelector((state: RootState) => state.social)
+  const ProfileState = useSelector((state: RootState) => state.profile)
 
   const [menuIsOpen, setMenuIsOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
@@ -159,8 +162,16 @@ function SocialPostCard(props: socialPostCardProps) {
   const onConfirmDeleteClick = () => {
     setMenuIsOpen(false)
     setDeleteConfirmation(!deleteConfirmation)
-    dispatch(DeleteSocialPost(postId))
-    dispatch(DeleteProfilePost(postId))
+
+    if (SocialState.posts.length !== 0 && ProfileState.posts.length !== 0) {
+      dispatch(DeleteSocialPost(postId))
+      dispatch(DeleteProfilePost(postId))
+    } else if (SocialState.posts.length !== 0) {
+      dispatch(DeleteSocialPost(postId))
+    } else if (ProfileState.posts.length !== 0) {
+      dispatch(DeleteProfilePost(postId))
+    } else {
+    }
   }
 
   return (

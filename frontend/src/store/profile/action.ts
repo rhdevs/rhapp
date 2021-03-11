@@ -3,6 +3,9 @@ import { DOMAIN_URL, ENDPOINTS } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 
+const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
+
 // export const checkIsLoggedIn = () => (dispatch: Dispatch<ActionTypes>) => {
 //   const token = localStorage.token
 //   console.log(token)
@@ -290,15 +293,12 @@ export const DeleteProfilePost = (postIdToDelete: string) => async (
     method: 'DELETE',
     mode: 'cors',
   })
-    .then((resp) => {
-      const [success] = useSnackbar('success')
-      success('Successfully deleted!')
-      resp.json()
+    .then(() => {
+      success('Post successfully deleted!')
     })
     .catch((err) => {
-      const [error] = useSnackbar('error')
-      error('Error deleting')
-      err.json()
+      console.log(err)
+      error('Error deleting post')
     })
 
   dispatch({

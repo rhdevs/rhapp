@@ -6,7 +6,7 @@ import { cloneDeep, intersection } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 
 const [success] = useSnackbar('success')
-
+const [error] = useSnackbar('error')
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
   get(ENDPOINTS.USER_DETAILS, DOMAINS.SOCIAL, '/' + userID).then((response) => {
@@ -267,6 +267,13 @@ export const DeleteSocialPost = (postIdToDelete: string) => async (
     method: 'DELETE',
     mode: 'cors',
   })
+    .then(() => {
+      success('Post successfully deleted!')
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Error deleting post')
+    })
 
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
