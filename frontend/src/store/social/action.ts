@@ -270,20 +270,17 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     return post.postId !== postIdToDelete
   })
 
-  del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-    .then(() => {
-      success('Your post has been deleted!')
-      dispatch({
-        type: SOCIAL_ACTIONS.DELETE_POST,
-        posts: newPosts,
-      })
+  del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`).then(() => {
+    success('Your post has been deleted!')
+    dispatch({
+      type: SOCIAL_ACTIONS.DELETE_POST,
+      posts: newPosts,
     })
-    .catch(() => {
-      error('Post not deleted. Try again later.')
-    })
-
+  })
   console.log('fetching', localStorage.getItem('userID'))
-  dispatch(fetchUserPosts(localStorage.getItem('userID')))
+  dispatch(fetchUserPosts(localStorage.getItem('userID'))).catch(() => {
+    error('Post not deleted. Try again later.')
+  })
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
