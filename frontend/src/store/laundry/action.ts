@@ -94,7 +94,16 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
     try {
-      if (fetchedWashingMachine.jobID) {
+      // This condition allows code to run AFTER forEach
+      if (returnTableWithImage.length === returnTable.length) {
+        dispatch({
+          type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+          filteredMachines: returnTableWithImage as WashingMachine[],
+        })
+        dispatch(SetIsLoading(false))
+      }
+      // if there is a job, push WM with image, else push WM without image
+      if (fetchedWashingMachine.jobID !== undefined && fetchedWashingMachine.userID) {
         fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
           method: 'GET',
           mode: 'cors',
@@ -112,13 +121,6 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
       console.log('error when fetching images, hence cant update filtered machine')
     }
   })
-
-  dispatch({
-    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-    filteredMachines: returnTableWithImage as WashingMachine[],
-  })
-
-  dispatch(SetIsLoading(false))
 }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -257,19 +259,21 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
 }
 
 export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-        console.log(data.err)
-      } else {
-        dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
-      }
+  if (selectedMachine.userID && selectedMachine.jobID !== undefined) {
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
+      method: 'GET',
+      mode: 'cors',
     })
-    .catch((err) => {
-      console.log(err)
-    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          console.log(data.err)
+        } else {
+          dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 }

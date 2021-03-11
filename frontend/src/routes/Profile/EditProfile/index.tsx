@@ -247,7 +247,7 @@ export default function EditProfile() {
             </span>
           }
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {renderSwitch(detailsItem.title)}
