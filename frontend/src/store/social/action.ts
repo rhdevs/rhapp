@@ -225,7 +225,6 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    console.log('responsee', response)
     if (response.length > 0) {
       const transformedPost = cloneDeep(response).map((post) => {
         post.date = post.createdAt
@@ -241,8 +240,6 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
-      console.log('posts', posts)
-      console.log('post diff', postDiff)
 
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
@@ -286,7 +283,6 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
     })
 
   console.log('fetching', localStorage.getItem('userID'))
-  // const dispatchHook = useDispatch()
   dispatch(fetchUserPosts(localStorage.getItem('userID')))
 }
 

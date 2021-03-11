@@ -162,8 +162,6 @@ function SocialPostCard(props: socialPostCardProps) {
     dispatch(DeletePost(postId))
   }
 
-  console.log('avatar', avatar)
-  console.log(initials)
   return (
     <>
       <CardContainer>
