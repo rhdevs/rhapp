@@ -31,20 +31,22 @@ const getIsLoggedIn = async () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PrivateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
+  console.log(process.env.REACT_APP_MODE)
+
   if (process.env.REACT_APP_MODE == 'development') {
     localStorage.setItem('token', 'fuck')
     localStorage.setItem('userID', 'A1234567B')
     return <Route {...rest} render={(props) => <Component {...props} />} />
-  }
-
-  if (localStorage.token) {
-    return getIsLoggedIn() ? (
-      <Route {...rest} render={(props) => <Component {...props} />} />
-    ) : (
-      <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
-    )
   } else {
-    return <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+    if (localStorage.token) {
+      return getIsLoggedIn() ? (
+        <Route {...rest} render={(props) => <Component {...props} />} />
+      ) : (
+        <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+      )
+    } else {
+      return <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+    }
   }
 }
 
