@@ -94,6 +94,15 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
     try {
+      // This condition allows code to run AFTER forEach
+      if (returnTableWithImage.length === returnTable.length) {
+        dispatch({
+          type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+          filteredMachines: returnTableWithImage as WashingMachine[],
+        })
+        dispatch(SetIsLoading(false))
+      }
+      // if there is a job, push WM with image, else push WM without image
       if (fetchedWashingMachine.jobID) {
         fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
           method: 'GET',
@@ -112,13 +121,6 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
       console.log('error when fetching images, hence cant update filtered machine')
     }
   })
-
-  dispatch({
-    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-    filteredMachines: returnTableWithImage as WashingMachine[],
-  })
-
-  dispatch(SetIsLoading(false))
 }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
