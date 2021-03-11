@@ -145,7 +145,12 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
         : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        goToTelegramHandle(props.washingMachine)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        } else {
+          goToTelegramHandle(props.washingMachine)
+        }
       }
       break
     case WMStatus.INUSE:
