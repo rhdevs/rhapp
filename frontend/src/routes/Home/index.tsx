@@ -14,7 +14,9 @@ import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/newIcons/washer.svg'
 import facilities_icon from '../../assets/newIcons/booking.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
-import supper_icon from '../../assets/newIcons/fast-food.svg'
+import supper_icon from '../../assets/supperIcon.svg'
+import PullToRefresh from 'pull-to-refresh-react'
+import { onRefresh } from '../../common/reloadPage'
 
 const MainContainer = styled.div`
   width: 100%;
