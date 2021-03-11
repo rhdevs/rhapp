@@ -33,7 +33,7 @@ const DaySpanContainer = styled.span`
 const TimetableDayContainer = styled.div`
   border: 0.1px groove rgb(255 255 255);
   border-radius: 0px 5px 5px 0px !important;
-  background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
+  background: linear-gradient(to right, #e2abab3d 50%, #fff 0);
 `
 
 const ChildrenContainer = styled.div`

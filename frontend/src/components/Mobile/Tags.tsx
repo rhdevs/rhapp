@@ -37,7 +37,18 @@ function Tags({
   const renderContent = () => {
     if (ccaOptions) {
       return ccaOptions.map((option, key) => (
-        <Option value={option.ccaID} key={key} label={option.ccaName}>
+        <Option
+          value={option.ccaID}
+          key={key}
+          label={option.ccaName}
+          style={{
+            backgroundColor: 'rgb(245, 245, 245)',
+            padding: '6px 8px',
+            borderRadius: '8px',
+            lineHeight: '40px',
+            margin: '10px',
+          }}
+        >
           {option.ccaName}
         </Option>
       ))
