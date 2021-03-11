@@ -5,7 +5,7 @@ import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get, del } from '../endpoint
 import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 import { fetchUserPosts } from '../profile/action'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 
 const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
