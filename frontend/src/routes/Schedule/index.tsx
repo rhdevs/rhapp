@@ -14,7 +14,7 @@ import Timetable from '../../components/timetable/Timetable'
 import {
   deleteUserNusModsEvents,
   fetchAllCCAs,
-  fetchAllProfiles,
+  // fetchAllProfiles,
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
@@ -78,16 +78,16 @@ export default function Schedule() {
     isLoading,
     nusModsIsSuccessful,
     nusModsIsFailure,
-    profileList,
+    // profileList,
     ccaList,
     selectedProfileIds,
-    selectedCCAIds,
+    // selectedCCAIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
-    dispatch(fetchAllProfiles())
+    // dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
@@ -165,10 +165,10 @@ export default function Schedule() {
 
   const [modal, setModal] = useState(false)
 
-  const friendsOnChange = (input: string[]) => {
-    dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
-  }
+  // const friendsOnChange = (input: string[]) => {
+  //   dispatch(setSelectedProfileIds(input))
+  //   dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
+  // }
 
   const groupOnChange = (input: string[]) => {
     const numberArr: number[] = input.map((x: string) => {
@@ -211,7 +211,7 @@ export default function Schedule() {
           />
         </TimetableContainer>
       </TimetableMainContainer>
-      <GroupContainer>
+      {/* <GroupContainer>
         <SmallContainer>
           <TagTitleText>Friends</TagTitleText>
         </SmallContainer>
@@ -221,7 +221,7 @@ export default function Schedule() {
           })}
           onChange={friendsOnChange}
         />
-      </GroupContainer>
+      </GroupContainer> */}
       <GroupContainer>
         <SmallContainer>
           <TagTitleText>CCA</TagTitleText>

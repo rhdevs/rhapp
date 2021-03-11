@@ -18,6 +18,7 @@ app.config['SECRET_KEY'] = os.getenv('AUTH_SECRET_KEY')
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PWD = os.getenv('DB_PWD')
+DEFAULT_PROFILE_PIC = os.getenv('DEFAULT_PROFILE_PIC')
 URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(
     DB_PWD)
 
@@ -27,7 +28,6 @@ URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWr
 client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 db = client["RHApp"]
-
 
 
 def renamePost(post):
@@ -257,20 +257,21 @@ def editProfile():
 @cross_origin(supports_credentials=True)
 def getUserDetails(userID):
     try:
-        data1 = db.User.find_one({"userID": userID}, {"passwordHash" : 0, "_id" : 0})
-        data2 = db.Profiles.find_one({"userID": userID}, {"_id" : 0})
-       
+        data1 = db.User.find_one({"userID": userID}, {
+                                 "passwordHash": 0, "_id": 0})
+        data2 = db.Profiles.find_one({"userID": userID}, {"_id": 0})
+
         position = data1.get("position")
-        
+
         def getCCAName(ccaID):
             return {
-                "name" : db.CCA.find_one({"ccaID": ccaID}).get("ccaName"),
-                "ccaID" : ccaID
+                "name": db.CCA.find_one({"ccaID": ccaID}).get("ccaName"),
+                "ccaID": ccaID
             }
-        
+
         position = list(map(getCCAName, position))
-        data1["position"] = position;
-                   
+        data1["position"] = position
+
         data1.update(data2)
 
     except Exception as e:
@@ -384,7 +385,7 @@ def getLastN():
 
         # query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}, {"userID": userID}]
         #          }
-        
+
         data = db.Posts.find({},
                              sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
 
@@ -482,6 +483,7 @@ def getOfficialPosts():
                 'ccaName') if ccaID != -1 else None
             response.append(item)
             item['postID'] = item.get('_id')
+            del item['_id']
 
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
@@ -727,7 +729,7 @@ def images(imageName):
 
 
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
-# db.Session.create_index("createdAt", expireAfterSeconds=120)
+db.Session.create_index("createdAt", expireAfterSeconds=1210000)
 
 """
 Register route:
@@ -745,12 +747,13 @@ def register():
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
         email = formData["email"]
-        position = formData["position"]
+        position = []
         displayName = formData["displayName"]
         bio = formData["bio"]
         block = formData["block"]
         telegramHandle = formData["telegramHandle"]
-        #print(list(db.User.find({'userID': userID, 'passwordHash': passwordHash})))
+        modules = []
+
         if list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):  # entry exists
             return jsonify({'message': 'User already exists'}), 401
         # add to User table
@@ -765,7 +768,8 @@ def register():
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
-                                "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
+                                "profilePictureUrl": "data:image/png;base64," + DEFAULT_PROFILE_PIC,
+                                "modules": modules
                                 })
     except Exception as e:
         print(e)
@@ -791,15 +795,10 @@ def login():
     if not list(db.User.find({'userID': userID, 'passwordHash': passwordHash})):
         return jsonify({'message': 'Invalid credentials'}), 403
 
-    # insert new session into Session table
-    #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
     creationDate = datetime.now()
-    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
-                      'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
+    db.Session.update_one({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
+        'userID': userID, 'passwordHash': passwordHash, 'createdAt': creationDate}}, upsert=True)
 
-    #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
-    # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
-    # pip3 install pyJWT
     token = jwt.encode({'userID': userID,
                         'passwordHash': passwordHash
                         }, app.config['SECRET_KEY'], algorithm="HS256")
@@ -836,16 +835,12 @@ def check_for_token(func):
         originalToken = db.Session.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
         oldTime = originalToken['createdAt']
-        # print(datetime.datetime.now())
-        # print(oldTime)
-        if datetime.now() > oldTime + timedelta(minutes=2):
+        if datetime.now() > oldTime + timedelta(weeks=2):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
-            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
-            #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
-                              '$set': {'createdAt': datetime.now()}}, upsert=True)
+            db.Session.update_one({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
+                '$set': {'createdAt': datetime.now()}}, upsert=True)
 
         return func(currentUser, *args, **kwargs)
 
@@ -884,5 +879,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
+    # app.run('0.0.0.0', port=8080)
