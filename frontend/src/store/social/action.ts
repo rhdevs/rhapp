@@ -5,6 +5,7 @@ import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get, del } from '../endpoint
 import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 import { fetchUserPosts } from '../profile/action'
+import { useDispatch } from 'react-redux'
 
 const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
@@ -232,7 +233,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         post.ccaId = post.ccaID
         post.userId = post.userID
         post.date = new Date(post.createdAt)
-        post.profilePic = post.profilePicURI
+        post.profilePic = post.profilePictureURI
         return post
       })
 
@@ -279,7 +280,9 @@ export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<
         posts: newPosts,
       })
       console.log('fetching', localStorage.getItem('userID'))
-      fetchUserPosts(localStorage.getItem('userID'))
+
+      const dispatchHook = useDispatch()
+      dispatchHook(fetchUserPosts(localStorage.getItem('userID')))
     })
     .catch(() => {
       error('Post not deleted. Try again later.')
