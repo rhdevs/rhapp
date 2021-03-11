@@ -482,6 +482,8 @@ def getOfficialPosts():
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
+            item['postID'] = item.get('_id')
+            del item['_id']
 
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
