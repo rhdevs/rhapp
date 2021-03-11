@@ -481,6 +481,7 @@ def getOfficialPosts():
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
+            item['postID'] = item.get('_id')
 
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:
@@ -726,7 +727,7 @@ def images(imageName):
 
 
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
-db.Session.create_index("createdAt", expireAfterSeconds=120)
+# db.Session.create_index("createdAt", expireAfterSeconds=120)
 
 """
 Register route:
