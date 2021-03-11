@@ -73,6 +73,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
 ) => {
   dispatch(SetIsLoading(true))
   let returnTable: WashingMachine[] = []
+  let returnTableWithImage: WashingMachine[] = []
 
   // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
   for (let i = 0; i < 3; i++) {
@@ -88,8 +89,6 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
         returnTable = returnTable.concat(data)
       })
   }
-
-  const returnTableWithImage: WashingMachine[] = []
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
     const userId = fetchedWashingMachine.userID
@@ -111,11 +110,11 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
           .then((resp) => resp.json())
           .then((data) => {
             fetchedWashingMachine.userImage = data.profilePictureUrl
-            returnTableWithImage.push(fetchedWashingMachine)
+            returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
           })
       } else {
         // else user image is just undefined
-        returnTableWithImage.push(fetchedWashingMachine)
+        returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
       }
     } catch (err) {
       console.log('error when fetching images, hence cant update filtered machine')
