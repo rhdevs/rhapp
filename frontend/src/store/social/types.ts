@@ -10,6 +10,7 @@ export type Post = {
   createdAt?: Timestamp
   name: string
   userId: string
+  profilePic: string
 }
 
 export type User = {

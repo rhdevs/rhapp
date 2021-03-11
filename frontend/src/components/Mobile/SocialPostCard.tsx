@@ -9,6 +9,7 @@ import { PATHS } from '../../routes/Routes'
 import { DeletePost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
 import { getInitials } from '../../common/getInitials'
+import { Image } from 'antd'
 
 const CardContainer = styled.div`
   display: flex;
@@ -165,14 +166,22 @@ function SocialPostCard(props: socialPostCardProps) {
     <>
       <CardContainer>
         <div>
-          <Avatar
-            size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
-            style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-            src={avatar}
-            userId={userId}
-          >
-            {initials}
-          </Avatar>
+          {avatar ? (
+            <Avatar
+              size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
+              style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+              src={<Image src={'data:image/png;base64,' + avatar} height={40} width={40} />}
+              userId={userId}
+            />
+          ) : (
+            <Avatar
+              size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
+              style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+              userId={userId}
+            >
+              {initials}
+            </Avatar>
+          )}
         </div>
         <CenterContainer onClick={onExpandClick}>
           <TextContainer>
