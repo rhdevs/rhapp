@@ -121,7 +121,7 @@ export default function SocialSection() {
           </Tab>
         </TabBar>
       </Sticky>
-      {socialPosts.length > 0 && !isLoading ? renderSocialPosts() : <NoPostText>No posts, post something!</NoPostText>}
+      {socialPosts.length > 0 || !isLoading ? renderSocialPosts() : <NoPostText>No posts, post something!</NoPostText>}
       {!hasNoMorePosts && (
         <StyledContainer>
           {isLoading ? (
