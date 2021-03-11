@@ -64,8 +64,9 @@ export default function SocialSection() {
   const dispatch = useDispatch()
   const currentPostsFilter = useSelector((state: RootState) => state.social.postsFilter)
   const socialPosts = useSelector((state: RootState) => state.social.posts)
-  const { userID } = useSelector((state: RootState) => state.profile.user)
   const { pageIndex, isLoading, hasNoMorePosts } = useSelector((state: RootState) => state.social)
+
+  const userID = localStorage.getItem('userID') ?? undefined
 
   useEffect(() => {
     dispatch(GetPosts(currentPostsFilter, pageIndex, userID))
