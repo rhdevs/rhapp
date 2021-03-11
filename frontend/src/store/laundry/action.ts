@@ -92,23 +92,30 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
   const returnTableWithImage: WashingMachine[] = []
 
   returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
-    if (fetchedWashingMachine.jobID !== undefined) {
-      fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + fetchedWashingMachine.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          fetchedWashingMachine.userImage = data.profilePictureUrl
-          returnTableWithImage.push(fetchedWashingMachine)
-          if (returnTable.length === returnTableWithImage.length) {
-            dispatch({
-              type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-              filteredMachines: returnTableWithImage as WashingMachine[],
-            })
-          }
+    const userId = fetchedWashingMachine.userID
+    try {
+      if (fetchedWashingMachine.jobID) {
+        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
+          method: 'GET',
+          mode: 'cors',
         })
+          .then((resp) => resp.json())
+          .then((data) => {
+            fetchedWashingMachine.userImage = data.profilePictureUrl
+            returnTableWithImage.push(fetchedWashingMachine)
+          })
+      } else {
+        // else user image is just undefined
+        returnTableWithImage.push(fetchedWashingMachine)
+      }
+    } catch (err) {
+      console.log('error when fetching images, hence cant update filtered machine')
     }
+  })
+
+  dispatch({
+    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+    filteredMachines: returnTableWithImage as WashingMachine[],
   })
 
   dispatch(SetIsLoading(false))
