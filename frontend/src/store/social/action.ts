@@ -267,12 +267,6 @@ export const DeleteSocialPost = (postIdToDelete: string) => async (
     method: 'DELETE',
     mode: 'cors',
   })
-    .then((resp) => {
-      resp.json()
-    })
-    .catch((err) => {
-      err.json()
-    })
 
   dispatch({
     type: SOCIAL_ACTIONS.DELETE_POST,
