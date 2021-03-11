@@ -221,7 +221,6 @@ function SocialPostCard(props: socialPostCardProps) {
           onLeftButtonClick={onConfirmDeleteClick}
           rightButtonText={'Cancel'}
           onRightButtonClick={onDeleteClick}
-          bottom={10}
         />
       )}
     </>

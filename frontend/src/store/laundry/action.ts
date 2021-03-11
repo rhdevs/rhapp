@@ -73,6 +73,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
 ) => {
   dispatch(SetIsLoading(true))
   let returnTable: WashingMachine[] = []
+  // let returnTableWithImage: WashingMachine[] = []
 
   // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
   for (let i = 0; i < 3; i++) {
@@ -85,42 +86,62 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
     })
       .then((resp) => resp.json())
       .then((data) => {
-        returnTable = returnTable.concat(data)
+        try {
+          // if there is a job, push WM with image, else push WM without image
+          if (data.jobID !== undefined && data.userID) {
+            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + data.userID, {
+              method: 'GET',
+              mode: 'cors',
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                data.userImage = data.profilePictureUrl
+                returnTable = returnTable.concat(data)
+              })
+          } else {
+            returnTable = returnTable.concat(data)
+          }
+        } catch (err) {
+          console.log('error when fetching images, hence cant update filtered machine')
+        }
       })
   }
-
-  const returnTableWithImage: WashingMachine[] = []
-
-  returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
-    const userId = fetchedWashingMachine.userID
-    try {
-      // This condition allows code to run AFTER forEach
-      if (returnTableWithImage.length === returnTable.length) {
-        dispatch({
-          type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-          filteredMachines: returnTableWithImage as WashingMachine[],
-        })
-        dispatch(SetIsLoading(false))
-      }
-      // if there is a job, push WM with image, else push WM without image
-      if (fetchedWashingMachine.jobID !== undefined && fetchedWashingMachine.userID) {
-        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then((data) => {
-            fetchedWashingMachine.userImage = data.profilePictureUrl
-            returnTableWithImage.push(fetchedWashingMachine)
-          })
-      } else {
-        // else user image is just undefined
-        returnTableWithImage.push(fetchedWashingMachine)
-      }
-    } catch (err) {
-      console.log('error when fetching images, hence cant update filtered machine')
-    }
+  dispatch({
+    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+    filteredMachines: returnTable,
   })
+  dispatch(SetIsLoading(false))
+
+  // returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
+  //   const userId = fetchedWashingMachine.userID
+  //   try {
+  //     // This condition allows code to run AFTER forEach
+  //     if (returnTableWithImage.length === returnTable.length) {
+  //       dispatch({
+  //         type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+  //         filteredMachines: returnTableWithImage as WashingMachine[],
+  //       })
+  //       dispatch(SetIsLoading(false))
+  //     }
+  //     // if there is a job, push WM with image, else push WM without image
+  //     if (fetchedWashingMachine.jobID !== undefined && fetchedWashingMachine.userID) {
+  //       fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
+  //         method: 'GET',
+  //         mode: 'cors',
+  //       })
+  //         .then((resp) => resp.json())
+  //         .then((data) => {
+  //           fetchedWashingMachine.userImage = data.profilePictureUrl
+  //           returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
+  //         })
+  //     } else {
+  //       // else user image is just undefined
+  //       returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
+  //     }
+  //   } catch (err) {
+  //     console.log('error when fetching images, hence cant update filtered machine')
+  //   }
+  // })
 }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
