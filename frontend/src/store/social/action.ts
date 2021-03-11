@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get, del } from '../endpoints'
 import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
+import { fetchUserPosts } from '../profile/action'
+// import { useDispatch } from 'react-redux'
 
 const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
 
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
@@ -229,6 +232,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         post.ccaId = post.ccaID
         post.userId = post.userID
         post.date = new Date(post.createdAt)
+        post.profilePic = post.profilePictureURI
         return post
       })
 
@@ -236,11 +240,13 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       const transformedPostID = transformedPost.map((post) => post.postId)
       const postIds = posts.map((post) => post.postId)
       const postDiff = difference(transformedPostID, postIds)
+
       if (postDiff.length > 0) {
         const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
+        const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse(),
+          posts: sortedPosts,
         })
       } else {
         //do nothing
@@ -256,17 +262,25 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
-export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {
     return post.postId !== postIdToDelete
   })
 
-  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-  dispatch({
-    type: SOCIAL_ACTIONS.DELETE_POST,
-    posts: newPosts,
-  })
+  del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
+    .then(() => {
+      success('Your post has been deleted!')
+      dispatch({
+        type: SOCIAL_ACTIONS.DELETE_POST,
+        posts: newPosts,
+      })
+      dispatch(fetchUserPosts(localStorage.getItem('userID')))
+    })
+    .catch(() => {
+      error('Post not deleted. Try again later.')
+    })
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
@@ -290,7 +304,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
   const specificPost = response.data
 
-  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
+  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, profilePic } = specificPost
   const newPost = {
     name: name,
     userId: userID,
@@ -301,6 +315,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
     description: description,
     postPics: postPics,
     createdAt: createdAt,
+    profilePic: profilePic,
   }
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
