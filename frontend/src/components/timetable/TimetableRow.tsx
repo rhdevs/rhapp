@@ -16,7 +16,8 @@ const DayContainer = styled.div`
   flex: 0 0 1.5rem;
   justify-content: center;
   align-items: center;
-  outline: 1px solid #aeb1b5;
+  border: 1.2px solid rgb(174, 177, 181);
+  border-radius: 5px 0px 0px 5px !important;
   text-transform: uppercase;
   font-weight: 600;
   font-size: 0.85rem;
@@ -30,7 +31,8 @@ const DaySpanContainer = styled.span`
 `
 
 const TimetableDayContainer = styled.div`
-  outline: 1px solid #aeb1b5;
+  border: 0.1px groove rgb(255 255 255);
+  border-radius: 0px 5px 5px 0px !important;
   background: linear-gradient(to right, #f3f5f8 50%, #fff 0);
 `
 

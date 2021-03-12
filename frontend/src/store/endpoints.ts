@@ -11,6 +11,7 @@ export enum ENDPOINTS {
   TELEGRAM_HANDLE = '/users/telegramID',
   USER = '/user',
   USER_PROFILE = '/profile/',
+  USER_PROFILE_PICTURE = '/profile/picture/',
   USER_DETAILS = '/user/details',
   EDIT_PROFILE = '/profile/edit',
   USER_CCAS = '/user_CCA',

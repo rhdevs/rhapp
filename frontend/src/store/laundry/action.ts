@@ -65,15 +65,15 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
     selectedLevel: newLevel as string,
   })
   dispatch(SetIsLoading(false))
-  dispatch(SetFilteredMachines())
+  dispatch(SetFilteredMachines(newBlock, newLevel))
 }
 
-export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch(SetIsLoading(true))
-  const { selectedBlock, selectedLevel } = getState().laundry
-
+export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(SetIsLoading(true))
   let returnTable: WashingMachine[] = []
+  // let returnTableWithImage: WashingMachine[] = []
 
   // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
   for (let i = 0; i < 3; i++) {
@@ -86,7 +86,24 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
     })
       .then((resp) => resp.json())
       .then((data) => {
-        returnTable = returnTable.concat(data)
+        try {
+          // if there is a job, push WM with image, else push WM without image
+          if (data.jobID !== undefined && data.userID) {
+            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + data.userID, {
+              method: 'GET',
+              mode: 'cors',
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                data.userImage = data.profilePictureUrl
+                returnTable = returnTable.concat(data)
+              })
+          } else {
+            returnTable = returnTable.concat(data)
+          }
+        } catch (err) {
+          console.log('error when fetching images, hence cant update filtered machine')
+        }
       })
   }
   dispatch({
@@ -94,6 +111,37 @@ export const SetFilteredMachines = () => async (dispatch: Dispatch<ActionTypes>,
     filteredMachines: returnTable,
   })
   dispatch(SetIsLoading(false))
+
+  // returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
+  //   const userId = fetchedWashingMachine.userID
+  //   try {
+  //     // This condition allows code to run AFTER forEach
+  //     if (returnTableWithImage.length === returnTable.length) {
+  //       dispatch({
+  //         type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+  //         filteredMachines: returnTableWithImage as WashingMachine[],
+  //       })
+  //       dispatch(SetIsLoading(false))
+  //     }
+  //     // if there is a job, push WM with image, else push WM without image
+  //     if (fetchedWashingMachine.jobID !== undefined && fetchedWashingMachine.userID) {
+  //       fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
+  //         method: 'GET',
+  //         mode: 'cors',
+  //       })
+  //         .then((resp) => resp.json())
+  //         .then((data) => {
+  //           fetchedWashingMachine.userImage = data.profilePictureUrl
+  //           returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
+  //         })
+  //     } else {
+  //       // else user image is just undefined
+  //       returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
+  //     }
+  //   } catch (err) {
+  //     console.log('error when fetching images, hence cant update filtered machine')
+  //   }
+  // })
 }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -144,25 +192,6 @@ export const SetManualEditMode = (isEdit: boolean) => async (dispatch: Dispatch<
   dispatch({ type: LAUNDRY_ACTIONS.SET_EDIT_MODE, isEdit: isEdit })
 }
 
-export const getUserProfilePic = (machineID: string) => {
-  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_JOB + '?machineID=' + machineID, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      fetch(DOMAIN_URL.EVENT + ENDPOINTS.USER_PROFILE + '/' + data.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          return data.profilePictureUrl
-        })
-    })
-  return 'https://avatars1.githubusercontent.com/u/57870728?s=400&v=4'
-}
-
 /**
  *
  * AVAILABLE ---> job: "None" ---> RESERVED
@@ -195,7 +224,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     job: newJob,
     machineID: machineID,
     userID: localStorage.getItem('userID'), //TODO: Update userId
-    currentDuration: duration,
+    currentDuration: duration * 60,
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
@@ -209,7 +238,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('success') // TODO: user interaction for successfulyl booked
+        console.log('success') // TODO: user interaction for successfully booked
       }
     })
 
@@ -227,7 +256,7 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
   const { duration, filteredMachines } = getState().laundry
   const queryBody: { machineID: string; duration: number } = {
     machineID: machineID,
-    duration: duration,
+    duration: duration * 60, // duration should be in second when send to db
   }
 
   fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.EDIT_DURATION, {
@@ -245,25 +274,27 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
       }
     })
   filteredMachines.forEach((machine) => {
-    if (machine.machineID === machineID) machine.duration = duration
+    if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
 }
 
 export const fetchTelegram = (selectedMachine: WashingMachine) => (dispatch: Dispatch<ActionTypes>) => {
-  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-        console.log(data.err)
-      } else {
-        dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
-      }
+  if (selectedMachine.userID && selectedMachine.jobID !== undefined) {
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + selectedMachine.userID, {
+      method: 'GET',
+      mode: 'cors',
     })
-    .catch((err) => {
-      console.log(err)
-    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          console.log(data.err)
+        } else {
+          dispatch({ type: LAUNDRY_ACTIONS.SET_TELEGRAM_HANDLE, telegramHandle: data.telegramHandle })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 }

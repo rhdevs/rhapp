@@ -391,6 +391,8 @@ def getLastN():
         response = []
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
+            profile = db.Profiles.find_one({'userID': item.get('userID')})
+            item['profilePictureURI'] = profile.get('profilePictureUrl') if profile != None else None
             item = renamePost(item)
             response.append(item)
 
@@ -478,9 +480,13 @@ def getOfficialPosts():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
+            profile = db.Profiles.find_one({'userID': item.get('userID')})
+            item['profilePictureURI'] = profile.get('profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
+            item['postID'] = item.get('_id')
+            del item['_id']
 
         return json.dumps(response, default=lambda o: str(o)), 200
     except Exception as e:

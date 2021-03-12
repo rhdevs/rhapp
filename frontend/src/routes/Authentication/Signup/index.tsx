@@ -6,7 +6,7 @@ import { Button, Input, Form, Select } from 'antd'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
-import bcrypt from 'bcryptjs'
+import sha256 from 'crypto-js/sha256'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
@@ -91,14 +91,13 @@ export default function Signup() {
   //combit onSubmit and signupHandler
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    const salt = bcrypt.genSaltSync(10)
-    const passwordHash = bcrypt.hashSync(formData.password, salt)
+    const passwordHash = sha256(formData.password).toString()
 
     const newUser = {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
-      position: [0], //0 = 'Resident'
+      // position: [0], //0 = 'Resident'
       displayName: formData.display,
       bio: formData.bio,
       block: parseInt(formData.block),
@@ -292,7 +291,7 @@ export default function Signup() {
                   type="primary"
                   block
                   onClick={(e) => {
-                    if (!formData.display || !formData.telegram || !formData.bio) {
+                    if (!formData.display || formData.display.trim() === '' || !formData.telegram || !formData.bio) {
                       setError({ message: 'All fields are compulsory!' })
                     } else {
                       onSubmit(e)

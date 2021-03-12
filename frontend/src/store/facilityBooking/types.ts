@@ -107,7 +107,7 @@ type DeleteMyBooking = {
 
 type EditMyBooking = {
   type: typeof FACILITY_ACTIONS.EDIT_MY_BOOKING
-  newBooking: Booking
+  newBooking: Booking | undefined
 }
 
 type SetBookingName = {

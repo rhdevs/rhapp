@@ -35,7 +35,6 @@ const ProfileComponent = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
-  width: 80vw;
   margin: 0 auto;
 `
 
@@ -76,17 +75,10 @@ export default function EditProfile() {
   //   )
   // }
 
-  // Search bar
-  const options = [
-    { value: 'Basketball (MALE)' },
-    { value: 'Badminton (MALE)' },
-    { value: 'Handball (MALE)' },
-    { value: 'Board of Photography' },
-  ]
-
   let ccaToBeAdded = ''
   let moduleToBeAdded = ''
   const handleChangeAutoComplete = (type: string) => (value: string) => {
+    dispatch(setHasChanged(true))
     switch (type) {
       case 'CCAs':
         ccaToBeAdded = value
@@ -122,22 +114,26 @@ export default function EditProfile() {
     type: string
   }
 
-  const Complete: React.FC<Props> = (props) => (
+  const Complete: React.FC<Props> = (props: Props) => (
     <>
       <AutoComplete
         style={{ width: '120px', height: '22px' }}
-        options={options}
+        options={
+          props.type === 'CCAs'
+            ? allCcas?.map((cca) => ({
+                value: cca.ccaName,
+              }))
+            : []
+        }
         placeholder="search..."
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         filterOption={(inputValue, option) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-        // eslint-disable-next-line react/prop-types
         onChange={handleChangeAutoComplete(props.type)}
       />
       <img
         alt="tickIcon"
         style={{ marginLeft: 10, width: 15, color: 'gray' }}
         src={String(tickIcon)}
-        // eslint-disable-next-line react/prop-types
         onClick={() => handleAutoCompleteAdd(props.type, ccaToBeAdded, moduleToBeAdded)}
       ></img>
     </>
@@ -251,7 +247,7 @@ export default function EditProfile() {
             </span>
           }
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {renderSwitch(detailsItem.title)}
@@ -281,9 +277,9 @@ export default function EditProfile() {
         <ConfirmationModal
           title={'Discard Changes?'}
           hasLeftButton={true}
-          leftButtonText={'Delete'}
+          leftButtonText={'Discard Edits'}
           onLeftButtonClick={() => history.goBack()}
-          rightButtonText={'Cancel'}
+          rightButtonText={'Back to Edit'}
           onRightButtonClick={() => setShowConfirmationModal(false)}
         />
       )}

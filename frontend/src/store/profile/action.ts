@@ -122,15 +122,15 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     profilePictureUrl: userProfilePictureBase64,
   }
 
-  // Update database
-  dispatch(updateCurrentUser(newUser))
-
-  // Update local state
+  // 1. Update local state
   dispatch({
     type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
     user: newUser,
     ccas: newCCAs,
   })
+
+  // 2. Update database
+  dispatch(updateCurrentUser(newUser))
 }
 
 // One shot update database with all changes
@@ -144,6 +144,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   ccas?.map((cca) => {
     newUserCcasDatabase.push(cca.ccaID)
   })
+
   const updateUserJson = {
     userID: user.userID,
     ccaID: newUserCcasDatabase,
@@ -161,9 +162,11 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('update current user success')
+        // console.log('update current user success')
         // 1b. Update CCAs here
         dispatch(addUserCca(updateUserJson))
+      } else {
+        dispatch(setCanPush('error'))
       }
     })
     .catch(() => {
@@ -174,6 +177,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
+  console.log(cca)
   fetch('https://rhappevents.rhdevs.repl.co/user_CCA/add', {
     method: 'POST',
     mode: 'cors',
@@ -185,9 +189,11 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
     .then((resp) => resp)
     .then((data) => {
       if (data.ok) {
-        console.log('add CCA success')
+        // console.log('add CCA success!')
         // If all updates are done, set canPush to true
         dispatch(setCanPush('true'))
+      } else {
+        dispatch(setCanPush('error'))
       }
     })
     .catch(() => {

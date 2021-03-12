@@ -10,11 +10,13 @@ import TopNavBar from '../../components/Mobile/TopNavBar'
 import Tags from '../../components/Mobile/Tags'
 import MenuDropdown from '../../components/Mobile/MenuDropdown'
 import Timetable from '../../components/timetable/Timetable'
+import { onRefresh } from '../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 import {
   deleteUserNusModsEvents,
   fetchAllCCAs,
-  fetchAllProfiles,
+  // fetchAllProfiles,
   fetchCurrentUserEvents,
   setIsLoading,
   setNusModsStatus,
@@ -78,16 +80,16 @@ export default function Schedule() {
     isLoading,
     nusModsIsSuccessful,
     nusModsIsFailure,
-    profileList,
+    // profileList,
     ccaList,
     selectedProfileIds,
-    selectedCCAIds,
+    // selectedCCAIds,
   } = useSelector((state: RootState) => state.scheduling)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), true))
-    dispatch(fetchAllProfiles())
+    // dispatch(fetchAllProfiles())
     dispatch(fetchAllCCAs())
     dispatch(setSelectedProfileIds([]))
     dispatch(setSelectedCCAIds([]))
@@ -165,10 +167,10 @@ export default function Schedule() {
 
   const [modal, setModal] = useState(false)
 
-  const friendsOnChange = (input: string[]) => {
-    dispatch(setSelectedProfileIds(input))
-    dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
-  }
+  // const friendsOnChange = (input: string[]) => {
+  //   dispatch(setSelectedProfileIds(input))
+  //   dispatch(fetchCurrentUserEvents(localStorage.getItem('userID'), input.length === 0 && selectedCCAIds.length === 0))
+  // }
 
   const groupOnChange = (input: string[]) => {
     const numberArr: number[] = input.map((x: string) => {
@@ -184,51 +186,53 @@ export default function Schedule() {
 
   return (
     <Background>
-      <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
-      {isLoading && <LoadingSpin />}
-      {modal && (
-        <ConfirmationModal
-          title={'Confirm Delete?'}
-          hasLeftButton={true}
-          leftButtonText={'Delete'}
-          onLeftButtonClick={() => {
-            dispatch(setIsLoading(true))
-            dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
-            setModal(false)
-          }}
-          rightButtonText={'Cancel'}
-          onRightButtonClick={() => {
-            setModal(false)
-          }}
-        />
-      )}
-      <TimetableMainContainer>
-        <TimetableContainer>
-          <Timetable
-            events={userCurrentEvents}
-            eventsStartTime={userCurrentEventsStartTime}
-            eventsEndTime={userCurrentEventsEndTime}
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
+        {isLoading && <LoadingSpin />}
+        {modal && (
+          <ConfirmationModal
+            title={'Confirm Delete?'}
+            hasLeftButton={true}
+            leftButtonText={'Delete'}
+            onLeftButtonClick={() => {
+              dispatch(setIsLoading(true))
+              dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
+              setModal(false)
+            }}
+            rightButtonText={'Cancel'}
+            onRightButtonClick={() => {
+              setModal(false)
+            }}
           />
-        </TimetableContainer>
-      </TimetableMainContainer>
-      <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>Friends</TagTitleText>
-        </SmallContainer>
-        <Tags
-          profileOptions={profileList.filter((profile) => {
-            return profile.userID !== localStorage.getItem('userID')
-          })}
-          onChange={friendsOnChange}
-        />
-      </GroupContainer>
-      <GroupContainer>
-        <SmallContainer>
-          <TagTitleText>CCA</TagTitleText>
-        </SmallContainer>
-        <Tags ccaOptions={ccaList} onChange={groupOnChange} />
-      </GroupContainer>
-      <BottomNavBar />
+        )}
+        <TimetableMainContainer>
+          <TimetableContainer>
+            <Timetable
+              events={userCurrentEvents}
+              eventsStartTime={userCurrentEventsStartTime}
+              eventsEndTime={userCurrentEventsEndTime}
+            />
+          </TimetableContainer>
+        </TimetableMainContainer>
+        {/* <GroupContainer>
+          <SmallContainer>
+            <TagTitleText>Friends</TagTitleText>
+          </SmallContainer>
+          <Tags
+            profileOptions={profileList.filter((profile) => {
+              return profile.userID !== localStorage.getItem('userID')
+            })}
+            onChange={friendsOnChange}
+          />
+        </GroupContainer> */}
+        <GroupContainer>
+          <SmallContainer>
+            <TagTitleText>CCA</TagTitleText>
+          </SmallContainer>
+          <Tags ccaOptions={ccaList} onChange={groupOnChange} />
+        </GroupContainer>
+        <BottomNavBar />
+      </PullToRefresh>
     </Background>
   )
 }

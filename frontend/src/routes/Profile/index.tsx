@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Card, Tabs } from 'antd'
+import { Avatar, Card, Tabs } from 'antd'
 import 'antd/dist/antd.css'
 import { useHistory } from 'react-router-dom'
 import EditProfileButton from './Components/EditProfileButton'
@@ -18,6 +18,9 @@ import { Post } from '../../store/profile/types'
 import LoadingSpin from '../../components/LoadingSpin'
 import SocialPostCard from '../../components/Mobile/SocialPostCard'
 import dayjs from 'dayjs'
+import { getInitials } from '../../common/getInitials'
+import { onRefresh } from '../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -50,7 +53,6 @@ const CustomTabs = styled(Tabs)`
 
 const ProfileDetailsGroup = styled.div`
   margin-left: 10vw;
-  width: 80vw;
 `
 
 const NameParagraph = styled.p`
@@ -169,13 +171,21 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      <AvatarSpan>
-        <img
-          alt="logo"
-          style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
-          src={'data:image/png;base64,' + user?.profilePictureUrl}
-        />
-      </AvatarSpan>
+      {user.profilePictureUrl == undefined ? (
+        <AvatarSpan>
+          <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+            {getInitials(user.displayName)}
+          </Avatar>
+        </AvatarSpan>
+      ) : (
+        <AvatarSpan>
+          <img
+            alt="Profile Photo"
+            style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
+            src={'data:image/png;base64,' + user?.profilePictureUrl}
+          />
+        </AvatarSpan>
+      )}
       <PersonalInfoSpan>
         <NameParagraph>{user?.displayName}</NameParagraph>
         <TelegramParagraph>@{user?.telegramHandle}</TelegramParagraph>
@@ -196,7 +206,7 @@ export default function Profile() {
         <Card
           title={<span style={{ fontSize: '20px' }}>CCAs</span>}
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {ccas &&
@@ -228,7 +238,7 @@ export default function Profile() {
         <Card
           title={<span style={{ fontSize: '20px' }}>Modules</span>}
           bordered={false}
-          style={{ width: '80vw' }}
+          style={{ margin: '23px', borderRadius: '20px' }}
           size={'small'}
         >
           {user.modules &&
@@ -269,24 +279,26 @@ export default function Profile() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
-        {isLoading && <LoadingSpin />}
-        <ProfileComponent>
-          <PersonalInfoContainer />
-          {isOwnProfile ? (
-            <EditProfileButton
-              handleClick={() => {
-                history.push(PATHS.EDIT_PROFILE_PAGE)
-                dispatch(populateProfileEdits())
-              }}
-            />
-          ) : (
-            <FriendAndTelegramButtons user={user} />
-          )}
-          <CardContainer>
-            <CardTabs />
-          </CardContainer>
-        </ProfileComponent>
+        <PullToRefresh onRefresh={onRefresh}>
+          <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+          {isLoading && <LoadingSpin />}
+          <ProfileComponent>
+            <PersonalInfoContainer />
+            {isOwnProfile ? (
+              <EditProfileButton
+                handleClick={() => {
+                  history.push(PATHS.EDIT_PROFILE_PAGE)
+                  dispatch(populateProfileEdits())
+                }}
+              />
+            ) : (
+              <FriendAndTelegramButtons user={user} />
+            )}
+            <CardContainer>
+              <CardTabs />
+            </CardContainer>
+          </ProfileComponent>
+        </PullToRefresh>
         <BottomNavBar />
       </MainContainer>
     </>

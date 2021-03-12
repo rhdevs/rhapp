@@ -21,6 +21,8 @@ import {
   SetBlockLevelSelections,
 } from '../../../store/laundry/action'
 import { useParams } from 'react-router-dom'
+import { onRefresh } from '../../../common/reloadPage'
+import PullToRefresh from 'pull-to-refresh-react'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -218,7 +220,7 @@ export default function ViewWashingMachine() {
   }
 
   const UseWashineMachine = (machine: WashingMachine | null) => {
-    if (machine?.job === WMStatus.AVAIL || machine?.job === WMStatus.RESERVED) {
+    if (machine?.job === WMStatus.RESERVED) {
       return (
         <UseWashingMachineSection>
           <StyledSlider
@@ -293,6 +295,7 @@ export default function ViewWashingMachine() {
               } else {
                 dispatch(updateMachine(WMStatus.AVAIL, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
+                history.back()
               }
             }}
           />
@@ -317,8 +320,10 @@ export default function ViewWashingMachine() {
 
   return (
     <MainContainer>
-      {MachineDetails(selectedMachine)}
-      {UseWashineMachine(selectedMachine)}
+      <PullToRefresh onRefresh={onRefresh}>
+        {MachineDetails(selectedMachine)}
+        {UseWashineMachine(selectedMachine)}
+      </PullToRefresh>
       <BottomNavBar />
     </MainContainer>
   )

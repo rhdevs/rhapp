@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, Avatar } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
@@ -12,6 +12,7 @@ import {
 } from '../../../store/profile/action'
 import { useHistory } from 'react-router-dom'
 import useSnackbar from '../../../hooks/useSnackbar'
+import { getInitials } from '../../../common/getInitials'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
@@ -118,18 +119,35 @@ const EditPersonalInfoContainer = () => {
       <>
         <div className="image-upload">
           <label htmlFor="file-input">
-            <img
-              src={'data:image/png;base64,' + userProfilePictureBase64}
-              style={{
-                height: 75,
-                width: 75,
-                objectFit: 'cover',
-                borderRadius: 100 / 2,
-                opacity: 0.7,
-                border: '1.5px solid',
-                borderColor: 'red',
-              }}
-            />
+            {user.profilePictureUrl == undefined ? (
+              <AvatarSpan>
+                <Avatar
+                  size={{ xs: 70 }}
+                  style={{
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf',
+                    opacity: 0.7,
+                    border: '1.5px solid',
+                    borderColor: 'red',
+                  }}
+                >
+                  {getInitials(user.displayName)}
+                </Avatar>
+              </AvatarSpan>
+            ) : (
+              <img
+                src={'data:image/png;base64,' + userProfilePictureBase64}
+                style={{
+                  height: 75,
+                  width: 75,
+                  objectFit: 'cover',
+                  borderRadius: 100 / 2,
+                  opacity: 0.7,
+                  border: '1.5px solid',
+                  borderColor: 'red',
+                }}
+              />
+            )}
           </label>
 
           <input id="file-input" type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} />
@@ -154,14 +172,14 @@ const EditPersonalInfoContainer = () => {
           </Form.Item>
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input
-              defaultValue={'@' + newTelegramHandle}
+              defaultValue={newTelegramHandle}
               placeholder={'@' + newTelegramHandle}
               onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>
           <BlockParagraph>Block {user.block}</BlockParagraph>
         </PersonalInfoSpan>
-        <Form.Item name={['user', 'bio']} style={{ width: '80vw' }}>
+        <Form.Item name={['user', 'bio']} style={{ margin: '23px', borderRadius: '20px' }}>
           <Input.TextArea defaultValue={newBio} placeholder={newBio} />
         </Form.Item>
         <Form.Item>

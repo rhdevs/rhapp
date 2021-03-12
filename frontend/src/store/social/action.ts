@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get } from '../endpoints'
-import { cloneDeep, intersection } from 'lodash'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, put, get, del } from '../endpoints'
+import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
+import { fetchUserPosts } from '../profile/action'
+// import { useDispatch } from 'react-redux'
 
 const [success] = useSnackbar('success')
+const [error] = useSnackbar('error')
 
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
@@ -36,7 +39,7 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
       newPostBody: description,
       newPostImages: postPics ?? [],
       newPostOfficial: isOfficial,
-      newPostCca: '',
+      newPostCca: 0,
       userId: userId,
     })
   })
@@ -51,7 +54,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: position[0]?.name,
+    newPostCca: position[0]?.ccaID,
   })
 }
 
@@ -64,6 +67,7 @@ export const handleEditPost = () => (dispatch: Dispatch<ActionTypes>, getState: 
     description: newPostBody,
     isOfficial: newPostOfficial,
     postPics: newPostImages,
+    tags: [],
   }
   put(ENDPOINTS.EDIT_POST, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
@@ -81,8 +85,8 @@ export const handleCreatePost = () => (dispatch: Dispatch<ActionTypes>, getState
     isOfficial: newPostOfficial,
     postPics: newPostImages ?? [],
     ccaID: newPostCca,
+    tags: [],
   }
-
   post(ENDPOINTS.CREATE_POSTS, DOMAINS.SOCIAL, requestBody).then(() => {
     dispatch(GetPosts(POSTS_FILTER.ALL))
     success('Post created!')
@@ -179,7 +183,7 @@ export const EditPostDetail = (fieldName: string, fieldData: string) => (
       break
     case 'cca':
       if (fieldData) {
-        newPostCca = fieldData
+        newPostCca = parseInt(fieldData)
       }
       break
   }
@@ -217,9 +221,8 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
       break
   }
 
-  // const subroute: string = postFilter === POSTS_FILTER.FRIENDS ? `?N=${limit}&userID=${userId}` : ''
-
-  const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+  // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+  const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     if (response.length > 0) {
@@ -229,16 +232,21 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         post.ccaId = post.ccaID
         post.userId = post.userID
         post.date = new Date(post.createdAt)
+        post.profilePic = post.profilePictureURI
         return post
       })
 
       //validate if caller made repeated call to the same posts
       const transformedPostID = transformedPost.map((post) => post.postId)
-      const postLastID = posts.slice(posts.length - transformedPostID.length).map((post) => post.postId)
-      if (intersection(transformedPostID, postLastID).length === 0) {
+      const postIds = posts.map((post) => post.postId)
+      const postDiff = difference(transformedPostID, postIds)
+
+      if (postDiff.length > 0) {
+        const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
+        const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
         dispatch({
           type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: posts.concat(transformedPost),
+          posts: sortedPosts,
         })
       } else {
         //do nothing
@@ -254,17 +262,25 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   })
 }
 
-export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
   const { posts } = getState().social
   const newPosts = posts.filter((post) => {
     return post.postId !== postIdToDelete
   })
 
-  // const response = await del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-  dispatch({
-    type: SOCIAL_ACTIONS.DELETE_POST,
-    posts: newPosts,
-  })
+  del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
+    .then(() => {
+      success('Your post has been deleted!')
+      dispatch({
+        type: SOCIAL_ACTIONS.DELETE_POST,
+        posts: newPosts,
+      })
+      dispatch(fetchUserPosts(localStorage.getItem('userID')))
+    })
+    .catch(() => {
+      error('Post not deleted. Try again later.')
+    })
 }
 
 export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
@@ -288,7 +304,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
   const specificPost = response.data
 
-  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID } = specificPost
+  const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, profilePic } = specificPost
   const newPost = {
     name: name,
     userId: userID,
@@ -299,6 +315,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
     description: description,
     postPics: postPics,
     createdAt: createdAt,
+    profilePic: profilePic,
   }
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,

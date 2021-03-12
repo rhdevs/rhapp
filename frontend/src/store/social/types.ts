@@ -10,6 +10,7 @@ export type Post = {
   createdAt?: Timestamp
   name: string
   userId: string
+  profilePic: string
 }
 
 export type User = {
@@ -72,7 +73,7 @@ type GetPostDetailsToEdit = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostCca: number
   userId: string
 }
 
@@ -82,7 +83,7 @@ type EditNewFields = {
   newPostBody: string
   newPostImages: string[]
   newPostOfficial: boolean
-  newPostCca: string
+  newPostCca: number
 }
 
 type SetWarnings = {
