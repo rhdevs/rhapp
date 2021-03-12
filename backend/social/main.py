@@ -392,7 +392,8 @@ def getLastN():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
-            item['profilePictureURI'] = profile.get('profilePictureUrl') if profile != None else None
+            item['profilePictureURI'] = profile.get(
+                'profilePictureUrl') if profile != None else None
             item = renamePost(item)
             response.append(item)
 
@@ -481,7 +482,8 @@ def getOfficialPosts():
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
-            item['profilePictureURI'] = profile.get('profilePictureUrl') if profile != None else None
+            item['profilePictureURI'] = profile.get(
+                'profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
@@ -882,5 +884,5 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)
