@@ -65,6 +65,7 @@ function Tags({
         placeholder="Please select"
         defaultValue={defaultOptions ?? []}
         onChange={handleChange}
+        autoFocus={true}
         optionFilterProp="label"
         open={tagsIsOpen}
         onBlur={() => {

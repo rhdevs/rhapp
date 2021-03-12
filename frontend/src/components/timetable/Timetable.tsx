@@ -4,7 +4,8 @@ import { TimetableEvent } from '../../store/scheduling/types'
 import TimetableRow from './TimetableRow'
 
 const TimetableContainer = styled.div`
-  overflow: auto;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 `
 
 const TimetableRowsContainer = styled.ol`
@@ -68,7 +69,7 @@ function Timetable(props: Props) {
         <TimeContainer>
           {timeArray.map((time, index) => {
             return (
-              <IndividualTimeContainer style={{ width: `${ONE_HOUR_WIDTH}` }} key={index}>
+              <IndividualTimeContainer style={{ width: `${ONE_HOUR_WIDTH}`, paddingLeft: '25px' }} key={index}>
                 {time}
               </IndividualTimeContainer>
             )
