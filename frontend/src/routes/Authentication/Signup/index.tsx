@@ -104,7 +104,7 @@ export default function Signup() {
       telegramHandle: formData.telegram,
     }
 
-    await fetch('https://rhappsocial.rhdevs.repl.co/auth/register', {
+    await fetch(DOMAIN_URL.SOCIAL + '/auth/register', {
       method: 'POST',
       mode: 'cors',
       headers: {

@@ -26,7 +26,7 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
     dispatch(setIsLoading(true))
-    fetch('https://rhappsocial.rhdevs.repl.co/profile/' + userID, {
+    fetch(DOMAIN_URL.SOCIAL + '/profile/' + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
@@ -83,7 +83,7 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
 export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userID != null) {
     dispatch(setIsLoading(true))
-    await fetch('https://rhappsocial.rhdevs.repl.co/post/' + userID, {
+    await fetch(DOMAIN_URL.SOCIAL + '/post/' + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
@@ -178,7 +178,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   console.log(cca)
-  fetch('https://rhappevents.rhdevs.repl.co/user_CCA/add', {
+  fetch(DOMAIN_URL.EVENT + '/user_CCA/add', {
     method: 'POST',
     mode: 'cors',
     headers: {
