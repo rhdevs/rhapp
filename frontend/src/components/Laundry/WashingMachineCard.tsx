@@ -14,7 +14,6 @@ import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../store/types'
-import { ENDPOINTS, DOMAIN_URL } from '../../store/endpoints'
 
 const CardContainer = styled.div`
   position: relative;
@@ -111,6 +110,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     }
   }
 
+  const defaultProfilePictureUrl =
+    'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+
   switch (props.washingMachine.job) {
     case WMStatus.AVAIL:
       label = 'Reserve'
@@ -145,19 +147,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       break
     case WMStatus.UNCOLLECTED:
       label = props.washingMachine.userID === localStorage.getItem('userID') ? '' : 'Notify'
-      try {
-        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + props.washingMachine.userID, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then((data) => {
-            iconSrc = data.image
-          })
-      } catch (e) {
-        iconSrc = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
-      }
-      console.log(iconSrc)
+      iconSrc = props.washingMachine.userImage
+        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        : defaultProfilePictureUrl
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
@@ -171,20 +163,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
-      try {
-        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + props.washingMachine.userID, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then((data) => {
-            iconSrc = data.image
-            console.log('here')
-          })
-      } catch (e) {
-        iconSrc = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
-      }
-      console.log(iconSrc)
+      iconSrc = props.washingMachine.userImage
+        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        : defaultProfilePictureUrl
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
           dispatch(SetSelectedMachine(props.washingMachine))

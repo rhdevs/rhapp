@@ -1,6 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
+// import axios from 'axios'
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
@@ -71,77 +72,66 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
 export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  // const defaultProfilePictureUrl =
+  //   'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
   dispatch(SetIsLoading(true))
-  let returnTable: WashingMachine[] = []
-  // let returnTableWithImage: WashingMachine[] = []
 
   // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
-  for (let i = 0; i < 3; i++) {
-    const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
-    const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
-    const queryUrl = DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
-    await fetch(queryUrl, {
-      method: 'GET',
-      mode: 'cors',
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        try {
-          // if there is a job, push WM with image, else push WM without image
-          if (data.jobID !== undefined && data.userID) {
-            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + data.userID, {
-              method: 'GET',
-              mode: 'cors',
-            })
-              .then((resp) => resp.json())
-              .then((data) => {
-                data.userImage = data.profilePictureUrl
-                returnTable = returnTable.concat(data)
-              })
-          } else {
-            returnTable = returnTable.concat(data)
-          }
-        } catch (err) {
-          console.log('error when fetching images, hence cant update filtered machine')
-        }
+  async function populateTable(): Promise<WashingMachine[]> {
+    let returnTable: WashingMachine[] = []
+    for (let i = 0; i < 3; i++) {
+      const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
+      const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
+      const queryUrl =
+        DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
+      await fetch(queryUrl, {
+        method: 'GET',
+        mode: 'cors',
       })
-  }
-  dispatch({
-    type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-    filteredMachines: returnTable,
-  })
-  dispatch(SetIsLoading(false))
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data)
+          returnTable = returnTable.concat(data.data)
+        })
+    }
 
-  // returnTable.forEach((fetchedWashingMachine: WashingMachine) => {
-  //   const userId = fetchedWashingMachine.userID
-  //   try {
-  //     // This condition allows code to run AFTER forEach
-  //     if (returnTableWithImage.length === returnTable.length) {
-  //       dispatch({
-  //         type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-  //         filteredMachines: returnTableWithImage as WashingMachine[],
-  //       })
-  //       dispatch(SetIsLoading(false))
-  //     }
-  //     // if there is a job, push WM with image, else push WM without image
-  //     if (fetchedWashingMachine.jobID !== undefined && fetchedWashingMachine.userID) {
-  //       fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userId, {
-  //         method: 'GET',
-  //         mode: 'cors',
-  //       })
-  //         .then((resp) => resp.json())
-  //         .then((data) => {
-  //           fetchedWashingMachine.userImage = data.profilePictureUrl
-  //           returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
-  //         })
+    return returnTable
+  }
+
+  // const promises: Promise<void>[] = []
+  // const finalTable: WashingMachine[] = []
+
+  // await populateTable().then((returnTable) => {
+  //   returnTable.forEach((washingMachine) => {
+  //     console.log(washingMachine)
+  //     if (washingMachine.userID) {
+  //       promises.push(
+  //         axios.get(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + washingMachine.userID).then(
+  //           (response) => {
+  //             console.log(response)
+  //             washingMachine.userImage = response.data.data.image
+  //             finalTable.push(washingMachine)
+  //           },
+  //           (error) => {
+  //             console.log(error)
+  //           },
+  //         ),
+  //       )
   //     } else {
-  //       // else user image is just undefined
-  //       returnTableWithImage = returnTableWithImage.concat(fetchedWashingMachine)
+  //       washingMachine.userImage = defaultProfilePictureUrl
+  //       finalTable.push(washingMachine)
   //     }
-  //   } catch (err) {
-  //     console.log('error when fetching images, hence cant update filtered machine')
-  //   }
+  //   })
   // })
+
+  // await Promise.all(promises)
+  populateTable().then((returnTable) => {
+    dispatch(SetIsLoading(false))
+    dispatch({
+      type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+      filteredMachines: returnTable,
+    })
+  })
 }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
