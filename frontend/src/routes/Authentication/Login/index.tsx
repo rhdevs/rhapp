@@ -124,7 +124,7 @@ export default function Login() {
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             type="text"
-            placeholder="Username"
+            placeholder="A1234567B"
             value={username}
             onChange={(e) => {
               const newUsername = e.target.value
@@ -136,7 +136,7 @@ export default function Login() {
           <InputTextLabel>Password: </InputTextLabel>
           <Input.Password
             type="password"
-            placeholder="Password"
+            placeholder="password1"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
