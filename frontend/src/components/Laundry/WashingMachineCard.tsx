@@ -14,6 +14,7 @@ import wm_available from '../../assets/washing-machines/wm_available.svg'
 import wm_reserved from '../../assets/washing-machines/wm_reserved.svg'
 import wm_uncollected from '../../assets/washing-machines/wm_uncollected.svg'
 import { RootState } from '../../store/types'
+import { ENDPOINTS, DOMAIN_URL } from '../../store/endpoints'
 
 const CardContainer = styled.div`
   position: relative;
@@ -125,8 +126,10 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = collectIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.RESERVED:
@@ -134,15 +137,27 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = tickIcon
       washingMachineIcon = wm_reserved
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.UNCOLLECTED:
       label = props.washingMachine.userID === localStorage.getItem('userID') ? '' : 'Notify'
-      iconSrc = props.washingMachine.userImage
-        ? props.washingMachine.userImage
-        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
+      try {
+        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + props.washingMachine.userID, {
+          method: 'GET',
+          mode: 'cors',
+        })
+          .then((resp) => resp.json())
+          .then((data) => {
+            iconSrc = data.image
+          })
+      } catch (e) {
+        iconSrc = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+      }
+      console.log(iconSrc)
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
@@ -156,12 +171,25 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     case WMStatus.INUSE:
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
-      iconSrc = props.washingMachine.userImage
-        ? props.washingMachine.userImage
-        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+      try {
+        fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + props.washingMachine.userID, {
+          method: 'GET',
+          mode: 'cors',
+        })
+          .then((resp) => resp.json())
+          .then((data) => {
+            iconSrc = data.image
+            console.log('here')
+          })
+      } catch (e) {
+        iconSrc = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+      }
+      console.log(iconSrc)
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.ALERTED:
