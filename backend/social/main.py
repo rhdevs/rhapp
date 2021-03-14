@@ -140,23 +140,24 @@ def getUserProfile(userID):
 @cross_origin(supports_credentials=True)
 def getUserPicture(userID):
     response = {}
-
+    defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
     try:
-        image = db.Profiles.find({"userID": userID}, {"profilePictureUrl": 1})
+        image = db.Profiles.find_one(
+            {"userID": userID}, {"profilePictureUrl": 1})
         response['status'] = "success"
         response['data'] = {
-            'image': image
+            'image': image.get('profilePictureUrl')
         }
 
         return make_response(response, 200)
 
     except Exception as e:
-        response['status'] = "failed"
+        response['status'] = "default picture returned"
         response['data'] = {
-            'message ': 'image not found'
+            'image': defaultProfilePictureUrl
         }
 
-        return {"err": str(e)}, 400
+        return make_response(response, 200)
 
 
 @app.route("/profile", methods=['DELETE', 'POST'])

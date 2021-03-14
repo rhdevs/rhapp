@@ -110,6 +110,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     }
   }
 
+  const defaultProfilePictureUrl =
+    'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+
   switch (props.washingMachine.job) {
     case WMStatus.AVAIL:
       label = 'Reserve'
@@ -125,8 +128,10 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = collectIcon
       washingMachineIcon = wm_uncollected
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.RESERVED:
@@ -134,15 +139,17 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       iconSrc = tickIcon
       washingMachineIcon = wm_reserved
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.UNCOLLECTED:
       label = props.washingMachine.userID === localStorage.getItem('userID') ? '' : 'Notify'
       iconSrc = props.washingMachine.userImage
-        ? props.washingMachine.userImage
-        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' //initials here
+        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        : defaultProfilePictureUrl
       washingMachineIcon = wm_uncollected
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
@@ -157,11 +164,13 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
       iconSrc = props.washingMachine.userImage
-        ? props.washingMachine.userImage
-        : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        : defaultProfilePictureUrl
       rightAction = () => {
-        dispatch(SetSelectedMachine(props.washingMachine))
-        history.push(PATHS.VIEW_WASHING_MACHINE)
+        if (props.washingMachine.userID === localStorage.getItem('userID')) {
+          dispatch(SetSelectedMachine(props.washingMachine))
+          history.push(PATHS.VIEW_WASHING_MACHINE)
+        }
       }
       break
     case WMStatus.ALERTED:
