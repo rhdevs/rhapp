@@ -8,6 +8,7 @@ from bson.json_util import dumps
 import json
 import time
 from flask_cors import CORS, cross_origin
+from pprint import pprint
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -89,18 +90,7 @@ def SweepAll():
     return True
 
 
-def getUserPicture(userID=None):
-    defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-    if (userID is not None):
-        try : 
-            image = db.Profiles.find_one(
-                {"userID": userID}, {"profilePictureUrl": 1})
-
-            return image.get('profilePictureUrl')
-        except :
-            return defaultProfilePictureUrl
-    else:
-        return defaultProfilePictureUrl
+db.LaundryMachine.create_index('userID')
 
 
 @app.route('/laundry/machine', methods=['GET', 'POST'])
@@ -114,17 +104,38 @@ def laundry_by_location():
             machineID = request.args.get('machineID')
             print("Just Sweep : " + str(SweepAll()))
             # actually pretty not efficient, can optimize by lazily deleting and updating only those that wants to be returned
+            defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
 
             if machineID:
                 laundry_info = dumps(
                     db.LaundryMachine.find_one({'machineID': machineID}))
                 return make_response(laundry_info, 200)
             elif locationID:
-                laundry_info = db.LaundryMachine.find(
-                    {'locationID': locationID})
+                pipeline = [
+                    {'$match': {
+                        'locationID': locationID
+                    }
+                    },
+                    {'$lookup': {
+                        'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+                    }
+                    }
+                ]
+
                 response = {"data": []}
-                for item in laundry_info:
-                    item["userImage"] = getUserPicture(item.get('userID'))
+
+                for item in db.LaundryMachine.aggregate(pipeline):
+                    # print(item["profile"])
+                    if (len(item["profile"]) != 0):
+                        item["userImage"] = item["profile"][0].get(
+                            "profilePictureUrl")
+                    else:
+                        item["userImage"] = defaultProfilePictureUrl
+
+                    del item["profile"]
                     response["data"].append(item)
 
                 return make_response(response, 200)
