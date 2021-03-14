@@ -291,19 +291,21 @@ def addUserCCA():
             }
 
             body.append(item)
+        if len(body) != 0:
+            receipt = db.UserCCA.insert_many(body)
 
-        receipt = db.UserCCA.insert_many(body)
-
-        response = {}
-        response["_id"] = str(receipt.inserted_ids)
+            response = {}
+            response["_id"] = str(receipt.inserted_ids)
+        else:
+            response = "User has no more CCAs"
 
         return {"message": response}, 200
     except Exception as e:
         return {"err": str(e)}, 400
 
 
-@app.route("/permissions/<userID>", methods=["GET"])
-@cross_origin()
+@ app.route("/permissions/<userID>", methods=["GET"])
+@ cross_origin()
 def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
@@ -317,8 +319,8 @@ def getUserPermissions(userID):
     return json.dumps(list(response), default=lambda o: str(o)), 200
 
 
-@app.route("/permissions", methods=['DELETE', 'POST'])
-@cross_origin()
+@ app.route("/permissions", methods=['DELETE', 'POST'])
+@ cross_origin()
 def addDeletePermissions():
     try:
         data = request.get_json()
@@ -623,5 +625,5 @@ def addNUSModsEvents():
 
 
 if __name__ == "__main__":
-    app.run(threaded=True, debug=True)
-    # app.run('0.0.0.0', port=8080)
+    # app.run(threaded=True, debug=True)
+    app.run('0.0.0.0', port=8080)

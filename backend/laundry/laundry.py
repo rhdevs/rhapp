@@ -37,7 +37,6 @@ def all_location():
     except Exception as e:
         return make_response({"err": str(e)}, 400)
 
-
 @app.route('/location/<int:block_num>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def location(block_num):
@@ -89,9 +88,7 @@ def SweepAll():
 
     return True
 
-
 db.LaundryMachine.create_index('userID')
-
 
 @app.route('/laundry/machine', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -104,6 +101,7 @@ def laundry_by_location():
             machineID = request.args.get('machineID')
             print("Just Sweep : " + str(SweepAll()))
             # actually pretty not efficient, can optimize by lazily deleting and updating only those that wants to be returned
+
             defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
 
             if machineID:

@@ -109,7 +109,7 @@ def get_one_booking(bookingID):
 def check_bookings(facilityID):
     try:
         data = removeObjectID(list(db.Bookings.find({"facilityID": int(facilityID),
-            "startTime": {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
+                                                     "startTime": {"$gte": int(request.args.get('startDate'))}, "endTime": {"$lte": int(request.args.get('endDate'))}})))
     except Exception as e:
         return {"err": str(e)}, 400
 
@@ -150,14 +150,16 @@ def add_booking():
         #     return {"err": "Unauthorised Access"}, 401
 
         # Check for exisiting booking
-        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"), "$or": [
-            {"startTime": {"$gt": formData.get('startTime')}, "startTime": {"$lt": formData.get('endTime')}},
-            {"endTime": {"$gt": formData.get('startTime')}, "endTime": {"$lt": formData.get('endTime')}}
-        ]})))
+        # x1 <= y2 && y1 <= x2 because ranges are well-formed
+        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"),
+                                                         "endTime": {
+                                                             "$gte": formData.get('startTime')},
+                                                         "startTime": {
+                                                             "$lte": formData.get('endTime')}
+                                                         })))
 
-        if (len(conflict) != 0): 
+        if (len(conflict) != 0):
             raise Exception("Conflict Booking")
-        
 
         lastbookingID = list(db.Bookings.find().sort(
             [('_id', pymongo.DESCENDING)]).limit(1))
@@ -216,4 +218,5 @@ def delete_booking(bookingID):
 
 
 if __name__ == '__main__':
+    # app.run(threaded=True, debug=True)
     app.run('0.0.0.0', port=8080)
