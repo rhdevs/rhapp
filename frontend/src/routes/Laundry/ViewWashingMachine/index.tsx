@@ -105,7 +105,7 @@ export default function ViewWashingMachine() {
 
   useEffect(() => {
     dispatch(SetSelectedMachineFromId(params.machineId))
-  }, [dispatch, selectedMachine])
+  }, [dispatch])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
     const endDateTime = new Date((startUNIX + duration) * 1000)
@@ -313,6 +313,23 @@ export default function ViewWashingMachine() {
               }}
             />
           )}
+        </UseWashingMachineSection>
+      )
+    } else if (machine?.job === WMStatus.AVAIL) {
+      return (
+        <UseWashingMachineSection>
+          <Button
+            style={{ marginLeft: '23px' }}
+            hasSuccessMessage={false}
+            stopPropagation={false}
+            defaultButtonDescription={'Reserve'}
+            defaultButtonColor="#FAFAF4"
+            updatedButtonColor="#FAFAF4"
+            updatedTextColor="#000000"
+            onButtonClick={() => {
+              dispatch(updateMachine(WMStatus.AVAIL, machine.machineID))
+            }}
+          />
         </UseWashingMachineSection>
       )
     }

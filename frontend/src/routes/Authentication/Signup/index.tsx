@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { Button, Input, Form, Select } from 'antd'
+import { Button, Input, Form, Select, Spin } from 'antd'
 // import passwordHash from 'password-hash'
 import { Alert } from 'antd'
 import 'antd/dist/antd.css'
@@ -70,6 +70,7 @@ export default function Signup() {
   })
 
   const [pageNum, setPageNum] = useState({ page: 1 })
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState({ message: '' })
   // const { name, email, password, password2 } = formData
 
@@ -103,50 +104,59 @@ export default function Signup() {
       block: parseInt(formData.block),
       telegramHandle: formData.telegram,
     }
-
-    await fetch(DOMAIN_URL.SOCIAL + '/auth/register', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newUser),
-    })
-      .then((resp) => resp)
-      .then((data) => {
-        if (data.ok) {
-          const queryBody = {
-            userID: formData.userId,
-            passwordHash: passwordHash,
+    try {
+      await fetch(DOMAIN_URL.SOCIAL + '/auth/register', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      })
+        .then((resp) => resp)
+        .then((data) => {
+          if (data.ok) {
+            const queryBody = {
+              userID: formData.userId,
+              passwordHash: passwordHash,
+            }
+            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+              method: 'POST',
+              mode: 'cors',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(queryBody),
+            })
+              .then((resp) => {
+                if (!resp.ok) {
+                  throw new Error('Wrong Credentials')
+                }
+                return resp.json()
+              })
+              .then((data) => {
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('userID', formData.userId)
+                history.push(PATHS.HOME_PAGE)
+                setIsLoading(false)
+              })
+              .catch((err) => {
+                setError({ message: err })
+                setIsLoading(false)
+              })
+          } else {
+            setError({ message: 'Server Error! Contact a RHDEVS member for assistance!' })
+            setIsLoading(false)
           }
-          fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(queryBody),
-          })
-            .then((resp) => {
-              if (!resp.ok) {
-                throw new Error('Wrong Credentials')
-              }
-              return resp.json()
-            })
-            .then((data) => {
-              localStorage.setItem('token', data.token)
-              localStorage.setItem('userID', formData.userId)
-              history.push(PATHS.HOME_PAGE)
-            })
-            .catch((err) => {
-              setError({ message: 'Failed to create user, please try again' })
-              console.log(err)
-            })
-        }
-      })
-      .catch(() => {
-        setError({ message: 'Failed to create user, please check and try again' })
-      })
+        })
+        .catch((err) => {
+          setError({ message: err })
+          setIsLoading(false)
+        })
+    } catch (err) {
+      setError({ message: err })
+      setIsLoading(false)
+    }
   }
 
   const checkRegisterInfo = (formData) => {
@@ -287,19 +297,29 @@ export default function Signup() {
               <br />
               <br />
               <PostButton>
-                <Button
-                  type="primary"
-                  block
-                  onClick={(e) => {
-                    if (!formData.display || formData.display.trim() === '' || !formData.telegram || !formData.bio) {
-                      setError({ message: 'All fields are compulsory!' })
-                    } else {
-                      onSubmit(e)
-                    }
-                  }}
-                >
-                  Sign Up
-                </Button>
+                {isLoading && <Spin />}
+                {!isLoading && (
+                  <Button
+                    type="primary"
+                    block
+                    onClick={(e) => {
+                      setIsLoading(true)
+                      if (
+                        !formData.display ||
+                        formData.display.trim() === '' ||
+                        !formData.telegram ||
+                        formData.bio === ''
+                      ) {
+                        setError({ message: 'All fields are compulsory!' })
+                        setIsLoading(false)
+                      } else {
+                        onSubmit(e)
+                      }
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                )}
               </PostButton>
               <br />
               <PostButton>

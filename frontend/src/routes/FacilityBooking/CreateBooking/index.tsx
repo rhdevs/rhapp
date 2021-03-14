@@ -22,6 +22,7 @@ import {
   getFacilityList,
   handleCreateBooking,
   resetNewBooking,
+  setDefaultError,
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
@@ -88,6 +89,7 @@ export default function CreateBooking() {
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
+    dispatch(setDefaultError())
     if (newBooking) {
       dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
       dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))

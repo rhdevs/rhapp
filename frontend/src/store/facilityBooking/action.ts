@@ -168,6 +168,13 @@ const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispa
   })
 }
 
+export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: 'Your Event is now 0 minutes long!',
+  })
+}
+
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: newBookingCCA })
 }
