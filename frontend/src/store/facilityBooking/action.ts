@@ -213,6 +213,10 @@ export const createNewBookingFromFacility = (
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: facilityId })
 
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: '' })
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: '' })
+  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: '' })
+
   dispatch(SetIsLoading(false))
 }
 
