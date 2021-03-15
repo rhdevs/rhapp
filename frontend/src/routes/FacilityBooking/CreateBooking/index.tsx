@@ -126,7 +126,8 @@ export default function CreateBooking() {
       createBookingError === '' &&
       newBookingCCA !== '' &&
       newBookingDescription !== '' &&
-      newBookingFacilityName !== ''
+      newBookingFacilityName !== '' &&
+      Math.abs(newBookingFromDate.getTime() - newBookingToDate.getTime()) < 14400000 // 4 hours
     ) {
       return (
         <div
