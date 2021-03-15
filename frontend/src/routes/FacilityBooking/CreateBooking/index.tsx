@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { Alert, AutoComplete, Input } from 'antd'
@@ -23,14 +23,12 @@ import {
   getFacilityList,
   handleCreateBooking,
   resetNewBooking,
-  SetCreateBookingError,
   setDefaultError,
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -73,7 +71,7 @@ const DatePickerRow = styled.div`
 
 export default function CreateBooking() {
   const dispatch = useDispatch()
-  const history = useHistory()
+  // const history = useHistory()
   const {
     newBooking,
     newBookingName,
@@ -86,7 +84,6 @@ export default function CreateBooking() {
     isLoading,
     ccaList,
     createBookingError,
-    newBookingFacilityId,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -118,12 +115,12 @@ export default function CreateBooking() {
         <div
           onClick={() => {
             dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
-            history.replace(PATHS.FACILITY_BOOKING_MAIN)
-            if (newBookingFacilityId) {
-              history.push('/facility/view/' + newBookingFacilityId)
-            } else {
-              history.push('/facility/view/1')
-            }
+            // history.replace(PATHS.FACILITY_BOOKING_MAIN)
+            // if (newBookingFacilityId) {
+            //   history.push('/facility/view/' + newBookingFacilityId)
+            // } else {
+            //   history.push('/facility/view/1')
+            // }
           }}
         >
           <CheckOutlined style={{ color: 'black' }} />

@@ -198,7 +198,7 @@ export default function ViewFacility() {
 
   const getHumanReadableDate = (eventTime: number) => {
     const date = new Date(eventTime * 1000)
-    const day = date.getUTCDate() + 1
+    const day = date.getUTCDate()
     const monthInt = date.getUTCMonth()
 
     return day + ' ' + months[monthInt]
