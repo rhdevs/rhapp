@@ -13,6 +13,7 @@ import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  clearErrors,
   editBookingCCA,
   editBookingDescription,
   editBookingFromDate,
@@ -22,6 +23,7 @@ import {
   getFacilityList,
   handleCreateBooking,
   resetNewBooking,
+  SetCreateBookingError,
   setDefaultError,
   SetIsLoading,
   setNewBookingFacilityName,
@@ -105,21 +107,35 @@ export default function CreateBooking() {
     }
   }, [dispatch])
 
-  const CheckIcon = (
-    <div
-      onClick={() => {
-        dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
-        history.replace(PATHS.FACILITY_BOOKING_MAIN)
-        if (newBookingFacilityId) {
-          history.push('/facility/view/' + newBookingFacilityId)
-        } else {
-          history.push('/facility/view/1')
-        }
-      }}
-    >
-      <CheckOutlined style={{ color: 'black' }} />
-    </div>
-  )
+  const CheckIcon = (createBookingError: string) => {
+    if (
+      createBookingError === '' &&
+      newBookingCCA !== '' &&
+      newBookingDescription !== '' &&
+      newBookingFacilityName !== ''
+    ) {
+      return (
+        <div
+          onClick={() => {
+            dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
+            history.replace(PATHS.FACILITY_BOOKING_MAIN)
+            if (newBookingFacilityId) {
+              history.push('/facility/view/' + newBookingFacilityId)
+            } else {
+              history.push('/facility/view/1')
+            }
+          }}
+        >
+          <CheckOutlined style={{ color: 'black' }} />
+        </div>
+      )
+    } else {
+      // if (newBookingCCA !== '' || newBookingDescription !== '' || newBookingFacilityName !== '') {
+      //   dispatch(SetCreateBookingError('All fields are compulsary!'))
+      // }
+      return <CheckOutlined style={{ color: '#0000004d' }} />
+    }
+  }
 
   const handleFromDateChange = (newDate: Date) => {
     dispatch(editBookingFromDate(newDate))
@@ -155,7 +171,10 @@ export default function CreateBooking() {
 
   return (
     <div>
-      <TopNavBar title={newBooking?.bookingID ? `Edit Booking` : `New Booking`} rightComponent={CheckIcon} />
+      <TopNavBar
+        title={newBooking?.bookingID ? `Edit Booking` : `New Booking`}
+        rightComponent={CheckIcon(createBookingError)}
+      />
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
@@ -167,6 +186,9 @@ export default function CreateBooking() {
               style={{ margin: '23px 23px 23px 23px' }}
               closable
               showIcon
+              afterClose={() => {
+                dispatch(clearErrors())
+              }}
             />
           )}
           <AutoComplete

@@ -2,6 +2,8 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 import dayjs from 'dayjs'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../routes/Routes'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -151,7 +153,7 @@ export const editBookingFromDate = (newBookingFromDate: Date) => (
   dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
 }
 
-const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
+export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
   let newError = ''
   if (duration > 4) {
@@ -160,11 +162,20 @@ const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispa
     newError = 'End Date is before Start Date!'
   } else if (duration === 0) {
     newError = 'End Date is the Same as Start Date!'
+  } else {
+    newError = ''
   }
 
   dispatch({
     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
     createBookingError: newError,
+  })
+}
+
+export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+    createBookingError: '',
   })
 }
 
@@ -252,7 +263,9 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
     newBookingCCA,
     newBookingDescription,
     ccaList,
+    newBookingFacilityId,
   } = getState().facilityBooking
+  const history = useHistory()
 
   const requestBody = {
     facilityID: selectedFacilityId,
@@ -278,6 +291,12 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
             type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
             newBooking: undefined,
           })
+          history.replace(PATHS.FACILITY_BOOKING_MAIN)
+          if (newBookingFacilityId) {
+            history.push('/facility/view/' + newBookingFacilityId)
+          } else {
+            history.push('/facility/view/1')
+          }
         }
       })
       .catch(() => {
