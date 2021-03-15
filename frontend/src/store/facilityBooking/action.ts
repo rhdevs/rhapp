@@ -2,8 +2,6 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
 import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
-import { PATHS } from '../../routes/Routes'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -254,6 +252,10 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
+export const resetCreateBookingSuccessFailure = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+}
+
 export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const {
     newBookingName,
@@ -263,9 +265,7 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
     newBookingCCA,
     newBookingDescription,
     ccaList,
-    newBookingFacilityId,
   } = getState().facilityBooking
-  const history = useHistory()
 
   const requestBody = {
     facilityID: selectedFacilityId,
@@ -285,22 +285,26 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
       .then((resp) => {
         if (resp.status >= 400) {
           dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+          dispatch(
+            SetCreateBookingError(
+              'Check your fields again! All fields should be filled up, and event should be <4 hours!',
+            ),
+          )
         } else {
           dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
           dispatch({
             type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
             newBooking: undefined,
           })
-          history.replace(PATHS.FACILITY_BOOKING_MAIN)
-          if (newBookingFacilityId) {
-            history.push('/facility/view/' + newBookingFacilityId)
-          } else {
-            history.push('/facility/view/1')
-          }
         }
       })
       .catch(() => {
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+        dispatch(
+          SetCreateBookingError(
+            'Check your fields again! All fields should be filled up, and event should be <4 hours!',
+          ),
+        )
       })
   } else {
     fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
@@ -314,6 +318,11 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
       .then((resp) => {
         if (resp.status >= 400) {
           dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+          dispatch(
+            SetCreateBookingError(
+              'Check your fields again! All fields should be filled up, and event should be <4 hours!',
+            ),
+          )
         } else {
           dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
           dispatch({
@@ -324,6 +333,11 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
       })
       .catch(() => {
         dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+        dispatch(
+          SetCreateBookingError(
+            'Check your fields again! All fields should be filled up, and event should be <4 hours!',
+          ),
+        )
       })
   }
 }
