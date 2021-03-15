@@ -1,25 +1,24 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Button } from 'antd'
 import 'antd/dist/antd.css'
 import { User } from '../../../store/profile/types'
 
-const AddFriendButtonStyle = {
-  size: 'large',
-  backgroundColor: '#DE5F4C',
-  borderColor: '#DE5F4C',
-  width: '35vw',
-  left: '5%',
-  boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
-  borderRadius: '8px',
-}
+// const AddFriendButtonStyle = {
+//   size: 'large',
+//   backgroundColor: '#DE5F4C',
+//   borderColor: '#DE5F4C',
+//   width: '35vw',
+//   left: '5%',
+//   boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
+//   borderRadius: '8px',
+// }
 
 const TelegramButtonStyle = {
   size: 'large',
   backgroundColor: '#DE5F4C',
   borderColor: '#DE5F4C',
-  width: '35vw',
-  left: '15%',
+  width: '88vw',
   boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
   borderRadius: '8px',
 }
@@ -32,16 +31,16 @@ const ButtonDiv = styled.div`
 `
 
 export default function FriendAndTelegramButtons({ user }: { user: User }) {
-  const [isFriend, setIsFriend] = useState(false)
-  const handleFriendButtonClick = () => {
-    setIsFriend(!isFriend)
-  }
+  // const [isFriend, setIsFriend] = useState(false)
+  // const handleFriendButtonClick = () => {
+  //   setIsFriend(!isFriend)
+  // }
 
   return (
     <ButtonDiv>
-      <Button type="primary" style={AddFriendButtonStyle} onClick={handleFriendButtonClick}>
+      {/* <Button type="primary" style={AddFriendButtonStyle} onClick={handleFriendButtonClick}>
         {isFriend ? 'Unfriend' : 'Add Friend'}
-      </Button>
+      </Button> */}
       <Button
         type="primary"
         style={TelegramButtonStyle}

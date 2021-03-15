@@ -50,7 +50,7 @@ const ButtonGroup = styled.div`
 `
 
 const ActionButton = styled(Button)`
-  width: 130px;
+  width: 160px;
   height: 80px !important;
   border-radius: 28px !important;
   margin: 7px 18px !important;

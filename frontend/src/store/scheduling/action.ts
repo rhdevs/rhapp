@@ -241,7 +241,7 @@ const sortEvents = (events: TimetableEvent[]) => {
 
 const getTimetableStartTime = (formattedEvents: TimetableEvent[]) => {
   const sortedEvents = sortEvents(formattedEvents)
-  return sortedEvents[0].startTime
+  return sortedEvents[0]?.startTime
 }
 
 const getTimetableEndTime = (formattedEvents: TimetableEvent[]) => {

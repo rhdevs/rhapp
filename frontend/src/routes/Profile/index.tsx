@@ -95,13 +95,12 @@ export default function Profile() {
   const [isOwnProfile, setIsOwnProfile] = useState(true)
   const { user, ccas, posts, isLoading } = useSelector((state: RootState) => state.profile)
   const params = useParams<{ userId: string }>()
-  const userIdFromPath = params.userId
 
   useEffect(() => {
-    dispatch(fetchUserDetails(localStorage.getItem('userID')))
-    dispatch(fetchUserCCAs(localStorage.getItem('userID')))
-    dispatch(fetchUserPosts(localStorage.getItem('userID')))
-    setIsOwnProfile(userIdFromPath === localStorage.getItem('userID'))
+    dispatch(fetchUserDetails(params.userId))
+    dispatch(fetchUserCCAs(params.userId))
+    dispatch(fetchUserPosts(params.userId))
+    setIsOwnProfile(params.userId === localStorage.getItem('userID'))
   }, [dispatch])
 
   const ActivitiesItem = (postItem: Post) => {
@@ -113,14 +112,14 @@ export default function Profile() {
       <SocialPostCard
         key={postItem._id}
         isOwner={postItem.userID === params.userId}
-        avatar={user.profilePictureUrl}
-        name={user.displayName}
-        title={postItem.title}
+        avatar={user?.profilePictureUrl}
+        name={user?.displayName}
+        title={postItem?.title}
         dateTime={date}
-        description={postItem.description}
+        description={postItem?.description}
         postId={postItem._id}
         postPics={[]}
-        userId={params.userId}
+        userId={params?.userId}
       />
     )
   }
@@ -171,7 +170,7 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      {user.profilePictureUrl == undefined ? (
+      {user?.profilePictureUrl == undefined ? (
         <AvatarSpan>
           <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
             {getInitials(user.displayName)}
@@ -282,22 +281,24 @@ export default function Profile() {
         <PullToRefresh onRefresh={onRefresh}>
           <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
           {isLoading && <LoadingSpin />}
-          <ProfileComponent>
-            <PersonalInfoContainer />
-            {isOwnProfile ? (
-              <EditProfileButton
-                handleClick={() => {
-                  history.push(PATHS.EDIT_PROFILE_PAGE)
-                  dispatch(populateProfileEdits())
-                }}
-              />
-            ) : (
-              <FriendAndTelegramButtons user={user} />
-            )}
-            <CardContainer>
-              <CardTabs />
-            </CardContainer>
-          </ProfileComponent>
+          {!isLoading && (
+            <ProfileComponent>
+              <PersonalInfoContainer />
+              {isOwnProfile ? (
+                <EditProfileButton
+                  handleClick={() => {
+                    history.push(PATHS.EDIT_PROFILE_PAGE)
+                    dispatch(populateProfileEdits())
+                  }}
+                />
+              ) : (
+                <FriendAndTelegramButtons user={user} />
+              )}
+              <CardContainer>
+                <CardTabs />
+              </CardContainer>
+            </ProfileComponent>
+          )}
         </PullToRefresh>
         <BottomNavBar />
       </MainContainer>

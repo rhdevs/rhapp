@@ -162,11 +162,14 @@ export default function ViewMyBookings() {
                             title={'Delete Booking?'}
                             hasLeftButton={true}
                             leftButtonText={'Delete'}
+                            onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
                             onLeftButtonClick={() => {
                               dispatch(deleteMyBooking(booking.bookingID))
                               history.replace(PATHS.FACILITY_BOOKING_MAIN)
                               history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
                             }}
+                            top={10}
+                            bottom={-30}
                             rightButtonText={'Cancel'}
                             onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
                           />

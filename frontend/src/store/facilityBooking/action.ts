@@ -51,7 +51,7 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
         })
           .then((resp) => resp.json())
           .then(async (cca) => {
-            booking.ccaName = cca[0].ccaName
+            booking.ccaName = cca[0]?.ccaName
           })
         return booking
       })

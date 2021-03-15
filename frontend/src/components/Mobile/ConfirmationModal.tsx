@@ -50,6 +50,7 @@ function ConfirmationModal({
   rightButtonTextColor,
   rightButtonColor,
   onRightButtonClick,
+  onOverlayClick,
   top,
   bottom,
   right,
@@ -65,6 +66,7 @@ function ConfirmationModal({
   rightButtonTextColor?: string
   rightButtonColor?: string
   onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   top?: number
   bottom?: number
   right?: number
@@ -77,7 +79,7 @@ function ConfirmationModal({
 
   return (
     <>
-      <OverlayContainer />
+      <OverlayContainer onClick={onOverlayClick} />
       <MainContainer style={{ bottom: bottom ?? '50%', right: right ?? 0, left: left ?? 0, top: top }}>
         <TitleText>{title}</TitleText>
         <ButtonContainer>

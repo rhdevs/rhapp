@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-import { Switch } from 'react-router-dom'
+// import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import { AnimatedSwitch } from 'react-router-transition'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -88,7 +89,12 @@ export default class Routes extends React.Component {
     return (
       <Root>
         <Suspense fallback={LoadingSpin}>
-          <Switch>
+          <AnimatedSwitch
+            atEnter={{ opacity: 0 }}
+            atLeave={{ opacity: 0 }}
+            atActive={{ opacity: 1 }}
+            className="switch-wrapper"
+          >
             <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
             <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
@@ -120,7 +126,7 @@ export default class Routes extends React.Component {
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
             <PublicRoute component={FallBack} />
-          </Switch>
+          </AnimatedSwitch>
         </Suspense>
       </Root>
     )
