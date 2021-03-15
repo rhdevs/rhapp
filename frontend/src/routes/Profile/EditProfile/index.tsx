@@ -21,6 +21,7 @@ import deleteIcon from '../../../assets/cancel.svg'
 import tickIcon from '../../../assets/tick.svg'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PlusCircleFilled } from '@ant-design/icons'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -47,7 +48,7 @@ export default function EditProfile() {
   const history = useHistory()
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [searchInfoSelected, setSearchInfoSelected] = useState(true)
-  const { user, ccas, allCcas, hasChanged } = useSelector((state: RootState) => state.profile)
+  const { user, ccas, allCcas, hasChanged, isLoading } = useSelector((state: RootState) => state.profile)
 
   useEffect(() => {
     dispatch(fetchUserDetails(localStorage.getItem('userID')))
@@ -284,6 +285,7 @@ export default function EditProfile() {
         />
       )}
       <ProfileComponent>
+        {isLoading && <LoadingSpin />}
         <EditPersonalInfoContainer />
         <CardContainer>
           <EditDetailsCard />
