@@ -240,11 +240,17 @@ const sortEvents = (events: TimetableEvent[]) => {
 }
 
 const getTimetableStartTime = (formattedEvents: TimetableEvent[]) => {
+  if (formattedEvents.length === 0) {
+    return '1000'
+  }
   const sortedEvents = sortEvents(formattedEvents)
   return sortedEvents[0]?.startTime
 }
 
 const getTimetableEndTime = (formattedEvents: TimetableEvent[]) => {
+  if (formattedEvents.length === 0) {
+    return '1700'
+  }
   const sortByEndTime = (events: TimetableEvent[]) => {
     return events.sort((a, b) => {
       return b.endTime.localeCompare(a.endTime)
