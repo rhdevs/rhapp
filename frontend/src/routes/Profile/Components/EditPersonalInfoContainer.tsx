@@ -13,7 +13,6 @@ import {
 import { useHistory } from 'react-router-dom'
 import useSnackbar from '../../../hooks/useSnackbar'
 import { getInitials } from '../../../common/getInitials'
-import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   padding-left: 10vw;
