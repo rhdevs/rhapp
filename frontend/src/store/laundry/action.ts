@@ -243,6 +243,7 @@ export const updateMachine = (updatedState: string, machineID: string) => (
       }
     })
     .then((data) => {
+      console.log(data)
       if (data.ok) {
         console.log('success') // TODO: user interaction for successfully booked
       }
