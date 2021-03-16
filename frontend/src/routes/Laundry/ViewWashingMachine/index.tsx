@@ -245,7 +245,6 @@ export default function ViewWashingMachine() {
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
               } else {
-                console.log('here')
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
                 // Update washing machine state here / history.back()
