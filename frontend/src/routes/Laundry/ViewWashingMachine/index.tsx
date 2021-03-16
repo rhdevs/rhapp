@@ -247,6 +247,7 @@ export default function ViewWashingMachine() {
               } else {
                 dispatch(updateMachine(WMStatus.INUSE, machine?.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
+                // Update washing machine state here / history.back()
               }
             }}
           />

@@ -202,7 +202,7 @@ export const SetManualEditMode = (isEdit: boolean) => async (dispatch: Dispatch<
  * WHATEVER ---> job: "Cancelled" ---> AVAILABLE
  *
  **/
-export const updateMachine = (updatedState: string, machineID: string) => (
+export const updateMachine = (updatedState: string, machineID: string) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -226,8 +226,8 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     userID: localStorage.getItem('userID'), //TODO: Update userId
     currentDuration: duration * 60,
   }
-
-  fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
+  dispatch(SetIsLoading(true))
+  await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
     method: 'POST',
     mode: 'cors',
     headers: {
@@ -235,17 +235,25 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     },
     body: JSON.stringify(queryBody),
   })
-    .then((resp) => resp)
-    .then((data) => {
-      if (data.ok) {
-        console.log('success') // TODO: user interaction for successfully booked
+    .then((resp) => {
+      if (resp.ok) {
+        console.log('success')
+      } else {
+        throw new Error('fetching data failed')
       }
     })
+    .catch((error) => {
+      console.log(error)
+      // error, return to the page again
+    })
+
+  dispatch(SetSelectedMachineFromId(machineID))
 
   filteredMachines.forEach((machine) => {
     if (machine.machineID === machineID) machine.job = updatedState as WMStatus
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
+  dispatch(SetIsLoading(false))
 }
 
 export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -266,13 +274,11 @@ export const UpdateJobDuration = (machineID: string) => async (dispatch: Dispatc
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(queryBody),
+  }).then((resp) => {
+    if (resp.ok) {
+      console.log('success')
+    }
   })
-    .then((resp) => resp)
-    .then((data) => {
-      if (data.ok) {
-        console.log('success')
-      }
-    })
   filteredMachines.forEach((machine) => {
     if (machine.machineID === machineID) machine.duration = duration * 60 // duration should be in second
   })

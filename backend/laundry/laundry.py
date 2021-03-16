@@ -37,6 +37,7 @@ def all_location():
     except Exception as e:
         return make_response({"err": str(e)}, 400)
 
+
 @app.route('/location/<int:block_num>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def location(block_num):
@@ -88,7 +89,9 @@ def SweepAll():
 
     return True
 
+
 db.LaundryMachine.create_index('userID')
+
 
 @app.route('/laundry/machine', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -193,7 +196,9 @@ def laundry_by_location():
                     "jobHistory": ["Reserved"]
                 })
 
-                return make_response("Successfully create new job and change from Available to Reserved", 200)
+                response = {}
+                response["message"] = "Successfully create new job and change from Available to Reserved"
+                return make_response(response, 200)
 
             elif status == "Available" and (job not in ['Broken']):
                 # for admin use, change Available to Broken
@@ -222,7 +227,10 @@ def laundry_by_location():
                     }}
                 )
 
-                return make_response("Successfully Completed the job", 200)
+                response = {}
+                response["message"] = "Successfully Completed the job"
+
+                return make_response(response, 200)
 
             elif status == "Available" and job == "Broken":
                 # just update the machine without new entry
@@ -234,7 +242,10 @@ def laundry_by_location():
 
                 result = db.LaundryMachine.update_one(myquery, data_body)
 
-                return make_response("Successfully change the machine to Broken", 200)
+                response = {}
+                response["message"] = "Successfully change the machine to Broken"
+
+                return make_response(response, 200)
 
             elif status == "Reserved" and job == 'None':
                 if(currentDuration == None or currentDuration == 0):
@@ -258,7 +269,10 @@ def laundry_by_location():
                     }}
                 )
 
-                return make_response("Successfully update job from Reserved to In Use", 200)
+                response = {}
+                response["message"] = "Successfully update job from Reserved to In Use"
+
+                return make_response(response, 200)
 
             elif status in ['Uncollected', 'Alerted'] and job == "Alerted":
                 # just update the database without creating new entry
@@ -280,7 +294,10 @@ def laundry_by_location():
                     }}
                 )
 
-                return make_response("Successfully alerted the job", 200)
+                response = {}
+                response["message"] = "Successfully alerted the job"
+
+                return make_response(response, 200)
 
             elif job == "Cancelled":
                 jobID = db.LaundryMachine.find_one(
@@ -302,8 +319,14 @@ def laundry_by_location():
                     }}
                 )
 
+                response = {}
+                response["message"] = "Successfully Cancelled and Reset the job"
+
                 return make_response("Successfully Cancelled and Reset the job", 200)
             else:
+                response = {}
+                response["message"] = "command not recognized"
+
                 return make_response("command not recognized", 400)
     except Exception as e:
         return {"err": str(e)}, 400
@@ -365,9 +388,13 @@ def change_duration():
 
             result = db.LaundryMachine.update_one(myquery, data_body)
 
-            return make_response("Successfully Update the duration", 200)
+            response = {}
+            response["message"] = "Successfully Update the duration"
+            return make_response(response, 200)
         else:
-            return make_response("Can only update duration when its In Use, cannot change Reserved Timing")
+            response = {}
+            response["message"] = "Can only update duration when its In Use, cannot change Reserved Timing"
+            return make_response(response, 400)
     except Exception as e:
         return {"err": str(e)}, 400
 
