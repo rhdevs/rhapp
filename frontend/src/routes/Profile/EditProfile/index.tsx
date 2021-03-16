@@ -284,13 +284,16 @@ export default function EditProfile() {
           onRightButtonClick={() => setShowConfirmationModal(false)}
         />
       )}
-      <ProfileComponent>
-        {isLoading && <LoadingSpin />}
-        <EditPersonalInfoContainer />
-        <CardContainer>
-          <EditDetailsCard />
-        </CardContainer>
-      </ProfileComponent>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <ProfileComponent>
+          <EditPersonalInfoContainer />
+          <CardContainer>
+            <EditDetailsCard />
+          </CardContainer>
+        </ProfileComponent>
+      )}
       <BottomNavBar />
     </MainContainer>
   )
