@@ -235,12 +235,25 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     },
     body: JSON.stringify(queryBody),
   })
-    .then((resp) => resp)
+    .then((resp) => {
+      if (resp.ok) {
+        return resp.json()
+      } else {
+        throw new Error('fetching data failed')
+      }
+    })
     .then((data) => {
       if (data.ok) {
         console.log('success') // TODO: user interaction for successfully booked
       }
     })
+    .catch((error) => {
+      console.log(error)
+      // error, return to the page again
+      history.back()
+    })
+
+  dispatch(SetSelectedMachineFromId(machineID))
 
   filteredMachines.forEach((machine) => {
     if (machine.machineID === machineID) machine.job = updatedState as WMStatus
