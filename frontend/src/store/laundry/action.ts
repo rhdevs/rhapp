@@ -226,7 +226,7 @@ export const updateMachine = (updatedState: string, machineID: string) => async 
     userID: localStorage.getItem('userID'), //TODO: Update userId
     currentDuration: duration * 60,
   }
-
+  dispatch(SetIsLoading(true))
   await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
     method: 'POST',
     mode: 'cors',
@@ -253,6 +253,7 @@ export const updateMachine = (updatedState: string, machineID: string) => async 
     if (machine.machineID === machineID) machine.job = updatedState as WMStatus
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
+  dispatch(SetIsLoading(false))
 }
 
 export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {
