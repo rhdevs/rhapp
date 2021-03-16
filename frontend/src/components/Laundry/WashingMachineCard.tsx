@@ -130,7 +130,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }
       }
       break
@@ -141,7 +141,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }
       }
       break
@@ -154,7 +154,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         } else {
           goToTelegramHandle(props.washingMachine)
         }
@@ -169,7 +169,7 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
           dispatch(SetSelectedMachine(props.washingMachine))
-          history.push(PATHS.VIEW_WASHING_MACHINE)
+          history.push(PATHS.VIEW_MACHINE + '/' + props.washingMachine.machineID)
         }
       }
       break
