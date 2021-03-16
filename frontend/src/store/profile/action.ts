@@ -137,6 +137,7 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
 
+  // Set Loading while user waits
   dispatch(setIsLoading(true))
 
   // 1. Update CCAs
@@ -172,6 +173,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
     .catch(() => {
       dispatch(setCanPush('error'))
     })
+  // Stop Loading when done
   dispatch(setIsLoading(false))
 }
 
