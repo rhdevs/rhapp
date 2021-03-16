@@ -250,7 +250,6 @@ export const updateMachine = (updatedState: string, machineID: string) => (
     .catch((error) => {
       console.log(error)
       // error, return to the page again
-      history.back()
     })
 
   dispatch(SetSelectedMachineFromId(machineID))
