@@ -193,35 +193,14 @@ def get_booking(bookingID):
 @cross_origin(supports_credentials=True)
 def edit_booking(bookingID):
     try:
+        # if request.cookies.get("userID") == list(db.Bookings.find({"bookingID" : bookingID}))[0]['userID'] :
         formData = request.get_json()
-        formData["startTime"] = int(formData["startTime"])
-        formData["endTime"] = int(formData["endTime"])
-
-        formData["facilityID"] = int(formData["facilityID"])
         if not formData.get("ccaID"):
             formData["ccaID"] = int(0)
         else:
             formData["ccaID"] = int(formData["ccaID"])
-
-        if (formData["endTime"] < formData["startTime"]):
-            raise Exception("End time eariler than start time")
-        # else:
-        #     return {"err": "Unauthorised Access"}, 401
-
-        # Check for exisiting booking
-        # x1 <= y2 && y1 <= x2 because ranges are well-formed
-        conflict = removeObjectID(list(db.Bookings.find({"facilityID": formData.get("facilityID"),
-                                                         "endTime": {
-            "$gte": formData.get('startTime')},
-            "startTime": {
-            "$lte": formData.get('endTime')}
-        })))
-
-        if (len(conflict) != 0):
-            raise Exception("Conflict Booking")
-
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
-            "$set": request.get_json()})
+                               "$set": request.get_json()})
 
         # else:
         #     return {"err": "Unauthorised Access"}, 401
