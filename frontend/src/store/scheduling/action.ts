@@ -383,6 +383,7 @@ export const setUserNusMods = (userId: string | null, userNusModsLink: string) =
     }
     const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
       .then((resp) => {
+        console.log(resp)
         return resp
       })
       .catch((err) => {
