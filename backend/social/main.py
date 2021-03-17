@@ -51,17 +51,6 @@ def getAllProfiles():
         return {"err": str(e)}, 400
 
 
-@app.route("/user/<userID>")
-@cross_origin(supports_credentials=True)
-def getUser(userID):
-    try:
-        data = db.User.find_one({"userID": userID})
-        return make_response({"message": data}, 200)
-    except Exception as e:
-        print(e)
-        return {"err": str(e)}, 400
-
-
 @app.route("/user", methods=['DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
 def addDeleteUser():
@@ -92,37 +81,6 @@ def addDeleteUser():
     except Exception as e:
         print(e)
         return {"err": str(e)}, 400
-
-
-@app.route("/user/edit", methods=['PUT'])
-@cross_origin(supports_credentials=True)
-def editUser():
-    try:
-        data = request.get_json()
-        userID = str(data.get('userID'))
-
-        oldUser = db.User.find_one({"userID": userID})
-        passwordHash = str(data.get('passwordHash')) if data.get(
-            'passwordHash') else oldUser.get('passwordHash')
-        email = str(data.get('email')) if data.get(
-            'email') else oldUser.get('email')
-
-        body = {
-            "userID": userID,
-            "passwordHash": passwordHash,
-            "email": email,
-        }
-
-        result = db.User.update_one({"userID": userID}, {'$set': body})
-        if int(result.matched_count) > 0:
-            return {'message': "Event changed"}, 200
-        else:
-            return Response(status=204)
-
-    except Exception as e:
-        print(e)
-        return {"err": str(e)}, 400
-    return {'message': "Event changed"}, 200
 
 
 @app.route("/profile/<string:userID>")
@@ -158,54 +116,6 @@ def getUserPicture(userID):
         }
 
         return make_response(response, 200)
-
-
-@app.route("/profile", methods=['DELETE', 'POST'])
-@cross_origin(supports_credentials=True)
-def addDeleteProfile():
-    try:
-        if request.method == "POST":
-            data = request.get_json()
-            userID = str(data.get('userID'))
-            displayName = str(data.get('displayName'))
-            bio = str(data.get('bio'))
-            profilePictureUrl = str(data.get('profilePictureUrl'))
-            block = int(data.get('block'))
-            telegramHandle = str(data.get('telegramHandle'))
-            modules = data.get('modules')
-
-            body = {
-                "userID": userID,
-                "displayName": displayName,
-                "bio": bio,
-                "profilePictureUrl": profilePictureUrl,
-                "block": block,
-                "telegramHandle": telegramHandle,
-                "modules": modules
-            }
-            receipt = db.Profiles.insert_one(body)
-            db.UserCCA.insert_many(
-                [{
-                    "userID": userID,
-                    "ccaID": 80 + block
-                },
-                    {
-                    "userID": userID,
-                    "ccaID": 89
-                }])
-
-            body["_id"] = str(receipt.inserted_id)
-
-            return {"message": body}, 200
-
-        elif request.method == "DELETE":
-            userID = request.args.get('userID')
-            db.Profiles.delete_one({"userID": userID})
-            return Response(status=200)
-
-    except Exception as e:
-        print(e)
-        return {"err": str(e)}, 400
 
 
 @app.route("/profile/edit", methods=['PUT'])
@@ -624,6 +534,7 @@ def getAllFriends(userID):
         return make_response({"err": str(e)}, 400)
 
 
+# Unused route
 @app.route("/friend/check", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def checkFriend():
@@ -685,6 +596,7 @@ def search():
         return make_response(response, 400)
 
 
+# Unused route
 @app.route("/image/<string:imageName>", methods=['GET', 'PUT', 'DELETE', 'POST'])
 @cross_origin(supports_credentials=True)
 def images(imageName):
@@ -873,6 +785,7 @@ Delete the session entry
 """
 
 
+# Unused route
 @app.route('/auth/logout', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def logout():
