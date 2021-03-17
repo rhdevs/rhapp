@@ -83,6 +83,37 @@ def addDeleteUser():
         return {"err": str(e)}, 400
 
 
+@app.route("/user/edit", methods=['PUT'])
+@cross_origin(supports_credentials=True)
+def editUser():
+    try:
+        data = request.get_json()
+        userID = str(data.get('userID'))
+
+        oldUser = db.User.find_one({"userID": userID})
+        passwordHash = str(data.get('passwordHash')) if data.get(
+            'passwordHash') else oldUser.get('passwordHash')
+        email = str(data.get('email')) if data.get(
+            'email') else oldUser.get('email')
+
+        body = {
+            "userID": userID,
+            "passwordHash": passwordHash,
+            "email": email,
+        }
+
+        result = db.User.update_one({"userID": userID}, {'$set': body})
+        if int(result.matched_count) > 0:
+            return {'message': "Event changed"}, 200
+        else:
+            return Response(status=204)
+
+    except Exception as e:
+        print(e)
+        return {"err": str(e)}, 400
+    return {'message': "Event changed"}, 200
+
+
 @app.route("/profile/<string:userID>")
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
