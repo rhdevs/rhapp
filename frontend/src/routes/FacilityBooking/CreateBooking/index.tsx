@@ -24,7 +24,6 @@ import {
   handleCreateBooking,
   resetCreateBookingSuccessFailure,
   resetNewBooking,
-  setDefaultError,
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
@@ -93,7 +92,6 @@ export default function CreateBooking() {
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
-    dispatch(setDefaultError())
     if (newBooking) {
       dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
       dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
@@ -117,7 +115,8 @@ export default function CreateBooking() {
       } else {
         history.push('/facility/view/1')
       }
-      dispatch(resetCreateBookingSuccessFailure())
+      dispatch(resetCreateBookingSuccessFailure(true, true))
+      setTimeout(() => dispatch(resetCreateBookingSuccessFailure(false, false)), 5000)
     }
   }, [createSuccess, createFailure])
 
@@ -135,7 +134,7 @@ export default function CreateBooking() {
             dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
           }}
         >
-          <CheckOutlined style={{ color: 'black' }} />
+          <CheckOutlined style={{ color: 'green' }} />
         </div>
       )
     } else {
@@ -175,7 +174,10 @@ export default function CreateBooking() {
   }
 
   const locationOptions = facilityList.map((facility) => ({
-    value: facility.facilityName,
+    value:
+      facility.facilityName == 'Conference Room' || facility.facilityName == 'Main Area'
+        ? facility.facilityName + ' (' + facility.facilityLocation + ')'
+        : facility.facilityName,
   }))
 
   return (
@@ -200,6 +202,7 @@ export default function CreateBooking() {
               }}
             />
           )}
+          {createBookingError === '' && <div style={{ margin: '20px' }} />}
           <AutoComplete
             style={{ width: '50%', marginBottom: '23px' }}
             options={locationOptions}

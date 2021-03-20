@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, post, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, DOMAIN_URL } from '../endpoints'
 import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -252,11 +252,17 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
-export const resetCreateBookingSuccessFailure = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, successBoolean: boolean) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING,
+    createFailure: failureBoolean,
+    createSuccess: successBoolean,
+  })
 }
 
-export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const {
     newBookingName,
     selectedFacilityId,
@@ -278,36 +284,42 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
   }
   if (selectedFacilityId === 0) {
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    dispatch(SetCreateBookingError('Try reentering facility name!'))
     return
   }
   if (!isEdit) {
-    post(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody)
-      .then((resp) => {
-        if (resp.status >= 400) {
-          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-          dispatch(
-            SetCreateBookingError(
-              'Check your fields again! All fields should be filled up, and event should be <4 hours!',
-            ),
-          )
-        } else {
-          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-          dispatch({
-            type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-            newBooking: undefined,
-          })
-        }
-      })
-      .catch(() => {
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+
+    if (response.status >= 400) {
+      const body = await response.json()
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      if (body.err == 'End time eariler than start time') {
+        dispatch(SetCreateBookingError('End time is earlier than start time!'))
+      } else if (body.err == 'Conflict Booking') {
+        dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
+      } else {
         dispatch(
           SetCreateBookingError(
             'Check your fields again! All fields should be filled up, and event should be <4 hours!',
           ),
         )
+      }
+    } else {
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+      dispatch({
+        type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+        newBooking: undefined,
       })
+    }
   } else {
-    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
+    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -315,30 +327,28 @@ export const handleCreateBooking = (isEdit: boolean) => (dispatch: Dispatch<Acti
       },
       body: JSON.stringify(requestBody),
     })
-      .then((resp) => {
-        if (resp.status >= 400) {
-          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-          dispatch(
-            SetCreateBookingError(
-              'Check your fields again! All fields should be filled up, and event should be <4 hours!',
-            ),
-          )
-        } else {
-          dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-          dispatch({
-            type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-            newBooking: undefined,
-          })
-        }
-      })
-      .catch(() => {
-        dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+
+    if (response.status >= 400) {
+      const body = await response.json()
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      if (body.err == 'End time eariler than start time') {
+        dispatch(SetCreateBookingError('End time is earlier than start time!'))
+      } else if (body.err == 'Conflict Booking') {
+        dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
+      } else {
         dispatch(
           SetCreateBookingError(
             'Check your fields again! All fields should be filled up, and event should be <4 hours!',
           ),
         )
+      }
+    } else {
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+      dispatch({
+        type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+        newBooking: undefined,
       })
+    }
   }
 }
 
