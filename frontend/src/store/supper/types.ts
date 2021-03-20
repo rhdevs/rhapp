@@ -6,6 +6,7 @@ export type User = {
   block: number
   bio: string
   modules: string[]
+  contactNumber?: number
 }
 
 export type Food = {
@@ -28,10 +29,11 @@ export type Suborder = {
   suborderId: string
   hopperId: string
   orderId: string
+  paymentContactNumber?: number
   foodList: Food[]
   totalCost: number
   hasPaid: boolean //1 if hopper paid orderer (hopper POV)
-  methodOfPayment: string
+  modeOfPayment: string
   hasRecieved: boolean //1 if orderer received payment (orderer POV)
 }
 
@@ -39,6 +41,7 @@ export type Order = {
   orderId: string
   ordererId: string
   hopperIdList: string[]
+  paymentContactNumber?: number
   orderName: string
   orderList: Suborder[]
   additionalCost: number //ie GST, delivery fee
@@ -46,7 +49,7 @@ export type Order = {
   costLimit: number
   status: string
   comments: string
-  methodOfPayment: string
+  modeOfPayment: string
   closingTime: string
 }
 
