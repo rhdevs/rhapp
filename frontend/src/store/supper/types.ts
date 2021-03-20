@@ -9,38 +9,45 @@ export type User = {
 }
 
 export type Food = {
+  foodId: string
   foodName: string
   price: number
-  foodId: string
-  comments?: string //hopper comments
-  quantity?: number //hopper order quantity
+  comments?: string //hopper comments (undefined if in menu)
+  quantity?: number //hopper order quantity (undefined if in menu)
 }
 
 export type Restaurant = {
+  restaurantId: string
+  name: string
   menu: Food[]
   closingTime: number
-  contactNumber: number
+  contactNumber?: number
 }
 
-export type SubOrder = {
-  foodList: Food[]
-  totalCost: number
-  isPaid: boolean
+export type Suborder = {
+  suborderId: string
   hopperId: string
   orderId: string
+  foodList: Food[]
+  totalCost: number
+  hasPaid: boolean //1 if hopper paid orderer (hopper POV)
   methodOfPayment: string
+  hasRecieved: boolean //1 if orderer received payment (orderer POV)
 }
 
 export type Order = {
-  orderList: SubOrder[]
-  additionalCost: number
-  totalFoodCost: number
-  costLimit: number
-  status: string
   orderId: string
   ordererId: string
+  hopperIdList: string[]
+  orderName: string
+  orderList: Suborder[]
+  additionalCost: number //ie GST, delivery fee
+  currentFoodCost: number //non inclusive of additionalCost
+  costLimit: number
+  status: string
   comments: string
   methodOfPayment: string
+  closingTime: string
 }
 
 export enum SUPPER_ACTIONS {
