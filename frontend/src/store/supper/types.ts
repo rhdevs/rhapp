@@ -39,10 +39,12 @@ export type Suborder = {
 
 export type Order = {
   orderId: string
-  ordererId: string
-  hopperIdList: string[]
-  paymentContactNumber?: number
   orderName: string
+  ordererId: string
+  ordererName: string
+  paymentContactNumber?: number
+  restaurantName: string
+  hopperIdList: string[]
   orderList: Suborder[]
   additionalCost: number //ie GST, delivery fee
   currentFoodCost: number //non inclusive of additionalCost
