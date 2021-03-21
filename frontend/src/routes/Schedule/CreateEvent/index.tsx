@@ -118,6 +118,7 @@ export default function CreateEvent() {
   const [selectBorder, setSelectBorder] = useState('#d9d9d9')
   const [onClickStatus, setOnClickStatus] = useState(false)
   const [creatorIsAttending, setCreatorIsAttending] = useState(true)
+  const [tickHasBeenClicked, setTickHasBeenClicked] = useState(false)
 
   const RedAsterisk = <RedText>*</RedText>
 
@@ -200,13 +201,18 @@ export default function CreateEvent() {
   }
 
   const onClick = () => {
-    if (watch('eventTargetAudience') === 'Select') {
-      setSelectBorder('red')
-      setSelectColor('#ffd1d1')
-    }
-    setOnClickStatus(true)
+    if (createdEventID == null && !tickHasBeenClicked) {
+      if (watch('eventTargetAudience') === 'Select') {
+        setSelectBorder('red')
+        setSelectColor('#ffd1d1')
+      }
+      setOnClickStatus(true)
 
-    handleSubmit(onSubmit)()
+      handleSubmit(onSubmit)()
+
+      setTickHasBeenClicked(true)
+      setTimeout(() => setTickHasBeenClicked(false), 5000)
+    }
   }
 
   const onSubmit = (data: {
