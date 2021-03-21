@@ -252,6 +252,10 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
+/*success && failure -> Success Message shown
+success && !failure -> When in createbooking, redirect to viewbooking with success message
+!success && failure -> Failure Message shown
+!success && !failure -> Normal state no error shown*/
 export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, successBoolean: boolean) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
