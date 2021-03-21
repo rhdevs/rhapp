@@ -31,23 +31,6 @@ def renameEvent(event):
     event['eventID'] = event.pop('_id')
     return event
 
-
-@app.route("/")
-@cross_origin()
-def hello():
-    return "Welcome the Raffles Hall Events server"
-
-
-@app.route("/timetable/<userID>", methods=["GET"])
-@cross_origin()
-def getUserTimetable(userID):
-    try:
-        data = db.Lessons.find({"userID": userID})
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
 @app.route('/event/all', methods=["GET"])
 @cross_origin()
 def getAllEvents():
@@ -56,21 +39,6 @@ def getAllEvents():
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
-@app.route('/event/private/all', methods=["GET"])
-@cross_origin()
-def getAllPrivateEvents():
-    try:
-        data = db.Events.find({"isPrivate": {"$eq": True}})
-        response = []
-        for item in data:
-            item['eventID'] = item.pop('_id')
-            response.append(item)
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
-
 
 @app.route('/event/private/<userID>/<startTime>', methods=["GET"])
 @cross_origin()
@@ -114,17 +82,6 @@ def getAllPublicEvents():
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(response, default=lambda o: str(o)), 200
-
-
-@app.route('/event/afterTime/<startTime>', methods=["GET"])
-@cross_origin()
-def getEventAfterTime(startTime):
-    try:
-        data = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
 
 @app.route('/event/public/afterTime/<startTime>', methods=["GET"])
 @cross_origin()
@@ -270,39 +227,6 @@ def getCCAMembersName():
     except Exception as e:
         return {"err": str(e)}, 400
     return json.dumps(list(response), default=lambda o: str(o)), 200
-
-
-@app.route("/user_CCA/add", methods=['POST'])
-@cross_origin()
-def addUserCCA():
-    try:
-        data = request.get_json()
-        userID = data.get('userID')
-        ccaID = data.get('ccaID')  # list of integers
-
-        deleteQuery = {"userID": userID}
-        db.UserCCA.delete_many(deleteQuery)
-
-        body = []
-        for cca in ccaID:
-            item = {
-                "userID": userID,
-                "ccaID": cca
-            }
-
-            body.append(item)
-        if len(body) != 0:
-            receipt = db.UserCCA.insert_many(body)
-
-            response = {}
-            response["_id"] = str(receipt.inserted_ids)
-        else:
-            response = "User has no more CCAs"
-
-        return {"message": response}, 200
-    except Exception as e:
-        return {"err": str(e)}, 400
-
 
 @ app.route("/permissions/<userID>", methods=["GET"])
 @ cross_origin()
