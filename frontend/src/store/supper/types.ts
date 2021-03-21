@@ -47,6 +47,7 @@ export type Order = {
   hopperIdList: string[]
   orderList: Suborder[]
   additionalCost: number //ie GST, delivery fee
+  splitAdditionalCost: string
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
   status: string
