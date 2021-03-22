@@ -34,7 +34,7 @@ export type Suborder = {
   totalCost: number
   hasPaid: boolean //1 if hopper paid orderer (hopper POV)
   modeOfPayment: string
-  hasRecieved: boolean //1 if orderer received payment (orderer POV)
+  hasReceived: boolean //1 if orderer received payment (orderer POV)
 }
 
 export type Order = {
@@ -46,7 +46,7 @@ export type Order = {
   restaurantName: string
   hopperIdList: string[]
   orderList: Suborder[]
-  additionalCost: number //ie GST, delivery fee
+  additionalCost?: number //ie GST, delivery fee
   splitAdditionalCost: string
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
@@ -57,7 +57,13 @@ export type Order = {
 }
 
 export enum SUPPER_ACTIONS {
-  SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LIADING',
+  SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
+  GET_ORDERER_INFO = 'SUPPER_ACTIONS.GET_ORDERER_INFO',
+  GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
+  GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
+  GET_HOPPER_INFO = 'SUPPER_ACTIONS.GET_HOPPER_INFO',
+  GET_ALL_HOPPERS = 'SUPPER_ACTIONS.GET_ALL_HOPPERS',
+  GET_SUBORDER = 'SUPPER_ACTIONS.GET_SUBORDER',
 }
 
 type SetIsLoading = {
@@ -65,4 +71,41 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-export type ActionTypes = SetIsLoading
+type GetOrdererInfo = {
+  type: typeof SUPPER_ACTIONS.GET_ORDERER_INFO
+  orderer: User
+}
+
+type GetRestaurantInfo = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
+  restaurant: Restaurant
+}
+
+type GetAllRestaurantsInfo = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO
+  allRestaurant: Restaurant[]
+}
+
+type GetHopperInfo = {
+  type: typeof SUPPER_ACTIONS.GET_HOPPER_INFO
+  hopper: User
+}
+
+type GetAllHopperInfo = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_HOPPERS
+  allHopper: User[]
+}
+
+type GetSuborder = {
+  type: typeof SUPPER_ACTIONS.GET_SUBORDER
+  suborder: Suborder
+}
+
+export type ActionTypes =
+  | SetIsLoading
+  | GetOrdererInfo
+  | GetRestaurantInfo
+  | GetAllRestaurantsInfo
+  | GetHopperInfo
+  | GetAllHopperInfo
+  | GetSuborder
