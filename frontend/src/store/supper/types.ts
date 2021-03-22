@@ -95,17 +95,17 @@ type GetAllSuborders = {
 
 type GetCollatedOrder = {
   type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
-  collatedOrder: CollatedOrder
+  collatedOrder: CollatedOrder | null
 }
 
 type GetOrder = {
   type: typeof SUPPER_ACTIONS.GET_ORDER
-  order: Order
+  order: Order | null
 }
 
 type GetSuborder = {
   type: typeof SUPPER_ACTIONS.GET_SUBORDER
-  suborder: Suborder
+  suborder: Suborder | null
 }
 
 type GetOrderStatus = {
@@ -115,12 +115,12 @@ type GetOrderStatus = {
 
 type SetOrder = {
   type: typeof SUPPER_ACTIONS.SET_ORDER
-  order: Order
+  order: Order | null
 }
 
 type SetSuborder = {
   type: typeof SUPPER_ACTIONS.SET_SUBORDER
-  suborder: Suborder
+  suborder: Suborder | null
 }
 
 type SetOrderStatus = {
