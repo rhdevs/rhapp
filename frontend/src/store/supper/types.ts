@@ -34,7 +34,7 @@ export type Suborder = {
   totalCost: number
   hasPaid: boolean //1 if hopper paid orderer (hopper POV)
   modeOfPayment: string
-  hasRecieved: boolean //1 if orderer received payment (orderer POV)
+  hasReceived: boolean //1 if orderer received payment (orderer POV)
 }
 
 export type Order = {
@@ -46,7 +46,7 @@ export type Order = {
   restaurantName: string
   hopperIdList: string[]
   orderList: Suborder[]
-  additionalCost: number //ie GST, delivery fee
+  additionalCost?: number //ie GST, delivery fee
   splitAdditionalCost: string
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
@@ -56,8 +56,31 @@ export type Order = {
   closingTime: string
 }
 
+export type CollatedOrder = {
+  orderId: string
+  ordererId: string
+  collatedOrderList: Food[]
+}
+
+export enum OrderStatus {
+  OPEN = 'Open',
+  CLOSED = 'Closed',
+  ORDERED = 'Ordered',
+  ARRIVED = 'Arrived',
+  CANCELLED = 'Cancelled',
+  COMPLETED = 'Completed',
+}
+
 export enum SUPPER_ACTIONS {
-  SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LIADING',
+  SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
+  GET_ALL_SUBORDERS = 'SUPPER_ACTION.GET_ALL_SUBORDER',
+  GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
+  GET_ORDER = 'SUPPER_ACTION.GET_ORDER',
+  GET_SUBORDER = 'SUPPER_ACTION.GET_SUBORDER',
+  GET_ORDER_STATUS = 'SUPPER_ACTION.GET_ORDER_STATUS',
+  SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
+  SET_SUBORDER = 'SUPPER_ACTION.SET_SUBORDER',
+  SET_ORDER_STATUS = 'SUPPER_ACTION.SET_ORDER_STATUS',
 }
 
 type SetIsLoading = {
@@ -65,4 +88,53 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-export type ActionTypes = SetIsLoading
+type GetAllSuborders = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_SUBORDERS
+  allSuborders: Suborder[]
+}
+
+type GetCollatedOrder = {
+  type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
+  collatedOrder: CollatedOrder
+}
+
+type GetOrder = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER
+  order: Order
+}
+
+type GetSuborder = {
+  type: typeof SUPPER_ACTIONS.GET_SUBORDER
+  suborder: Suborder
+}
+
+type GetOrderStatus = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_STATUS
+  orderStatus: OrderStatus
+}
+
+type SetOrder = {
+  type: typeof SUPPER_ACTIONS.SET_ORDER
+  order: Order
+}
+
+type SetSuborder = {
+  type: typeof SUPPER_ACTIONS.SET_SUBORDER
+  suborder: Suborder
+}
+
+type SetOrderStatus = {
+  type: typeof SUPPER_ACTIONS.SET_ORDER_STATUS
+  orderStatus: OrderStatus
+}
+
+export type ActionTypes =
+  | SetIsLoading
+  | GetAllSuborders
+  | GetCollatedOrder
+  | GetOrder
+  | GetSuborder
+  | GetOrderStatus
+  | SetOrder
+  | SetSuborder
+  | SetOrderStatus
