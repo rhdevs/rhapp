@@ -73,12 +73,12 @@ type SetIsLoading = {
 
 type GetOrdererInfo = {
   type: typeof SUPPER_ACTIONS.GET_ORDERER_INFO
-  orderer: User
+  orderer: User | null
 }
 
 type GetRestaurantInfo = {
   type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
-  restaurant: Restaurant
+  restaurant: Restaurant | null
 }
 
 type GetAllRestaurantsInfo = {
@@ -88,7 +88,7 @@ type GetAllRestaurantsInfo = {
 
 type GetHopperInfo = {
   type: typeof SUPPER_ACTIONS.GET_HOPPER_INFO
-  hopper: User
+  hopper: User | null
 }
 
 type GetAllHopperInfo = {
@@ -98,7 +98,7 @@ type GetAllHopperInfo = {
 
 type GetSuborder = {
   type: typeof SUPPER_ACTIONS.GET_SUBORDER
-  suborder: Suborder
+  suborder: Suborder | null
 }
 
 export type ActionTypes =
