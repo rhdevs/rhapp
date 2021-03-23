@@ -11,58 +11,63 @@ export type User = {
 
 export type Food = {
   foodId: string
-  foodName: string
-  price: number
-  comments?: string //hopper comments (undefined if in menu)
-  quantity?: number //hopper order quantity (undefined if in menu)
+  comments?: string
+  quantity: number
+  foodMenu: FoodMenu
+}
+
+export type FoodMenu = {
+  foodMenuId: string
+  restaurantId: string
+  foodMenuName: string
+  price: string
 }
 
 export type Restaurant = {
   restaurantId: string
   name: string
-  menu: Food[]
+  menu: FoodMenu[]
   closingTime: number
   contactNumber?: number
 }
 
-export type Suborder = {
-  suborderId: string
-  hopperId: string
-  orderId: string
-  paymentContactNumber?: number
-  foodList: Food[]
-  totalCost: number
-  hasPaid: boolean //1 if hopper paid orderer (hopper POV)
-  modeOfPayment: string
-  hasReceived: boolean //1 if orderer received payment (orderer POV)
-}
-
 export type Order = {
   orderId: string
-  orderName: string
-  ordererId: string
-  ordererName: string
-  paymentContactNumber?: number
+  userId: string
+  supperGroupId: string
+  userContact?: number
+  foodList: Food[]
+  totalCost: number
+  hasPaid: boolean //1 if user paid owner (user POV)
+  paymentMethod: PaymentMethod
+  hasReceived: boolean //1 if owner received payment (owner POV)
+}
+
+export type SupperGroup = {
+  supperGroupId: string
+  supperGroupName: string
+  ownerId: string
+  ownerName: string
+  paymentInfo: PaymentInfo[]
   restaurantName: string
-  hopperIdList: string[]
-  orderList: Suborder[]
+  allUsers: string[]
+  orderList: Order[]
   additionalCost?: number //ie GST, delivery fee
   splitAdditionalCost: string
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
   status: string
   comments: string
-  modeOfPayment: string
   closingTime: string
 }
 
 export type CollatedOrder = {
-  orderId: string
-  ordererId: string
+  supperGroupId: string
+  ownerId: string
   collatedOrderList: Food[]
 }
 
-export enum OrderStatus {
+export enum SupperGroupStatus {
   OPEN = 'Open',
   CLOSED = 'Closed',
   ORDERED = 'Ordered',
@@ -71,16 +76,33 @@ export enum OrderStatus {
   COMPLETED = 'Completed',
 }
 
+export enum PaymentMethod {
+  PAYLAH = 'PayLah!',
+  PAYNOW = 'PayNow',
+  GOOGLEPAY = 'GooglePay',
+  CASH = 'Cash',
+}
+
+export type PaymentInfo = {
+  paymentMethod: PaymentMethod
+  link?: string
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
-  GET_ALL_SUBORDERS = 'SUPPER_ACTION.GET_ALL_SUBORDER',
+  GET_ALL_ORDERS = 'SUPPER_ACTION.GET_ALL_ORDERS',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
+  GET_SUPPER_GROUP = 'SUPPER_ACTION.GET_SUPPER_GROUP',
   GET_ORDER = 'SUPPER_ACTION.GET_ORDER',
-  GET_SUBORDER = 'SUPPER_ACTION.GET_SUBORDER',
-  GET_ORDER_STATUS = 'SUPPER_ACTION.GET_ORDER_STATUS',
+  GET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.GET_SUPPER_GROUP_STATUS',
+  SET_SUPPER_GROUP = 'SUPPER_ACTION.SET_SUPPER_GROUP',
   SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
-  SET_SUBORDER = 'SUPPER_ACTION.SET_SUBORDER',
-  SET_ORDER_STATUS = 'SUPPER_ACTION.SET_ORDER_STATUS',
+  SET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.SET_SUPPER_GROUP_STATUS',
+  GET_OWNER_INFO = 'SUPPER_ACTIONS.GET_OWNER_INFO',
+  GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
+  GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
+  GET_USER_INFO = 'SUPPER_ACTIONS.GET_USER_INFO',
+  GET_ALL_USERS = 'SUPPER_ACTIONS.GET_ALL_USERS',
 }
 
 type SetIsLoading = {
@@ -88,9 +110,9 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-type GetAllSuborders = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_SUBORDERS
-  allSuborders: Suborder[]
+type GetAllOrders = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_ORDERS
+  allOrders: Order[]
 }
 
 type GetCollatedOrder = {
@@ -98,19 +120,24 @@ type GetCollatedOrder = {
   collatedOrder: CollatedOrder | null
 }
 
+type GetSupperGroup = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP
+  supperGroup: SupperGroup | null
+}
+
 type GetOrder = {
   type: typeof SUPPER_ACTIONS.GET_ORDER
   order: Order | null
 }
 
-type GetSuborder = {
-  type: typeof SUPPER_ACTIONS.GET_SUBORDER
-  suborder: Suborder | null
+type GetSupperGroupStatus = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS
+  supperGroupStatus: SupperGroupStatus
 }
 
-type GetOrderStatus = {
-  type: typeof SUPPER_ACTIONS.GET_ORDER_STATUS
-  orderStatus: OrderStatus
+type SetSupperGroup = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP
+  supperGroup: SupperGroup | null
 }
 
 type SetOrder = {
@@ -118,23 +145,47 @@ type SetOrder = {
   order: Order | null
 }
 
-type SetSuborder = {
-  type: typeof SUPPER_ACTIONS.SET_SUBORDER
-  suborder: Suborder | null
+type SetSupperGroupStatus = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS
+  supperGroupStatus: SupperGroupStatus
+}
+type GetOwnerInfo = {
+  type: typeof SUPPER_ACTIONS.GET_OWNER_INFO
+  owner: User | null
 }
 
-type SetOrderStatus = {
-  type: typeof SUPPER_ACTIONS.SET_ORDER_STATUS
-  orderStatus: OrderStatus
+type GetRestaurantInfo = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
+  restaurant: Restaurant | null
+}
+
+type GetAllRestaurantsInfo = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO
+  allRestaurants: Restaurant[]
+}
+
+type GetUserInfo = {
+  type: typeof SUPPER_ACTIONS.GET_USER_INFO
+  user: User | null
+}
+
+type GetAllUserInfo = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_USERS
+  allUsers: User[]
 }
 
 export type ActionTypes =
   | SetIsLoading
-  | GetAllSuborders
-  | GetCollatedOrder
+  | GetOwnerInfo
+  | GetRestaurantInfo
+  | GetAllRestaurantsInfo
+  | GetUserInfo
+  | GetAllUserInfo
   | GetOrder
-  | GetSuborder
-  | GetOrderStatus
+  | GetAllOrders
+  | GetCollatedOrder
+  | GetSupperGroup
+  | GetSupperGroupStatus
+  | SetSupperGroup
   | SetOrder
-  | SetSuborder
-  | SetOrderStatus
+  | SetSupperGroupStatus
