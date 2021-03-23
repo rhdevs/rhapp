@@ -1,26 +1,33 @@
 import { Reducer } from 'redux'
-import { User } from '../social/types'
-import { ActionTypes, Restaurant, Suborder } from '../supper/types'
+import { ActionTypes, User, Restaurant, CollatedOrder, SupperGroup, SupperGroupStatus, Order } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
   isLoading: false,
-  orderer: null,
+  allOrders: [],
+  collatedOrder: null,
+  supperGroup: null,
+  order: null,
+  supperGroupStatus: SupperGroupStatus.OPEN,
+  owner: null,
   restaurant: null,
-  allRestaurant: [],
-  hopper: null,
-  allHopper: [],
-  suborder: null,
+  allRestaurants: [],
+  user: null,
+  allUsers: [],
 }
 
 type State = {
   isLoading: boolean
-  orderer: User | null
+  allOrders: Order[]
+  collatedOrder: CollatedOrder | null
+  supperGroup: SupperGroup | null
+  order: Order | null
+  supperGroupStatus: SupperGroupStatus
+  owner: User | null
   restaurant: Restaurant | null
-  allRestaurant: Restaurant[]
-  hopper: User | null
-  allHopper: User[]
-  suborder: Suborder | null
+  allRestaurants: Restaurant[]
+  user: User | null
+  allUsers: User[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -28,25 +35,42 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_IS_LOADING: {
       return { ...state, isLoading: action.isLoading }
     }
-    case SUPPER_ACTIONS.GET_ORDERER_INFO: {
-      return { ...state, orderer: action.orderer }
+    case SUPPER_ACTIONS.GET_ALL_ORDERS: {
+      return { ...state, allOrders: action.allOrders }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP: {
+      return { ...state, supperGroup: action.supperGroup }
+    }
+    case SUPPER_ACTIONS.GET_ORDER: {
+      return { ...state, order: action.order }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS: {
+      return { ...state, supperGroupStatus: action.supperGroupStatus }
+    }
+    case SUPPER_ACTIONS.SET_SUPPER_GROUP: {
+      return { ...state, supperGroup: action.supperGroup }
+    }
+    case SUPPER_ACTIONS.SET_ORDER: {
+      return { ...state, order: action.order }
+    }
+    case SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS: {
+      return { ...state, supperGroupStatus: action.supperGroupStatus }
+    }
+    case SUPPER_ACTIONS.GET_OWNER_INFO: {
+      return { ...state, owner: action.owner }
     }
     case SUPPER_ACTIONS.GET_RESTAURANT_INFO: {
       return { ...state, restaurant: action.restaurant }
     }
     case SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO: {
-      return { ...state, allRestaurant: action.allRestaurant }
+      return { ...state, allRestaurants: action.allRestaurants }
     }
-    case SUPPER_ACTIONS.GET_HOPPER_INFO: {
-      return { ...state, hopper: action.hopper }
+    case SUPPER_ACTIONS.GET_USER_INFO: {
+      return { ...state, user: action.user }
     }
-    case SUPPER_ACTIONS.GET_ALL_HOPPERS: {
-      return { ...state, allHopper: action.allHopper }
+    case SUPPER_ACTIONS.GET_ALL_USERS: {
+      return { ...state, allUsers: action.allUsers }
     }
-    case SUPPER_ACTIONS.GET_SUBORDER: {
-      return { ...state, suborder: action.suborder }
-    }
-
     default:
       return state
   }
