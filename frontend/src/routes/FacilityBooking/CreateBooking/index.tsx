@@ -173,12 +173,13 @@ export default function CreateBooking() {
     return `${dayjs(date).format('ddd, MMM D, YYYY, h:mm A')}`
   }
 
-  const locationOptions = facilityList.map((facility) => ({
-    value:
-      facility.facilityName == 'Conference Room' || facility.facilityName == 'Main Area'
-        ? facility.facilityName + ' (' + facility.facilityLocation + ')'
-        : facility.facilityName,
-  }))
+  const locationOptions = facilityList
+    .filter((facility) => facility.facilityName !== 'Conference Room' && facility.facilityName !== 'Main Area')
+    .map((facility) => ({
+      value: facility.facilityName,
+    }))
+
+  locationOptions.push({ value: 'Conference Room' }, { value: 'Main Area' })
 
   return (
     <div>
