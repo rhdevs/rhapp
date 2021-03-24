@@ -615,6 +615,8 @@ def addNUSModsEvents():
 
         body = {"userID": userID,
                 "mods": indexed_output}
+                
+        db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
 
         return json.dumps(db.NUSMods.find_one({"userID": userID}), default=lambda o: str(o)), 200
 
