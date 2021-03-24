@@ -581,10 +581,11 @@ def addNUSModsEvents():
                 break
             abbrev, classNo = lesson.split(":")
             lessonType = ABBREV_TO_LESSON[abbrev]
-            lesson = next(
-                moduleClass for moduleClass in moduleData if moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType)
-            lesson["abbrev"] = abbrev
-            out.append(lesson)
+            lesson = [
+                moduleClass for moduleClass in moduleData if moduleClass["classNo"] == classNo and moduleClass["lessonType"] == lessonType]
+            for les in lesson:
+                les["abbrev"] = abbrev
+                out.append(les)
 
         out = [{"eventName": moduleArray[0] + " " + classInformation["abbrev"],
                 "location": classInformation["venue"],
@@ -614,8 +615,6 @@ def addNUSModsEvents():
 
         body = {"userID": userID,
                 "mods": indexed_output}
-
-        db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
 
         return json.dumps(db.NUSMods.find_one({"userID": userID}), default=lambda o: str(o)), 200
 
