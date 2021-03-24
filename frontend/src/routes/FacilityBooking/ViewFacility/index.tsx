@@ -22,12 +22,14 @@ import {
   getAllBookingsForFacility,
   SetIsLoading,
   setViewDates,
+  setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+import dayjs from 'dayjs'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -141,12 +143,16 @@ export default function ViewFacility() {
     isLoading,
     facilityBookings,
     selectedFacilityName,
+    selectedFacilityId,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
+    if (selectedFacilityId == 0) {
+      dispatch(setSelectedFacility(parseInt(params.facilityID)))
+    }
   }, [])
 
   const fetchTelegram = async (booking) => {
@@ -206,8 +212,10 @@ export default function ViewFacility() {
 
   const AlertSection = (
     <AlertGroup>
-      {createSuccess && <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />}
-      {createFailure && <Alert message="Not Successful Boohoo :-(" type="error" closable showIcon />}
+      {createSuccess && createFailure && (
+        <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+      )}
+      {createFailure && !createSuccess && <Alert message="Not Successful Boohoo :-(" type="error" closable showIcon />}
     </AlertGroup>
   )
 
@@ -242,7 +250,12 @@ export default function ViewFacility() {
               <StyledButton
                 onButtonClick={() => {
                   dispatch(
-                    createNewBookingFromFacility(ViewStartDate, ViewEndDate, selectedFacilityName, params.facilityID),
+                    createNewBookingFromFacility(
+                      ViewStartDate,
+                      dayjs(ViewStartDate).add(1, 'hour').toDate(),
+                      selectedFacilityName,
+                      params.facilityID,
+                    ),
                   )
                   history.push('/facility/booking/create')
                 }}
