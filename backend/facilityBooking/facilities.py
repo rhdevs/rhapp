@@ -2,6 +2,7 @@ from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
 import json
+from bson.json_util import dumps
 from datetime import datetime
 from threading import Thread
 
@@ -225,6 +226,21 @@ def delete_booking(bookingID):
 
     return {"message": "Booking Deleted"}, 200
 
+###########################################################
+
+@app.route('/supper', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def all_supper_group():
+    try:
+        if request.method == 'GET':
+            all_supper_group = db.SupperGroup.find()
+            return make_response(json.dumps(list(all_supper_group), default=lambda o: str(o)), 200)
+    except Exception as e:
+        return make_response({"err": str(e)}, 400)
+
+
+
+###########################################################
 
 def keep_alive():
     t = Thread(target=run)
@@ -237,6 +253,6 @@ def run():
 
 keep_alive()
 
-# if __name__ == '__main__':
-#   keep_alive();
-#   app.run('0.0.0.0', port=8080)
+if __name__ == '__main__':
+  keep_alive();
+  app.run('0.0.0.0', port=8080)
