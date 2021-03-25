@@ -246,37 +246,39 @@ def all_supper_group():
         return make_response({"err": str(e)}, 400)
 
 
-@app.route('/supper/<int:supperGroupId>/<int:orderId>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/supper/<int:supperGroupId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @cross_origin(supports_credentials=True)
-def order(supperGroupId, orderId):
+def supper_group(supperGroupId):
     try:
-        if request.method == 'GET':
-            order = db.Order.find_one({'orderId': orderId})
+        if request.method == "GET":
+            data = listToIndexedDict(
+                list(db.SupperGroup.find({"supperGroupId": supperGroupId})))
+            return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
 
-            return make_response(json.dumps(order, default=lambda o: str(o)), 200)
-        elif request.method == 'PUT':
-            data = request.get_json()
-            db.Order.update_one({"orderId": orderId},
-                                {"$set": data})
+        elif request.method == "POST":  # Add new order into Order
+            formData = request.get_json()
+            db.Order.insert_one(formData)
+            return {"message": "Order submitted!"}, 200
 
-            response = {"message": "Successfully edited order!"}
+        elif request.method == "PUT":  # Edit supper group details
+            formData = request.get_json()
+            db.SupperGroup.update_one({"supperGroupId": supperGroupId}, {
+                "$set": formData})
+            return {"message": "Supper Group edited"}, 200
+        elif request.method == "DELETE":
+            db.SupperGroup.delete_one({"supperGroupId": supperGroupId})
+            return {"message": "Supper Group Deleted"}, 200
 
-            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
-        elif request.method == 'DELETE':
-            db.Order.delete_one({"orderId": orderId})
-
-            response = {"message": "Successfully deleted order!"}
-
-            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
     except Exception as e:
+        print(e)
         return make_response({"err": str(e)}, 400)
-
 
 ###########################################################
 
-# def keep_alive():
-#     t = Thread(target=run)
-#     t.start()
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
 
 
 def run():
@@ -285,6 +287,7 @@ def run():
 
 keep_alive()
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    app.run(threaded=True, debug=True)
 #   keep_alive();
 #   app.run('0.0.0.0', port=8080)
