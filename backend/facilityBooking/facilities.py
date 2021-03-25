@@ -302,16 +302,9 @@ def supper_group(supperGroupId):
 
 ###########################################################
 
-<<<<<<< HEAD
-
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
-=======
 # def keep_alive():
 #     t = Thread(target=run)
 #     t.start()
->>>>>>> 307ad7b4cd350ca7937d9ccca86367b017486ca6
 
 
 # def run():
@@ -322,12 +315,6 @@ def keep_alive():
 # keep_alive()
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    app.run(threaded=True, debug=True)
-#   keep_alive();
-#   app.run('0.0.0.0', port=8080)
-=======
     # keep_alive();
     # app.run('0.0.0.0', port=8080)
     app.run(threaded=True, debug=True)
->>>>>>> 307ad7b4cd350ca7937d9ccca86367b017486ca6
