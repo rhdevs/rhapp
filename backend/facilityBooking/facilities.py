@@ -228,6 +228,7 @@ def delete_booking(bookingID):
 
 ###########################################################
 
+
 @app.route('/supper', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def all_supper_group():
@@ -272,12 +273,45 @@ def order(supperGroupId, orderId):
         return make_response({"err": str(e)}, 400)
 
 
+@app.route('/supper/<int:supperGroupId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def supper_group(supperGroupId):
+    try:
+        if request.method == "GET":
+            data = listToIndexedDict(
+                list(db.SupperGroup.find({"supperGroupId": supperGroupId})))
+            return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
+
+        elif request.method == "POST":  # Add new order into Order
+            formData = request.get_json()
+            db.Order.insert_one(formData)
+            return {"message": "Order submitted!"}, 200
+
+        elif request.method == "PUT":  # Edit supper group details
+            formData = request.get_json()
+            db.SupperGroup.update_one({"supperGroupId": supperGroupId}, {
+                "$set": formData})
+            return {"message": "Supper Group edited"}, 200
+        elif request.method == "DELETE":
+            db.SupperGroup.delete_one({"supperGroupId": supperGroupId})
+            return {"message": "Supper Group Deleted"}, 200
+
+    except Exception as e:
+        print(e)
+        return make_response({"err": str(e)}, 400)
 
 ###########################################################
 
+<<<<<<< HEAD
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+=======
 # def keep_alive():
 #     t = Thread(target=run)
 #     t.start()
+>>>>>>> 307ad7b4cd350ca7937d9ccca86367b017486ca6
 
 
 # def run():
@@ -288,6 +322,12 @@ def order(supperGroupId, orderId):
 # keep_alive()
 
 if __name__ == '__main__':
+<<<<<<< HEAD
+    app.run(threaded=True, debug=True)
+#   keep_alive();
+#   app.run('0.0.0.0', port=8080)
+=======
     # keep_alive();
     # app.run('0.0.0.0', port=8080)
     app.run(threaded=True, debug=True)
+>>>>>>> 307ad7b4cd350ca7937d9ccca86367b017486ca6
