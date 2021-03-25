@@ -235,6 +235,26 @@ def all_supper_group():
         if request.method == 'GET':
             all_supper_group = db.SupperGroup.find()
             return make_response(json.dumps(list(all_supper_group), default=lambda o: str(o)), 200)
+        elif request.method == 'POST':
+            data = request.get_json()
+
+            document = {}
+            document["supperGroupId"] = int(data.get("supperGroupId"))
+            document["supperGroupName"] = str(data.get("supperGroupName"))
+            document["ownerId"] = int(data.get("ownerId"))
+            document["ownerName"] = str(data.get("ownerName"))
+            document["restaurantName"] = str(data.get("restaurantName"))
+            document["userIdList"] = str(data.get("userIdList"))
+            document["currentFoodCost"] = int(data.get("currentFoodCost"))
+            document["costLimit"] = int(data.get("costLimit"))
+            document["comments"] = str(data.get("comments"))
+
+            db.SupperGroup.insert_one(document)
+
+            response = {}
+            response["message"] = "Successfully created supper group!"
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
     except Exception as e:
         return make_response({"err": str(e)}, 400)
 
@@ -242,17 +262,19 @@ def all_supper_group():
 
 ###########################################################
 
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
+# def keep_alive():
+#     t = Thread(target=run)
+#     t.start()
 
 
-def run():
-    app.run(host='0.0.0.0', port=8080)
+# def run():
+#     app.run(host='0.0.0.0', port=8080)
+#     app.run(threaded=True, debug=True)
 
 
-keep_alive()
+# keep_alive()
 
 if __name__ == '__main__':
-  keep_alive();
-  app.run('0.0.0.0', port=8080)
+    # keep_alive();
+    # app.run('0.0.0.0', port=8080)
+    app.run(threaded=True, debug=True)
