@@ -227,9 +227,56 @@ def delete_booking(bookingID):
     return {"message": "Booking Deleted"}, 200
 
 
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
+@app.route('/supper', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def all_supper_group():
+    try:
+        if request.method == 'GET':
+            all_supper_group = db.SupperGroup.find()
+
+            return make_response(json.dumps(list(all_supper_group), default=lambda o: str(o)), 200)
+        elif request.method == 'POST':
+            data = request.get_json()
+            db.SupperGroup.insert_one(data)
+
+            response = {"message": "Successfully created supper group!"}
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
+    except Exception as e:
+        return make_response({"err": str(e)}, 400)
+
+
+@app.route('/supper/<int:supperGroupId>/<int:orderId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def order(supperGroupId, orderId):
+    try:
+        if request.method == 'GET':
+            order = db.Order.find_one({'orderId': orderId})
+
+            return make_response(json.dumps(order, default=lambda o: str(o)), 200)
+        elif request.method == 'PUT':
+            data = request.get_json()
+            db.Order.update_one({"orderId": orderId},
+                                {"$set": data})
+
+            response = {"message": "Successfully edited order!"}
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
+        elif request.method == 'DELETE':
+            db.Order.delete_one({"orderId": orderId})
+
+            response = {"message": "Successfully deleted order!"}
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
+    except Exception as e:
+        return make_response({"err": str(e)}, 400)
+
+
+###########################################################
+
+# def keep_alive():
+#     t = Thread(target=run)
+#     t.start()
 
 
 def run():
