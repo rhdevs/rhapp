@@ -1,12 +1,12 @@
 export type User = {
-  userId: string
+  _id: string
+  userID: string
   profilePictureUrl: string
   displayName: string
   telegramHandle: string
   block: number
   bio: string
   modules: string[]
-  contactNumber?: number
 }
 
 export type Food = {
@@ -16,24 +16,37 @@ export type Food = {
   foodMenu: FoodMenu
 }
 
+export type Option = {
+  name: string
+  isSelected: boolean
+}
+
+// type Custom refers to a section in the customization page
+export type Custom = {
+  title: string
+  options: Option[]
+  max: number | null
+  min: number
+  customNumber: number //to order the sections in the order card
+}
+
 export type FoodMenu = {
   foodMenuId: string
   restaurantId: string
   foodMenuName: string
   price: string
+  custom?: Custom[]
 }
 
 export type Restaurant = {
   restaurantId: string
   name: string
   menu: FoodMenu[]
-  closingTime: number
-  contactNumber?: number
 }
 
 export type Order = {
   orderId: string
-  userId: string
+  user: string
   supperGroupId: string
   userContact?: number
   foodList: Food[]
@@ -46,18 +59,20 @@ export type Order = {
 export type SupperGroup = {
   supperGroupId: string
   supperGroupName: string
-  ownerId: string
+  owner: string
   ownerName: string
   paymentInfo: PaymentInfo[]
   restaurantName: string
-  allUsers: string[]
+  allUsers: User[]
   orderList: Order[]
   additionalCost?: number //ie GST, delivery fee
-  splitAdditionalCost: string
+  splitAdditionalCost: SplitACMethod
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
   status: string
-  comments: string
+  location: string //collection point
+  deliveryDuration: number
+  arrivalTime: number // = creationTime + estimated delivery duration
   closingTime: string
 }
 
@@ -65,6 +80,11 @@ export type CollatedOrder = {
   supperGroupId: string
   ownerId: string
   collatedOrderList: Food[]
+}
+
+export enum SplitACMethod {
+  PROPORTIONAL = 'Proportional',
+  EQUAL = 'Equal',
 }
 
 export enum SupperGroupStatus {
@@ -98,11 +118,12 @@ export enum SUPPER_ACTIONS {
   SET_SUPPER_GROUP = 'SUPPER_ACTION.SET_SUPPER_GROUP',
   SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
   SET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.SET_SUPPER_GROUP_STATUS',
-  GET_OWNER_INFO = 'SUPPER_ACTIONS.GET_OWNER_INFO',
   GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
   GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
   GET_USER_INFO = 'SUPPER_ACTIONS.GET_USER_INFO',
   GET_ALL_USERS = 'SUPPER_ACTIONS.GET_ALL_USERS',
+  GET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID',
+  SET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID',
 }
 
 type SetIsLoading = {
@@ -149,10 +170,6 @@ type SetSupperGroupStatus = {
   type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS
   supperGroupStatus: SupperGroupStatus
 }
-type GetOwnerInfo = {
-  type: typeof SUPPER_ACTIONS.GET_OWNER_INFO
-  owner: User | null
-}
 
 type GetRestaurantInfo = {
   type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
@@ -174,9 +191,18 @@ type GetAllUserInfo = {
   allUsers: User[]
 }
 
+type GetFoodByFoodId = {
+  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID
+  food: Food
+}
+
+type SetFoodByFoodId = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID
+  food: Food
+}
+
 export type ActionTypes =
   | SetIsLoading
-  | GetOwnerInfo
   | GetRestaurantInfo
   | GetAllRestaurantsInfo
   | GetUserInfo
@@ -189,3 +215,5 @@ export type ActionTypes =
   | SetSupperGroup
   | SetOrder
   | SetSupperGroupStatus
+  | GetFoodByFoodId
+  | SetFoodByFoodId

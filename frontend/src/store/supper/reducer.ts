@@ -9,7 +9,6 @@ const initialState = {
   supperGroup: null,
   order: null,
   supperGroupStatus: SupperGroupStatus.OPEN,
-  owner: null,
   restaurant: null,
   allRestaurants: [],
   user: null,
@@ -23,7 +22,6 @@ type State = {
   supperGroup: SupperGroup | null
   order: Order | null
   supperGroupStatus: SupperGroupStatus
-  owner: User | null
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
   user: User | null
@@ -55,9 +53,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS: {
       return { ...state, supperGroupStatus: action.supperGroupStatus }
-    }
-    case SUPPER_ACTIONS.GET_OWNER_INFO: {
-      return { ...state, owner: action.owner }
     }
     case SUPPER_ACTIONS.GET_RESTAURANT_INFO: {
       return { ...state, restaurant: action.restaurant }
