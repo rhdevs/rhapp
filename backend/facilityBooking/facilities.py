@@ -245,6 +245,35 @@ def all_supper_group():
     except Exception as e:
         return make_response({"err": str(e)}, 400)
 
+<<<<<<< HEAD
+=======
+
+@app.route('/supper/<int:supperGroupId>/<int:orderId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def order(supperGroupId, orderId):
+    try:
+        if request.method == 'GET':
+            order = db.Order.find_one({'orderId': orderId})
+
+            return make_response(json.dumps(order, default=lambda o: str(o)), 200)
+        elif request.method == 'PUT':
+            data = request.get_json()
+            db.Order.update_one({"orderId": orderId},
+                                {"$set": data})
+
+            response = {"message": "Successfully edited order!"}
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
+        elif request.method == 'DELETE':
+            db.Order.delete_one({"orderId": orderId})
+
+            response = {"message": "Successfully deleted order!"}
+
+            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
+    except Exception as e:
+        return make_response({"err": str(e)}, 400)
+
+>>>>>>> 6025c470d (Add restaurant routes)
 
 @app.route('/supper/<int:supperGroupId>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 @cross_origin(supports_credentials=True)
@@ -253,7 +282,7 @@ def supper_group(supperGroupId):
         if request.method == "GET":
             data = listToIndexedDict(
                 list(db.SupperGroup.find({"supperGroupId": supperGroupId})))
-            return make_response(json.dumps(list(data), default=lambda o: str(o)), 200)
+            return make_response(json.dumps(data, default=lambda o: str(o)), 200)
 
         elif request.method == "POST":  # Add new order into Order
             formData = request.get_json()
@@ -272,6 +301,47 @@ def supper_group(supperGroupId):
     except Exception as e:
         print(e)
         return make_response({"err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def all_restaurants():
+    try:
+        all_restaurant = db.Restaurants.find()
+        return make_response(json.dumps(list(all_restaurant), default=lambda o: str(o)), 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/<int:restaurantId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def restaurant(restaurantId):
+    try:
+        if request.method == "GET":
+            data = listToIndexedDict(
+                list(db.FoodMenu.find({"restaurantId": restaurantId})))
+            return make_response(json.dumps(data, default=lambda o: str(o)), 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/<int:foodMenuId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def foodItem(foodMenuId):
+    try:
+        if request.method == "GET":
+            data = listToIndexedDict(
+                db.FoodMenu.find({"foodMenuId": foodMenuId}))
+            return make_response(json.dumps(data, default=lambda o: str(o)), 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"err": str(e)}, 400)
+
 
 ###########################################################
 
