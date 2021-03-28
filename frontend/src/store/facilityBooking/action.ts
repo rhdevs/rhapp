@@ -308,6 +308,16 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
     dispatch(SetCreateBookingError('Try reentering facility name!'))
     return
+  } else if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
+    //More than 2 weeks in advance
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    dispatch(SetCreateBookingError('You cannot create a booking more than 2 weeks in advance!'))
+    return
+  } else if (new Date().getTime() > newBookingFromDate.getTime()) {
+    //Creating a booking in the past
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
+    return
   }
   if (!isEdit) {
     const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING, {
