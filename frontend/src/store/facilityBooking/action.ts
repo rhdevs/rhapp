@@ -366,6 +366,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
         )
       }
     } else {
+      dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
       dispatch({
         type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
