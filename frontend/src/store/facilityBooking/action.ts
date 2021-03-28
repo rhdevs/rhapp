@@ -292,6 +292,8 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     newBookingToDate,
     newBookingCCA,
     newBookingDescription,
+    newBookingFacilityName,
+    facilityList,
     ccaList,
   } = getState().facilityBooking
 
@@ -305,10 +307,18 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     description: newBookingDescription,
   }
   if (selectedFacilityId === 0) {
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    dispatch(SetCreateBookingError('Try reentering facility name!'))
-    return
-  } else if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
+    //validate if selected facility id is zero
+    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
+      ?.facilityID
+    if (newSelectedFacilityId) {
+      dispatch(setSelectedFacility(newSelectedFacilityId))
+    } else {
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      dispatch(SetCreateBookingError('Try reentering facility name!'))
+      return
+    }
+  }
+  if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
     //More than 2 weeks in advance
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
     dispatch(SetCreateBookingError('You cannot create a booking more than 2 weeks in advance!'))
