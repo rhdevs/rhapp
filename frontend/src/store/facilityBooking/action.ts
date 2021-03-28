@@ -341,7 +341,8 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       })
     }
   } else {
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
+    const { newBooking } = getState().facilityBooking
+    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + newBooking?.bookingID, {
       method: 'PUT',
       mode: 'cors',
       headers: {
