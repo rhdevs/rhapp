@@ -30,13 +30,31 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
 export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  const adjustedStart = new Date(
+    ViewStartDate.getFullYear(),
+    ViewStartDate.getMonth(),
+    ViewStartDate.getDate(),
+    0,
+    0,
+    0,
+    0,
+  )
+  const adjustedEnd = new Date(
+    ViewEndDate.getFullYear(),
+    ViewEndDate.getMonth(),
+    ViewEndDate.getDate(),
+    23,
+    59,
+    59,
+    999,
+  )
   const querySubString =
     selectedFacilityId +
     '/' +
     '?startDate=' +
-    parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
+    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
     '&endDate=' +
-    parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
   let updatedFB: Booking[] = []
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
