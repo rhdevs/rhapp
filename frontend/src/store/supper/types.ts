@@ -42,6 +42,7 @@ export type FoodMenu = {
 export type Restaurant = {
   restaurantId: string
   name: string
+  restaurantLogo: string
   menu: FoodMenu[]
 }
 
