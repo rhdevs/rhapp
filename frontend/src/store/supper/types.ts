@@ -42,6 +42,7 @@ export type FoodMenu = {
 export type Restaurant = {
   restaurantId: string
   name: string
+  restaurantLogo: string
   menu: FoodMenu[]
 }
 
@@ -111,20 +112,13 @@ export type PaymentInfo = {
 
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
-  GET_ALL_ORDERS = 'SUPPER_ACTION.GET_ALL_ORDERS',
-  GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
-  GET_SUPPER_GROUP = 'SUPPER_ACTION.GET_SUPPER_GROUP',
-  GET_ORDER = 'SUPPER_ACTION.GET_ORDER',
-  GET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.GET_SUPPER_GROUP_STATUS',
-  SET_SUPPER_GROUP = 'SUPPER_ACTION.SET_SUPPER_GROUP',
-  SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
-  SET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.SET_SUPPER_GROUP_STATUS',
-  GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
-  GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
-  GET_USER_INFO = 'SUPPER_ACTIONS.GET_USER_INFO',
-  GET_ALL_USERS = 'SUPPER_ACTIONS.GET_ALL_USERS',
-  GET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID',
-  SET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID',
+  SET_SUPPER_GROUP = 'SUPPER_ACTIONS.SET_SUPPER_GROUP',
+  GET_SUPPER_GROUP_BY_ID = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID',
+  SET_ORDER = 'SUPPER_ACTIONS.SET_ORDER',
+  GET_ALL_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS',
+  GET_RESTAURANT_MENU = 'SUPPER_ACTIONS.GET_RESTAURANT_MENU',
+  GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
+  GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
 }
 
 type SetIsLoading = {
@@ -132,33 +126,13 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-type GetAllOrders = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_ORDERS
-  allOrders: Order[]
-}
-
-type GetCollatedOrder = {
-  type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
-  collatedOrder: CollatedOrder | null
-}
-
-type GetSupperGroup = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP
+type SetSupperGroup = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP
   supperGroup: SupperGroup | null
 }
 
-type GetOrder = {
-  type: typeof SUPPER_ACTIONS.GET_ORDER
-  order: Order | null
-}
-
-type GetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
-}
-
-type SetSupperGroup = {
-  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP
+type GetSupperGroupById = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID
   supperGroup: SupperGroup | null
 }
 
@@ -167,54 +141,32 @@ type SetOrder = {
   order: Order | null
 }
 
-type SetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
+type GetAllSupperGroups = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS
+  allSupperGroups: SupperGroup[]
 }
 
-type GetRestaurantInfo = {
-  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
-  restaurant: Restaurant | null
+type GetRestaurantMenu = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_MENU
+  menu: FoodMenu[]
 }
 
-type GetAllRestaurantsInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO
-  allRestaurants: Restaurant[]
+type GetOrderHistory = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_HISTORY
+  orderHistory: Order[]
 }
 
-type GetUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_USER_INFO
-  user: User | null
-}
-
-type GetAllUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_USERS
-  allUsers: User[]
-}
-
-type GetFoodByFoodId = {
-  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID
-  food: Food
-}
-
-type SetFoodByFoodId = {
-  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID
-  food: Food
+type GetSupperGroupHistory = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY
+  supperGroupHistory: SupperGroup[]
 }
 
 export type ActionTypes =
   | SetIsLoading
-  | GetRestaurantInfo
-  | GetAllRestaurantsInfo
-  | GetUserInfo
-  | GetAllUserInfo
-  | GetOrder
-  | GetAllOrders
-  | GetCollatedOrder
-  | GetSupperGroup
-  | GetSupperGroupStatus
   | SetSupperGroup
+  | GetSupperGroupById
   | SetOrder
-  | SetSupperGroupStatus
-  | GetFoodByFoodId
-  | SetFoodByFoodId
+  | GetAllSupperGroups
+  | GetRestaurantMenu
+  | GetOrderHistory
+  | GetSupperGroupHistory
