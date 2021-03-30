@@ -112,6 +112,14 @@ export type PaymentInfo = {
 
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
+  GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
+  GET_ORDER_BY_ID = 'SUPPER_ACTION.GET_ORDER_BY_ID',
+  GET_ORDER_BY_USER = 'SUPPER_ACTION.GET_ORDER_BY_USER',
+  SET_ORDER_BY_ID = 'SUPPER_ACTION.SET_ORDER_BY_ID',
+  GET_ALL_RESTAURANTS = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS',
+  GET_RESTAURANT_BY_ID = 'SUPPER_ACTIONS.GET_RESTAURANT_BY_ID',
+  GET_FOOD_BY_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_ID',
+  SET_FOOD_BY_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_ID',
   SET_SUPPER_GROUP = 'SUPPER_ACTIONS.SET_SUPPER_GROUP',
   GET_SUPPER_GROUP_BY_ID = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID',
   SET_ORDER = 'SUPPER_ACTIONS.SET_ORDER',
@@ -124,6 +132,46 @@ export enum SUPPER_ACTIONS {
 type SetIsLoading = {
   type: typeof SUPPER_ACTIONS.SET_IS_LOADING
   isLoading: boolean
+}
+
+type GetCollatedOrder = {
+  type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
+  collatedOrder: CollatedOrder | null
+}
+
+type GetOrderById = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_ID
+  order: Order | null
+}
+
+type GetOrderByUser = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_USER
+  order: Order | null
+}
+
+type SetOrderById = {
+  type: typeof SUPPER_ACTIONS.SET_ORDER_BY_ID
+  order: Order | null
+}
+
+type GetAllRestaurants = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS
+  allRestaurants: Restaurant[]
+}
+
+type GetRestaurantById = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_BY_ID
+  restaurant: Restaurant
+}
+
+type GetFoodById = {
+  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_ID
+  food: Food
+}
+
+type SetFoodById = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_ID
+  food: Food
 }
 
 type SetSupperGroup = {
@@ -163,6 +211,14 @@ type GetSupperGroupHistory = {
 
 export type ActionTypes =
   | SetIsLoading
+  | GetAllRestaurants
+  | GetRestaurantById
+  | GetOrderById
+  | GetOrderByUser
+  | GetCollatedOrder
+  | SetOrderById
+  | GetFoodById
+  | SetFoodById
   | SetSupperGroup
   | GetSupperGroupById
   | SetOrder
