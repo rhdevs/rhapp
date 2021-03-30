@@ -27,7 +27,7 @@ type State = {
   order: Order | null
   allSupperGroups: SupperGroup[]
   menu: FoodMenu[]
-  menufood: FoodMenu | null
+  menuFood: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
 }
