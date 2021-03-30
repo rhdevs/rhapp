@@ -4,28 +4,18 @@ import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
   isLoading: false,
-  allOrders: [],
   collatedOrder: null,
-  supperGroup: null,
   order: null,
-  supperGroupStatus: SupperGroupStatus.OPEN,
   restaurant: null,
   allRestaurants: [],
-  user: null,
-  allUsers: [],
 }
 
 type State = {
   isLoading: boolean
-  allOrders: Order[]
   collatedOrder: CollatedOrder | null
-  supperGroup: SupperGroup | null
   order: Order | null
-  supperGroupStatus: SupperGroupStatus
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
-  user: User | null
-  allUsers: User[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -54,7 +44,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_FOOD_BY_ID: {
       return { ...state, food: action.food }
     }
-
+    case SUPPER_ACTIONS.GET_COLLATED_ORDER: {
+      return { ...state, collatedOrder: action.collatedOrder }
+    }
     default:
       return state
   }
