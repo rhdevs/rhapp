@@ -42,6 +42,7 @@ export type FoodMenu = {
 export type Restaurant = {
   restaurantId: string
   name: string
+  restaurantLogo: string
   menu: FoodMenu[]
 }
 
@@ -119,6 +120,13 @@ export enum SUPPER_ACTIONS {
   GET_RESTAURANT_BY_ID = 'SUPPER_ACTIONS.GET_RESTAURANT_BY_ID',
   GET_FOOD_BY_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_ID',
   SET_FOOD_BY_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_ID',
+  SET_SUPPER_GROUP = 'SUPPER_ACTIONS.SET_SUPPER_GROUP',
+  GET_SUPPER_GROUP_BY_ID = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID',
+  SET_ORDER = 'SUPPER_ACTIONS.SET_ORDER',
+  GET_ALL_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS',
+  GET_RESTAURANT_MENU = 'SUPPER_ACTIONS.GET_RESTAURANT_MENU',
+  GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
+  GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
 }
 
 type SetIsLoading = {
@@ -166,6 +174,41 @@ type SetFoodById = {
   food: Food
 }
 
+type SetSupperGroup = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP
+  supperGroup: SupperGroup | null
+}
+
+type GetSupperGroupById = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID
+  supperGroup: SupperGroup | null
+}
+
+type SetOrder = {
+  type: typeof SUPPER_ACTIONS.SET_ORDER
+  order: Order | null
+}
+
+type GetAllSupperGroups = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS
+  allSupperGroups: SupperGroup[]
+}
+
+type GetRestaurantMenu = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_MENU
+  menu: FoodMenu[]
+}
+
+type GetOrderHistory = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_HISTORY
+  orderHistory: Order[]
+}
+
+type GetSupperGroupHistory = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY
+  supperGroupHistory: SupperGroup[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -176,3 +219,10 @@ export type ActionTypes =
   | SetOrderById
   | GetFoodById
   | SetFoodById
+  | SetSupperGroup
+  | GetSupperGroupById
+  | SetOrder
+  | GetAllSupperGroups
+  | GetRestaurantMenu
+  | GetOrderHistory
+  | GetSupperGroupHistory

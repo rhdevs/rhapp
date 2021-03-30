@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Food, Restaurant, CollatedOrder, Order } from '../supper/types'
+import { ActionTypes, Food, Restaurant, CollatedOrder, Order, FoodMenu, SupperGroup } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
@@ -9,6 +9,12 @@ const initialState = {
   restaurant: null,
   allRestaurants: [],
   food: null,
+  supperGroup: null,
+  order: null,
+  allSupperGroups: [],
+  menu: [],
+  orderHistory: [],
+  supperGroupHistory: [],
 }
 
 type State = {
@@ -18,6 +24,12 @@ type State = {
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
   food: Food | null
+  supperGroup: SupperGroup | null
+  order: Order | null
+  allSupperGroups: SupperGroup[]
+  menu: FoodMenu[]
+  orderHistory: Order[]
+  supperGroupHistory: SupperGroup[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -30,6 +42,12 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_ORDER_BY_USER: {
       return { ...state, order: action.order }
+    }
+    case SUPPER_ACTIONS.SET_SUPPER_GROUP: {
+      return { ...state, supperGroup: action.supperGroup }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID: {
+      return { ...state, supperGroup: action.supperGroup }
     }
     case SUPPER_ACTIONS.SET_ORDER_BY_ID: {
       return { ...state, order: action.order }
@@ -48,6 +66,18 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_COLLATED_ORDER: {
       return { ...state, collatedOrder: action.collatedOrder }
+    }
+    case SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS: {
+      return { ...state, allSupperGroups: action.allSupperGroups }
+    }
+    case SUPPER_ACTIONS.GET_RESTAURANT_MENU: {
+      return { ...state, menu: action.menu }
+    }
+    case SUPPER_ACTIONS.GET_ORDER_HISTORY: {
+      return { ...state, orderHistory: action.orderHistory }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
+      return { ...state, supperGroupHistory: action.supperGroupHistory }
     }
     default:
       return state
