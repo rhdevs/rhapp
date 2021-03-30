@@ -33,39 +33,28 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_IS_LOADING: {
       return { ...state, isLoading: action.isLoading }
     }
-    case SUPPER_ACTIONS.GET_ALL_ORDERS: {
-      return { ...state, allOrders: action.allOrders }
-    }
-    case SUPPER_ACTIONS.GET_SUPPER_GROUP: {
-      return { ...state, supperGroup: action.supperGroup }
-    }
-    case SUPPER_ACTIONS.GET_ORDER: {
+    case SUPPER_ACTIONS.GET_ORDER_BY_ID: {
       return { ...state, order: action.order }
     }
-    case SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS: {
-      return { ...state, supperGroupStatus: action.supperGroupStatus }
-    }
-    case SUPPER_ACTIONS.SET_SUPPER_GROUP: {
-      return { ...state, supperGroup: action.supperGroup }
-    }
-    case SUPPER_ACTIONS.SET_ORDER: {
+    case SUPPER_ACTIONS.GET_ORDER_BY_USER: {
       return { ...state, order: action.order }
     }
-    case SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS: {
-      return { ...state, supperGroupStatus: action.supperGroupStatus }
-    }
-    case SUPPER_ACTIONS.GET_RESTAURANT_INFO: {
-      return { ...state, restaurant: action.restaurant }
+    case SUPPER_ACTIONS.SET_ORDER_BY_ID: {
+      return { ...state, order: action.order }
     }
     case SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO: {
       return { ...state, allRestaurants: action.allRestaurants }
     }
-    case SUPPER_ACTIONS.GET_USER_INFO: {
-      return { ...state, user: action.user }
+    case SUPPER_ACTIONS.GET_RESTAURANT_BY_ID: {
+      return { ...state, restaurant: action.restaurant }
     }
-    case SUPPER_ACTIONS.GET_ALL_USERS: {
-      return { ...state, allUsers: action.allUsers }
+    case SUPPER_ACTIONS.GET_FOOD_BY_ID: {
+      return { ...state, food: action.food }
     }
+    case SUPPER_ACTIONS.SET_FOOD_BY_ID: {
+      return { ...state, food: action.food }
+    }
+
     default:
       return state
   }

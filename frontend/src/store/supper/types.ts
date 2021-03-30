@@ -111,20 +111,14 @@ export type PaymentInfo = {
 
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
-  GET_ALL_ORDERS = 'SUPPER_ACTION.GET_ALL_ORDERS',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
-  GET_SUPPER_GROUP = 'SUPPER_ACTION.GET_SUPPER_GROUP',
-  GET_ORDER = 'SUPPER_ACTION.GET_ORDER',
-  GET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.GET_SUPPER_GROUP_STATUS',
-  SET_SUPPER_GROUP = 'SUPPER_ACTION.SET_SUPPER_GROUP',
-  SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
-  SET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.SET_SUPPER_GROUP_STATUS',
-  GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
+  GET_ORDER_BY_ID = 'SUPPER_ACTION.GET_ORDER_BY_ID',
+  GET_ORDER_BY_USER = 'SUPPER_ACTION.GET_ORDER_BY_USER',
+  SET_ORDER_BY_ID = 'SUPPER_ACTION.SET_ORDER_BY_ID',
   GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
-  GET_USER_INFO = 'SUPPER_ACTIONS.GET_USER_INFO',
-  GET_ALL_USERS = 'SUPPER_ACTIONS.GET_ALL_USERS',
-  GET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID',
-  SET_FOOD_BY_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID',
+  GET_RESTAURANT_BY_ID = 'SUPPER_ACTIONS.GET_RESTAURANT_BY_ID',
+  GET_FOOD_BY_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_ID',
+  SET_FOOD_BY_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_ID',
 }
 
 type SetIsLoading = {
@@ -132,49 +126,24 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-type GetAllOrders = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_ORDERS
-  allOrders: Order[]
-}
-
 type GetCollatedOrder = {
   type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
   collatedOrder: CollatedOrder | null
 }
 
-type GetSupperGroup = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP
-  supperGroup: SupperGroup | null
-}
-
-type GetOrder = {
-  type: typeof SUPPER_ACTIONS.GET_ORDER
+type GetOrderById = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_ID
   order: Order | null
 }
 
-type GetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
-}
-
-type SetSupperGroup = {
-  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP
-  supperGroup: SupperGroup | null
+type GetOrderByUser = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_USER
+  order: Order | null
 }
 
 type SetOrder = {
-  type: typeof SUPPER_ACTIONS.SET_ORDER
+  type: typeof SUPPER_ACTIONS.SET_ORDER_BY_ID
   order: Order | null
-}
-
-type SetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
-}
-
-type GetRestaurantInfo = {
-  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
-  restaurant: Restaurant | null
 }
 
 type GetAllRestaurantsInfo = {
@@ -182,39 +151,28 @@ type GetAllRestaurantsInfo = {
   allRestaurants: Restaurant[]
 }
 
-type GetUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_USER_INFO
-  user: User | null
+type GetRestaurantById = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_BY_ID
+  restaurant: Restaurant
 }
 
-type GetAllUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_USERS
-  allUsers: User[]
-}
-
-type GetFoodByFoodId = {
-  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_FOOD_ID
+type GetFoodById = {
+  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_ID
   food: Food
 }
 
-type SetFoodByFoodId = {
-  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_FOOD_ID
+type SetFoodById = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_ID
   food: Food
 }
 
 export type ActionTypes =
   | SetIsLoading
-  | GetRestaurantInfo
   | GetAllRestaurantsInfo
-  | GetUserInfo
-  | GetAllUserInfo
-  | GetOrder
-  | GetAllOrders
+  | GetRestaurantById
+  | GetOrderById
+  | GetOrderByUser
   | GetCollatedOrder
-  | GetSupperGroup
-  | GetSupperGroupStatus
-  | SetSupperGroup
   | SetOrder
-  | SetSupperGroupStatus
-  | GetFoodByFoodId
-  | SetFoodByFoodId
+  | GetFoodById
+  | SetFoodById
