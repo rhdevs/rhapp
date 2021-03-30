@@ -79,6 +79,19 @@ export enum ENDPOINTS {
 
   // HOME
   SEARCH = '/search',
+
+  // SUPPER
+  ALL_SUPPER_GROUPS = '/supper',
+  ADD_SUPPER_GROUP = '/supper',
+  GET_SUPPER_GROUP_BY_ID = '/supper',
+  ADD_ORDER = '/supper',
+  UPDATE_SUPPER_GROUP = '/supper',
+  DELETE_SUPPER_GROUP = '/supper',
+  GET_ORDER_IN_SUPPER_GROUP = '/supper',
+  UPDATE_ORDER_DETAILS = '/supper',
+  DELETE_ORDER = '/supper',
+  GET_ORDER_HISTORY = '/supper/user',
+  GET_SUPPER_GROUP_HISTORY = '/supper/user',
 }
 
 export enum DOMAINS {
@@ -86,6 +99,7 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+  SUPPER = 'facility', //'supper',
 }
 
 export const DOMAIN_URL = {
@@ -105,6 +119,11 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappsocial.rhdevs.repl.co'
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
+  //TODO: update with supper domain url
+  SUPPER:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappfacilities.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
 }
 
 async function makeRequest(
@@ -135,6 +154,13 @@ async function makeRequest(
           : '//rhapp-middleware.herokuapp.com/rhapplaundry'
       break
     case DOMAINS.SOCIAL:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappsocial.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+      break
+    //TODO: update with supper request url
+    case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhappsocial.rhdevs.repl.co'
