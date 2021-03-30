@@ -125,6 +125,7 @@ export enum SUPPER_ACTIONS {
   SET_ORDER = 'SUPPER_ACTIONS.SET_ORDER',
   GET_ALL_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS',
   GET_RESTAURANT_MENU = 'SUPPER_ACTIONS.GET_RESTAURANT_MENU',
+  GET_MENU_FOOD = 'SUPPER_ACTIONS.GET_MENU_FOOD',
   GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
 }
@@ -199,6 +200,11 @@ type GetRestaurantMenu = {
   menu: FoodMenu[]
 }
 
+type GetMenuFood = {
+  type: typeof SUPPER_ACTIONS.GET_MENU_FOOD
+  menuFood: FoodMenu
+}
+
 type GetOrderHistory = {
   type: typeof SUPPER_ACTIONS.GET_ORDER_HISTORY
   orderHistory: Order[]
@@ -224,5 +230,6 @@ export type ActionTypes =
   | SetOrder
   | GetAllSupperGroups
   | GetRestaurantMenu
+  | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory

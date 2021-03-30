@@ -12,6 +12,7 @@ const initialState = {
   supperGroup: null,
   allSupperGroups: [],
   menu: [],
+  menuFood: null,
   orderHistory: [],
   supperGroupHistory: [],
 }
@@ -26,6 +27,7 @@ type State = {
   order: Order | null
   allSupperGroups: SupperGroup[]
   menu: FoodMenu[]
+  menufood: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
 }
@@ -70,6 +72,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_RESTAURANT_MENU: {
       return { ...state, menu: action.menu }
+    }
+    case SUPPER_ACTIONS.GET_MENU_FOOD: {
+      return { ...state, menuFood: action.menuFood }
     }
     case SUPPER_ACTIONS.GET_ORDER_HISTORY: {
       return { ...state, orderHistory: action.orderHistory }

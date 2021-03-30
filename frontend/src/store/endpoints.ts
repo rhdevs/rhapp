@@ -79,6 +79,18 @@ export enum ENDPOINTS {
 
   // HOME
   SEARCH = '/search',
+
+  // SUPPER
+  ALL_RESTAURANTS = '/supper/restaurant',
+  GET_RESTAURANT = '/supper/restaurant',
+  GET_RESTAURANT_MENU = '/supper/restaurant',
+  GET_MENU_FOOD = '/supper/restaurant',
+  ADD_FOOD = '/supper',
+  GET_FOOD = '/supper',
+  EDIT_FOOD = '/supper',
+  DELETE_FOOD = '/supper',
+  GET_COLLATED_ORDER = '/supper',
+  GET_USER_ORDER = '/supper',
 }
 
 export enum DOMAINS {
@@ -146,7 +158,8 @@ async function makeRequest(
           ? '//rhappsocial.rhdevs.repl.co'
           : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
-    case DOMAINS.FACILITY:
+    //TODO: update with supper request url
+    case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhappfacilities.rhdevs.repl.co'

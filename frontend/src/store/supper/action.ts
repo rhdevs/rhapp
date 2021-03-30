@@ -1,10 +1,10 @@
-import { ActionTypes } from '../supper/types'
+import { ActionTypes, Food } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
-import { Dispatch, GetState } from '../types'
+import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
 
-const [success] = useSnackbar('success')
+//const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
 
 //------------------------ GET --------------------------
@@ -29,9 +29,71 @@ export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getFoodInOrder = (supperGroupId, orderId, foodId) => (dispatch: Dispatch<ActionTypes>) => {
+export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/${orderId}/${foodId}`)
+  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}`)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
+        restaurant: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to get restaurant, please try again later.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getRestaurantMenu = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  get(ENDPOINTS.GET_RESTAURANT_MENU, DOMAINS.SUPPER, `/${restaurantId}/menu`)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_RESTAURANT_MENU,
+        menu: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to get restaurant menu, please try again later.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  get(ENDPOINTS.GET_MENU_FOOD, DOMAINS.SUPPER, `/${foodMenuId}`)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_MENU_FOOD,
+        menuFood: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to get food from menu, please try again later.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getFoodInOrder = (supperGroupId: string, orderId: string, foodId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch(setIsLoading(true))
+  get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${supperGroupId}/${orderId}/${foodId}`)
     .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -48,9 +110,52 @@ export const getFoodInOrder = (supperGroupId, orderId, foodId) => (dispatch: Dis
     })
   dispatch(setIsLoading(false))
 }
+
+export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
+        collatedOrder: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to get collated order, please try again later.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getUserOrder = (supperGroupId: string, userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
+    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_ORDER_BY_USER,
+        order: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      error("Failed to get user's order, please try again later.")
+    })
+  dispatch(setIsLoading(false))
+}
+
 //------------------------ POST / PUT -------------------------
 
-export const addFoodToOrder = (newFood, supperGroupId, orderId) => (dispatch: Dispatch<ActionTypes>) => {
+export const addFoodToOrder = (newFood: Food, supperGroupId: string, orderId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
   post(ENDPOINTS.ADD_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/${orderId}`)
@@ -63,12 +168,14 @@ export const addFoodToOrder = (newFood, supperGroupId, orderId) => (dispatch: Di
     })
     .catch((err) => {
       console.log(err)
-      error('Failed to add Food, please try again later.')
+      error('Failed to add food, please try again later.')
     })
   dispatch(setIsLoading(false))
 }
 
-export const updateFoodInOrder = (newFood, supperGroupId, orderId, foodId) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateFoodInOrder = (newFood: Food, supperGroupId: string, orderId: string, foodId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
   put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/${orderId}/${foodId}`)
@@ -81,13 +188,15 @@ export const updateFoodInOrder = (newFood, supperGroupId, orderId, foodId) => (d
     })
     .catch((err) => {
       console.log(err)
-      error('Failed to update Food, please try again later.')
+      error('Failed to update food, please try again later.')
     })
   dispatch(setIsLoading(false))
 }
 //------------------------ DELETE -----------------------
 
-export const deleteFoodInOrder = (supperGroupId, orderId, foodId) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteFoodInOrder = (supperGroupId: string, orderId: string, foodId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${supperGroupId}/${orderId}/${foodId}`)
     .then((resp) => resp.json())
@@ -99,7 +208,7 @@ export const deleteFoodInOrder = (supperGroupId, orderId, foodId) => (dispatch: 
     })
     .catch((err) => {
       console.log(err)
-      error('Failed to delete Food, please try again later.')
+      error('Failed to delete food, please try again later.')
     })
   dispatch(setIsLoading(false))
 }
