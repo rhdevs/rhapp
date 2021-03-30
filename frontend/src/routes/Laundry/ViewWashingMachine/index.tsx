@@ -133,18 +133,23 @@ export default function ViewWashingMachine() {
     const [minuteState, useMinuteState] = useState('')
     const [secondState, useSecondState] = useState('')
 
+    const [intervalID, setIntervalID] = useState<NodeJS.Timeout | undefined>()
+
     useEffect(() => {
       useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
       useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
       if (machine != null) {
-        setTimeout(() => timer(), 1000)
+        if (intervalID != undefined) {
+          clearInterval(intervalID)
+        }
+        const idinterval = setInterval(setTimeState, 1000)
+        setIntervalID(idinterval)
       }
     }, [machine])
 
-    function timer() {
+    function setTimeState() {
       useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
       useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-      setTimeout(() => timer(), 1000)
     }
 
     const timeLeftGroup = (
