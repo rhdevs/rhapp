@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -23,6 +23,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+import { padStart } from 'lodash'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -120,8 +121,7 @@ export default function ViewWashingMachine() {
 
     const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
     const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
-    const seconds: string = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
-
+    const seconds: string = padStart((timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0), 2, '0')
     return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
   }
 
@@ -130,21 +130,31 @@ export default function ViewWashingMachine() {
     let actions = <></>
     let subtitle = <></>
     let imagesrc = ''
+    const [minuteState, useMinuteState] = useState('')
+    const [secondState, useSecondState] = useState('')
+
+    useEffect(() => {
+      useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
+      useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
+      if (machine != null) {
+        setTimeout(() => timer(), 1000)
+      }
+    }, [machine])
+
+    function timer() {
+      useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
+      useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
+      setTimeout(() => timer(), 1000)
+    }
+
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
-          <TimeLeftText>
-            {calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number)}
-          </TimeLeftText>{' '}
-          <TimeLabel>minutes</TimeLabel>
+          <TimeLeftText>{minuteState}</TimeLeftText> <TimeLabel>minutes</TimeLabel>
         </TimeUnit>
         <TimeLeftText> : </TimeLeftText>
         <TimeUnit>
-          <TimeLeftText>
-            {' '}
-            {calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number)}{' '}
-          </TimeLeftText>{' '}
-          <TimeLabel>seconds</TimeLabel>
+          <TimeLeftText> {secondState} </TimeLeftText> <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
         {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
       </TimeLeft>
