@@ -10,7 +10,6 @@ const initialState = {
   allRestaurants: [],
   food: null,
   supperGroup: null,
-  order: null,
   allSupperGroups: [],
   menu: [],
   orderHistory: [],
@@ -20,7 +19,6 @@ const initialState = {
 type State = {
   isLoading: boolean
   collatedOrder: CollatedOrder | null
-  order: Order | null
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
   food: Food | null

@@ -86,6 +86,7 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+  SUPPER = 'facility', //'supper',
 }
 
 export const DOMAIN_URL = {
@@ -105,6 +106,11 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappsocial.rhdevs.repl.co'
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
+  //TODO: update with supper domain url
+  SUPPER:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappfacilities.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
 }
 
 async function makeRequest(
@@ -139,6 +145,12 @@ async function makeRequest(
         process.env.REACT_APP_MODE === 'production'
           ? '//rhappsocial.rhdevs.repl.co'
           : '//rhapp-middleware.herokuapp.com/rhappsocial'
+      break
+    case DOMAINS.FACILITY:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappfacilities.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
       break
   }
   return axios({
