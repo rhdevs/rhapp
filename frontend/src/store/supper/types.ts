@@ -19,6 +19,7 @@ export type Food = {
 export type Option = {
   name: string
   isSelected: boolean
+  price: number
 }
 
 // type Custom refers to a section in the customization page
