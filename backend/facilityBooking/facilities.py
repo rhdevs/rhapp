@@ -5,6 +5,7 @@ import json
 from bson.json_util import dumps
 from datetime import datetime
 from threading import Thread
+from bson.objectid import ObjectId
 
 
 def removeObjectID(xs):
@@ -341,6 +342,50 @@ def foodItem(foodMenuId):
         print(e)
         return make_response({"err": str(e)}, 400)
 
+
+@app.route('/dummy/<orderId>')
+@cross_origin(supports_credentials=True)
+def getorder(orderId):
+    try:
+        pipeline = [
+            {'$match': {"_id": ObjectId(orderId)}},
+            {
+                '$lookup': {
+                    'from': 'FoodOrder',
+                    'localField': 'foodIds',
+                    'foreignField': '_id',
+                    'as': 'foodList'
+                }
+            },
+            {'$project': {'foodIds': 0}}
+        ]
+
+        temp = db.Order.aggregate(pipeline)
+
+        # Only 1 item in temp, can only access it like this otherwise its a mongo array object
+        for item in temp:
+            data = item
+
+        data['orderId'] = str(data.pop('_id'))
+
+        totalPrice = 0
+        for food in data["foodList"]:
+            # rename _id field to foodId and unbox mongo object
+            food["foodId"] = str(food.pop('_id'))
+            # sum up all the prices
+            for custom in food["custom"]:
+                for option in custom['options']:
+                    totalPrice += option["price"] if option["selected"] else 0
+            totalPrice += food["price"]
+
+        data["totalPrice"] = totalPrice
+
+        response = {"status": "success", "data": data}
+
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
 
 ###########################################################
 
