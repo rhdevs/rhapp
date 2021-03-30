@@ -142,15 +142,13 @@ export default function ViewWashingMachine() {
         if (intervalID != undefined) {
           clearInterval(intervalID)
         }
-        const idinterval = setInterval(setTimeState, 1000)
+        const idinterval = setInterval(() => {
+          useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
+          useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
+        }, 1000)
         setIntervalID(idinterval)
       }
     }, [machine])
-
-    function setTimeState() {
-      useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-      useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-    }
 
     const timeLeftGroup = (
       <TimeLeft>
