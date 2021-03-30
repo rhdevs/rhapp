@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, User, Restaurant, CollatedOrder, SupperGroup, SupperGroupStatus, Order } from '../supper/types'
+import { ActionTypes, Food, Restaurant, CollatedOrder, Order } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
@@ -8,6 +8,7 @@ const initialState = {
   order: null,
   restaurant: null,
   allRestaurants: [],
+  food: null,
 }
 
 type State = {
@@ -16,6 +17,7 @@ type State = {
   order: Order | null
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
+  food: Food | null
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -32,7 +34,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_ORDER_BY_ID: {
       return { ...state, order: action.order }
     }
-    case SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO: {
+    case SUPPER_ACTIONS.GET_ALL_RESTAURANTS: {
       return { ...state, allRestaurants: action.allRestaurants }
     }
     case SUPPER_ACTIONS.GET_RESTAURANT_BY_ID: {

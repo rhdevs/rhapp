@@ -115,7 +115,7 @@ export enum SUPPER_ACTIONS {
   GET_ORDER_BY_ID = 'SUPPER_ACTION.GET_ORDER_BY_ID',
   GET_ORDER_BY_USER = 'SUPPER_ACTION.GET_ORDER_BY_USER',
   SET_ORDER_BY_ID = 'SUPPER_ACTION.SET_ORDER_BY_ID',
-  GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
+  GET_ALL_RESTAURANTS = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS',
   GET_RESTAURANT_BY_ID = 'SUPPER_ACTIONS.GET_RESTAURANT_BY_ID',
   GET_FOOD_BY_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_ID',
   SET_FOOD_BY_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_ID',
@@ -141,13 +141,13 @@ type GetOrderByUser = {
   order: Order | null
 }
 
-type SetOrder = {
+type SetOrderById = {
   type: typeof SUPPER_ACTIONS.SET_ORDER_BY_ID
   order: Order | null
 }
 
-type GetAllRestaurantsInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO
+type GetAllRestaurants = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS
   allRestaurants: Restaurant[]
 }
 
@@ -168,11 +168,11 @@ type SetFoodById = {
 
 export type ActionTypes =
   | SetIsLoading
-  | GetAllRestaurantsInfo
+  | GetAllRestaurants
   | GetRestaurantById
   | GetOrderById
   | GetOrderByUser
   | GetCollatedOrder
-  | SetOrder
+  | SetOrderById
   | GetFoodById
   | SetFoodById
