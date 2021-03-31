@@ -29,7 +29,6 @@ export enum ENDPOINTS {
   MACHINE_LIST = '/location',
   LAUNDRY_MACHINE = '/laundry/machine',
   UPDATE_MACHINE = '/laundry/machine',
-  LAUNDRY_JOB = '/laundry/job',
   EDIT_DURATION = '/laundry/machine/editDuration',
 
   // SCHEDULING
