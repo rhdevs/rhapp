@@ -279,7 +279,11 @@ export default function Profile() {
     <>
       <MainContainer>
         <PullToRefresh onRefresh={onRefresh}>
-          <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+          {localStorage.getItem('userID') === user.userID ? (
+            <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+          ) : (
+            <TopNavBar title={'Profile'} leftIcon />
+          )}
           {isLoading && <LoadingSpin />}
           {!isLoading && (
             <ProfileComponent>
