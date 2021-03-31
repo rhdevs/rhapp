@@ -91,6 +91,17 @@ export enum ENDPOINTS {
   DELETE_FOOD = '/supper',
   GET_COLLATED_ORDER = '/supper',
   GET_USER_ORDER = '/supper',
+  ALL_SUPPER_GROUPS = '/supper',
+  ADD_SUPPER_GROUP = '/supper',
+  GET_SUPPER_GROUP_BY_ID = '/supper',
+  ADD_ORDER = '/supper',
+  UPDATE_SUPPER_GROUP = '/supper',
+  DELETE_SUPPER_GROUP = '/supper',
+  GET_ORDER_IN_SUPPER_GROUP = '/supper',
+  UPDATE_ORDER_DETAILS = '/supper',
+  DELETE_ORDER = '/supper',
+  GET_ORDER_HISTORY = '/supper/user',
+  GET_SUPPER_GROUP_HISTORY = '/supper/user',
 }
 
 export enum DOMAINS {
@@ -162,8 +173,8 @@ async function makeRequest(
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappfacilities.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
+          ? '//rhappsocial.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
   }
   return axios({

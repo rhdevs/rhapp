@@ -24,7 +24,6 @@ type State = {
   allRestaurants: Restaurant[]
   food: Food | null
   supperGroup: SupperGroup | null
-  order: Order | null
   allSupperGroups: SupperGroup[]
   menu: FoodMenu[]
   menuFood: FoodMenu | null
