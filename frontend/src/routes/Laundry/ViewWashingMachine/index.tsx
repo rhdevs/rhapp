@@ -103,10 +103,35 @@ export default function ViewWashingMachine() {
   )
   const dispatch = useDispatch()
   const params = useParams<{ machineId: string }>()
+  const [minuteState, useMinuteState] = useState('')
+  const [secondState, useSecondState] = useState('')
+
+  const [intervalID, setIntervalID] = useState<NodeJS.Timeout | undefined>()
 
   useEffect(() => {
     dispatch(SetSelectedMachineFromId(params.machineId))
-  }, [dispatch])
+    useMinuteState(
+      calculateRemainingTime('minutes', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+    )
+    useSecondState(
+      calculateRemainingTime('seconds', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+    )
+
+    if (selectedMachine != null) {
+      if (intervalID != undefined) {
+        clearInterval(intervalID)
+      }
+      const idinterval = setInterval(() => {
+        useMinuteState(
+          calculateRemainingTime('minutes', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+        )
+        useSecondState(
+          calculateRemainingTime('seconds', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+        )
+      }, 1000)
+      setIntervalID(idinterval)
+    }
+  }, [dispatch, selectedMachine])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
     const endDateTime = new Date((startUNIX + duration) * 1000)
@@ -130,25 +155,22 @@ export default function ViewWashingMachine() {
     let actions = <></>
     let subtitle = <></>
     let imagesrc = ''
-    const [minuteState, useMinuteState] = useState('')
-    const [secondState, useSecondState] = useState('')
 
-    const [intervalID, setIntervalID] = useState<NodeJS.Timeout | undefined>()
+    // useEffect(() => {
+    //   useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
+    //   useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
 
-    useEffect(() => {
-      useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-      useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-      if (machine != null) {
-        if (intervalID != undefined) {
-          clearInterval(intervalID)
-        }
-        const idinterval = setInterval(() => {
-          useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-          useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-        }, 1000)
-        setIntervalID(idinterval)
-      }
-    }, [machine])
+    //   if (machine != null) {
+    //     if (intervalID != undefined) {
+    //       clearInterval(intervalID)
+    //     }
+    //     const idinterval = setInterval(() => {
+    //       useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
+    //       useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
+    //     }, 1000)
+    //     setIntervalID(idinterval)
+    //   }
+    // }, [machine])
 
     const timeLeftGroup = (
       <TimeLeft>
@@ -240,7 +262,15 @@ export default function ViewWashingMachine() {
             min={1}
             max={machine?.job === WMStatus.RESERVED && isEdit ? 15 : 120}
             tooltipVisible
-            onChange={(value: number) => dispatch(SetDuration(value))}
+            onChange={(value: number) => {
+              dispatch(SetDuration(value))
+              useMinuteState(
+                calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number),
+              )
+              useSecondState(
+                calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number),
+              )
+            }}
             value={duration}
             trackStyle={{ backgroundColor: '#023666' }}
             handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
@@ -288,7 +318,15 @@ export default function ViewWashingMachine() {
               min={1}
               max={120}
               tooltipVisible
-              onChange={(value: number) => dispatch(SetDuration(value))}
+              onChange={(value: number) => {
+                dispatch(SetDuration(value))
+                useMinuteState(
+                  calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number),
+                )
+                useSecondState(
+                  calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number),
+                )
+              }}
               value={duration}
               trackStyle={{ backgroundColor: '#023666' }}
               handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
