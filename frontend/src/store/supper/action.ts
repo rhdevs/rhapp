@@ -340,6 +340,7 @@ export const addFoodToOrder = (newFood: Food, supperGroupId: string, orderId: st
       if (resp.status === 'failed') {
         throw resp.err
       }
+      // TODO: May need use updateOrder
       dispatch(getOrderInSupperGroup(supperGroupId, orderId))
     })
     .catch((err) => {
@@ -360,6 +361,7 @@ export const updateFoodInOrder = (newFood: Food, supperGroupId: string, orderId:
       if (resp.status === 'failed') {
         throw resp.err
       }
+      // TODO: May need use updateOrder
       dispatch(getOrderInSupperGroup(supperGroupId, orderId))
     })
     .catch((err) => {
@@ -414,6 +416,7 @@ export const deleteFoodInOrder = (supperGroupId: string, orderId: string, foodId
       if (resp.status === 'failed') {
         throw resp.err
       }
+      // TODO: May need use UpdateOrder
       dispatch(getOrderInSupperGroup(supperGroupId, orderId))
     })
     .catch((err) => {
