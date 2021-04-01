@@ -282,7 +282,7 @@ export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispa
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getAllSupperGroups())
+      dispatch(getSupperGroupById(supperGroupId))
     })
     .catch((err) => {
       console.log(err)
