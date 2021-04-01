@@ -427,7 +427,9 @@ def add_food(orderId):
         newFood = db.FoodOrder.insert_one(data).inserted_id
 
         # Add new food's id into Order
-        result = db.Order.update_one({'_id': ObjectId(orderId)}, {'$push': {'foodIds': ObjectId(newFood)}})
+        result = db.Order.update_one({'_id': ObjectId(orderId)},
+                                     {'$push': {'foodIds': ObjectId(newFood)},
+                                     '$inc': {'orderPrice': data['foodPrice']}})
         if result.matched_count != 1:
             raise Exception('Order not found.')
         if result.modified_count != 1:
@@ -435,6 +437,7 @@ def add_food(orderId):
 
         response = {"status": "success",
                     "message": "Food added successfully."}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
