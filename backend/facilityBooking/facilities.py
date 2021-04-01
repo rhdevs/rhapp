@@ -235,9 +235,41 @@ def delete_booking(bookingID):
 def all_supper_group():
     try:
         all_supper_group = list(db.SupperGroup.find(
-            {}, {'_id': 0}).sort('createdAt', -1))
+            {}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
 
-        response = {"status": "sucess", "data": all_supper_group}
+        print(all_supper_group)
+
+        # I hate mongo
+
+        data = []
+        for supperGroup in all_supper_group:
+            pipeline = [
+                {'$match': {'supperGroupId': supperGroup['supperGroupId']}},
+                {
+                    '$lookup': {
+                        'from': 'Order',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'orders'
+                    }
+                },
+                {
+                    '$addFields': {
+                        'totalPrice': {'$sum': '$orders.orderPrice'}
+                    }
+                },
+                {'$project': {'orders': 0, '_id': 0}}
+            ]
+            result = db.SupperGroup.aggregate(pipeline)
+            info = None
+            for suppergroup in result:
+                info = suppergroup
+
+            if info == None:
+                raise Exception('Order group not found.')
+            data.append(info)
+
+        response = {"status": "success", "data": data}
 
         return make_response(response, 200)
     except Exception as e:
@@ -252,7 +284,7 @@ def create_supper_group():
         data["createdAt"] = int(datetime.now().timestamp())
         db.SupperGroup.insert_one(data)
 
-        response = {"status": "sucess",
+        response = {"status": "success",
                     "message": "Successfully created supper group!"}
 
         return make_response(response, 200)
@@ -265,8 +297,33 @@ def create_supper_group():
 def supper_group(supperGroupId):
     try:
         if request.method == "GET":
-            data = db.SupperGroup.find_one(
-                {"supperGroupId": supperGroupId}, {'_id': 0})
+            pipeline = [
+                {'$match': {'supperGroupId': supperGroupId}},
+                {
+                    '$lookup': {
+                        'from': 'Order',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'orders'
+                    }
+                },
+                {
+                    '$addFields': {
+                        'totalPrice': {'$sum': '$orders.orderPrice'}
+                    }
+                },
+                {'$project': {'orders': 0, '_id': 0}}
+            ]
+
+            result = db.SupperGroup.aggregate(pipeline)
+
+            data = None
+            for suppergroup in result:
+                data = suppergroup
+
+            if data == None:
+                raise Exception('Order group not found.')
+
             response = {"status": "success", "data": data}
 
         elif request.method == "PUT":  # Edit supper group details
