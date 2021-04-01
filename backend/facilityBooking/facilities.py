@@ -432,7 +432,11 @@ def foodorder(orderId, foodId):
 @cross_origin(supports_credentials=True)
 def all_restaurants():
     try:
-        restaurants = db.Restaurants.find({}, {'_id': 0})
+        restaurants = list(db.Restaurants.find({}))
+        for restaurant in restaurants:
+            data = restaurant
+            data['restaurantId'] = str(data.pop('_id'))
+
         response = {"status": "success", "data": list(
             restaurants)}
         return make_response(response, 200)
@@ -442,12 +446,28 @@ def all_restaurants():
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/<int:restaurantId>', methods=['GET'])
+@app.route('/supper/restaurant', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def post_restaurant():
+    try:
+        data = request.get_json();
+        # Add restaurant into Restaurants
+        db.Restaurants.insert_one(data)
+
+        response = {"status": "success",
+                    "message": "Restaurant added successfully."}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+@app.route('/supper/restaurant/<restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_restaurant(restaurantId):
     try:
         restaurant = db.Restaurants.find_one(
-            {'restaurantId': restaurantId}, {'_id': 0})
+            {'_id': ObjectId(restaurantId)})
+        restaurant['restaurantId'] = str(restaurant.pop('_id'))
         response = {"status": "success", "data": restaurant}
         return make_response(response, 200)
 
@@ -456,31 +476,33 @@ def get_restaurant(restaurantId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/<int:restaurantId>/menu', methods=['GET'])
+@app.route('/supper/restaurant/<restaurantId>/menu', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def restaurant(restaurantId):
     try:
         if request.method == "GET":
             pipeline = [
-                {'$match': {'restaurantId': restaurantId}},
+                {'$match': {'_id': ObjectId(restaurantId)}},
                 {
                     '$lookup': {
                         'from': 'FoodMenu',
-                        'localField': 'restaurantId',
+                        'localField': '_id',
                         'foreignField': 'restaurantId',
                         'as': 'menu'
                     }
                 },
-                {'$project': {'_id': 0, 'menu._id': 0}}
+                {'$project': {'menu.restaurantId': 0}}
             ]
 
-            data = db.Restaurants.aggregate(pipeline)
-
-            restaurant = None
-            for item in data:
-                restaurant = item
-
-            response = {"status": "success", "data": restaurant}
+            temp = db.Restaurant.aggregate(pipeline)
+            for item in temp:
+                restaurantInfo = item
+            restaurantInfo['restaurantId'] = str(restaurantInfo.pop('_id'))
+            for food in restaurantInfo['menu']:
+                food['foodMenuId'] = str(food.pop('_id'))
+            
+            
+            response = {"status": "success", "data": list(restaurantInfo)}
             return make_response(response, 200)
 
     except Exception as e:
@@ -488,12 +510,15 @@ def restaurant(restaurantId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/food/<int:foodMenuId>', methods=['GET'])
+@app.route('/supper/restaurant/food/<foodMenuId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def foodItem(foodMenuId):
     try:
         if request.method == "GET":
-            data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
+            data = db.FoodMenu.find_one({"_id": ObjectId(foodMenuId)})
+            data['foodMenuId'] = str(data.pop('_id'))
+            data['restaurantId'] = str(data.pop('restaurantId'))
+
             response = {"status": "success", "data": data}
             return make_response(response, 200)
 
