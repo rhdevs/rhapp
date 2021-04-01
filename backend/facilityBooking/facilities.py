@@ -253,7 +253,8 @@ def create_supper_group():
         db.SupperGroup.insert_one(data)
 
         response = {"status": "sucess",
-                    "message": "Successfully created supper group!"}
+                    "message": "Successfully created supper group!",
+                    "data": data}
 
         return make_response(response, 200)
     except Exception as e:
@@ -270,12 +271,15 @@ def supper_group(supperGroupId):
             response = {"status": "success", "data": data}
 
         elif request.method == "PUT":  # Edit supper group details
-            formData = request.get_json()
+            data = request.get_json()
 
-            db.SupperGroup.update_one({"supperGroupId": supperGroupId}, {
-                "$set": formData})
+            db.SupperGroup.update_one({"supperGroupId": supperGroupId},
+                                      {"$set": data})
 
-            response = {"status": "success", "message": "Supper Group edited"}
+            response = {"status": "success",
+                        "message": "Supper Group edited",
+                        "data": data}
+
         elif request.method == "DELETE":
             data = db.SupperGroup.find({'supperGroupId': supperGroupId})
 
@@ -284,7 +288,9 @@ def supper_group(supperGroupId):
 
             db.SupperGroup.delete_one({"supperGroupId": supperGroupId})
             db.Order.delete_many({'supperGroupId': supperGroupId})
-            response = {"status": "success", "message": "Supper Group Deleted"}
+
+            response = {"status": "success",
+                        "message": "Supper Group Deleted"}
 
         return make_response(response, 200)
 
@@ -299,8 +305,11 @@ def create_order():
     try:
         data = request.get_json()
         db.Order.insert_one(data)
+
         response = {"status": "success",
-                    "message": "Order created successfully."}
+                    "message": "Order created successfully.",
+                    "data": data}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
@@ -309,7 +318,7 @@ def create_order():
 
 @app.route('/supper/order/<orderId>', methods=['GET', 'PUT', 'DELETE'])
 @cross_origin(supports_credentials=True)
-def getorder(orderId):
+def get_order(orderId):
     try:
         if request.method == 'GET':
             pipeline = [
@@ -344,10 +353,10 @@ def getorder(orderId):
                                 {"$set": data})
 
             response = {"status": "success",
-                        "message": "Successfully edited order!"}
+                        "message": "Successfully edited order!",
+                        "data": data}
 
         elif request.method == 'DELETE':
-
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
@@ -372,13 +381,15 @@ def add_food(orderId):
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
                                      '$inc': {'orderPrice': data['foodPrice']}})
-        if result.matched_count != 1:
+
+        if result.matched_count == 0:
             raise Exception('Order not found.')
-        if result.modified_count != 1:
+        if result.modified_count == 0:
             raise Exception('Update failed.')
 
         response = {"status": "success",
-                    "message": "Food added successfully."}
+                    "message": "Food added successfully.",
+                    "data": data}
 
         return make_response(response, 200)
     except Exception as e:
@@ -393,7 +404,8 @@ def foodorder(orderId, foodId):
         if request.method == 'GET':
             # Route doesn't seem necessary
             data = {}
-            response = {"status": "success", "data": data}
+            response = {"status": "success",
+                        "data": data}
         elif request.method == 'PUT':
             data = request.get_json()
             result = db.FoodOrder.update_one({"_id": ObjectId(foodId)},
@@ -401,9 +413,12 @@ def foodorder(orderId, foodId):
 
             if result.matched_count == 0:
                 raise Exception('Food not found')
+            if result.modified_count == 0:
+                raise Exception('Update failed.')
 
             response = {"status": "success",
-                        "message": "Successfully edited food!"}
+                        "message": "Successfully edited food!",
+                        "data": data}
 
         elif request.method == 'DELETE':
             data = db.Order.find_one({'_id': ObjectId(orderId)})
