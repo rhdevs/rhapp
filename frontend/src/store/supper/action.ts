@@ -4,7 +4,6 @@ import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
 
-//const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
 
 //------------------------ GET --------------------------
