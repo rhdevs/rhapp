@@ -6,6 +6,7 @@ from bson.json_util import dumps
 from datetime import datetime
 from threading import Thread
 from bson.objectid import ObjectId
+import copy
 
 
 def removeObjectID(xs):
@@ -20,6 +21,28 @@ def listToIndexedDict(xs):
         del xs[i]["_id"]
         output[i] = item
     return output
+
+
+def make_hash(o):
+    """
+    Makes a hash from a dictionary, list, tuple or set to any level, that contains
+    only other hashable types (including any lists, tuples, sets, and
+    dictionaries).
+    """
+
+    if isinstance(o, (set, tuple, list)):
+
+        return tuple([make_hash(e) for e in o])
+
+    elif not isinstance(o, dict):
+
+        return hash(o)
+
+    new_o = copy.deepcopy(o)
+    for k, v in new_o.items():
+        new_o[k] = make_hash(v)
+
+    return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
 # MongoDB
@@ -646,6 +669,97 @@ def user_supper_group_history(userID):
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
+
+@app.route('/supper/supperGroup/<int:supperGroupId>/collated', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def collated_orders(supperGroupId):
+    try:
+        pipeline = [
+            {'$match': {'supperGroupId': supperGroupId}},
+            {
+                '$lookup': {
+                    'from': 'Order',
+                    'localField': 'supperGroupId',
+                    'foreignField': 'supperGroupId',
+                    'as': 'orders'
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'FoodOrder',
+                    'localField': 'orders.foodIds',
+                    'foreignField': '_id',
+                    'as': 'foods'
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0, 'foods._id': 0}},
+        ]
+
+        result = db.SupperGroup.aggregate(pipeline)
+
+        data = None
+        for item in result:
+            data = item
+
+        for food in data['foods']:
+            food['customHash'] = make_hash(food['custom'])
+
+        data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
+
+        data['collatedFoods'] = []
+        for food in data['foods']:
+            if not data['collatedFoods']:
+                data['collatedFoods'].append(food)
+            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == data['collatedFoods'][-1]['customHash']:
+                data['collatedFoods'][-1]['quantity'] += food['quantity']
+            else:
+                data['collatedFoods'].append(food)
+
+        data.pop('foods')
+        for food in data['collatedFoods']:
+            food.pop('customHash')
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/supperGroup/<int:supperGroupId>/user/<userID>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def user_order(supperGroupId, userID):
+    try:
+        pipeline = [
+            {'$match': {'userID': userID, 'supperGroupId': supperGroupId}},
+            {
+                '$lookup': {
+                    'from': 'FoodOrder',
+                    'localField': 'foodIds',
+                    'foreignField': '_id',
+                    'as': 'foodList'
+                }
+            },
+            {'$project': {'foodIds': 0}}
+        ]
+
+        temp = db.Order.aggregate(pipeline)
+
+        # Only 1 item in temp, can only access it like this otherwise its a mongo array object
+        for item in temp:
+            data = item
+
+        data['orderId'] = str(data.pop('_id'))
+
+        for food in data["foodList"]:
+            # rename _id field to foodId and unbox mongo object
+            food["foodId"] = str(food.pop('_id'))
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
 ###########################################################
 
 # def keep_alive():
@@ -659,7 +773,6 @@ def user_supper_group_history(userID):
 
 
 # keep_alive()
-
 if __name__ == '__main__':
     # keep_alive();
     # app.run('0.0.0.0', port=8080)
