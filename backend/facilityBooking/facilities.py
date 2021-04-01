@@ -347,7 +347,7 @@ def getorder(orderId):
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
             data = request.get_json()
-            db.Order.update_one({"orderId": orderId},
+            db.Order.update_one({"_id": ObjectId(orderId)},
                                 {"$set": data})
 
             response = {"status": "success",
@@ -355,7 +355,7 @@ def getorder(orderId):
 
         elif request.method == 'DELETE':
 
-            result = db.Order.delete_one({"orderId": orderId})
+            result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
 
