@@ -73,7 +73,7 @@ export type SupperGroup = {
   splitAdditionalCost: SplitACMethod
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
-  status: string
+  status: SupperGroupStatus
   location: string //collection point
   deliveryDuration: number
   arrivalTime: number // = creationTime + estimated delivery duration

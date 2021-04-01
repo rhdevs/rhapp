@@ -1,4 +1,3 @@
-import { CheckOutlined } from '@ant-design/icons'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -7,14 +6,19 @@ import tick from '../../assets/whiteTick.svg'
 // background: ${(props) => props.color};
 // <{ border: string; color: string }>
 
-const MainContainer = styled.div<{ backgroundColor?: string; borderColor: string; borderWidth: string }>`
+const MainContainer = styled.div<{
+  hasCustomMargin: boolean
+  backgroundColor?: string
+  borderColor: string
+  borderWidth: string
+}>`
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
-  padding: 2px 15px;
+  padding: 2px 5px;
   height: fit-content;
   min-width: 3rem;
-  margin: 5px;
+  margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -53,6 +57,7 @@ type Props = {
   rightIcon?: ReactElement
   backgroundColor?: string
   isClicked?: boolean
+  hasNoLeftMargin?: boolean
 }
 
 export const StatusSymbol = (props: Props) => {
@@ -61,8 +66,8 @@ export const StatusSymbol = (props: Props) => {
   const RED = '#de5f4c'
 
   const buttonPressed = props.isClicked ?? false
+  const hasCustomMargin = props.hasNoLeftMargin ?? false
   const CHECK_ICON = props.isClicked && <CheckIcon src={tick} alt="Check Icon" />
-  //   <CheckOutlined style={{ fontWeight: 600 }} />
 
   let BACKGROUND_COLOR = props.backgroundColor ?? ''
   if (props.backgroundColor === 'bluegrey') {
@@ -76,7 +81,12 @@ export const StatusSymbol = (props: Props) => {
   const RIGHT_ICON = BACKGROUND_COLOR === BLUE_GREY ? CHECK_ICON : props.rightIcon ?? <></>
 
   return (
-    <MainContainer borderWidth={BORDER_WIDTH} borderColor={BORDER_COLOR} backgroundColor={BACKGROUND_COLOR}>
+    <MainContainer
+      hasCustomMargin={hasCustomMargin}
+      borderWidth={BORDER_WIDTH}
+      borderColor={BORDER_COLOR}
+      backgroundColor={BACKGROUND_COLOR}
+    >
       {props.leftIcon && <IconContainer color={ICON_COLOR}>{props.leftIcon}</IconContainer>}
       {props.preText && <PreTextContainer textColor={TEXT_COLOR}>{props.preText}</PreTextContainer>}
       <TextContainer textColor={TEXT_COLOR}>{props.text}</TextContainer>
