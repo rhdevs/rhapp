@@ -333,17 +333,10 @@ def getorder(orderId):
 
             data['orderId'] = str(data.pop('_id'))
 
-            totalPrice = 0
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
                 food["foodId"] = str(food.pop('_id'))
-                # sum up all the prices
-                for custom in food["custom"]:
-                    for option in custom['options']:
-                        totalPrice += option["price"] if option["selected"] else 0
-                totalPrice += food["price"]
 
-            data["totalPrice"] = totalPrice
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
             data = request.get_json()
@@ -377,6 +370,9 @@ def add_food(orderId):
 
         # Add new food's id into Order
         order = db.Order.find_one({'_id': ObjectId(orderId)})
+        if order == None:
+            raise Exception('Order not found.')
+
         order["foodIds"].append(ObjectId(newFood))
         db.Order.update_one({'_id': ObjectId(orderId)}, {'$set': order})
 
@@ -460,28 +456,27 @@ def get_restaurant(restaurantId):
 @cross_origin(supports_credentials=True)
 def restaurant(restaurantId):
     try:
-        if request.method == "GET":
-            pipeline = [
-                {'$match': {'restaurantId': restaurantId}},
-                {
-                    '$lookup': {
-                        'from': 'FoodMenu',
-                        'localField': 'restaurantId',
-                        'foreignField': 'restaurantId',
-                        'as': 'menu'
-                    }
-                },
-                {'$project': {'_id': 0, 'menu._id': 0}}
-            ]
+        pipeline = [
+            {'$match': {'restaurantId': restaurantId}},
+            {
+                '$lookup': {
+                    'from': 'FoodMenu',
+                    'localField': 'restaurantId',
+                    'foreignField': 'restaurantId',
+                    'as': 'menu'
+                }
+            },
+            {'$project': {'_id': 0, 'menu._id': 0}}
+        ]
 
-            data = db.Restaurants.aggregate(pipeline)
+        data = db.Restaurants.aggregate(pipeline)
 
-            restaurant = None
-            for item in data:
-                restaurant = item
+        restaurant = None
+        for item in data:
+            restaurant = item
 
-            response = {"status": "success", "data": restaurant}
-            return make_response(response, 200)
+        response = {"status": "success", "data": restaurant}
+        return make_response(response, 200)
 
     except Exception as e:
         print(e)
@@ -492,10 +487,43 @@ def restaurant(restaurantId):
 @cross_origin(supports_credentials=True)
 def foodItem(foodMenuId):
     try:
-        if request.method == "GET":
-            data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
-            response = {"status": "success", "data": data}
-            return make_response(response, 200)
+        data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/user/<userID>/orderHistory', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def user_order_history(userID):
+    try:
+        pipeline = [
+            {'$match': {"userID": userID}},
+            {
+                '$lookup': {
+                    'from': 'FoodOrder',
+                    'localField': 'foodIds',
+                    'foreignField': '_id',
+                    'as': 'foodList'
+                }
+            },
+            {'$project': {'foodIds': 0}}
+        ]
+
+        orders = db.Order.aggregate(pipeline)
+
+        data = []
+        for order in orders:
+            order['orderId'] = str(order.pop('_id'))
+            for food in order["foodList"]:
+                food["foodId"] = str(food.pop('_id'))
+            data.append(order)
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
 
     except Exception as e:
         print(e)
