@@ -467,13 +467,17 @@ def foodorder(orderId, foodId):
                         "data": data}
         elif request.method == 'PUT':
             data = request.get_json()
-            result = db.FoodOrder.update_one({"_id": ObjectId(foodId)},
-                                             {"$set": data})
+            food_result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
+                                                           {"$set": data})
 
-            if result.matched_count == 0:
+            if food_result is None:
                 raise Exception('Food not found')
-            if result.modified_count == 0:
-                raise Exception('Update failed.')
+
+            order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
+                                                        {"$inc": {"orderPrice": data['foodPrice'] -
+                                                                                food_result['foodPrice']}})
+            if order_result is None:
+                raise Exception('Failed to update order')
 
             response = {"status": "success",
                         "message": "Successfully edited food!",
