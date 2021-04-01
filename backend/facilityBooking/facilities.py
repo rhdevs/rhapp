@@ -355,15 +355,74 @@ def getorder(orderId):
                         "message": "Successfully edited order!"}
 
         elif request.method == 'DELETE':
-            data = db.Order.find({'orderId': orderId})
 
-            if (len(data) == 0):
+            result = db.Order.delete_one({"orderId": orderId})
+            if result.deleted_count == 0:
                 raise Exception("Order not found")
-
-            db.Order.delete_one({"orderId": orderId})
 
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order/<orderId>/food', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def add_food(orderId):
+    try:
+        data = request.get_json()
+        # Add food into FoodOrder
+        newFood = db.FoodOrder.insert_one(data).inserted_id
+
+        # Add new food's id into Order
+        order = db.Order.find_one({'_id': ObjectId(orderId)})
+        order["foodIds"].append(ObjectId(newFood))
+        db.Order.update_one({'_id': ObjectId(orderId)}, {'$set': order})
+
+        response = {"status": "success",
+                    "message": "Food added successfully."}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order/<orderId>/food/<foodId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def foodorder(orderId, foodId):
+    try:
+        if request.method == 'GET':
+            # Route doesn't seem necessary
+            data = {}
+            response = {"status": "success", "data": data}
+        elif request.method == 'PUT':
+            data = request.get_json()
+            result = db.FoodOrder.update_one({"_id": ObjectId(foodId)},
+                                             {"$set": data})
+
+            if result.matched_count == 0:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully edited food!"}
+
+        elif request.method == 'DELETE':
+            data = db.Order.find_one({'_id': ObjectId(orderId)})
+            if data == None:
+                raise Exception("Order not found")
+
+            result = db.FoodOrder.delete_one({"_id": ObjectId(foodId)})
+            if result.deleted_count == 0:
+                raise Exception("Food not found")
+
+            data["foodIds"].remove(ObjectId(foodId))
+
+            db.Order.update_one({'_id': ObjectId(orderId)}, {'$set': data})
+
+            response = {"status": "success",
+                        "message": "Successfully deleted food!"}
         return make_response(response, 200)
     except Exception as e:
         print(e)
