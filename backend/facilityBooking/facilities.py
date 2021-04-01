@@ -237,8 +237,6 @@ def all_supper_group():
         all_supper_group = list(db.SupperGroup.find(
             {}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
 
-        print(all_supper_group)
-
         # I hate mongo
 
         data = []
@@ -360,6 +358,7 @@ def supper_group(supperGroupId):
 def create_order():
     try:
         data = request.get_json()
+        data["createdAt"] = int(datetime.now().timestamp())
         data['orderId'] = db.Order.insert_one(data).inserted_id
 
         response = {"status": "success",
@@ -602,6 +601,50 @@ def user_order_history(userID):
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
+
+@app.route('/supper/user/<userID>/supperGroupHistory', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_history(userID):
+    try:
+        all_supper_group = list(db.SupperGroup.find(
+            {'ownerId': userID}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
+
+        # I hate mongo
+
+        data = []
+        for supperGroup in all_supper_group:
+            pipeline = [
+                {'$match': {'supperGroupId': supperGroup['supperGroupId']}},
+                {
+                    '$lookup': {
+                        'from': 'Order',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'orders'
+                    }
+                },
+                {
+                    '$addFields': {
+                        'totalPrice': {'$sum': '$orders.orderPrice'}
+                    }
+                },
+                {'$project': {'orders': 0, '_id': 0}}
+            ]
+            result = db.SupperGroup.aggregate(pipeline)
+            info = None
+            for suppergroup in result:
+                info = suppergroup
+
+            if info == None:
+                raise Exception('Order group not found.')
+            data.append(info)
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
 
 ###########################################################
 
