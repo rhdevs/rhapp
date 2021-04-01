@@ -234,10 +234,10 @@ def delete_booking(bookingID):
 @cross_origin(supports_credentials=True)
 def all_supper_group():
     try:
-        all_supper_group = list(db.SupperGroup.find().sort('createdAt', -1))
+        all_supper_group = list(db.SupperGroup.find(
+            {}, {'_id': 0}).sort('createdAt', -1))
 
-        response = {"status": "sucess", "data": json.dumps(
-            all_supper_group, default=lambda o: str(o))}
+        response = {"status": "sucess", "data": all_supper_group}
 
         return make_response(response, 200)
     except Exception as e:
