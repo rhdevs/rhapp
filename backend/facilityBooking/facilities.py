@@ -230,7 +230,7 @@ def delete_booking(bookingID):
 ###########################################################
 
 
-@app.route('/supper', methods=['GET'])
+@app.route('/supper/supperGroup', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def all_supper_group():
     try:
