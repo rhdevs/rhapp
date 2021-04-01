@@ -60,8 +60,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Session
 session = {}
-
-
 # session format : {userID: {
 #                           sessionID: VALUE
 #                           startTime : VALUE
@@ -251,7 +249,6 @@ def delete_booking(bookingID):
         return {"err": str(e)}, 400
 
     return {"message": "Booking Deleted"}, 200
-
 
 ###########################################################
 
@@ -497,7 +494,7 @@ def foodorder(orderId, foodId):
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                         {"$inc": {"orderPrice": data['foodPrice'] -
-                                                                                food_result['foodPrice']}})
+                                                                  food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
 
@@ -507,7 +504,8 @@ def foodorder(orderId, foodId):
 
         elif request.method == 'DELETE':
             # Delete food from collection
-            deleted_food = db.FoodOrder.find_one_and_delete({"_id": ObjectId(foodId)})
+            deleted_food = db.FoodOrder.find_one_and_delete(
+                {"_id": ObjectId(foodId)})
 
             if deleted_food is None:
                 raise Exception("Food not found")
