@@ -14,6 +14,7 @@ export type Food = {
   comments?: string
   quantity: number
   foodMenu: FoodMenu
+  foodPrice?: number
 }
 
 export type Option = {
