@@ -20,6 +20,7 @@ const initialState = {
 type State = {
   isLoading: boolean
   collatedOrder: CollatedOrder | null
+  order: Order | null
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
   food: Food | null
