@@ -338,12 +338,11 @@ def supper_group(supperGroupId):
                         "data": data}
 
         elif request.method == "DELETE":
-            data = db.SupperGroup.find({'supperGroupId': supperGroupId})
-
-            if (len(data) == 0):
+            remove = db.SupperGroup.delete_one(
+                {"supperGroupId": supperGroupId}).deleted_count
+            if remove == 0:
                 raise Exception("Supper group not found")
 
-            db.SupperGroup.delete_one({"supperGroupId": supperGroupId})
             db.Order.delete_many({'supperGroupId': supperGroupId})
 
             response = {"status": "success",
@@ -361,7 +360,7 @@ def supper_group(supperGroupId):
 def create_order():
     try:
         data = request.get_json()
-        db.Order.insert_one(data)
+        data['orderId'] = db.Order.insert_one(data).inserted_id
 
         response = {"status": "success",
                     "message": "Order created successfully.",
