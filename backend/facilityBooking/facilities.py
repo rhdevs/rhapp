@@ -373,9 +373,9 @@ def getorder(orderId):
 @cross_origin(supports_credentials=True)
 def all_restaurants():
     try:
-        all_restaurant = db.Restaurants.find()
-        response = {"status": "success", "data": json.dumps(
-            list(all_restaurant), default=lambda o: str(o))}
+        restaurants = db.Restaurants.find({}, {'_id': 0})
+        response = {"status": "success", "data": list(
+            restaurants)}
         return make_response(response, 200)
 
     except Exception as e:
@@ -385,12 +385,43 @@ def all_restaurants():
 
 @app.route('/supper/restaurant/<int:restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
+def get_restaurant(restaurantId):
+    try:
+        restaurant = db.Restaurants.find_one(
+            {'restaurantId': restaurantId}, {'_id': 0})
+        response = {"status": "success", "data": restaurant}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/<int:restaurantId>/menu', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def restaurant(restaurantId):
     try:
         if request.method == "GET":
-            data = listToIndexedDict(
-                list(db.FoodMenu.find({"restaurantId": restaurantId})))
-            response = {"status": "success", "data": data}
+            pipeline = [
+                {'$match': {'restaurantId': restaurantId}},
+                {
+                    '$lookup': {
+                        'from': 'FoodMenu',
+                        'localField': 'restaurantId',
+                        'foreignField': 'restaurantId',
+                        'as': 'menu'
+                    }
+                },
+                {'$project': {'_id': 0, 'menu._id': 0}}
+            ]
+
+            data = db.Restaurants.aggregate(pipeline)
+
+            restaurant = None
+            for item in data:
+                restaurant = item
+
+            response = {"status": "success", "data": restaurant}
             return make_response(response, 200)
 
     except Exception as e:
@@ -398,14 +429,14 @@ def restaurant(restaurantId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/<int:foodMenuId>', methods=['GET'])
+@app.route('/supper/restaurant/food/<int:foodMenuId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def foodItem(foodMenuId):
     try:
         if request.method == "GET":
-            data = listToIndexedDict(
-                db.FoodMenu.find({"foodMenuId": foodMenuId}))
-            return make_response(json.dumps(data, default=lambda o: str(o)), 200)
+            data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
+            response = {"status": "success", "data": data}
+            return make_response(response, 200)
 
     except Exception as e:
         print(e)
