@@ -285,7 +285,7 @@ def create_supper_group():
     try:
         data = request.get_json()
         data["createdAt"] = int(datetime.now().timestamp())
-        db.SupperGroup.insert_one(data)
+        data['supperGroupId'] = db.SupperGroup.insert_one(data).inserted_id
 
         response = {"status": "sucess",
                     "message": "Successfully created supper group!",
@@ -434,7 +434,7 @@ def add_food(orderId):
     try:
         data = request.get_json()
         # Add food into FoodOrder
-        newFood = db.FoodOrder.insert_one(data).inserted_id
+        newFood = data['foodId'] = db.FoodOrder.insert_one(data).inserted_id
 
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
