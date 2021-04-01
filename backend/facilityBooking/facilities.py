@@ -37,6 +37,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Session
 session = {}
+
+
 # session format : {userID: {
 #                           sessionID: VALUE
 #                           startTime : VALUE
@@ -202,7 +204,7 @@ def edit_booking(bookingID):
         else:
             formData["ccaID"] = int(formData["ccaID"])
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
-                               "$set": request.get_json()})
+            "$set": request.get_json()})
 
         # else:
         #     return {"err": "Unauthorised Access"}, 401
@@ -226,6 +228,7 @@ def delete_booking(bookingID):
         return {"err": str(e)}, 400
 
     return {"message": "Booking Deleted"}, 200
+
 
 ###########################################################
 
@@ -380,7 +383,7 @@ def add_food(orderId):
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
-                                     '$inc': {'orderPrice': data['foodPrice']}})
+                                      '$inc': {'orderPrice': data['foodPrice']}})
 
         if result.matched_count == 0:
             raise Exception('Order not found.')
@@ -421,20 +424,30 @@ def foodorder(orderId, foodId):
                         "data": data}
 
         elif request.method == 'DELETE':
-            data = db.Order.find_one({'_id': ObjectId(orderId)})
-            if data == None:
-                raise Exception("Order not found")
+            # Delete food from collection
+            deleted_food = db.FoodOrder.find_one_and_delete({"_id": ObjectId(foodId)})
 
-            result = db.FoodOrder.delete_one({"_id": ObjectId(foodId)})
-            if result.deleted_count == 0:
+            if deleted_food is None:
                 raise Exception("Food not found")
 
-            data["foodIds"].remove(ObjectId(foodId))
+            # Delete food id from Order, update orderPrice
+            data = db.Order.find_one_and_update({'_id': ObjectId(orderId)},
+                                                {'$pull': {'foodIds': deleted_food['_id']},
+                                                 '$inc': {'orderPrice': -deleted_food['foodPrice']}})
 
-            db.Order.update_one({'_id': ObjectId(orderId)}, {'$set': data})
+            if data is None:
+                raise Exception("Failed to update order")
+
+            data['orderId'] = str(data.pop('_id'))
+            data['foodIds'] = [str(foodId) for foodId in data['foodIds']]
+            # find_one_and_update returns document before updating
+            # removing the deleted foodId here to keep consistent
+            data['foodIds'].remove(str(deleted_food['_id']))
 
             response = {"status": "success",
-                        "message": "Successfully deleted food!"}
+                        "message": "Successfully deleted food!",
+                        "data": data}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
