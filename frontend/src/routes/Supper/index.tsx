@@ -4,6 +4,8 @@ import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { RoundProgress } from '../../components/Supper/RoundProgress'
 import { MainSGCard } from '../../components/Supper/MainSGCard'
+import { MaxPriceFixer } from '../../components/Supper/MaxPriceFixer'
+import { QuantityTracker } from '../../components/Supper/QuantityTracker'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
@@ -15,6 +17,11 @@ import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 export default function Supper() {
   return (
     <>
+      <RoundProgress amountLeft={50} percent={20} />
+      <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
+      <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <MaxPriceFixer />
+      <QuantityTracker default={5} />
       <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
       <RoundProgress amountLeft={50} percent={100} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
