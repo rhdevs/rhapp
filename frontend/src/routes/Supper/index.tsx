@@ -6,6 +6,7 @@ import { RoundProgress } from '../../components/Supper/RoundProgress'
 import { MainSGCard } from '../../components/Supper/MainSGCard'
 import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
 import { SplitACMethod } from '../../store/supper/types'
+import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 
 export default function Supper() {
   return (
@@ -22,6 +23,16 @@ export default function Supper() {
         closingTime="11:59PM"
         numberOfUsers={10}
         splitACType={SplitACMethod.EQUAL}
+        deliveryFee="10.70"
+      />
+      <ViewOrderSGCard
+        title="f> SUPPER FRIENDS :0"
+        orderId="RHSO#1002"
+        username="Zhou BaoBao"
+        amountLeft={50}
+        percent={70}
+        closingTime="11:59PM"
+        numberOfUsers={10}
         deliveryFee="10.70"
       />
     </>
