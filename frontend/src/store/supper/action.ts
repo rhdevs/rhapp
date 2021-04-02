@@ -328,13 +328,6 @@ export const updateOrderDetails = (newOrderDetails: Order, supperGroupId: string
   dispatch(setIsLoading(false))
 }
 
-const setOrder = (newOrder: Order) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SUPPER_ACTIONS.SET_ORDER_BY_ID,
-    order: newOrder,
-  })
-}
-
 export const addFoodToOrder = (newFood: Food, supperGroupId: string, orderId: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
