@@ -543,39 +543,34 @@ def foodorder(orderId, foodId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant', methods=['GET'])
+@app.route('/supper/restaurant', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def all_restaurants():
     try:
-        restaurants = list(db.Restaurants.find({}))
-        for restaurant in restaurants:
-            data = restaurant
-            data['restaurantId'] = str(data.pop('_id'))
+        if request.method == 'GET':
+            restaurants = list(db.Restaurants.find({}))
+            for restaurant in restaurants:
+                data = restaurant
+                data['restaurantId'] = str(data.pop('_id'))
 
-        response = {"status": "success", "data": list(
-            restaurants)}
+            response = {"status": "success", "data": list(
+                restaurants)}
+
+        elif request.method == 'POST':
+            data = request.get_json()
+            # Add restaurant into Restaurants
+            data['restaurantId'] = db.Restaurants.insert_one(data).inserted_id
+
+            response = {"status": "success",
+                        "message": "Restaurant added successfully.",
+                        "data": data}
+
         return make_response(response, 200)
-
 
     except Exception as e:
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
-
-@app.route('/supper/restaurant', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def post_restaurant():
-    try:
-        data = request.get_json();
-        # Add restaurant into Restaurants
-        db.Restaurants.insert_one(data)
-
-        response = {"status": "success",
-                    "message": "Restaurant added successfully."}
-        return make_response(response, 200)
-    except Exception as e:
-        print(e)
-        return make_response({"status": "failed", "err": str(e)}, 400)
 
 @app.route('/supper/restaurant/<restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
@@ -616,8 +611,7 @@ def restaurant(restaurantId):
             restaurantInfo['restaurantId'] = str(restaurantInfo.pop('_id'))
             for food in restaurantInfo['menu']:
                 food['foodMenuId'] = str(food.pop('_id'))
-            
-            
+
             response = {"status": "success", "data": restaurantInfo}
             return make_response(response, 200)
 
@@ -665,6 +659,8 @@ def user_order_history(userID):
             for food in order["foodList"]:
                 food["foodId"] = str(food.pop('_id'))
             data.append(order)
+
+        data.sort(key=lambda x: x['createdAt'], reverse=True)
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
