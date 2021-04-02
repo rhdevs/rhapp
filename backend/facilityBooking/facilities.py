@@ -284,8 +284,6 @@ def all_supper_group():
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
-
-        return make_response(response, 200)
     except Exception as e:
         return make_response({"status": "failed", "err": str(e)}, 400)
 
