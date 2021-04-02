@@ -6,7 +6,7 @@ import { Radio } from 'antd'
 const MainContainer = styled.div`
   overflow: auto;
   white-space: nowrap;
-  margin: 0 21px;
+  margin: 15px 0px;
   position: sticky;
   left: 0;
   top: 4.4rem;
@@ -56,6 +56,11 @@ const ToggleTabsContainer = styled(Radio.Group)`
     font-family: Inter;
   }
 `
+
+const TextContainer = styled(Radio.Button)`
+  font-size: 16px;
+`
+
 //const { menuSections } = useSelector((state: RootState) => state.supper)
 export const MenuTabs = () => {
   const menuSections = ['Value Meal', 'Ala Carte', 'Breakfast', 'Dinner', 'Dessert']
@@ -64,9 +69,9 @@ export const MenuTabs = () => {
     <MainContainer>
       <ToggleTabsContainer>
         {menuSections.map((section, idx) => (
-          <Radio.Button key={idx} value={section}>
+          <TextContainer key={idx} value={section}>
             {section}
-          </Radio.Button>
+          </TextContainer>
         ))}
       </ToggleTabsContainer>
     </MainContainer>
