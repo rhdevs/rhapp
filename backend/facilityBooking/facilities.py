@@ -450,7 +450,7 @@ def all_restaurants():
 @cross_origin(supports_credentials=True)
 def post_restaurant():
     try:
-        data = request.get_json()
+        data = request.get_json();
         # Add restaurant into Restaurants
         db.Restaurants.insert_one(data)
 
@@ -460,7 +460,6 @@ def post_restaurant():
     except Exception as e:
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
-
 
 @app.route('/supper/restaurant/<restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
@@ -495,15 +494,15 @@ def restaurant(restaurantId):
                 {'$project': {'menu.restaurantId': 0}}
             ]
 
-            temp = db.Restaurants.aggregate(pipeline)
-            restaurantInfo = None
+            temp = db.Restaurant.aggregate(pipeline)
             for item in temp:
                 restaurantInfo = item
             restaurantInfo['restaurantId'] = str(restaurantInfo.pop('_id'))
             for food in restaurantInfo['menu']:
                 food['foodMenuId'] = str(food.pop('_id'))
-
-            response = {"status": "success", "data": restaurantInfo}
+            
+            
+            response = {"status": "success", "data": list(restaurantInfo)}
             return make_response(response, 200)
 
     except Exception as e:
