@@ -7,13 +7,15 @@ import { MainSGCard } from '../../components/Supper/MainSGCard'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
-import { SplitACMethod } from '../../store/supper/types'
+import { SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
+import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 
 export default function Supper() {
   return (
     <>
+      <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
       <RoundProgress amountLeft={50} percent={100} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
