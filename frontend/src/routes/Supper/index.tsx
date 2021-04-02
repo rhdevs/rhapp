@@ -14,6 +14,7 @@ import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
+import { OrderSummaryCard } from '../../components/Supper/OrderSummaryCard'
 
 export default function Supper() {
   return (
@@ -21,6 +22,7 @@ export default function Supper() {
       <RoundProgress amountLeft={50} percent={20} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <OrderSummaryCard isEditable foodList={[]} />
       <MaxPriceFixer />
       <QuantityTracker default={5} />
       <SGStatusBubble text={SupperGroupStatus.CANCELLED} />

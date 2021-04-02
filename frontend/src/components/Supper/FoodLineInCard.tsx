@@ -1,0 +1,101 @@
+import React from 'react'
+
+import styled from 'styled-components'
+import editIcon from '../../assets/SupperEditIcon.svg'
+import deleteIcon from '../../assets/SupperDeleteIcon.svg'
+
+const MainContainer = styled.div`
+  border: 1px solid black;
+  height: fit-content;
+  position: relative;
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+`
+
+const QuantityContainer = styled.div`
+  width: 10%;
+  font-size: 17px;
+  line-height: 22px;
+`
+
+const SubContainer = styled.div`
+  width: 90%;
+`
+
+const TopContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const TitleText = styled.text`
+  font-size: 17px;
+  line-height: 22px;
+`
+
+const MoneyText = styled.text`
+  font-size: 14px;
+  line-height: 14px;
+  margin: auto;
+`
+
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const CustomisationContainer = styled.div`
+  min-width: 76%;
+  display: flex;
+  flex-direction: column;
+`
+
+const CustomText = styled.text`
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 200;
+`
+
+const IconsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const EditIcon = styled.img`
+  padding: 0 7px;
+`
+
+const DeleteIcon = styled.img`
+  padding: 0 7px;
+`
+
+type Props = {
+  customisations?: string[]
+}
+
+export const FoodLineInCard = (props: Props) => {
+  return (
+    <MainContainer>
+      <QuantityContainer>1x</QuantityContainer>
+      <SubContainer>
+        <TopContainer>
+          <TitleText>McGriddles with Egg Meal</TitleText>
+          <MoneyText>$6.60</MoneyText>
+        </TopContainer>
+        <BottomContainer>
+          <CustomisationContainer>
+            {props.customisations?.map((custom, index) => {
+              return <CustomText key={index}>{custom}</CustomText>
+            })}
+          </CustomisationContainer>
+
+          <IconsContainer>
+            <EditIcon src={editIcon} alt="Edit Icon" />
+            <DeleteIcon src={deleteIcon} alt="Edit Icon" />
+          </IconsContainer>
+        </BottomContainer>
+      </SubContainer>
+    </MainContainer>
+  )
+}
