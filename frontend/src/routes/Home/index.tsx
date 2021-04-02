@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
-import { Button } from 'antd'
+import { Alert, Button } from 'antd'
+import TelegramIcon from '../../assets/TelegramIcon.svg'
 // import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import SocialSection from './components/SocialSection'
@@ -73,6 +74,29 @@ const ImageButton = styled.img<{ filter: string }>`
   filter: ${(props) => props.filter};
 `
 
+const BannerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: #e7f7ff;
+  position: relative;
+  height: 3.3rem;
+  margin-top: -10px;
+  border-radius: 15px;
+  margin: 1px 23px 5px 23px;
+`
+
+const BannerText = styled.text`
+  font-size: 17px;
+  margin: auto;
+`
+
+const StyledTelegramIcon = styled.img`
+  width: 3.3rem;
+  border-radius: 50%;
+  position absolute;
+  right: 1rem;
+`
+
 export default function Home() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -120,6 +144,11 @@ export default function Home() {
     },
   ]
 
+  const OpenUserTelegram = (telegramHandle: string) => {
+    const site = 'https://telegram.me/' + telegramHandle
+    return window.open(site)
+  }
+
   return (
     <MainContainer>
       <PullToRefresh onRefresh={onRefresh}>
@@ -130,6 +159,16 @@ export default function Home() {
           {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
         </TopBar>
         <AnnouncementCarousel />
+        <BannerContainer>
+          <BannerText>App under Beta testing</BannerText>
+          <StyledTelegramIcon
+            onClick={() => {
+              OpenUserTelegram('richardlidf')
+            }}
+            src={TelegramIcon}
+            alt="Telegram Icon"
+          />
+        </BannerContainer>
         <ButtonGroup>
           {buttons.map((button) => (
             // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
