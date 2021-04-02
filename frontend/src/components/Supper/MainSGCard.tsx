@@ -6,10 +6,18 @@ import notFound from '../../assets/notFound.svg'
 import { StatusSymbol } from './StatusSymbol'
 import Friends from '../../assets/Friends.svg'
 
-const ImageContainer = styled.img`
+const Logo = styled.img`
   border-radius: 50%;
-  width: 64px;
+  overflow: hidden;
+  min-width: 100%;
+  min-height: 100%;
   height: 64px;
+  width: 64px;
+`
+
+const ImgContainer = styled.div`
+  height: 64px;
+  width: 64px;
   margin: auto 0;
 `
 
@@ -48,7 +56,9 @@ type Props = {
 export const MainSGCard = (props: Props) => {
   return (
     <MainCard>
-      <ImageContainer src={notFound} alt="Restaurant Logo" />
+      <ImgContainer>
+        <Logo src={notFound} alt="Restaurant Logo" />
+      </ImgContainer>
       <SubContainer>
         <TitleContainer>{props.title}</TitleContainer>
         <BottomContainer>

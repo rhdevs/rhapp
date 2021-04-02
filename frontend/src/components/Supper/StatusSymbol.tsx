@@ -36,7 +36,7 @@ const PreTextContainer = styled.text<{ textColor: string }>`
 `
 
 const TextContainer = styled.text<{ textColor: string }>`
-  margin: 0 5px 0 3px;
+  margin: 0 4px;
   font-size: 13px;
   font-weight: 600;
   color: ${(props) => props.textColor};
