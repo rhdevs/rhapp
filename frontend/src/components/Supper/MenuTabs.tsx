@@ -63,7 +63,7 @@ const TextContainer = styled(Radio.Button)`
 
 //const { menuSections } = useSelector((state: RootState) => state.supper)
 export const MenuTabs = () => {
-  const menuSections = ['Value Meal', 'Ala Carte', 'Breakfast', 'Dinner', 'Dessert']
+  const menuSections = ['Value Meals', 'Ala Carte', 'Breakfast', 'Dinner', 'Dessert']
 
   return (
     <MainContainer>
