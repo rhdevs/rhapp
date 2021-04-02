@@ -3,10 +3,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { MainCard } from './MainCard'
 import notFound from '../../assets/notFound.svg'
+import locationIcon from '../../assets/LocationIcon.svg'
+import moneyIcon from '../../assets/MoneyIcon.svg'
 import { SGStatusBubble } from './SGStatusBubble'
-import { SupperGroupStatus } from '../../store/supper/types'
+import { PaymentInfo, PaymentMethod, SupperGroupStatus } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { OpenUserTelegram } from '../TelegramShareButton'
+import { UnderlinedButton } from './UnderlinedButton'
 
 const Logo = styled.img`
   border-radius: 50%;
@@ -52,12 +55,52 @@ const OrderIdContainer = styled.text`
   font-weight: 200;
 `
 
+const OtherInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const IconImage = styled.img`
+  width: 21px;
+  margin: 5px;
+`
+
+const OtherInfoSubContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  width: 90%;
+  margin: auto;
+`
+
+const LocationText = styled.text`
+  font-size: 16px;
+  margin: 0 5px;
+`
+
+const CashText = styled.text`
+  margin: 0 5px;
+  font-size: 16px;
+  color: rgba(0, 38, 66, 0.7);
+`
+
+const PaymentTextContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+`
+
 type Props = {
   title: string
   orderId: string
   username: string
-  supperGroupStatus?: SupperGroupStatus
+  supperGroupStatus: SupperGroupStatus
   buttonTeleHandle?: string
+  location?: string
+  collectionTime?: string
+  paymentMethod?: PaymentInfo[]
 }
 
 export const SGCardWithStatus = (props: Props) => {
@@ -67,6 +110,10 @@ export const SGCardWithStatus = (props: Props) => {
     }
     return undefined
   }
+
+  const isCloseCard = props.supperGroupStatus === SupperGroupStatus.CLOSED
+  const isCancelledCard = props.supperGroupStatus === SupperGroupStatus.CANCELLED
+
   return (
     <MainCard flexDirection="column">
       <TopSection>
@@ -81,7 +128,7 @@ export const SGCardWithStatus = (props: Props) => {
         </TextSubContainer>
       </TopSection>
       <BottomContainer>
-        <SGStatusBubble text={SupperGroupStatus.CLOSED} />
+        <SGStatusBubble text={props.supperGroupStatus} />
         <Button
           stopPropagation={true}
           defaultButtonDescription="Message Owner"
@@ -89,6 +136,38 @@ export const SGCardWithStatus = (props: Props) => {
           isFlipButton={false}
         />
       </BottomContainer>
+      {isCloseCard || isCancelledCard ? (
+        <></>
+      ) : (
+        <OtherInfoContainer>
+          <OtherInfoSubContainer>
+            <IconImage src={locationIcon} alt="Location Icon" />
+            <LocationText>
+              {props.location} @ {props.collectionTime}
+            </LocationText>
+          </OtherInfoSubContainer>
+          <OtherInfoSubContainer>
+            <IconImage src={moneyIcon} alt="Location Icon" />
+            <PaymentTextContainer>
+              {props.paymentMethod?.map((pm, index) => {
+                if (pm.paymentMethod === PaymentMethod.CASH) {
+                  return <CashText>{pm.paymentMethod}</CashText>
+                } else {
+                  return (
+                    <UnderlinedButton
+                      fontSize="16px"
+                      key={index}
+                      onClick={() => window.open(pm.link)}
+                      text={pm.paymentMethod}
+                      color="rgba(0, 38, 66, 0.7)"
+                    />
+                  )
+                }
+              })}
+            </PaymentTextContainer>
+          </OtherInfoSubContainer>
+        </OtherInfoContainer>
+      )}
     </MainCard>
   )
 }
