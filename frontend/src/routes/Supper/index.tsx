@@ -14,6 +14,7 @@ import React from 'react'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 // import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { MenuTabs } from '../../components/Supper/MenuTabs'
+// import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
 
 export default function Supper() {
   return (
@@ -27,6 +28,21 @@ export default function Supper() {
       <RoundProgress amountLeft={50} percent={100} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <SGCardWithStatus
+        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        location="Basketball Court"
+        collectionTime="12:30AM"
+        username="Zhou BaoBao"
+        title="f> SUPPER FRIENDS"
+        orderId="RHSO#1002"
+        buttonTeleHandle="someOwnerTele"
+        paymentMethod={[
+          { paymentMethod: PaymentMethod.CASH },
+          { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
+        ]}
+      />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
