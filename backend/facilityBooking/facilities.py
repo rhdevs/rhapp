@@ -302,9 +302,17 @@ def all_supper_group():
 def create_supper_group():
     try:
         data = request.get_json()
-        data["createdAt"] = int(datetime.now().timestamp())
-        data['supperGroupId'] = db.SupperGroup.insert_one(data).inserted_id
 
+        # auto-increment supperGroupId
+        lastsupperGroupID = list(db.SupperGroup.find().sort(
+            [('_id', pymongo.DESCENDING)]).limit(1))
+        newsupperGroupID = 1 if len(lastsupperGroupID) == 0 else int(
+            lastsupperGroupID[0].get("supperGroupId")) + 1
+
+        data["supperGroupId"] = newsupperGroupID
+        data["createdAt"] = int(datetime.now().timestamp())
+        db.SupperGroup.insert_one(data)
+        data['_id'] = str(data.pop('_id'))
         response = {"status": "sucess",
                     "message": "Successfully created supper group!",
                     "data": data}
