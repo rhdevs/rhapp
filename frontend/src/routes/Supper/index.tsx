@@ -13,11 +13,12 @@ import { SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
+import { MenuSection } from '../../components/Supper/MenuSection'
 
 export default function Supper() {
   return (
     <>
-      <RoundProgress amountLeft={50} percent={20} />
+      {/* <RoundProgress amountLeft={50} percent={20} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <MaxPriceFixer />
@@ -49,7 +50,8 @@ export default function Supper() {
         numberOfUsers={10}
         deliveryFee="10.70"
       />
-      <ViewCartButton numberOfItems={5} currentTotal="7.90" />
+      <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
+      <MenuSection />
     </>
   )
 }
