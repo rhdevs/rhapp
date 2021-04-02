@@ -561,6 +561,21 @@ def all_restaurants():
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
+@app.route('/supper/restaurant', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def post_restaurant():
+    try:
+        data = request.get_json();
+        # Add restaurant into Restaurants
+        db.Restaurants.insert_one(data)
+
+        response = {"status": "success",
+                    "message": "Restaurant added successfully."}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
 @app.route('/supper/restaurant/<restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_restaurant(restaurantId):
@@ -576,7 +591,7 @@ def get_restaurant(restaurantId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/<int:restaurantId>/menu', methods=['GET'])
+@app.route('/supper/restaurant/<restaurantId>/menu', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def restaurant(restaurantId):
     try:
@@ -607,11 +622,12 @@ def restaurant(restaurantId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/food/<int:foodMenuId>', methods=['GET'])
+@app.route('/supper/restaurant/food/<foodMenuId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def foodItem(foodMenuId):
     try:
         data = db.FoodMenu.find_one({"_id": ObjectId(foodMenuId)})
+        data['foodMenuId'] = str(data.pop('_id'))
         response = {"status": "success", "data": data}
         return make_response(response, 200)
 
