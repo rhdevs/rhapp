@@ -546,22 +546,28 @@ def foodorder(orderId, foodId):
 @cross_origin(supports_credentials=True)
 def all_restaurants():
     try:
-        restaurants = db.Restaurants.find({}, {'_id': 0})
+        restaurants = list(db.Restaurants.find({}))
+        for restaurant in restaurants:
+            data = restaurant
+            data['restaurantId'] = str(data.pop('_id'))
+
         response = {"status": "success", "data": list(
             restaurants)}
         return make_response(response, 200)
+
 
     except Exception as e:
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@app.route('/supper/restaurant/<int:restaurantId>', methods=['GET'])
+@app.route('/supper/restaurant/<restaurantId>', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_restaurant(restaurantId):
     try:
         restaurant = db.Restaurants.find_one(
-            {'restaurantId': restaurantId}, {'_id': 0})
+            {'_id': ObjectId(restaurantId)})
+        restaurant['restaurantId'] = str(restaurant.pop('_id'))
         response = {"status": "success", "data": restaurant}
         return make_response(response, 200)
 
@@ -605,7 +611,7 @@ def restaurant(restaurantId):
 @cross_origin(supports_credentials=True)
 def foodItem(foodMenuId):
     try:
-        data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
+        data = db.FoodMenu.find_one({"_id": ObjectId(foodMenuId)})
         response = {"status": "success", "data": data}
         return make_response(response, 200)
 
