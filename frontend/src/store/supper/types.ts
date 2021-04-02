@@ -57,6 +57,7 @@ export type Order = {
   hasPaid: boolean //1 if user paid owner (user POV)
   paymentMethod: PaymentMethod
   hasReceived: boolean //1 if owner received payment (owner POV)
+  createdAt: number
 }
 
 export type SupperGroup = {
@@ -72,11 +73,12 @@ export type SupperGroup = {
   splitAdditionalCost: SplitACMethod
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
-  status: string
+  status: SupperGroupStatus
   location: string //collection point
   deliveryDuration: number
   arrivalTime: number // = creationTime + estimated delivery duration
   closingTime: string
+  createdAt: number
 }
 
 export type CollatedOrder = {
