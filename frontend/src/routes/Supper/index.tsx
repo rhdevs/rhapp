@@ -7,6 +7,7 @@ import { MainSGCard } from '../../components/Supper/MainSGCard'
 import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
 import { SplitACMethod } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
+import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 
 export default function Supper() {
   return (
@@ -35,6 +36,7 @@ export default function Supper() {
         numberOfUsers={10}
         deliveryFee="10.70"
       />
+      <ViewCartButton numberOfItems={5} currentTotal="7.90" />
     </>
   )
 }
