@@ -313,7 +313,7 @@ def create_supper_group():
         data["createdAt"] = int(datetime.now().timestamp())
         db.SupperGroup.insert_one(data)
         data['_id'] = str(data.pop('_id'))
-        response = {"status": "sucess",
+        response = {"status": "success",
                     "message": "Successfully created supper group!",
                     "data": data}
 
@@ -390,7 +390,8 @@ def create_order():
     try:
         data = request.get_json()
         data["createdAt"] = int(datetime.now().timestamp())
-        data['orderId'] = db.Order.insert_one(data).inserted_id
+        db.Order.insert_one(data)
+        data['orderId'] = str(data.pop('_id'))
 
         response = {"status": "success",
                     "message": "Order created successfully.",
@@ -461,8 +462,8 @@ def add_food(orderId):
     try:
         data = request.get_json()
         # Add food into FoodOrder
-        newFood = data['foodId'] = db.FoodOrder.insert_one(data).inserted_id
-
+        db.FoodOrder.insert_one(data)
+        newFood = data['foodId'] = str(data.pop('_id'))
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
