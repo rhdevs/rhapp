@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { setCount } from '../../store/supper/action'
@@ -15,13 +15,18 @@ const ValueContainer = styled.text`
 `
 type Props = {
   max?: number
+  default: number
 }
 
 export const QuantityTracker = (props: Props) => {
   const dispatch = useDispatch()
   const { count } = useSelector((state: RootState) => state.supper)
 
-  const MAX = props.max !== undefined ? props.max : Math.max()
+  useEffect(() => {
+    dispatch(setCount(props.default))
+  }, [])
+
+  const MAX = props.max !== undefined ? props.max : Number.MAX_SAFE_INTEGER
 
   const subFromCount = () => {
     if (count !== 0) {

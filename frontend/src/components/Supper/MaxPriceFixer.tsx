@@ -6,39 +6,33 @@ import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'
 
+const CounterContainer = styled.div``
+
 const ValueContainer = styled.text`
   font-size: 24px;
   font-weight: 500;
-  margin: 30px;
+  margin: 25px;
 `
-type Props = {
-  max?: number
-}
 
-export const MaxPriceFixer = (props: Props) => {
+export const MaxPriceFixer = () => {
   const dispatch = useDispatch()
-
   const { priceLimit } = useSelector((state: RootState) => state.supper)
 
-  const MAX = props.max !== undefined ? props.max : Math.max()
-
-  const subFrompriceLimit = () => {
-    if (priceLimit !== 0) {
-      dispatch(setPriceLimit(priceLimit - 1))
+  const subFromPriceLimit = () => {
+    if (priceLimit > 0) {
+      dispatch(setPriceLimit(priceLimit - 5))
     }
   }
 
-  const addTopriceLimit = () => {
-    if (priceLimit < MAX) {
-      dispatch(setPriceLimit(priceLimit + 1))
-    }
+  const addToPriceLimit = () => {
+    dispatch(setPriceLimit(priceLimit + 5))
   }
 
   return (
-    <>
-      <MinusButton color="DARK_BLUE" onClick={subFrompriceLimit} />
+    <CounterContainer>
+      <MinusButton color="DARK_BLUE" onClick={subFromPriceLimit} />
       <ValueContainer>${priceLimit}</ValueContainer>
-      <PlusButton color="DARK_BLUE" isAdding={true} onClick={addTopriceLimit} max={MAX} />
-    </>
+      <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />
+    </CounterContainer>
   )
 }

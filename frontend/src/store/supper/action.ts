@@ -436,9 +436,16 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const setCount = (count: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setCount = (newCount: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_COUNT,
-    count: count,
+    count: newCount,
+  })
+}
+
+export const setPriceLimit = (newPriceLimit: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PRICE_LIMIT,
+    priceLimit: newPriceLimit,
   })
 }

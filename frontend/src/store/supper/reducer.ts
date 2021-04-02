@@ -16,6 +16,7 @@ const initialState = {
   orderHistory: [],
   supperGroupHistory: [],
   count: 0,
+  priceLimit: 0,
 }
 
 type State = {
@@ -32,6 +33,7 @@ type State = {
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
   count: number
+  priceLimit: number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -86,6 +88,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_COUNT: {
       return { ...state, count: action.count }
+    }
+    case SUPPER_ACTIONS.SET_PRICE_LIMIT: {
+      return { ...state, priceLimit: action.priceLimit }
     }
     default:
       return state

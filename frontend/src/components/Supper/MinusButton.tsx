@@ -18,7 +18,9 @@ export const MinusButton = (props: Props) => {
   let BUTTON_COLOR = LIGHT_RED
 
   if (count === 0) {
-    BUTTON_COLOR = SHADED_RED
+    if ((BUTTON_COLOR = LIGHT_RED)) {
+      BUTTON_COLOR = SHADED_RED
+    }
   }
 
   if (props.color === 'DARK_BLUE') {
