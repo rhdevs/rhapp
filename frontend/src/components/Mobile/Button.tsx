@@ -85,6 +85,7 @@ function Button(props: Props) {
           background: buttonColour,
           color: textColour,
           borderRadius: '5px',
+          border: props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
           width: props.buttonWidth ? props.buttonWidth : '',
           height: props.buttonHeight ? props.buttonHeight : '',
         }
