@@ -3,9 +3,6 @@ import styled from 'styled-components'
 
 import tick from '../../assets/whiteTick.svg'
 
-// background: ${(props) => props.color};
-// <{ border: string; color: string }>
-
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
   backgroundColor?: string
@@ -39,7 +36,7 @@ const PreTextContainer = styled.text<{ textColor: string }>`
 `
 
 const TextContainer = styled.text<{ textColor: string }>`
-  margin: 0 5px 0 3px;
+  margin: 0 4px;
   font-size: 13px;
   font-weight: 600;
   color: ${(props) => props.textColor};
