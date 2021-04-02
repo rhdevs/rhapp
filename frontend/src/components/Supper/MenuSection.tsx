@@ -11,18 +11,64 @@ const SectionHeaderContainer = styled.div`
 `
 
 const SectionHeader = styled.text`
-font
+  font-size: 24px;
+  font-weight: 700;
 `
 
-const SectionBodyContainer = styled.div``
+const SectionBodyContainer = styled.div`
+  padding: 16px;
+`
+
+const FoodMenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const FoodAndQuantityContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: ;
+`
+const FoodContainer = styled.text`
+  margin: 5px 2px 5px 5px;
+  font-size: 17px;
+  font-weight: 700;
+`
+
+const QuantityContainer = styled.text`
+  margin: 5px;
+  color: #de5f4c;
+  font-size: 17px;
+  font-weight: 600;
+`
+const PriceContainer = styled.text`
+  margin: 0 0 3px 5px;
+  font-size: 14px;
+  font-weight: 200;
+`
 
 export const MenuSection = () => {
+  const foodMenu = [
+    { food: 'McSpicy Meal', quantity: 'x1', price: '$7.90' },
+    { food: 'Filet-O-Fish Meal', quantity: '', price: '$5' },
+  ]
   return (
     <MainContainer>
       <SectionHeaderContainer>
         <SectionHeader>Value Meals</SectionHeader>
       </SectionHeaderContainer>
-      <SectionBodyContainer></SectionBodyContainer>
+      <SectionBodyContainer>
+        <FoodMenuContainer>
+          {foodMenu.map((foodMenu) => (
+            <>
+              <FoodAndQuantityContainer>
+                <FoodContainer>{foodMenu.food}</FoodContainer>
+                <QuantityContainer>{foodMenu.quantity}</QuantityContainer>
+              </FoodAndQuantityContainer>
+              <PriceContainer>{foodMenu.price}</PriceContainer>
+            </>
+          ))}
+        </FoodMenuContainer>
+      </SectionBodyContainer>
     </MainContainer>
   )
 }
