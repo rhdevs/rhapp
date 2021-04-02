@@ -6,15 +6,17 @@ const MainContainer = styled.a`
   margin: 2px;
 `
 
-const ButtonText = styled.text<{ color: string }>`
+const ButtonText = styled.text<{ color: string; fontSize?: string }>`
   color: ${(props) => props.color};
-  font-size: 17px;
+  font-size: ${(props) => props.fontSize ?? '17px'};
   text-decoration: underline;
+  margin: 0 5px;
 `
 
 type Props = {
   text: string
   color: string
+  fontSize?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const UnderlinedButton = (props: Props) => {
@@ -29,7 +31,9 @@ export const UnderlinedButton = (props: Props) => {
 
   return (
     <MainContainer onClick={props.onClick}>
-      <ButtonText color={COLOR}>{props.text}</ButtonText>
+      <ButtonText fontSize={props.fontSize} color={COLOR}>
+        {props.text}
+      </ButtonText>
     </MainContainer>
   )
 }
