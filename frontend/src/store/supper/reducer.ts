@@ -15,6 +15,7 @@ const initialState = {
   menuFood: null,
   orderHistory: [],
   supperGroupHistory: [],
+  count: 0,
 }
 
 type State = {
@@ -30,6 +31,7 @@ type State = {
   menuFood: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
+  count: number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -81,6 +83,12 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
       return { ...state, supperGroupHistory: action.supperGroupHistory }
+    }
+    case SUPPER_ACTIONS.SET_COUNT: {
+      return { ...state, count: action.count }
+    }
+    case SUPPER_ACTIONS.GET_COUNT: {
+      return { ...state, count: action.count }
     }
     default:
       return state

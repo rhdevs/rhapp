@@ -435,3 +435,10 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
     isLoading: isLoading,
   })
 }
+
+export const setCount = (count: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_COUNT,
+    count: count,
+  })
+}

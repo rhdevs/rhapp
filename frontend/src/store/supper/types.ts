@@ -130,6 +130,8 @@ export enum SUPPER_ACTIONS {
   GET_MENU_FOOD = 'SUPPER_ACTIONS.GET_MENU_FOOD',
   GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
+  SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
+  GET_COUNT = 'SUPPER_ACTIONS.GET_COUNT',
 }
 
 type SetIsLoading = {
@@ -212,6 +214,16 @@ type GetSupperGroupHistory = {
   supperGroupHistory: SupperGroup[]
 }
 
+type SetCount = {
+  type: typeof SUPPER_ACTIONS.SET_COUNT
+  count: number
+}
+
+type GetCount = {
+  type: typeof SUPPER_ACTIONS.GET_COUNT
+  count: number
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -229,3 +241,5 @@ export type ActionTypes =
   | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory
+  | SetCount
+  | GetCount
