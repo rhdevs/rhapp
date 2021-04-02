@@ -14,17 +14,17 @@ const TextContainer = styled.text`
 
 const ProgressBar = styled.div<{ isColored: boolean; borderRadius: string }>`
   background-color: ${(props) => `${props.isColored ? '#002642' : '#C4C4C4'}`};
-  width: 2rem;
+  width: 2.5rem;
   height: 10px;
   border-radius: ${(props) => `${props.borderRadius}`};
+  margin: 0 2px;
 `
 
 const ProgressSection = styled.div`
   display: flex;
   flex-direction: row;
-  width: 26vw;
-  justify-content: space-evenly;
   margin: auto;
+  justify-content: center;
 `
 
 type Props = {
