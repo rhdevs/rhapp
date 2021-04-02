@@ -11,6 +11,7 @@ import { SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
+import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
 
 export default function Supper() {
   return (
@@ -19,6 +20,12 @@ export default function Supper() {
       <RoundProgress amountLeft={50} percent={100} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <SGCardWithStatus
+        username="Zhou BaoBao"
+        title="f> SUPPER FRIENDS"
+        orderId="RHSO#1002"
+        buttonTeleHandle="someOwnerTele"
+      />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
