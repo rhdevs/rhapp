@@ -14,6 +14,7 @@ import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { MenuTabs } from '../../components/Supper/MenuTabs'
+import { ToggleCreatedJoined } from '../../components/Supper/ToggleCreatedJoined'
 
 export default function Supper() {
   return (
@@ -51,7 +52,7 @@ export default function Supper() {
         deliveryFee="10.70"
       />
       <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
-      <MenuTabs />
+      <ToggleCreatedJoined />
     </>
   )
 }
