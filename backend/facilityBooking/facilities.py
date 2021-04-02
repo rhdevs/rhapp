@@ -494,7 +494,7 @@ def restaurant(restaurantId):
                 {'$project': {'menu.restaurantId': 0}}
             ]
 
-            temp = db.Restaurant.aggregate(pipeline)
+            temp = db.Restaurants.aggregate(pipeline)
             for item in temp:
                 restaurantInfo = item
             restaurantInfo['restaurantId'] = str(restaurantInfo.pop('_id'))
