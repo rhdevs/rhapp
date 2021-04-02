@@ -1,7 +1,7 @@
 import React, { ReactChild, ReactChildren } from 'react'
 import styled from 'styled-components'
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ flexDirection?: string }>`
   position: relative;
   cursor: pointer;
   background-color: #ffffff;
@@ -11,12 +11,14 @@ const MainContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   padding: 15px;
+  flex-direction: ${(props) => props.flexDirection ?? ''};
 `
 
 interface AuxProps {
   children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
+  flexDirection?: string
 }
 
 export const MainCard = (props: AuxProps) => {
-  return <MainContainer>{props.children}</MainContainer>
+  return <MainContainer flexDirection={props.flexDirection}>{props.children}</MainContainer>
 }
