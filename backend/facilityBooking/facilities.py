@@ -595,27 +595,30 @@ def get_restaurant(restaurantId):
 @cross_origin(supports_credentials=True)
 def restaurant(restaurantId):
     try:
-        pipeline = [
-            {'$match': {'restaurantId': restaurantId}},
-            {
-                '$lookup': {
-                    'from': 'FoodMenu',
-                    'localField': 'restaurantId',
-                    'foreignField': 'restaurantId',
-                    'as': 'menu'
-                }
-            },
-            {'$project': {'_id': 0, 'menu._id': 0}}
-        ]
+        if request.method == "GET":
+            pipeline = [
+                {'$match': {'_id': ObjectId(restaurantId)}},
+                {
+                    '$lookup': {
+                        'from': 'FoodMenu',
+                        'localField': '_id',
+                        'foreignField': 'restaurantId',
+                        'as': 'menu'
+                    }
+                },
+                {'$project': {'menu.restaurantId': 0}}
+            ]
 
-        data = db.Restaurants.aggregate(pipeline)
-
-        restaurant = None
-        for item in data:
-            restaurant = item
-
-        response = {"status": "success", "data": restaurant}
-        return make_response(response, 200)
+            temp = db.Restaurants.aggregate(pipeline)
+            for item in temp:
+                restaurantInfo = item
+            restaurantInfo['restaurantId'] = str(restaurantInfo.pop('_id'))
+            for food in restaurantInfo['menu']:
+                food['foodMenuId'] = str(food.pop('_id'))
+            
+            
+            response = {"status": "success", "data": restaurantInfo}
+            return make_response(response, 200)
 
     except Exception as e:
         print(e)
