@@ -257,40 +257,33 @@ def delete_booking(bookingID):
 @cross_origin(supports_credentials=True)
 def all_supper_group():
     try:
-        all_supper_group = list(db.SupperGroup.find(
-            {}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
+        pipeline = [
+            {
+                '$lookup': {
+                    'from': 'Order',
+                    'localField': 'supperGroupId',
+                    'foreignField': 'supperGroupId',
+                    'as': 'orders'
+                }
+            },
+            {
+                '$addFields': {
+                    'totalPrice': {'$sum': '$orders.orderPrice'}
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0}}
+        ]
 
-        # I hate mongo
+        result = db.SupperGroup.aggregate(pipeline)
 
         data = []
-        for supperGroup in all_supper_group:
-            pipeline = [
-                {'$match': {'supperGroupId': supperGroup['supperGroupId']}},
-                {
-                    '$lookup': {
-                        'from': 'Order',
-                        'localField': 'supperGroupId',
-                        'foreignField': 'supperGroupId',
-                        'as': 'orders'
-                    }
-                },
-                {
-                    '$addFields': {
-                        'totalPrice': {'$sum': '$orders.orderPrice'}
-                    }
-                },
-                {'$project': {'orders': 0, '_id': 0}}
-            ]
-            result = db.SupperGroup.aggregate(pipeline)
-            info = None
-            for suppergroup in result:
-                info = suppergroup
+        for supperGroup in result:
+            data.append(supperGroup)
 
-            if info == None:
-                raise Exception('Order group not found.')
-            data.append(info)
+        data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
         response = {"status": "success", "data": data}
+        return make_response(response, 200)
 
         return make_response(response, 200)
     except Exception as e:
@@ -550,16 +543,15 @@ def all_restaurants():
         if request.method == 'GET':
             restaurants = list(db.Restaurants.find({}))
             for restaurant in restaurants:
-                data = restaurant
-                data['restaurantId'] = str(data.pop('_id'))
+                restaurant['restaurantId'] = str(restaurant.pop('_id'))
 
-            response = {"status": "success", "data": list(
-                restaurants)}
+            response = {"status": "success", "data": restaurants}
 
         elif request.method == 'POST':
             data = request.get_json()
             # Add restaurant into Restaurants
-            data['restaurantId'] = db.Restaurants.insert_one(data).inserted_id
+            db.Restaurants.insert_one(data)
+            data['restaurantId'] = str(data.pop('_id'))
 
             response = {"status": "success",
                         "message": "Restaurant added successfully.",
@@ -660,7 +652,9 @@ def user_order_history(userID):
                 food["foodId"] = str(food.pop('_id'))
             data.append(order)
 
-        data.sort(key=lambda x: x['createdAt'], reverse=True)
+        print(data)
+
+        data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
@@ -674,38 +668,31 @@ def user_order_history(userID):
 @cross_origin(supports_credentials=True)
 def user_supper_group_history(userID):
     try:
-        all_supper_group = list(db.SupperGroup.find(
-            {'ownerId': userID}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
+        pipeline = [
+            {'$match': {'ownerId': userID}},
+            {
+                '$lookup': {
+                    'from': 'Order',
+                    'localField': 'supperGroupId',
+                    'foreignField': 'supperGroupId',
+                    'as': 'orders'
+                }
+            },
+            {
+                '$addFields': {
+                    'totalPrice': {'$sum': '$orders.orderPrice'}
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0}}
+        ]
 
-        # I hate mongo
+        result = db.SupperGroup.aggregate(pipeline)
 
         data = []
-        for supperGroup in all_supper_group:
-            pipeline = [
-                {'$match': {'supperGroupId': supperGroup['supperGroupId']}},
-                {
-                    '$lookup': {
-                        'from': 'Order',
-                        'localField': 'supperGroupId',
-                        'foreignField': 'supperGroupId',
-                        'as': 'orders'
-                    }
-                },
-                {
-                    '$addFields': {
-                        'totalPrice': {'$sum': '$orders.orderPrice'}
-                    }
-                },
-                {'$project': {'orders': 0, '_id': 0}}
-            ]
-            result = db.SupperGroup.aggregate(pipeline)
-            info = None
-            for suppergroup in result:
-                info = suppergroup
+        for supperGroup in result:
+            data.append(supperGroup)
 
-            if info == None:
-                raise Exception('Order group not found.')
-            data.append(info)
+        data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
