@@ -4,6 +4,7 @@ import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { RoundProgress } from '../../components/Supper/RoundProgress'
 import { MainSGCard } from '../../components/Supper/MainSGCard'
+import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
 import { SplitACMethod } from '../../store/supper/types'
@@ -16,6 +17,7 @@ export default function Supper() {
       <RoundProgress amountLeft={50} percent={100} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
         title="f> SUPPER FRIENDS I REALLY LIKE A RLY LONG NAME"

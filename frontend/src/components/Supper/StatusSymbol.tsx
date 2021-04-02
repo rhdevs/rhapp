@@ -3,9 +3,6 @@ import styled from 'styled-components'
 
 import tick from '../../assets/whiteTick.svg'
 
-// background: ${(props) => props.color};
-// <{ border: string; color: string }>
-
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
   backgroundColor?: string
