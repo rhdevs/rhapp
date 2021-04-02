@@ -14,3 +14,8 @@ export const TelegramShareButton = (props: Props) => {
   }
   return <Button stopPropagation={true} defaultButtonDescription="Share" onButtonClick={onClick} isFlipButton={false} />
 }
+
+export const OpenUserTelegram = (telegramHandle: string) => {
+  const site = 'https://telegram.me/' + telegramHandle
+  return window.open(site)
+}
