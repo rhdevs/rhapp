@@ -87,9 +87,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_COUNT: {
       return { ...state, count: action.count }
     }
-    case SUPPER_ACTIONS.GET_COUNT: {
-      return { ...state, count: action.count }
-    }
     default:
       return state
   }

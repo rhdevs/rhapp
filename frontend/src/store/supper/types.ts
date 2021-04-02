@@ -131,7 +131,6 @@ export enum SUPPER_ACTIONS {
   GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
   SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
-  GET_COUNT = 'SUPPER_ACTIONS.GET_COUNT',
 }
 
 type SetIsLoading = {
@@ -219,11 +218,6 @@ type SetCount = {
   count: number
 }
 
-type GetCount = {
-  type: typeof SUPPER_ACTIONS.GET_COUNT
-  count: number
-}
-
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -242,4 +236,3 @@ export type ActionTypes =
   | GetOrderHistory
   | GetSupperGroupHistory
   | SetCount
-  | GetCount
