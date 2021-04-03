@@ -13,9 +13,21 @@ const EmptyCartContainer = styled.div`
   font-size: 17px;
 `
 
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
+
+const ButtonContainer = styled.div`
+  margin: auto;
+  padding-top: 10px;
+`
+
 type Props = {
   isEditable: boolean
   foodList: Food[]
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const OrderSummaryCard = (props: Props) => {
@@ -24,21 +36,30 @@ export const OrderSummaryCard = (props: Props) => {
       return <EmptyCartContainer>Empty Cart</EmptyCartContainer>
     } else {
       return (
-        <>
-          <FoodLineInCard />
+        <MainContainer>
+          <FoodLineInCard
+            foodName="McGriddles with Egg Meal"
+            qty={2}
+            price={6.7}
+            customisations={['Small Fries', 'Small Coke', 'Small Fries', 'Small Coke']}
+          />
           {props.isEditable && (
-            <Button
-              stopPropagation={true}
-              defaultButtonDescription="Cancel Order"
-              defaultButtonColor="transparent"
-              defaultTextColor="#de5f4c"
-              //   buttonWidth?: string
-              //   buttonHeight?: string
-              //   onButtonClick?: (arg0: boolean) => void
-              isFlipButton={false}
-            />
+            <ButtonContainer>
+              <Button
+                stopPropagation={true}
+                defaultButtonDescription="Cancel Order"
+                defaultButtonColor="transparent"
+                defaultTextColor="#de5f4c"
+                buttonWidth="fit-content"
+                onButtonClick={() => {
+                  props.onClick
+                }}
+                isFlipButton={false}
+                border="1px solid #de5f4c"
+              />
+            </ButtonContainer>
           )}
-        </>
+        </MainContainer>
       )
     }
   }

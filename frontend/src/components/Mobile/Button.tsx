@@ -18,6 +18,7 @@ type Props = {
   descriptionStyle?: React.CSSProperties
   onButtonClick?: (arg0: boolean) => void
   isFlipButton?: boolean
+  border?: string
 }
 
 function Button(props: Props) {
@@ -85,7 +86,7 @@ function Button(props: Props) {
           background: buttonColour,
           color: textColour,
           borderRadius: '5px',
-          border: props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
+          border: props.border ? props.border : props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
           width: props.buttonWidth ? props.buttonWidth : '',
           height: props.buttonHeight ? props.buttonHeight : '',
         }

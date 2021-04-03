@@ -71,17 +71,20 @@ const DeleteIcon = styled.img`
 `
 
 type Props = {
+  foodName: string
+  qty: number
+  price: number
   customisations?: string[]
 }
 
 export const FoodLineInCard = (props: Props) => {
   return (
     <MainContainer>
-      <QuantityContainer>1x</QuantityContainer>
+      <QuantityContainer>{props.qty}x</QuantityContainer>
       <SubContainer>
         <TopContainer>
-          <TitleText>McGriddles with Egg Meal</TitleText>
-          <MoneyText>$6.60</MoneyText>
+          <TitleText>{props.foodName}</TitleText>
+          <MoneyText>${props.price.toFixed(2)}</MoneyText>
         </TopContainer>
         <BottomContainer>
           <CustomisationContainer>
