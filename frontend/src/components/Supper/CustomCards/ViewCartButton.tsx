@@ -1,5 +1,5 @@
 import React from 'react'
-import { BottomStickyButton } from './BottomStickyButton'
+import { BottomStickyButton } from '../BottomStickyButton'
 
 type Props = {
   numberOfItems: number

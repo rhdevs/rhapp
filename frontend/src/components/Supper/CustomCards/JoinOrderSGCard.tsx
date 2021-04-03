@@ -1,11 +1,11 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { MainCard } from './MainCard'
-import notFound from '../../assets/notFound.svg'
-import { RoundProgress } from './RoundProgress'
-import { StatusSymbol } from './StatusSymbol'
-import { SplitACMethod } from '../../store/supper/types'
+import { MainCard } from '../MainCard'
+import notFound from '../../../assets/notFound.svg'
+import { RoundProgress } from '../RoundProgress'
+import { StatusSymbol } from '../StatusSymbol'
+import { SplitACMethod } from '../../../store/supper/types'
 
 const TopSection = styled.div`
   display: flex;

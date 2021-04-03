@@ -3,18 +3,18 @@ import React from 'react'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { RoundProgress } from '../../components/Supper/RoundProgress'
-import { MainSGCard } from '../../components/Supper/MainSGCard'
+import { MainSGCard } from '../../components/Supper/CustomCards/MainSGCard'
 import { MaxPriceFixer } from '../../components/Supper/MaxPriceFixer'
 import { QuantityTracker } from '../../components/Supper/QuantityTracker'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
-import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
+import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
 import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
-import { ViewCartButton } from '../../components/Supper/ViewCartButton'
+import { ViewCartButton } from '../../components/Supper/CustomCards/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
-import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
-import { ExpandableSGCard } from '../../components/Supper/ExpandableSGCard'
+import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
+import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 
 export default function Supper() {
   return (
@@ -39,7 +39,8 @@ export default function Supper() {
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <SGCardWithStatus
-        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        // isOwner
+        supperGroupStatus={SupperGroupStatus.CANCELLED}
         location="Basketball Court"
         collectionTime="12:30AM"
         username="Zhou BaoBao"

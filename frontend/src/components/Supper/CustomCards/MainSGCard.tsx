@@ -1,9 +1,9 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { MainCard } from './MainCard'
-import notFound from '../../assets/notFound.svg'
-import { StatusSymbol } from './StatusSymbol'
+import { MainCard } from '../MainCard'
+import notFound from '../../../assets/notFound.svg'
+import { StatusSymbol } from '../StatusSymbol'
 
 const Logo = styled.img`
   max-height: 64px;

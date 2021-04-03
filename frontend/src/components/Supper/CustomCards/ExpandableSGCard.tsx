@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
 import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
-import { MainCard } from './MainCard'
-import { RoundProgress } from './RoundProgress'
-import { StatusSymbol } from './StatusSymbol'
-import { UnderlinedButton } from './UnderlinedButton'
+import { MainCard } from '../MainCard'
+import { RoundProgress } from '../RoundProgress'
+import { StatusSymbol } from '../StatusSymbol'
+import { UnderlinedButton } from '../UnderlinedButton'
 import { useDispatch, useSelector } from 'react-redux'
-import { setExpandableCardStatus } from '../../store/supper/action'
-import { RootState } from '../../store/types'
+import { setExpandableCardStatus } from '../../../store/supper/action'
+import { RootState } from '../../../store/types'
 
 const TopContainer = styled.div`
   display: flex;
