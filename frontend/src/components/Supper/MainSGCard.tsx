@@ -7,24 +7,28 @@ import { StatusSymbol } from './StatusSymbol'
 import Friends from '../../assets/Friends.svg'
 
 const Logo = styled.img`
+  max-height: 64px;
+  max-width: 64px;
+  width: 100%;
+  height: auto;
+  border: 1px #002642 solid;
   border-radius: 50%;
   overflow: hidden;
-  min-width: 100%;
-  min-height: 100%;
-  height: 64px;
-  width: 64px;
 `
 
 const ImgContainer = styled.div`
-  height: 64px;
-  width: 64px;
-  margin: auto 0;
+  height: 100%;
+  width: 25%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
 `
 
 const SubContainer = styled.div`
-  margin: 8px 20px 0 15px;
+  margin: 5px 0 0 10px;
   display: flex;
   flex-direction: column;
+  width: 75%;
 `
 
 const TitleContainer = styled.text`
@@ -35,15 +39,19 @@ const TitleContainer = styled.text`
 const BottomContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
 `
 
 const OrderIdContainer = styled.text`
   font-size: 11px;
   font-weight: 200;
   text-align: right;
-  position: absolute;
-  right: 0;
-  margin-right: 20px;
+`
+
+const StatusSymbolContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `
 
 type Props = {
@@ -62,17 +70,15 @@ export const MainSGCard = (props: Props) => {
       <SubContainer>
         <TitleContainer>{props.title}</TitleContainer>
         <BottomContainer>
-          <StatusSymbol hasNoLeftMargin text={props.time} />
-          <StatusSymbol
-            hasNoLeftMargin
-            leftIcon={<img src={Friends} alt="Friends Icon" />}
-            text={String(props.users)}
-          />
-          <OrderIdContainer>
-            Order ID:
-            <br />
-            {props.orderId}
-          </OrderIdContainer>
+          <StatusSymbolContainer>
+            <StatusSymbol hasNoLeftMargin text={props.time} />
+            <StatusSymbol
+              hasNoLeftMargin
+              leftIcon={<img src={Friends} alt="Friends Icon" />}
+              text={String(props.users)}
+            />
+          </StatusSymbolContainer>
+          <OrderIdContainer>{props.orderId}</OrderIdContainer>
         </BottomContainer>
       </SubContainer>
     </MainCard>

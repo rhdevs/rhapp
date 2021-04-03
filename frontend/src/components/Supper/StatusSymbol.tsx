@@ -12,20 +12,21 @@ const MainContainer = styled.div<{
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
-  padding: 2px 5px;
+  padding: 2px 7px;
   height: fit-content;
+  min-height: 33px;
   min-width: 3rem;
   margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   background-color: ${(props) => props.backgroundColor ?? ''};
 `
 
 const IconContainer = styled.div<{ color: string }>`
-  color: #666666;
   color: ${(props) => props.color};
+  max-height: 28px;
 `
 
 const PreTextContainer = styled.text<{ textColor: string }>`
@@ -44,7 +45,7 @@ const TextContainer = styled.text<{ textColor: string }>`
 `
 
 const CheckIcon = styled.img`
-  margin-top: -3px;
+  margin-top: -4px;
 `
 
 type Props = {
