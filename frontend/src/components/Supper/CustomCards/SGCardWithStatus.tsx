@@ -10,15 +10,7 @@ import { PaymentInfo, PaymentMethod, SupperGroupStatus } from '../../../store/su
 import Button from '../../Mobile/Button'
 import { OpenUserTelegram } from '../../TelegramShareButton'
 import { UnderlinedButton } from '../UnderlinedButton'
-
-const Logo = styled.img`
-  border-radius: 50%;
-  overflow: hidden;
-  min-width: 100%;
-  min-height: 100%;
-  height: 64px;
-  width: 64px;
-`
+import { RoundImage } from '../RoundImage'
 
 const BottomContainer = styled.div`
   margin: 8px 20px 0 15px;
@@ -38,12 +30,6 @@ const ReasonText = styled.text`
 const TopSection = styled.div`
   display: flex;
   flex-direction: row;
-`
-
-const ImgContainer = styled.div`
-  height: 64px;
-  width: 64px;
-  margin: auto 0;
 `
 
 const TextSubContainer = styled.div`
@@ -126,15 +112,12 @@ export const SGCardWithStatus = (props: Props) => {
     return undefined
   }
 
-  const isCloseCard = props.supperGroupStatus === SupperGroupStatus.CLOSED
   const isCancelledCard = props.supperGroupStatus === SupperGroupStatus.CANCELLED
 
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        <ImgContainer>
-          <Logo src={notFound} alt="Restaurant Logo" />
-        </ImgContainer>
+        <RoundImage image={notFound} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
@@ -153,12 +136,8 @@ export const SGCardWithStatus = (props: Props) => {
           />
         )}
       </BottomContainer>
-      {isCloseCard || isCancelledCard ? (
-        isCancelledCard ? (
-          <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
-        ) : (
-          <></>
-        )
+      {isCancelledCard ? (
+        <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
       ) : (
         <OtherInfoContainer>
           <OtherInfoSubContainer>

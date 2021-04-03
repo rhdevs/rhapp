@@ -4,23 +4,12 @@ import styled from 'styled-components'
 import { MainCard } from '../MainCard'
 import notFound from '../../../assets/notFound.svg'
 import { StatusSymbol } from '../StatusSymbol'
+import { RoundImage } from '../RoundImage'
+import { UnderlinedButton } from '../UnderlinedButton'
 
-const Logo = styled.img`
-  max-height: 64px;
-  max-width: 64px;
-  width: 100%;
-  height: auto;
-  border: 1px #002642 solid;
-  border-radius: 50%;
-  overflow: hidden;
-`
-
-const ImgContainer = styled.div`
-  height: 100%;
-  width: 25%;
-  margin: auto;
+const MainContainer = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: row;
 `
 
 const SubContainer = styled.div`
@@ -53,29 +42,43 @@ const StatusSymbolContainer = styled.div`
   flex-direction: row;
 `
 
+const OwnerButtonContainer = styled.div`
+  margin: auto;
+  padding-top: 3px;
+`
+
 type Props = {
   title: string
   time: string
   users: number
   orderId: string
+  isOwner?: boolean
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const MainSGCard = (props: Props) => {
   return (
-    <MainCard>
-      <ImgContainer>
-        <Logo src={notFound} alt="Restaurant Logo" />
-      </ImgContainer>
-      <SubContainer>
-        <TitleContainer>{props.title}</TitleContainer>
-        <BottomContainer>
-          <StatusSymbolContainer>
-            <StatusSymbol hasNoLeftMargin text={props.time} />
-            <StatusSymbol hasNoLeftMargin type="numberOfUsers" text={String(props.users)} />
-          </StatusSymbolContainer>
-          <OrderIdContainer>{props.orderId}</OrderIdContainer>
-        </BottomContainer>
-      </SubContainer>
+    <MainCard flexDirection="column">
+      <MainContainer>
+        <RoundImage image={notFound} alt="Restaurant Logo" />
+        <SubContainer>
+          <TitleContainer>{props.title}</TitleContainer>
+          <BottomContainer>
+            <StatusSymbolContainer>
+              <StatusSymbol hasNoLeftMargin text={props.time} />
+              <StatusSymbol hasNoLeftMargin type="numberOfUsers" text={String(props.users)} />
+            </StatusSymbolContainer>
+            <OrderIdContainer>{props.orderId}</OrderIdContainer>
+          </BottomContainer>
+        </SubContainer>
+      </MainContainer>
+      {props.isOwner ? (
+        <OwnerButtonContainer>
+          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
+        </OwnerButtonContainer>
+      ) : (
+        <></>
+      )}
     </MainCard>
   )
 }

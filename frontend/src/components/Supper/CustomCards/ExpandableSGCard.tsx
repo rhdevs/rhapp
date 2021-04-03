@@ -52,6 +52,11 @@ const ExpandableButtonContainer = styled.div`
   align-items: center;
 `
 
+const OwnerButtonContainer = styled.div`
+  margin: auto;
+  padding-top: 3px;
+`
+
 type Props = {
   supperGroupName: string
   supperGroupId: string
@@ -61,6 +66,8 @@ type Props = {
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
+  isOwner?: boolean
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const ExpandableSGCard = (props: Props) => {
@@ -80,7 +87,7 @@ export const ExpandableSGCard = (props: Props) => {
         <LeftContainer>
           <TitleText>{props.supperGroupName}</TitleText>
           <OrderText>
-            {props.supperGroupId} ({props.ownerName})
+            {props.supperGroupId} ({props.isOwner ? 'You' : props.ownerName})
           </OrderText>
           <ExpandableButtonContainer>
             <UnderlinedButton
@@ -103,6 +110,13 @@ export const ExpandableSGCard = (props: Props) => {
           <StatusSymbol type="numberOfUsers" text={String(props.numberOfUsers)} />
           <StatusSymbol type="deliveryFee" text={String(props.deliveryFee)} />
         </BottomContainer>
+      ) : (
+        <></>
+      )}
+      {props.isOwner ? (
+        <OwnerButtonContainer>
+          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
+        </OwnerButtonContainer>
       ) : (
         <></>
       )}
