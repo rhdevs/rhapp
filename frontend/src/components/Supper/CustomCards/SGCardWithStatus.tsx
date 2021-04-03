@@ -101,6 +101,7 @@ const PaymentTextContainer = styled.div`
 
 const OwnerButtonContainer = styled.div`
   margin: auto;
+  padding-top: 3px;
 `
 
 type Props = {
@@ -137,7 +138,7 @@ export const SGCardWithStatus = (props: Props) => {
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
-            {props.orderId} ({props.username})
+            {props.orderId} ({props.isOwner ? 'You' : props.username})
           </OrderIdContainer>
         </TextSubContainer>
       </TopSection>
@@ -190,7 +191,7 @@ export const SGCardWithStatus = (props: Props) => {
           )}
         </OtherInfoContainer>
       )}
-      {props.isOwner && !isCancelledCard ? (
+      {props.isOwner ? (
         <OwnerButtonContainer>
           <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
         </OwnerButtonContainer>

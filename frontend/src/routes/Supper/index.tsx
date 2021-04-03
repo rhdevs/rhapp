@@ -39,7 +39,7 @@ export default function Supper() {
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <SGCardWithStatus
-        // isOwner
+        isOwner
         supperGroupStatus={SupperGroupStatus.CANCELLED}
         location="Basketball Court"
         collectionTime="12:30AM"
