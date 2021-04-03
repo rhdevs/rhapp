@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { Food } from '../../store/supper/types'
+import { Food, Option } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { FoodLineInCard } from './FoodLineInCard'
 import { MainCard } from './MainCard'
@@ -25,24 +25,37 @@ const ButtonContainer = styled.div`
 `
 
 type Props = {
-  isEditable: boolean
+  isEditable?: boolean
   foodList: Food[]
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const OrderSummaryCard = (props: Props) => {
   const cardContent = () => {
-    if (props.foodList.length > 0) {
+    if (props.foodList.length <= 0) {
       return <EmptyCartContainer>Empty Cart</EmptyCartContainer>
     } else {
       return (
         <MainContainer>
-          <FoodLineInCard
-            foodName="McGriddles with Egg Meal"
-            qty={2}
-            price={6.7}
-            customisations={['Small Fries', 'Small Coke', 'Small Fries', 'Small Coke']}
-          />
+          {props.foodList.map((food, index) => {
+            const customisations: string[] = []
+            food.foodMenu.custom?.map((custom) =>
+              custom.options.map((option) => {
+                if (option.isSelected) customisations.push(option.name)
+              }),
+            )
+            return (
+              <FoodLineInCard
+                key={index}
+                foodName={food.foodMenu.foodMenuName}
+                qty={food.quantity}
+                price={food.foodPrice}
+                customisations={customisations}
+                isEditable={props.isEditable}
+                comments={food.comments}
+              />
+            )
+          })}
           {props.isEditable && (
             <ButtonContainer>
               <Button
@@ -55,7 +68,7 @@ export const OrderSummaryCard = (props: Props) => {
                   props.onClick
                 }}
                 isFlipButton={false}
-                border="1px solid #de5f4c"
+                border="2px solid #de5f4c"
               />
             </ButtonContainer>
           )}

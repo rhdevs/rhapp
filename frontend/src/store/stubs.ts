@@ -167,3 +167,96 @@ export const userProfileStub: User = {
 }
 
 export const dummyUserId = 'A1234567B'
+
+// foodId: string
+// comments?: string
+// quantity: number
+// foodMenu: FoodMenu
+// foodPrice?: number
+
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+
+// title: string
+// options: Option[]
+// max: number | null
+// min: number
+// customNumber: number
+
+// name: string
+// isSelected: boolean
+// price: number
+export const foodList = [
+  {
+    foodId: '12345364832764134',
+    comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    quantity: 1,
+    foodMenu: {
+      foodMenuId: 'i3572f8whff582842',
+      restaurantId: 'jkhw8237429dh8wqe',
+      foodMenuName: 'McGriddles with Egg Meal',
+      price: 6.7,
+      custom: [
+        {
+          title: 'Sides',
+          options: [
+            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Apple pie', isSelected: false, price: 1.2 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 1,
+        },
+        {
+          title: 'Drinks',
+          options: [
+            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+            { name: 'Milo', isSelected: false, price: 1.5 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 2,
+        },
+      ],
+    },
+    foodPrice: 8.6,
+  },
+  {
+    foodId: '12345364832764134',
+    quantity: 2,
+    foodMenu: {
+      foodMenuId: 'i3572f8whff582842',
+      restaurantId: 'jkhw8237429dh8wqe',
+      foodMenuName: 'McGriddles with Egg Meal',
+      price: 6.7,
+      custom: [
+        {
+          title: 'Sides',
+          options: [
+            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Apple pie', isSelected: false, price: 1.2 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 1,
+        },
+        {
+          title: 'Drinks',
+          options: [
+            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+            { name: 'Milo', isSelected: false, price: 1.5 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 2,
+        },
+      ],
+    },
+    foodPrice: 8.6,
+  },
+]

@@ -5,7 +5,6 @@ import editIcon from '../../assets/SupperEditIcon.svg'
 import deleteIcon from '../../assets/SupperDeleteIcon.svg'
 
 const MainContainer = styled.div`
-  border: 1px solid black;
   height: fit-content;
   position: relative;
   width: 100%;
@@ -60,21 +59,22 @@ const CustomText = styled.text`
 const IconsContainer = styled.div`
   display: flex;
   flex-direction: row;
+  height: fit-content;
 `
 
-const EditIcon = styled.img`
-  padding: 0 7px;
-`
-
-const DeleteIcon = styled.img`
-  padding: 0 7px;
+const Icon = styled.img`
+  padding: 7px 7px 0 7px;
 `
 
 type Props = {
   foodName: string
   qty: number
-  price: number
+  price?: number
   customisations?: string[]
+  isEditable?: boolean
+  comments?: string
+  onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const FoodLineInCard = (props: Props) => {
@@ -84,19 +84,26 @@ export const FoodLineInCard = (props: Props) => {
       <SubContainer>
         <TopContainer>
           <TitleText>{props.foodName}</TitleText>
-          <MoneyText>${props.price.toFixed(2)}</MoneyText>
+          <MoneyText>${props.price?.toFixed(2)}</MoneyText>
         </TopContainer>
         <BottomContainer>
           <CustomisationContainer>
             {props.customisations?.map((custom, index) => {
               return <CustomText key={index}>{custom}</CustomText>
             })}
+            {props.comments && (
+              <>
+                Comments: <CustomText>{props.comments}</CustomText>
+              </>
+            )}
           </CustomisationContainer>
 
-          <IconsContainer>
-            <EditIcon src={editIcon} alt="Edit Icon" />
-            <DeleteIcon src={deleteIcon} alt="Edit Icon" />
-          </IconsContainer>
+          {props.isEditable && (
+            <IconsContainer>
+              <Icon onClick={props.onEditClick} src={editIcon} alt="Edit Icon" />
+              <Icon onClick={props.onDeleteClick} src={deleteIcon} alt="Edit Icon" />
+            </IconsContainer>
+          )}
         </BottomContainer>
       </SubContainer>
     </MainContainer>
