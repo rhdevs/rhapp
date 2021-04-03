@@ -5,9 +5,7 @@ import { MainCard } from './MainCard'
 import notFound from '../../assets/notFound.svg'
 import { RoundProgress } from './RoundProgress'
 import { StatusSymbol } from './StatusSymbol'
-import Friends from '../../assets/Friends.svg'
 import { SplitACMethod } from '../../store/supper/types'
-import { CarOutlined } from '@ant-design/icons'
 
 const TopSection = styled.div`
   display: flex;
@@ -67,8 +65,8 @@ type Props = {
   title: string
   orderId: string
   username: string
-  amountLeft: number
-  percent: number
+  priceLimit: number
+  currentAmount: number
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
@@ -93,15 +91,11 @@ export const JoinOrderSGCard = (props: Props) => {
         <BubblesContainer>
           <FirstLineContainer>
             <StatusSymbol text={props.closingTime} />
-            <StatusSymbol text={String(props.numberOfUsers)} leftIcon={<img src={Friends} alt="Friends Icon" />} />
+            <StatusSymbol text={String(props.numberOfUsers)} type="numberOfUsers" />
           </FirstLineContainer>
-          <StatusSymbol
-            leftIcon={<CarOutlined />}
-            preText="est."
-            text={`${props.deliveryFee} (${props.splitACType})`}
-          />
+          <StatusSymbol type="estDeliveryFee" text={`${props.deliveryFee} (${props.splitACType})`} />
         </BubblesContainer>
-        <RoundProgress amountLeft={props.amountLeft} percent={props.percent} />
+        <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
       </BottomSection>
     </MainCard>
   )

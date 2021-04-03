@@ -16,21 +16,23 @@ const SubTextContainer = styled.text<{ fontSize?: string }>`
 `
 
 type Props = {
-  amountLeft: number
-  percent: number
+  priceLimit: number
+  currentAmount: number
   width?: number
   moneyFontSize?: string
   textFontSize?: string
 }
 
 export const RoundProgress = (props: Props) => {
+  const percentage = (props.currentAmount / props.priceLimit) * 100
+  const amountLeft = props.priceLimit - props.currentAmount
   return (
     <Progress
       format={() => {
         return (
           <>
             <TextContainer fontSize={props.moneyFontSize}>
-              ${props.amountLeft}
+              ${amountLeft.toFixed()}
               <br />
             </TextContainer>
             <SubTextContainer fontSize={props.textFontSize}>left</SubTextContainer>
@@ -38,7 +40,7 @@ export const RoundProgress = (props: Props) => {
         )
       }}
       type="circle"
-      percent={props.percent}
+      percent={percentage}
       width={props.width ?? 80}
       strokeColor="#DE5F4C"
     />

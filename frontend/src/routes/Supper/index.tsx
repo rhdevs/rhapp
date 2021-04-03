@@ -14,17 +14,28 @@ import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
+import { ExpandableSGCard } from '../../components/Supper/ExpandableSGCard'
 
 export default function Supper() {
   return (
     <>
-      <RoundProgress amountLeft={50} percent={20} />
+      <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
+      <ExpandableSGCard
+        supperGroupName="SUPPER FRIENDS"
+        supperGroupId="RHSO#1002"
+        ownerName="Zhou BaoBao"
+        priceLimit={30}
+        currentAmount={10}
+        closingTime="10.30PM"
+        numberOfUsers={10}
+        deliveryFee="10.70"
+      />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <MaxPriceFixer />
       <QuantityTracker default={5} />
       <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
-      <RoundProgress amountLeft={50} percent={100} />
+      <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <SGCardWithStatus
@@ -48,8 +59,8 @@ export default function Supper() {
         title="f> SUPPER FRIENDS I REALLY LIKE A RLY LONG NAME"
         orderId="RHSO#1002"
         username="Zhou BaoBao"
-        amountLeft={50}
-        percent={100}
+        currentAmount={50}
+        priceLimit={100}
         closingTime="11:59PM"
         numberOfUsers={10}
         splitACType={SplitACMethod.EQUAL}
@@ -59,12 +70,14 @@ export default function Supper() {
         title="f> SUPPER FRIENDS :0"
         orderId="RHSO#1002"
         username="Zhou BaoBao"
-        amountLeft={50}
-        percent={70}
+        currentAmount={50}
+        priceLimit={70}
         closingTime="11:59PM"
         numberOfUsers={10}
         deliveryFee="10.70"
       />
+      <br />
+      <br />
       <ViewCartButton numberOfItems={5} currentTotal="7.90" />
     </>
   )

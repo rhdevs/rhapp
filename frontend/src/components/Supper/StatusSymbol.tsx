@@ -2,6 +2,8 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import tick from '../../assets/whiteTick.svg'
+import Friends from '../../assets/Friends.svg'
+import { CarOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
@@ -56,6 +58,7 @@ type Props = {
   backgroundColor?: string
   isClicked?: boolean
   hasNoLeftMargin?: boolean
+  type?: string
 }
 
 export const StatusSymbol = (props: Props) => {
@@ -65,7 +68,21 @@ export const StatusSymbol = (props: Props) => {
 
   const buttonPressed = props.isClicked ?? false
   const hasCustomMargin = props.hasNoLeftMargin ?? false
+  const PEOPLE_ICON = <img src={Friends} alt="Friends Icon" />
   const CHECK_ICON = props.isClicked && <CheckIcon src={tick} alt="Check Icon" />
+
+  let leftIcon = props.leftIcon
+  let preText = props.preText
+  let text = props.text
+  if (props.type === 'numberOfUsers') {
+    leftIcon = PEOPLE_ICON
+  } else if (props.type === 'estDeliveryFee') {
+    leftIcon = <CarOutlined />
+    preText = 'est.'
+  } else if (props.type === 'deliveryFee') {
+    leftIcon = <CarOutlined />
+    text = `${props.text}*`
+  }
 
   let BACKGROUND_COLOR = props.backgroundColor ?? ''
   if (props.backgroundColor === 'bluegrey') {
@@ -85,9 +102,9 @@ export const StatusSymbol = (props: Props) => {
       borderColor={BORDER_COLOR}
       backgroundColor={BACKGROUND_COLOR}
     >
-      {props.leftIcon && <IconContainer color={ICON_COLOR}>{props.leftIcon}</IconContainer>}
-      {props.preText && <PreTextContainer textColor={TEXT_COLOR}>{props.preText}</PreTextContainer>}
-      <TextContainer textColor={TEXT_COLOR}>{props.text}</TextContainer>
+      {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
+      {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}
+      <TextContainer textColor={TEXT_COLOR}>{text}</TextContainer>
       {<IconContainer color={ICON_COLOR}>{RIGHT_ICON}</IconContainer>}
     </MainContainer>
   )

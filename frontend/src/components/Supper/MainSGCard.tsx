@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { MainCard } from './MainCard'
 import notFound from '../../assets/notFound.svg'
 import { StatusSymbol } from './StatusSymbol'
-import Friends from '../../assets/Friends.svg'
 
 const Logo = styled.img`
   max-height: 64px;
@@ -72,11 +71,7 @@ export const MainSGCard = (props: Props) => {
         <BottomContainer>
           <StatusSymbolContainer>
             <StatusSymbol hasNoLeftMargin text={props.time} />
-            <StatusSymbol
-              hasNoLeftMargin
-              leftIcon={<img src={Friends} alt="Friends Icon" />}
-              text={String(props.users)}
-            />
+            <StatusSymbol hasNoLeftMargin type="numberOfUsers" text={String(props.users)} />
           </StatusSymbolContainer>
           <OrderIdContainer>{props.orderId}</OrderIdContainer>
         </BottomContainer>
