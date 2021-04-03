@@ -32,7 +32,7 @@ export const RoundProgress = (props: Props) => {
         return (
           <>
             <TextContainer fontSize={props.moneyFontSize}>
-              ${amountLeft.toFixed()}
+              ${amountLeft.toFixed(2)}
               <br />
             </TextContainer>
             <SubTextContainer fontSize={props.textFontSize}>left</SubTextContainer>
