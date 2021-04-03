@@ -14,6 +14,7 @@ import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
+import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 
 export default function Supper() {
   return (
@@ -65,7 +66,8 @@ export default function Supper() {
         numberOfUsers={10}
         deliveryFee="10.70"
       />
-      <ViewCartButton numberOfItems={5} currentTotal="7.90" />
+      {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
+      <AddUpdateCartButton update currentTotal="7.90" />
     </>
   )
 }
