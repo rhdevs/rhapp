@@ -156,22 +156,6 @@ export default function ViewWashingMachine() {
     let subtitle = <></>
     let imagesrc = ''
 
-    // useEffect(() => {
-    //   useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-    //   useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-
-    //   if (machine != null) {
-    //     if (intervalID != undefined) {
-    //       clearInterval(intervalID)
-    //     }
-    //     const idinterval = setInterval(() => {
-    //       useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-    //       useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-    //     }, 1000)
-    //     setIntervalID(idinterval)
-    //   }
-    // }, [machine])
-
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
