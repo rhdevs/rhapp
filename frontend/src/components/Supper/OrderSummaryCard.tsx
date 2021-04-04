@@ -135,8 +135,12 @@ export const OrderSummaryCard = (props: Props) => {
                 </>
               )
             })}
-            <br />
-            <br />
+            {bottomButtons() && (
+              <>
+                <br />
+                <br />
+              </>
+            )}
             {bottomButtons()}
           </MainContainer>
         )
@@ -166,8 +170,12 @@ export const OrderSummaryCard = (props: Props) => {
                 />
               )
             })}
-            <br />
-            <br />
+            {bottomButtons() && (
+              <>
+                <br />
+                <br />
+              </>
+            )}
             {bottomButtons()}
           </MainContainer>
         )
