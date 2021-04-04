@@ -28,6 +28,7 @@ const initialState = {
   priceLimit: 0,
   isExpanded: false,
   selectedPaymentMethod: [],
+  selectedRestaurant: null,
 }
 
 type State = {
@@ -47,6 +48,7 @@ type State = {
   priceLimit: number
   isExpanded: boolean
   selectedPaymentMethod: PaymentMethod[]
+  selectedRestaurant: string | null
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -110,6 +112,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD: {
       return { ...state, selectedPaymentMethod: action.selectedPaymentMethod }
+    }
+    case SUPPER_ACTIONS.SET_SELECTED_RESTAURANT: {
+      return { ...state, selectedRestaurant: action.selectedRestaurant }
     }
     default:
       return state

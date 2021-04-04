@@ -450,11 +450,18 @@ export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispa
   })
 }
 
-export const SetSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+export const setSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
     selectedPaymentMethod: selectedPaymentMethod,
+  })
+}
+
+export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_RESTAURANT,
+    selectedRestaurant: selectedRestaurant,
   })
 }

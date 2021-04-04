@@ -310,3 +310,5 @@ export const orderList: Order[] = [
 ]
 
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
+
+export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
