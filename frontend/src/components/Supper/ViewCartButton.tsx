@@ -1,10 +1,5 @@
 import React from 'react'
-<<<<<<< .merge_file_MViALz
 import { RedButton } from './RedButton'
-=======
-
-import { BottomStickyButton } from './BottomStickyButton'
->>>>>>> .merge_file_KOAng9
 
 type Props = {
   numberOfItems: number
