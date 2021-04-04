@@ -49,7 +49,7 @@ export type Restaurant = {
 
 export type Order = {
   orderId: string
-  user: string
+  user: User
   supperGroupId: string
   userContact?: number
   foodList: Food[]

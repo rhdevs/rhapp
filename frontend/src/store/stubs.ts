@@ -1,6 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
+import { Order, PaymentMethod } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -156,7 +157,7 @@ export const searchResultsStub: SearchResult[] = [
 
 export const userProfileStub: User = {
   _id: '0',
-  userID: localStorage.username,
+  userID: localStorage.userID,
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',
@@ -258,5 +259,52 @@ export const foodList = [
       ],
     },
     foodPrice: 8.6,
+  },
+]
+
+// orderId: string
+// user: string
+// supperGroupId: string
+// userContact?: number
+// foodList: Food[]
+// totalCost: number
+// hasPaid: boolean //1 if user paid owner (user POV)
+// paymentMethod: PaymentMethod
+// hasReceived: boolean //1 if owner received payment (owner POV)
+// createdAt: number
+export const orderList: Order[] = [
+  {
+    orderId: 'y34u23423jhkdfaksd',
+    user: {
+      _id: '12',
+      userID: 'j324ioasdia90da',
+      profilePictureUrl:
+        'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+      displayName: 'Jane Doe',
+      telegramHandle: 'jane_doe',
+      block: 8,
+      bio: 'This is my bio, I am jane doe',
+      modules: ['CS1010', 'CFG1000', 'CS2040S'],
+    },
+    supperGroupId: '2',
+    userContact: 99234567,
+    foodList: foodList,
+    totalCost: 23,
+    hasPaid: false, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.CASH,
+    hasReceived: false, //1 if owner received payment (owner POV)
+    createdAt: 122,
+  },
+  {
+    orderId: 'kajldskfhskfksdf',
+    user: userProfileStub,
+    supperGroupId: '1',
+    userContact: 91234567,
+    foodList: foodList,
+    totalCost: 13,
+    hasPaid: false, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.GOOGLEPAY,
+    hasReceived: false, //1 if owner received payment (owner POV)
+    createdAt: 12,
   },
 ]

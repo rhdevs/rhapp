@@ -8,7 +8,7 @@ const MainContainer = styled.div`
   height: fit-content;
   position: relative;
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
 `
