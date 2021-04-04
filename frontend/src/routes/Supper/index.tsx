@@ -11,8 +11,9 @@ import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
 import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
-import { ViewCartButton } from '../../components/Supper/ViewCartButton'
+// import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
+import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 
@@ -78,9 +79,8 @@ export default function Supper() {
         numberOfUsers={10}
         deliveryFee="10.70"
       />
-      <br />
-      <br />
-      <ViewCartButton numberOfItems={5} currentTotal="7.90" />
+      {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
+      <AddUpdateCartButton update currentTotal="7.90" />
     </>
   )
 }
