@@ -1,11 +1,11 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { orderList } from '../../store/stubs'
-import { Food, Order } from '../../store/supper/types'
-import Button from '../Mobile/Button'
-import { FoodLineInCard } from './FoodLineInCard'
-import { MainCard } from './MainCard'
+import { orderList } from '../../../store/stubs'
+import { Food, Order } from '../../../store/supper/types'
+import Button from '../../Mobile/Button'
+import { FoodLineInCard } from '../FoodLineInCard'
+import { MainCard } from '../MainCard'
 
 const EmptyCartContainer = styled.div`
   display: flex;

@@ -4,7 +4,7 @@ import { Progress } from 'antd'
 import styled from 'styled-components'
 
 const TextContainer = styled.text<{ fontSize?: string }>`
-  font-size: ${(props) => props.fontSize ?? '20px'};
+  font-size: ${(props) => props.fontSize ?? '16px'};
   font-weight: 600;
   color: rgba(0, 0, 0, 0.65);
 `

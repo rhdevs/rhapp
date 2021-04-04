@@ -308,3 +308,5 @@ export const orderList: Order[] = [
     createdAt: 12,
   },
 ]
+
+export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]

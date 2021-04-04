@@ -1,10 +1,10 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { MainCard } from './MainCard'
-import { RoundProgress } from './RoundProgress'
-import { StatusSymbol } from './StatusSymbol'
-import notFound from '../../assets/notFound.svg'
+import { MainCard } from '../MainCard'
+import { RoundProgress } from '../RoundProgress'
+import { StatusSymbol } from '../StatusSymbol'
+import notFound from '../../../assets/notFound.svg'
 
 const TopSection = styled.div`
   display: flex;
