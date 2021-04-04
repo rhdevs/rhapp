@@ -36,7 +36,7 @@ export type FoodMenu = {
   foodMenuId: string
   restaurantId: string
   foodMenuName: string
-  price: string
+  price: number
   custom?: Custom[]
 }
 
@@ -49,7 +49,7 @@ export type Restaurant = {
 
 export type Order = {
   orderId: string
-  user: string
+  user: User
   supperGroupId: string
   userContact?: number
   foodList: Food[]

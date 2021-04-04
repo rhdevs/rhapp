@@ -13,6 +13,8 @@ import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/sup
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
+import { OrderSummaryCard } from '../../components/Supper/OrderSummaryCard'
+import { foodList, orderList } from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
@@ -22,6 +24,8 @@ export default function Supper() {
     <>
       <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
+      <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <OrderSummaryCard orderByUser isOwner isEditable foodList={foodList} orderList={orderList} />
       <ExpandableSGCard
         isOwner
         supperGroupName="SUPPER FRIENDS"
