@@ -144,11 +144,6 @@ export default function Home() {
     },
   ]
 
-  const OpenUserTelegram = (telegramHandle: string) => {
-    const site = 'https://telegram.me/' + telegramHandle
-    return window.open(site)
-  }
-
   return (
     <MainContainer>
       <PullToRefresh onRefresh={onRefresh}>
@@ -163,7 +158,7 @@ export default function Home() {
           <BannerText>App under Beta testing</BannerText>
           <StyledTelegramIcon
             onClick={() => {
-              OpenUserTelegram('richardlidf')
+              window.open('https://t.me/joinchat/NhfZLX0Ed2VjZWM1')
             }}
             src={TelegramIcon}
             alt="Telegram Icon"
