@@ -17,6 +17,7 @@ const initialState = {
   supperGroupHistory: [],
   count: 0,
   priceLimit: 0,
+  isExpanded: false,
 }
 
 type State = {
@@ -34,6 +35,7 @@ type State = {
   supperGroupHistory: SupperGroup[]
   count: number
   priceLimit: number
+  isExpanded: boolean
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -91,6 +93,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_PRICE_LIMIT: {
       return { ...state, priceLimit: action.priceLimit }
+    }
+    case SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS: {
+      return { ...state, isExpanded: action.isExpanded }
     }
     default:
       return state

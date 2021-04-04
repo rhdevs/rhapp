@@ -2,6 +2,8 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import tick from '../../assets/whiteTick.svg'
+import Friends from '../../assets/Friends.svg'
+import { CarOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
@@ -12,20 +14,21 @@ const MainContainer = styled.div<{
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
-  padding: 2px 5px;
+  padding: 2px 7px;
   height: fit-content;
+  min-height: 33px;
   min-width: 3rem;
   margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   background-color: ${(props) => props.backgroundColor ?? ''};
 `
 
 const IconContainer = styled.div<{ color: string }>`
-  color: #666666;
   color: ${(props) => props.color};
+  max-height: 28px;
 `
 
 const PreTextContainer = styled.text<{ textColor: string }>`
@@ -44,7 +47,7 @@ const TextContainer = styled.text<{ textColor: string }>`
 `
 
 const CheckIcon = styled.img`
-  margin-top: -3px;
+  margin-top: -4px;
 `
 
 type Props = {
@@ -55,6 +58,7 @@ type Props = {
   backgroundColor?: string
   isClicked?: boolean
   hasNoLeftMargin?: boolean
+  type?: string
 }
 
 export const StatusSymbol = (props: Props) => {
@@ -64,7 +68,21 @@ export const StatusSymbol = (props: Props) => {
 
   const buttonPressed = props.isClicked ?? false
   const hasCustomMargin = props.hasNoLeftMargin ?? false
+  const PEOPLE_ICON = <img src={Friends} alt="Friends Icon" />
   const CHECK_ICON = props.isClicked && <CheckIcon src={tick} alt="Check Icon" />
+
+  let leftIcon = props.leftIcon
+  let preText = props.preText
+  let text = props.text
+  if (props.type === 'numberOfUsers') {
+    leftIcon = PEOPLE_ICON
+  } else if (props.type === 'estDeliveryFee') {
+    leftIcon = <CarOutlined />
+    preText = 'est.'
+  } else if (props.type === 'deliveryFee') {
+    leftIcon = <CarOutlined />
+    text = `${props.text}*`
+  }
 
   let BACKGROUND_COLOR = props.backgroundColor ?? ''
   if (props.backgroundColor === 'bluegrey') {
@@ -84,9 +102,9 @@ export const StatusSymbol = (props: Props) => {
       borderColor={BORDER_COLOR}
       backgroundColor={BACKGROUND_COLOR}
     >
-      {props.leftIcon && <IconContainer color={ICON_COLOR}>{props.leftIcon}</IconContainer>}
-      {props.preText && <PreTextContainer textColor={TEXT_COLOR}>{props.preText}</PreTextContainer>}
-      <TextContainer textColor={TEXT_COLOR}>{props.text}</TextContainer>
+      {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
+      {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}
+      <TextContainer textColor={TEXT_COLOR}>{text}</TextContainer>
       {<IconContainer color={ICON_COLOR}>{RIGHT_ICON}</IconContainer>}
     </MainContainer>
   )

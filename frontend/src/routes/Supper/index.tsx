@@ -3,33 +3,45 @@ import React from 'react'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { RoundProgress } from '../../components/Supper/RoundProgress'
-import { MainSGCard } from '../../components/Supper/MainSGCard'
+import { MainSGCard } from '../../components/Supper/CustomCards/MainSGCard'
 import { MaxPriceFixer } from '../../components/Supper/MaxPriceFixer'
 import { QuantityTracker } from '../../components/Supper/QuantityTracker'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
-import { JoinOrderSGCard } from '../../components/Supper/JoinOrderSGCard'
+import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
 import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/ViewOrderSGCard'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
-import { SGCardWithStatus } from '../../components/Supper/SGCardWithStatus'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
+import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
+import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 
 export default function Supper() {
   return (
     <>
-      <RoundProgress amountLeft={50} percent={20} />
+      <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
-      <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
+      <ExpandableSGCard
+        isOwner
+        supperGroupName="SUPPER FRIENDS"
+        supperGroupId="RHSO#1002"
+        ownerName="Zhou BaoBao"
+        priceLimit={30}
+        currentAmount={10}
+        closingTime="10.30PM"
+        numberOfUsers={10}
+        deliveryFee="10.70"
+      />
+      <MainSGCard isOwner title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <MaxPriceFixer />
       <QuantityTracker default={5} />
-      <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
-      <RoundProgress amountLeft={50} percent={100} />
+      <SGStatusBubble text={SupperGroupStatus.ORDERED} />
+      <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol isClicked backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <SGCardWithStatus
-        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        supperGroupStatus={SupperGroupStatus.CLOSED}
         location="Basketball Court"
         collectionTime="12:30AM"
         username="Zhou BaoBao"
@@ -46,11 +58,12 @@ export default function Supper() {
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
+        isOwner
         title="f> SUPPER FRIENDS I REALLY LIKE A RLY LONG NAME"
         orderId="RHSO#1002"
         username="Zhou BaoBao"
-        amountLeft={50}
-        percent={100}
+        currentAmount={50}
+        priceLimit={100}
         closingTime="11:59PM"
         numberOfUsers={10}
         splitACType={SplitACMethod.EQUAL}
@@ -60,8 +73,8 @@ export default function Supper() {
         title="f> SUPPER FRIENDS :0"
         orderId="RHSO#1002"
         username="Zhou BaoBao"
-        amountLeft={50}
-        percent={70}
+        currentAmount={50}
+        priceLimit={70}
         closingTime="11:59PM"
         numberOfUsers={10}
         deliveryFee="10.70"
