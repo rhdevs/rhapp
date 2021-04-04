@@ -107,7 +107,7 @@ export const OrderSummaryCard = (props: Props) => {
             {orderList?.map((order, index) => {
               return (
                 <>
-                  <NameText>
+                  <NameText key={index}>
                     {order.user.userID === localStorage.getItem('userID')
                       ? 'You'
                       : `${order.user.displayName} (@${order.user.telegramHandle})`}

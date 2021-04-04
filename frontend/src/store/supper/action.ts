@@ -1,4 +1,4 @@
-import { ActionTypes, Food, Order, PaymentMethod, SupperGroup } from '../supper/types'
+import { ActionTypes, Food, Order, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -463,5 +463,14 @@ export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: 
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_RESTAURANT,
     selectedRestaurant: selectedRestaurant,
+  })
+}
+
+export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS,
+    selectedSupperGroupStatus: selectedSupperGroupStatus,
   })
 }

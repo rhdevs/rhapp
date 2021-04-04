@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod } from './supper/types'
+import { Order, PaymentMethod, SupperGroupStatus } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -312,3 +312,12 @@ export const orderList: Order[] = [
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
 
 export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
+
+export const supperGroupStatusList = [
+  SupperGroupStatus.ARRIVED,
+  SupperGroupStatus.CANCELLED,
+  SupperGroupStatus.CLOSED,
+  SupperGroupStatus.COMPLETED,
+  SupperGroupStatus.OPEN,
+  SupperGroupStatus.ORDERED,
+]

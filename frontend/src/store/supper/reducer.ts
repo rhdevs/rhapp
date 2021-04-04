@@ -8,6 +8,7 @@ import {
   FoodMenu,
   SupperGroup,
   PaymentMethod,
+  SupperGroupStatus,
 } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
@@ -29,6 +30,7 @@ const initialState = {
   isExpanded: false,
   selectedPaymentMethod: [],
   selectedRestaurant: null,
+  selectedSupperGroupStatus: null,
 }
 
 type State = {
@@ -49,6 +51,7 @@ type State = {
   isExpanded: boolean
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
+  selectedSupperGroupStatus: SupperGroupStatus | null
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -115,6 +118,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_SELECTED_RESTAURANT: {
       return { ...state, selectedRestaurant: action.selectedRestaurant }
+    }
+    case SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS: {
+      return { ...state, selectedSupperGroupStatus: action.selectedSupperGroupStatus }
     }
     default:
       return state

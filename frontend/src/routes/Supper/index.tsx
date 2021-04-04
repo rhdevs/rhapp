@@ -14,18 +14,20 @@ import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSG
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { OrderSummaryCard } from '../../components/Supper/CustomCards/OrderSummaryCard'
-import { foodList, orderList, paymentMethods, restaurantList } from '../../store/stubs'
+import { foodList, orderList, paymentMethods, restaurantList, supperGroupStatusList } from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbles'
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
+import { SGStatusBubbles } from '../../components/Supper/SGStatusBubbles'
 
 export default function Supper() {
   return (
     <>
       <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
+      <SGStatusBubbles supperGroupStatusList={supperGroupStatusList} />
       <RestaurantBubbles restaurantList={restaurantList} />
       <PaymentMethodBubbles paymentMethods={paymentMethods} />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />

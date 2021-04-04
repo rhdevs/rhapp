@@ -135,6 +135,7 @@ export enum SUPPER_ACTIONS {
   SET_EXPANDABLE_CARD_STATUS = 'SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS',
   SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
   SET_SELECTED_RESTAURANT = 'SUPPER_ACTIONS.SET_SELECTED_RESTAURANT',
+  SET_SELECTED_SUPPER_GROUP_STATUS = 'SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS',
 }
 
 type SetIsLoading = {
@@ -242,6 +243,11 @@ type SetSelectedRestaurant = {
   selectedRestaurant: string | null
 }
 
+type SetSelectedSupperGroupStatus = {
+  type: typeof SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS
+  selectedSupperGroupStatus: SupperGroupStatus | null
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -264,3 +270,4 @@ export type ActionTypes =
   | SetExpandableCardStatus
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
+  | SetSelectedSupperGroupStatus
