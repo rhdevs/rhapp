@@ -25,13 +25,14 @@ type Props = {
   supperGroupStatusList: SupperGroupStatus[]
 }
 
-export const SGStatusBubbles = (props: Props) => {
+export const SGStatusOptions = (props: Props) => {
   const DARK_BLUE = '#002642'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
   const { selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
 
+  //TODO: Change dummy status to currentSG Status
   useEffect(() => {
     dispatch(setSelectedSupperGroupStatus(SupperGroupStatus.OPEN))
   }, [])

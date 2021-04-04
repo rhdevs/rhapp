@@ -20,14 +20,14 @@ import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWith
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbles'
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
-import { SGStatusBubbles } from '../../components/Supper/SGStatusBubbles'
+import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 
 export default function Supper() {
   return (
     <>
       <RoundProgress priceLimit={50} currentAmount={10} />
       <StatusSymbol backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
-      <SGStatusBubbles supperGroupStatusList={supperGroupStatusList} />
+      <SGStatusOptions supperGroupStatusList={supperGroupStatusList} />
       <RestaurantBubbles restaurantList={restaurantList} />
       <PaymentMethodBubbles paymentMethods={paymentMethods} />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
