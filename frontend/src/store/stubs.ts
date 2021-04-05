@@ -1,6 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
+import { FoodMenu } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -166,4 +167,8 @@ export const userProfileStub: User = {
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
 }
 
+export const foodMenuStub: FoodMenu[] = [
+  { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
+  { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+]
 export const dummyUserId = 'A1234567B'

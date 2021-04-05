@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FoodMenu } from '../../store/supper/types'
+import { FoodMenu, Order } from '../../store/supper/types'
 
 const MainContainer = styled.div`
   background-color: white;
@@ -48,8 +48,10 @@ const PriceContainer = styled.text`
 `
 type Props = {
   menu: FoodMenu[]
+  order?: Order
 }
 export const MenuSection = (props: Props) => {
+  let QUANTITY: string | undefined
   return (
     <MainContainer>
       <SectionHeaderContainer>
@@ -61,9 +63,15 @@ export const MenuSection = (props: Props) => {
             <>
               <FoodAndQuantityContainer>
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-                <QuantityContainer>x1</QuantityContainer>
+                {
+                  (QUANTITY =
+                    props.order !== undefined
+                      ? props.order?.foodList?.find((food) => food.foodMenu === foodMenu)?.quantity.toString
+                      : '')
+                }
+                <QuantityContainer>{QUANTITY}</QuantityContainer>
               </FoodAndQuantityContainer>
-              <PriceContainer>{foodMenu.price}</PriceContainer>
+              <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
             </>
           ))}
         </FoodMenuContainer>
