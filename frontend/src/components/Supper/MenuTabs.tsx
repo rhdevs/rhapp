@@ -61,14 +61,15 @@ const TextContainer = styled(Radio.Button)`
   font-size: 16px;
 `
 
-//const { menuSections } = useSelector((state: RootState) => state.supper)
-export const MenuTabs = () => {
-  const menuSections = ['Value Meals', 'Ala Carte', 'Breakfast', 'Dinner', 'Dessert']
+type Props = {
+  menuSections: string[]
+}
 
+export const MenuTabs = (props: Props) => {
   return (
     <MainContainer>
       <ToggleTabsContainer>
-        {menuSections.map((section, idx) => (
+        {props.menuSections.map((section, idx) => (
           <TextContainer key={idx} value={section}>
             {section}
           </TextContainer>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { MenuTabs } from '../../components/Supper/MenuTabs'
 
 // import { SmileOutlined } from '@ant-design/icons'
 // import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -69,6 +70,7 @@ export default function Supper() {
       />
       <ViewCartButton numberOfItems={5} currentTotal="7.90" /> 
       <ToggleCreatedJoined /> */}
+      <MenuTabs menuSections={['Value Meals', 'Ala Carte', 'Breakfast', 'Dinner', 'Dessert']} />
     </>
   )
 }
