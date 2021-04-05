@@ -25,7 +25,7 @@ import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 export default function Supper() {
   return (
     <>
-      <RoundProgress priceLimit={50} currentAmount={10} />
+      <RoundProgress priceLimit={50} currentAmount={19.7} />
       <StatusSymbol backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <SGStatusOptions supperGroupStatusList={supperGroupStatusList} />
       <RestaurantBubbles restaurantList={restaurantList} />

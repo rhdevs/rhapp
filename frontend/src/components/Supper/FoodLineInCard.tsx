@@ -36,7 +36,7 @@ const TitleText = styled.text`
 const MoneyText = styled.text`
   font-size: 14px;
   line-height: 14px;
-  margin: auto;
+  margin: auto 0;
 `
 
 const BottomContainer = styled.div`

@@ -4,7 +4,7 @@ import { Progress } from 'antd'
 import styled from 'styled-components'
 
 const TextContainer = styled.text<{ fontSize?: string }>`
-  font-size: ${(props) => props.fontSize ?? '16px'};
+  font-size: ${(props) => props.fontSize ?? '21px'};
   font-weight: 600;
   color: rgba(0, 0, 0, 0.65);
 `
@@ -32,7 +32,7 @@ export const RoundProgress = (props: Props) => {
         return (
           <>
             <TextContainer fontSize={props.moneyFontSize}>
-              ${amountLeft.toFixed(2)}
+              ${Math.floor(amountLeft)}
               <br />
             </TextContainer>
             <SubTextContainer fontSize={props.textFontSize}>left</SubTextContainer>
