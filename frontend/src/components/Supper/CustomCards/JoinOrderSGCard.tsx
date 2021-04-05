@@ -1,33 +1,17 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { MainCard } from './MainCard'
-import notFound from '../../assets/notFound.svg'
-import { RoundProgress } from './RoundProgress'
-import { StatusSymbol } from './StatusSymbol'
-import Friends from '../../assets/Friends.svg'
-import { SplitACMethod } from '../../store/supper/types'
-import { CarOutlined } from '@ant-design/icons'
+import { MainCard } from '../MainCard'
+import notFound from '../../../assets/notFound.svg'
+import { RoundProgress } from '../RoundProgress'
+import { StatusSymbol } from '../StatusSymbol'
+import { SplitACMethod } from '../../../store/supper/types'
+import { RoundImage } from '../RoundImage'
+import { UnderlinedButton } from '../UnderlinedButton'
 
 const TopSection = styled.div`
   display: flex;
   flex-direction: row;
-`
-
-const ImgContainer = styled.div`
-  height: 64px;
-  width: 64px;
-  margin: auto 0;
-`
-
-const RestaurantLogo = styled.img`
-  min-width: 100%;
-  min-height: 100%;
-  height: 64px;
-  width: 64px;
-  border: 1px #002642 solid;
-  border-radius: 50%;
-  overflow: hidden;
 `
 
 const TextSubContainer = styled.div`
@@ -63,29 +47,34 @@ const FirstLineContainer = styled.div`
   flex-direction: row;
 `
 
+const OwnerButtonContainer = styled.div`
+  margin: auto;
+  padding-top: 3px;
+`
+
 type Props = {
   title: string
   orderId: string
   username: string
-  amountLeft: number
-  percent: number
+  priceLimit: number
+  currentAmount: number
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
   splitACType: SplitACMethod
+  isOwner?: boolean
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const JoinOrderSGCard = (props: Props) => {
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        <ImgContainer>
-          <RestaurantLogo src={notFound} alt="Restaurant Logo" />
-        </ImgContainer>
+        <RoundImage image={notFound} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
-            {props.orderId} ({props.username})
+            {props.orderId} ({props.isOwner ? 'You' : props.username})
           </OrderIdContainer>
         </TextSubContainer>
       </TopSection>
@@ -93,16 +82,19 @@ export const JoinOrderSGCard = (props: Props) => {
         <BubblesContainer>
           <FirstLineContainer>
             <StatusSymbol text={props.closingTime} />
-            <StatusSymbol text={String(props.numberOfUsers)} leftIcon={<img src={Friends} alt="Friends Icon" />} />
+            <StatusSymbol text={String(props.numberOfUsers)} type="numberOfUsers" />
           </FirstLineContainer>
-          <StatusSymbol
-            leftIcon={<CarOutlined />}
-            preText="est."
-            text={`${props.deliveryFee} (${props.splitACType})`}
-          />
+          <StatusSymbol type="estDeliveryFee" text={`${props.deliveryFee} (${props.splitACType})`} />
         </BubblesContainer>
-        <RoundProgress amountLeft={props.amountLeft} percent={props.percent} />
+        <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
       </BottomSection>
+      {props.isOwner ? (
+        <OwnerButtonContainer>
+          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
+        </OwnerButtonContainer>
+      ) : (
+        <></>
+      )}
     </MainCard>
   )
 }

@@ -3,11 +3,11 @@ import React from 'react'
 
 import styled from 'styled-components'
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ isSticky?: boolean; width?: string }>`
   margin: auto;
   padding: 6px 15px;
-  width: 100vw;
-  position: fixed;
+  width: ${(props) => props.width ?? '100vw'};
+  position: ${(props) => (props.isSticky ? 'fixed' : '')};
   bottom: 0;
   z-index: 1000;
   background: #fafaf4;
@@ -39,15 +39,17 @@ const TextField = styled.text`
 `
 
 type Props = {
+  isSticky?: boolean
   leftText?: string
   middleText?: string
   rightText?: string
+  width?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
-export const BottomStickyButton = (props: Props) => {
+export const RedButton = (props: Props) => {
   return (
-    <MainContainer>
+    <MainContainer isSticky={props.isSticky} width={props.width}>
       <Button type="primary" onClick={props.onClick}>
         <ButtonTextContainer>
           <TextField>{props.leftText}</TextField>

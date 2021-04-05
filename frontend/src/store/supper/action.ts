@@ -1,4 +1,4 @@
-import { ActionTypes, Food, Order, SupperGroup } from '../supper/types'
+import { ActionTypes, Food, Order, PaymentMethod, SupperGroup } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -440,5 +440,21 @@ export const setPriceLimit = (newPriceLimit: number) => (dispatch: Dispatch<Acti
   dispatch({
     type: SUPPER_ACTIONS.SET_PRICE_LIMIT,
     priceLimit: newPriceLimit,
+  })
+}
+
+export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS,
+    isExpanded: isExpanded,
+  })
+}
+
+export const SetSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
+    selectedPaymentMethod: selectedPaymentMethod,
   })
 }

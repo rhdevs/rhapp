@@ -36,7 +36,7 @@ export type FoodMenu = {
   foodMenuId: string
   restaurantId: string
   foodMenuName: string
-  price: string
+  price: number
   custom?: Custom[]
 }
 
@@ -49,7 +49,7 @@ export type Restaurant = {
 
 export type Order = {
   orderId: string
-  user: string
+  user: User
   supperGroupId: string
   userContact?: number
   foodList: Food[]
@@ -132,6 +132,8 @@ export enum SUPPER_ACTIONS {
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
   SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
   SET_PRICE_LIMIT = 'SUPPER_ACTIONS.SET_PRICE_LIMIT',
+  SET_EXPANDABLE_CARD_STATUS = 'SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS',
+  SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
 }
 
 type SetIsLoading = {
@@ -224,6 +226,16 @@ type SetPriceLimit = {
   priceLimit: number
 }
 
+type SetExpandableCardStatus = {
+  type: typeof SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS
+  isExpanded: boolean
+}
+
+type SetSelectedPaymentMethod = {
+  type: typeof SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD
+  selectedPaymentMethod: PaymentMethod[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -243,3 +255,5 @@ export type ActionTypes =
   | GetSupperGroupHistory
   | SetCount
   | SetPriceLimit
+  | SetExpandableCardStatus
+  | SetSelectedPaymentMethod
