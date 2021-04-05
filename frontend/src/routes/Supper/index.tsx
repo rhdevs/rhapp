@@ -16,6 +16,10 @@ import React from 'react'
 import { MenuSection } from '../../components/Supper/MenuSection'
 
 export default function Supper() {
+  const foodMenuStub = [
+    { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: '$7.90' },
+    { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: '$5' },
+  ]
   return (
     <>
       {/* <RoundProgress amountLeft={50} percent={20} />
@@ -51,7 +55,7 @@ export default function Supper() {
         deliveryFee="10.70"
       />
       <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
-      <MenuSection />
+      <MenuSection menu={foodMenuStub} />
     </>
   )
 }

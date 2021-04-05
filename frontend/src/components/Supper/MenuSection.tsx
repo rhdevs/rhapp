@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { FoodMenu } from '../../store/supper/types'
 
 const MainContainer = styled.div`
   background-color: white;
@@ -45,12 +46,10 @@ const PriceContainer = styled.text`
   font-size: 14px;
   font-weight: 200;
 `
-
-export const MenuSection = () => {
-  const foodMenu = [
-    { food: 'McSpicy Meal', quantity: 'x1', price: '$7.90' },
-    { food: 'Filet-O-Fish Meal', quantity: '', price: '$5' },
-  ]
+type Props = {
+  menu: FoodMenu[]
+}
+export const MenuSection = (props: Props) => {
   return (
     <MainContainer>
       <SectionHeaderContainer>
@@ -58,11 +57,11 @@ export const MenuSection = () => {
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
-          {foodMenu.map((foodMenu) => (
+          {props.menu.map((foodMenu) => (
             <>
               <FoodAndQuantityContainer>
-                <FoodContainer>{foodMenu.food}</FoodContainer>
-                <QuantityContainer>{foodMenu.quantity}</QuantityContainer>
+                <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
+                <QuantityContainer>x1</QuantityContainer>
               </FoodAndQuantityContainer>
               <PriceContainer>{foodMenu.price}</PriceContainer>
             </>
