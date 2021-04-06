@@ -50,7 +50,7 @@ const ArrowContainer = styled.div`
 const ChildContainer = styled.div`
   margin: auto;
   width: 85vw;
-  height: 5rem;
+  height: fit-content;
   padding: 0 0.5rem;
 `
 
