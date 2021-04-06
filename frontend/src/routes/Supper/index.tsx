@@ -14,12 +14,9 @@ import React from 'react'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 // import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { MenuSection } from '../../components/Supper/MenuSection'
+import { foodMenuStub } from '../../store/stubs'
 
 export default function Supper() {
-  const foodMenuStub = [
-    { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: '$7.90' },
-    { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: '$5' },
-  ]
   return (
     <>
       {/* <RoundProgress amountLeft={50} percent={20} />

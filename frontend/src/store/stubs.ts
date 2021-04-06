@@ -167,6 +167,11 @@ export const userProfileStub: User = {
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
 }
 
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
 export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
   { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },

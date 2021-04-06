@@ -51,7 +51,7 @@ type Props = {
   order?: Order
 }
 export const MenuSection = (props: Props) => {
-  let QUANTITY: string | undefined
+  let QUANTITY
   return (
     <MainContainer>
       <SectionHeaderContainer>
@@ -64,10 +64,11 @@ export const MenuSection = (props: Props) => {
               <FoodAndQuantityContainer>
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
                 {
-                  (QUANTITY =
-                    props.order !== undefined
-                      ? props.order?.foodList?.find((food) => food.foodMenu === foodMenu)?.quantity.toString
-                      : '')
+                  (QUANTITY = props.order?.foodList?.find((food) => {
+                    if (food.foodMenu === foodMenu) {
+                      return String(food.quantity)
+                    }
+                  }))
                 }
                 <QuantityContainer>{QUANTITY}</QuantityContainer>
               </FoodAndQuantityContainer>
