@@ -267,12 +267,24 @@ def all_supper_group():
                 }
             },
             {
-                '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'},
-                    'numOrders': {'$size': '$orders'}
+                '$lookup': {
+                    'from': 'Restaurants',
+                    'localField': 'restaurantName',
+                    'foreignField': 'name',
+                    'as': 'restaurant'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0}}
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$addFields': {
+                    'totalPrice': {'$sum': '$orders.orderPrice'},
+                    'numOrders': {'$size': '$orders'},
+                    'restaurantLogo': '$restaurant.restaurantLogo'
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -297,7 +309,7 @@ def create_supper_group():
 
         # auto-increment supperGroupId
         lastsupperGroupID = list(db.SupperGroup.find().sort(
-            [('_id', pymongo.DESCENDING)]).limit(1))
+            [('suppGroupId', pymongo.DESCENDING)]).limit(1))
         newsupperGroupID = 1 if len(lastsupperGroupID) == 0 else int(
             lastsupperGroupID[0].get("supperGroupId")) + 1
 
@@ -678,11 +690,24 @@ def user_supper_group_history(userID):
                 }
             },
             {
-                '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'}
+                '$lookup': {
+                    'from': 'Restaurants',
+                    'localField': 'restaurantName',
+                    'foreignField': 'name',
+                    'as': 'restaurant'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0}}
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$addFields': {
+                    'totalPrice': {'$sum': '$orders.orderPrice'},
+                    'numOrders': {'$size': '$orders'},
+                    'restaurantLogo': '$restaurant.restaurantLogo'
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
