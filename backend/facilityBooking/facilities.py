@@ -675,6 +675,65 @@ def user_order_history(userID):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
+@app.route('/supper/user/<userID>/joinGroupHistory', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_history(userID):
+    try:
+        pipeline = [
+            {'$match': {'ownerId': userID}},
+            {
+                '$lookup': {
+                    'from': 'SupperGroup',
+                    'localField': 'supperGroupId',
+                    'foreignField': 'supperGroupId',
+                    'as': 'suppergroups'
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'Order',
+                    'localField': 'supperGroupId',
+                    'foreignField': 'supperGroupId',
+                    'as': 'orders'
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'Restaurants',
+                    'localField': 'restaurantName',
+                    'foreignField': 'name',
+                    'as': 'restaurant'
+                }
+            },
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$addFields': {
+                    'totalPrice': {'$sum': '$orders.orderPrice'},
+                    'numOrders': {'$size': '$orders'},
+                    'restaurantLogo': '$restaurant.restaurantLogo'
+                }
+            },
+            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
+        ]
+
+        result = db.SupperGroup.aggregate(pipeline)
+
+        data = []
+        for supperGroup in result:
+            data.append(supperGroup)
+
+        data.sort(key=lambda x: x.get('createdAt'), reverse=True)
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
 @app.route('/supper/user/<userID>/supperGroupHistory', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def user_supper_group_history(userID):
