@@ -27,7 +27,7 @@ const FoodMenuContainer = styled.div`
 const FoodAndQuantityContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: ;
+  margin: 0;
 `
 const FoodContainer = styled.text`
   margin: 5px 2px 5px 5px;
@@ -49,6 +49,7 @@ const PriceContainer = styled.text`
 type Props = {
   menu: FoodMenu[]
   order?: Order
+  onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const MenuSection = (props: Props) => {
   let QUANTITY
@@ -61,7 +62,10 @@ export const MenuSection = (props: Props) => {
         <FoodMenuContainer>
           {props.menu.map((foodMenu) => (
             <>
-              <FoodAndQuantityContainer>
+              <FoodAndQuantityContainer onClick={()=>{
+                // TODO: Add route
+                //history.push(/foodMenu.foodMenuId)
+              }}>
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
                 {
                   (QUANTITY = props.order?.foodList?.find((food) => {
