@@ -76,7 +76,7 @@ export type SupperGroup = {
   status: SupperGroupStatus
   location: string //collection point
   deliveryDuration: number
-  arrivalTime: number // = creationTime + estimated delivery duration
+  //arrivalTime = creationTime + estimated delivery duration
   closingTime: string
   createdAt: number
 }

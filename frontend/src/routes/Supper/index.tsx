@@ -19,6 +19,7 @@ import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbles'
+import { NotificationBar } from '../../components/Supper/NotificationBar'
 
 export default function Supper() {
   return (
@@ -86,6 +87,7 @@ export default function Supper() {
       />
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
+      <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
     </>
   )
 }
