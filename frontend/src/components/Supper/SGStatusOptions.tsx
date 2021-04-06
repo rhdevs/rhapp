@@ -34,7 +34,7 @@ export const SGStatusOptions = (props: Props) => {
 
   //TODO: Change dummy status to currentSG Status
   useEffect(() => {
-    dispatch(setSelectedSupperGroupStatus(SupperGroupStatus.OPEN))
+    dispatch(setSelectedSupperGroupStatus(SupperGroupStatus.ORDERED))
   }, [])
 
   return (

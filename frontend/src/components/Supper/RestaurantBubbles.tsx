@@ -14,10 +14,10 @@ const CheckIcon = styled.img`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
+  width: 75vw;
+  white-space: nowrap;
+  overflow: scroll;
   margin: auto;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  width: 80vw;
 `
 
 type Props = {
@@ -47,6 +47,7 @@ export const RestaurantBubbles = (props: Props) => {
               rightIcon={CHECK_ICON}
               fontWeight={500}
               fontSize="14px"
+              minWidth=""
             />
           )
         } else {
@@ -63,6 +64,7 @@ export const RestaurantBubbles = (props: Props) => {
               text={restaurant}
               fontWeight={500}
               fontSize="14px"
+              minWidth=""
             />
           )
         }

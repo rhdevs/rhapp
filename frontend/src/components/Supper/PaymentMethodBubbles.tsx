@@ -16,9 +16,9 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: auto;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  width: 80vw;
+  white-space: nowrap;
+  width: 75vw;
+  overflow: scroll;
 `
 
 type Props = {
