@@ -67,6 +67,7 @@ const Icon = styled.img`
 `
 
 type Props = {
+  foodUserId?: string
   foodName: string
   qty: number
   price?: number
@@ -98,7 +99,7 @@ export const FoodLineInCard = (props: Props) => {
             )}
           </CustomisationContainer>
 
-          {props.isEditable && (
+          {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
               <Icon onClick={props.onEditClick} src={editIcon} alt="Edit Icon" />
               <Icon onClick={props.onDeleteClick} src={deleteIcon} alt="Edit Icon" />

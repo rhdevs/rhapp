@@ -31,7 +31,7 @@ export default function Supper() {
       <RestaurantBubbles restaurantList={restaurantList} />
       <PaymentMethodBubbles paymentMethods={paymentMethods} />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
-      <OrderSummaryCard orderByUser isOwner isEditable foodList={foodList} orderList={orderList} />
+      <OrderSummaryCard orderByUser isEditable foodList={foodList} orderList={orderList} />
       <ExpandableSGCard
         isOwner
         supperGroupName="SUPPER FRIENDS"

@@ -238,7 +238,7 @@ export const foodList = [
         {
           title: 'Sides',
           options: [
-            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Fries', isSelected: false, price: 0 },
             { name: 'Apple pie', isSelected: false, price: 1.2 },
           ],
           max: null,
@@ -248,7 +248,7 @@ export const foodList = [
         {
           title: 'Drinks',
           options: [
-            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Coca Cola', isSelected: false, price: 0 },
             { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
             { name: 'Milo', isSelected: false, price: 1.5 },
           ],

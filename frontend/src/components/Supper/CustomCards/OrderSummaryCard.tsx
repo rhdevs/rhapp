@@ -50,7 +50,6 @@ type Props = {
   onCancelOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onCloseOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
-  isOwner?: boolean
   orderList?: Order[]
 }
 
@@ -60,11 +59,12 @@ export const OrderSummaryCard = (props: Props) => {
       props.isEditable && (
         <ButtonContainer>
           <Button
+            descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
             stopPropagation={true}
-            defaultButtonDescription="Cancel Order"
+            defaultButtonDescription={props.orderByUser ? 'Cancel Group Order' : 'Cancel Order'}
             defaultButtonColor="transparent"
             defaultTextColor="#de5f4c"
-            buttonWidth="fit-content"
+            buttonWidth="120px"
             buttonHeight="fit-content"
             onButtonClick={() => {
               props.onCancelOrderClick
@@ -72,12 +72,13 @@ export const OrderSummaryCard = (props: Props) => {
             isFlipButton={false}
             border="2px solid #de5f4c"
           />
-          {props.isOwner && (
+          {props.orderByUser && (
             <Button
+              descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
               stopPropagation={true}
-              defaultButtonDescription="Close Order"
-              buttonWidth="fit-content"
-              buttonHeight="34px"
+              defaultButtonDescription="Close Group Order"
+              buttonWidth="120px"
+              buttonHeight="56px"
               onButtonClick={() => {
                 props.onCloseOrderClick
               }}
@@ -128,6 +129,7 @@ export const OrderSummaryCard = (props: Props) => {
                         customisations={customisations}
                         isEditable={props.isEditable}
                         comments={food.comments}
+                        foodUserId={order.user.userID}
                       />
                     )
                   })}
@@ -137,6 +139,7 @@ export const OrderSummaryCard = (props: Props) => {
             })}
             {bottomButtons() && (
               <>
+                <br />
                 <br />
                 <br />
               </>
