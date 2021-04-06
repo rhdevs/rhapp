@@ -1,12 +1,10 @@
-import { CarOutlined } from '@ant-design/icons'
 import React from 'react'
 
 import styled from 'styled-components'
-import { MainCard } from './MainCard'
-import { RoundProgress } from './RoundProgress'
-import { StatusSymbol } from './StatusSymbol'
-import notFound from '../../assets/notFound.svg'
-import Friends from '../../assets/Friends.svg'
+import { MainCard } from '../MainCard'
+import { RoundProgress } from '../RoundProgress'
+import { StatusSymbol } from '../StatusSymbol'
+import notFound from '../../../assets/notFound.svg'
 
 const TopSection = styled.div`
   display: flex;
@@ -63,8 +61,8 @@ type Props = {
   title: string
   orderId: string
   username: string
-  amountLeft: number
-  percent: number
+  priceLimit: number
+  currentAmount: number
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
@@ -87,19 +85,15 @@ export const ViewOrderSGCard = (props: Props) => {
       <BottomSection>
         <BubblesContainer>
           <StatusSymbol text={props.closingTime} />
-          <StatusSymbol
-            hasNoLeftMargin
-            text={String(props.numberOfUsers)}
-            leftIcon={<img src={Friends} alt="Friends Icon" />}
-          />
-          <StatusSymbol hasNoLeftMargin leftIcon={<CarOutlined />} text={`${props.deliveryFee}*`} />
+          <StatusSymbol hasNoLeftMargin text={String(props.numberOfUsers)} type="numberOfUsers" />
+          <StatusSymbol hasNoLeftMargin type="deliveryFee" text={props.deliveryFee} />
         </BubblesContainer>
         <RoundProgress
           width={50}
           moneyFontSize="15px"
           textFontSize="12px"
-          amountLeft={props.amountLeft}
-          percent={props.percent}
+          priceLimit={props.priceLimit}
+          currentAmount={props.currentAmount}
         />
       </BottomSection>
     </MainCard>
