@@ -10,6 +10,7 @@ const MainContainer = styled.div<{
   borderColor: string
   borderWidth: string
   shadow?: string
+  minWidth?: string
 }>`
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
@@ -17,7 +18,7 @@ const MainContainer = styled.div<{
   padding: 2px 7px;
   height: fit-content;
   min-height: 33px;
-  min-width: 3rem;
+  min-width: ${(props) => `${props.minWidth}` ?? '3rem'};
   margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
   display: flex;
@@ -62,6 +63,7 @@ type Props = {
   iconColor?: string
   fontWeight?: number
   fontSize?: string
+  minWidth?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -107,6 +109,7 @@ export const StatusSymbol = (props: Props) => {
       backgroundColor={BACKGROUND_COLOR}
       shadow={props.shadow}
       onClick={props.onClick}
+      minWidth={props.minWidth}
     >
       {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
       {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}

@@ -152,7 +152,7 @@ export const SGCardWithStatus = (props: Props) => {
               <PaymentTextContainer>
                 {props.paymentMethod?.map((pm, index) => {
                   if (pm.paymentMethod === PaymentMethod.CASH) {
-                    return <CashText>{pm.paymentMethod}</CashText>
+                    return <CashText key={index}>{pm.paymentMethod}</CashText>
                   } else {
                     return (
                       <UnderlinedButton

@@ -16,10 +16,11 @@ const MainContainer = styled.div<{ flexDirection?: string; minHeight?: string }>
   flex-direction: ${(props) => props.flexDirection ?? ''};
 `
 
-const EditIcon = styled.img`
+const EditIcon = styled.img<{ editIconSize?: string }>`
   position: absolute;
-  padding: 0 15px;
+  margin: 5px 20px;
   right: 0;
+  height: ${(props) => props.editIconSize ?? 'auto'};
 `
 
 interface AuxProps {
@@ -27,13 +28,14 @@ interface AuxProps {
   flexDirection?: string
   minHeight?: string
   isEditable?: boolean
+  editIconSize?: string
 }
 
 export const MainCard = (props: AuxProps) => {
   return (
     <MainContainer minHeight={props.minHeight} flexDirection={props.flexDirection}>
       {props.children}
-      {props.isEditable && <EditIcon src={editIcon} alt="Edit Icon" />}
+      {props.isEditable && <EditIcon editIconSize={props.editIconSize} src={editIcon} alt="Edit Icon" />}
     </MainContainer>
   )
 }

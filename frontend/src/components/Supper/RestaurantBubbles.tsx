@@ -1,12 +1,11 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { PaymentMethod } from '../../store/supper/types'
 import { StatusSymbol } from './StatusSymbol'
 import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setSelectedPaymentMethod } from '../../store/supper/action'
+import { setSelectedRestaurant } from '../../store/supper/action'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -15,64 +14,57 @@ const CheckIcon = styled.img`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: auto;
-  white-space: nowrap;
   width: 75vw;
+  white-space: nowrap;
   overflow: scroll;
+  margin: auto;
 `
 
 type Props = {
-  paymentMethods: PaymentMethod[]
+  restaurantList: string[]
 }
 
-export const PaymentMethodBubbles = (props: Props) => {
+export const RestaurantBubbles = (props: Props) => {
   const DARK_BLUE = '#002642'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
-  const { selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
+  const { selectedRestaurant } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
 
   return (
     <MainContainer>
-      {props.paymentMethods.map((paymentMethod, index) => {
-        if (selectedPaymentMethod.includes(paymentMethod)) {
+      {props.restaurantList.map((restaurant, index) => {
+        if (selectedRestaurant === restaurant) {
           return (
             <StatusSymbol
-              onClick={() => {
-                dispatch(
-                  setSelectedPaymentMethod(
-                    selectedPaymentMethod.filter((pm) => {
-                      return pm !== paymentMethod
-                    }),
-                  ),
-                )
-              }}
               border={DARK_BLUE}
               color="white"
               borderWidth="1px"
               backgroundColor="bluegrey"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
-              text={paymentMethod}
+              text={restaurant}
               rightIcon={CHECK_ICON}
               fontWeight={500}
               fontSize="14px"
+              minWidth=""
             />
           )
         } else {
           return (
             <StatusSymbol
               onClick={() => {
-                dispatch(setSelectedPaymentMethod(selectedPaymentMethod.concat(paymentMethod)))
+                dispatch(setSelectedRestaurant(restaurant))
               }}
               border={DARK_BLUE}
               color={DARK_BLUE}
               borderWidth="1px"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
-              text={paymentMethod}
+              text={restaurant}
               fontWeight={500}
               fontSize="14px"
+              minWidth=""
             />
           )
         }

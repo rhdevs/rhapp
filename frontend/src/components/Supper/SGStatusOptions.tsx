@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
-import { PaymentMethod } from '../../store/supper/types'
 import { StatusSymbol } from './StatusSymbol'
 import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setSelectedPaymentMethod } from '../../store/supper/action'
+import { setSelectedSupperGroupStatus } from '../../store/supper/action'
+import { SupperGroupStatus } from '../../store/supper/types'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -16,44 +16,40 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: auto;
-  white-space: nowrap;
-  width: 75vw;
-  overflow: scroll;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 80vw;
 `
 
 type Props = {
-  paymentMethods: PaymentMethod[]
+  supperGroupStatusList: SupperGroupStatus[]
 }
 
-export const PaymentMethodBubbles = (props: Props) => {
+export const SGStatusOptions = (props: Props) => {
   const DARK_BLUE = '#002642'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
-  const { selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
+  const { selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
+
+  //TODO: Change dummy status to currentSG Status
+  useEffect(() => {
+    dispatch(setSelectedSupperGroupStatus(SupperGroupStatus.ORDERED))
+  }, [])
 
   return (
     <MainContainer>
-      {props.paymentMethods.map((paymentMethod, index) => {
-        if (selectedPaymentMethod.includes(paymentMethod)) {
+      {props.supperGroupStatusList.map((supperGroupStatus, index) => {
+        if (selectedSupperGroupStatus === supperGroupStatus) {
           return (
             <StatusSymbol
-              onClick={() => {
-                dispatch(
-                  setSelectedPaymentMethod(
-                    selectedPaymentMethod.filter((pm) => {
-                      return pm !== paymentMethod
-                    }),
-                  ),
-                )
-              }}
               border={DARK_BLUE}
               color="white"
               borderWidth="1px"
               backgroundColor="bluegrey"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
-              text={paymentMethod}
+              text={supperGroupStatus}
               rightIcon={CHECK_ICON}
               fontWeight={500}
               fontSize="14px"
@@ -63,14 +59,14 @@ export const PaymentMethodBubbles = (props: Props) => {
           return (
             <StatusSymbol
               onClick={() => {
-                dispatch(setSelectedPaymentMethod(selectedPaymentMethod.concat(paymentMethod)))
+                dispatch(setSelectedSupperGroupStatus(supperGroupStatus))
               }}
               border={DARK_BLUE}
               color={DARK_BLUE}
               borderWidth="1px"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
-              text={paymentMethod}
+              text={supperGroupStatus}
               fontWeight={500}
               fontSize="14px"
             />

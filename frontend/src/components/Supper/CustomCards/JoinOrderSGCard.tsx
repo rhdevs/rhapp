@@ -7,7 +7,6 @@ import { RoundProgress } from '../RoundProgress'
 import { StatusSymbol } from '../StatusSymbol'
 import { SplitACMethod } from '../../../store/supper/types'
 import { RoundImage } from '../RoundImage'
-import { UnderlinedButton } from '../UnderlinedButton'
 
 const TopSection = styled.div`
   display: flex;
@@ -23,6 +22,7 @@ const TextSubContainer = styled.div`
 const TitleContainer = styled.text`
   font-size: 20px;
   font-weight: 600;
+  width: 95%;
 `
 
 const OrderIdContainer = styled.text`
@@ -47,11 +47,6 @@ const FirstLineContainer = styled.div`
   flex-direction: row;
 `
 
-const OwnerButtonContainer = styled.div`
-  margin: auto;
-  padding-top: 3px;
-`
-
 type Props = {
   title: string
   orderId: string
@@ -68,7 +63,7 @@ type Props = {
 
 export const JoinOrderSGCard = (props: Props) => {
   return (
-    <MainCard flexDirection="column">
+    <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <TopSection>
         <RoundImage image={notFound} alt="Restaurant Logo" />
         <TextSubContainer>
@@ -88,13 +83,6 @@ export const JoinOrderSGCard = (props: Props) => {
         </BubblesContainer>
         <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
       </BottomSection>
-      {props.isOwner ? (
-        <OwnerButtonContainer>
-          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
-        </OwnerButtonContainer>
-      ) : (
-        <></>
-      )}
     </MainCard>
   )
 }
