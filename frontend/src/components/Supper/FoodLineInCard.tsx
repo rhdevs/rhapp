@@ -13,9 +13,9 @@ const MainContainer = styled.div`
   flex-direction: row;
 `
 
-const QuantityContainer = styled.div`
+const QuantityContainer = styled.div<{ fontPercentage?: number }>`
   width: 10%;
-  font-size: 17px;
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
   line-height: 22px;
 `
 
@@ -28,13 +28,13 @@ const TopContainer = styled.div`
   justify-content: space-between;
 `
 
-const TitleText = styled.text`
-  font-size: 17px;
+const TitleText = styled.text<{ fontPercentage?: number }>`
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
   line-height: 22px;
 `
 
-const MoneyText = styled.text`
-  font-size: 14px;
+const MoneyText = styled.text<{ fontPercentage?: number }>`
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   line-height: 14px;
   margin: auto 0;
 `
@@ -50,8 +50,8 @@ const CustomisationContainer = styled.div`
   flex-direction: column;
 `
 
-const CustomText = styled.text`
-  font-size: 14px;
+const CustomText = styled.text<{ fontPercentage?: number }>`
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   line-height: 14px;
   font-weight: 200;
 `
@@ -62,12 +62,23 @@ const IconsContainer = styled.div`
   height: fit-content;
 `
 
+const CommentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const CommentText = styled.text<{ fontPercentage?: number }>`
+  font-weight: 400;
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
+`
+
 const Icon = styled.img`
   padding: 7px 7px 0 7px;
 `
 
 type Props = {
   foodUserId?: string
+  fontPercentage?: number
   foodName: string
   qty: number
   price?: number
@@ -81,21 +92,26 @@ type Props = {
 export const FoodLineInCard = (props: Props) => {
   return (
     <MainContainer>
-      <QuantityContainer>{props.qty}x</QuantityContainer>
+      <QuantityContainer fontPercentage={props.fontPercentage}>{props.qty}x</QuantityContainer>
       <SubContainer>
         <TopContainer>
-          <TitleText>{props.foodName}</TitleText>
-          <MoneyText>${props.price?.toFixed(2)}</MoneyText>
+          <TitleText fontPercentage={props.fontPercentage}>{props.foodName}</TitleText>
+          <MoneyText fontPercentage={props.fontPercentage}>${props.price?.toFixed(2)}</MoneyText>
         </TopContainer>
         <BottomContainer>
           <CustomisationContainer>
             {props.customisations?.map((custom, index) => {
-              return <CustomText key={index}>{custom}</CustomText>
+              return (
+                <CustomText fontPercentage={props.fontPercentage} key={index}>
+                  {custom}
+                </CustomText>
+              )
             })}
             {props.comments && (
-              <>
-                Comments: <CustomText>{props.comments}</CustomText>
-              </>
+              <CommentsContainer>
+                <CommentText fontPercentage={props.fontPercentage}>Comments: </CommentText>
+                <CustomText>{props.comments}</CustomText>
+              </CommentsContainer>
             )}
           </CustomisationContainer>
 
