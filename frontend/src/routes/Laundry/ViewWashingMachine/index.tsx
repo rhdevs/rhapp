@@ -97,6 +97,13 @@ const MachineSize = styled.p`
   color: #023666;
 `
 
+const EditDuration = styled.p`
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: left;
+`
+
 export default function ViewWashingMachine() {
   const { selectedBlock, selectedLevel, selectedMachine, isEdit, duration } = useSelector(
     (state: RootState) => state.laundry,
@@ -156,22 +163,6 @@ export default function ViewWashingMachine() {
     let subtitle = <></>
     let imagesrc = ''
 
-    // useEffect(() => {
-    //   useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-    //   useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-
-    //   if (machine != null) {
-    //     if (intervalID != undefined) {
-    //       clearInterval(intervalID)
-    //     }
-    //     const idinterval = setInterval(() => {
-    //       useMinuteState(calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number))
-    //       useSecondState(calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number))
-    //     }, 1000)
-    //     setIntervalID(idinterval)
-    //   }
-    // }, [machine])
-
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
@@ -181,7 +172,9 @@ export default function ViewWashingMachine() {
         <TimeUnit>
           <TimeLeftText> {secondState} </TimeLeftText> <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
-        {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
+        {!isEdit && machine?.job === WMStatus.INUSE && (
+          <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>
+        )}
       </TimeLeft>
     )
     switch (machine?.job) {
@@ -217,7 +210,7 @@ export default function ViewWashingMachine() {
         break
       case WMStatus.RESERVED:
         subtitle = timeLeftGroup
-        pageTitle = isEdit ? 'Edit Reservation' : 'Reservation'
+        pageTitle = 'Reservation'
         imagesrc = wm_reserved
         actions = (
           <Button
@@ -258,6 +251,7 @@ export default function ViewWashingMachine() {
     if (machine?.job === WMStatus.RESERVED) {
       return (
         <UseWashingMachineSection>
+          <EditDuration> Select Duration </EditDuration>
           <StyledSlider
             min={1}
             max={machine?.job === WMStatus.RESERVED && isEdit ? 15 : 120}
@@ -313,6 +307,7 @@ export default function ViewWashingMachine() {
     } else if (machine?.job === WMStatus.INUSE) {
       return (
         <UseWashingMachineSection>
+          {isEdit && <EditDuration> Select Duration </EditDuration>}
           {isEdit && (
             <StyledSlider
               min={1}
