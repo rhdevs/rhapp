@@ -21,11 +21,13 @@ const CardContainer = styled.div`
   background-color: #ffffff;
   margin: 23px;
   min-height: 70px;
+  max-height: 100px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
 `
 const WashingMachineAvatar = styled.img`
+  max-height: 100px;
   padding: 20px;
   width: 30%;
   max-width: 135px;
@@ -148,7 +150,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
     case WMStatus.UNCOLLECTED:
       label = props.washingMachine.userID === localStorage.getItem('userID') ? '' : 'Notify'
       iconSrc = props.washingMachine.userImage
-        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        ? props.washingMachine.userImage.startsWith('data:image/png;base64')
+          ? props.washingMachine.userImage
+          : 'data:image/png;base64,' + props.washingMachine.userImage
         : defaultProfilePictureUrl
       washingMachineIcon = wm_uncollected
       rightAction = () => {
@@ -164,7 +168,9 @@ export default function WashingMachineCard(props: { washingMachine: WashingMachi
       label = calculateRemainingTime(props.washingMachine.startTime, props.washingMachine.duration)
       washingMachineIcon = wm_inuse
       iconSrc = props.washingMachine.userImage
-        ? 'data:image/png;base64,' + props.washingMachine.userImage
+        ? props.washingMachine.userImage.startsWith('data:image/png;base64')
+          ? props.washingMachine.userImage
+          : 'data:image/png;base64,' + props.washingMachine.userImage
         : defaultProfilePictureUrl
       rightAction = () => {
         if (props.washingMachine.userID === localStorage.getItem('userID')) {
