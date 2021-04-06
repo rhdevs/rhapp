@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod } from './supper/types'
+import { Order, PaymentMethod, SupperGroupStatus, FoodMenu } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -238,7 +238,7 @@ export const foodList = [
         {
           title: 'Sides',
           options: [
-            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Fries', isSelected: false, price: 0 },
             { name: 'Apple pie', isSelected: false, price: 1.2 },
           ],
           max: null,
@@ -248,7 +248,7 @@ export const foodList = [
         {
           title: 'Drinks',
           options: [
-            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Coca Cola', isSelected: false, price: 0 },
             { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
             { name: 'Milo', isSelected: false, price: 1.5 },
           ],
@@ -310,3 +310,16 @@ export const orderList: Order[] = [
 ]
 
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
+
+export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
+
+export const supperGroupStatusList = [SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED, SupperGroupStatus.ORDERED]
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+export const foodMenuStub: FoodMenu[] = [
+  { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
+  { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+]

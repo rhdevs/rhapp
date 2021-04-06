@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
+import editIcon from '../../../assets/SupperEditIcon.svg'
 import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
 import { MainCard } from '../MainCard'
 import { RoundProgress } from '../RoundProgress'
@@ -45,16 +46,16 @@ const OrderText = styled.text`
 `
 
 const ExpandableButtonContainer = styled.div`
-  position: absolute;
-  bottom: 3px;
+  padding-top: 10px;
   left: 15%;
   display: flex;
   align-items: center;
 `
 
-const OwnerButtonContainer = styled.div`
-  margin: auto;
-  padding-top: 3px;
+const EditIcon = styled.img`
+  margin: 0 15px;
+  right: 0;
+  height: 15px;
 `
 
 type Props = {
@@ -98,6 +99,7 @@ export const ExpandableSGCard = (props: Props) => {
               text={buttonText}
               rightIcon={arrowIcon}
             />
+            {props.isOwner && <EditIcon src={editIcon} alt="Edit Icon" />}
           </ExpandableButtonContainer>
         </LeftContainer>
         <RightContainer>
@@ -110,13 +112,6 @@ export const ExpandableSGCard = (props: Props) => {
           <StatusSymbol type="numberOfUsers" text={String(props.numberOfUsers)} />
           <StatusSymbol type="deliveryFee" text={String(props.deliveryFee)} />
         </BottomContainer>
-      ) : (
-        <></>
-      )}
-      {props.isOwner ? (
-        <OwnerButtonContainer>
-          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
-        </OwnerButtonContainer>
       ) : (
         <></>
       )}

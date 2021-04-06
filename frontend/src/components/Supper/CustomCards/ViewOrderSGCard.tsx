@@ -66,11 +66,12 @@ type Props = {
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
+  isOwner?: boolean
 }
 
 export const ViewOrderSGCard = (props: Props) => {
   return (
-    <MainCard flexDirection="column">
+    <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <TopSection>
         <ImgContainer>
           <RestaurantLogo src={notFound} alt="Restaurant Logo" />

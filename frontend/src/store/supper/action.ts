@@ -1,4 +1,4 @@
-import { ActionTypes, Food, Order, PaymentMethod, SupperGroup } from '../supper/types'
+import { ActionTypes, Food, Order, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -450,11 +450,27 @@ export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispa
   })
 }
 
-export const SetSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+export const setSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
     selectedPaymentMethod: selectedPaymentMethod,
+  })
+}
+
+export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_RESTAURANT,
+    selectedRestaurant: selectedRestaurant,
+  })
+}
+
+export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS,
+    selectedSupperGroupStatus: selectedSupperGroupStatus,
   })
 }

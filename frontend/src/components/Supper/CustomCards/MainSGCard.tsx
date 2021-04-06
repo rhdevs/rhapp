@@ -5,7 +5,6 @@ import { MainCard } from '../MainCard'
 import notFound from '../../../assets/notFound.svg'
 import { StatusSymbol } from '../StatusSymbol'
 import { RoundImage } from '../RoundImage'
-import { UnderlinedButton } from '../UnderlinedButton'
 
 const MainContainer = styled.div`
   display: flex;
@@ -42,11 +41,6 @@ const StatusSymbolContainer = styled.div`
   flex-direction: row;
 `
 
-const OwnerButtonContainer = styled.div`
-  margin: auto;
-  padding-top: 3px;
-`
-
 type Props = {
   title: string
   time: string
@@ -58,7 +52,7 @@ type Props = {
 
 export const MainSGCard = (props: Props) => {
   return (
-    <MainCard flexDirection="column">
+    <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <MainContainer>
         <RoundImage image={notFound} alt="Restaurant Logo" />
         <SubContainer>
@@ -72,13 +66,6 @@ export const MainSGCard = (props: Props) => {
           </BottomContainer>
         </SubContainer>
       </MainContainer>
-      {props.isOwner ? (
-        <OwnerButtonContainer>
-          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
-        </OwnerButtonContainer>
-      ) : (
-        <></>
-      )}
     </MainCard>
   )
 }
