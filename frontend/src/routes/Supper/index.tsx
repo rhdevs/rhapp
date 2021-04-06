@@ -87,6 +87,7 @@ export default function Supper() {
         closingTime="11:59PM"
         numberOfUsers={10}
         deliveryFee="10.70"
+        isOwner
       />
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />

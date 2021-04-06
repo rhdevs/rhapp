@@ -2,10 +2,11 @@ import React, { ReactElement } from 'react'
 
 import styled from 'styled-components'
 
-const MainContainer = styled.a`
+const MainContainer = styled.a<{ alignItems?: string }>`
   margin: 2px;
   display: flex;
   flex-direction: row;
+  align-items: ${(props) => props.alignItems ?? ''};
 `
 
 const ButtonText = styled.text<{ color: string; fontSize?: string }>`
@@ -28,6 +29,7 @@ type Props = {
   color?: string
   fontSize?: string
   rightIcon?: ReactElement
+  alignItems?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const UnderlinedButton = (props: Props) => {
@@ -41,13 +43,15 @@ export const UnderlinedButton = (props: Props) => {
   }
 
   return (
-    <MainContainer onClick={props.onClick}>
+    <MainContainer alignItems={props.alignItems} onClick={props.onClick}>
       <ButtonText fontSize={props.fontSize} color={COLOR}>
         {props.text}
       </ButtonText>
-      <StyledRightIcon fontSize={props.fontSize} color={COLOR}>
-        {props.rightIcon}
-      </StyledRightIcon>
+      {props.rightIcon && (
+        <StyledRightIcon fontSize={props.fontSize} color={COLOR}>
+          {props.rightIcon}
+        </StyledRightIcon>
+      )}
     </MainContainer>
   )
 }
