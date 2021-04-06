@@ -552,7 +552,7 @@ def foodorder(orderId, foodId):
 def all_restaurants():
     try:
         if request.method == 'GET':
-            restaurants = list(db.Restaurants.find({}))
+            restaurants = list(db.Restaurants.find({}, {'restaurantLogo': 0}))
             for restaurant in restaurants:
                 restaurant['restaurantId'] = str(restaurant.pop('_id'))
 
