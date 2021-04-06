@@ -1,5 +1,14 @@
 import { Reducer } from 'redux'
-import { ActionTypes, Food, Restaurant, CollatedOrder, Order, FoodMenu, SupperGroup } from '../supper/types'
+import {
+  ActionTypes,
+  Food,
+  Restaurant,
+  CollatedOrder,
+  Order,
+  FoodMenu,
+  SupperGroup,
+  PaymentMethod,
+} from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
@@ -15,6 +24,10 @@ const initialState = {
   menuFood: null,
   orderHistory: [],
   supperGroupHistory: [],
+  count: 0,
+  priceLimit: 0,
+  isExpanded: false,
+  selectedPaymentMethod: [],
 }
 
 type State = {
@@ -30,6 +43,10 @@ type State = {
   menuFood: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
+  count: number
+  priceLimit: number
+  isExpanded: boolean
+  selectedPaymentMethod: PaymentMethod[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -81,6 +98,18 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
       return { ...state, supperGroupHistory: action.supperGroupHistory }
+    }
+    case SUPPER_ACTIONS.SET_COUNT: {
+      return { ...state, count: action.count }
+    }
+    case SUPPER_ACTIONS.SET_PRICE_LIMIT: {
+      return { ...state, priceLimit: action.priceLimit }
+    }
+    case SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS: {
+      return { ...state, isExpanded: action.isExpanded }
+    }
+    case SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD: {
+      return { ...state, selectedPaymentMethod: action.selectedPaymentMethod }
     }
     default:
       return state

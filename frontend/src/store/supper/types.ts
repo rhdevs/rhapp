@@ -49,7 +49,7 @@ export type Restaurant = {
 
 export type Order = {
   orderId: string
-  user: string
+  user: User
   supperGroupId: string
   userContact?: number
   foodList: Food[]
@@ -57,6 +57,7 @@ export type Order = {
   hasPaid: boolean //1 if user paid owner (user POV)
   paymentMethod: PaymentMethod
   hasReceived: boolean //1 if owner received payment (owner POV)
+  createdAt: number
 }
 
 export type SupperGroup = {
@@ -72,11 +73,12 @@ export type SupperGroup = {
   splitAdditionalCost: SplitACMethod
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
-  status: string
+  status: SupperGroupStatus
   location: string //collection point
   deliveryDuration: number
   arrivalTime: number // = creationTime + estimated delivery duration
   closingTime: string
+  createdAt: number
 }
 
 export type CollatedOrder = {
@@ -128,6 +130,10 @@ export enum SUPPER_ACTIONS {
   GET_MENU_FOOD = 'SUPPER_ACTIONS.GET_MENU_FOOD',
   GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
+  SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
+  SET_PRICE_LIMIT = 'SUPPER_ACTIONS.SET_PRICE_LIMIT',
+  SET_EXPANDABLE_CARD_STATUS = 'SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS',
+  SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
 }
 
 type SetIsLoading = {
@@ -210,6 +216,26 @@ type GetSupperGroupHistory = {
   supperGroupHistory: SupperGroup[]
 }
 
+type SetCount = {
+  type: typeof SUPPER_ACTIONS.SET_COUNT
+  count: number
+}
+
+type SetPriceLimit = {
+  type: typeof SUPPER_ACTIONS.SET_PRICE_LIMIT
+  priceLimit: number
+}
+
+type SetExpandableCardStatus = {
+  type: typeof SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS
+  isExpanded: boolean
+}
+
+type SetSelectedPaymentMethod = {
+  type: typeof SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD
+  selectedPaymentMethod: PaymentMethod[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -227,3 +253,7 @@ export type ActionTypes =
   | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory
+  | SetCount
+  | SetPriceLimit
+  | SetExpandableCardStatus
+  | SetSelectedPaymentMethod

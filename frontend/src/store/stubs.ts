@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { FoodMenu } from './supper/types'
+import { FoodMenu, Order, PaymentMethod } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -157,7 +157,7 @@ export const searchResultsStub: SearchResult[] = [
 
 export const userProfileStub: User = {
   _id: '0',
-  userID: localStorage.username,
+  userID: localStorage.userID,
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',
@@ -166,6 +166,150 @@ export const userProfileStub: User = {
   bio: 'This is my bio hur hur',
   modules: ['CS1010', 'CFG1000', 'CS2040S'],
 }
+
+export const dummyUserId = 'A1234567B'
+
+// foodId: string
+// comments?: string
+// quantity: number
+// foodMenu: FoodMenu
+// foodPrice?: number
+
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+
+// title: string
+// options: Option[]
+// max: number | null
+// min: number
+// customNumber: number
+
+// name: string
+// isSelected: boolean
+// price: number
+export const foodList = [
+  {
+    foodId: '12345364832764134',
+    comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    quantity: 1,
+    foodMenu: {
+      foodMenuId: 'i3572f8whff582842',
+      restaurantId: 'jkhw8237429dh8wqe',
+      foodMenuName: 'McGriddles with Egg Meal',
+      price: 6.7,
+      custom: [
+        {
+          title: 'Sides',
+          options: [
+            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Apple pie', isSelected: false, price: 1.2 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 1,
+        },
+        {
+          title: 'Drinks',
+          options: [
+            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+            { name: 'Milo', isSelected: false, price: 1.5 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 2,
+        },
+      ],
+    },
+    foodPrice: 8.6,
+  },
+  {
+    foodId: '12345364832764134',
+    quantity: 2,
+    foodMenu: {
+      foodMenuId: 'i3572f8whff582842',
+      restaurantId: 'jkhw8237429dh8wqe',
+      foodMenuName: 'McGriddles with Egg Meal',
+      price: 6.7,
+      custom: [
+        {
+          title: 'Sides',
+          options: [
+            { name: 'Fries', isSelected: true, price: 0 },
+            { name: 'Apple pie', isSelected: false, price: 1.2 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 1,
+        },
+        {
+          title: 'Drinks',
+          options: [
+            { name: 'Coca Cola', isSelected: true, price: 0 },
+            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+            { name: 'Milo', isSelected: false, price: 1.5 },
+          ],
+          max: null,
+          min: 0,
+          customNumber: 2,
+        },
+      ],
+    },
+    foodPrice: 8.6,
+  },
+]
+
+// orderId: string
+// user: string
+// supperGroupId: string
+// userContact?: number
+// foodList: Food[]
+// totalCost: number
+// hasPaid: boolean //1 if user paid owner (user POV)
+// paymentMethod: PaymentMethod
+// hasReceived: boolean //1 if owner received payment (owner POV)
+// createdAt: number
+export const orderList: Order[] = [
+  {
+    orderId: 'y34u23423jhkdfaksd',
+    user: {
+      _id: '12',
+      userID: 'j324ioasdia90da',
+      profilePictureUrl:
+        'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+      displayName: 'Jane Doe',
+      telegramHandle: 'jane_doe',
+      block: 8,
+      bio: 'This is my bio, I am jane doe',
+      modules: ['CS1010', 'CFG1000', 'CS2040S'],
+    },
+    supperGroupId: '2',
+    userContact: 99234567,
+    foodList: foodList,
+    totalCost: 23,
+    hasPaid: false, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.CASH,
+    hasReceived: false, //1 if owner received payment (owner POV)
+    createdAt: 122,
+  },
+  {
+    orderId: 'kajldskfhskfksdf',
+    user: userProfileStub,
+    supperGroupId: '1',
+    userContact: 91234567,
+    foodList: foodList,
+    totalCost: 13,
+    hasPaid: false, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.GOOGLEPAY,
+    hasReceived: false, //1 if owner received payment (owner POV)
+    createdAt: 12,
+  },
+]
+
+export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
 
 // foodMenuId: string
 // restaurantId: string
@@ -176,4 +320,3 @@ export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
   { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
 ]
-export const dummyUserId = 'A1234567B'

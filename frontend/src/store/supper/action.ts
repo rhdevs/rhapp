@@ -1,10 +1,9 @@
-import { ActionTypes, Food, Order, SupperGroup } from '../supper/types'
+import { ActionTypes, Food, Order, PaymentMethod, SupperGroup } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
 
-//const [success] = useSnackbar('success')
 const [error] = useSnackbar('error')
 
 //------------------------ GET --------------------------
@@ -329,13 +328,6 @@ export const updateOrderDetails = (newOrderDetails: Order, supperGroupId: string
   dispatch(setIsLoading(false))
 }
 
-const setOrder = (newOrder: Order) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SUPPER_ACTIONS.SET_ORDER_BY_ID,
-    order: newOrder,
-  })
-}
-
 export const addFoodToOrder = (newFood: Food, supperGroupId: string, orderId: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
@@ -434,5 +426,35 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({
     type: SUPPER_ACTIONS.SET_IS_LOADING,
     isLoading: isLoading,
+  })
+}
+
+export const setCount = (newCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_COUNT,
+    count: newCount,
+  })
+}
+
+export const setPriceLimit = (newPriceLimit: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PRICE_LIMIT,
+    priceLimit: newPriceLimit,
+  })
+}
+
+export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS,
+    isExpanded: isExpanded,
+  })
+}
+
+export const SetSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
+    selectedPaymentMethod: selectedPaymentMethod,
   })
 }
