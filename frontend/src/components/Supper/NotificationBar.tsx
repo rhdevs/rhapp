@@ -4,6 +4,7 @@ import CloseIcon from '../../assets/CloseIcon.svg'
 
 const MainContainer = styled.div`
   display: flex;
+  background: white;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -11,9 +12,12 @@ const MainContainer = styled.div`
   margin-right: auto;
   padding: 5px 10px;
   position: sticky;
+  top: 1rem;
+  left: 0;
+  z-index: 1000;
   border-radius: 10px;
   max-width: 300px;
-  boxshadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 6px 16px rgba(0, 0, 0, 0.08),
+  box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 6px 16px rgba(0, 0, 0, 0.08),
     0px 9px 28px 8px rgba(0, 0, 0, 0.05);
 `
 
@@ -21,7 +25,7 @@ const HeaderContainer = styled.div``
 
 const TextContainer = styled.div`
   display: flex;
-  flexdirection: column;
+  flex-direction: column;
   padding: 10px;
 `
 

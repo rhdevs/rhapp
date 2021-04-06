@@ -34,6 +34,7 @@ import { NotificationBar } from '../../components/Supper/NotificationBar'
 export default function Supper() {
   return (
     <>
+      <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <StatusSymbol backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <SGStatusOptions supperGroupStatusList={supperGroupStatusList} />
