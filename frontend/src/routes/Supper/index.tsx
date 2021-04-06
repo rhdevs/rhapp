@@ -14,13 +14,21 @@ import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSG
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { OrderSummaryCard } from '../../components/Supper/CustomCards/OrderSummaryCard'
-import { foodList, orderList, paymentMethods, restaurantList, supperGroupStatusList } from '../../store/stubs'
+import {
+  foodList,
+  orderList,
+  paymentMethods,
+  restaurantList,
+  supperGroupStatusList,
+  foodMenuStub,
+} from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
 import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbles'
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
+import { MenuSection } from '../../components/Supper/MenuSection'
 
 export default function Supper() {
   return (
@@ -91,6 +99,7 @@ export default function Supper() {
       />
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
+      <MenuSection menu={foodMenuStub} />
     </>
   )
 }

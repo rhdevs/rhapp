@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus } from './supper/types'
+import { Order, PaymentMethod, SupperGroupStatus, FoodMenu } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -314,3 +314,12 @@ export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, Paym
 export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
 
 export const supperGroupStatusList = [SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED, SupperGroupStatus.ORDERED]
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+export const foodMenuStub: FoodMenu[] = [
+  { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
+  { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+]
