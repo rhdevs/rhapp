@@ -677,18 +677,10 @@ def user_order_history(userID):
 
 @app.route('/supper/user/<userID>/joinGroupHistory', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def user_supper_group_history(userID):
+def user_join_group_history(userID):
     try:
         pipeline = [
-            {'$match': {'ownerId': userID}},
-            {
-                '$lookup': {
-                    'from': 'SupperGroup',
-                    'localField': 'supperGroupId',
-                    'foreignField': 'supperGroupId',
-                    'as': 'suppergroups'
-                }
-            },
+            {"$match": {"$expr": {"$in": [userID, "$userIdList"]}}},
             {
                 '$lookup': {
                     'from': 'Order',
