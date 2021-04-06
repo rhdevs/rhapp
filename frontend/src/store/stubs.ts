@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod } from './supper/types'
+import { FoodMenu, Order, PaymentMethod } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -310,3 +310,13 @@ export const orderList: Order[] = [
 ]
 
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
+
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+export const foodMenuStub: FoodMenu[] = [
+  { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
+  { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+]
