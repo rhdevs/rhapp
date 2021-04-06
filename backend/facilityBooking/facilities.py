@@ -268,7 +268,8 @@ def all_supper_group():
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'}
+                    'totalPrice': {'$sum': '$orders.orderPrice'},
+                    'numOrders': {'$size': '$orders'}
                 }
             },
             {'$project': {'orders': 0, '_id': 0}}
