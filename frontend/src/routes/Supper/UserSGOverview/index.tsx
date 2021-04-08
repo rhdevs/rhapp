@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { MainSGCard } from '../../../components/Supper/CustomCards/MainSGCard'
 import { ToggleCreatedJoined } from '../../../components/Supper/ToggleCreatedJoined'
@@ -23,6 +24,11 @@ const Background = styled.div`
   position: relative;
 `
 
+const TabsContentContainer = styled.div`
+  height: 75vh;
+  overflow: scroll;
+`
+
 export default function UserSGOverview() {
   const param = useParams<{ section: string }>()
   const dispatch = useDispatch()
@@ -40,7 +46,7 @@ export default function UserSGOverview() {
       : null
 
   const sectionSupperGroups = (
-    <>
+    <TabsContentContainer>
       {clickedHistorySection
         ? clickedHistorySection.map((supperGroup, index) => {
             return (
@@ -54,7 +60,7 @@ export default function UserSGOverview() {
             )
           })
         : 'No supper groups'}
-    </>
+    </TabsContentContainer>
   )
 
   const onCreatedClick = `${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`
@@ -77,6 +83,7 @@ export default function UserSGOverview() {
         joinedTab={<>{sectionSupperGroups}</>}
         tabKey={key}
       />
+      <BottomNavBar />
     </Background>
   )
 }

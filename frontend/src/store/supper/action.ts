@@ -30,7 +30,6 @@ export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch
   dispatch(setIsLoading(true))
 
   get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -69,7 +68,6 @@ export const getSupperHistory = (userId) => (dispatch: Dispatch<ActionTypes>) =>
 export const getOrderInSupperGroup = (orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_ORDER_IN_SUPPER_GROUP, DOMAINS.SUPPER, `/${orderId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -89,7 +87,6 @@ export const getOrderInSupperGroup = (orderId: string) => (dispatch: Dispatch<Ac
 export const getOrderHistory = (userId) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_ORDER_HISTORY, DOMAINS.SUPPER, `/${userId}/orderHistory`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -109,7 +106,6 @@ export const getOrderHistory = (userId) => (dispatch: Dispatch<ActionTypes>) => 
 export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.ALL_RESTAURANTS, DOMAINS.SUPPER)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -129,7 +125,6 @@ export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
 export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -149,7 +144,6 @@ export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<Actio
 export const getRestaurantMenu = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_RESTAURANT_MENU, DOMAINS.SUPPER, `/${restaurantId}/menu`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -169,7 +163,6 @@ export const getRestaurantMenu = (restaurantId: string) => (dispatch: Dispatch<A
 export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_MENU_FOOD, DOMAINS.SUPPER, `/${foodMenuId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -189,7 +182,6 @@ export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
 export const getFoodInOrder = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -209,7 +201,6 @@ export const getFoodInOrder = (orderId: string, foodId: string) => (dispatch: Di
 export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -229,7 +220,6 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
 export const getUserOrder = (supperGroupId: string, userId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -286,7 +276,6 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
 
   const requestBody = newSupperGroup
   post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -305,7 +294,6 @@ export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispa
 
   const requestBody = order
   put(ENDPOINTS.UPDATE_SUPPER_GROUP, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -323,7 +311,6 @@ export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Disp
   dispatch(setIsLoading(true))
   const requestBody = order
   post(ENDPOINTS.ADD_ORDER, DOMAINS.SUPPER, requestBody, {})
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -341,7 +328,6 @@ export const updateOrderDetails = (newOrderDetails: Order, orderId: string) => (
   dispatch(setIsLoading(true))
   const requestBody = newOrderDetails
   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -359,7 +345,6 @@ export const addFoodToOrder = (newFood: Food, orderId: string) => (dispatch: Dis
   const requestBody = newFood
   dispatch(setIsLoading(true))
   post(ENDPOINTS.ADD_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -379,7 +364,6 @@ export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string
   const requestBody = newFood
   dispatch(setIsLoading(true))
   put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/${foodId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -397,7 +381,6 @@ export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string
 export const deleteSupperGroup = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -414,7 +397,6 @@ export const deleteSupperGroup = (supperGroupId: string) => (dispatch: Dispatch<
 export const deleteOrder = (supperGroupId: string, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_ORDER, DOMAINS.SUPPER, {}, `/${orderId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -433,7 +415,6 @@ export const deleteFoodInOrder = (supperGroupId: string, orderId: string, foodId
 ) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${orderId}/food/${foodId}`)
-    .then((resp) => resp.json())
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
