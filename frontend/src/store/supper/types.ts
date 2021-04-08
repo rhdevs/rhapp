@@ -36,6 +36,7 @@ export type FoodMenu = {
   foodMenuId: string
   restaurantId: string
   foodMenuName: string
+  section: string
   price: number
   custom?: Custom[]
 }
@@ -45,6 +46,7 @@ export type Restaurant = {
   name: string
   restaurantLogo: string
   menu: FoodMenu[]
+  allSection: string[]
 }
 
 export type Order = {

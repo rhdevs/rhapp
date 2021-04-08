@@ -33,6 +33,7 @@ import { MenuSection } from '../../components/Supper/MenuSection'
 import { NotificationBar } from '../../components/Supper/NotificationBar'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
+import { MenuTabs } from '../../components/Supper/MenuTabs'
 
 export default function Supper() {
   return (
@@ -109,6 +110,7 @@ export default function Supper() {
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
+      <MenuTabs menuSections={['Value Meals', 'Breakfast', 'Dessert', 'Dinner']} />
       <MenuSection menu={foodMenuStub} />
     </>
   )
