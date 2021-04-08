@@ -384,13 +384,20 @@ def supper_group(supperGroupId):
                         "data": data}
 
         elif request.method == "DELETE":
+            
+            foodIdList = list(db.Order.find({'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+            print(foodIdList)
+            foods = []
+            for food in foodIdList:
+                foods += food['foodIds']
+            
+
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
             if remove == 0:
                 raise Exception("Supper group not found")
-
             db.Order.delete_many({'supperGroupId': supperGroupId})
-
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
             response = {"status": "success",
                         "message": "Supper Group Deleted"}
 
