@@ -356,7 +356,8 @@ def supper_group(supperGroupId):
                     '$addFields': {
                         'totalPrice': {'$sum': '$orders.orderPrice'},
                         'numOrders': {'$size': '$orders'},
-                        'restaurantLogo': '$restaurant.restaurantLogo'
+                        'restaurantLogo': '$restaurant.restaurantLogo',
+                        'userIdList': {'$concatArrays': '$orders.userID'}
                     }
                 },
                 {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
