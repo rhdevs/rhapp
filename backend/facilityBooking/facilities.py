@@ -724,8 +724,13 @@ def user_order_history(userID):
 @cross_origin(supports_credentials=True)
 def user_join_group_history(userID):
     try:
+        supperGroups = list(db.Order.find(
+            {'userID': userID}, {'_id': 0, 'supperGroupId': 1}))
+        supperGroupIds = [supperGroup.get('supperGroupId')
+                          for supperGroup in supperGroups]
+
         pipeline = [
-            {"$match": {"$expr": {"$in": [userID, "$userIdList"]}}},
+            {"$match": {'supperGroupId': {"$in": supperGroupIds}}},
             {
                 '$lookup': {
                     'from': 'Order',
