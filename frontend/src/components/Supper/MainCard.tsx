@@ -24,7 +24,7 @@ const EditIcon = styled.img<{ editIconSize?: string }>`
 `
 
 interface AuxProps {
-  children: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
+  children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
   flexDirection?: string
   minHeight?: string
   isEditable?: boolean

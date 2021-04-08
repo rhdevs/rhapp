@@ -63,11 +63,11 @@ export type Order = {
 export type SupperGroup = {
   supperGroupId: string
   supperGroupName: string
-  owner: string
+  ownerId: string
   ownerName: string
   paymentInfo: PaymentInfo[]
   restaurantName: string
-  allUsers: User[]
+  userIdList: string[]
   orderList: Order[]
   additionalCost?: number //ie GST, delivery fee
   splitAdditionalCost: SplitACMethod

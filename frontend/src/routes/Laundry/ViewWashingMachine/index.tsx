@@ -162,6 +162,7 @@ export default function ViewWashingMachine() {
     let actions = <></>
     let subtitle = <></>
     let imagesrc = ''
+    const authorized = machine?.userID === localStorage.getItem('userID')
 
     const timeLeftGroup = (
       <TimeLeft>
@@ -172,7 +173,7 @@ export default function ViewWashingMachine() {
         <TimeUnit>
           <TimeLeftText> {secondState} </TimeLeftText> <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
-        {!isEdit && machine?.job === WMStatus.INUSE && (
+        {!isEdit && authorized && machine?.job === WMStatus.INUSE && (
           <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>
         )}
       </TimeLeft>
@@ -192,7 +193,7 @@ export default function ViewWashingMachine() {
       case WMStatus.UNCOLLECTED:
         pageTitle = 'Collect Laundry'
         imagesrc = wm_uncollected
-        actions = (
+        actions = authorized ? (
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
@@ -206,13 +207,15 @@ export default function ViewWashingMachine() {
               history.back()
             }}
           />
+        ) : (
+          <div></div>
         )
         break
       case WMStatus.RESERVED:
         subtitle = timeLeftGroup
         pageTitle = 'Reservation'
         imagesrc = wm_reserved
-        actions = (
+        actions = authorized ? (
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
@@ -226,6 +229,8 @@ export default function ViewWashingMachine() {
               history.back()
             }}
           />
+        ) : (
+          <div></div>
         )
         break
     }
@@ -248,7 +253,8 @@ export default function ViewWashingMachine() {
   }
 
   const UseWashineMachine = (machine: WashingMachine | null) => {
-    if (machine?.job === WMStatus.RESERVED) {
+    const authorized = machine?.userID === localStorage.getItem('userID')
+    if (machine?.job === WMStatus.RESERVED && authorized) {
       return (
         <UseWashingMachineSection>
           <EditDuration> Select Duration </EditDuration>
@@ -304,7 +310,7 @@ export default function ViewWashingMachine() {
           )}
         </UseWashingMachineSection>
       )
-    } else if (machine?.job === WMStatus.INUSE) {
+    } else if (machine?.job === WMStatus.INUSE && authorized) {
       return (
         <UseWashingMachineSection>
           {isEdit && <EditDuration> Select Duration </EditDuration>}
@@ -335,7 +341,7 @@ export default function ViewWashingMachine() {
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
             onButtonClick={() => {
-              if (isEdit) {
+              if (isEdit && authorized) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
@@ -346,7 +352,7 @@ export default function ViewWashingMachine() {
               }
             }}
           />
-          {isEdit && (
+          {isEdit && authorized && (
             <Button
               style={{ marginLeft: '23px' }}
               hasSuccessMessage={false}
@@ -362,7 +368,7 @@ export default function ViewWashingMachine() {
           )}
         </UseWashingMachineSection>
       )
-    } else if (machine?.job === WMStatus.AVAIL) {
+    } else if (machine?.job === WMStatus.AVAIL && authorized) {
       return (
         <UseWashingMachineSection>
           <Button

@@ -21,13 +21,13 @@ const CardContainer = styled.div`
   background-color: #ffffff;
   margin: 23px;
   min-height: 70px;
-  max-height: 100px;
+  max-height: 120px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
 `
 const WashingMachineAvatar = styled.img`
-  max-height: 100px;
+  max-height: 120px;
   padding: 20px;
   width: 30%;
   max-width: 135px;

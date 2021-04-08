@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus, FoodMenu } from './supper/types'
+import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -302,7 +302,7 @@ export const orderList: Order[] = [
     userContact: 91234567,
     foodList: foodList,
     totalCost: 13,
-    hasPaid: false, //1 if user paid owner (user POV)
+    hasPaid: true, //1 if user paid owner (user POV)
     paymentMethod: PaymentMethod.GOOGLEPAY,
     hasReceived: false, //1 if owner received payment (owner POV)
     createdAt: 12,
@@ -323,3 +323,72 @@ export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
   { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
 ]
+
+// supperGroupId: string
+//   supperGroupName: string
+//   ownerId: string
+//   ownerName: string
+//   paymentInfo: PaymentInfo[]
+//   restaurantName: string
+//   allUsers: User[]
+//   orderList: Order[]
+//   additionalCost?: number //ie GST, delivery fee
+//   splitAdditionalCost: SplitACMethod
+//   currentFoodCost: number //non inclusive of additionalCost
+//   costLimit: number
+//   status: SupperGroupStatus
+//   location: string //collection point
+//   deliveryDuration: number
+//   arrivalTime: number // = creationTime + estimated delivery duration
+//   closingTime: string
+//   createdAt:
+export const supperGroupStub: SupperGroup =
+  // {
+  //   orderList: orderList,
+  //   additionalCost: 3,
+  //   comments: 'pls feed me',
+  //   costLimit: 1000,
+  //   createdAt: 10000000,
+  //   currentFoodCost: 100,
+  //   location: 'Blk 5 Hard Court',
+  //   numOrders: 1,
+  //   ownerId: 'A1234567B',
+  //   ownerName: 'Leong',
+  //   // paymentMethod: PaymentMethod;
+  //   // link?: string | undefined;
+  //   paymentInfo: [{ paymentMethod: 'PayLah!', link: 'wwww.google.com' }, { paymentMethod: 'GooglePay' }],
+  //   phoneNumber: '98765432',
+  //   restaurantLogo: 'asdfghjkl',
+  //   restaurantName: "McDonald's",
+  //   splitAdditionalCost: 'EQUAL',
+  //   status: 'OPEN',
+  //   supperGroupId: 1,
+  //   supperGroupName: 'feed me',
+  //   totalPrice: 13.2,
+  //   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
+  //   deliveryDuration: 50,
+  //   closingTime: '10',
+  // },
+  {
+    supperGroupId: 'ehqerekwrk234',
+    supperGroupName: 'some name!',
+    ownerId: 'A1234567B',
+    ownerName: 'Zhou MaoMao',
+    paymentInfo: [
+      { paymentMethod: PaymentMethod.PAYLAH, link: 'wwww.google.com' },
+      { paymentMethod: PaymentMethod.GOOGLEPAY },
+    ],
+    restaurantName: 'Somewhere',
+    userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
+    orderList: orderList,
+    additionalCost: 3, //ie GST, delivery fee
+    splitAdditionalCost: SplitACMethod.PROPORTIONAL,
+    currentFoodCost: 12, //non inclusive of additionalCost
+    costLimit: 50,
+    status: SupperGroupStatus.ARRIVED,
+    location: 'somwhereee', //collection point
+    deliveryDuration: 50,
+    //arrivalTime: number // = creationTime + estimated delivery duration
+    closingTime: 'idk why this is a string',
+    createdAt: 10000000,
+  }
