@@ -342,53 +342,27 @@ export const foodMenuStub: FoodMenu[] = [
 //   arrivalTime: number // = creationTime + estimated delivery duration
 //   closingTime: string
 //   createdAt:
-export const supperGroupStub: SupperGroup =
-  // {
-  //   orderList: orderList,
-  //   additionalCost: 3,
-  //   comments: 'pls feed me',
-  //   costLimit: 1000,
-  //   createdAt: 10000000,
-  //   currentFoodCost: 100,
-  //   location: 'Blk 5 Hard Court',
-  //   numOrders: 1,
-  //   ownerId: 'A1234567B',
-  //   ownerName: 'Leong',
-  //   // paymentMethod: PaymentMethod;
-  //   // link?: string | undefined;
-  //   paymentInfo: [{ paymentMethod: 'PayLah!', link: 'wwww.google.com' }, { paymentMethod: 'GooglePay' }],
-  //   phoneNumber: '98765432',
-  //   restaurantLogo: 'asdfghjkl',
-  //   restaurantName: "McDonald's",
-  //   splitAdditionalCost: 'EQUAL',
-  //   status: 'OPEN',
-  //   supperGroupId: 1,
-  //   supperGroupName: 'feed me',
-  //   totalPrice: 13.2,
-  //   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
-  //   deliveryDuration: 50,
-  //   closingTime: '10',
-  // },
-  {
-    supperGroupId: 'ehqerekwrk234',
-    supperGroupName: 'some name!',
-    ownerId: 'A1234567B',
-    ownerName: 'Zhou MaoMao',
-    paymentInfo: [
-      { paymentMethod: PaymentMethod.PAYLAH, link: 'wwww.google.com' },
-      { paymentMethod: PaymentMethod.GOOGLEPAY },
-    ],
-    restaurantName: 'Somewhere',
-    userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
-    orderList: orderList,
-    additionalCost: 3, //ie GST, delivery fee
-    splitAdditionalCost: SplitACMethod.PROPORTIONAL,
-    currentFoodCost: 12, //non inclusive of additionalCost
-    costLimit: 50,
-    status: SupperGroupStatus.ARRIVED,
-    location: 'somwhereee', //collection point
-    deliveryDuration: 50,
-    //arrivalTime: number // = creationTime + estimated delivery duration
-    closingTime: 'idk why this is a string',
-    createdAt: 10000000,
-  }
+export const supperGroupStub: SupperGroup = {
+  additionalCost: 3,
+  comments: 'pls feed me',
+  costLimit: 1000,
+  createdAt: 10000000,
+  currentFoodCost: 100,
+  location: 'Blk 5 Hard Court',
+  numOrders: 2,
+  ownerId: 'A1234567B',
+  ownerName: 'Leong',
+  paymentInfo: [
+    { paymentMethod: PaymentMethod.PAYLAH, link: 'asdasd' },
+    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'asdzxcasd' },
+  ],
+  restaurantLogo: 'asdfghjkl',
+  restaurantName: "McDonald's",
+  splitAdditionalCost: SplitACMethod.EQUAL,
+  status: SupperGroupStatus.OPEN,
+  supperGroupId: 1,
+  supperGroupName: 'feed me',
+  totalPrice: 15.7,
+  userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
+  closingTime: 10000000,
+}

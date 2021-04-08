@@ -47,6 +47,7 @@ type Props = {
   users: number
   orderId: string
   isOwner?: boolean
+  restaurantLogo?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -54,7 +55,7 @@ export const MainSGCard = (props: Props) => {
   return (
     <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <MainContainer>
-        <RoundImage image={notFound} alt="Restaurant Logo" />
+        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
         <SubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <BottomContainer>

@@ -47,6 +47,9 @@ export enum PATHS {
   EDIT_POST = '/social/post/edit/:postId',
   //SUPPER
   SUPPER_HOME = '/supper',
+  SUPPER_COMPONENTS_PAGE = '/supper/components',
+  USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
+  USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -87,7 +90,9 @@ const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 //SUPPER
+const SupperCompoenents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
+const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
 
 export default class Routes extends React.Component {
   render() {
@@ -130,7 +135,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
+            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperCompoenents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
+            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
