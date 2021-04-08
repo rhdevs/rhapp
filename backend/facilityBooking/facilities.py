@@ -60,6 +60,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Session
 session = {}
+
+
 # session format : {userID: {
 #                           sessionID: VALUE
 #                           startTime : VALUE
@@ -250,6 +252,7 @@ def delete_booking(bookingID):
 
     return {"message": "Booking Deleted"}, 200
 
+
 ###########################################################
 
 
@@ -331,6 +334,7 @@ def create_supper_group():
 def supper_group(supperGroupId):
     try:
         if request.method == "GET":
+            test = [ObjectId("606c7076c59a1089395a6cfb"), ObjectId("6065f5e2c9c172e6ba567e2b")]
             pipeline = [
                 {'$match': {'supperGroupId': supperGroupId}},
                 {
@@ -353,13 +357,25 @@ def supper_group(supperGroupId):
                     '$unwind': {'path': '$restaurant'}
                 },
                 {
+                    '$lookup': {
+                        'from': 'FoodOrder',
+                        'localField': 'orders.foodIds',
+                        'foreignField': '_id',
+                        'as': 'foodList'
+                    }
+                },
+                {
                     '$addFields': {
                         'totalPrice': {'$sum': '$orders.orderPrice'},
                         'numOrders': {'$size': '$orders'},
-                        'restaurantLogo': '$restaurant.restaurantLogo'
+                        'restaurantLogo': '$restaurant.restaurantLogo',
+                        'orders.foodList': []
                     }
                 },
-                {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
+                {'$project': {'_id': 0, 'restaurant': 0, 'orders._id': 0,
+                              'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
+                              }
+                 }
             ]
 
             result = db.SupperGroup.aggregate(pipeline)
@@ -370,6 +386,20 @@ def supper_group(supperGroupId):
 
             if data == None:
                 raise Exception('Order group not found.')
+
+            for order in data['orders']:
+                order['foodIds'] = list(map(lambda x: str(x), order['foodIds']))
+
+            for food in data['foodList']:
+                food['_id'] = str(food['_id'])
+                for order in data['orders']:
+                    if food['_id'] in order['foodIds']:
+                        order['foodList'].append(food)
+                        order['foodIds'].remove(food['_id'])
+
+            data.pop('foodList')
+            for order in data['orders']:
+                order.pop('foodIds')
 
             response = {"status": "success", "data": data}
 
@@ -522,7 +552,7 @@ def foodorder(orderId, foodId):
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                         {"$inc": {"orderPrice": data['foodPrice'] -
-                                                                  food_result['foodPrice']}})
+                                                                                food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
 
@@ -832,7 +862,8 @@ def collated_orders(supperGroupId):
         for food in data['foods']:
             if not data['collatedFoods']:
                 data['collatedFoods'].append(food)
-            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == data['collatedFoods'][-1]['customHash']:
+            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == \
+                    data['collatedFoods'][-1]['customHash']:
                 data['collatedFoods'][-1]['quantity'] += food['quantity']
             else:
                 data['collatedFoods'].append(food)
@@ -882,6 +913,8 @@ def user_order(supperGroupId, userID):
     except Exception as e:
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
+
+
 ###########################################################
 
 # def keep_alive():
