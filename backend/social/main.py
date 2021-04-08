@@ -392,10 +392,11 @@ def getLastN():
 
         response = []
         for item in data:
-            item['name'] = userIDtoName(item.get('userID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
             item['profilePictureURI'] = profile.get(
                 'profilePictureUrl') if profile != None else None
+            item['name'] = profile.get(
+                'displayName') if profile != None else None
             item = renamePost(item)
             response.append(item)
 

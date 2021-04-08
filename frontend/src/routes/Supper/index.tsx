@@ -30,12 +30,14 @@ import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbl
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 import { MenuSection } from '../../components/Supper/MenuSection'
+import { NotificationBar } from '../../components/Supper/NotificationBar'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 
 export default function Supper() {
   return (
     <>
+      <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <BubbleSection title="Order Information" number={1}>
         hello
@@ -106,6 +108,7 @@ export default function Supper() {
       />
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
+      <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
     </>
   )
