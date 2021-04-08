@@ -292,7 +292,7 @@ export const orderList: Order[] = [
     totalCost: 23,
     hasPaid: false, //1 if user paid owner (user POV)
     paymentMethod: PaymentMethod.CASH,
-    hasReceived: false, //1 if owner received payment (owner POV)
+    hasReceived: true, //1 if owner received payment (owner POV)
     createdAt: 122,
   },
   {
@@ -365,4 +365,5 @@ export const supperGroupStub: SupperGroup = {
   totalPrice: 15.7,
   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
   closingTime: 10000000,
+  orderList: orderList,
 }

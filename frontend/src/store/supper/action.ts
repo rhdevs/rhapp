@@ -324,7 +324,7 @@ export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Disp
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (newOrderDetails: Order, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateOrderDetails = (newOrderDetails: any, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const requestBody = newOrderDetails
   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)

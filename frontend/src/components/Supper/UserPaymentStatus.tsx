@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
-import { Checkbox as AntdCheckbox } from 'antd'
 import { Food } from '../../store/supper/types'
 import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
 import { UnderlinedButton } from './UnderlinedButton'
 import { OpenUserTelegram } from '../TelegramShareButton'
+import checkboxFilled from '../../assets/checkbox-filled.svg'
+import checkboxNotFilled from '../../assets/checkbox-notFilled.svg'
+// import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
   display: flex;
@@ -45,7 +47,7 @@ const StatusSymbolContainer = styled.div`
   justify-content: center;
 `
 
-const Checkbox = styled(AntdCheckbox)`
+const Checkbox = styled.img`
   padding-right: 10px;
   margin: auto 0;
 `
@@ -89,6 +91,7 @@ const NameText = styled.text<{ cancelName: boolean }>`
 `
 
 type Props = {
+  orderId?: string
   foodList: Food[]
   name: string
   hasPaid: boolean
@@ -106,16 +109,28 @@ export const UserPaymentStatus = (props: Props) => {
   const buttonText = isExpanded ? 'Hide Details' : 'Show Details'
   const arrowIcon = isExpanded ? <CaretUpOutlined /> : <CaretDownOutlined />
 
+  const checkIcon = props.hasRecieved ? checkboxFilled : checkboxNotFilled
+  const alt = props.hasRecieved ? 'Checked' : 'Not checked'
+
   return (
     <MainContainer>
       <TopContainer>
         <LeftContainer>
-          <Checkbox
+          {/* <Checkbox
             defaultChecked={props.hasRecieved}
             onChange={() => {
               setCancelName(!cancelName)
             }}
             checked={cancelName}
+          /> */}
+          <Checkbox
+            src={checkIcon}
+            alt={alt}
+            onClick={() => {
+              setCancelName(!cancelName)
+              //set order hasRecieved to true
+              // dispatch(updateOrderDetails({ hasRecieved: true }, props.orderId))
+            }}
           />
           <NameText
             onClick={() => {
