@@ -132,6 +132,7 @@ export enum SUPPER_ACTIONS {
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
   SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
   SET_PRICE_LIMIT = 'SUPPER_ACTIONS.SET_PRICE_LIMIT',
+  SET_DELIVERY_TIME = 'SUPPER_ACTIONS.SET_DELIVERY_tIME',
   SET_EXPANDABLE_CARD_STATUS = 'SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS',
   SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
   SET_SELECTED_RESTAURANT = 'SUPPER_ACTIONS.SET_SELECTED_RESTAURANT',
@@ -228,6 +229,11 @@ type SetPriceLimit = {
   priceLimit: number
 }
 
+type SetDeliveryTime = {
+  type: typeof SUPPER_ACTIONS.SET_DELIVERY_TIME
+  deliveryTime: number
+}
+
 type SetExpandableCardStatus = {
   type: typeof SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS
   isExpanded: boolean
@@ -267,6 +273,7 @@ export type ActionTypes =
   | GetSupperGroupHistory
   | SetCount
   | SetPriceLimit
+  | SetDeliveryTime
   | SetExpandableCardStatus
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
