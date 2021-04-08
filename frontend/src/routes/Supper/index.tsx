@@ -21,6 +21,7 @@ import {
   restaurantList,
   supperGroupStatusList,
   foodMenuStub,
+  supperGroupStub,
 } from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
@@ -29,11 +30,17 @@ import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbl
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 import { MenuSection } from '../../components/Supper/MenuSection'
+import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
+import { BubbleSection } from '../../components/Supper/BubbleSection'
 
 export default function Supper() {
   return (
     <>
       <RoundProgress priceLimit={50} currentAmount={19.7} />
+      <BubbleSection title="Order Information" number={1}>
+        hello
+      </BubbleSection>
+      <SGPaymentStatus supperGroup={supperGroupStub} />
       <StatusSymbol backgroundColor="bluegrey" leftIcon={<SmileOutlined />} preText="est." text="Ordered" />
       <SGStatusOptions supperGroupStatusList={supperGroupStatusList} />
       <RestaurantBubbles restaurantList={restaurantList} />
