@@ -293,7 +293,14 @@ def all_supper_group():
         result = db.SupperGroup.aggregate(pipeline)
 
         data = []
+        currentTime = int(datetime.now().timestamp())
         for supperGroup in result:
+            if supperGroup.get('status') == 'open' and supperGroup.get('closingTime') <= currentTime:
+                # Checks if closingTime has passed. If so, set status to closed.
+                supperGroup['status'] = 'closed'
+                query = {'supperGroupId': supperGroup.get('supperGroupId')}
+                changes = {'$set': {'status': 'closed'}}
+                db.SupperGroup.update_one(query, changes)
             data.append(supperGroup)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
@@ -369,7 +376,8 @@ def supper_group(supperGroupId):
                         'totalPrice': {'$sum': '$orders.orderPrice'},
                         'numOrders': {'$size': '$orders'},
                         'restaurantLogo': '$restaurant.restaurantLogo',
-                        'orders.foodList': []
+                        'orders.foodList': [],
+                        'userIdList': {'$concatArrays': '$orders.userID'}
                     }
                 },
                 {'$project': {'_id': 0, 'restaurant': 0, 'orders._id': 0,
@@ -384,22 +392,30 @@ def supper_group(supperGroupId):
             for suppergroup in result:
                 data = suppergroup
 
+                for order in data['orders']:
+                    order['foodIds'] = list(map(lambda x: str(x), order['foodIds']))
+
+                for food in data['foodList']:
+                    food['_id'] = str(food['_id'])
+                    for order in data['orders']:
+                        if food['_id'] in order['foodIds']:
+                            order['foodList'].append(food)
+                            order['foodIds'].remove(food['_id'])
+
+                data.pop('foodList')
+                for order in data['orders']:
+                    order.pop('foodIds')
+
+            currentTime = int(datetime.now().timestamp())
             if data == None:
                 raise Exception('Order group not found.')
 
-            for order in data['orders']:
-                order['foodIds'] = list(map(lambda x: str(x), order['foodIds']))
-
-            for food in data['foodList']:
-                food['_id'] = str(food['_id'])
-                for order in data['orders']:
-                    if food['_id'] in order['foodIds']:
-                        order['foodList'].append(food)
-                        order['foodIds'].remove(food['_id'])
-
-            data.pop('foodList')
-            for order in data['orders']:
-                order.pop('foodIds')
+            elif data.get('status') == 'open' and data.get('closingTime') <= currentTime:
+                # Checks if closingTime has passed. If so, set status to closed.
+                data['status'] = 'closed'
+                query = {'supperGroupId': data.get('supperGroupId')}
+                changes = {'$set': {'status': 'closed'}}
+                db.SupperGroup.update_one(query, changes)
 
             response = {"status": "success", "data": data}
 
@@ -414,13 +430,17 @@ def supper_group(supperGroupId):
                         "data": data}
 
         elif request.method == "DELETE":
+
+            foodIdList = list(db.Order.find(
+                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+            foods = [food.get('foodIds') for food in foodIdList]
+
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
             if remove == 0:
                 raise Exception("Supper group not found")
-
             db.Order.delete_many({'supperGroupId': supperGroupId})
-
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
             response = {"status": "success",
                         "message": "Supper Group Deleted"}
 
@@ -493,9 +513,15 @@ def get_order(orderId):
                         "data": data}
 
         elif request.method == 'DELETE':
+            foodIdList = list(db.Order.find(
+                {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
+            foods = [food.get('foodIds') for food in foodIdList]
+
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
+
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
 
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
@@ -724,8 +750,13 @@ def user_order_history(userID):
 @cross_origin(supports_credentials=True)
 def user_join_group_history(userID):
     try:
+        supperGroups = list(db.Order.find(
+            {'userID': userID}, {'_id': 0, 'supperGroupId': 1}))
+        supperGroupIds = [supperGroup.get('supperGroupId')
+                          for supperGroup in supperGroups]
+
         pipeline = [
-            {"$match": {"$expr": {"$in": [userID, "$userIdList"]}}},
+            {"$match": {'supperGroupId': {"$in": supperGroupIds}}},
             {
                 '$lookup': {
                     'from': 'Order',
