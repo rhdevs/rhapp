@@ -403,9 +403,7 @@ def supper_group(supperGroupId):
 
             foodIdList = list(db.Order.find(
                 {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
-            foods = []
-            for food in foodIdList:
-                foods += food['foodIds']
+            foods = [food.get('foodIds') for food in foodIdList]
 
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
@@ -487,9 +485,7 @@ def get_order(orderId):
         elif request.method == 'DELETE':
             foodIdList = list(db.Order.find(
                 {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
-            foods = []
-            for food in foodIdList:
-                foods += food['foodIds']
+            foods = [food.get('foodIds') for food in foodIdList]
 
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
