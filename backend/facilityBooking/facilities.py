@@ -386,7 +386,6 @@ def supper_group(supperGroupId):
         elif request.method == "DELETE":
             
             foodIdList = list(db.Order.find({'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
-            print(foodIdList)
             foods = []
             for food in foodIdList:
                 foods += food['foodIds']
@@ -470,10 +469,18 @@ def get_order(orderId):
                         "data": data}
 
         elif request.method == 'DELETE':
+            foodIdList = list(db.Order.find(
+                {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
+            foods = []
+            for food in foodIdList:
+                foods += food['foodIds']
+
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
 
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
+            
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
         return make_response(response, 200)
