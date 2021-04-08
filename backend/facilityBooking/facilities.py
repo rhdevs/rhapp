@@ -290,7 +290,14 @@ def all_supper_group():
         result = db.SupperGroup.aggregate(pipeline)
 
         data = []
+        currentTime = int(datetime.now().timestamp())
         for supperGroup in result:
+            if supperGroup.get('status') == 'open' and supperGroup.get('closingTime') <= currentTime:
+                # Checks if closingTime has passed. If so, set status to closed.
+                supperGroup['status'] = 'closed'
+                query = {'supperGroupId': supperGroup.get('supperGroupId')}
+                changes = {'$set': {'status': 'closed'}}
+                db.SupperGroup.update_one(query, changes)
             data.append(supperGroup)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
@@ -368,8 +375,16 @@ def supper_group(supperGroupId):
             for suppergroup in result:
                 data = suppergroup
 
+            currentTime = int(datetime.now().timestamp())
             if data == None:
                 raise Exception('Order group not found.')
+
+            elif data.get('status') == 'open' and data.get('closingTime') <= currentTime:
+                # Checks if closingTime has passed. If so, set status to closed.
+                data['status'] = 'closed'
+                query = {'supperGroupId': data.get('supperGroupId')}
+                changes = {'$set': {'status': 'closed'}}
+                db.SupperGroup.update_one(query, changes)
 
             response = {"status": "success", "data": data}
 
@@ -384,12 +399,12 @@ def supper_group(supperGroupId):
                         "data": data}
 
         elif request.method == "DELETE":
-            
-            foodIdList = list(db.Order.find({'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+
+            foodIdList = list(db.Order.find(
+                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
             foods = []
             for food in foodIdList:
                 foods += food['foodIds']
-            
 
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
@@ -480,7 +495,7 @@ def get_order(orderId):
                 raise Exception("Order not found")
 
             db.FoodOrder.delete_many({'_id': {'$in': foods}})
-            
+
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
         return make_response(response, 200)
