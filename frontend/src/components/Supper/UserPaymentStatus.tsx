@@ -97,27 +97,27 @@ type Props = {
   hasPaid: boolean
   phoneNumber?: number
   telegramHandle: string
-  hasRecieved: boolean
+  hasReceived: boolean
   totalCost: number
   additionalCost: number
 }
 
 export const UserPaymentStatus = (props: Props) => {
-  const [cancelName, setCancelName] = useState(props.hasRecieved)
+  const [cancelName, setCancelName] = useState(props.hasReceived)
   const [isExpanded, setIsExpanded] = useState(false)
 
   const buttonText = isExpanded ? 'Hide Details' : 'Show Details'
   const arrowIcon = isExpanded ? <CaretUpOutlined /> : <CaretDownOutlined />
 
-  const checkIcon = props.hasRecieved ? checkboxFilled : checkboxNotFilled
-  const alt = props.hasRecieved ? 'Checked' : 'Not checked'
+  const checkIcon = props.hasReceived ? checkboxFilled : checkboxNotFilled
+  const alt = props.hasReceived ? 'Checked' : 'Not checked'
 
   return (
     <MainContainer>
       <TopContainer>
         <LeftContainer>
           {/* <Checkbox
-            defaultChecked={props.hasRecieved}
+            defaultChecked={props.hasReceived}
             onChange={() => {
               setCancelName(!cancelName)
             }}
@@ -128,8 +128,8 @@ export const UserPaymentStatus = (props: Props) => {
             alt={alt}
             onClick={() => {
               setCancelName(!cancelName)
-              //set order hasRecieved to true
-              // dispatch(updateOrderDetails({ hasRecieved: true }, props.orderId))
+              //set order hasReceived to true
+              // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
             }}
           />
           <NameText

@@ -35,7 +35,7 @@ export const SGPaymentStatus = (props: Props) => {
                 telegramHandle={order.user.telegramHandle}
                 hasPaid={order.hasPaid}
                 foodList={order.foodList}
-                hasRecieved={order.hasReceived}
+                hasReceived={order.hasReceived}
                 totalCost={order.totalCost}
                 additionalCost={additionalCost}
               />
