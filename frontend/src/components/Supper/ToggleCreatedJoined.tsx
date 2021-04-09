@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Tabs } from 'antd'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../routes/Routes'
 
 const { TabPane } = Tabs
 
@@ -21,15 +23,35 @@ const TabContainer = styled(Tabs)`
     pointer-events: none;
   }
 `
-export const ToggleCreatedJoined = () => {
+
+type Props = {
+  createdTab: ReactElement
+  createdTabUrl: string
+  joinedTab: ReactElement
+  joinedTabUrl: string
+  tabKey: string
+}
+
+export const ToggleCreatedJoined = (props: Props) => {
+  const history = useHistory()
   return (
     <MainContainer>
-      <TabContainer defaultActiveKey="1" size={'middle'} style={{ marginBottom: 32 }}>
+      <TabContainer
+        centered
+        onTabClick={(key) => {
+          history.replace(PATHS.SUPPER_HOME)
+          if (key === '1') history.push(props.createdTabUrl)
+          else history.push(props.joinedTabUrl)
+        }}
+        defaultActiveKey={props.tabKey ?? '1'}
+        size={'middle'}
+        style={{ marginBottom: 32 }}
+      >
         <TabPane tab="Created" key="1">
-          Created Supper Group
+          {props.createdTab}
         </TabPane>
         <TabPane tab="Joined" key="2">
-          Joined Supper Group
+          {props.joinedTab}
         </TabPane>
       </TabContainer>
     </MainContainer>

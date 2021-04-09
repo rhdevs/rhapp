@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
-import { Checkbox as AntdCheckbox } from 'antd'
 import { Food } from '../../store/supper/types'
 import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
 import { UnderlinedButton } from './UnderlinedButton'
 import { OpenUserTelegram } from '../TelegramShareButton'
+import checkboxFilled from '../../assets/checkbox-filled.svg'
+import checkboxNotFilled from '../../assets/checkbox-notFilled.svg'
+// import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
   display: flex;
@@ -45,7 +47,7 @@ const StatusSymbolContainer = styled.div`
   justify-content: center;
 `
 
-const Checkbox = styled(AntdCheckbox)`
+const Checkbox = styled.img`
   padding-right: 10px;
   margin: auto 0;
 `
@@ -89,33 +91,46 @@ const NameText = styled.text<{ cancelName: boolean }>`
 `
 
 type Props = {
+  orderId?: string
   foodList: Food[]
   name: string
   hasPaid: boolean
   phoneNumber?: number
   telegramHandle: string
-  hasRecieved: boolean
+  hasReceived: boolean
   totalCost: number
   additionalCost: number
 }
 
 export const UserPaymentStatus = (props: Props) => {
-  const [cancelName, setCancelName] = useState(props.hasRecieved)
+  const [cancelName, setCancelName] = useState(props.hasReceived)
   const [isExpanded, setIsExpanded] = useState(false)
 
   const buttonText = isExpanded ? 'Hide Details' : 'Show Details'
   const arrowIcon = isExpanded ? <CaretUpOutlined /> : <CaretDownOutlined />
 
+  const checkIcon = props.hasReceived ? checkboxFilled : checkboxNotFilled
+  const alt = props.hasReceived ? 'Checked' : 'Not checked'
+
   return (
     <MainContainer>
       <TopContainer>
         <LeftContainer>
-          <Checkbox
-            defaultChecked={props.hasRecieved}
+          {/* <Checkbox
+            defaultChecked={props.hasReceived}
             onChange={() => {
               setCancelName(!cancelName)
             }}
             checked={cancelName}
+          /> */}
+          <Checkbox
+            src={checkIcon}
+            alt={alt}
+            onClick={() => {
+              setCancelName(!cancelName)
+              //set order hasReceived to true
+              // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
+            }}
           />
           <NameText
             onClick={() => {

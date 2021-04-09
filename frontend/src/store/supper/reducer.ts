@@ -25,6 +25,7 @@ const initialState = {
   menuFood: null,
   orderHistory: [],
   supperGroupHistory: [],
+  joinedSupperGroupHistory: [],
   count: 0,
   priceLimit: 0,
   deliveryTime: 0,
@@ -32,6 +33,9 @@ const initialState = {
   selectedPaymentMethod: [],
   selectedRestaurant: null,
   selectedSupperGroupStatus: null,
+  searchedSupperGroups: [],
+  searchValue: '',
+  tabsKey: '1',
 }
 
 type State = {
@@ -47,6 +51,7 @@ type State = {
   menuFood: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
+  joinedSupperGroupHistory: SupperGroup[]
   count: number
   priceLimit: number
   deliveryTime: number
@@ -54,6 +59,9 @@ type State = {
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
   selectedSupperGroupStatus: SupperGroupStatus | null
+  searchedSupperGroups: SupperGroup[]
+  searchValue: string
+  tabsKey: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -106,6 +114,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
       return { ...state, supperGroupHistory: action.supperGroupHistory }
     }
+    case SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY: {
+      return { ...state, joinedSupperGroupHistory: action.joinedSupperGroupHistory }
+    }
     case SUPPER_ACTIONS.SET_COUNT: {
       return { ...state, count: action.count }
     }
@@ -126,6 +137,15 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS: {
       return { ...state, selectedSupperGroupStatus: action.selectedSupperGroupStatus }
+    }
+    case SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS: {
+      return { ...state, searchedSupperGroups: action.searchedSupperGroups }
+    }
+    case SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE: {
+      return { ...state, searchValue: action.searchValue }
+    }
+    case SUPPER_ACTIONS.SET_TABS_KEY: {
+      return { ...state, tabsKey: action.tabsKey }
     }
     default:
       return state

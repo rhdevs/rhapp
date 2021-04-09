@@ -66,6 +66,7 @@ export const MenuSection = (props: Props) => {
                 onClick={() => {
                   // TODO: Add route
                   //history.push(/foodMenu.foodMenuId)
+                  console.log('Go to food page!')
                 }}
               >
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
