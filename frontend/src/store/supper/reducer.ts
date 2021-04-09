@@ -27,6 +27,7 @@ const initialState = {
   supperGroupHistory: [],
   count: 0,
   priceLimit: 0,
+  deliveryTime: 0,
   isExpanded: false,
   selectedPaymentMethod: [],
   selectedRestaurant: null,
@@ -48,6 +49,7 @@ type State = {
   supperGroupHistory: SupperGroup[]
   count: number
   priceLimit: number
+  deliveryTime: number
   isExpanded: boolean
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
@@ -109,6 +111,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_PRICE_LIMIT: {
       return { ...state, priceLimit: action.priceLimit }
+    }
+    case SUPPER_ACTIONS.SET_DELIVERY_TIME: {
+      return { ...state, deliveryTime: action.deliveryTime }
     }
     case SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS: {
       return { ...state, isExpanded: action.isExpanded }
