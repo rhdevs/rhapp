@@ -341,7 +341,6 @@ def create_supper_group():
 def supper_group(supperGroupId):
     try:
         if request.method == "GET":
-            test = [ObjectId("606c7076c59a1089395a6cfb"), ObjectId("6065f5e2c9c172e6ba567e2b")]
             pipeline = [
                 {'$match': {'supperGroupId': supperGroupId}},
                 {
@@ -393,7 +392,8 @@ def supper_group(supperGroupId):
                 data = suppergroup
 
                 for order in data['orders']:
-                    order['foodIds'] = list(map(lambda x: str(x), order['foodIds']))
+                    order['foodIds'] = list(
+                        map(lambda x: str(x), order['foodIds']))
 
                 for food in data['foodList']:
                     food['_id'] = str(food['_id'])
@@ -578,7 +578,7 @@ def foodorder(orderId, foodId):
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                         {"$inc": {"orderPrice": data['foodPrice'] -
-                                                                                food_result['foodPrice']}})
+                                                                  food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
 
