@@ -449,6 +449,13 @@ export const setPriceLimit = (newPriceLimit: number) => (dispatch: Dispatch<Acti
   })
 }
 
+export const setDeliveryTime = (newDeliveryTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_DELIVERY_TIME,
+    deliveryTime: newDeliveryTime,
+  })
+}
+
 export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS,

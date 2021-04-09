@@ -33,6 +33,7 @@ import { MenuSection } from '../../components/Supper/MenuSection'
 import { NotificationBar } from '../../components/Supper/NotificationBar'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
+import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
 
 export default function Supper() {
   return (
@@ -62,6 +63,7 @@ export default function Supper() {
       />
       <MainSGCard isOwner title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <MaxPriceFixer />
+      <DeliveryTimeSetter default={20} />
       <QuantityTracker default={5} />
       <SGStatusBubble text={SupperGroupStatus.ORDERED} />
       <RoundProgress priceLimit={50} currentAmount={10} />

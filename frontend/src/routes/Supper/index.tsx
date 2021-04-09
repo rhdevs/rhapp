@@ -1,9 +1,8 @@
-import { HistoryOutlined } from '@ant-design/icons'
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
+import { HistoryOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import SearchBar from '../../components/Mobile/SearchBar'
