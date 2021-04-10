@@ -1,7 +1,7 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod } from './supper/types'
+import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod, Food } from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -190,7 +190,7 @@ export const dummyUserId = 'A1234567B'
 // name: string
 // isSelected: boolean
 // price: number
-export const foodList = [
+export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
@@ -198,6 +198,7 @@ export const foodList = [
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
+      section: 'Value Meal',
       foodMenuName: 'McGriddles with Egg Meal',
       price: 6.7,
       custom: [
@@ -232,6 +233,7 @@ export const foodList = [
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
+      section: 'Value Meal',
       foodMenuName: 'McGriddles with Egg Meal',
       price: 6.7,
       custom: [
@@ -320,8 +322,8 @@ export const supperGroupStatusList = [SupperGroupStatus.ARRIVED, SupperGroupStat
 // price: number
 // custom?: Custom[]
 export const foodMenuStub: FoodMenu[] = [
-  { foodMenuId: '1', restaurantId: '1', foodMenuName: 'McSpicy Meal', price: 7.9 },
-  { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+  { foodMenuId: '1', restaurantId: '1', section: 'Value Meal', foodMenuName: 'McSpicy Meal', price: 7.9 },
+  { foodMenuId: '2', restaurantId: '1', section: 'Value Meal', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
 ]
 
 // supperGroupId: string

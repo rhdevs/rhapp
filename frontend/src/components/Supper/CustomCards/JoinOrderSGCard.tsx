@@ -7,6 +7,9 @@ import { RoundProgress } from '../RoundProgress'
 import { StatusSymbol } from '../StatusSymbol'
 import { SplitACMethod } from '../../../store/supper/types'
 import { RoundImage } from '../RoundImage'
+import MacDonald from '../../../assets/MacDonald.svg'
+import Alamaan from '../../../assets/Alamaan.svg'
+import Kimly from '../../../assets/Kimly.svg'
 
 const TopSection = styled.div`
   display: flex;
@@ -49,6 +52,7 @@ const FirstLineContainer = styled.div`
 
 type Props = {
   title: string
+  restaurant?: string
   orderId: string
   username: string
   priceLimit: number
@@ -62,10 +66,24 @@ type Props = {
 }
 
 export const JoinOrderSGCard = (props: Props) => {
+  const getImage = (restaurant) => {
+    if (restaurant === 'MacDonald') {
+      return MacDonald
+    } else if (restaurant === 'Alamaan') {
+      return Alamaan
+    } else if (restaurant === 'Kimly') {
+      return Kimly
+    } else {
+      return notFound
+    }
+  }
+
+  const IMG = getImage(props.restaurant)
+
   return (
     <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <TopSection>
-        <RoundImage image={notFound} alt="Restaurant Logo" />
+        <RoundImage image={IMG} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
