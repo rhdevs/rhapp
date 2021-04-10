@@ -63,24 +63,27 @@ export type Order = {
 }
 
 export type SupperGroup = {
-  supperGroupId: string
-  supperGroupName: string
+  additionalCost?: number //ie GST, delivery fee
+  comments?: string
+  costLimit: number
+  createdAt: number
+  currentFoodCost: number //non inclusive of additionalCost
+  location: string //collection point
+  numOrders: number
   ownerId: string
   ownerName: string
   paymentInfo: PaymentInfo[]
+  restaurantLogo: string
   restaurantName: string
-  userIdList: string[]
-  orderList: Order[]
-  additionalCost?: number //ie GST, delivery fee
   splitAdditionalCost: SplitACMethod
-  currentFoodCost: number //non inclusive of additionalCost
-  costLimit: number
   status: SupperGroupStatus
-  location: string //collection point
-  deliveryDuration: number
-  //arrivalTime = creationTime + estimated delivery duration
-  closingTime: string
-  createdAt: number
+  supperGroupId: number
+  supperGroupName: string
+  totalPrice: number
+  userIdList: string[]
+  orderList?: Order[]
+  deliveryDuration?: number
+  closingTime: number
 }
 
 export type CollatedOrder = {
@@ -132,12 +135,17 @@ export enum SUPPER_ACTIONS {
   GET_MENU_FOOD = 'SUPPER_ACTIONS.GET_MENU_FOOD',
   GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
   GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
+  GET_JOINED_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY',
   SET_COUNT = 'SUPPER_ACTIONS.SET_COUNT',
   SET_PRICE_LIMIT = 'SUPPER_ACTIONS.SET_PRICE_LIMIT',
+  SET_DELIVERY_TIME = 'SUPPER_ACTIONS.SET_DELIVERY_TIME',
   SET_EXPANDABLE_CARD_STATUS = 'SUPPER_ACTIONS.SET_EXPANDABLE_CARD_STATUS',
   SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
   SET_SELECTED_RESTAURANT = 'SUPPER_ACTIONS.SET_SELECTED_RESTAURANT',
   SET_SELECTED_SUPPER_GROUP_STATUS = 'SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS',
+  GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
+  SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
+  SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
 }
 
 type SetIsLoading = {
@@ -220,6 +228,11 @@ type GetSupperGroupHistory = {
   supperGroupHistory: SupperGroup[]
 }
 
+type GetJoinedSupperGroupHistory = {
+  type: typeof SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY
+  joinedSupperGroupHistory: SupperGroup[]
+}
+
 type SetCount = {
   type: typeof SUPPER_ACTIONS.SET_COUNT
   count: number
@@ -228,6 +241,11 @@ type SetCount = {
 type SetPriceLimit = {
   type: typeof SUPPER_ACTIONS.SET_PRICE_LIMIT
   priceLimit: number
+}
+
+type SetDeliveryTime = {
+  type: typeof SUPPER_ACTIONS.SET_DELIVERY_TIME
+  deliveryTime: number
 }
 
 type SetExpandableCardStatus = {
@@ -250,6 +268,21 @@ type SetSelectedSupperGroupStatus = {
   selectedSupperGroupStatus: SupperGroupStatus | null
 }
 
+type GetSearchedSupperGroups = {
+  type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
+  searchedSupperGroups: SupperGroup[]
+}
+
+type SetSearchSupperGroupValue = {
+  type: typeof SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE
+  searchValue: string
+}
+
+type SetTabsKey = {
+  type: typeof SUPPER_ACTIONS.SET_TABS_KEY
+  tabsKey: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -267,9 +300,14 @@ export type ActionTypes =
   | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory
+  | GetJoinedSupperGroupHistory
   | SetCount
   | SetPriceLimit
+  | SetDeliveryTime
   | SetExpandableCardStatus
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
   | SetSelectedSupperGroupStatus
+  | GetSearchedSupperGroups
+  | SetSearchSupperGroupValue
+  | SetTabsKey

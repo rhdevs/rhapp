@@ -101,6 +101,7 @@ export enum ENDPOINTS {
   DELETE_ORDER = '/supper/order',
   GET_ORDER_HISTORY = '/supper/user',
   GET_SUPPER_GROUP_HISTORY = '/supper/user',
+  GET_JOINED_SUPPER_GROUP_HISTORY = '/supper/user',
 }
 
 export enum DOMAINS {

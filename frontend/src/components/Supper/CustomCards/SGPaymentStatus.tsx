@@ -19,29 +19,33 @@ type Props = {
 export const SGPaymentStatus = (props: Props) => {
   return (
     <MainCard flexDirection="column">
-      {props.supperGroup.orderList.map((order, index) => {
-        const additionalCost =
-          props.supperGroup.splitAdditionalCost === SplitACMethod.EQUAL
-            ? props.supperGroup.additionalCost ?? 0 / props.supperGroup.userIdList.length
-            : ((props.supperGroup.additionalCost ?? 0) * order.totalCost) /
-              (props.supperGroup.currentFoodCost + (props.supperGroup.additionalCost ?? 0))
-        return (
-          <>
-            <UserPaymentStatus
-              key={index}
-              name={order.user.displayName}
-              phoneNumber={order.userContact}
-              telegramHandle={order.user.telegramHandle}
-              hasPaid={order.hasPaid}
-              foodList={order.foodList}
-              hasRecieved={order.hasReceived}
-              totalCost={order.totalCost}
-              additionalCost={additionalCost}
-            />
-            {index + 1 !== props.supperGroup.orderList.length && <HorizontalLine />}
-          </>
-        )
-      })}
+      {props.supperGroup.orderList ? (
+        props.supperGroup.orderList.map((order, index) => {
+          const additionalCost =
+            props.supperGroup.splitAdditionalCost === SplitACMethod.EQUAL
+              ? props.supperGroup.additionalCost ?? 0 / props.supperGroup.userIdList.length
+              : ((props.supperGroup.additionalCost ?? 0) * order.totalCost) /
+                (props.supperGroup.currentFoodCost + (props.supperGroup.additionalCost ?? 0))
+          return (
+            <>
+              <UserPaymentStatus
+                key={index}
+                name={order.user.displayName}
+                phoneNumber={order.userContact}
+                telegramHandle={order.user.telegramHandle}
+                hasPaid={order.hasPaid}
+                foodList={order.foodList}
+                hasReceived={order.hasReceived}
+                totalCost={order.totalCost}
+                additionalCost={additionalCost}
+              />
+              {index + 1 !== props.supperGroup.orderList?.length && <HorizontalLine />}
+            </>
+          )
+        })
+      ) : (
+        <>there are no orders!</>
+      )}
     </MainCard>
   )
 }
