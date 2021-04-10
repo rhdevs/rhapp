@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Avatar, Card, Tabs } from 'antd'
+import { Avatar, Card, Tabs, Menu, Dropdown } from 'antd'
 import 'antd/dist/antd.css'
 import { useHistory } from 'react-router-dom'
 import EditProfileButton from './Components/EditProfileButton'
@@ -21,6 +21,10 @@ import dayjs from 'dayjs'
 import { getInitials } from '../../common/getInitials'
 import { onRefresh } from '../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+import settingIcons from '../../assets/ProfileIcons/settings.svg'
+import passwordIcon from '../../assets/ProfileIcons/change password.svg'
+import logout from '../../assets/ProfileIcons/logout.svg'
+import catIcon from '../../assets/ProfileIcons/there_s nothing to see here.gif'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -85,8 +89,22 @@ const PersonalInfoSpan = styled.span`
   vertical-align: middle;
   padding-left: 3vw;
 `
-const LogoutButton = styled.div`
-  color: #de5f4c;
+const SettingImage = styled.img`
+  height: 40px;
+  padding: 5px;
+`
+const NothingToSee = styled.div`
+  padding-top: 10px;
+  margin-bottom: 50px;
+  vertical-align: middle;
+  text-align: center;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 18px;
+`
+const CatImage = styled.img`
+  height: 180px;
+  margin-top: 10px;
 `
 
 export default function Profile() {
@@ -124,6 +142,27 @@ export default function Profile() {
     )
   }
 
+  const settings = (
+    <Menu>
+      <Menu.Item key="0">
+        <div onClick={() => history.push(PATHS.CHANGE_PASSWORD_PAGE)}>
+          <SettingImage src={passwordIcon} />
+          &nbsp;Change Password
+        </div>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <div
+          onClick={() => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('userID')
+            history.push(PATHS.LOGIN_PAGE)
+          }}
+        >
+          <SettingImage src={logout} /> &nbsp;Log Out{' '}
+        </div>
+      </Menu.Item>
+    </Menu>
+  )
   const renderActivitiesItems = () => {
     return posts.map((postItem) => {
       return (
@@ -144,7 +183,16 @@ export default function Profile() {
   }
 
   const ActivitiesCard = () => {
-    return <div>{renderActivitiesItems()}</div>
+    return posts.length == 0 ? (
+      <NothingToSee>
+        <div>
+          <CatImage src={catIcon} />
+        </div>
+        <div>{"There's nothing to see here!"}</div>
+      </NothingToSee>
+    ) : (
+      <div>{renderActivitiesItems()}</div>
+    )
   }
 
   const { TabPane } = Tabs
@@ -264,15 +312,11 @@ export default function Profile() {
   }
 
   const logoutButton = (
-    <LogoutButton
-      onClick={() => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userID')
-        history.push(PATHS.LOGIN_PAGE)
-      }}
-    >
-      Logout
-    </LogoutButton>
+    <Dropdown overlay={settings} trigger={['click']}>
+      <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+        <SettingImage src={settingIcons} />
+      </a>
+    </Dropdown>
   )
 
   return (
