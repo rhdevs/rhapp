@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
-import dummyAvatar from '../../assets/dummyAvatar.svg'
 import { PATHS } from '../Routes'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
@@ -12,6 +11,7 @@ import { Radio } from 'antd'
 import 'antd/dist/antd.css'
 import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
+import FacilityArray from '../../assets/FacilityIcons/index'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -30,6 +30,7 @@ const FacilityCard = styled.div`
 
 const FacilityAvatar = styled.img`
   padding: 20px;
+  height: 80px;
 `
 
 const FacilityHeader = styled.p`
@@ -164,7 +165,7 @@ export default function FacilityBooking() {
                         dispatch(setSelectedFacility(facility.facilityID))
                       }}
                     >
-                      <FacilityAvatar src={dummyAvatar} />
+                      <FacilityAvatar src={FacilityArray[facility.facilityID]} />
                       <FacilityLabels>
                         <FacilityHeader>{facility.facilityName}</FacilityHeader>
                         <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
