@@ -15,8 +15,11 @@ const Background = styled.div`
   position: relative;
 `
 const ButtonContainer = styled.div`
-  text_align: centre;
-  margin: 70px 140px;
+  margin-top: 40px;
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0);
 `
 
 export default function UserJoinOrder() {
