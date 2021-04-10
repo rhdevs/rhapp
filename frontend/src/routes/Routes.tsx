@@ -137,10 +137,10 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
-            <PublicRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
+            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
-            <PublicRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
+            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
