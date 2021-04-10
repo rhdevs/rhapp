@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
-import { FileImageFilled } from '@ant-design/icons'
+// import { FileImageFilled } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { Button, Switch } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -26,6 +26,7 @@ import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import DropDownSelector from '../../../components/Mobile/DropDownSelector'
+import uploadImage from '../../../assets/SocialIcon/upload image.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -124,6 +125,11 @@ const InputLabel = styled.label`
   justify-content: center;
   color: #484848;
   left: 106.5px;
+`
+
+const UploadImage = styled.img`
+  padding: 20px;
+  height: 70px;
 `
 
 const Announcement = styled.div`
@@ -297,7 +303,8 @@ export default function CreateEditPost() {
                   }}
                 />
                 <InputLabel htmlFor="file">
-                  <FileImageFilled style={{ fontSize: '20px' }} />
+                  {/* <FileImageFilled style={{ fontSize: '20px' }} /> */}
+                  <UploadImage src={uploadImage} />
                 </InputLabel>
               </Footer>
             )}
