@@ -4,8 +4,10 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import deleteIcon from '../../../assets/deleteIcon.svg'
-import editIcon from '../../../assets/editIcon.svg'
+// import deleteIcon from '../../../assets/deleteIcon.svg'
+// import editIcon from '../../../assets/editIcon.svg'
+import editIcon from '../../../assets/FacilityIcons/ActionIcons/change password.svg'
+import deleteIcon from '../../../assets/FacilityIcons/ActionIcons/delete (dustbin) closed.svg'
 import catIcon from '../../../assets/catMagnifyGlass.svg'
 import {
   getMyBookings,
@@ -20,6 +22,7 @@ import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+import FacilityArray from '../../../assets/FacilityIcons/index'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -44,6 +47,7 @@ const BookingCard = styled.div`
 
 const BookingAvatar = styled.img`
   padding: 20px;
+  height: 80px;
 `
 
 const BookingHeader = styled.p`
@@ -86,6 +90,8 @@ const RightActionGroups = styled.div`
 
 const ActionButton = styled.img`
   padding: 15px;
+  height: 50px;
+  color: #de5f4c;
 `
 
 export default function ViewMyBookings() {
@@ -117,7 +123,7 @@ export default function ViewMyBookings() {
                 if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
                     <BookingCard key={booking.bookingID}>
-                      <BookingAvatar src={dummyAvatar} />
+                      <BookingAvatar src={FacilityArray[booking.facilityID]} />
                       <BookingLabels
                         onClick={() => {
                           history.push('/facility/booking/view/' + booking.bookingID)
