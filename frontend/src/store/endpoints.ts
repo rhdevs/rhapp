@@ -18,11 +18,10 @@ export enum ENDPOINTS {
   FRIEND = '/friend',
 
   // FACILITY
-  FACILITY_LIST = '/facilities/all',
-  FACILITY = '/facility',
+  FACILITY = '/facilities',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
-  VIEW_BOOKING = '/booking',
+  VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
@@ -113,9 +112,11 @@ export enum DOMAINS {
 
 export const DOMAIN_URL = {
   FACILITY:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+    process.env.REACT_APP_MODE !== 'production'
+      ? //? '//rhappfacilities.rhdevs.repl.co'
+        '//rhapp-backend.rhdevs.repl.co/facilities'
+      : //'//rhapp-middleware.herokuapp.com/rhappfacilities',
+        '//rhapp-backend.rhdevs.repl.co/facilities',
   EVENT:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappevents.rhdevs.repl.co'
