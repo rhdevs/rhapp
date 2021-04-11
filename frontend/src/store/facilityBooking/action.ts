@@ -2,7 +2,6 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, DOMAIN_URL } from '../endpoints'
 import dayjs from 'dayjs'
-
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
@@ -11,16 +10,16 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
 }
 
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY, {
     method: 'GET',
     mode: 'cors',
   })
     .then((resp) => resp.json())
     .then((data) => {
-      const uniqueLocationList = [...new Set(data.map((item: Facility) => item.facilityLocation))]
+      const uniqueLocationList = [...new Set(data.data.facilities.map((item: Facility) => item.facilityLocation))]
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
-        facilityList: data,
+        facilityList: data.data.facilities,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
       dispatch(SetIsLoading(false))
@@ -50,10 +49,9 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
   )
   const querySubString =
     selectedFacilityId +
-    '/' +
-    '?startDate=' +
+    '?startTime=' +
     parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
-    '&endDate=' +
+    '&endTime=' +
     parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
   let updatedFB: Booking[] = []
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
@@ -62,7 +60,7 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
   })
     .then((resp) => resp.json())
     .then(async (data) => {
-      updatedFB = await data.map((booking: Booking) => {
+      updatedFB = await data.data.map((booking: Booking) => {
         fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
           method: 'GET',
           mode: 'cors',
@@ -84,10 +82,14 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
-  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.USER_BOOKINGS + '/' + userId, {
+    method: 'GET',
+    mode: 'cors',
+  })
     .then((resp) => resp)
-    .then((bookingList) => {
-      const fetchedList: Booking[] = bookingList
+    .then(async (bookingList) => {
+      const dataList = await bookingList.json()
+      const fetchedList: Booking[] = dataList.data
       newList = fetchedList.map((booking) => {
         fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
           method: 'GET',
@@ -102,7 +104,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
             })
               .then((resp) => resp.json())
               .then((facility) => {
-                booking.facilityName = facility[0].facilityName
+                booking.facilityName = facility.data[0].facilityName
               })
           })
         return booking
@@ -125,13 +127,17 @@ export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then(() => {
-      const { myBookings } = getState().facilityBooking
-      dispatch({
-        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
-      })
-      setIsDeleteMyBooking(-1)
+    .then((data) => {
+      if (data.status == 'success') {
+        const { myBookings } = getState().facilityBooking
+        dispatch({
+          type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+          myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+        })
+        setIsDeleteMyBooking(-1)
+      } else if (data.status == 'failed') {
+        console.log(data.err) //create warning for failure to delete
+      }
     })
 }
 
@@ -266,7 +272,7 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
   })
     .then((resp) => resp.json())
     .then((facility) => {
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME, selectedFacilityName: facility[0].facilityName })
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME, selectedFacilityName: facility.data[0].facilityName })
     })
 }
 
@@ -419,25 +425,25 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   })
     .then((resp) => resp.json())
     .then(async (booking) => {
-      await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + booking[0].facilityID, {
+      await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + booking.data[0].facilityID, {
         method: 'GET',
         mode: 'cors',
       })
         .then((resp) => resp.json())
         .then(async (facility) => {
-          booking[0].facilityName = facility[0].facilityName
-          await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking[0].ccaID, {
+          booking.data[0].facilityName = facility.data[0].facilityName
+          await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.data[0].ccaID, {
             method: 'GET',
             mode: 'cors',
           })
             .then((resp) => resp.json())
             .then((cca) => {
-              booking[0].ccaName = cca[0].ccaName
+              booking.data[0].ccaName = cca[0].ccaName
             })
         })
 
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking[0] })
-      return booking[0]
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data[0] })
+      return booking.data[0]
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
