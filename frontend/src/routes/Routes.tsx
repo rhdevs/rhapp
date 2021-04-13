@@ -50,6 +50,7 @@ export enum PATHS {
   SUPPER_COMPONENTS_PAGE = '/supper/components',
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
+  USER_SUPPER_GROUP_PLACE_ORDER = '/supper/placeOrder',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -90,9 +91,10 @@ const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 //SUPPER
-const SupperCompoenents = React.lazy(() => import('./Supper/componentsPage'))
+const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
+const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
 
 export default class Routes extends React.Component {
   render() {
@@ -135,9 +137,10 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
-            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperCompoenents} />
-            <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
-            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
+            <PublicRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
+            <PublicRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
+            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
+            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER} component={UserPlaceOrder} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
