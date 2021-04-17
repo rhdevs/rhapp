@@ -111,7 +111,7 @@ export default function Supper() {
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
-      <MenuSection menu={foodMenuStub} />
+      <MenuSection menu={foodMenuStub} sectionHeader={'Value Meals'} />
     </>
   )
 }

@@ -6,7 +6,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
-import { foodMenuStub } from '../../../store/stubs'
+import { AlAmaanStub, foodMenuStub } from '../../../store/stubs'
 
 const Background = styled.div`
   height: 100vh;
@@ -39,7 +39,7 @@ export default function UserPlaceOrder() {
         numberOfUsers={10}
         deliveryFee="10.70"
       />
-      <Restaurant>RestaurantName</Restaurant>
+      <Restaurant>{AlAmaanStub.name}</Restaurant>
       <SearchBarContainer>
         <SearchBar
           placeholder="Search for food"
@@ -48,8 +48,8 @@ export default function UserPlaceOrder() {
             1
           }}
         />
-        <MenuTabs menuSections={['Thai Kitchen', 'Indian Kitchen', 'Western Kitchen']} />
-        <MenuSection menu={foodMenuStub} />
+        <MenuTabs menuSections={AlAmaanStub.allSection} />
+        <MenuSection menu={AlAmaanStub.menu} sectionHeader={'Thai Kitchen'} />
       </SearchBarContainer>
     </Background>
   )

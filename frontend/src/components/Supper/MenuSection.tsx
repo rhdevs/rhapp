@@ -48,6 +48,7 @@ const PriceContainer = styled.text`
 `
 type Props = {
   menu: FoodMenu[]
+  sectionHeader: string
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
@@ -56,7 +57,7 @@ export const MenuSection = (props: Props) => {
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>Value Meals</SectionHeader>
+        <SectionHeader>{props.sectionHeader}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
