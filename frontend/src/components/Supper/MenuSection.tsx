@@ -61,28 +61,30 @@ export const MenuSection = (props: Props) => {
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
-          {props.menu.map((foodMenu) => (
-            <>
-              <FoodAndQuantityContainer
-                onClick={() => {
-                  // TODO: Add route
-                  //history.push(/foodMenu.foodMenuId)
-                  console.log('Go to food page!')
-                }}
-              >
-                <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-                {
-                  (QUANTITY = props.order?.foodList?.find((food) => {
-                    if (food.foodMenu === foodMenu) {
-                      return String(food.quantity)
-                    }
-                  }))
-                }
-                <QuantityContainer>{QUANTITY}</QuantityContainer>
-              </FoodAndQuantityContainer>
-              <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
-            </>
-          ))}
+          {props.menu
+            .filter((foodMenu) => foodMenu.section === props.sectionHeader)
+            .map((foodMenu) => (
+              <>
+                <FoodAndQuantityContainer
+                  onClick={() => {
+                    // TODO: Add route
+                    //history.push(/foodMenu.foodMenuId)
+                    console.log('Go to food page!')
+                  }}
+                >
+                  <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
+                  {
+                    (QUANTITY = props.order?.foodList?.find((food) => {
+                      if (food.foodMenu === foodMenu) {
+                        return String(food.quantity)
+                      }
+                    }))
+                  }
+                  <QuantityContainer>{QUANTITY}</QuantityContainer>
+                </FoodAndQuantityContainer>
+                <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
+              </>
+            ))}
         </FoodMenuContainer>
       </SectionBodyContainer>
     </MainContainer>

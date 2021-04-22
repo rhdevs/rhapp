@@ -1,4 +1,6 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import SearchBar from '../../../components/Mobile/SearchBar'
@@ -6,7 +8,8 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
-import { AlAmaanStub, foodMenuStub } from '../../../store/stubs'
+import { AlAmaanStub } from '../../../store/stubs'
+import { RootState } from '../../../store/types'
 
 const Background = styled.div`
   height: 100vh;
@@ -25,6 +28,8 @@ const Restaurant = styled.text`
 `
 
 export default function UserPlaceOrder() {
+  const { menuTabKey } = useSelector((state: RootState) => state.supper)
+
   return (
     <Background>
       <TopNavBar title="Place Order" />
@@ -49,7 +54,7 @@ export default function UserPlaceOrder() {
           }}
         />
         <MenuTabs menuSections={AlAmaanStub.allSection} />
-        <MenuSection menu={AlAmaanStub.menu} sectionHeader={'Thai Kitchen'} />
+        <MenuSection menu={AlAmaanStub.menu} sectionHeader={menuTabKey} />
       </SearchBarContainer>
     </Background>
   )

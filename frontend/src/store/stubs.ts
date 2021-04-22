@@ -419,7 +419,7 @@ export const AlAmaanStub: Restaurant = {
     {
       foodMenuId: 'hkn',
       restaurantId: 'alamaan',
-      foodMenuName: 'Hong Kong Noodles',
+      foodMenuName: 'Pad Thai',
       section: 'Thai Kitchen',
       price: 5.5,
     },

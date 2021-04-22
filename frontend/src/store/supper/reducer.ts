@@ -36,6 +36,7 @@ const initialState = {
   searchedSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
+  menuTabKey: '',
 }
 
 type State = {
@@ -62,6 +63,7 @@ type State = {
   searchedSupperGroups: SupperGroup[]
   searchValue: string
   tabsKey: string
+  menuTabKey: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -146,6 +148,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_TABS_KEY: {
       return { ...state, tabsKey: action.tabsKey }
+    }
+    case SUPPER_ACTIONS.SET_MENU_TAB_KEY: {
+      return { ...state, menuTabKey: action.menuTabKey }
     }
     default:
       return state
