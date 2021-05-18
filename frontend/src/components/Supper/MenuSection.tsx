@@ -1,6 +1,8 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { FoodMenu, Order } from '../../store/supper/types'
+import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   background-color: white;
@@ -48,21 +50,22 @@ const PriceContainer = styled.text`
 `
 type Props = {
   menu: FoodMenu[]
-  sectionHeader: string
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const MenuSection = (props: Props) => {
   let QUANTITY
+  const { menuTabKey } = useSelector((state: RootState) => state.supper)
+  console.log(menuTabKey)
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>{props.sectionHeader}</SectionHeader>
+        <SectionHeader>{menuTabKey}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
           {props.menu
-            .filter((foodMenu) => foodMenu.section === props.sectionHeader)
+            .filter((foodMenu) => foodMenu.section === menuTabKey)
             .map((foodMenu) => (
               <>
                 <FoodAndQuantityContainer

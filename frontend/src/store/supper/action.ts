@@ -530,7 +530,7 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
 
 export const setMenuTabKey = (section: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
-    type: SUPPER_ACTIONS.SET_TABS_KEY,
-    tabsKey: section,
+    type: SUPPER_ACTIONS.SET_MENU_TAB_KEY,
+    menuTabKey: section,
   })
 }

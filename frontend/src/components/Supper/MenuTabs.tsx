@@ -81,7 +81,15 @@ export const MenuTabs = (props: Props) => {
     <MainContainer>
       <ToggleTabsContainer>
         {props.menuSections.map((section, idx) => (
-          <TextContainer key={idx} value={section} onClick={() => (menuTab = section) && console.log(section)}>
+          <TextContainer
+            key={idx}
+            value={section}
+            onClick={() => {
+              menuTab = section
+              console.log(section)
+              dispatch(setMenuTabKey(section))
+            }}
+          >
             {section}
           </TextContainer>
         ))}

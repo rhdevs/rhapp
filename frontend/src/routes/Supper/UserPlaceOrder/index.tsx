@@ -28,8 +28,6 @@ const Restaurant = styled.text`
 `
 
 export default function UserPlaceOrder() {
-  const { menuTabKey } = useSelector((state: RootState) => state.supper)
-
   return (
     <Background>
       <TopNavBar title="Place Order" />
@@ -54,7 +52,7 @@ export default function UserPlaceOrder() {
           }}
         />
         <MenuTabs menuSections={AlAmaanStub.allSection} />
-        <MenuSection menu={AlAmaanStub.menu} sectionHeader={menuTabKey} />
+        <MenuSection menu={AlAmaanStub.menu} />
       </SearchBarContainer>
     </Background>
   )
