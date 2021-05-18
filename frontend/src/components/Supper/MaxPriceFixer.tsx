@@ -6,7 +6,9 @@ import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'
 
-const CounterContainer = styled.div``
+const CounterContainer = styled.div`
+  text-align: center;
+`
 
 const ValueContainer = styled.text`
   font-size: 24px;
