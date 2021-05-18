@@ -527,3 +527,10 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
     tabsKey: key,
   })
 }
+
+export const setOrder = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
+    supperGroup: updatedOrder,
+  })
+}
