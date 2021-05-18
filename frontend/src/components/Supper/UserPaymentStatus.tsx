@@ -7,8 +7,7 @@ import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
 import { UnderlinedButton } from './UnderlinedButton'
 import { OpenUserTelegram } from '../TelegramShareButton'
-import checkboxFilled from '../../assets/checkbox-filled.svg'
-import checkboxNotFilled from '../../assets/checkbox-notFilled.svg'
+import { Checkbox } from '../Checkbox'
 // import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
@@ -45,11 +44,6 @@ const StatusSymbolContainer = styled.div`
   margin: auto;
   display: flex;
   justify-content: center;
-`
-
-const Checkbox = styled.img`
-  padding-right: 10px;
-  margin: auto 0;
 `
 
 const DetailsContainer = styled.div`
@@ -109,23 +103,12 @@ export const UserPaymentStatus = (props: Props) => {
   const buttonText = isExpanded ? 'Hide Details' : 'Show Details'
   const arrowIcon = isExpanded ? <CaretUpOutlined /> : <CaretDownOutlined />
 
-  const checkIcon = props.hasReceived ? checkboxFilled : checkboxNotFilled
-  const alt = props.hasReceived ? 'Checked' : 'Not checked'
-
   return (
     <MainContainer>
       <TopContainer>
         <LeftContainer>
-          {/* <Checkbox
-            defaultChecked={props.hasReceived}
-            onChange={() => {
-              setCancelName(!cancelName)
-            }}
-            checked={cancelName}
-          /> */}
           <Checkbox
-            src={checkIcon}
-            alt={alt}
+            isChecked={cancelName}
             onClick={() => {
               setCancelName(!cancelName)
               //set order hasReceived to true
