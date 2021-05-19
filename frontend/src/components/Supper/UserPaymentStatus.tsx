@@ -75,6 +75,7 @@ const LeftContainer = styled.div`
   margin: auto;
   display: flex;
   flex-direction: row;
+  align-items: center;
 `
 
 const NameText = styled.text<{ cancelName: boolean }>`
@@ -82,6 +83,11 @@ const NameText = styled.text<{ cancelName: boolean }>`
   font-size: 17px;
   text-decoration: ${(props) => (props.cancelName ? 'line-through' : 'none')};
   color: rgba(0, 0, 0, 0.47);
+`
+
+const CheckboxContainer = styled.div`
+  width: fit-content;
+  margin: -10px 0 0 0;
 `
 
 type Props = {
@@ -107,14 +113,16 @@ export const UserPaymentStatus = (props: Props) => {
     <MainContainer>
       <TopContainer>
         <LeftContainer>
-          <Checkbox
-            isChecked={cancelName}
-            onClick={() => {
-              setCancelName(!cancelName)
-              //set order hasReceived to true
-              // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
-            }}
-          />
+          <CheckboxContainer>
+            <Checkbox
+              isChecked={cancelName}
+              onClick={() => {
+                setCancelName(!cancelName)
+                //set order hasReceived to true
+                // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
+              }}
+            />
+          </CheckboxContainer>
           <NameText
             onClick={() => {
               setCancelName(!cancelName)

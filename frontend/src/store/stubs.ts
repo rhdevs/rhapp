@@ -324,24 +324,6 @@ export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
 ]
 
-// supperGroupId: string
-//   supperGroupName: string
-//   ownerId: string
-//   ownerName: string
-//   paymentInfo: PaymentInfo[]
-//   restaurantName: string
-//   allUsers: User[]
-//   orderList: Order[]
-//   additionalCost?: number //ie GST, delivery fee
-//   splitAdditionalCost: SplitACMethod
-//   currentFoodCost: number //non inclusive of additionalCost
-//   costLimit: number
-//   status: SupperGroupStatus
-//   location: string //collection point
-//   deliveryDuration: number
-//   arrivalTime: number // = creationTime + estimated delivery duration
-//   closingTime: string
-//   createdAt:
 export const supperGroupStub: SupperGroup = {
   additionalCost: 3,
   comments: 'pls feed me',
@@ -356,7 +338,6 @@ export const supperGroupStub: SupperGroup = {
     { paymentMethod: PaymentMethod.PAYLAH, link: 'asdasd' },
     { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'asdzxcasd' },
   ],
-  restaurantLogo: 'asdfghjkl',
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
   status: SupperGroupStatus.OPEN,
@@ -367,3 +348,5 @@ export const supperGroupStub: SupperGroup = {
   closingTime: 10000000,
   orderList: orderList,
 }
+
+export const supperGroupId = '1'

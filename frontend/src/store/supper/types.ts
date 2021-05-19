@@ -71,7 +71,7 @@ export type SupperGroup = {
   ownerId: string
   ownerName: string
   paymentInfo: PaymentInfo[]
-  restaurantLogo: string
+  restaurantLogo?: string
   restaurantName: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus

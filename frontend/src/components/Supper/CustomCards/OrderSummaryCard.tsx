@@ -1,17 +1,18 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { orderList } from '../../../store/stubs'
-import { Food, Order } from '../../../store/supper/types'
+import { CollatedOrder, Food, Order } from '../../../store/supper/types'
 import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
+import EmptyCart from '../../../assets/EmptyCart.svg'
 
 const EmptyCartContainer = styled.div`
   display: flex;
   justify-content: center;
   margin: auto;
   font-size: 17px;
+  font-family: 'Inter';
 `
 
 const MainContainer = styled.div`
@@ -44,6 +45,11 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
+const EmptyCartImg = styled.img`
+  height: 61px;
+  width: 55px;
+`
+
 type Props = {
   isEditable?: boolean
   foodList: Food[]
@@ -51,49 +57,98 @@ type Props = {
   onCloseOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
   orderList?: Order[]
+  margin?: string
+  collatedOrder?: CollatedOrder | null
 }
 
 export const OrderSummaryCard = (props: Props) => {
   const bottomButtons = () => {
     return (
       props.isEditable && (
-        <ButtonContainer>
-          <Button
-            descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
-            stopPropagation={true}
-            defaultButtonDescription={props.orderByUser ? 'Cancel Group Order' : 'Cancel Order'}
-            defaultButtonColor="transparent"
-            defaultTextColor="#de5f4c"
-            buttonWidth="120px"
-            buttonHeight="fit-content"
-            onButtonClick={() => {
-              props.onCancelOrderClick
-            }}
-            isFlipButton={false}
-            border="2px solid #de5f4c"
-          />
-          {props.orderByUser && (
+        <>
+          <br />
+          <br />
+          <ButtonContainer>
             <Button
               descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
               stopPropagation={true}
-              defaultButtonDescription="Close Group Order"
+              defaultButtonDescription={
+                props.orderByUser || props.collatedOrder !== undefined ? 'Delete Group' : 'Cancel Order'
+              }
+              defaultButtonColor="transparent"
+              defaultTextColor="#de5f4c"
               buttonWidth="120px"
-              buttonHeight="56px"
               onButtonClick={() => {
-                props.onCloseOrderClick
+                props.onCancelOrderClick
               }}
               isFlipButton={false}
+              border="2px solid #de5f4c"
             />
-          )}
-        </ButtonContainer>
+            {(props.orderByUser || props.collatedOrder !== undefined) && (
+              <Button
+                descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
+                stopPropagation={true}
+                defaultButtonDescription="Close Order"
+                buttonWidth="120px"
+                onButtonClick={() => {
+                  props.onCloseOrderClick
+                }}
+                isFlipButton={false}
+              />
+            )}
+          </ButtonContainer>
+        </>
       )
     )
   }
 
   const cardContent = () => {
-    if (props.orderByUser) {
-      if (orderList.length <= 0) {
-        return <EmptyCartContainer>Empty Cart</EmptyCartContainer>
+    console.log(props.collatedOrder)
+    if (props.collatedOrder || props.collatedOrder === null) {
+      const collatedOrderList = props.collatedOrder?.collatedOrderList ?? []
+      if (collatedOrderList.length <= 0 || collatedOrderList === null) {
+        return (
+          <MainContainer>
+            <EmptyCartContainer>No Orders</EmptyCartContainer>
+            {bottomButtons()}
+          </MainContainer>
+        )
+      } else {
+        return (
+          <MainContainer>
+            {collatedOrderList.map((food, index) => {
+              const customisations: string[] = []
+              food.foodMenu.custom?.map((custom) =>
+                custom.options.map((option) => {
+                  if (option.isSelected) customisations.push(option.name)
+                }),
+              )
+              return (
+                <FoodLineInCard
+                  key={index}
+                  foodName={food.foodMenu.foodMenuName}
+                  qty={food.quantity}
+                  price={food.foodPrice}
+                  customisations={customisations}
+                  isEditable={props.isEditable}
+                  comments={food.comments}
+                />
+              )
+            })}
+            {bottomButtons()}
+          </MainContainer>
+        )
+      }
+    } else if (props.orderByUser) {
+      if ((props.orderList?.length ?? 0) <= 0) {
+        return (
+          <MainContainer>
+            <EmptyCartContainer>
+              <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
+            </EmptyCartContainer>
+            {bottomButtons()}
+          </MainContainer>
+        )
       } else {
         let orderList = props.orderList
         if (orderList) {
@@ -105,6 +160,7 @@ export const OrderSummaryCard = (props: Props) => {
         }
         return (
           <MainContainer>
+            {console.log(orderList)}
             {orderList?.map((order, index) => {
               return (
                 <>
@@ -137,20 +193,20 @@ export const OrderSummaryCard = (props: Props) => {
                 </>
               )
             })}
-            {bottomButtons() && (
-              <>
-                <br />
-                <br />
-                <br />
-              </>
-            )}
             {bottomButtons()}
           </MainContainer>
         )
       }
     } else {
       if (props.foodList.length <= 0) {
-        return <EmptyCartContainer>Empty Cart</EmptyCartContainer>
+        return (
+          <MainContainer>
+            <EmptyCartContainer>
+              <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
+            </EmptyCartContainer>
+            {bottomButtons()}
+          </MainContainer>
+        )
       } else {
         return (
           <MainContainer>
@@ -173,17 +229,15 @@ export const OrderSummaryCard = (props: Props) => {
                 />
               )
             })}
-            {bottomButtons() && (
-              <>
-                <br />
-                <br />
-              </>
-            )}
             {bottomButtons()}
           </MainContainer>
         )
       }
     }
   }
-  return <MainCard minHeight="10rem">{cardContent()}</MainCard>
+  return (
+    <MainCard margin={props.margin} minHeight="10rem">
+      {cardContent()}
+    </MainCard>
+  )
 }
