@@ -17,7 +17,7 @@ const MainContainer = styled.div`
   height: fit-content;
   min-height: 100vh;
   background-color: #fafaf4;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
 `
 
 const SummaryContainer = styled.div`
@@ -101,7 +101,6 @@ const ViewOrder = () => {
         orderList={orderList}
       />
       <TotalPriceText>Total Price: ${supperGroup?.totalPrice.toFixed(2) ?? '0.00'}</TotalPriceText>
-      <br />
     </MainContainer>
   )
 }
