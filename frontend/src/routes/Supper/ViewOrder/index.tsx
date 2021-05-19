@@ -82,7 +82,7 @@ const ViewOrder = () => {
         closingTime={String(supperGroup?.closingTime ?? '-')}
         numberOfUsers={supperGroup?.userIdList.length ?? 0}
         splitACType={supperGroup?.splitAdditionalCost}
-        deliveryFee={'$' + String(supperGroup?.additionalCost?.toFixed(2) ?? '-')}
+        deliveryFee={'$' + String(supperGroup?.additionalCost?.toFixed(2) ?? '0.00')}
       />
       <SummaryContainer>
         <SubContainer>
@@ -100,7 +100,7 @@ const ViewOrder = () => {
         foodList={foodList}
         orderList={orderList}
       />
-      <TotalPriceText>Total Price: ${supperGroup?.totalPrice.toFixed(2) ?? ' -'}</TotalPriceText>
+      <TotalPriceText>Total Price: ${supperGroup?.totalPrice.toFixed(2) ?? '0.00'}</TotalPriceText>
       <br />
     </MainContainer>
   )

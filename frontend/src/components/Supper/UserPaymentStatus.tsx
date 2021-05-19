@@ -180,7 +180,7 @@ export const UserPaymentStatus = (props: Props) => {
                   />
                   {index + 1 === props.foodList.length && (
                     <DeliveryFeeText>
-                      Delivery Fee <MoneyText>${props.additionalCost.toFixed(2)}</MoneyText>
+                      Delivery Fee <MoneyText>${props.additionalCost.toFixed(2) ?? '0.00'}</MoneyText>
                     </DeliveryFeeText>
                   )}
                 </>
