@@ -266,7 +266,7 @@ def all_supper_group():
                     'from': 'Order',
                     'localField': 'supperGroupId',
                     'foreignField': 'supperGroupId',
-                    'as': 'orders'
+                    'as': 'orderList'
                 }
             },
             {
@@ -282,12 +282,12 @@ def all_supper_group():
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'},
-                    'numOrders': {'$size': '$orders'},
+                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -348,7 +348,7 @@ def supper_group(supperGroupId):
                         'from': 'Order',
                         'localField': 'supperGroupId',
                         'foreignField': 'supperGroupId',
-                        'as': 'orders'
+                        'as': 'orderList'
                     }
                 },
                 {
@@ -365,21 +365,21 @@ def supper_group(supperGroupId):
                 {
                     '$lookup': {
                         'from': 'FoodOrder',
-                        'localField': 'orders.foodIds',
+                        'localField': 'orderList.foodIds',
                         'foreignField': '_id',
                         'as': 'foodList'
                     }
                 },
                 {
                     '$addFields': {
-                        'totalPrice': {'$sum': '$orders.orderPrice'},
-                        'numOrders': {'$size': '$orders'},
+                        'totalPrice': {'$sum': '$orderList.orderPrice'},
+                        'numOrders': {'$size': '$orderList'},
                         'restaurantLogo': '$restaurant.restaurantLogo',
-                        'orders.foodList': [],
-                        'userIdList': {'$concatArrays': '$orders.userID'}
+                        'orderList.foodList': [],
+                        'userIdList': {'$concatArrays': '$orderList.userID'}
                     }
                 },
-                {'$project': {'_id': 0, 'restaurant': 0, 'orders._id': 0,
+                {'$project': {'_id': 0, 'restaurant': 0, 'orderList._id': 0,
                               'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
                               }
                  }
@@ -391,19 +391,19 @@ def supper_group(supperGroupId):
             for suppergroup in result:
                 data = suppergroup
 
-                for order in data['orders']:
+                for order in data['orderList']:
                     order['foodIds'] = list(
                         map(lambda x: str(x), order['foodIds']))
 
                 for food in data['foodList']:
                     food['_id'] = str(food['_id'])
-                    for order in data['orders']:
+                    for order in data['orderList']:
                         if food['_id'] in order['foodIds']:
                             order['foodList'].append(food)
                             order['foodIds'].remove(food['_id'])
 
                 data.pop('foodList')
-                for order in data['orders']:
+                for order in data['orderList']:
                     order.pop('foodIds')
 
             currentTime = int(datetime.now().timestamp())
@@ -725,16 +725,14 @@ def user_order_history(userID):
             {'$project': {'foodIds': 0}}
         ]
 
-        orders = db.Order.aggregate(pipeline)
+        orderList = db.Order.aggregate(pipeline)
 
         data = []
-        for order in orders:
+        for order in orderList:
             order['orderId'] = str(order.pop('_id'))
             for food in order["foodList"]:
                 food["foodId"] = str(food.pop('_id'))
             data.append(order)
-
-        print(data)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
@@ -762,7 +760,7 @@ def user_join_group_history(userID):
                     'from': 'Order',
                     'localField': 'supperGroupId',
                     'foreignField': 'supperGroupId',
-                    'as': 'orders'
+                    'as': 'orderList'
                 }
             },
             {
@@ -778,12 +776,12 @@ def user_join_group_history(userID):
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'},
-                    'numOrders': {'$size': '$orders'},
+                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -813,7 +811,7 @@ def user_supper_group_history(userID):
                     'from': 'Order',
                     'localField': 'supperGroupId',
                     'foreignField': 'supperGroupId',
-                    'as': 'orders'
+                    'as': 'orderList'
                 }
             },
             {
@@ -829,12 +827,12 @@ def user_supper_group_history(userID):
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orders.orderPrice'},
-                    'numOrders': {'$size': '$orders'},
+                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -864,18 +862,18 @@ def collated_orders(supperGroupId):
                     'from': 'Order',
                     'localField': 'supperGroupId',
                     'foreignField': 'supperGroupId',
-                    'as': 'orders'
+                    'as': 'orderList'
                 }
             },
             {
                 '$lookup': {
                     'from': 'FoodOrder',
-                    'localField': 'orders.foodIds',
+                    'localField': 'orderList.foodIds',
                     'foreignField': '_id',
                     'as': 'foods'
                 }
             },
-            {'$project': {'orders': 0, '_id': 0, 'foods._id': 0}},
+            {'$project': {'orderList': 0, '_id': 0, 'foods._id': 0}},
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
