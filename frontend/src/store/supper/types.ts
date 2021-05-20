@@ -88,6 +88,7 @@ export type CollatedOrder = {
   supperGroupId: string
   ownerId: string
   collatedOrderList: Food[]
+  price?: number
 }
 
 export enum SplitACMethod {
@@ -144,6 +145,7 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  SET_FINAL_DELIVERY_FEE = 'SUPPER_ACTION.SET_FINAL_DELIVERY_FEE',
 }
 
 type SetIsLoading = {
@@ -281,6 +283,11 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type SetFinalDeliveryFee = {
+  type: typeof SUPPER_ACTIONS.SET_FINAL_DELIVERY_FEE
+  finalDeliveryFee: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -309,3 +316,4 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetFinalDeliveryFee

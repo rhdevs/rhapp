@@ -207,7 +207,7 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: resp.data,
+        collatedOrder: { ...resp.data, supperGroupId: readableSupperGroupId(resp.data.supperGroupId), price: 0.0 },
       })
     })
     .catch((err) => {
@@ -525,5 +525,12 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   dispatch({
     type: SUPPER_ACTIONS.SET_TABS_KEY,
     tabsKey: key,
+  })
+}
+
+export const setFinalDeliveryFee = (finalDeliveryFee: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_FINAL_DELIVERY_FEE,
+    finalDeliveryFee: finalDeliveryFee,
   })
 }
