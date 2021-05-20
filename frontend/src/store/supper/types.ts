@@ -15,12 +15,18 @@ export type Food = {
   quantity: number
   foodMenu: FoodMenu
   foodPrice?: number
+  cancelAction?: CancelAction
 }
 
 export type Option = {
   name: string
   isSelected: boolean
   price: number
+}
+
+export enum CancelAction {
+  contact = 'contact',
+  cancel = 'cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -71,7 +77,7 @@ export type SupperGroup = {
   ownerId: string
   ownerName: string
   paymentInfo: PaymentInfo[]
-  restaurantLogo: string
+  restaurantLogo?: string
   restaurantName: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus

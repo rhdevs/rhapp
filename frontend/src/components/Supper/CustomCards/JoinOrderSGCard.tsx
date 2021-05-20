@@ -17,6 +17,7 @@ const TextSubContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 8px 20px 0 15px;
+  width: 60%;
 `
 
 const TitleContainer = styled.text`
@@ -48,6 +49,7 @@ const FirstLineContainer = styled.div`
 `
 
 type Props = {
+  restaurantLogo?: string
   title: string
   orderId: string
   username: string
@@ -56,16 +58,17 @@ type Props = {
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
-  splitACType: SplitACMethod
+  splitACType?: SplitACMethod
   isOwner?: boolean
+  cardMargin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const JoinOrderSGCard = (props: Props) => {
   return (
-    <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
+    <MainCard margin={props.cardMargin} flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <TopSection>
-        <RoundImage image={notFound} alt="Restaurant Logo" />
+        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>

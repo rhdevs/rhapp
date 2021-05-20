@@ -1,7 +1,17 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod } from './supper/types'
+import {
+  Order,
+  PaymentMethod,
+  SupperGroupStatus,
+  FoodMenu,
+  SupperGroup,
+  SplitACMethod,
+  CollatedOrder,
+  Food,
+  CancelAction,
+} from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -190,10 +200,11 @@ export const dummyUserId = 'A1234567B'
 // name: string
 // isSelected: boolean
 // price: number
-export const foodList = [
+export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    cancelAction: CancelAction.cancel,
     quantity: 1,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
@@ -229,6 +240,7 @@ export const foodList = [
   {
     foodId: '12345364832764134',
     quantity: 2,
+    cancelAction: CancelAction.contact,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
@@ -324,24 +336,6 @@ export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: '2', restaurantId: '1', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
 ]
 
-// supperGroupId: string
-//   supperGroupName: string
-//   ownerId: string
-//   ownerName: string
-//   paymentInfo: PaymentInfo[]
-//   restaurantName: string
-//   allUsers: User[]
-//   orderList: Order[]
-//   additionalCost?: number //ie GST, delivery fee
-//   splitAdditionalCost: SplitACMethod
-//   currentFoodCost: number //non inclusive of additionalCost
-//   costLimit: number
-//   status: SupperGroupStatus
-//   location: string //collection point
-//   deliveryDuration: number
-//   arrivalTime: number // = creationTime + estimated delivery duration
-//   closingTime: string
-//   createdAt:
 export const supperGroupStub: SupperGroup = {
   additionalCost: 3,
   comments: 'pls feed me',
@@ -356,7 +350,6 @@ export const supperGroupStub: SupperGroup = {
     { paymentMethod: PaymentMethod.PAYLAH, link: 'asdasd' },
     { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'asdzxcasd' },
   ],
-  restaurantLogo: 'asdfghjkl',
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
   status: SupperGroupStatus.OPEN,
@@ -369,3 +362,12 @@ export const supperGroupStub: SupperGroup = {
 }
 
 export const supperGroupId = '1'
+
+// supperGroupId: string;
+// ownerId: string;
+// collatedOrderList: Food[];
+export const dummyCollatedOrderList: CollatedOrder = {
+  supperGroupId: '1',
+  ownerId: 'A1234567B',
+  collatedOrderList: foodList,
+}
