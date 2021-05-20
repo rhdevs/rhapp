@@ -209,7 +209,7 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: resp.data,
+        collatedOrder: { ...resp.data, supperGroupId: readableSupperGroupId(resp.data.supperGroupId), price: 0.0 },
       })
     })
     .catch((err) => {
