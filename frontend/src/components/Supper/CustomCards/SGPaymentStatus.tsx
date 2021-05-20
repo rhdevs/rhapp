@@ -13,19 +13,19 @@ const HorizontalLine = styled.hr`
 `
 
 type Props = {
-  supperGroup: SupperGroup
+  supperGroup?: SupperGroup | null
 }
 
 export const SGPaymentStatus = (props: Props) => {
   return (
     <MainCard flexDirection="column">
-      {props.supperGroup.orderList ? (
+      {props.supperGroup?.orderList ? (
         props.supperGroup.orderList.map((order, index) => {
           const additionalCost =
-            props.supperGroup.splitAdditionalCost === SplitACMethod.EQUAL
-              ? props.supperGroup.additionalCost ?? 0 / props.supperGroup.userIdList.length
-              : ((props.supperGroup.additionalCost ?? 0) * order.totalCost) /
-                (props.supperGroup.currentFoodCost + (props.supperGroup.additionalCost ?? 0))
+            props.supperGroup?.splitAdditionalCost === SplitACMethod.EQUAL
+              ? props.supperGroup?.additionalCost ?? 0 / props.supperGroup?.userIdList.length
+              : ((props.supperGroup?.additionalCost ?? 0) * order.totalCost) /
+                (props.supperGroup?.currentFoodCost ?? 0 + (props.supperGroup?.additionalCost ?? 0))
           return (
             <>
               <UserPaymentStatus
@@ -39,7 +39,7 @@ export const SGPaymentStatus = (props: Props) => {
                 totalCost={order.totalCost}
                 additionalCost={additionalCost}
               />
-              {index + 1 !== props.supperGroup.orderList?.length && <HorizontalLine />}
+              {index + 1 !== props.supperGroup?.orderList?.length && <HorizontalLine />}
             </>
           )
         })

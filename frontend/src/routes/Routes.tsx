@@ -53,6 +53,9 @@ export enum PATHS {
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_WITH_ID = '/supper/view/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
+  VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
+  PAYMENT_SCREEN = '/supper/view/payment',
+  PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -98,6 +101,7 @@ const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
+const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 
 export default class Routes extends React.Component {
   render() {
@@ -144,7 +148,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_WITH_ID} component={ViewOrder} />
-            <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
+            <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
+            <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>

@@ -32,7 +32,6 @@ const TopMoneyText = styled.text`
 `
 
 const ExpandableButtonContainer = styled.div`
-  padding-top: 10px;
   left: 15%;
   display: flex;
   align-items: center;
@@ -47,7 +46,6 @@ const StatusSymbolContainer = styled.div`
 `
 
 const DetailsContainer = styled.div`
-  padding-left: 1.5rem;
   font-weight: 500;
   font-size: 14px;
 `
@@ -56,8 +54,6 @@ const TelegramHandle = styled.text`
   font-weight: 500;
   font-size: 14px;
 `
-
-const BottomContainer = styled.div``
 
 const DeliveryFeeText = styled.text`
   padding-left: 2.2rem;
@@ -88,6 +84,10 @@ const NameText = styled.text<{ cancelName: boolean }>`
 const CheckboxContainer = styled.div`
   width: fit-content;
   margin: -10px 0 0 0;
+`
+
+const InformationContainer = styled.div`
+  padding-left: 1.5rem;
 `
 
 type Props = {
@@ -137,17 +137,20 @@ export const UserPaymentStatus = (props: Props) => {
         </StatusSymbolContainer>
         <TopMoneyText>${props.totalCost.toFixed(2)}</TopMoneyText>
       </TopContainer>
-      <BottomContainer>
-        <DetailsContainer>
-          {props.phoneNumber}{' '}
-          <TelegramHandle
-            onClick={() => {
-              OpenUserTelegram(props.telegramHandle)
-            }}
-          >
-            @{props.telegramHandle}
-          </TelegramHandle>
-        </DetailsContainer>
+      <>
+        <InformationContainer>
+          <DetailsContainer>
+            {props.phoneNumber}{' '}
+            <TelegramHandle
+              onClick={() => {
+                OpenUserTelegram(props.telegramHandle)
+              }}
+            >
+              @{props.telegramHandle}
+            </TelegramHandle>
+          </DetailsContainer>
+          {/* TODO: Add the payment method? */}
+        </InformationContainer>
         <>
           <ExpandableButtonContainer>
             <UnderlinedButton
@@ -187,7 +190,7 @@ export const UserPaymentStatus = (props: Props) => {
               )
             })}
         </>
-      </BottomContainer>
+      </>
     </MainContainer>
   )
 }
