@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -105,7 +106,7 @@ const DeliveryDetails = () => {
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
-  const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus } = useSelector(
+  const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
 
@@ -139,50 +140,56 @@ const DeliveryDetails = () => {
     <Background>
       <TopNavBar title="Delivery Details" />
       <MainContainer>
-        <StyledSGIdText>{supperGroup?.supperGroupId}</StyledSGIdText>
-        <StyledText>Order Status</StyledText>
-        <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
-        <DeliveryTimeContainer>
-          <StyledText>Delivery Time</StyledText>
-          <StyledTimeText>{estArrivalTime}</StyledTimeText>
-        </DeliveryTimeContainer>
-        <DeliveryTimeSetter center default={supperGroup?.deliveryDuration ?? 20} />
-        <br />
-        <StyledText>Collection Point {RedAsterisk}</StyledText>
-        <>
-          <Input
-            type="text"
-            placeholder="Enter Location"
-            name="location"
-            ref={register({
-              required: true,
-              validate: (input) => input.trim().length !== 0,
-            })}
-            style={{
-              borderColor: errors.location && 'red',
-              background: errors.location && '#ffd1d1',
-            }}
-          />
-          {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-          {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-        </>
-        <ButtonContainer>
-          <Button
-            stopPropagation
-            defaultButtonDescription="Save Changes"
-            buttonWidth="fit-content"
-            buttonHeight="2.3rem"
-            descriptionStyle={{
-              fontFamily: 'Inter',
-              fontStyle: 'normal',
-              fontWeight: 200,
-              fontSize: '17px',
-              lineHeight: '22px',
-            }}
-            onButtonClick={onClick}
-            isFlipButton={false}
-          />
-        </ButtonContainer>
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            <StyledSGIdText>{supperGroup?.supperGroupId}</StyledSGIdText>
+            <StyledText>Order Status</StyledText>
+            <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
+            <DeliveryTimeContainer>
+              <StyledText>Delivery Time</StyledText>
+              <StyledTimeText>{estArrivalTime}</StyledTimeText>
+            </DeliveryTimeContainer>
+            <DeliveryTimeSetter center default={supperGroup?.deliveryDuration ?? 20} />
+            <br />
+            <StyledText>Collection Point {RedAsterisk}</StyledText>
+            <>
+              <Input
+                type="text"
+                placeholder="Enter Location"
+                name="location"
+                ref={register({
+                  required: true,
+                  validate: (input) => input.trim().length !== 0,
+                })}
+                style={{
+                  borderColor: errors.location && 'red',
+                  background: errors.location && '#ffd1d1',
+                }}
+              />
+              {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+            </>
+            <ButtonContainer>
+              <Button
+                stopPropagation
+                defaultButtonDescription="Save Changes"
+                buttonWidth="fit-content"
+                buttonHeight="2.3rem"
+                descriptionStyle={{
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight: 200,
+                  fontSize: '17px',
+                  lineHeight: '22px',
+                }}
+                onButtonClick={onClick}
+                isFlipButton={false}
+              />
+            </ButtonContainer>
+          </>
+        )}
       </MainContainer>
     </Background>
   )
