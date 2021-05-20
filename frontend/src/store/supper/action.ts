@@ -529,10 +529,3 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
     tabsKey: key,
   })
 }
-
-export const setFinalDeliveryFee = (finalDeliveryFee: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SUPPER_ACTIONS.SET_FINAL_DELIVERY_FEE,
-    finalDeliveryFee: finalDeliveryFee,
-  })
-}

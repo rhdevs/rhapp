@@ -36,7 +36,6 @@ const initialState = {
   searchedSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
-  finalDeliveryFee: '',
 }
 
 type State = {
@@ -63,7 +62,6 @@ type State = {
   searchedSupperGroups: SupperGroup[]
   searchValue: string
   tabsKey: string
-  finalDeliveryFee: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -148,9 +146,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_TABS_KEY: {
       return { ...state, tabsKey: action.tabsKey }
-    }
-    case SUPPER_ACTIONS.SET_FINAL_DELIVERY_FEE: {
-      return { ...state, finalDeliveryFee: action.finalDeliveryFee }
     }
     default:
       return state

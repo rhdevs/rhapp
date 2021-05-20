@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Button from '../../../components/Mobile/Button'
-import InputRow from '../../../components/Mobile/InputRow'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getCollatedOrder, setFinalDeliveryFee } from '../../../store/supper/action'
+import { getCollatedOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -75,76 +75,85 @@ const Input = styled.input`
   height: 35px;
 `
 
+const ErrorText = styled.p`
+  margin: 0;
+  color: #ff837a;
+  width: 100%;
+  text-align: center;
+  font-size: 17px;
+`
+
+type FormValues = {
+  deliveryFee: number
+}
+
 const OrderSummary = () => {
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
-  const { collatedOrder, finalDeliveryFee } = useSelector((state: RootState) => state.supper)
+  const { collatedOrder, isLoading } = useSelector((state: RootState) => state.supper)
   const {
     register,
-
+    handleSubmit,
     formState: { errors },
-  } = useForm()
-  const { handleSubmit, control } = useForm()
+  } = useForm<FormValues>()
 
-  const onSubmit = (data) => console.log(data)
-  console.log(errors)
   useEffect(() => {
     dispatch(getCollatedOrder(params.supperGroupId))
-  }, [])
-
-  const setFinalDeliveryFeeMethod = (deliveryFee: string) => {
-    dispatch(setFinalDeliveryFee(deliveryFee))
-  }
+  }, [dispatch])
 
   const onClick = () => {
-    console.log(finalDeliveryFee.length)
-    console.log('Order placed!')
-    handleSubmit(onSubmit)()
+    handleSubmit((data) => {
+      console.log('Order Placed!')
+      //TODO: Update status and final delivery fee
+      console.log(data)
+      console.log(errors)
+    })()
   }
+
   return (
     <MainContainer>
       <TopNavBar title="Order Summary" />
-      <OrderIdText>{collatedOrder?.supperGroupId}</OrderIdText>
-      {/* TODO: UPDATE ORDER SUMMARY CARD */}
-      <OrderSummaryCard foodList={collatedOrder?.collatedOrderList ?? []} />
-      <TotalPriceText>
-        Total Price
-        <span style={{ width: '1.5rem' }} /> ${collatedOrder?.price?.toFixed(2) ?? '0.00'}
-      </TotalPriceText>
-      <DeliveryFeeContainer>
-        <FinalDeliveryFeeText>Final Delivery Fee</FinalDeliveryFeeText>
-        <Controller
-          control={control}
-          name="DeliveryFee"
-          render={({ onChange, value }) => <InputRow placeholder="Enter Price" value={value} setValue={onChange} />}
-        />
-        {/* <Controller
-  control={control}
-  name="test"
-  render={(
-    { onChange, onBlur, value, name, ref },
-    { invalid, isTouched, isDirty }
-  ) => (
-    <Checkbox
-      onBlur={onBlur}
-      onChange={(e) => onChange(e.target.checked)}
-      checked={value}
-      inputRef={ref}
-    />
-  )}
-/> */}
-      </DeliveryFeeContainer>
-      <ButtonContainer>
-        <Button
-          stopPropagation
-          defaultButtonDescription="Order Placed"
-          buttonWidth="fit-content"
-          buttonHeight="fit-content"
-          onButtonClick={onClick}
-          isFlipButton={false}
-          descriptionStyle={{ fontSize: '17px', fontFamily: 'Inter' }}
-        />
-      </ButtonContainer>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <OrderIdText>{collatedOrder?.supperGroupId}</OrderIdText>
+          <OrderSummaryCard collatedOrder={collatedOrder} />
+          <TotalPriceText>
+            Total Price
+            <span style={{ width: '1.5rem' }} /> ${collatedOrder?.price?.toFixed(2) ?? '0.00'}
+          </TotalPriceText>
+          <DeliveryFeeContainer>
+            <FinalDeliveryFeeText>Final Delivery Fee</FinalDeliveryFeeText>
+            <Input
+              type="number"
+              placeholder="Enter Price"
+              name="deliveryFee"
+              ref={register({
+                valueAsNumber: true,
+                required: true,
+                validate: (input) => input.trim().length !== 0,
+              })}
+              style={{
+                borderColor: errors.deliveryFee && 'red',
+                background: errors.deliveryFee && '#ffd1d1',
+              }}
+            />
+          </DeliveryFeeContainer>
+          {errors.deliveryFee && <ErrorText>This is required!</ErrorText>}
+          <ButtonContainer>
+            <Button
+              stopPropagation
+              defaultButtonDescription="Order Placed"
+              buttonWidth="fit-content"
+              buttonHeight="fit-content"
+              onButtonClick={onClick}
+              isFlipButton={false}
+              descriptionStyle={{ fontSize: '17px', fontFamily: 'Inter' }}
+            />
+          </ButtonContainer>
+        </>
+      )}
     </MainContainer>
   )
 }
