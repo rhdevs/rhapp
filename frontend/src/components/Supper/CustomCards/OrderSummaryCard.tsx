@@ -53,7 +53,7 @@ const EmptyCartImg = styled.img`
 
 type Props = {
   isEditable?: boolean
-  foodList: Food[]
+  foodList?: Food[]
   onCancelOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onCloseOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
@@ -106,20 +106,14 @@ export const OrderSummaryCard = (props: Props) => {
   const [success] = useSnackbar('success')
 
   const cardContent = () => {
-    console.log(props.collatedOrder)
     if (props.collatedOrder || props.collatedOrder === null) {
       const collatedOrderList = props.collatedOrder?.collatedOrderList ?? []
-      if (collatedOrderList.length <= 0 || collatedOrderList === null) {
-        return (
-          <MainContainer>
+      return (
+        <MainContainer>
+          {collatedOrderList.length <= 0 || collatedOrderList === null ? (
             <EmptyCartContainer>No Orders</EmptyCartContainer>
-            {bottomButtons()}
-          </MainContainer>
-        )
-      } else {
-        return (
-          <MainContainer>
-            {collatedOrderList.map((food, index) => {
+          ) : (
+            collatedOrderList.map((food, index) => {
               const customisations: string[] = []
               food.foodMenu.custom?.map((custom) =>
                 custom.options.map((option) => {
@@ -135,13 +129,14 @@ export const OrderSummaryCard = (props: Props) => {
                   customisations={customisations}
                   isEditable={props.isEditable}
                   comments={food.comments}
+                  cancelAction={food.cancelAction}
                 />
               )
-            })}
-            {bottomButtons()}
-          </MainContainer>
-        )
-      }
+            })
+          )}
+          {bottomButtons()}
+        </MainContainer>
+      )
     } else if (props.orderByUser) {
       if ((props.orderList?.length ?? 0) <= 0) {
         return (
@@ -163,7 +158,6 @@ export const OrderSummaryCard = (props: Props) => {
         }
         return (
           <MainContainer>
-            {console.log(orderList)}
             {orderList?.map((order, index) => {
               return (
                 <>
@@ -193,6 +187,7 @@ export const OrderSummaryCard = (props: Props) => {
                           console.log('Deleted food!') //TODO: Delete food item from list!
                           success('Successfully Deleted Item!')
                         }}
+                        cancelAction={food.cancelAction}
                       />
                     )
                   })}
@@ -205,7 +200,7 @@ export const OrderSummaryCard = (props: Props) => {
         )
       }
     } else {
-      if (props.foodList.length <= 0) {
+      if ((props.foodList?.length ?? 0) <= 0) {
         return (
           <MainContainer>
             <EmptyCartContainer>
@@ -217,7 +212,7 @@ export const OrderSummaryCard = (props: Props) => {
       } else {
         return (
           <MainContainer>
-            {props.foodList.map((food, index) => {
+            {props.foodList?.map((food, index) => {
               const customisations: string[] = []
               food.foodMenu.custom?.map((custom) =>
                 custom.options.map((option) => {
@@ -237,6 +232,7 @@ export const OrderSummaryCard = (props: Props) => {
                     console.log('Deleted food!') //TODO: Delete food item from list!
                     success('Successfully Deleted Item!')
                   }}
+                  cancelAction={food.cancelAction}
                 />
               )
             })}

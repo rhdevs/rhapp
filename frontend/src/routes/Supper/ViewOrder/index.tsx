@@ -8,7 +8,6 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { foodList, orderList } from '../../../store/stubs'
 import { getCollatedOrder, getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
@@ -64,9 +63,8 @@ const ViewOrder = () => {
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getCollatedOrder(params.supperGroupId))
-  }, [])
+  }, [dispatch])
 
-  console.log(collatedOrder)
   return (
     <MainContainer>
       <TopNavBar title="View Order" rightComponent={<ShareAltOutlined style={{ fontSize: '20px' }} />} />
@@ -97,8 +95,7 @@ const ViewOrder = () => {
         orderByUser
         collatedOrder={viewCollatedOrder ? collatedOrder : undefined}
         isEditable
-        foodList={foodList}
-        orderList={orderList}
+        orderList={supperGroup?.orderList}
       />
       <TotalPriceText>Total Price: ${supperGroup?.totalPrice.toFixed(2) ?? '0.00'}</TotalPriceText>
     </MainContainer>

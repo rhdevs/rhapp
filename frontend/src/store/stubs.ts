@@ -1,7 +1,17 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod } from './supper/types'
+import {
+  Order,
+  PaymentMethod,
+  SupperGroupStatus,
+  FoodMenu,
+  SupperGroup,
+  SplitACMethod,
+  CollatedOrder,
+  Food,
+  CancelAction,
+} from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -190,10 +200,11 @@ export const dummyUserId = 'A1234567B'
 // name: string
 // isSelected: boolean
 // price: number
-export const foodList = [
+export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    cancelAction: CancelAction.cancel,
     quantity: 1,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
@@ -229,6 +240,7 @@ export const foodList = [
   {
     foodId: '12345364832764134',
     quantity: 2,
+    cancelAction: CancelAction.contact,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
@@ -350,3 +362,12 @@ export const supperGroupStub: SupperGroup = {
 }
 
 export const supperGroupId = '1'
+
+// supperGroupId: string;
+// ownerId: string;
+// collatedOrderList: Food[];
+export const dummyCollatedOrderList: CollatedOrder = {
+  supperGroupId: '1',
+  ownerId: 'A1234567B',
+  collatedOrderList: foodList,
+}
