@@ -94,6 +94,7 @@ export type CollatedOrder = {
   supperGroupId: string
   ownerId: string
   collatedOrderList: Food[]
+  price?: number
 }
 
 export enum SplitACMethod {

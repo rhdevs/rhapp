@@ -50,6 +50,8 @@ export enum PATHS {
   SUPPER_COMPONENTS_PAGE = '/supper/components',
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
+  ORDER_SUMMARY = '/supper/view/summary',
+  ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_WITH_ID = '/supper/view/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
@@ -99,6 +101,7 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 const SupperCompoenents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
+const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
 const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
@@ -147,6 +150,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperCompoenents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
+            <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_WITH_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
             <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
