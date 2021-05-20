@@ -55,6 +55,7 @@ export enum PATHS {
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_WITH_ID = '/supper/view/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
+  DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -101,6 +102,7 @@ const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOver
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
+const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
 
 export default class Routes extends React.Component {
   render() {
@@ -149,6 +151,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_WITH_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
+            <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
