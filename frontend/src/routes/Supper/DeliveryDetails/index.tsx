@@ -131,7 +131,6 @@ const DeliveryDetails = () => {
 
   useEffect(() => {
     if (deliveryTime !== supperGroup?.deliveryDuration) {
-      console.log('second useeffect')
       dispatch(setEstimatedArrivalTime(calculateArrivalTime(deliveryTime)))
     }
   }, [deliveryTime])
