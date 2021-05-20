@@ -902,6 +902,8 @@ def collated_orders(supperGroupId):
         data.pop('foods')
         for food in data['collatedFoods']:
             food.pop('customHash')
+            food['restaurantId'] = str(food['restaurantId'])
+            food['foodMenuId'] = str(food['foodMenuId'])
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
