@@ -34,9 +34,11 @@ export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
+      const newId = readableSupperGroupId(resp.data.supperGroupId)
+      const newClosingTime = unixTo12HourTime(resp.data.closingTime)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: resp.data,
+        supperGroup: { ...resp.data, supperGroupId: newId, closingTime: newClosingTime },
       })
     })
     .catch((err) => {

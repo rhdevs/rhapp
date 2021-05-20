@@ -367,3 +367,5 @@ export const supperGroupStub: SupperGroup = {
   closingTime: 10000000,
   orderList: orderList,
 }
+
+export const supperGroupId = '1'

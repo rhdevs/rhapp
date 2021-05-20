@@ -9,9 +9,10 @@ const MainContainer = styled.a<{ alignItems?: string }>`
   align-items: ${(props) => props.alignItems ?? ''};
 `
 
-const ButtonText = styled.text<{ color: string; fontSize?: string }>`
+const ButtonText = styled.text<{ color: string; fontSize?: string; fontWeight?: number | string }>`
   color: ${(props) => props.color};
   font-size: ${(props) => props.fontSize ?? '17px'};
+  font-weight: ${(props) => props.fontWeight ?? 'normal'};
   text-decoration: underline;
   margin: 0 5px;
 `
@@ -28,6 +29,7 @@ type Props = {
   text: string
   color?: string
   fontSize?: string
+  fontWeight?: number | string
   rightIcon?: ReactElement
   alignItems?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
@@ -44,7 +46,7 @@ export const UnderlinedButton = (props: Props) => {
 
   return (
     <MainContainer alignItems={props.alignItems} onClick={props.onClick}>
-      <ButtonText fontSize={props.fontSize} color={COLOR}>
+      <ButtonText fontSize={props.fontSize} color={COLOR} fontWeight={props.fontWeight}>
         {props.text}
       </ButtonText>
       {props.rightIcon && (
