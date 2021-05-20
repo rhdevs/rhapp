@@ -56,7 +56,7 @@ const FinalDeliveryFeeText = styled.text`
   font-weight: 500;
   font-size: 18px;
   line-height: 14px;
-  width: 120%;
+  width: 130%;
 `
 
 const ButtonContainer = styled.div`
@@ -81,6 +81,16 @@ const ErrorText = styled.p`
   width: 100%;
   text-align: center;
   font-size: 17px;
+  font-family: 'Inter';
+`
+const RedText = styled.text`
+  color: red;
+  padding-right: 5px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 14px;
 `
 
 type FormValues = {
@@ -96,6 +106,7 @@ const OrderSummary = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>()
+  const RedAsterisk = <RedText>*</RedText>
 
   useEffect(() => {
     dispatch(getCollatedOrder(params.supperGroupId))
@@ -124,7 +135,7 @@ const OrderSummary = () => {
             <span style={{ width: '1.5rem' }} /> ${collatedOrder?.price?.toFixed(2) ?? '0.00'}
           </TotalPriceText>
           <DeliveryFeeContainer>
-            <FinalDeliveryFeeText>Final Delivery Fee</FinalDeliveryFeeText>
+            <FinalDeliveryFeeText>Final Delivery Fee{RedAsterisk}</FinalDeliveryFeeText>
             <Input
               type="number"
               placeholder="Enter Price"
@@ -132,6 +143,7 @@ const OrderSummary = () => {
               ref={register({
                 valueAsNumber: true,
                 required: true,
+                min: 0,
                 validate: (input) => input.trim().length !== 0,
               })}
               style={{
@@ -140,7 +152,9 @@ const OrderSummary = () => {
               }}
             />
           </DeliveryFeeContainer>
-          {errors.deliveryFee && <ErrorText>This is required!</ErrorText>}
+          {errors.deliveryFee?.type === ('required' || 'validate') && <ErrorText>This is required!</ErrorText>}
+          {errors.deliveryFee?.type === 'min' && <ErrorText>Invalid value!</ErrorText>}
+
           <ButtonContainer>
             <Button
               stopPropagation
