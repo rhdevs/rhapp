@@ -2,6 +2,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { CollatedOrder, Food, Order } from '../../../store/supper/types'
+import useSnackbar from '../../../hooks/useSnackbar'
 import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
@@ -102,6 +103,8 @@ export const OrderSummaryCard = (props: Props) => {
     )
   }
 
+  const [success] = useSnackbar('success')
+
   const cardContent = () => {
     console.log(props.collatedOrder)
     if (props.collatedOrder || props.collatedOrder === null) {
@@ -186,6 +189,10 @@ export const OrderSummaryCard = (props: Props) => {
                         isEditable={props.isEditable}
                         comments={food.comments}
                         foodUserId={order.user.userID}
+                        onDeleteClick={() => {
+                          console.log('Deleted food!') //TODO: Delete food item from list!
+                          success('Successfully Deleted Item!')
+                        }}
                       />
                     )
                   })}
@@ -226,6 +233,10 @@ export const OrderSummaryCard = (props: Props) => {
                   customisations={customisations}
                   isEditable={props.isEditable}
                   comments={food.comments}
+                  onDeleteClick={() => {
+                    console.log('Deleted food!') //TODO: Delete food item from list!
+                    success('Successfully Deleted Item!')
+                  }}
                 />
               )
             })}
