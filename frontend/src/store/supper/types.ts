@@ -151,6 +151,8 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
+  SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
 }
 
 type SetIsLoading = {
@@ -288,6 +290,16 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type SetExpandAll = {
+  type: typeof SUPPER_ACTIONS.SET_EXPAND_ALL
+  isExpandAll: boolean
+}
+
+type SetPaymentExpandedCount = {
+  type: typeof SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT
+  expandedCount: number
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -316,3 +328,5 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetExpandAll
+  | SetPaymentExpandedCount

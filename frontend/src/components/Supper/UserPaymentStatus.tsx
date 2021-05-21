@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
@@ -8,6 +8,9 @@ import { StatusSymbol } from './StatusSymbol'
 import telegram_black from '../../assets/telegram_black.svg'
 import { OpenUserTelegram } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
+import { setExpandAll, setPaymentExpandedCount } from '../../store/supper/action'
 // import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
@@ -31,14 +34,6 @@ const TopMoneyText = styled.text`
   justify-content: flex-end;
   display: flex;
 `
-
-const ExpandableButtonContainer = styled.div`
-  left: 15%;
-  display: flex;
-  align-items: center;
-  padding-left: 1.5rem;
-`
-
 const StatusSymbolContainer = styled.div`
   width: 30%;
   margin: auto;
@@ -56,11 +51,6 @@ const DetailsContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   display: flex;
-`
-
-const TelegramHandle = styled.text`
-  font-weight: 500;
-  font-size: 14px;
 `
 
 const DeliveryFeeText = styled.text`
@@ -103,6 +93,7 @@ const PaymentMethodText = styled.text`
 `
 
 type Props = {
+  isExpanded?: boolean
   orderId?: string
   foodList: Food[]
   name: string
@@ -113,23 +104,49 @@ type Props = {
   totalCost: number
   additionalCost: number
   paymentMethod: PaymentMethod
+  numOrders?: number
 }
 
 export const UserPaymentStatus = (props: Props) => {
+  const { isExpandAll, expandedCount } = useSelector((state: RootState) => state.supper)
   const [cancelName, setCancelName] = useState(props.hasReceived)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (isExpandAll) {
+      dispatch(setPaymentExpandedCount(0))
+    } else {
+      dispatch(setPaymentExpandedCount(props.numOrders ?? 0))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (expandedCount === props.numOrders) {
+      dispatch(setExpandAll(false))
+    }
+    if (expandedCount === 0) {
+      dispatch(setExpandAll(true))
+    }
+  }, [dispatch, expandedCount])
+
+  useEffect(() => {
+    setIsExpanded(!isExpandAll)
+  }, [isExpandAll])
 
   const arrowIcon = isExpanded ? (
     <CaretUpOutlined
       onClick={() => {
-        setIsExpanded(!isExpanded)
+        setIsExpanded(false)
+        dispatch(setPaymentExpandedCount(expandedCount - 1))
       }}
       style={{ paddingLeft: '5px' }}
     />
   ) : (
     <CaretDownOutlined
       onClick={() => {
-        setIsExpanded(!isExpanded)
+        setIsExpanded(true)
+        dispatch(setPaymentExpandedCount(expandedCount + 1))
       }}
       style={{ paddingLeft: '5px' }}
     />
@@ -145,7 +162,7 @@ export const UserPaymentStatus = (props: Props) => {
               onClick={() => {
                 setCancelName(!cancelName)
                 //set order hasReceived to true
-                // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
+                //TODO dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
               }}
             />
           </CheckboxContainer>

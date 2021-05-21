@@ -529,3 +529,17 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
     tabsKey: key,
   })
 }
+
+export const setExpandAll = (isExpandAll: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPAND_ALL,
+    isExpandAll: isExpandAll,
+  })
+}
+
+export const setPaymentExpandedCount = (expandedCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT,
+    expandedCount: expandedCount,
+  })
+}
