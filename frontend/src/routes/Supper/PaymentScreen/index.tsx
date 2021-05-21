@@ -7,6 +7,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SGPaymentStatus } from '../../../components/Supper/CustomCards/SGPaymentStatus'
+import { supperGroupStub } from '../../../store/stubs'
 import { getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
@@ -61,18 +62,18 @@ const PaymentScreen = () => {
           <BottomContainer>
             <SubContainer>
               <StyledText>Total Price</StyledText>
-              <StyledText>${supperGroup?.currentFoodCost?.toFixed(2)}</StyledText>
+              <StyledText>${(supperGroup?.currentFoodCost ?? 0).toFixed(2)}</StyledText>
             </SubContainer>
             <SubContainer>
               <StyledText>Delivery Fee</StyledText>
-              <StyledText>${supperGroup?.additionalCost?.toFixed(2)}</StyledText>
+              <StyledText>${(supperGroup?.additionalCost ?? 0).toFixed(2)}</StyledText>
             </SubContainer>
             <SubContainer>
               <StyledText>
                 <b>Total</b>
               </StyledText>
               <StyledText>
-                <b>${supperGroup?.totalPrice?.toFixed(2)}</b>
+                <b>${(supperGroup?.totalPrice ?? 0).toFixed(2)}</b>
               </StyledText>
             </SubContainer>
           </BottomContainer>

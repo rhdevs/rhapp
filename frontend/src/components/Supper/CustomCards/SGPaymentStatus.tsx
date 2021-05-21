@@ -12,6 +12,14 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
+const StyledText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 10px auto;
+`
+
 type Props = {
   supperGroup?: SupperGroup | null
 }
@@ -19,7 +27,7 @@ type Props = {
 export const SGPaymentStatus = (props: Props) => {
   return (
     <MainCard flexDirection="column">
-      {props.supperGroup?.orderList ? (
+      {props.supperGroup?.orderList && props.supperGroup?.orderList?.length ? (
         props.supperGroup.orderList.map((order, index) => {
           const additionalCost =
             props.supperGroup?.splitAdditionalCost === SplitACMethod.EQUAL
@@ -38,13 +46,14 @@ export const SGPaymentStatus = (props: Props) => {
                 hasReceived={order.hasReceived}
                 totalCost={order.totalCost}
                 additionalCost={additionalCost}
+                paymentMethod={order.paymentMethod}
               />
               {index + 1 !== props.supperGroup?.orderList?.length && <HorizontalLine />}
             </>
           )
         })
       ) : (
-        <>there are no orders!</>
+        <StyledText>No orders found!</StyledText>
       )}
     </MainCard>
   )
