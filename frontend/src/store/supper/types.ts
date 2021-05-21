@@ -153,6 +153,7 @@ export enum SUPPER_ACTIONS {
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
   SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
+  SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
 }
 
 type SetIsLoading = {
@@ -300,6 +301,11 @@ type SetPaymentExpandedCount = {
   expandedCount: number
 }
 
+type SetEstimatedArrivalTime = {
+  type: typeof SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME
+  estArrivalTime: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -330,3 +336,4 @@ export type ActionTypes =
   | SetTabsKey
   | SetExpandAll
   | SetPaymentExpandedCount
+  | SetEstimatedArrivalTime

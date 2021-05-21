@@ -325,7 +325,7 @@ export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, Paym
 
 export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
 
-export const supperGroupStatusList = [SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED, SupperGroupStatus.ORDERED]
+export const supperGroupStatusList = [SupperGroupStatus.ORDERED, SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED]
 // foodMenuId: string
 // restaurantId: string
 // foodMenuName: string
