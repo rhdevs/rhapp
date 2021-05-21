@@ -151,6 +151,7 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
 }
 
 type SetIsLoading = {
@@ -288,6 +289,11 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type SetEstimatedArrivalTime = {
+  type: typeof SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME
+  estArrivalTime: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -316,3 +322,4 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetEstimatedArrivalTime

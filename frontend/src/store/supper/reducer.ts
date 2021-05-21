@@ -10,6 +10,7 @@ import {
   PaymentMethod,
   SupperGroupStatus,
 } from '../supper/types'
+import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
   searchedSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
+  estArrivalTime: unixTo12HourTime(Math.round(Date.now() / 1000)),
 }
 
 type State = {
@@ -62,6 +64,7 @@ type State = {
   searchedSupperGroups: SupperGroup[]
   searchValue: string
   tabsKey: string
+  estArrivalTime: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -146,6 +149,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_TABS_KEY: {
       return { ...state, tabsKey: action.tabsKey }
+    }
+    case SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME: {
+      return { ...state, estArrivalTime: action.estArrivalTime }
     }
     default:
       return state

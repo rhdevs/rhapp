@@ -23,6 +23,7 @@ const MainContainer = styled.div`
 
 type Props = {
   supperGroupStatusList: SupperGroupStatus[]
+  default?: SupperGroupStatus
 }
 
 export const SGStatusOptions = (props: Props) => {
@@ -34,7 +35,7 @@ export const SGStatusOptions = (props: Props) => {
 
   //TODO: Change dummy status to currentSG Status
   useEffect(() => {
-    dispatch(setSelectedSupperGroupStatus(SupperGroupStatus.ORDERED))
+    dispatch(setSelectedSupperGroupStatus(props.default ?? SupperGroupStatus.ORDERED))
   }, [])
 
   return (

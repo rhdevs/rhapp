@@ -529,3 +529,10 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
     tabsKey: key,
   })
 }
+
+export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME,
+    estArrivalTime: unixTo12HourTime(estArrivalTime),
+  })
+}
