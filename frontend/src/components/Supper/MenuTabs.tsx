@@ -72,6 +72,7 @@ export const MenuTabs = (props: Props) => {
   const dispatch = useDispatch()
 
   let menuTab = ''
+  const menuSections = ['All'].concat(props.menuSections)
 
   useEffect(() => {
     dispatch(setMenuTabKey(menuTab))
@@ -80,7 +81,7 @@ export const MenuTabs = (props: Props) => {
   return (
     <MainContainer>
       <ToggleTabsContainer>
-        {props.menuSections.map((section, idx) => (
+        {menuSections.map((section, idx) => (
           <TextContainer
             key={idx}
             value={section}

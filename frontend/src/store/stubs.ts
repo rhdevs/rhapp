@@ -417,6 +417,13 @@ export const AlAmaanStub: Restaurant = {
       price: 4.5,
     },
     {
+      foodMenuId: 'TSSC',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Thai Sweet and Spicy Chicken',
+      section: 'Thai Kitchen',
+      price: 4.0,
+    },
+    {
       foodMenuId: 'hkn',
       restaurantId: 'alamaan',
       foodMenuName: 'Pad Thai',

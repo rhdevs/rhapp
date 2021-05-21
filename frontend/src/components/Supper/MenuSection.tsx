@@ -65,7 +65,7 @@ export const MenuSection = (props: Props) => {
       <SectionBodyContainer>
         <FoodMenuContainer>
           {props.menu
-            .filter((foodMenu) => foodMenu.section === menuTabKey)
+            .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All' || menuTabKey === '')
             .map((foodMenu) => (
               <>
                 <FoodAndQuantityContainer
