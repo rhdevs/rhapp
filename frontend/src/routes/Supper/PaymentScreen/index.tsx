@@ -7,7 +7,6 @@ import LoadingSpin from '../../../components/LoadingSpin'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SGPaymentStatus } from '../../../components/Supper/CustomCards/SGPaymentStatus'
-import { supperGroupStub } from '../../../store/stubs'
 import { getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
