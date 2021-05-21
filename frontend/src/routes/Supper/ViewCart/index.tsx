@@ -10,7 +10,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { getSupperGroupById, getUserOrder } from '../../../store/supper/action'
+import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -79,11 +79,11 @@ const ViewCart = () => {
           <ExpandableSGCard
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
-            supperGroupId={String(supperGroup?.supperGroupId ?? 'RHSO#')}
+            supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
             ownerName={supperGroup?.ownerName ?? ''}
             priceLimit={supperGroup?.costLimit ?? 50}
             currentAmount={supperGroup?.currentFoodCost ?? 10}
-            closingTime={String(supperGroup?.closingTime ?? '-')}
+            closingTime={unixTo12HourTime(supperGroup?.closingTime)}
             numberOfUsers={supperGroup?.userIdList.length ?? 0}
             deliveryFee={String(supperGroup?.additionalCost ?? '-')}
           />

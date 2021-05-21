@@ -345,10 +345,11 @@ export const supperGroupStub: SupperGroup = {
   location: 'Blk 5 Hard Court',
   numOrders: 2,
   ownerId: 'A1234567B',
+  ownerTele: 'leongggg',
   ownerName: 'Leong',
   paymentInfo: [
-    { paymentMethod: PaymentMethod.PAYLAH, link: 'asdasd' },
-    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'asdzxcasd' },
+    { paymentMethod: PaymentMethod.PAYLAH, link: 'http://www.google.com' },
+    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'www.google.com' },
   ],
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
@@ -358,6 +359,7 @@ export const supperGroupStub: SupperGroup = {
   totalPrice: 15.7,
   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
   closingTime: 10000000,
+  estArrivalTime: 100453488,
   orderList: orderList,
 }
 

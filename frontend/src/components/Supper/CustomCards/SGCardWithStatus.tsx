@@ -36,6 +36,7 @@ const TextSubContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 8px 20px 0 15px;
+  width: 60%;
 `
 
 const TitleContainer = styled.text`
@@ -92,9 +93,10 @@ const OwnerButtonContainer = styled.div`
 
 type Props = {
   title: string
+  restaurantLogo?: string
   orderId: string
   username: string
-  supperGroupStatus: SupperGroupStatus
+  supperGroupStatus?: SupperGroupStatus
   buttonTeleHandle?: string
   location?: string
   collectionTime?: string
@@ -117,7 +119,7 @@ export const SGCardWithStatus = (props: Props) => {
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        <RoundImage image={notFound} alt="Restaurant Logo" />
+        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
@@ -126,7 +128,7 @@ export const SGCardWithStatus = (props: Props) => {
         </TextSubContainer>
       </TopSection>
       <BottomContainer>
-        <SGStatusBubble text={props.supperGroupStatus} />
+        <SGStatusBubble text={props.supperGroupStatus ?? '-'} />
         {!props.isOwner && (
           <Button
             stopPropagation={true}
@@ -154,11 +156,15 @@ export const SGCardWithStatus = (props: Props) => {
                   if (pm.paymentMethod === PaymentMethod.CASH) {
                     return <CashText key={index}>{pm.paymentMethod}</CashText>
                   } else {
+                    let link = pm.link
+                    if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
+                      link = 'https://' + pm.link
+                    }
                     return (
                       <UnderlinedButton
                         fontSize="16px"
                         key={index}
-                        onClick={() => window.open(pm.link)}
+                        onClick={() => window.open(link, '_blank', 'noopener,noreferrer')}
                         text={pm.paymentMethod}
                         color="rgba(0, 38, 66, 0.7)"
                       />

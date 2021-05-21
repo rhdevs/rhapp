@@ -34,11 +34,9 @@ export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
-      const newId = readableSupperGroupId(resp.data.supperGroupId)
-      const newClosingTime = unixTo12HourTime(resp.data.closingTime)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: { ...resp.data, supperGroupId: newId, closingTime: newClosingTime },
+        supperGroup: resp.data,
       })
     })
     .catch((err) => {
@@ -209,7 +207,7 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: { ...resp.data, supperGroupId: readableSupperGroupId(resp.data.supperGroupId), price: 0.0 },
+        collatedOrder: { ...resp.data, price: 0.0 },
       })
     })
     .catch((err) => {
@@ -481,7 +479,7 @@ export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: 
   })
 }
 
-export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus) => (
+export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus | null) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
@@ -497,7 +495,7 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
-export const unixTo12HourTime = (unixDate: number) => {
+export const unixTo12HourTime = (unixDate?: number) => {
   if (!unixDate) {
     return '-'
   }
@@ -515,7 +513,10 @@ export const unixTo12HourTime = (unixDate: number) => {
   return formattedTime
 }
 
-export const readableSupperGroupId = (supperGroupId: number) => {
+export const readableSupperGroupId = (supperGroupId?: number) => {
+  if (!supperGroupId) {
+    return 'RHSO#'
+  }
   const readableSupperGroupId = '0000000000' + supperGroupId
   return String('RHSO#' + readableSupperGroupId.substr(-4))
 }
