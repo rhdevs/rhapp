@@ -5,11 +5,11 @@ import editIcon from '../../assets/SupperEditIcon.svg'
 import deleteIcon from '../../assets/SupperDeleteIcon.svg'
 import { CancelAction } from '../../store/supper/types'
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ padding?: string }>`
   height: fit-content;
   position: relative;
   width: 100%;
-  padding: 10px;
+  padding: ${(props) => props.padding ?? '10px'};
   display: flex;
   flex-direction: row;
 `
@@ -86,6 +86,7 @@ const Icon = styled.img`
 
 type Props = {
   foodUserId?: string
+  padding?: string
   fontPercentage?: number
   foodName: string
   qty: number
@@ -100,7 +101,7 @@ type Props = {
 
 export const FoodLineInCard = (props: Props) => {
   return (
-    <MainContainer>
+    <MainContainer padding={props.padding}>
       <QuantityContainer fontPercentage={props.fontPercentage}>{props.qty}x</QuantityContainer>
       <SubContainer>
         <TopContainer>

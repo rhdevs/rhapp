@@ -530,6 +530,20 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
+export const setExpandAll = (isExpandAll: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPAND_ALL,
+    isExpandAll: isExpandAll,
+  })
+}
+
+export const setPaymentExpandedCount = (expandedCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT,
+    expandedCount: expandedCount,
+  })
+}
+
 export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME,

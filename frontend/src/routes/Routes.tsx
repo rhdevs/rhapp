@@ -53,8 +53,11 @@ export enum PATHS {
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
-  VIEW_ORDER_WITH_ID = '/supper/view/order/:supperGroupId',
+  VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
+  VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
+  PAYMENT_SCREEN = '/supper/view/payment',
+  PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
 }
 
@@ -102,6 +105,7 @@ const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOver
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
+const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
 
 export default class Routes extends React.Component {
@@ -149,7 +153,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
-            <PrivateRoute exact path={PATHS.VIEW_ORDER_WITH_ID} component={ViewOrder} />
+            <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
+            <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
+            <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
 
