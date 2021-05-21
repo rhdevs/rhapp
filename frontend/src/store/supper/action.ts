@@ -3,6 +3,7 @@ import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
+import { foodList } from '../stubs'
 
 const [error] = useSnackbar('error')
 
@@ -23,6 +24,17 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
       console.log(err)
       error('Failed to get all supper groups, please try again later.')
     })
+  dispatch(setIsLoading(false))
+}
+
+export const getEditFoodItem = (supperGroupId: string, foodItemId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  console.log(`fetching edit food Item with supperGroupId ${supperGroupId} and foodItemId ${foodItemId}`)
+  // TODO: fetch from DB or otherwise. Using Stub currently
+  dispatch({
+    type: SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM,
+    editFoodItem: foodList[1],
+  })
   dispatch(setIsLoading(false))
 }
 
@@ -289,6 +301,13 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       error('Failed to get all supper groups, please try again later.')
     })
   dispatch(setIsLoading(false))
+}
+
+export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  // TODO: Call to database
+  console.log(`Order Item Updated on foodId ${oldFoodId}`)
+  console.log(`new Food details: ${newFoodItem}`)
 }
 
 export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {

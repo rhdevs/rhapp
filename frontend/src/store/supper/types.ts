@@ -151,6 +151,7 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  GET_EDIT_FOOD_ITEM = 'SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM',
 }
 
 type SetIsLoading = {
@@ -288,6 +289,11 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type GetEditFoodItem = {
+  type: typeof SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM
+  editFoodItem: Food | null
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -305,6 +311,7 @@ export type ActionTypes =
   | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory
+  | GetEditFoodItem
   | GetJoinedSupperGroupHistory
   | SetCount
   | SetPriceLimit
