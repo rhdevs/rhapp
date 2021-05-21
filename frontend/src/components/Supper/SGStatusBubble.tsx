@@ -30,7 +30,7 @@ const TextContainer = styled.text`
 `
 
 type Props = {
-  text: SupperGroupStatus
+  text: SupperGroupStatus | string
   backgroundColor?: string
 }
 

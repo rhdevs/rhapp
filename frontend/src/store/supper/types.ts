@@ -76,6 +76,7 @@ export type SupperGroup = {
   numOrders: number
   ownerId: string
   ownerName: string
+  ownerTele: string
   paymentInfo: PaymentInfo[]
   restaurantLogo?: string
   restaurantName: string
@@ -87,6 +88,7 @@ export type SupperGroup = {
   userIdList: string[]
   orderList?: Order[]
   deliveryDuration?: number
+  estArrivalTime?: number
   closingTime: number
 }
 

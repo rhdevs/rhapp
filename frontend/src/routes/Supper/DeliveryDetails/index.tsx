@@ -10,7 +10,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
-import { getSupperGroupById, setEstimatedArrivalTime } from '../../../store/supper/action'
+import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const Background = styled.div`
@@ -143,7 +143,7 @@ const DeliveryDetails = () => {
           <LoadingSpin />
         ) : (
           <>
-            <StyledSGIdText>{supperGroup?.supperGroupId}</StyledSGIdText>
+            <StyledSGIdText>{readableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
             <DeliveryTimeContainer>
