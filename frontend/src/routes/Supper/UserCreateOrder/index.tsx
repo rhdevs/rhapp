@@ -10,8 +10,9 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { setOrder } from '../../../store/supper/action'
-import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../../store/supper/types'
+import { SplitACMethod, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 
 const Background = styled.div`
   height: 100vh;
@@ -89,6 +90,14 @@ export default function UserCreateOrder() {
 
   const history = useHistory()
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  const onSubmit = (data) => console.log(data)
+  console.log(errors)
+
   useEffect(() => {
     setOrder(initSupperGroup)
   }, [])
@@ -101,6 +110,7 @@ export default function UserCreateOrder() {
   const onCancelClick = () => {
     setModalIsOpen(false)
   }
+
   const abstractSteps = () => {
     {
       switch (count) {
@@ -124,7 +134,11 @@ export default function UserCreateOrder() {
               <HortSectionContainer>
                 <Header>Est. Delivery Fees</Header>
                 <HortInputContainer>
-                  <InputBox placeholder="e.g. $3" />
+                  <InputBox
+                    type="number"
+                    placeholder="e.g. $3"
+                    {...register('e.g. $3', { min: 0, maxLength: 12, pattern: /[0-9]+/i })}
+                  />
                 </HortInputContainer>
               </HortSectionContainer>
               <HortSectionContainer>
@@ -154,7 +168,17 @@ export default function UserCreateOrder() {
               <VertSectionContainer>
                 <Header>Phone Number</Header>
                 <VertInputContainer>
-                  <InputBox placeholder="Phone Number" />
+                  <InputBox
+                    type="text"
+                    placeholder="Phone Number"
+                    {...register('Phone Number', {
+                      required: true,
+                      max: 99999999,
+                      min: 800000000,
+                      maxLength: 8,
+                      pattern: /[0-9]+/i,
+                    })}
+                  />
                 </VertInputContainer>
               </VertSectionContainer>
             </Step>
@@ -168,9 +192,9 @@ export default function UserCreateOrder() {
                 onLeftClick={() =>
                   modalIsOpen && (
                     <ConfirmationModal
-                      title={'Discard Order?'}
+                      title={'Discard Changes?'}
                       hasLeftButton={true}
-                      leftButtonText={'Discard'}
+                      leftButtonText={'Delete'}
                       onLeftButtonClick={onConfirmDiscardClick}
                       rightButtonText={'Cancel'}
                       onRightButtonClick={onCancelClick}
@@ -182,7 +206,11 @@ export default function UserCreateOrder() {
               <VertSectionContainer>
                 <Header>Order Name</Header>
                 <VertInputContainer>
-                  <InputBox placeholder="Order Name" />
+                  <InputBox
+                    type="text"
+                    placeholder="Order Name"
+                    {...register('Order Name', { required: true, maxLength: 57 })}
+                  />
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
@@ -192,7 +220,11 @@ export default function UserCreateOrder() {
               <VertSectionContainer>
                 <Header>Closing Time</Header>
                 <VertInputContainer>
-                  <InputBox placeholder="Select Time" />
+                  <InputBox
+                    type="datetime-local"
+                    placeholder="Select Time"
+                    {...register('Select Time', { required: true, pattern: /^\S+@\S+$/i })}
+                  />
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
