@@ -1,5 +1,3 @@
-import { Select } from 'antd'
-import { Input } from 'antd'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,7 +9,7 @@ import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartBut
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { getEditFoodItem, updateEditFoodItem } from '../../../store/supper/action'
-import { Food } from '../../../store/supper/types'
+import { CancelAction, Food } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -34,6 +32,10 @@ const SectionHeader = styled.p`
   line-height: 14px;
 `
 
+const Spacer = styled.div`
+  height: 24px;
+`
+
 // const OptionText = styled.p`
 //   font-style: normal;
 //   font-weight: 200;
@@ -42,11 +44,12 @@ const SectionHeader = styled.p`
 // `
 
 type FormValues = {
-  sides: string
-  drinks: string
+  Sides: string
+  Drinks: string
   others: string
   comments: string
   quantity: number
+  cancelAction: string
 }
 
 const EditFoodItem = () => {
@@ -58,11 +61,12 @@ const EditFoodItem = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>()
-
-  const onSubmit = (data: Food) => {
-    dispatch(updateEditFoodItem(data, params.itemId))
-    console.log(errors)
-  }
+  const onSubmit = (data) => console.log(data)
+  // const onSubmit = (data: Food) => {
+  //   console.log(data)
+  //   dispatch(updateEditFoodItem(data, params.itemId))
+  //   console.log(errors)
+  // }
 
   useEffect(() => {
     dispatch(getEditFoodItem(params.supperGroupId, params.itemId))
@@ -74,31 +78,44 @@ const EditFoodItem = () => {
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <MainCard flexDirection="column" isEditable={false} editIconSize="0rem">
+        <MainCard flexDirection="column" isEditable={false} editIconSize="0rem" padding="25px">
           <FoodItemHeader>{editFoodItem?.foodMenu.foodMenuName}</FoodItemHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
             {editFoodItem?.foodMenu.custom?.map((section) => {
               return (
                 <>
                   <SectionHeader>{section.title}</SectionHeader>
-                  {/* <Select value="" onChange={(e) => setValue('muiSelect', e.target.value as number[])}>
-                    {section.options.map((option) => {
-                      return <MenuItem value={option.name}>{option.name}</MenuItem>
-                    })}
-                  </Select> */}
+                  {section.options.map((option, key) => {
+                    return (
+                      <>
+                        <input key={key} {...register('Sides', { required: true })} type="radio" value={option.name} />
+                        <br />
+                      </>
+                    )
+                  })}
+                  <Spacer />
                 </>
               )
             })}
-            <SectionHeader>If this product is not available</SectionHeader>
-            <select {...register}>
-              <option value="contact">contact</option>
-              <option value="cancel">cancel</option>
-            </select>
 
-            <Input defaultValue={editFoodItem?.comments} {...register('comments')} />
+            <SectionHeader>If this product is not available</SectionHeader>
+            <input {...register('cancelAction', { required: true })} type="radio" value={'contact'} label="Contact" />
+            <br />
+            <input {...register('cancelAction', { required: true })} type="radio" value="Cancel" label="Cancel" />
+            <Spacer />
+
+            <input
+              defaultValue={editFoodItem?.comments}
+              {...register('comments')}
+              placeholder="Additional comments e.g. BBQ Sauce"
+            />
+            <Spacer />
+
             <div style={{ textAlignLast: 'center' }}>
               <QuantityTracker default={editFoodItem?.quantity || 0} />
             </div>
+            <Spacer />
+            <input type="submit" />
             <AddUpdateCartButton update currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'} />
           </form>
         </MainCard>
