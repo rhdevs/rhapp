@@ -1,14 +1,22 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import LoadingSpin from '../../../components/LoadingSpin'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
 import { AlAmaanStub } from '../../../store/stubs'
+import {
+  getRestaurant,
+  getSupperGroupById,
+  readableSupperGroupId,
+  setSearchValue,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const Background = styled.div`
@@ -26,34 +34,55 @@ const Restaurant = styled.text`
   font-size: 24px;
   margin-left: 30px;
 `
+const NoFoodMatchText = styled.text``
 
 export default function UserPlaceOrder() {
+  const dispatch = useDispatch()
+  const { searchValue } = useSelector((state: RootState) => state.supper)
+  const params = useParams<{ supperGroupId: string; restaurantId: string }>()
+
+  const onChange = (input: string) => {
+    console.log(input)
+    dispatch(setSearchValue(input))
+  }
+
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getRestaurant(params.restaurantId))
+  })
+
+  const { supperGroup, restaurant, isLoading } = useSelector((state: RootState) => state.supper)
+
   return (
     <Background>
       <TopNavBar title="Place Order" />
-      <ExpandableSGCard
-        isOwner
-        supperGroupName="SUPPER FRIENDS"
-        supperGroupId="RHSO#1002"
-        ownerName="Zhou BaoBao"
-        priceLimit={30}
-        currentAmount={10}
-        closingTime="10.30PM"
-        numberOfUsers={10}
-        deliveryFee="10.70"
-      />
-      <Restaurant>{AlAmaanStub.name}</Restaurant>
-      <SearchBarContainer>
-        <SearchBar
-          placeholder="Search for food"
-          value={'Search for food'}
-          onChange={() => {
-            1
-          }}
-        />
-        <MenuTabs menuSections={AlAmaanStub.allSection} />
-        <MenuSection menu={AlAmaanStub.menu} />
-      </SearchBarContainer>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <ExpandableSGCard
+            isOwner={supperGroup?.ownerId === localStorage.userID}
+            supperGroupName={supperGroup?.supperGroupName ?? ''}
+            supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
+            ownerName={supperGroup?.ownerName ?? ''}
+            priceLimit={supperGroup?.costLimit ?? 50}
+            currentAmount={supperGroup?.currentFoodCost ?? 10}
+            closingTime={unixTo12HourTime(supperGroup?.closingTime)}
+            numberOfUsers={supperGroup?.userIdList.length ?? 0}
+            deliveryFee={String(supperGroup?.additionalCost ?? '-')}
+          />
+          <Restaurant>{restaurant?.name ?? AlAmaanStub.name}</Restaurant>
+          <SearchBarContainer>
+            <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
+            <MenuTabs menuSections={restaurant?.allSection ?? AlAmaanStub.allSection} />
+            {searchValue ? (
+              <NoFoodMatchText>No food matched. Try something else!</NoFoodMatchText>
+            ) : (
+              <MenuSection menu={restaurant?.menu ?? AlAmaanStub.menu} />
+            )}
+          </SearchBarContainer>
+        </>
+      )}
     </Background>
   )
 }
