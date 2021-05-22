@@ -938,8 +938,12 @@ def user_order(supperGroupId, userID):
         for food in data["foodList"]:
             # rename _id field to foodId and unbox mongo object
             food["foodId"] = str(food.pop('_id'))
+            food["restaurantId"] = str(food.pop('restaurantId'))
+            food["foodMenuId"] = str(food.pop('foodMenuId'))
 
+        print(data)
         response = {"status": "success", "data": data}
+        # print(data)
         return make_response(response, 200)
     except Exception as e:
         print(e)
