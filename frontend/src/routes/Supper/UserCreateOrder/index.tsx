@@ -93,10 +93,13 @@ export default function UserCreateOrder() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm()
+
   const onSubmit = (data) => console.log(data)
-  console.log(errors)
+
+  console.log(watch('Order Name'))
 
   useEffect(() => {
     setOrder(initSupperGroup)
@@ -123,6 +126,7 @@ export default function UserCreateOrder() {
                   <UnderlinedButton
                     onClick={() => {
                       setCount(count + 1)
+                      console.log()
                     }}
                     text="Next"
                     fontWeight={700}
@@ -137,7 +141,11 @@ export default function UserCreateOrder() {
                   <InputBox
                     type="number"
                     placeholder="e.g. $3"
-                    {...register('e.g. $3', { min: 0, maxLength: 12, pattern: /[0-9]+/i })}
+                    {...register('e.g. $3', {
+                      min: 0,
+                      maxLength: 12,
+                      pattern: { value: /[0-9]+/i, message: 'Invalid input.' },
+                    })}
                   />
                 </HortInputContainer>
               </HortSectionContainer>
@@ -188,7 +196,16 @@ export default function UserCreateOrder() {
             <Step>
               <TopNavBar
                 title="Create Order"
-                rightComponent={<UnderlinedButton onClick={() => setCount(count + 1)} text="Next" fontWeight={700} />}
+                rightComponent={
+                  <UnderlinedButton
+                    onClick={() => {
+                      handleSubmit(onSubmit)
+                      setCount(count + 1)
+                    }}
+                    text="Next"
+                    fontWeight={700}
+                  />
+                }
                 onLeftClick={() =>
                   modalIsOpen && (
                     <ConfirmationModal
@@ -209,8 +226,14 @@ export default function UserCreateOrder() {
                   <InputBox
                     type="text"
                     placeholder="Order Name"
-                    {...register('Order Name', { required: true, maxLength: 57 })}
+                    {...register('OrderName', {
+                      required: true,
+                      validate: (input) => input.trim().length !== 0,
+                      minLength: 1,
+                      maxLength: 10,
+                    })}
                   />
+                  {errors.OrderName && <span>This field is required.</span>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
