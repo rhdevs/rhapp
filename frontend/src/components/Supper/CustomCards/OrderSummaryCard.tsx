@@ -7,6 +7,7 @@ import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
 import EmptyCart from '../../../assets/EmptyCart.svg'
+import { OpenUserTelegram } from '../../TelegramShareButton'
 
 const EmptyCartContainer = styled.div`
   display: flex;
@@ -162,9 +163,17 @@ export const OrderSummaryCard = (props: Props) => {
               return (
                 <>
                   <NameText key={index}>
-                    {order.user.userID === localStorage.getItem('userID')
-                      ? 'You'
-                      : `${order.user.displayName} (@${order.user.telegramHandle})`}
+                    {order.user.userID === localStorage.getItem('userID') ? (
+                      'You'
+                    ) : (
+                      <>
+                        {order.user.displayName} (@
+                        <text onClick={() => OpenUserTelegram(order.user.telegramHandle)}>
+                          {order.user.telegramHandle}
+                        </text>
+                        )
+                      </>
+                    )}
                   </NameText>
                   {order.foodList.map((food, index) => {
                     const customisations: string[] = []

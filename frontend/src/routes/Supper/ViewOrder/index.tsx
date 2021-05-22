@@ -7,8 +7,16 @@ import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
+import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { getCollatedOrder, getSupperGroupById } from '../../../store/supper/action'
+import {
+  getCollatedOrder,
+  getSupperGroupById,
+  readableSupperGroupId,
+  setSelectedSupperGroupStatus,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -31,6 +39,15 @@ const SummaryContainer = styled.div`
 const SubContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: baseline;
+`
+
+const BottomMoneyContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 60%;
+  justify-content: space-between;
+  margin: 10px 0;
 `
 
 const SummaryText = styled.h3`
@@ -38,7 +55,6 @@ const SummaryText = styled.h3`
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
-  line-height: 14px;
   padding-right: 5px;
 `
 
@@ -54,50 +70,108 @@ const TotalPriceText = styled.h3`
   margin: 15px auto;
 `
 
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  margin: 1rem auto;
+  align-items: flex-end;
+`
+
+const StyledText = styled.text`
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 14px;
+`
+
 const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
-  const { supperGroup, collatedOrder } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, collatedOrder, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const [viewCollatedOrder, setViewCollatedOrder] = useState(false)
+  let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 
+  useEffect(() => {
+    console.log(supperGroup?.status)
+    dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
+    supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+  }, [supperGroup?.status])
+
   return (
     <MainContainer>
       <TopNavBar title="View Order" rightComponent={<ShareAltOutlined style={{ fontSize: '20px' }} />} />
-      <JoinOrderSGCard
-        restaurantLogo={supperGroup?.restaurantLogo}
-        cardMargin="0 23px"
-        isOwner={supperGroup?.ownerId === localStorage.userID}
-        title={supperGroup?.supperGroupName ?? ''}
-        orderId={String(supperGroup?.supperGroupId ?? 'RHSO#')}
-        username={supperGroup?.ownerName ?? ''}
-        currentAmount={supperGroup?.currentFoodCost ?? 0}
-        priceLimit={supperGroup?.costLimit ?? 50}
-        closingTime={String(supperGroup?.closingTime ?? '-')}
-        numberOfUsers={supperGroup?.userIdList.length ?? 0}
-        splitACType={supperGroup?.splitAdditionalCost}
-        deliveryFee={'$' + String(supperGroup?.additionalCost?.toFixed(2) ?? '0.00')}
-      />
+      {supperGroupIsOpen ? (
+        <JoinOrderSGCard
+          restaurantLogo={supperGroup?.restaurantLogo}
+          cardMargin="0 23px"
+          isOwner={supperGroup?.ownerId === localStorage.userID}
+          title={supperGroup?.supperGroupName ?? ''}
+          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          username={supperGroup?.ownerName ?? ''}
+          currentAmount={supperGroup?.currentFoodCost ?? 0}
+          priceLimit={supperGroup?.costLimit ?? 50}
+          closingTime={unixTo12HourTime(supperGroup?.closingTime)}
+          numberOfUsers={supperGroup?.userIdList.length ?? 0}
+          splitACType={supperGroup?.splitAdditionalCost}
+          deliveryFee={'$' + String((supperGroup?.additionalCost ?? 0).toFixed(2))}
+        />
+      ) : (
+        <SGCardWithStatus
+          restaurantLogo={supperGroup?.restaurantLogo}
+          isOwner={supperGroup?.ownerId === localStorage.userID}
+          supperGroupStatus={supperGroup?.status}
+          location={supperGroup?.location}
+          collectionTime={unixTo12HourTime(supperGroup?.estArrivalTime)}
+          username={supperGroup?.ownerName ?? '-'}
+          title={supperGroup?.supperGroupName ?? '-'}
+          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          buttonTeleHandle={supperGroup?.ownerTele}
+          paymentMethod={supperGroup?.paymentInfo}
+        />
+      )}
       <SummaryContainer>
         <SubContainer>
           <SummaryText>Summary</SummaryText>
           <FileZipTwoTone onClick={() => setViewCollatedOrder(!viewCollatedOrder)} />
         </SubContainer>
-        <UnderlinedButton text="Add Item" color="red" />
-        {/* TODO: font-weight: 200; */}
+        {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
       </SummaryContainer>
       <OrderSummaryCard
         margin="5px 23px"
         orderByUser
         collatedOrder={viewCollatedOrder ? collatedOrder : undefined}
-        isEditable
+        isEditable={supperGroupIsOpen}
         orderList={supperGroup?.orderList}
       />
-      <TotalPriceText>Total Price: ${supperGroup?.totalPrice.toFixed(2) ?? '0.00'}</TotalPriceText>
+      {supperGroupIsOpen ? (
+        <TotalPriceText>Total Price: ${(supperGroup?.totalPrice ?? 0).toFixed(2)}</TotalPriceText>
+      ) : (
+        <BottomContainer>
+          <BottomMoneyContainer>
+            <StyledText>Total Price</StyledText>
+            <StyledText>${(supperGroup?.currentFoodCost ?? 0).toFixed(2)}</StyledText>
+          </BottomMoneyContainer>
+          <BottomMoneyContainer>
+            <StyledText>Delivery Fee</StyledText>
+            <StyledText>${(supperGroup?.additionalCost ?? 0).toFixed(2)}</StyledText>
+          </BottomMoneyContainer>
+          <BottomMoneyContainer>
+            <StyledText>
+              <b>Total</b>
+            </StyledText>
+            <StyledText>
+              <b>${(supperGroup?.totalPrice ?? 0).toFixed(2)}</b>
+            </StyledText>
+          </BottomMoneyContainer>
+        </BottomContainer>
+      )}
     </MainContainer>
   )
 }

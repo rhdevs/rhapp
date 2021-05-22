@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -9,8 +10,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { foodList, orderList, supperGroupId } from '../../../store/stubs'
-import { getSupperGroupById, getUserOrder } from '../../../store/supper/action'
+import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -57,10 +57,11 @@ const SubtotalText = styled.h3`
 
 const ViewCart = () => {
   const dispatch = useDispatch()
+  const params = useParams<{ supperGroupId: string }>()
 
   useEffect(() => {
-    dispatch(getSupperGroupById(supperGroupId))
-    dispatch(getUserOrder(supperGroupId, localStorage.userID))
+    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
   }, [])
 
   const { supperGroup, order, isLoading } = useSelector((state: RootState) => state.supper)
@@ -78,11 +79,11 @@ const ViewCart = () => {
           <ExpandableSGCard
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
-            supperGroupId={String(supperGroup?.supperGroupId ?? 'RHSO#')}
+            supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
             ownerName={supperGroup?.ownerName ?? ''}
             priceLimit={supperGroup?.costLimit ?? 50}
             currentAmount={supperGroup?.currentFoodCost ?? 10}
-            closingTime={String(supperGroup?.closingTime ?? '-')}
+            closingTime={unixTo12HourTime(supperGroup?.closingTime)}
             numberOfUsers={supperGroup?.userIdList.length ?? 0}
             deliveryFee={String(supperGroup?.additionalCost ?? '-')}
           />
@@ -91,7 +92,7 @@ const ViewCart = () => {
               <MyOrderText>My Order</MyOrderText>
               <UnderlinedButton text="Add Item" color="red" fontWeight={200} />
             </MyOrderContainer>
-            <OrderSummaryCard isEditable foodList={foodList} orderList={orderList} />
+            <OrderSummaryCard isEditable foodList={order?.foodList} orderList={supperGroup?.orderList} />
             <SubtotalText>Subtotal: ${order?.totalCost?.toFixed(2) ?? '-'}</SubtotalText>
             <ButtonContainer>
               <Button

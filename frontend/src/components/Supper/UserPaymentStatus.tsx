@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
-import { Food } from '../../store/supper/types'
+import { Food, PaymentMethod } from '../../store/supper/types'
 import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
-import { UnderlinedButton } from './UnderlinedButton'
+import telegram_black from '../../assets/telegram_black.svg'
 import { OpenUserTelegram } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
+import { setExpandAll, setPaymentExpandedCount } from '../../store/supper/action'
 // import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
@@ -22,6 +25,7 @@ const TopContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  align-items: center;
 `
 
 const TopMoneyText = styled.text`
@@ -30,15 +34,6 @@ const TopMoneyText = styled.text`
   justify-content: flex-end;
   display: flex;
 `
-
-const ExpandableButtonContainer = styled.div`
-  padding-top: 10px;
-  left: 15%;
-  display: flex;
-  align-items: center;
-  padding-left: 1.5rem;
-`
-
 const StatusSymbolContainer = styled.div`
   width: 30%;
   margin: auto;
@@ -47,17 +42,16 @@ const StatusSymbolContainer = styled.div`
 `
 
 const DetailsContainer = styled.div`
-  padding-left: 1.5rem;
+  width: 82%;
+  margin: 0 15px 0 auto;
+  font-family: Inter;
+  font-style: normal;
   font-weight: 500;
   font-size: 14px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
 `
-
-const TelegramHandle = styled.text`
-  font-weight: 500;
-  font-size: 14px;
-`
-
-const BottomContainer = styled.div``
 
 const DeliveryFeeText = styled.text`
   padding-left: 2.2rem;
@@ -90,7 +84,16 @@ const CheckboxContainer = styled.div`
   margin: -10px 0 0 0;
 `
 
+const PaymentMethodText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 10px auto 0 auto;
+`
+
 type Props = {
+  isExpanded?: boolean
   orderId?: string
   foodList: Food[]
   name: string
@@ -100,14 +103,54 @@ type Props = {
   hasReceived: boolean
   totalCost: number
   additionalCost: number
+  paymentMethod: PaymentMethod
+  numOrders?: number
 }
 
 export const UserPaymentStatus = (props: Props) => {
+  const { isExpandAll, expandedCount } = useSelector((state: RootState) => state.supper)
   const [cancelName, setCancelName] = useState(props.hasReceived)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
+  const dispatch = useDispatch()
 
-  const buttonText = isExpanded ? 'Hide Details' : 'Show Details'
-  const arrowIcon = isExpanded ? <CaretUpOutlined /> : <CaretDownOutlined />
+  useEffect(() => {
+    if (isExpandAll) {
+      dispatch(setPaymentExpandedCount(0))
+    } else {
+      dispatch(setPaymentExpandedCount(props.numOrders ?? 0))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (expandedCount === props.numOrders) {
+      dispatch(setExpandAll(false))
+    }
+    if (expandedCount === 0) {
+      dispatch(setExpandAll(true))
+    }
+  }, [dispatch, expandedCount])
+
+  useEffect(() => {
+    setIsExpanded(!isExpandAll)
+  }, [isExpandAll])
+
+  const arrowIcon = isExpanded ? (
+    <CaretUpOutlined
+      onClick={() => {
+        setIsExpanded(false)
+        dispatch(setPaymentExpandedCount(expandedCount - 1))
+      }}
+      style={{ paddingLeft: '5px' }}
+    />
+  ) : (
+    <CaretDownOutlined
+      onClick={() => {
+        setIsExpanded(true)
+        dispatch(setPaymentExpandedCount(expandedCount + 1))
+      }}
+      style={{ paddingLeft: '5px' }}
+    />
+  )
 
   return (
     <MainContainer>
@@ -119,7 +162,7 @@ export const UserPaymentStatus = (props: Props) => {
               onClick={() => {
                 setCancelName(!cancelName)
                 //set order hasReceived to true
-                // dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
+                //TODO dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
               }}
             />
           </CheckboxContainer>
@@ -136,31 +179,22 @@ export const UserPaymentStatus = (props: Props) => {
           <StatusSymbol text={props.hasPaid ? 'Paid' : 'Unpaid'} />
         </StatusSymbolContainer>
         <TopMoneyText>${props.totalCost.toFixed(2)}</TopMoneyText>
+        {arrowIcon}
       </TopContainer>
-      <BottomContainer>
-        <DetailsContainer>
-          {props.phoneNumber}{' '}
-          <TelegramHandle
-            onClick={() => {
-              OpenUserTelegram(props.telegramHandle)
-            }}
-          >
-            @{props.telegramHandle}
-          </TelegramHandle>
-        </DetailsContainer>
-        <>
-          <ExpandableButtonContainer>
-            <UnderlinedButton
-              onClick={() => {
-                setIsExpanded(!isExpanded)
-              }}
-              fontSize="13px"
-              text={buttonText}
-              rightIcon={arrowIcon}
-            />
-          </ExpandableButtonContainer>
-          {isExpanded &&
-            props.foodList.map((food, index) => {
+      <>
+        {isExpanded && (
+          <>
+            <DetailsContainer>
+              {props.phoneNumber}
+              <img
+                onClick={() => {
+                  OpenUserTelegram(props.telegramHandle)
+                }}
+                src={telegram_black}
+                alt="Telegram Icon"
+              />
+            </DetailsContainer>
+            {props.foodList.map((food, index) => {
               const customisations: string[] = []
               food.foodMenu.custom?.map((custom) =>
                 custom.options.map((option) => {
@@ -170,6 +204,7 @@ export const UserPaymentStatus = (props: Props) => {
               return (
                 <>
                   <FoodLineInCard
+                    padding="5px 15px 10px 15px"
                     fontPercentage={0.85}
                     key={index}
                     foodName={food.foodMenu.foodMenuName}
@@ -186,8 +221,10 @@ export const UserPaymentStatus = (props: Props) => {
                 </>
               )
             })}
-        </>
-      </BottomContainer>
+            <PaymentMethodText>Paid by {props.paymentMethod}</PaymentMethodText>
+          </>
+        )}
+      </>
     </MainContainer>
   )
 }

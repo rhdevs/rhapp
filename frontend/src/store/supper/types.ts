@@ -76,6 +76,7 @@ export type SupperGroup = {
   numOrders: number
   ownerId: string
   ownerName: string
+  ownerTele: string
   paymentInfo: PaymentInfo[]
   restaurantLogo?: string
   restaurantName: string
@@ -87,6 +88,7 @@ export type SupperGroup = {
   userIdList: string[]
   orderList?: Order[]
   deliveryDuration?: number
+  estArrivalTime?: number
   closingTime: number
 }
 
@@ -152,6 +154,9 @@ export enum SUPPER_ACTIONS {
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
   GET_EDIT_FOOD_ITEM = 'SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM',
+  SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
+  SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
+  SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
 }
 
 type SetIsLoading = {
@@ -292,6 +297,19 @@ type SetTabsKey = {
 type GetEditFoodItem = {
   type: typeof SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM
   editFoodItem: Food | null
+type SetExpandAll = {
+  type: typeof SUPPER_ACTIONS.SET_EXPAND_ALL
+  isExpandAll: boolean
+}
+
+type SetPaymentExpandedCount = {
+  type: typeof SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT
+  expandedCount: number
+}
+
+type SetEstimatedArrivalTime = {
+  type: typeof SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME
+  estArrivalTime: string
 }
 
 export type ActionTypes =
@@ -323,3 +341,6 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetExpandAll
+  | SetPaymentExpandedCount
+  | SetEstimatedArrivalTime

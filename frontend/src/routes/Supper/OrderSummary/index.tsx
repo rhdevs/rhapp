@@ -83,6 +83,7 @@ const ErrorText = styled.p`
   font-size: 17px;
   font-family: 'Inter';
 `
+
 const RedText = styled.text`
   color: red;
   padding-right: 5px;
