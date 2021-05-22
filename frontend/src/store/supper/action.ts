@@ -551,3 +551,10 @@ export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Di
     estArrivalTime: unixTo12HourTime(estArrivalTime),
   })
 }
+
+export const setEditOrderNumber = (editOrderNumber: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER,
+    editOrderNumber: editOrderNumber,
+  })
+}

@@ -12,19 +12,22 @@ export const MinusButton = (props: Props) => {
   const DARK_BLUE = '#002642'
   const LIGHT_RED = '#EB5757'
   const SHADED_RED = 'rgba(235, 87, 87, 0.5)'
+  const SHADED_DARK_BLUE = 'rgba(0,38,66, 0.5)'
 
   const { count } = useSelector((state: RootState) => state.supper)
 
   let BUTTON_COLOR = LIGHT_RED
+  if (props.color === 'DARK_BLUE') {
+    BUTTON_COLOR = DARK_BLUE
+  }
 
   if (count === 0) {
     if ((BUTTON_COLOR = LIGHT_RED)) {
       BUTTON_COLOR = SHADED_RED
     }
-  }
-
-  if (props.color === 'DARK_BLUE') {
-    BUTTON_COLOR = DARK_BLUE
+    if ((BUTTON_COLOR = DARK_BLUE)) {
+      BUTTON_COLOR = SHADED_DARK_BLUE
+    }
   }
 
   return (

@@ -3,6 +3,10 @@ import React, { ReactChild, ReactChildren, useState } from 'react'
 import styled from 'styled-components'
 
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEditOrderNumber } from '../../store/supper/action'
+import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   margin: 0.5rem 1rem;
@@ -55,13 +59,24 @@ const ChildContainer = styled.div`
 `
 
 type Props = {
+  isOpen?: boolean
   number: number
   title: string
   children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
 }
 
 export const BubbleSection = (props: Props) => {
-  const [isClicked, setIsClicked] = useState(false)
+  const { editOrderNumber } = useSelector((state: RootState) => state.supper)
+  const [isClicked, setIsClicked] = useState(props.isOpen ?? props.number === editOrderNumber)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (isClicked) dispatch(setEditOrderNumber(props.number))
+  }, [isClicked])
+
+  useEffect(() => {
+    setIsClicked(props.isOpen ?? false)
+  }, [props.isOpen])
 
   const arrowIcon = isClicked ? <CaretUpOutlined /> : <CaretDownOutlined />
   return (
@@ -69,7 +84,7 @@ export const BubbleSection = (props: Props) => {
       <SubContainer>
         <NumberContainer
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
           isClicked={isClicked}
         >
@@ -77,7 +92,7 @@ export const BubbleSection = (props: Props) => {
         </NumberContainer>
         <TitleText
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
           isClicked={isClicked}
         >
@@ -85,7 +100,7 @@ export const BubbleSection = (props: Props) => {
         </TitleText>
         <ArrowContainer
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
         >
           {arrowIcon}

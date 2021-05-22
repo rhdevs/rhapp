@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { setPriceLimit } from '../../store/supper/action'
+import { setCount, setPriceLimit } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'
 
-const CounterContainer = styled.div``
+const CounterContainer = styled.div<{ center?: boolean }>`
+  ${(props) => props.center && 'margin: 0 auto;'}
+`
 
 const ValueContainer = styled.text`
   font-size: 24px;
@@ -14,22 +16,33 @@ const ValueContainer = styled.text`
   margin: 25px;
 `
 
-export const MaxPriceFixer = () => {
+type Props = {
+  defaultValue?: number
+  center?: boolean
+}
+
+export const MaxPriceFixer = (props: Props) => {
   const dispatch = useDispatch()
   const { priceLimit } = useSelector((state: RootState) => state.supper)
+
+  useEffect(() => {
+    dispatch(setPriceLimit(props.defaultValue ?? 0))
+  }, [])
 
   const subFromPriceLimit = () => {
     if (priceLimit > 0) {
       dispatch(setPriceLimit(priceLimit - 5))
+      dispatch(setCount(priceLimit - 5))
     }
   }
 
   const addToPriceLimit = () => {
     dispatch(setPriceLimit(priceLimit + 5))
+    dispatch(setCount(priceLimit + 5))
   }
 
   return (
-    <CounterContainer>
+    <CounterContainer center={props.center}>
       <MinusButton color="DARK_BLUE" onClick={subFromPriceLimit} />
       <ValueContainer>${priceLimit}</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />

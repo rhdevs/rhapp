@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
 import { StatusSymbol } from './StatusSymbol'
@@ -6,6 +6,7 @@ import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { setSelectedRestaurant } from '../../store/supper/action'
+import { Restaurants } from '../../store/supper/types'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -22,14 +23,21 @@ const MainContainer = styled.div`
 
 type Props = {
   restaurantList: string[]
+  defaultRestaurant?: Restaurants
+  isDisabled?: boolean
 }
 
 export const RestaurantBubbles = (props: Props) => {
   const DARK_BLUE = '#002642'
+  const SHADED_DARK_BLUE = 'rgba(0,38,66, 0.5)'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
   const { selectedRestaurant } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setSelectedRestaurant(String(props.defaultRestaurant) ?? ''))
+  }, [])
 
   return (
     <MainContainer>
@@ -37,10 +45,11 @@ export const RestaurantBubbles = (props: Props) => {
         if (selectedRestaurant === restaurant) {
           return (
             <StatusSymbol
-              border={DARK_BLUE}
+              isDisabled={props.isDisabled ?? false}
+              border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
               color="white"
               borderWidth="1px"
-              backgroundColor="bluegrey"
+              backgroundColor={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
               text={restaurant}
@@ -53,11 +62,12 @@ export const RestaurantBubbles = (props: Props) => {
         } else {
           return (
             <StatusSymbol
+              isDisabled={props.isDisabled ?? false}
               onClick={() => {
-                dispatch(setSelectedRestaurant(restaurant))
+                if (!props.isDisabled) dispatch(setSelectedRestaurant(restaurant))
               }}
-              border={DARK_BLUE}
-              color={DARK_BLUE}
+              border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
+              color={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
               borderWidth="1px"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}
