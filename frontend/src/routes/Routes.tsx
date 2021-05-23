@@ -54,7 +54,7 @@ export enum PATHS {
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
-  USER_VIEW_ORDER = 'supper/userOrder',
+  USER_VIEW_ORDER = 'supper/view/userOrder',
   VIEW_CART = '/supper/view/cart',
   VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
   PAYMENT_SCREEN = '/supper/view/payment',
