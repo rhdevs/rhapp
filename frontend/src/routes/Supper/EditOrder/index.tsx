@@ -188,6 +188,7 @@ const EditOrder = () => {
             />
           )}
         />
+        {console.log(errors.supperGroupName)}
         {errors.supperGroupName?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
         <StyledText topMargin>Max Price</StyledText>
         <PriceContainer>
@@ -244,6 +245,7 @@ const EditOrder = () => {
 
   const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
+    console.log(errors.supperGroupName)
     if (errors.supperGroupName || errors.closingTime) {
       dispatch(setEditOrderNumber(1))
       console.log('HELLLOO')
@@ -279,7 +281,7 @@ const EditOrder = () => {
             fontWeight: 200,
             fontSize: '17px',
           }}
-          //   onButtonClick={() => console.log('Save changes!!')}
+          // onButtonClick={() => onSubmit}
           isFlipButton={false}
         />
       </ButtonContainer>
