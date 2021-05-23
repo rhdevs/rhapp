@@ -74,6 +74,7 @@ export default function UserViewOrder() {
   const dispatch = useDispatch()
   const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
   const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+  const supperGroupIsCancelled = true // selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -102,6 +103,15 @@ export default function UserViewOrder() {
           numberOfUsers={supperGroup?.userIdList.length ?? 0}
           deliveryFee={String(supperGroup?.additionalCost ?? '-')}
         />
+      ) : supperGroupIsCancelled ? (
+        <SGCardWithStatus
+          supperGroupStatus={SupperGroupStatus.CANCELLED}
+          username={supperGroup?.ownerName ?? '-'}
+          title={supperGroup?.supperGroupName ?? '-'}
+          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          buttonTeleHandle={supperGroup?.ownerTele}
+          cancelReason={supperGroup?.comments}
+        />
       ) : (
         <SGCardWithStatus
           restaurantLogo={supperGroup?.restaurantLogo}
@@ -116,13 +126,20 @@ export default function UserViewOrder() {
           paymentMethod={supperGroup?.paymentInfo}
         />
       )}
-      <OrderContainer>
-        <Header>My Order</Header>
-        {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
-      </OrderContainer>
-      <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
-
-      {supperGroupIsOpen ? (
+      {supperGroupIsCancelled ? (
+        <></>
+      ) : (
+        <>
+          <OrderContainer>
+            <Header>My Order</Header>
+            {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
+          </OrderContainer>
+          <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
+        </>
+      )}
+      {supperGroupIsCancelled ? (
+        <></>
+      ) : supperGroupIsOpen ? (
         <BottomContainer>
           <BottomMoneyContainer>
             <StyledText>
