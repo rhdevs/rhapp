@@ -74,6 +74,7 @@ export default function UserViewOrder() {
   const dispatch = useDispatch()
   const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
   const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+  const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -102,6 +103,15 @@ export default function UserViewOrder() {
           numberOfUsers={supperGroup?.userIdList.length ?? 0}
           deliveryFee={String(supperGroup?.additionalCost ?? '-')}
         />
+      ) : supperGroupIsCancelled ? (
+        <SGCardWithStatus
+          supperGroupStatus={SupperGroupStatus.CANCELLED}
+          username={supperGroup?.ownerName ?? '-'}
+          title={supperGroup?.supperGroupName ?? '-'}
+          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          buttonTeleHandle={supperGroup?.ownerTele}
+          cancelReason={supperGroup?.comments}
+        />
       ) : (
         <SGCardWithStatus
           restaurantLogo={supperGroup?.restaurantLogo}
@@ -116,54 +126,59 @@ export default function UserViewOrder() {
           paymentMethod={supperGroup?.paymentInfo}
         />
       )}
-      <OrderContainer>
-        <Header>My Order</Header>
-        {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
-      </OrderContainer>
-      <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
-
-      {supperGroupIsOpen ? (
-        <BottomContainer>
-          <BottomMoneyContainer>
-            <StyledText>
-              <b>Subtotal</b>
-            </StyledText>
-            <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-          </BottomMoneyContainer>
-        </BottomContainer>
+      {supperGroupIsCancelled ? (
+        <></>
       ) : (
         <>
-          <BottomContainer>
-            <BottomMoneyContainer>
-              <StyledText>Subtotal</StyledText>
-              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-            <BottomMoneyContainer>
-              <StyledText>Delivery Fee</StyledText>
-              <StyledText>${deliveryFee.toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-            <BottomMoneyContainer>
-              <StyledText>
-                <b>Total</b>
-              </StyledText>
-              <StyledText>
-                <b>${totalFee.toFixed(2)}</b>
-              </StyledText>
-            </BottomMoneyContainer>
-          </BottomContainer>
-          <ButtonContainer>
-            <Button
-              descriptionStyle={{ width: '100%' }}
-              stopPropagation={true}
-              defaultButtonDescription="Mark Payment Complete"
-              updatedButtonDescription="Payment Completed"
-              buttonWidth="200px"
-              onButtonClick={() => {
-                console.log('success')
-              }}
-              isFlipButton
-            />
-          </ButtonContainer>
+          <OrderContainer>
+            <Header>My Order</Header>
+            {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
+          </OrderContainer>
+          <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
+          {supperGroupIsOpen ? (
+            <BottomContainer>
+              <BottomMoneyContainer>
+                <StyledText>
+                  <b>Subtotal</b>
+                </StyledText>
+                <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
+              </BottomMoneyContainer>
+            </BottomContainer>
+          ) : (
+            <>
+              <BottomContainer>
+                <BottomMoneyContainer>
+                  <StyledText>Subtotal</StyledText>
+                  <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
+                </BottomMoneyContainer>
+                <BottomMoneyContainer>
+                  <StyledText>Delivery Fee</StyledText>
+                  <StyledText>${deliveryFee.toFixed(2)}</StyledText>
+                </BottomMoneyContainer>
+                <BottomMoneyContainer>
+                  <StyledText>
+                    <b>Total</b>
+                  </StyledText>
+                  <StyledText>
+                    <b>${totalFee.toFixed(2)}</b>
+                  </StyledText>
+                </BottomMoneyContainer>
+              </BottomContainer>
+              <ButtonContainer>
+                <Button
+                  descriptionStyle={{ width: '100%' }}
+                  stopPropagation={true}
+                  defaultButtonDescription="Mark Payment Complete"
+                  updatedButtonDescription="Payment Completed"
+                  buttonWidth="200px"
+                  onButtonClick={() => {
+                    console.log('success')
+                  }}
+                  isFlipButton
+                />
+              </ButtonContainer>
+            </>
+          )}
         </>
       )}
       <BottomNavBar />
