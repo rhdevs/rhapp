@@ -1,4 +1,3 @@
-import { Flex } from 'antd-mobile'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -11,9 +10,8 @@ import { ExpandableSGCard } from '../../../components/Supper/CustomCards/Expanda
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { foodList, orderList } from '../../../store/stubs'
-import { getSupperGroupById } from '../../../store/supper/action'
-import { PaymentMethod, SupperGroupStatus } from '../../../store/supper/types'
+import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -72,53 +70,57 @@ const ButtonContainer = styled.div`
 `
 
 export default function UserViewOrder() {
-  const params = useParams<{ supperGroupId: string }>()
+  const params = useParams<{ supperGroupId: string; userId: string }>()
   const dispatch = useDispatch()
-  const { supperGroup, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
-  const supperGroupIsOpen = true
-  //selectedSupperGroupStatus === SupperGroupStatus.OPEN
+  const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
+  const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getUserOrder(params.supperGroupId, params.userId))
   }, [dispatch])
+
+  const deliveryFee =
+    supperGroup?.splitAdditionalCost === 'Equal'
+      ? (supperGroup?.additionalCost ?? 0) / supperGroup?.numOrders
+      : ((supperGroup?.additionalCost ?? 0) / (supperGroup?.totalPrice ?? 1)) * (order?.totalCost ?? 0)
+
+  const totalFee = (order?.totalCost ?? 0) + deliveryFee
 
   return (
     <MainContainer>
       <TopNavBar title="View Order" />
       {supperGroupIsOpen ? (
         <ExpandableSGCard
-          isOwner
-          supperGroupName="SUPPER FRIENDS"
-          supperGroupId="RHSO#1002"
-          ownerName="Zhou BaoBao"
-          priceLimit={30}
-          currentAmount={10}
-          closingTime="10.30PM"
-          numberOfUsers={10}
-          deliveryFee="10.70"
+          isOwner={supperGroup?.ownerId === localStorage.userID}
+          supperGroupName={supperGroup?.supperGroupName ?? ''}
+          supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          ownerName={supperGroup?.ownerName ?? ''}
+          priceLimit={supperGroup?.costLimit ?? 50}
+          currentAmount={supperGroup?.currentFoodCost ?? 10}
+          closingTime={unixTo12HourTime(supperGroup?.closingTime)}
+          numberOfUsers={supperGroup?.userIdList.length ?? 0}
+          deliveryFee={String(supperGroup?.additionalCost ?? '-')}
         />
       ) : (
         <SGCardWithStatus
-          supperGroupStatus={SupperGroupStatus.CLOSED}
-          location="Basketball Court"
-          collectionTime="12:30AM"
-          username="Zhou BaoBao"
-          title="f> SUPPER FRIENDS"
-          orderId="RHSO#1002"
-          buttonTeleHandle="someOwnerTele"
-          paymentMethod={[
-            { paymentMethod: PaymentMethod.CASH },
-            { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
-            { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
-            { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
-          ]}
+          restaurantLogo={supperGroup?.restaurantLogo}
+          isOwner={supperGroup?.ownerId === localStorage.userID}
+          supperGroupStatus={supperGroup?.status}
+          location={supperGroup?.location}
+          collectionTime={unixTo12HourTime(supperGroup?.estArrivalTime)}
+          username={supperGroup?.ownerName ?? '-'}
+          title={supperGroup?.supperGroupName ?? '-'}
+          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          buttonTeleHandle={supperGroup?.ownerTele}
+          paymentMethod={supperGroup?.paymentInfo}
         />
       )}
       <OrderContainer>
         <Header>My Order</Header>
         {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
       </OrderContainer>
-      <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={foodList} orderList={orderList} />
+      <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
 
       {supperGroupIsOpen ? (
         <BottomContainer>
@@ -126,9 +128,7 @@ export default function UserViewOrder() {
             <StyledText>
               <b>Subtotal</b>
             </StyledText>
-            <StyledText>
-              <b>$18.80</b>
-            </StyledText>
+            <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
           </BottomMoneyContainer>
         </BottomContainer>
       ) : (
@@ -136,18 +136,18 @@ export default function UserViewOrder() {
           <BottomContainer>
             <BottomMoneyContainer>
               <StyledText>Subtotal</StyledText>
-              <StyledText>$19.80</StyledText>
+              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
             </BottomMoneyContainer>
             <BottomMoneyContainer>
               <StyledText>Delivery Fee</StyledText>
-              <StyledText>$0.50</StyledText>
+              <StyledText>${deliveryFee.toFixed(2)}</StyledText>
             </BottomMoneyContainer>
             <BottomMoneyContainer>
               <StyledText>
                 <b>Total</b>
               </StyledText>
               <StyledText>
-                <b>$20.30</b>
+                <b>${totalFee.toFixed(2)}</b>
               </StyledText>
             </BottomMoneyContainer>
           </BottomContainer>
