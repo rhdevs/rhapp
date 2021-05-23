@@ -167,7 +167,7 @@ const DeliveryDetails = () => {
                   background: errors.location && '#ffd1d1',
                 }}
               />
-              {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+              {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
               {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
             </>
             <ButtonContainer>

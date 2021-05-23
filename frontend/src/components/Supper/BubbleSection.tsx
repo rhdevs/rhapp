@@ -51,15 +51,23 @@ const ArrowContainer = styled.div`
   font-size: 18px;
 `
 
-const ChildContainer = styled.div`
-  margin: auto;
-  width: 85vw;
-  height: fit-content;
-  padding: 0 0.5rem;
+const ChildContainer = styled.div<{ canHide?: boolean; isClicked?: boolean }>`
+  ${(props) =>
+    (props.canHide ?? false) && !props.isClicked
+      ? `
+width: 0;
+height: 0;
+display: none;
+`
+      : `margin: auto;
+width: 85vw;
+height: fit-content;
+padding: 0 0.5rem;`}
 `
 
 type Props = {
   isOpen?: boolean
+  canHide?: boolean //component can be hidden, not removed
   number: number
   title: string
   children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
@@ -106,7 +114,9 @@ export const BubbleSection = (props: Props) => {
           {arrowIcon}
         </ArrowContainer>
       </SubContainer>
-      {isClicked && <ChildContainer>{props.children}</ChildContainer>}
+      <ChildContainer canHide={props.canHide} isClicked={isClicked}>
+        {props.canHide ? props.children : isClicked && props.children}
+      </ChildContainer>
     </MainContainer>
   )
 }
