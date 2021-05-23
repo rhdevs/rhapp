@@ -38,20 +38,19 @@ const NoFoodMatchText = styled.text``
 
 export default function UserPlaceOrder() {
   const dispatch = useDispatch()
-  const { searchValue } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
-
-  const onChange = (input: string) => {
-    console.log(input)
-    dispatch(setSearchValue(input))
-  }
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getRestaurant(params.restaurantId))
   })
 
-  const { supperGroup, restaurant, isLoading } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, restaurant, isLoading, searchValue } = useSelector((state: RootState) => state.supper)
+
+  const onChange = (input: string) => {
+    console.log(input)
+    dispatch(setSearchValue(input))
+  }
 
   return (
     <Background>
@@ -75,11 +74,7 @@ export default function UserPlaceOrder() {
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
             <MenuTabs menuSections={restaurant?.allSection ?? AlAmaanStub.allSection} />
-            {searchValue ? (
-              <NoFoodMatchText>No food matched. Try something else!</NoFoodMatchText>
-            ) : (
-              <MenuSection menu={restaurant?.menu ?? AlAmaanStub.menu} />
-            )}
+            <MenuSection menu={restaurant?.menu ?? AlAmaanStub.menu} />
           </SearchBarContainer>
         </>
       )}
