@@ -12,13 +12,19 @@ const CheckIcon = styled.img`
   margin-top: -4px;
 `
 
+const ScrollableContainer = styled.div`
+  overflow: scroll;
+  width: 75vw;
+  margin: auto;
+`
+
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 75vw;
   white-space: nowrap;
-  overflow: scroll;
-  margin: auto;
+  padding: 5px 0;
+  width: fit-content;
+  margin-right: 10px;
 `
 
 type Props = {
@@ -40,45 +46,47 @@ export const RestaurantBubbles = (props: Props) => {
   }, [])
 
   return (
-    <MainContainer>
-      {props.restaurantList.map((restaurant, index) => {
-        if (selectedRestaurant === restaurant) {
-          return (
-            <StatusSymbol
-              isDisabled={props.isDisabled ?? false}
-              border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
-              color="white"
-              borderWidth="1px"
-              backgroundColor={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
-              shadow="0px 4px 4px 0px #6b6b6b"
-              key={index}
-              text={restaurant}
-              rightIcon={CHECK_ICON}
-              fontWeight={500}
-              fontSize="14px"
-              minWidth=""
-            />
-          )
-        } else {
-          return (
-            <StatusSymbol
-              isDisabled={props.isDisabled ?? false}
-              onClick={() => {
-                if (!props.isDisabled) dispatch(setSelectedRestaurant(restaurant))
-              }}
-              border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
-              color={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
-              borderWidth="1px"
-              shadow="0px 4px 4px 0px #6b6b6b"
-              key={index}
-              text={restaurant}
-              fontWeight={500}
-              fontSize="14px"
-              minWidth=""
-            />
-          )
-        }
-      })}
-    </MainContainer>
+    <ScrollableContainer>
+      <MainContainer>
+        {props.restaurantList.map((restaurant, index) => {
+          if (selectedRestaurant === restaurant) {
+            return (
+              <StatusSymbol
+                isDisabled={props.isDisabled ?? false}
+                border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
+                color="white"
+                borderWidth="1px"
+                backgroundColor={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
+                shadow="0px 4px 4px 0px #6b6b6b"
+                key={index}
+                text={restaurant}
+                rightIcon={CHECK_ICON}
+                fontWeight={500}
+                fontSize="14px"
+                minWidth=""
+              />
+            )
+          } else {
+            return (
+              <StatusSymbol
+                isDisabled={props.isDisabled ?? false}
+                onClick={() => {
+                  if (!props.isDisabled) dispatch(setSelectedRestaurant(restaurant))
+                }}
+                border={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
+                color={props.isDisabled ?? false ? SHADED_DARK_BLUE : DARK_BLUE}
+                borderWidth="1px"
+                shadow="0px 4px 4px 0px #6b6b6b"
+                key={index}
+                text={restaurant}
+                fontWeight={500}
+                fontSize="14px"
+                minWidth=""
+              />
+            )
+          }
+        })}
+      </MainContainer>
+    </ScrollableContainer>
   )
 }

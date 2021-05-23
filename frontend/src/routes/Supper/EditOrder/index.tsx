@@ -7,7 +7,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { BubbleSection } from '../../../components/Supper/BubbleSection'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
-import { PaymentInfo, Restaurants, SplitACMethod } from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, Restaurants, SplitACMethod } from '../../../store/supper/types'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { RootState } from '../../../store/types'
 import { Radio, Switch, TimePicker } from 'antd'
@@ -16,8 +16,8 @@ import Button from '../../../components/Mobile/Button'
 import moment from 'moment'
 import { setEditOrderNumber, unixTo12HourTime } from '../../../store/supper/action'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-
-//943PM
+import { RadioButton } from '../../../components/RadioButton'
+import { last } from 'lodash'
 
 const Background = styled.form`
   width: 100vw;
@@ -36,13 +36,14 @@ const StyledText = styled.text<{ topMargin?: boolean }>`
   width: 100%;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ flex?: boolean }>`
   width: 80%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
   margin: 5px auto 0 auto;
   height: 35px;
+  ${(props) => props.flex && 'display: flex;'}
 `
 
 const OISection = styled.div`
@@ -50,22 +51,9 @@ const OISection = styled.div`
   flex-direction: column;
 `
 
-const SecondSubSection = styled.div<{ topMargin?: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  ${(props) => props.topMargin && 'margin-top: 1rem'}
-`
-
 const DISection = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-const RadioButtonsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80%;
 `
 
 const ButtonContainer = styled.div`
@@ -112,6 +100,27 @@ const PriceContainer = styled.div`
   margin-bottom: 10px;
 `
 
+const StyledRadioGroup = styled(Radio.Group)`
+  width: 100%;
+`
+
+const Wrapper = styled.div<{ topMargin?: boolean; baseline?: boolean }>`
+  display: grid;
+  grid-template-columns: 50% 47%;
+  grid-gap: 3%;
+  ${(props) => props.baseline && 'align-items: baseline;'}
+  ${(props) => props.topMargin && 'margin-top: 1rem'}
+`
+
+const DeliveryFeeInput = styled.input`
+  width: 100%;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 5px auto 0 auto;
+  height: 35px;
+`
+
 type FormData = {
   supperGroupName: string
   restuarant: string
@@ -122,11 +131,19 @@ type FormData = {
   paymentMethod: PaymentInfo
 }
 
+type PaymentInfoData = Record<
+  `${PaymentMethod.GOOGLEPAY}` | `${PaymentMethod.PAYLAH}` | `${PaymentMethod.PAYNOW}`,
+  string
+>
+
 const EditOrder = () => {
   const dispatch = useDispatch()
   const [hasMaxPrice, setHasMaxPrice] = useState(false)
   const { editOrderNumber, selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
-  const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<FormData>()
+  const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<
+    FormData,
+    PaymentInfoData
+  >()
   const RedAsterisk = <RedText>*</RedText>
 
   const onChange = (time, timeString) => {
@@ -188,7 +205,6 @@ const EditOrder = () => {
             />
           )}
         />
-        {console.log(errors.supperGroupName)}
         {errors.supperGroupName?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
         <StyledText topMargin>Max Price</StyledText>
         <PriceContainer>
@@ -200,13 +216,6 @@ const EditOrder = () => {
             defaultChecked={hasMaxPrice}
           />
         </PriceContainer>
-        {/* <Controller 
-        render={({ field }) => <TextField {...field} />} 
-        name="firstName"
-        control={control} 
-        rules={ required: true } 
-        defaultValue=""
-      /> */}
         {hasMaxPrice && <MaxPriceFixer center />}
       </OISection>
     )
@@ -215,16 +224,42 @@ const EditOrder = () => {
   const deliveryInformationSection = () => {
     return (
       <DISection>
-        <SecondSubSection>
-          <StyledText>Est. Delivery Fees{RedAsterisk}</StyledText> <Input />
-        </SecondSubSection>
-        <SecondSubSection topMargin>
+        <Wrapper baseline>
+          <StyledText>Est. Delivery Fees{RedAsterisk}</StyledText>
+          <DeliveryFeeInput
+            type="number"
+            placeholder="Delivery fee"
+            name="estDeliveryFee"
+            ref={register({
+              required: true,
+              validate: (input) => input.trim().length !== 0,
+              valueAsNumber: true,
+              min: 0,
+            })}
+            style={{
+              borderColor: errors.estDeliveryFee && 'red',
+              background: errors.estDeliveryFee && '#ffd1d1',
+            }}
+          />
+        </Wrapper>
+        {errors.estDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
+        {(errors.estDeliveryFee?.type === 'min' || errors.estDeliveryFee?.type === 'validate') && (
+          <ErrorText>Invalid delivery fee!</ErrorText>
+        )}
+        <Wrapper topMargin>
           <StyledText>Split Delivery Fees{RedAsterisk}</StyledText>
-          <RadioButtonsSection>
-            <input type="radio" value={SplitACMethod.EQUAL} />
-            <input type="radio" value={SplitACMethod.PROPORTIONAL} />
-          </RadioButtonsSection>
-        </SecondSubSection>
+          <StyledRadioGroup
+            {...register('splitDeliveryFee', { required: true })}
+            onChange={(e) => {
+              clearErrors('splitDeliveryFee')
+              setValue('splitDeliveryFee', e.target.value)
+            }}
+          >
+            <RadioButton value={SplitACMethod.EQUAL} label={SplitACMethod.EQUAL} />
+            <RadioButton value={SplitACMethod.PROPORTIONAL} label={SplitACMethod.PROPORTIONAL} />
+          </StyledRadioGroup>
+        </Wrapper>
+        {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
       </DISection>
     )
   }
@@ -234,11 +269,31 @@ const EditOrder = () => {
       <PICSection>
         <StyledText>Payment Method{RedAsterisk}</StyledText>
         <PaymentMethodBubbles paymentMethods={paymentMethods} />
-        {selectedPaymentMethod
-          //   .sort((a, b) => a.localeCompare(b))
-          .map((pm, index) => {
-            return <Input key={index} placeholder={pm} />
+        {paymentMethods
+          .filter((pm) => pm !== PaymentMethod.CASH)
+          .map((pm) => {
+            return (
+              selectedPaymentMethod.includes(pm) && (
+                <Input
+                  flex
+                  type="text"
+                  ref={register({
+                    required: true,
+                    validate: (input) => input.trim().length !== 0,
+                    valueAsNumber: true,
+                    min: 0,
+                  })}
+                  style={{
+                    borderColor: errors[`${pm}`] && 'red',
+                    background: errors[`${pm}`] && '#ffd1d1',
+                  }}
+                  name={pm}
+                  placeholder={pm + ' Link'}
+                />
+              )
+            )
           })}
+        {errors[`${selectedPaymentMethod}`]}
       </PICSection>
     )
   }

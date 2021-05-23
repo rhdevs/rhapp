@@ -558,3 +558,31 @@ export const setEditOrderNumber = (editOrderNumber: number) => (dispatch: Dispat
     editOrderNumber: editOrderNumber,
   })
 }
+
+export const setPaymentInfo = (method: string, paymentMethod: PaymentMethod, link?: string) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { paymentInfo } = getState().supper
+  // let newPaymentInfo = paymentInfo
+  if (method === 'add') {
+    // if (
+    //   paymentInfo.find((pi) => {
+    //     if (pi.paymentMethod === paymentMethod) {
+    //       return { paymentMethod: paymentMethod, link: link }
+    //     }
+    //   })
+    // ) {
+    //   newPaymentInfo = {}
+    // }
+    dispatch({
+      type: SUPPER_ACTIONS.SET_PAYMENT_INFO,
+      paymentInfo: paymentInfo.concat({ paymentMethod: paymentMethod, link: link }),
+    })
+  } else {
+    dispatch({
+      type: SUPPER_ACTIONS.SET_PAYMENT_INFO,
+      paymentInfo: paymentInfo.filter((pi) => pi.paymentMethod !== paymentMethod),
+    })
+  }
+}
