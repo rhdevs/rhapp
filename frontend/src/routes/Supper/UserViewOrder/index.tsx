@@ -135,52 +135,50 @@ export default function UserViewOrder() {
             {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
           </OrderContainer>
           <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={order?.foodList} />
-        </>
-      )}
-      {supperGroupIsCancelled ? (
-        <></>
-      ) : supperGroupIsOpen ? (
-        <BottomContainer>
-          <BottomMoneyContainer>
-            <StyledText>
-              <b>Subtotal</b>
-            </StyledText>
-            <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-          </BottomMoneyContainer>
-        </BottomContainer>
-      ) : (
-        <>
-          <BottomContainer>
-            <BottomMoneyContainer>
-              <StyledText>Subtotal</StyledText>
-              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-            <BottomMoneyContainer>
-              <StyledText>Delivery Fee</StyledText>
-              <StyledText>${deliveryFee.toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-            <BottomMoneyContainer>
-              <StyledText>
-                <b>Total</b>
-              </StyledText>
-              <StyledText>
-                <b>${totalFee.toFixed(2)}</b>
-              </StyledText>
-            </BottomMoneyContainer>
-          </BottomContainer>
-          <ButtonContainer>
-            <Button
-              descriptionStyle={{ width: '100%' }}
-              stopPropagation={true}
-              defaultButtonDescription="Mark Payment Complete"
-              updatedButtonDescription="Payment Completed"
-              buttonWidth="200px"
-              onButtonClick={() => {
-                console.log('success')
-              }}
-              isFlipButton
-            />
-          </ButtonContainer>
+          {supperGroupIsOpen ? (
+            <BottomContainer>
+              <BottomMoneyContainer>
+                <StyledText>
+                  <b>Subtotal</b>
+                </StyledText>
+                <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
+              </BottomMoneyContainer>
+            </BottomContainer>
+          ) : (
+            <>
+              <BottomContainer>
+                <BottomMoneyContainer>
+                  <StyledText>Subtotal</StyledText>
+                  <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
+                </BottomMoneyContainer>
+                <BottomMoneyContainer>
+                  <StyledText>Delivery Fee</StyledText>
+                  <StyledText>${deliveryFee.toFixed(2)}</StyledText>
+                </BottomMoneyContainer>
+                <BottomMoneyContainer>
+                  <StyledText>
+                    <b>Total</b>
+                  </StyledText>
+                  <StyledText>
+                    <b>${totalFee.toFixed(2)}</b>
+                  </StyledText>
+                </BottomMoneyContainer>
+              </BottomContainer>
+              <ButtonContainer>
+                <Button
+                  descriptionStyle={{ width: '100%' }}
+                  stopPropagation={true}
+                  defaultButtonDescription="Mark Payment Complete"
+                  updatedButtonDescription="Payment Completed"
+                  buttonWidth="200px"
+                  onButtonClick={() => {
+                    console.log('success')
+                  }}
+                  isFlipButton
+                />
+              </ButtonContainer>
+            </>
+          )}
         </>
       )}
       <BottomNavBar />
