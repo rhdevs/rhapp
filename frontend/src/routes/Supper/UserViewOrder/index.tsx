@@ -1,12 +1,20 @@
-import React from 'react'
+import { Flex } from 'antd-mobile'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
+import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
+import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { foodList, orderList } from '../../../store/stubs'
+import { getSupperGroupById } from '../../../store/supper/action'
 import { PaymentMethod, SupperGroupStatus } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -57,47 +65,107 @@ const StyledText = styled.text`
   line-height: 14px;
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  margin: 23px 15px;
+  justify-content: space-around;
+`
+
 export default function UserViewOrder() {
+  const params = useParams<{ supperGroupId: string }>()
+  const dispatch = useDispatch()
+  const { supperGroup, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
+  const supperGroupIsOpen = true
+  //selectedSupperGroupStatus === SupperGroupStatus.OPEN
+
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+  }, [dispatch])
+
   return (
     <MainContainer>
-      <TopNavBar title="ViewOrder" />
-      <SGCardWithStatus
-        supperGroupStatus={SupperGroupStatus.CLOSED}
-        location="Basketball Court"
-        collectionTime="12:30AM"
-        username="Zhou BaoBao"
-        title="f> SUPPER FRIENDS"
-        orderId="RHSO#1002"
-        buttonTeleHandle="someOwnerTele"
-        paymentMethod={[
-          { paymentMethod: PaymentMethod.CASH },
-          { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
-          { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
-          { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
-        ]}
-      />
+      <TopNavBar title="View Order" />
+      {supperGroupIsOpen ? (
+        <ExpandableSGCard
+          isOwner
+          supperGroupName="SUPPER FRIENDS"
+          supperGroupId="RHSO#1002"
+          ownerName="Zhou BaoBao"
+          priceLimit={30}
+          currentAmount={10}
+          closingTime="10.30PM"
+          numberOfUsers={10}
+          deliveryFee="10.70"
+        />
+      ) : (
+        <SGCardWithStatus
+          supperGroupStatus={SupperGroupStatus.CLOSED}
+          location="Basketball Court"
+          collectionTime="12:30AM"
+          username="Zhou BaoBao"
+          title="f> SUPPER FRIENDS"
+          orderId="RHSO#1002"
+          buttonTeleHandle="someOwnerTele"
+          paymentMethod={[
+            { paymentMethod: PaymentMethod.CASH },
+            { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
+            { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
+            { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
+          ]}
+        />
+      )}
       <OrderContainer>
         <Header>My Order</Header>
-        <OrderSummaryCard margin="5px 23px" orderByUser foodList={foodList} orderList={orderList} />
+        {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
       </OrderContainer>
-      <BottomContainer>
-        <BottomMoneyContainer>
-          <StyledText>Subtotal</StyledText>
-          <StyledText>$19.80</StyledText>
-        </BottomMoneyContainer>
-        <BottomMoneyContainer>
-          <StyledText>Delivery Fee</StyledText>
-          <StyledText>$0.50</StyledText>
-        </BottomMoneyContainer>
-        <BottomMoneyContainer>
-          <StyledText>
-            <b>Total</b>
-          </StyledText>
-          <StyledText>
-            <b>$20.30</b>
-          </StyledText>
-        </BottomMoneyContainer>
-      </BottomContainer>
+      <OrderSummaryCard margin="5px 23px" isEditable={supperGroupIsOpen} foodList={foodList} orderList={orderList} />
+
+      {supperGroupIsOpen ? (
+        <BottomContainer>
+          <BottomMoneyContainer>
+            <StyledText>
+              <b>Subtotal</b>
+            </StyledText>
+            <StyledText>
+              <b>$18.80</b>
+            </StyledText>
+          </BottomMoneyContainer>
+        </BottomContainer>
+      ) : (
+        <>
+          <BottomContainer>
+            <BottomMoneyContainer>
+              <StyledText>Subtotal</StyledText>
+              <StyledText>$19.80</StyledText>
+            </BottomMoneyContainer>
+            <BottomMoneyContainer>
+              <StyledText>Delivery Fee</StyledText>
+              <StyledText>$0.50</StyledText>
+            </BottomMoneyContainer>
+            <BottomMoneyContainer>
+              <StyledText>
+                <b>Total</b>
+              </StyledText>
+              <StyledText>
+                <b>$20.30</b>
+              </StyledText>
+            </BottomMoneyContainer>
+          </BottomContainer>
+          <ButtonContainer>
+            <Button
+              descriptionStyle={{ width: '100%' }}
+              stopPropagation={true}
+              defaultButtonDescription="Mark Payment Complete"
+              updatedButtonDescription="Payment Completed"
+              buttonWidth="200px"
+              onButtonClick={() => {
+                console.log('success')
+              }}
+              isFlipButton
+            />
+          </ButtonContainer>
+        </>
+      )}
       <BottomNavBar />
     </MainContainer>
   )
