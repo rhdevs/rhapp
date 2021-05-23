@@ -70,11 +70,11 @@ export default function UserPlaceOrder() {
             numberOfUsers={supperGroup?.userIdList.length ?? 0}
             deliveryFee={String(supperGroup?.additionalCost ?? '-')}
           />
-          <Restaurant>{restaurant?.name ?? AlAmaanStub.name}</Restaurant>
+          <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
-            <MenuTabs menuSections={restaurant?.allSection ?? AlAmaanStub.allSection} />
-            <MenuSection menu={restaurant?.menu ?? AlAmaanStub.menu} />
+            <MenuTabs menuSections={restaurant?.allSection} />
+            <MenuSection menu={restaurant?.menu} />
           </SearchBarContainer>
         </>
       )}

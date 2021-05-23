@@ -64,7 +64,7 @@ const TextContainer = styled(Radio.Button)`
 `
 
 type Props = {
-  menuSections: string[]
+  menuSections?: string[]
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -72,7 +72,6 @@ export const MenuTabs = (props: Props) => {
   const dispatch = useDispatch()
 
   let menuTab = ''
-  const menuSections = ['All'].concat(props.menuSections)
 
   useEffect(() => {
     dispatch(setMenuTabKey(menuTab))
@@ -81,19 +80,23 @@ export const MenuTabs = (props: Props) => {
   return (
     <MainContainer>
       <ToggleTabsContainer>
-        {menuSections.map((section, idx) => (
-          <TextContainer
-            key={idx}
-            value={section}
-            onClick={() => {
-              menuTab = section
-              console.log(section)
-              dispatch(setMenuTabKey(section))
-            }}
-          >
-            {section}
-          </TextContainer>
-        ))}
+        {props.menuSections ? (
+          ['All'].concat(props.menuSections).map((section, idx) => (
+            <TextContainer
+              key={idx}
+              value={section}
+              onClick={() => {
+                menuTab = section
+                console.log(section)
+                dispatch(setMenuTabKey(section))
+              }}
+            >
+              {section}
+            </TextContainer>
+          ))
+        ) : (
+          <></>
+        )}
       </ToggleTabsContainer>
     </MainContainer>
   )
