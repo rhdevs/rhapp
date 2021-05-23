@@ -74,7 +74,7 @@ export default function UserViewOrder() {
   const dispatch = useDispatch()
   const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
   const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
-  const supperGroupIsCancelled = true // selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
+  const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
