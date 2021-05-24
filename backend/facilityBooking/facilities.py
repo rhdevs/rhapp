@@ -954,6 +954,8 @@ def user_order(supperGroupId, userID):
         for food in data["foodList"]:
             # rename _id field to foodId and unbox mongo object
             food["foodId"] = str(food.pop('_id'))
+            food["restaurantId"] = str(food.pop('restaurantId'))
+            food["foodMenuId"] = str(food.pop('foodMenuId'))
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
