@@ -2,8 +2,9 @@ import { Input } from 'antd'
 import React from 'react'
 import styled from 'styled-components'
 import Button from '../../../components/Mobile/Button'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { foodList, orderList } from '../../../store/stubs'
+import { foodList } from '../../../store/stubs'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -14,14 +15,17 @@ const MainContainer = styled.div`
 `
 
 const NumberContainer = styled.div`
-  margin: 25px 35px;
+  margin: 5px 35px 15px 35px;
   display: flex;
   flex-direction: row;
+  align-items: baseline;
   justify-content: space-between;
 `
 const FieldHeader = styled.text`
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 500;
+  font-size: 15px;
+  width: 65%;
+  padding-right: 5px;
 `
 
 const InputBox = styled(Input)`
@@ -80,6 +84,7 @@ const ButtonContainer = styled.div`
 export default function ConfirmOrder() {
   return (
     <MainContainer>
+      <TopNavBar title="Confirm Order" />
       <NumberContainer>
         <FieldHeader>Phone Number</FieldHeader>
         <InputBox placeholder="Phone Number" />
@@ -87,7 +92,7 @@ export default function ConfirmOrder() {
       <OrderContainer>
         <Header>My Order</Header>
       </OrderContainer>
-      <OrderSummaryCard margin="5px 23px" isEditable foodList={foodList} />
+      <OrderSummaryCard margin="5px 23px" foodList={foodList} />
       <BottomContainer>
         <BottomMoneyContainer>
           <StyledText>
@@ -101,7 +106,7 @@ export default function ConfirmOrder() {
           descriptionStyle={{ width: '100%' }}
           stopPropagation={true}
           defaultButtonDescription="Confirm Order"
-          buttonWidth="180px"
+          buttonWidth="160px"
           onButtonClick={() => {
             console.log('success')
           }}
