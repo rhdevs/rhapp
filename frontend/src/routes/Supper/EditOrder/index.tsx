@@ -1,23 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
+import moment from 'moment'
 import styled from 'styled-components'
 
+import { Radio, Switch, TimePicker } from 'antd'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import Button from '../../../components/Mobile/Button'
+import { RadioButton } from '../../../components/RadioButton'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { BubbleSection } from '../../../components/Supper/BubbleSection'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
-import { PaymentInfo, PaymentMethod, Restaurants, SplitACMethod } from '../../../store/supper/types'
-import { paymentMethods, restaurantList } from '../../../store/stubs'
-import { RootState } from '../../../store/types'
-import { Radio, Switch, TimePicker } from 'antd'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
-import Button from '../../../components/Mobile/Button'
-import moment from 'moment'
 import { setEditOrderNumber, unixTo12HourTime } from '../../../store/supper/action'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { RadioButton } from '../../../components/RadioButton'
-import { last } from 'lodash'
+import { PaymentMethod, Restaurants, SplitACMethod } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
+import { paymentMethods, restaurantList } from '../../../store/stubs'
 
 const Background = styled.form`
   width: 100vw;
@@ -128,17 +127,15 @@ type FormData = {
   maxPrice: number
   estDeliveryFee: number
   splitDeliveryFee: SplitACMethod
-  paymentMethod: PaymentInfo
+  paymentMethod: number
 }
 
-type PaymentInfoData = Record<
-  `${PaymentMethod.GOOGLEPAY}` | `${PaymentMethod.PAYLAH}` | `${PaymentMethod.PAYNOW}`,
-  string
->
+type PaymentInfoData = Record<string, string>
 
 const EditOrder = () => {
   const dispatch = useDispatch()
   const [hasMaxPrice, setHasMaxPrice] = useState(false)
+  const [hasSubmit, setHasSubmit] = useState(false)
   const { editOrderNumber, selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
   const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<
     FormData,
@@ -205,7 +202,7 @@ const EditOrder = () => {
             />
           )}
         />
-        {errors.supperGroupName?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
+        {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
         <StyledText topMargin>Max Price</StyledText>
         <PriceContainer>
           Set maximum total price
@@ -264,11 +261,13 @@ const EditOrder = () => {
     )
   }
 
+  let pmError = 0
+
   const paymentInformationSection = () => {
     return (
       <PICSection>
         <StyledText>Payment Method{RedAsterisk}</StyledText>
-        <PaymentMethodBubbles paymentMethods={paymentMethods} />
+        <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
           .map((pm) => {
@@ -277,38 +276,64 @@ const EditOrder = () => {
                 <Input
                   flex
                   type="text"
+                  name={pm}
                   ref={register({
                     required: true,
                     validate: (input) => input.trim().length !== 0,
-                    valueAsNumber: true,
-                    min: 0,
                   })}
                   style={{
                     borderColor: errors[`${pm}`] && 'red',
                     background: errors[`${pm}`] && '#ffd1d1',
                   }}
-                  name={pm}
                   placeholder={pm + ' Link'}
                 />
               )
             )
           })}
-        {errors[`${selectedPaymentMethod}`]}
+        {selectedPaymentMethod.filter((pm) => {
+          if (errors[`${pm}`]) {
+            return pmError++
+          }
+        })}
+        {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
+        {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
       </PICSection>
     )
   }
 
+  useEffect(() => {
+    if (hasSubmit) {
+      if (selectedPaymentMethod.length === 0 || pmError !== 0) {
+        console.log('error!', errors)
+        setValue('paymentMethod', undefined)
+        setError('paymentMethod', { type: 'required' })
+      } else {
+        pmError = 0
+        clearErrors('paymentMethod')
+        setValue('paymentMethod', selectedPaymentMethod.length)
+      }
+    }
+  }, [selectedPaymentMethod, hasSubmit])
+
   const onSubmit = (e: { preventDefault: () => void }) => {
+    setHasSubmit(true)
     e.preventDefault()
-    console.log(errors.supperGroupName)
     if (errors.supperGroupName || errors.closingTime) {
       dispatch(setEditOrderNumber(1))
-      console.log('HELLLOO')
+      return
+    }
+    if (errors.estDeliveryFee || errors.splitDeliveryFee) {
+      dispatch(setEditOrderNumber(2))
+      return
+    }
+    if (errors.paymentMethod) {
+      dispatch(setEditOrderNumber(3))
+      return
     }
     console.log(watch())
     console.log(errors)
-    console.log('Form was submitted!')
     handleSubmit((data: FormData) => {
+      console.log('Form was submitted!')
       console.log(data)
     })()
   }
@@ -336,7 +361,6 @@ const EditOrder = () => {
             fontWeight: 200,
             fontSize: '17px',
           }}
-          // onButtonClick={() => onSubmit}
           isFlipButton={false}
         />
       </ButtonContainer>
