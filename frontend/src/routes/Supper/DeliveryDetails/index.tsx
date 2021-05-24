@@ -83,6 +83,7 @@ const CancellationBox = styled.div`
 const CancellationInputBox = styled.div`
   display: flex;
   justify-content: space-around;
+  flex-direction: column;
 
   textarea.ant-input {
     height: 80px;
@@ -119,6 +120,7 @@ const RedText = styled.text`
 
 type FormValues = {
   location: string
+  cancelReason: string
 }
 
 const DeliveryDetails = () => {
@@ -146,6 +148,7 @@ const DeliveryDetails = () => {
       //TODO: Update status, delivery time, delivery duration (estArrivalTime, deliveryTime) and location
       console.log(selectedSupperGroupStatus + ',' + estArrivalTime + ',' + deliveryTime + ',' + data.location)
       console.log(errors)
+      //TODO: Update comments when status === cancelled
     })()
   }
 
@@ -176,7 +179,16 @@ const DeliveryDetails = () => {
               <CancellationBox>
                 <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
                 <CancellationInputBox>
-                  <CancellationInput placeholder="e.g. Driver cancelled." />
+                  <CancellationInput
+                    placeholder="e.g. Driver cancelled."
+                    name="cancelReason"
+                    {...register('cancelReason', { required: true, validate: (input) => input.trim().length !== 0 })}
+                    style={{
+                      borderColor: errors.cancelReason && 'red',
+                      background: errors.cancelReason && '#ffd1d1',
+                    }}
+                  />
+                  {errors.cancelReason?.type && <ErrorText>This is required!</ErrorText>}
                 </CancellationInputBox>
               </CancellationBox>
             ) : (
