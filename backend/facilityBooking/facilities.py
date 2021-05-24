@@ -379,6 +379,14 @@ def supper_group(supperGroupId):
                         'userIdList': {'$concatArrays': '$orderList.userID'}
                     }
                 },
+                {
+                    '$lookup': {
+                        'from': 'Profiles',
+                        'localField': 'userIdList',
+                        'foreignField': 'userId',
+                        'as': 'userList'
+                    }
+                },
                 {'$project': {'_id': 0, 'restaurant': 0, 'orderList._id': 0,
                               'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
                               }
@@ -401,6 +409,14 @@ def supper_group(supperGroupId):
                         if food['_id'] in order['foodIds']:
                             order['foodList'].append(food)
                             order['foodIds'].remove(food['_id'])
+
+                for user in data['userList']:
+                    user['_id'] = str(user['_id'])
+                    for order in data['orderList']:
+                        if user['userID'] == order['userID']:
+                            order['user'] = user
+
+                data.pop('userList')
 
                 data.pop('foodList')
                 for order in data['orderList']:
