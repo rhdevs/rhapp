@@ -15,12 +15,18 @@ export type Food = {
   quantity: number
   foodMenu: FoodMenu
   foodPrice?: number
+  cancelAction?: CancelAction
 }
 
 export type Option = {
   name: string
   isSelected: boolean
   price: number
+}
+
+export enum CancelAction {
+  contact = 'contact',
+  cancel = 'cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -72,8 +78,9 @@ export type SupperGroup = {
   numOrders: number
   ownerId: string
   ownerName: string
+  ownerTele: string
   paymentInfo: PaymentInfo[]
-  restaurantLogo: string
+  restaurantLogo?: string
   restaurantName: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
@@ -83,6 +90,7 @@ export type SupperGroup = {
   userIdList: string[]
   orderList?: Order[]
   deliveryDuration?: number
+  estArrivalTime?: number
   closingTime: number
 }
 
@@ -90,6 +98,7 @@ export type CollatedOrder = {
   supperGroupId: string
   ownerId: string
   collatedOrderList: Food[]
+  price?: number
 }
 
 export enum SplitACMethod {
@@ -146,6 +155,10 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  SET_MENU_TAB_KEY = 'SUPPER_ACTIONS.SET_MENU_TAB_KEY',
+  SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
+  SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
+  SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
 }
 
 type SetIsLoading = {
@@ -283,6 +296,26 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type SetMenuTabKey = {
+  type: typeof SUPPER_ACTIONS.SET_MENU_TAB_KEY
+  menuTabKey: string
+}
+
+type SetExpandAll = {
+  type: typeof SUPPER_ACTIONS.SET_EXPAND_ALL
+  isExpandAll: boolean
+}
+
+type SetPaymentExpandedCount = {
+  type: typeof SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT
+  expandedCount: number
+}
+
+type SetEstimatedArrivalTime = {
+  type: typeof SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME
+  estArrivalTime: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -311,3 +344,7 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetMenuTabKey
+  | SetExpandAll
+  | SetPaymentExpandedCount
+  | SetEstimatedArrivalTime

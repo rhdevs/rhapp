@@ -1,7 +1,18 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
-import { Order, PaymentMethod, SupperGroupStatus, FoodMenu, SupperGroup, SplitACMethod, Food } from './supper/types'
+import {
+  Order,
+  PaymentMethod,
+  SupperGroupStatus,
+  FoodMenu,
+  SupperGroup,
+  SplitACMethod,
+  Restaurant,
+  CollatedOrder,
+  CancelAction,
+  Food,
+} from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -194,12 +205,14 @@ export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    cancelAction: CancelAction.cancel,
     quantity: 1,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
       section: 'Value Meal',
       foodMenuName: 'McGriddles with Egg Meal',
+      section: 'Value Meal',
       price: 6.7,
       custom: [
         {
@@ -230,11 +243,13 @@ export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     quantity: 2,
+    cancelAction: CancelAction.contact,
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
       section: 'Value Meal',
       foodMenuName: 'McGriddles with Egg Meal',
+      section: 'Value Meal',
       price: 6.7,
       custom: [
         {
@@ -315,35 +330,26 @@ export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, Paym
 
 export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
 
-export const supperGroupStatusList = [SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED, SupperGroupStatus.ORDERED]
+export const supperGroupStatusList = [SupperGroupStatus.ORDERED, SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED]
 // foodMenuId: string
 // restaurantId: string
 // foodMenuName: string
 // price: number
 // custom?: Custom[]
 export const foodMenuStub: FoodMenu[] = [
-  { foodMenuId: '1', restaurantId: '1', section: 'Value Meal', foodMenuName: 'McSpicy Meal', price: 7.9 },
-  { foodMenuId: '2', restaurantId: '1', section: 'Value Meal', foodMenuName: 'Filet-O-Fish Meal', price: 5 },
+  { foodMenuId: 'msm', restaurantId: 'mdn', foodMenuName: 'McSpicy Meal', section: 'Value Meals', price: 7.9 },
+  { foodMenuId: 'fofm', restaurantId: 'mdn', foodMenuName: 'Filet-O-Fish Meal', section: 'Value Meals', price: 5 },
+  {
+    foodMenuId: 'snm',
+    restaurantId: 'mdn',
+    foodMenuName: 'Spicy McNuggets Meal',
+    section: 'Upsized Value Meals',
+    price: 7.5,
+  },
+  { foodMenuId: 'ccc', restaurantId: 'mdn', foodMenuName: 'Corn', section: 'Ala Carte', price: 3.0 },
+  { foodMenuId: 'mcm', restaurantId: 'mdn', foodMenuName: 'Mc Muffin', section: 'Breakfast', price: 3.0 },
 ]
 
-// supperGroupId: string
-//   supperGroupName: string
-//   ownerId: string
-//   ownerName: string
-//   paymentInfo: PaymentInfo[]
-//   restaurantName: string
-//   allUsers: User[]
-//   orderList: Order[]
-//   additionalCost?: number //ie GST, delivery fee
-//   splitAdditionalCost: SplitACMethod
-//   currentFoodCost: number //non inclusive of additionalCost
-//   costLimit: number
-//   status: SupperGroupStatus
-//   location: string //collection point
-//   deliveryDuration: number
-//   arrivalTime: number // = creationTime + estimated delivery duration
-//   closingTime: string
-//   createdAt:
 export const supperGroupStub: SupperGroup = {
   additionalCost: 3,
   comments: 'pls feed me',
@@ -353,12 +359,12 @@ export const supperGroupStub: SupperGroup = {
   location: 'Blk 5 Hard Court',
   numOrders: 2,
   ownerId: 'A1234567B',
+  ownerTele: 'leongggg',
   ownerName: 'Leong',
   paymentInfo: [
-    { paymentMethod: PaymentMethod.PAYLAH, link: 'asdasd' },
-    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'asdzxcasd' },
+    { paymentMethod: PaymentMethod.PAYLAH, link: 'http://www.google.com' },
+    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'www.google.com' },
   ],
-  restaurantLogo: 'asdfghjkl',
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
   status: SupperGroupStatus.OPEN,
@@ -367,5 +373,123 @@ export const supperGroupStub: SupperGroup = {
   totalPrice: 15.7,
   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
   closingTime: 10000000,
+  estArrivalTime: 100453488,
   orderList: orderList,
+}
+
+// Restaurant = {
+//   restaurantId: string
+//   name: string
+//   restaurantLogo: string
+//   menu: FoodMenu[]
+//   allSection: string[]
+// }
+// export type FoodMenu = {
+//   foodMenuId: string
+//   restaurantId: string
+//   foodMenuName: string
+//   section: string
+//   price: number
+//   custom?: Custom[]
+// }
+
+export const AlAmaanStub: Restaurant = {
+  restaurantId: 'alalalala',
+  name: "Al Amaan's",
+  restaurantLogo: 'logo',
+  menu: [
+    { foodMenuId: 'tyn', restaurantId: 'alamaan', foodMenuName: 'Tomyum Noodles', section: 'Thai Kitchen', price: 6.5 },
+    {
+      foodMenuId: 'bsn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Bandung Soup Noodles',
+      section: 'Thai Kitchen',
+      price: 4.5,
+    },
+    {
+      foodMenuId: 'TSSC',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Thai Sweet and Spicy Chicken',
+      section: 'Thai Kitchen',
+      price: 4.0,
+    },
+    {
+      foodMenuId: 'hkn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Pad Thai',
+      section: 'Thai Kitchen',
+      price: 5.5,
+    },
+    {
+      foodMenuId: 'gn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Garlic Naan',
+      section: 'Indian Kitchen',
+      price: 2.4,
+    },
+    {
+      foodMenuId: 'fnc',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Fish & Chips',
+      section: 'Western Kitchen',
+      price: 5.5,
+    },
+  ],
+  allSection: ['Thai Kitchen', 'Indian Kitchen', 'Western Kitchen'],
+}
+
+export const KimlyStub: Restaurant = {
+  restaurantId: 'kkkkkk',
+  name: 'Kimly Dim Sum',
+  restaurantLogo: 'logo',
+  menu: [
+    { foodMenuId: 'bkb', restaurantId: 'kimly', foodMenuName: 'Bak Kwa Pau', section: 'Mains', price: 1.2 },
+    {
+      foodMenuId: 'bpp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Big Pau (Pork)',
+      section: 'Mains',
+      price: 1.9,
+    },
+    {
+      foodMenuId: 'csp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Char Siew Pau (Mini)',
+      section: 'Mains',
+      price: 1.3,
+    },
+    {
+      foodMenuId: 'tp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Teh Ping',
+      section: 'Drinks',
+      price: 1.5,
+    },
+    {
+      foodMenuId: 'bd',
+      restaurantId: 'kimly',
+      foodMenuName: 'Bandung',
+      section: 'Drinks',
+      price: 2.0,
+    },
+  ],
+  allSection: ['Mains', 'Drinks'],
+}
+
+export const McDonaldstub: Restaurant = {
+  restaurantId: 'mdmdmdmd',
+  name: "McDonald's",
+  restaurantLogo: 'logo',
+  menu: foodMenuStub,
+  allSection: ['Value Meals', 'Upsized Value Meals', 'Ala Carte', 'Breakfast'],
+}
+export const supperGroupId = '1'
+
+// supperGroupId: string;
+// ownerId: string;
+// collatedOrderList: Food[];
+export const dummyCollatedOrderList: CollatedOrder = {
+  supperGroupId: '1',
+  ownerId: 'A1234567B',
+  collatedOrderList: foodList,
 }

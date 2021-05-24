@@ -207,7 +207,7 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: resp.data,
+        collatedOrder: { ...resp.data, price: 0.0 },
       })
     })
     .catch((err) => {
@@ -479,7 +479,7 @@ export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: 
   })
 }
 
-export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus) => (
+export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus | null) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
@@ -495,7 +495,7 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
-export const unixTo12HourTime = (unixDate: number) => {
+export const unixTo12HourTime = (unixDate?: number) => {
   if (!unixDate) {
     return '-'
   }
@@ -513,7 +513,10 @@ export const unixTo12HourTime = (unixDate: number) => {
   return formattedTime
 }
 
-export const readableSupperGroupId = (supperGroupId: number) => {
+export const readableSupperGroupId = (supperGroupId?: number) => {
+  if (!supperGroupId) {
+    return 'RHSO#'
+  }
   const readableSupperGroupId = '0000000000' + supperGroupId
   return String('RHSO#' + readableSupperGroupId.substr(-4))
 }
@@ -525,5 +528,33 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   dispatch({
     type: SUPPER_ACTIONS.SET_TABS_KEY,
     tabsKey: key,
+  })
+}
+
+export const setMenuTabKey = (section: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_MENU_TAB_KEY,
+    menuTabKey: section,
+  })
+}
+
+export const setExpandAll = (isExpandAll: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPAND_ALL,
+    isExpandAll: isExpandAll,
+  })
+}
+
+export const setPaymentExpandedCount = (expandedCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT,
+    expandedCount: expandedCount,
+  })
+}
+
+export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME,
+    estArrivalTime: unixTo12HourTime(estArrivalTime),
   })
 }
