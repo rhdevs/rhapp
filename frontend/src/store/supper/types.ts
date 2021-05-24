@@ -163,7 +163,6 @@ export enum SUPPER_ACTIONS {
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
   SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
-  SET_PAYMENT_INFO = 'SUPPER_ACTIONS.SET_PAYMENT_INFO',
 }
 
 type SetIsLoading = {
@@ -321,11 +320,6 @@ type SetEditOrderNumber = {
   editOrderNumber: number
 }
 
-type SetPaymentInfo = {
-  type: typeof SUPPER_ACTIONS.SET_PAYMENT_INFO
-  paymentInfo: PaymentInfo[]
-}
-
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -358,4 +352,3 @@ export type ActionTypes =
   | SetPaymentExpandedCount
   | SetEstimatedArrivalTime
   | SetEditOrderNumber
-  | SetPaymentInfo
