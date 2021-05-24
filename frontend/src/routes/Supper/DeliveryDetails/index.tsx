@@ -11,6 +11,7 @@ import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSette
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
 import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const Background = styled.div`
@@ -74,6 +75,26 @@ const Input = styled.input`
   height: 35px;
 `
 
+const CancellationBox = styled.div`
+  margin: 25px 0px 10px 0px;
+`
+
+const CancellationInputBox = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
+
+const CancellationInput = styled.input`
+  width: 90%;
+  border-radius: 15px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 10px auto;
+  height: 80px;
+  font-size: 14px;
+  font-weight: 200px;
+`
+
 const ErrorText = styled.p`
   margin: 0;
   color: #ff837a;
@@ -109,6 +130,7 @@ const DeliveryDetails = () => {
   const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
+  const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -146,30 +168,42 @@ const DeliveryDetails = () => {
             <StyledSGIdText>{readableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
-            <DeliveryTimeContainer>
-              <StyledText>Delivery Time</StyledText>
-              <StyledTimeText>{estArrivalTime}</StyledTimeText>
-            </DeliveryTimeContainer>
-            <DeliveryTimeSetter center default={supperGroup?.deliveryDuration ?? 20} />
-            <br />
-            <StyledText>Collection Point {RedAsterisk}</StyledText>
-            <>
-              <Input
-                type="text"
-                placeholder="Enter Location"
-                name="location"
-                ref={register({
-                  required: true,
-                  validate: (input) => input.trim().length !== 0,
-                })}
-                style={{
-                  borderColor: errors.location && 'red',
-                  background: errors.location && '#ffd1d1',
-                }}
-              />
-              {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-            </>
+
+            {supperGroupIsCancelled ? (
+              <CancellationBox>
+                <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
+                <CancellationInputBox>
+                  <CancellationInput placeholder="e.g. Driver cancelled." />
+                </CancellationInputBox>
+              </CancellationBox>
+            ) : (
+              <>
+                <DeliveryTimeContainer>
+                  <StyledText>Delivery Time</StyledText>
+                  <StyledTimeText>{estArrivalTime}</StyledTimeText>
+                </DeliveryTimeContainer>
+                <DeliveryTimeSetter center default={supperGroup?.deliveryDuration ?? 20} />
+                <br />
+                <StyledText>Collection Point {RedAsterisk}</StyledText>
+                <>
+                  <Input
+                    type="text"
+                    placeholder="Enter Location"
+                    name="location"
+                    ref={register({
+                      required: true,
+                      validate: (input) => input.trim().length !== 0,
+                    })}
+                    style={{
+                      borderColor: errors.location && 'red',
+                      background: errors.location && '#ffd1d1',
+                    }}
+                  />
+                  {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+                  {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+                </>
+              </>
+            )}
             <ButtonContainer>
               <Button
                 stopPropagation
