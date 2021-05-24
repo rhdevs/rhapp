@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 
+import { Input } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
@@ -66,7 +67,7 @@ const ButtonContainer = styled.div`
   margin: 20px auto 10px auto;
 `
 
-const Input = styled.input`
+const InputText = styled.input`
   width: 60%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
@@ -82,17 +83,19 @@ const CancellationBox = styled.div`
 const CancellationInputBox = styled.div`
   display: flex;
   justify-content: space-around;
+
+  textarea.ant-input {
+    height: 80px;
+  }
 `
 
-const CancellationInput = styled.input`
+const CancellationInput = styled(Input.TextArea)`
   width: 90%;
   border-radius: 15px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
   margin: 10px auto;
-  height: 80px;
   font-size: 14px;
-  font-weight: 200px;
 `
 
 const ErrorText = styled.p`
@@ -186,7 +189,7 @@ const DeliveryDetails = () => {
                 <br />
                 <StyledText>Collection Point {RedAsterisk}</StyledText>
                 <>
-                  <Input
+                  <InputText
                     type="text"
                     placeholder="Enter Location"
                     name="location"

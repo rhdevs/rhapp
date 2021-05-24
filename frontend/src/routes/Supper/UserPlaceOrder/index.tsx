@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -9,7 +9,6 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
-import { AlAmaanStub } from '../../../store/stubs'
 import {
   getRestaurant,
   getSupperGroupById,
@@ -34,7 +33,6 @@ const Restaurant = styled.text`
   font-size: 24px;
   margin-left: 30px;
 `
-const NoFoodMatchText = styled.text``
 
 export default function UserPlaceOrder() {
   const dispatch = useDispatch()
