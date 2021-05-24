@@ -383,7 +383,7 @@ def supper_group(supperGroupId):
                     '$lookup': {
                         'from': 'Profiles',
                         'localField': 'userIdList',
-                        'foreignField': 'userId',
+                        'foreignField': 'userID',
                         'as': 'userList'
                     }
                 },
@@ -503,6 +503,14 @@ def get_order(orderId):
                         'as': 'foodList'
                     }
                 },
+                {
+                    '$lookup': {
+                        'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'user'
+                    }
+                },
                 {'$project': {'foodIds': 0}}
             ]
 
@@ -513,6 +521,7 @@ def get_order(orderId):
                 data = item
 
             data['orderId'] = str(data.pop('_id'))
+            data['user']['_id'] = str(data['user']['_id'])
 
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
@@ -738,6 +747,14 @@ def user_order_history(userID):
                     'as': 'foodList'
                 }
             },
+            # {
+            #     '$lookup': {
+            #         'from': 'Profiles',
+            #         'localField': 'userID',
+            #         'foreignField': 'userID',
+            #         'as': 'userList'
+            #     }
+            # },
             {'$project': {'foodIds': 0}}
         ]
 
@@ -746,8 +763,12 @@ def user_order_history(userID):
         data = []
         for order in orderList:
             order['orderId'] = str(order.pop('_id'))
+            # order['user']['_id'] = str(order['user']['_id'])
             for food in order["foodList"]:
                 food["foodId"] = str(food.pop('_id'))
+                food["restaurantId"] = str(food.pop('restaurantId'))
+                food["foodMenuId"] = str(food.pop('foodMenuId'))
+
             data.append(order)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
@@ -938,6 +959,14 @@ def user_order(supperGroupId, userID):
                     'localField': 'foodIds',
                     'foreignField': '_id',
                     'as': 'foodList'
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'Profiles',
+                    'localField': userID,
+                    'foreignField': 'userID',
+                    'as': 'user'
                 }
             },
             {'$project': {'foodIds': 0}}
