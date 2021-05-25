@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
+import InputRow from '../../../components/Mobile/InputRow'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { foodList } from '../../../store/stubs'
@@ -34,10 +35,10 @@ const FieldHeader = styled.text`
   padding-right: 5px;
 `
 
-const InputBox = styled(Input)`
-  &.ant-input {
-    border-radius: 25px;
-  }
+const InputBox = styled.input`
+  border-radius: 25px;
+  padding: 2px 10px;
+  width: 75%;
 `
 
 const OrderContainer = styled.div`
@@ -138,7 +139,7 @@ export default function ConfirmOrder() {
         <>
           <NumberContainer>
             <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
-            <InputBox
+            <InputRow
               placeholder="Phone Number"
               {...register('number', { required: true, minLength: 8, maxLength: 8, pattern: /[0-9]+/i })}
               style={{
