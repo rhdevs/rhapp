@@ -154,10 +154,6 @@ const EditOrder = () => {
     PaymentInfoData
   >({
     mode: 'all',
-    defaultValues: {
-      closingTime: supperGroup?.closingTime,
-      maxPrice: supperGroup?.costLimit,
-    },
     shouldUnregister: false,
   })
 
