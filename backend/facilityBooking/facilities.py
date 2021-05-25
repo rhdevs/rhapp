@@ -511,6 +511,7 @@ def get_order(orderId):
                         'as': 'user'
                     }
                 },
+                {'$unwind': {'path': '$user'}},
                 {'$project': {'foodIds': 0}}
             ]
 
@@ -519,7 +520,7 @@ def get_order(orderId):
             # Only 1 item in temp, can only access it like this otherwise its a mongo array object
             for item in temp:
                 data = item
-            
+
             data['orderId'] = str(data.pop('_id'))
             print(data)
             # data['user']['_id'] = str(data['user']['_id'])
@@ -529,8 +530,8 @@ def get_order(orderId):
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
                 food["foodId"] = str(food.pop('_id'))
-                food["restaurantId"] = str(food.pop('restaurantId'))
                 food["foodMenuId"] = str(food.pop('foodMenuId'))
+                food["restaurantId"] = str(food.pop('restaurantId'))
 
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
@@ -969,11 +970,12 @@ def user_order(supperGroupId, userID):
             {
                 '$lookup': {
                     'from': 'Profiles',
-                    'localField': userID,
+                    'localField': 'userID',
                     'foreignField': 'userID',
                     'as': 'user'
                 }
             },
+            {'$unwind': {'path': '$user'}},
             {'$project': {'foodIds': 0}}
         ]
 
@@ -984,6 +986,7 @@ def user_order(supperGroupId, userID):
             data = item
 
         data['orderId'] = str(data.pop('_id'))
+        data['user']['_id'] = str(data['user']['_id'])
 
         for food in data["foodList"]:
             # rename _id field to foodId and unbox mongo object
