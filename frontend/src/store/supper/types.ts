@@ -11,11 +11,15 @@ export type User = {
 
 export type Food = {
   foodId: string
+  restaurantId: string
+  foodMenuId: string
+  foodName: string
   comments?: string
   quantity: number
-  foodMenu: FoodMenu
-  foodPrice?: number
+  price: number
+  foodPrice: number //with add ons
   cancelAction?: CancelAction
+  custom?: Custom[]
 }
 
 export type Option = {
@@ -93,7 +97,6 @@ export type SupperGroup = {
   totalPrice: number
   userIdList: string[]
   orderList?: Order[]
-  deliveryDuration?: number
   estArrivalTime?: number
   closingTime: number
 }

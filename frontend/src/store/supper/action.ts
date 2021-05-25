@@ -26,17 +26,18 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
+  await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: resp.data,
+        supperGroup: { ...resp.data, costLimit: 10 },
       })
     })
     .catch((err) => {
@@ -435,7 +436,8 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const setCount = (newCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setCount = (newCount?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (newCount === undefined) return
   dispatch({
     type: SUPPER_ACTIONS.SET_COUNT,
     count: newCount,
@@ -463,9 +465,10 @@ export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispa
   })
 }
 
-export const setSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+export const setSelectedPaymentMethod = (selectedPaymentMethod?: PaymentMethod[]) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  if (!selectedPaymentMethod) return
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
     selectedPaymentMethod: selectedPaymentMethod,
@@ -509,6 +512,20 @@ export const unixTo12HourTime = (unixDate?: number) => {
   }
 
   const formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + letters
+
+  return formattedTime
+}
+
+export const unixToFormattedTime = (unixDate?: number) => {
+  if (!unixDate) {
+    return '-'
+  }
+  const date = new Date(unixDate * 1000)
+  const hours = date.getHours()
+  const minutes = '0' + date.getMinutes()
+  const seconds = '0' + date.getSeconds()
+
+  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
 
   return formattedTime
 }

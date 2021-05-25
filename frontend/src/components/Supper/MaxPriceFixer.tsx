@@ -43,7 +43,7 @@ export const MaxPriceFixer = (props: Props) => {
 
   return (
     <CounterContainer center={props.center}>
-      <MinusButton color="DARK_BLUE" onClick={subFromPriceLimit} />
+      <MinusButton defaultValue={props.defaultValue} color="DARK_BLUE" onClick={subFromPriceLimit} />
       <ValueContainer>${priceLimit}</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />
     </CounterContainer>

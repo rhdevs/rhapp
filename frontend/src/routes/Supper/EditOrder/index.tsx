@@ -13,10 +13,19 @@ import { BubbleSection } from '../../../components/Supper/BubbleSection'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
-import { setEditOrderNumber, unixTo12HourTime } from '../../../store/supper/action'
+import {
+  getSupperGroupById,
+  setEditOrderNumber,
+  setIsLoading,
+  setSelectedPaymentMethod,
+  unixTo12HourTime,
+  unixToFormattedTime,
+} from '../../../store/supper/action'
 import { PaymentMethod, Restaurants, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
-import { paymentMethods, restaurantList } from '../../../store/stubs'
+import { paymentMethods, restaurantList, supperGroupStub } from '../../../store/stubs'
+import { useParams } from 'react-router-dom'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const Background = styled.form`
   width: 100vw;
@@ -134,34 +143,37 @@ type PaymentInfoData = Record<string, string>
 
 const EditOrder = () => {
   const dispatch = useDispatch()
-  const [hasMaxPrice, setHasMaxPrice] = useState(false)
-  const [hasSubmit, setHasSubmit] = useState(false)
-  const { editOrderNumber, selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading } = useSelector(
+    (state: RootState) => state.supper,
+  )
+  const params = useParams<{ supperGroupId: string }>()
+  const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroupStub?.costLimit ? true : false)
+
   const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<
     FormData,
     PaymentInfoData
-  >()
+  >({
+    mode: 'all',
+    defaultValues: {
+      closingTime: supperGroupStub?.estArrivalTime,
+      maxPrice: supperGroupStub?.costLimit,
+    },
+  })
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+    const selectedPM = supperGroup?.paymentInfo.map((pi) => {
+      return pi.paymentMethod
+    })
+    dispatch(setSelectedPaymentMethod(selectedPM))
+  }, [dispatch])
+
+  useEffect(() => {
+    const selectedPM = supperGroup?.paymentInfo.map((pi) => {
+      return pi.paymentMethod
+    })
+    dispatch(setSelectedPaymentMethod(selectedPM))
+  }, [supperGroup])
   const RedAsterisk = <RedText>*</RedText>
-
-  const onChange = (time, timeString) => {
-    if (!time || !timeString) {
-      setValue('closingTime', undefined)
-      setError('closingTime', { type: 'required' })
-      return
-    }
-    console.log(time._d)
-    console.log(timeString)
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-
-    let epochClosingTime = moment(time._d).unix()
-    if (currentUNIXDate > epochClosingTime) {
-      epochClosingTime += 24 * 60 * 60 // Add a day
-    }
-    console.log(epochClosingTime)
-    console.log(unixTo12HourTime(epochClosingTime))
-    setValue('closingTime', epochClosingTime)
-    clearErrors('closingTime')
-  }
 
   const orderInformationSection = () => {
     return (
@@ -169,6 +181,7 @@ const EditOrder = () => {
         <StyledText>Order Name{RedAsterisk}</StyledText>
         <Input
           type="text"
+          defaultValue={supperGroup?.supperGroupName ?? ''}
           placeholder="Supper group name"
           name="supperGroupName"
           ref={register({
@@ -183,7 +196,7 @@ const EditOrder = () => {
         {errors.supperGroupName?.type === 'required' && <ErrorText>Order Name required!</ErrorText>}
         {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
         <StyledText topMargin>Restaurant</StyledText>
-        <RestaurantBubbles isDisabled defaultRestaurant={Restaurants.McDonalds} restaurantList={restaurantList} />
+        <RestaurantBubbles isDisabled defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
         <StyledText topMargin>Closing Time{RedAsterisk}</StyledText>
         <Controller
           name="closingTime"
@@ -199,6 +212,7 @@ const EditOrder = () => {
                 borderColor: errors.closingTime && 'red',
                 background: errors.closingTime && '#ffd1d1',
               }}
+              defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
             />
           )}
         />
@@ -213,7 +227,7 @@ const EditOrder = () => {
             defaultChecked={hasMaxPrice}
           />
         </PriceContainer>
-        {hasMaxPrice && <MaxPriceFixer center />}
+        {hasMaxPrice && <MaxPriceFixer defaultValue={supperGroup?.costLimit} center />}
       </OISection>
     )
   }
@@ -227,6 +241,7 @@ const EditOrder = () => {
             type="number"
             placeholder="Delivery fee"
             name="estDeliveryFee"
+            defaultValue={supperGroup?.additionalCost}
             ref={register({
               required: true,
               validate: (input) => input.trim().length !== 0,
@@ -251,6 +266,7 @@ const EditOrder = () => {
               clearErrors('splitDeliveryFee')
               setValue('splitDeliveryFee', e.target.value)
             }}
+            defaultValue={supperGroup?.splitAdditionalCost}
           >
             <RadioButton value={SplitACMethod.EQUAL} label={SplitACMethod.EQUAL} />
             <RadioButton value={SplitACMethod.PROPORTIONAL} label={SplitACMethod.PROPORTIONAL} />
@@ -286,6 +302,11 @@ const EditOrder = () => {
                     background: errors[`${pm}`] && '#ffd1d1',
                   }}
                   placeholder={pm + ' Link'}
+                  defaultValue={
+                    supperGroup?.paymentInfo.find((pi) => {
+                      return pi.paymentMethod === pm
+                    })?.link
+                  }
                 />
               )
             )
@@ -302,22 +323,41 @@ const EditOrder = () => {
   }
 
   useEffect(() => {
-    if (hasSubmit) {
-      if (selectedPaymentMethod.length === 0 || pmError !== 0) {
-        console.log('error!', errors)
-        setValue('paymentMethod', undefined)
-        setError('paymentMethod', { type: 'required' })
-      } else {
-        pmError = 0
-        clearErrors('paymentMethod')
-        setValue('paymentMethod', selectedPaymentMethod.length)
-      }
+    if (selectedPaymentMethod.length === 0 || pmError !== 0) {
+      setValue('paymentMethod', undefined)
+      setError('paymentMethod', { type: 'required' })
+    } else {
+      pmError = 0
+      clearErrors('paymentMethod')
+      setValue('paymentMethod', selectedPaymentMethod.length)
     }
-  }, [selectedPaymentMethod, hasSubmit])
+  }, [selectedPaymentMethod])
+
+  const onChange = (time, timeString) => {
+    if (!time || !timeString) {
+      setValue('closingTime', undefined)
+      setError('closingTime', { type: 'required' })
+      return
+    }
+    console.log(time._d)
+    console.log(timeString)
+    const currentUNIXDate = Math.round(Date.now() / 1000)
+
+    let epochClosingTime = moment(time._d).unix()
+    if (currentUNIXDate > epochClosingTime) {
+      epochClosingTime += 24 * 60 * 60 // Add a day
+    }
+    console.log(epochClosingTime)
+    console.log(unixTo12HourTime(epochClosingTime))
+    setValue('closingTime', epochClosingTime)
+    clearErrors('closingTime')
+  }
 
   const onSubmit = (e: { preventDefault: () => void }) => {
-    setHasSubmit(true)
     e.preventDefault()
+
+    if (!watch('splitDeliveryFee')) setValue('splitDeliveryFee', supperGroup?.splitAdditionalCost as SplitACMethod)
+    setValue('paymentMethod', selectedPaymentMethod.length)
     if (errors.supperGroupName || errors.closingTime) {
       dispatch(setEditOrderNumber(1))
       return
@@ -330,8 +370,7 @@ const EditOrder = () => {
       dispatch(setEditOrderNumber(3))
       return
     }
-    console.log(watch())
-    console.log(errors)
+
     handleSubmit((data: FormData) => {
       console.log('Form was submitted!')
       console.log(data)
@@ -341,29 +380,35 @@ const EditOrder = () => {
   return (
     <Background onSubmit={onSubmit}>
       <TopNavBar title="Edit Order" />
-      <BubbleSection canHide isOpen={editOrderNumber === 1} title="Order Information" number={1}>
-        {orderInformationSection()}
-      </BubbleSection>
-      <BubbleSection canHide isOpen={editOrderNumber === 2} title="Delivery Information" number={2}>
-        {deliveryInformationSection()}
-      </BubbleSection>
-      <BubbleSection canHide isOpen={editOrderNumber === 3} title="Payment Information" number={3}>
-        {paymentInformationSection()}
-      </BubbleSection>
-      <ButtonContainer>
-        <Button
-          htmlType="submit"
-          stopPropagation
-          defaultButtonDescription="Save Changes"
-          buttonHeight="2.5rem"
-          descriptionStyle={{
-            fontFamily: 'Inter',
-            fontWeight: 200,
-            fontSize: '17px',
-          }}
-          isFlipButton={false}
-        />
-      </ButtonContainer>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <BubbleSection canHide isOpen={editOrderNumber === 1} title="Order Information" number={1}>
+            {orderInformationSection()}
+          </BubbleSection>
+          <BubbleSection canHide isOpen={editOrderNumber === 2} title="Delivery Information" number={2}>
+            {deliveryInformationSection()}
+          </BubbleSection>
+          <BubbleSection canHide isOpen={editOrderNumber === 3} title="Payment Information" number={3}>
+            {paymentInformationSection()}
+          </BubbleSection>
+          <ButtonContainer>
+            <Button
+              htmlType="submit"
+              stopPropagation
+              defaultButtonDescription="Save Changes"
+              buttonHeight="2.5rem"
+              descriptionStyle={{
+                fontFamily: 'Inter',
+                fontWeight: 200,
+                fontSize: '17px',
+              }}
+              isFlipButton={false}
+            />
+          </ButtonContainer>
+        </>
+      )}
     </Background>
   )
 }

@@ -29,7 +29,7 @@ const MainContainer = styled.div`
 
 type Props = {
   restaurantList: string[]
-  defaultRestaurant?: Restaurants
+  defaultRestaurant?: Restaurants | string
   isDisabled?: boolean
 }
 
@@ -43,7 +43,7 @@ export const RestaurantBubbles = (props: Props) => {
 
   useEffect(() => {
     dispatch(setSelectedRestaurant(String(props.defaultRestaurant) ?? ''))
-  }, [])
+  }, [dispatch, props.defaultRestaurant])
 
   return (
     <ScrollableContainer>
