@@ -513,7 +513,6 @@ def get_order(orderId):
                         'as': 'user'
                     }
                 },
-                {'$unwind': {'path': '$user'}},
                 {'$project': {'foodIds': 0}}
             ]
 
@@ -524,16 +523,11 @@ def get_order(orderId):
                 data = item
 
             data['orderId'] = str(data.pop('_id'))
-            print(data)
-            # data['user']['_id'] = str(data['user']['_id'])
-            for user in data["user"]:
-                user["_id"] = str(user.pop('_id'))
+            data['user']['_id'] = str(data['user']['_id'])
 
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
                 food["foodId"] = str(food.pop('_id'))
-                food["foodMenuId"] = str(food.pop('foodMenuId'))
-                food["restaurantId"] = str(food.pop('restaurantId'))
 
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
@@ -955,21 +949,23 @@ def collated_orders(supperGroupId):
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
-        data['collatedFoods'] = []
+        data['collated'] = []
         for food in data['foods']:
-            if not data['collatedFoods']:
-                data['collatedFoods'].append(food)
-            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == \
-                    data['collatedFoods'][-1]['customHash']:
-                data['collatedFoods'][-1]['quantity'] += food['quantity']
+            if not data['collated']:
+                data['collated'].append(food)
+            elif food['foodMenuId'] == data['collated'][-1]['foodMenuId'] and food['customHash'] == \
+                    data['collated'][-1]['customHash']:
+                data['collated'][-1]['quantity'] += food['quantity']
             else:
-                data['collatedFoods'].append(food)
+                data['collated'].append(food)
 
         data.pop('foods')
-        for food in data['collatedFoods']:
+        for food in data['collated']:
             food.pop('customHash')
             food['restaurantId'] = str(food['restaurantId'])
             food['foodMenuId'] = str(food['foodMenuId'])
+
+        data = {key: data[key] for key in ('supperGroupId', 'ownerId', 'collated') if key in data}
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
@@ -995,12 +991,11 @@ def user_order(supperGroupId, userID):
             {
                 '$lookup': {
                     'from': 'Profiles',
-                    'localField': 'userID',
+                    'localField': userID,
                     'foreignField': 'userID',
                     'as': 'user'
                 }
             },
-            {'$unwind': {'path': '$user'}},
             {'$project': {'foodIds': 0}}
         ]
 
@@ -1011,7 +1006,6 @@ def user_order(supperGroupId, userID):
             data = item
 
         data['orderId'] = str(data.pop('_id'))
-        data['user']['_id'] = str(data['user']['_id'])
 
         for food in data["foodList"]:
             # rename _id field to foodId and unbox mongo object
