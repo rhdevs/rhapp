@@ -1,3 +1,4 @@
+import ssl
 from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
@@ -45,7 +46,7 @@ def make_hash(o):
     return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
-# MongoDB\
+# MongoDB
 myclient = client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 
@@ -408,7 +409,8 @@ def supper_group(supperGroupId):
             data = None
             for suppergroup in result:
                 data = suppergroup
-                suppergroup['restaurantId'] = str(suppergroup.pop('restaurantId'))
+                suppergroup['restaurantId'] = str(
+                    suppergroup.pop('restaurantId'))
 
                 for order in data['orderList']:
                     order['foodIds'] = list(
@@ -574,6 +576,9 @@ def add_food(orderId):
     try:
         data = request.get_json()
 
+        data["restaurantId"] = ObjectId(data["restaurantId"])
+        data["foodMenuId"] = ObjectId(data["foodMenuId"])
+
         # Calculating foodPrice of new food
         data['foodPrice'] = data['price']
         for custom in data['custom']:
@@ -585,10 +590,6 @@ def add_food(orderId):
                     continue
         data['foodPrice'] = data['foodPrice'] * data['quantity']
 
-        # Wrapping IDs for Mongo
-        data['restaurantId'] = ObjectId(data['restaurantId'])
-        data['foodMenuId'] = ObjectId(data['foodMenuId'])
-
         # Add food into FoodOrder
         db.FoodOrder.insert_one(data)
 
@@ -596,7 +597,7 @@ def add_food(orderId):
         newFood = data['foodId'] = str(data.pop('_id'))
         data['restaurantId'] = str(data['restaurantId'])
         data['foodMenuId'] = str(data['foodMenuId'])
-        
+
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
@@ -607,7 +608,8 @@ def add_food(orderId):
         if result.modified_count == 0:
             raise Exception('Update failed.')
 
-
+        data["restaurantId"] = str(data["restaurantId"])
+        data["foodMenuId"] = str(data["foodMenuId"])
 
         response = {"status": "success",
                     "message": "Food added successfully.",
@@ -637,8 +639,8 @@ def foodorder(orderId, foodId):
                 raise Exception('Food not found')
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
-                                                        {"$inc": {"totalCost": data['foodPrice'] -
-                                                                                food_result['foodPrice']}})
+                                                        {"$inc": {"orderPrice": data['foodPrice'] -
+                                                                  food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
 
@@ -976,7 +978,8 @@ def collated_orders(supperGroupId):
             food['restaurantId'] = str(food['restaurantId'])
             food['foodMenuId'] = str(food['foodMenuId'])
 
-        data = {key: data[key] for key in ('supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
+        data = {key: data[key] for key in (
+            'supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
