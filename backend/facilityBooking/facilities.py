@@ -48,6 +48,13 @@ def make_hash(o):
 # MongoDB
 myclient = client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+
+# for leewah
+# import ssl
+# myclient = client = pymongo.MongoClient(
+#     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority",
+#     ssl_cert_reqs=ssl.CERT_NONE)
+
 db = myclient["RHApp"]
 
 # Flask
@@ -515,7 +522,6 @@ def get_order(orderId):
                         'as': 'user'
                     }
                 },
-                {'$unwind': {'path': '$user'}},
                 {'$project': {'foodIds': 0}}
             ]
 
@@ -526,16 +532,11 @@ def get_order(orderId):
                 data = item
 
             data['orderId'] = str(data.pop('_id'))
-            print(data)
-            # data['user']['_id'] = str(data['user']['_id'])
-            for user in data["user"]:
-                user["_id"] = str(user.pop('_id'))
+            data['user']['_id'] = str(data['user']['_id'])
 
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
                 food["foodId"] = str(food.pop('_id'))
-                food["foodMenuId"] = str(food.pop('foodMenuId'))
-                food["restaurantId"] = str(food.pop('restaurantId'))
 
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
@@ -571,9 +572,30 @@ def get_order(orderId):
 def add_food(orderId):
     try:
         data = request.get_json()
+
+        # Calculating foodPrice of new food
+        data['foodPrice'] = data['price']
+        for custom in data['custom']:
+            for option in custom['options']:
+                if option['isSelected']:
+                    data['foodPrice'] += option['price']
+                    break
+                else:
+                    continue
+        data['foodPrice'] = data['foodPrice'] * data['quantity']
+
+        # Wrapping IDs for Mongo
+        data['restaurantId'] = ObjectId(data['restaurantId'])
+        data['foodMenuId'] = ObjectId(data['foodMenuId'])
+
         # Add food into FoodOrder
         db.FoodOrder.insert_one(data)
+
+        # Unwrapping IDs for JSON
         newFood = data['foodId'] = str(data.pop('_id'))
+        data['restaurantId'] = str(data['restaurantId'])
+        data['foodMenuId'] = str(data['foodMenuId'])
+        
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
@@ -583,6 +605,8 @@ def add_food(orderId):
             raise Exception('Order not found.')
         if result.modified_count == 0:
             raise Exception('Update failed.')
+
+
 
         response = {"status": "success",
                     "message": "Food added successfully.",
@@ -613,7 +637,7 @@ def foodorder(orderId, foodId):
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                         {"$inc": {"orderPrice": data['foodPrice'] -
-                                                                  food_result['foodPrice']}})
+                                                                                food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
 
@@ -934,21 +958,23 @@ def collated_orders(supperGroupId):
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
-        data['collatedFoods'] = []
+        data['collatedOrderList'] = []
         for food in data['foods']:
-            if not data['collatedFoods']:
-                data['collatedFoods'].append(food)
-            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == \
-                    data['collatedFoods'][-1]['customHash']:
-                data['collatedFoods'][-1]['quantity'] += food['quantity']
+            if not data['collatedOrderList']:
+                data['collatedOrderList'].append(food)
+            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and food['customHash'] == \
+                    data['collatedOrderList'][-1]['customHash']:
+                data['collatedOrderList'][-1]['quantity'] += food['quantity']
             else:
-                data['collatedFoods'].append(food)
+                data['collatedOrderList'].append(food)
 
         data.pop('foods')
-        for food in data['collatedFoods']:
+        for food in data['collatedOrderList']:
             food.pop('customHash')
             food['restaurantId'] = str(food['restaurantId'])
             food['foodMenuId'] = str(food['foodMenuId'])
+
+        data = {key: data[key] for key in ('supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
@@ -974,12 +1000,11 @@ def user_order(supperGroupId, userID):
             {
                 '$lookup': {
                     'from': 'Profiles',
-                    'localField': 'userID',
+                    'localField': userID,
                     'foreignField': 'userID',
                     'as': 'user'
                 }
             },
-            {'$unwind': {'path': '$user'}},
             {'$project': {'foodIds': 0}}
         ]
 
@@ -990,7 +1015,6 @@ def user_order(supperGroupId, userID):
             data = item
 
         data['orderId'] = str(data.pop('_id'))
-        data['user']['_id'] = str(data['user']['_id'])
 
         for food in data["foodList"]:
             # rename _id field to foodId and unbox mongo object
