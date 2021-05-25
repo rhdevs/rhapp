@@ -440,10 +440,10 @@ const EditOrder = () => {
             newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })
           }
         })
-      if (
-        (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) ||
-        (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH))
-      ) {
+      if (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH, link: null })
+      }
+      if (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH)) {
         newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
       }
       if (newPI.length) {
