@@ -60,9 +60,9 @@ export type Restaurant = {
 }
 
 export enum Restaurants {
-  McDonalds = "McDonald's",
-  AlAmmans = "Al Amaan's",
-  KimlyDimSum = 'Kimly Dim Sum',
+  MCDONALDS = "McDonald's",
+  ALAMAANS = "Al Amaan's",
+  KIMLYDIMSUM = 'Kimly Dim Sum',
 }
 
 export type Order = {

@@ -375,6 +375,15 @@ const EditOrder = () => {
     }
 
     handleSubmit((data: FormData) => {
+      // GooglePay: "aweufsiooawoekf"
+      // PayLah!: "awejfjiiasjkdf"
+      // closingTime: 100453488
+      // estDeliveryFee: 3
+      // paymentMethod: 2
+      // splitDeliveryFee: "Equal"
+      // supperGroupName: "feed me"
+      if (data.supperGroupName !== supperGroup?.supperGroupName) {
+      }
       console.log('Form was submitted!')
       console.log(data)
     })()

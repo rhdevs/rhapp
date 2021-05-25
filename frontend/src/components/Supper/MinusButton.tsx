@@ -21,7 +21,7 @@ export const MinusButton = (props: Props) => {
 
   useEffect(() => {
     dispatch(setCount(props.defaultValue))
-  }, [])
+  }, [dispatch])
 
   let BUTTON_COLOR = LIGHT_RED
   if (props.color === 'DARK_BLUE') {
