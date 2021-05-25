@@ -46,10 +46,15 @@ def make_hash(o):
 
 
 # MongoDB
-import ssl
 myclient = client = pymongo.MongoClient(
-    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority",
-    ssl_cert_reqs=ssl.CERT_NONE)
+    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
+
+# for leewah
+# import ssl
+# myclient = client = pymongo.MongoClient(
+#     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority",
+#     ssl_cert_reqs=ssl.CERT_NONE)
+
 db = myclient["RHApp"]
 
 # Flask
@@ -949,23 +954,23 @@ def collated_orders(supperGroupId):
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
-        data['collated'] = []
+        data['collatedOrderList'] = []
         for food in data['foods']:
-            if not data['collated']:
-                data['collated'].append(food)
-            elif food['foodMenuId'] == data['collated'][-1]['foodMenuId'] and food['customHash'] == \
-                    data['collated'][-1]['customHash']:
-                data['collated'][-1]['quantity'] += food['quantity']
+            if not data['collatedOrderList']:
+                data['collatedOrderList'].append(food)
+            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and food['customHash'] == \
+                    data['collatedOrderList'][-1]['customHash']:
+                data['collatedOrderList'][-1]['quantity'] += food['quantity']
             else:
-                data['collated'].append(food)
+                data['collatedOrderList'].append(food)
 
         data.pop('foods')
-        for food in data['collated']:
+        for food in data['collatedOrderList']:
             food.pop('customHash')
             food['restaurantId'] = str(food['restaurantId'])
             food['foodMenuId'] = str(food['foodMenuId'])
 
-        data = {key: data[key] for key in ('supperGroupId', 'ownerId', 'collated') if key in data}
+        data = {key: data[key] for key in ('supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
         return make_response(response, 200)
