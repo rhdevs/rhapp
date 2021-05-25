@@ -19,6 +19,7 @@ type Props = {
   onButtonClick?: (arg0: boolean) => void
   isFlipButton?: boolean
   border?: string
+  htmlType?: 'button' | 'submit' | 'reset' | undefined
 }
 
 function Button(props: Props) {
@@ -80,6 +81,7 @@ function Button(props: Props) {
 
   return (
     <AntdButton
+      htmlType={props.htmlType ?? 'button'}
       danger
       style={
         props.style ?? {

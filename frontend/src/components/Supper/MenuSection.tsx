@@ -94,7 +94,7 @@ export const MenuSection = (props: Props) => {
                     <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
                     {
                       (QUANTITY = props.order?.foodList?.find((food) => {
-                        if (food.foodMenu === foodMenu) {
+                        if (food.foodMenuId === foodMenu.foodMenuId) {
                           return String(food.quantity)
                         }
                       }))

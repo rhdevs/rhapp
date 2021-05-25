@@ -62,7 +62,7 @@ const ViewCart = () => {
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
-  }, [])
+  }, [dispatch])
 
   const { supperGroup, order, isLoading } = useSelector((state: RootState) => state.supper)
 

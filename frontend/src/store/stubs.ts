@@ -205,74 +205,70 @@ export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
-    cancelAction: CancelAction.cancel,
+    cancelAction: CancelAction.CANCEL,
     quantity: 1,
-    foodMenu: {
-      foodMenuId: 'i3572f8whff582842',
-      restaurantId: 'jkhw8237429dh8wqe',
-      section: 'Value Meal',
-      foodMenuName: 'McGriddles with Egg Meal',
-      price: 6.7,
-      custom: [
-        {
-          title: 'Sides',
-          options: [
-            { name: 'Fries', isSelected: true, price: 0 },
-            { name: 'Apple pie', isSelected: false, price: 1.2 },
-          ],
-          max: null,
-          min: 0,
-          customNumber: 1,
-        },
-        {
-          title: 'Drinks',
-          options: [
-            { name: 'Coca Cola', isSelected: true, price: 0 },
-            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
-            { name: 'Milo', isSelected: false, price: 1.5 },
-          ],
-          max: null,
-          min: 0,
-          customNumber: 2,
-        },
-      ],
-    },
+    foodMenuId: 'i3572f8whff582842',
+    restaurantId: 'jkhw8237429dh8wqe',
+    foodName: 'McGriddles with Egg Meal',
+    price: 6.7,
+    custom: [
+      {
+        title: 'Sides',
+        options: [
+          { name: 'Fries', isSelected: true, price: 0 },
+          { name: 'Apple pie', isSelected: false, price: 1.2 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 1,
+      },
+      {
+        title: 'Drinks',
+        options: [
+          { name: 'Coca Cola', isSelected: true, price: 0 },
+          { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+          { name: 'Milo', isSelected: false, price: 1.5 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 2,
+      },
+    ],
+
     foodPrice: 8.6,
   },
   {
     foodId: '12345364832764134',
     quantity: 2,
-    cancelAction: CancelAction.contact,
-    foodMenu: {
-      foodMenuId: 'i3572f8whff582842',
-      restaurantId: 'jkhw8237429dh8wqe',
-      section: 'Value Meal',
-      foodMenuName: 'McGriddles with Egg Meal',
-      price: 6.7,
-      custom: [
-        {
-          title: 'Sides',
-          options: [
-            { name: 'Fries', isSelected: false, price: 0 },
-            { name: 'Apple pie', isSelected: false, price: 1.2 },
-          ],
-          max: null,
-          min: 0,
-          customNumber: 1,
-        },
-        {
-          title: 'Drinks',
-          options: [
-            { name: 'Coca Cola', isSelected: false, price: 0 },
-            { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
-            { name: 'Milo', isSelected: false, price: 1.5 },
-          ],
-          max: null,
-          min: 0,
-          customNumber: 2,
-        },
-      ],
-    },
+    cancelAction: CancelAction.CONTACT,
+    foodMenuId: 'i3572f8whff582842',
+    restaurantId: 'jkhw8237429dh8wqe',
+    foodName: 'McGriddles with Egg Meal',
+    price: 6.7,
+    custom: [
+      {
+        title: 'Sides',
+        options: [
+          { name: 'Fries', isSelected: false, price: 0 },
+          { name: 'Apple pie', isSelected: false, price: 1.2 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 1,
+      },
+      {
+        title: 'Drinks',
+        options: [
+          { name: 'Coca Cola', isSelected: false, price: 0 },
+          { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+          { name: 'Milo', isSelected: false, price: 1.5 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 2,
+      },
+    ],
+
     foodPrice: 8.6,
   },
 ]

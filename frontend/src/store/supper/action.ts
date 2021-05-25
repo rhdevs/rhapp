@@ -26,10 +26,10 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
+  await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -435,7 +435,8 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const setCount = (newCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setCount = (newCount?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (newCount === undefined) return
   dispatch({
     type: SUPPER_ACTIONS.SET_COUNT,
     count: newCount,
@@ -463,9 +464,10 @@ export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispa
   })
 }
 
-export const setSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+export const setSelectedPaymentMethod = (selectedPaymentMethod?: PaymentMethod[]) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  if (!selectedPaymentMethod) return
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
     selectedPaymentMethod: selectedPaymentMethod,
@@ -513,6 +515,20 @@ export const unixTo12HourTime = (unixDate?: number) => {
   return formattedTime
 }
 
+export const unixToFormattedTime = (unixDate?: number) => {
+  if (!unixDate) {
+    return '-'
+  }
+  const date = new Date(unixDate * 1000)
+  const hours = date.getHours()
+  const minutes = '0' + date.getMinutes()
+  const seconds = '0' + date.getSeconds()
+
+  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
+
+  return formattedTime
+}
+
 export const readableSupperGroupId = (supperGroupId?: number) => {
   if (!supperGroupId) {
     return 'RHSO#'
@@ -556,5 +572,19 @@ export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Di
   dispatch({
     type: SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME,
     estArrivalTime: unixTo12HourTime(estArrivalTime),
+  })
+}
+
+export const setEditOrderNumber = (editOrderNumber: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER,
+    editOrderNumber: editOrderNumber,
+  })
+}
+
+export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_COUNTER,
+    counter: counter,
   })
 }

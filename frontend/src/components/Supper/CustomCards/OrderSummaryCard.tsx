@@ -116,7 +116,7 @@ export const OrderSummaryCard = (props: Props) => {
           ) : (
             collatedOrderList.map((food, index) => {
               const customisations: string[] = []
-              food.foodMenu.custom?.map((custom) =>
+              food.custom?.map((custom) =>
                 custom.options.map((option) => {
                   if (option.isSelected) customisations.push(option.name)
                 }),
@@ -124,7 +124,7 @@ export const OrderSummaryCard = (props: Props) => {
               return (
                 <FoodLineInCard
                   key={index}
-                  foodName={food.foodMenu.foodMenuName}
+                  foodName={food.foodName}
                   qty={food.quantity}
                   price={food.foodPrice}
                   customisations={customisations}
@@ -177,7 +177,7 @@ export const OrderSummaryCard = (props: Props) => {
                   </NameText>
                   {order.foodList.map((food, index) => {
                     const customisations: string[] = []
-                    food.foodMenu.custom?.map((custom) =>
+                    food.custom?.map((custom) =>
                       custom.options.map((option) => {
                         if (option.isSelected) customisations.push(option.name)
                       }),
@@ -185,7 +185,7 @@ export const OrderSummaryCard = (props: Props) => {
                     return (
                       <FoodLineInCard
                         key={index}
-                        foodName={food.foodMenu.foodMenuName}
+                        foodName={food.foodName}
                         qty={food.quantity}
                         price={food.foodPrice}
                         customisations={customisations}
@@ -223,7 +223,7 @@ export const OrderSummaryCard = (props: Props) => {
           <MainContainer>
             {props.foodList?.map((food, index) => {
               const customisations: string[] = []
-              food.foodMenu.custom?.map((custom) =>
+              food.custom?.map((custom) =>
                 custom.options.map((option) => {
                   if (option.isSelected) customisations.push(option.name)
                 }),
@@ -231,7 +231,7 @@ export const OrderSummaryCard = (props: Props) => {
               return (
                 <FoodLineInCard
                   key={index}
-                  foodName={food.foodMenu.foodMenuName}
+                  foodName={food.foodName}
                   qty={food.quantity}
                   price={food.foodPrice}
                   customisations={customisations}
