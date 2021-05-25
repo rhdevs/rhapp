@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -11,7 +11,9 @@ import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSette
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
 import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import InputRow from '../../../components/Mobile/InputRow'
 
 const Background = styled.div`
   width: 100vw;
@@ -65,13 +67,27 @@ const ButtonContainer = styled.div`
   margin: 20px auto 10px auto;
 `
 
-const Input = styled.input`
+const InputText = styled.input`
   width: 60%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
   margin: 10px auto;
   height: 35px;
+`
+
+const CancellationBox = styled.div`
+  margin: 25px 0px 10px 0px;
+`
+
+const CancellationInputBox = styled.div`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+
+  textarea.ant-input {
+    height: 80px;
+  }
 `
 
 const ErrorText = styled.p`
@@ -95,14 +111,11 @@ const RedText = styled.text`
 
 type FormValues = {
   location: string
+  cancelReason: string
 }
 
 const DeliveryDetails = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
+  const { register, handleSubmit, watch, errors, control } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
@@ -110,6 +123,7 @@ const DeliveryDetails = () => {
     (state: RootState) => state.supper,
   )
   const currentUNIXDate = Math.round(Date.now() / 1000)
+  const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -121,11 +135,13 @@ const DeliveryDetails = () => {
   }, [dispatch])
 
   const onClick = () => {
+    console.log(watch())
     handleSubmit((data) => {
       console.log('Save changes!')
       //TODO: Update status, delivery time, delivery duration (estArrivalTime, deliveryTime) and location
       console.log(selectedSupperGroupStatus + ',' + estArrivalTime + ',' + deliveryTime + ',' + data.location)
       console.log(errors)
+      //TODO: Update comments when status === cancelled
     })()
   }
 
@@ -151,33 +167,62 @@ const DeliveryDetails = () => {
             <StyledSGIdText>{readableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
-            <DeliveryTimeContainer>
-              <StyledText>Delivery Time</StyledText>
-              <StyledTimeText>{estArrivalTime}</StyledTimeText>
-            </DeliveryTimeContainer>
-            <DeliveryTimeSetter
-              center
-              default={supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20}
-            />
-            <br />
-            <StyledText>Collection Point {RedAsterisk}</StyledText>
-            <>
-              <Input
-                type="text"
-                placeholder="Enter Location"
-                name="location"
-                ref={register({
-                  required: true,
-                  validate: (input) => input.trim().length !== 0,
-                })}
-                style={{
-                  borderColor: errors.location && 'red',
-                  background: errors.location && '#ffd1d1',
-                }}
-              />
-              {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
-              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-            </>
+            {supperGroupIsCancelled ? (
+              <CancellationBox>
+                <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
+                <CancellationInputBox>
+                  <Controller
+                    name="cancelReason"
+                    render={({ onChange, value }) => (
+                      <InputRow
+                        placeholder="Tell us what your event is about!"
+                        textarea
+                        value={value}
+                        onChange={onChange}
+                        {...register('cancelReason', {
+                          required: true,
+                          validate: (input) => input.trim().length !== 0,
+                        })}
+                        hasError={errors.cancelReason ? true : false}
+                      />
+                    )}
+                    control={control}
+                    defaultValue={null}
+                  />
+                  {errors.cancelReason?.type && <ErrorText>This is required!</ErrorText>}
+                </CancellationInputBox>
+              </CancellationBox>
+            ) : (
+              <>
+                <DeliveryTimeContainer>
+                  <StyledText>Delivery Time</StyledText>
+                  <StyledTimeText>{estArrivalTime}</StyledTimeText>
+                </DeliveryTimeContainer>
+                <DeliveryTimeSetter
+                  center
+                  default={supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20}
+                />
+                <br />
+                <StyledText>Collection Point {RedAsterisk}</StyledText>
+                <>
+                  <InputText
+                    type="text"
+                    placeholder="Enter Location"
+                    name="location"
+                    ref={register({
+                      required: true,
+                      validate: (input) => input.trim().length !== 0,
+                    })}
+                    style={{
+                      borderColor: errors.location && 'red',
+                      background: errors.location && '#ffd1d1',
+                    }}
+                  />
+                  {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+                  {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+                </>
+              </>
+            )}
             <ButtonContainer>
               <Button
                 stopPropagation

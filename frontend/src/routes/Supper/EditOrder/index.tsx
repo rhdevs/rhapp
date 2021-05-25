@@ -16,12 +16,11 @@ import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBu
 import {
   getSupperGroupById,
   setEditOrderNumber,
-  setIsLoading,
   setSelectedPaymentMethod,
   unixTo12HourTime,
   unixToFormattedTime,
 } from '../../../store/supper/action'
-import { PaymentMethod, Restaurants, SplitACMethod } from '../../../store/supper/types'
+import { PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { paymentMethods, restaurantList, supperGroupStub } from '../../../store/stubs'
 import { useParams } from 'react-router-dom'

@@ -1,6 +1,8 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { FoodMenu, Order } from '../../store/supper/types'
+import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   background-color: white;
@@ -24,11 +26,13 @@ const FoodMenuContainer = styled.div`
   display: flex;
   flex-direction: column;
 `
+
 const FoodAndQuantityContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0;
 `
+
 const FoodContainer = styled.text`
   margin: 5px 2px 5px 5px;
   font-size: 17px;
@@ -46,42 +50,65 @@ const PriceContainer = styled.text`
   font-size: 14px;
   font-weight: 200;
 `
+const EmptyContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
+
+const EmptyCOntainerText = styled.text`
+  margin: 5px 2px 5px 5px;
+  font-size: 15px;
+  font-weight: 500;
+`
+
 type Props = {
-  menu: FoodMenu[]
+  menu?: FoodMenu[]
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
+
 export const MenuSection = (props: Props) => {
   let QUANTITY
+  const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
+  console.log(menuTabKey)
+  console.log(searchValue)
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>Value Meals</SectionHeader>
+        <SectionHeader>{menuTabKey}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
-          {props.menu.map((foodMenu) => (
-            <>
-              <FoodAndQuantityContainer
-                onClick={() => {
-                  // TODO: Add route
-                  //history.push(/foodMenu.foodMenuId)
-                  console.log('Go to food page!')
-                }}
-              >
-                <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-                {
-                  (QUANTITY = props.order?.foodList?.find((food) => {
-                    if (food.foodMenu === foodMenu) {
-                      return String(food.quantity)
+          {props.menu ? (
+            props.menu
+              .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All' || menuTabKey === '')
+              .map((foodMenu) => (
+                <>
+                  <FoodAndQuantityContainer
+                    onClick={() => {
+                      // TODO: Add route
+                      //history.push(/foodMenu.foodMenuId)
+                      console.log('Go to food page!')
+                    }}
+                  >
+                    <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
+                    {
+                      (QUANTITY = props.order?.foodList?.find((food) => {
+                        if (food.foodMenuId === foodMenu.foodMenuId) {
+                          return String(food.quantity)
+                        }
+                      }))
                     }
-                  }))
-                }
-                <QuantityContainer>{QUANTITY}</QuantityContainer>
-              </FoodAndQuantityContainer>
-              <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
-            </>
-          ))}
+                    <QuantityContainer>{QUANTITY}</QuantityContainer>
+                  </FoodAndQuantityContainer>
+                  <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
+                </>
+              ))
+          ) : (
+            <EmptyContainer>
+              <EmptyCOntainerText>Menu is currently empty.</EmptyCOntainerText>
+            </EmptyContainer>
+          )}
         </FoodMenuContainer>
       </SectionBodyContainer>
     </MainContainer>

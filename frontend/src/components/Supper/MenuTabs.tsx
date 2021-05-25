@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import 'antd/dist/antd.css'
 import styled from 'styled-components'
 import { Radio } from 'antd'
+import { setMenuTabKey } from '../../store/supper/action'
+import { useDispatch } from 'react-redux'
 
 const MainContainer = styled.div`
   overflow: auto;
@@ -62,18 +64,39 @@ const TextContainer = styled(Radio.Button)`
 `
 
 type Props = {
-  menuSections: string[]
+  menuSections?: string[]
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const MenuTabs = (props: Props) => {
+  const dispatch = useDispatch()
+
+  let menuTab = ''
+
+  useEffect(() => {
+    dispatch(setMenuTabKey(menuTab))
+  }, [dispatch])
+
   return (
     <MainContainer>
       <ToggleTabsContainer>
-        {props.menuSections.map((section, idx) => (
-          <TextContainer key={idx} value={section}>
-            {section}
-          </TextContainer>
-        ))}
+        {props.menuSections ? (
+          ['All'].concat(props.menuSections).map((section, idx) => (
+            <TextContainer
+              key={idx}
+              value={section}
+              onClick={() => {
+                menuTab = section
+                console.log(section)
+                dispatch(setMenuTabKey(section))
+              }}
+            >
+              {section}
+            </TextContainer>
+          ))
+        ) : (
+          <></>
+        )}
       </ToggleTabsContainer>
     </MainContainer>
   )
