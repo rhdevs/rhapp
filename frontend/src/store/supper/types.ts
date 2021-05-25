@@ -102,6 +102,7 @@ export type SupperGroup = {
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number
+  phoneNumber?: number
 }
 
 export type CollatedOrder = {
@@ -134,7 +135,7 @@ export enum PaymentMethod {
 
 export type PaymentInfo = {
   paymentMethod: PaymentMethod
-  link?: string
+  link?: string | null
 }
 
 export enum SUPPER_ACTIONS {
