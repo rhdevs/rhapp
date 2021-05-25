@@ -29,8 +29,8 @@ export type Option = {
 }
 
 export enum CancelAction {
-  contact = 'contact',
-  cancel = 'cancel',
+  CONTACT = 'Contact',
+  CANCEL = 'Cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -169,6 +169,7 @@ export enum SUPPER_ACTIONS {
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
   SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
+  SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
 }
 
 type SetIsLoading = {
@@ -331,6 +332,11 @@ type SetEditOrderNumber = {
   editOrderNumber: number
 }
 
+type SetCounter = {
+  type: typeof SUPPER_ACTIONS.SET_COUNTER
+  counter: number
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -364,3 +370,4 @@ export type ActionTypes =
   | SetPaymentExpandedCount
   | SetEstimatedArrivalTime
   | SetEditOrderNumber
+  | SetCounter

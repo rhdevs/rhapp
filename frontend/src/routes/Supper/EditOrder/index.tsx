@@ -15,6 +15,7 @@ import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import {
   getSupperGroupById,
+  setCounter,
   setEditOrderNumber,
   setSelectedPaymentMethod,
   unixTo12HourTime,
@@ -142,12 +143,11 @@ type PaymentInfoData = Record<string, string>
 
 const EditOrder = () => {
   const dispatch = useDispatch()
-  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading } = useSelector(
+  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading, counter } = useSelector(
     (state: RootState) => state.supper,
   )
   const params = useParams<{ supperGroupId: string }>()
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroupStub?.costLimit ? true : false)
-
   const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<
     FormData,
     PaymentInfoData
@@ -302,9 +302,11 @@ const EditOrder = () => {
                   }}
                   placeholder={pm + ' Link'}
                   defaultValue={
-                    supperGroup?.paymentInfo.find((pi) => {
-                      return pi.paymentMethod === pm
-                    })?.link
+                    counter <= 1
+                      ? supperGroup?.paymentInfo.find((pi) => {
+                          return pi.paymentMethod === pm
+                        })?.link
+                      : undefined
                   }
                 />
               )
@@ -322,6 +324,8 @@ const EditOrder = () => {
   }
 
   useEffect(() => {
+    dispatch(setCounter(counter + 1))
+    console.log(counter)
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
       setValue('paymentMethod', undefined)
       setError('paymentMethod', { type: 'required' })

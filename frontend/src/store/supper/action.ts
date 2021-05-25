@@ -582,3 +582,10 @@ export const setEditOrderNumber = (editOrderNumber: number) => (dispatch: Dispat
     editOrderNumber: editOrderNumber,
   })
 }
+
+export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_COUNTER,
+    counter: counter,
+  })
+}

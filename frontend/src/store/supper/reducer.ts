@@ -42,6 +42,7 @@ const initialState = {
   expandedCount: 0,
   estArrivalTime: unixTo12HourTime(Math.round(Date.now() / 1000)),
   editOrderNumber: 1,
+  counter: 0,
 }
 
 type State = {
@@ -73,6 +74,7 @@ type State = {
   expandedCount: number
   estArrivalTime: string
   editOrderNumber: number
+  counter: number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -172,6 +174,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER: {
       return { ...state, editOrderNumber: action.editOrderNumber }
+    }
+    case SUPPER_ACTIONS.SET_COUNTER: {
+      return { ...state, counter: action.counter }
     }
     default:
       return state
