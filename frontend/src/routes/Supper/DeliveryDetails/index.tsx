@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 
-import { Input } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
@@ -14,6 +13,7 @@ import { supperGroupStatusList } from '../../../store/stubs'
 import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import InputRow from '../../../components/Mobile/InputRow'
 
 const Background = styled.div`
   width: 100vw;
@@ -90,15 +90,6 @@ const CancellationInputBox = styled.div`
   }
 `
 
-const CancellationInput = styled(Input.TextArea)`
-  width: 90%;
-  border-radius: 15px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 10px auto;
-  font-size: 14px;
-`
-
 const ErrorText = styled.p`
   margin: 0;
   color: #ff837a;
@@ -124,11 +115,7 @@ type FormValues = {
 }
 
 const DeliveryDetails = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
+  const { register, handleSubmit, watch, errors, control } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
@@ -143,6 +130,7 @@ const DeliveryDetails = () => {
   }, [dispatch])
 
   const onClick = () => {
+    console.log(watch())
     handleSubmit((data) => {
       console.log('Save changes!')
       //TODO: Update status, delivery time, delivery duration (estArrivalTime, deliveryTime) and location
@@ -174,19 +162,27 @@ const DeliveryDetails = () => {
             <StyledSGIdText>{readableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
-
             {supperGroupIsCancelled ? (
               <CancellationBox>
                 <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
                 <CancellationInputBox>
-                  <CancellationInput
-                    placeholder="e.g. Driver cancelled."
+                  <Controller
                     name="cancelReason"
-                    {...register('cancelReason', { required: true, validate: (input) => input.trim().length !== 0 })}
-                    style={{
-                      borderColor: errors.cancelReason && 'red',
-                      background: errors.cancelReason && '#ffd1d1',
-                    }}
+                    render={({ onChange, value }) => (
+                      <InputRow
+                        placeholder="Tell us what your event is about!"
+                        textarea
+                        value={value}
+                        onChange={onChange}
+                        {...register('cancelReason', {
+                          required: true,
+                          validate: (input) => input.trim().length !== 0,
+                        })}
+                        hasError={errors.cancelReason ? true : false}
+                      />
+                    )}
+                    control={control}
+                    defaultValue={null}
                   />
                   {errors.cancelReason?.type && <ErrorText>This is required!</ErrorText>}
                 </CancellationInputBox>
