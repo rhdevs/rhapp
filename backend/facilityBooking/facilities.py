@@ -284,7 +284,8 @@ def all_supper_group():
                 '$addFields': {
                     'totalPrice': {'$sum': '$orderList.orderPrice'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo'
+                    'restaurantLogo': '$restaurant.restaurantLogo',
+                    'restaurantId': '$restaurant._id'
                 }
             },
             {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
@@ -302,6 +303,7 @@ def all_supper_group():
                 changes = {'$set': {'status': 'closed'}}
                 db.SupperGroup.update_one(query, changes)
             data.append(supperGroup)
+            supperGroup['restaurantId'] = str(supperGroup.pop('restaurantId'))
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
@@ -375,6 +377,7 @@ def supper_group(supperGroupId):
                         'totalPrice': {'$sum': '$orderList.orderPrice'},
                         'numOrders': {'$size': '$orderList'},
                         'restaurantLogo': '$restaurant.restaurantLogo',
+                        'restaurantId': '$restaurant._id',
                         'orderList.foodList': [],
                         'userIdList': {'$concatArrays': '$orderList.userID'}
                     }
@@ -398,6 +401,7 @@ def supper_group(supperGroupId):
             data = None
             for suppergroup in result:
                 data = suppergroup
+                suppergroup['restaurantId'] = str(suppergroup.pop('restaurantId'))
 
                 for order in data['orderList']:
                     order['foodIds'] = list(
