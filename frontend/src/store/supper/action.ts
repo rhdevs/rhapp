@@ -124,11 +124,12 @@ export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}`)
+  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}/menu`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
         restaurant: resp.data,
