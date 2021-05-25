@@ -34,10 +34,9 @@ export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Di
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: { ...resp.data, costLimit: 10 },
+        supperGroup: resp.data,
       })
     })
     .catch((err) => {

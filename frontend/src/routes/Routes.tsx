@@ -51,7 +51,7 @@ export enum PATHS {
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
   USER_JOIN_ORDER_MAIN_PAGE = '/supper/joinOrder',
-  USER_SUPPER_GROUP_PLACE_ORDER = '/supper/placeOrder',
+  USER_SUPPER_GROUP_PLACE_ORDER = '/supper/:supperGroupId/placeOrder',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',

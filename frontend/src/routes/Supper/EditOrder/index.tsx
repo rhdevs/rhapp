@@ -158,6 +158,7 @@ const EditOrder = () => {
       maxPrice: supperGroupStub?.costLimit,
     },
   })
+
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     const selectedPM = supperGroup?.paymentInfo.map((pi) => {
