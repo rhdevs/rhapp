@@ -33,7 +33,6 @@ const Restaurant = styled.text`
   font-size: 24px;
   margin-left: 30px;
 `
-const NoFoodMatchText = styled.text``
 
 export default function UserPlaceOrder() {
   const dispatch = useDispatch()

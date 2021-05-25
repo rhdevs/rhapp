@@ -210,8 +210,8 @@ export const foodList: Food[] = [
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
-      foodMenuName: 'McGriddles with Egg Meal',
       section: 'Value Meal',
+      foodMenuName: 'McGriddles with Egg Meal',
       price: 6.7,
       custom: [
         {
@@ -246,8 +246,8 @@ export const foodList: Food[] = [
     foodMenu: {
       foodMenuId: 'i3572f8whff582842',
       restaurantId: 'jkhw8237429dh8wqe',
-      foodMenuName: 'McGriddles with Egg Meal',
       section: 'Value Meal',
+      foodMenuName: 'McGriddles with Egg Meal',
       price: 6.7,
       custom: [
         {
