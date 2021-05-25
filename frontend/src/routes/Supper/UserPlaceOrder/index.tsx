@@ -41,7 +41,7 @@ export default function UserPlaceOrder() {
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getRestaurant(params.restaurantId))
-  })
+  }, [dispatch])
 
   const { supperGroup, restaurant, isLoading, searchValue } = useSelector((state: RootState) => state.supper)
 

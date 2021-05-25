@@ -325,7 +325,6 @@ const EditOrder = () => {
 
   useEffect(() => {
     dispatch(setCounter(counter + 1))
-    console.log(counter)
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
       setValue('paymentMethod', undefined)
       setError('paymentMethod', { type: 'required' })
