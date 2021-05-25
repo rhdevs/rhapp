@@ -109,10 +109,15 @@ const DeliveryDetails = () => {
   const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
+  const currentUNIXDate = Math.round(Date.now() / 1000)
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(setEstimatedArrivalTime(calculateArrivalTime(supperGroup?.deliveryDuration ?? 20)))
+    dispatch(
+      setEstimatedArrivalTime(
+        calculateArrivalTime(supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20),
+      ),
+    )
   }, [dispatch])
 
   const onClick = () => {
@@ -130,7 +135,7 @@ const DeliveryDetails = () => {
   }
 
   useEffect(() => {
-    if (deliveryTime !== supperGroup?.deliveryDuration) {
+    if (deliveryTime !== (supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20)) {
       dispatch(setEstimatedArrivalTime(calculateArrivalTime(deliveryTime)))
     }
   }, [deliveryTime])
@@ -150,7 +155,10 @@ const DeliveryDetails = () => {
               <StyledText>Delivery Time</StyledText>
               <StyledTimeText>{estArrivalTime}</StyledTimeText>
             </DeliveryTimeContainer>
-            <DeliveryTimeSetter center default={supperGroup?.deliveryDuration ?? 20} />
+            <DeliveryTimeSetter
+              center
+              default={supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20}
+            />
             <br />
             <StyledText>Collection Point {RedAsterisk}</StyledText>
             <>
