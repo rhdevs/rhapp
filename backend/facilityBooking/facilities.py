@@ -484,8 +484,8 @@ def create_order():
     try:
         data = request.get_json()
         data["createdAt"] = int(datetime.now().timestamp())
-        data['isPaid'] = False
-        data['isReceived'] = False
+        data['hasPaid'] = False
+        data['hasReceived'] = False
         db.Order.insert_one(data)
         data['orderId'] = str(data.pop('_id'))
 
