@@ -1,5 +1,5 @@
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -9,7 +9,7 @@ import InputRow from '../../../components/Mobile/InputRow'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { foodList } from '../../../store/stubs'
-import { updateOrderDetails } from '../../../store/supper/action'
+import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -21,7 +21,7 @@ const MainContainer = styled.div`
 `
 
 const NumberContainer = styled.div`
-  margin: 5px 35px 15px 35px;
+  margin: 5px 35px 10px 35px;
   display: flex;
   flex-direction: row;
   align-items: baseline;
@@ -34,7 +34,7 @@ const FieldHeader = styled.text`
   padding-right: 5px;
 `
 
-const InputBox = styled.input`
+const InputText = styled.input`
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 15px;
@@ -87,12 +87,13 @@ const ButtonContainer = styled.div`
   margin: 23px 15px;
   justify-content: space-around;
 `
+
 const ErrorText = styled.p`
   margin: 0;
   color: #ff837a;
   width: 100%;
   text-align: center;
-  font-size: 17px;
+  font-size: 15px;
   font-family: 'Inter';
 `
 
@@ -114,8 +115,12 @@ export default function ConfirmOrder() {
   const { register, handleSubmit, watch, errors } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
-  const params = useParams<{ orderId: string }>()
+  const params = useParams<{ supperGroupId: string; userId: string }>()
   const { order, isLoading } = useSelector((state: RootState) => state.supper)
+
+  useEffect(() => {
+    dispatch(getUserOrder(params.supperGroupId, params.userId))
+  }, [dispatch])
 
   const onClick = () => {
     console.log(watch())
@@ -123,8 +128,9 @@ export default function ConfirmOrder() {
     handleSubmit((data) => {
       console.log(data.number)
       const updatedOrder = { ...order, userContact: data.number }
-      dispatch(updateOrderDetails(updatedOrder, params.orderId))
-    })
+      console.log(updatedOrder)
+      //dispatch(updateOrderDetails(updatedOrder, params.orderId))
+    })()
   }
 
   return (
@@ -136,15 +142,13 @@ export default function ConfirmOrder() {
         <>
           <NumberContainer>
             <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
-            <InputBox
+            <InputText
               type="text"
               placeholder="Phone Number"
               name="number"
               ref={register({
                 required: true,
                 validate: (input) => input.trim().length !== 0,
-                minLength: 8,
-                maxLength: 8,
                 pattern: /[0-9]+/i,
               })}
               style={{
@@ -152,22 +156,20 @@ export default function ConfirmOrder() {
                 background: errors.number && '#ffd1d1',
               }}
             />
-            {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-            {(errors.number?.type === 'minLength' || errors.number?.type === 'maxlength') && (
-              <ErrorText>Number should have 8 digits</ErrorText>
-            )}
-            {errors.number?.type === 'pattern' && <ErrorText>Numbers only!</ErrorText>}
           </NumberContainer>
+          {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+          {errors.number?.type === 'pattern' && <ErrorText>Numbers only!</ErrorText>}
+
           <OrderContainer>
             <Header>My Order</Header>
           </OrderContainer>
-          <OrderSummaryCard margin="5px 23px" foodList={foodList} />
+          <OrderSummaryCard margin="5px 23px" foodList={order?.foodList} />
           <BottomContainer>
             <BottomMoneyContainer>
               <StyledText>
                 <b>Subtotal</b>
               </StyledText>
-              <StyledText>$17.20</StyledText>
+              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
             </BottomMoneyContainer>
           </BottomContainer>
           <ButtonContainer>
