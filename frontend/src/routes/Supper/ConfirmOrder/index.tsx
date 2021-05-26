@@ -1,4 +1,3 @@
-import { Input } from 'antd'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,8 +35,9 @@ const FieldHeader = styled.text`
 `
 
 const InputBox = styled.input`
-  border-radius: 25px;
-  padding: 2px 10px;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 15px;
   width: 75%;
 `
 
@@ -111,22 +111,19 @@ type FormValues = {
 }
 
 export default function ConfirmOrder() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
+  const { register, handleSubmit, watch, errors } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ orderId: string }>()
   const { order, isLoading } = useSelector((state: RootState) => state.supper)
 
   const onClick = () => {
+    console.log(watch())
+    console.log(errors)
     handleSubmit((data) => {
-      dispatch(updateOrderDetails(order?.userContact, params.orderId))
-      console.log('success')
       console.log(data.number)
-      console.log(errors)
+      const updatedOrder = { ...order, userContact: data.number }
+      dispatch(updateOrderDetails(updatedOrder, params.orderId))
     })
   }
 
@@ -139,9 +136,17 @@ export default function ConfirmOrder() {
         <>
           <NumberContainer>
             <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
-            <InputRow
+            <InputBox
+              type="text"
               placeholder="Phone Number"
-              {...register('number', { required: true, minLength: 8, maxLength: 8, pattern: /[0-9]+/i })}
+              name="number"
+              ref={register({
+                required: true,
+                validate: (input) => input.trim().length !== 0,
+                minLength: 8,
+                maxLength: 8,
+                pattern: /[0-9]+/i,
+              })}
               style={{
                 borderColor: errors.number && 'red',
                 background: errors.number && '#ffd1d1',
