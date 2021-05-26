@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
-import InputRow from '../../../components/Mobile/InputRow'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { foodList } from '../../../store/stubs'
-import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
+import { getUserOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -112,7 +110,7 @@ type FormValues = {
 }
 
 export default function ConfirmOrder() {
-  const { register, handleSubmit, watch, errors } = useForm<FormValues>()
+  const { register, handleSubmit, errors } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string; userId: string }>()
@@ -123,10 +121,7 @@ export default function ConfirmOrder() {
   }, [dispatch])
 
   const onClick = () => {
-    console.log(watch())
-    console.log(errors)
     handleSubmit((data) => {
-      console.log(data.number)
       const updatedOrder = { ...order, userContact: data.number }
       console.log(updatedOrder)
       //dispatch(updateOrderDetails(updatedOrder, params.orderId))
