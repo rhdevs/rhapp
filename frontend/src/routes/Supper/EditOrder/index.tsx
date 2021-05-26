@@ -409,7 +409,7 @@ const EditOrder = () => {
         updatedOrderInfo = { ...updatedOrderInfo, costLimit: undefined }
       }
       if (data.estDeliveryFee !== supperGroup?.additionalCost) {
-        updatedOrderInfo = { ...updatedOrderInfo, estDeliveryFee: data.estDeliveryFee }
+        updatedOrderInfo = { ...updatedOrderInfo, additionalCost: data.estDeliveryFee }
       }
       if (data.splitDeliveryFee !== supperGroup?.splitAdditionalCost) {
         updatedOrderInfo = { ...updatedOrderInfo, splitAdditionalCost: data.splitDeliveryFee }
