@@ -10,7 +10,7 @@ const MainContainer = styled.div`
 `
 
 const SectionHeaderContainer = styled.div`
-  padding: 10px 20px;
+  padding: 8px 20px 0px 20px;
 `
 
 const SectionHeader = styled.text`
@@ -19,7 +19,7 @@ const SectionHeader = styled.text`
 `
 
 const SectionBodyContainer = styled.div`
-  padding: 16px;
+  padding: 15px;
 `
 
 const FoodMenuContainer = styled.div`
