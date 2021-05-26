@@ -45,7 +45,7 @@ def make_hash(o):
     return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
-# MongoDB
+# MongoDB\
 myclient = client = pymongo.MongoClient(
     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
 
@@ -289,7 +289,7 @@ def all_supper_group():
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'totalPrice': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
@@ -379,7 +379,7 @@ def supper_group(supperGroupId):
                 },
                 {
                     '$addFields': {
-                        'totalPrice': {'$sum': '$orderList.orderPrice'},
+                        'totalPrice': {'$sum': '$orderList.totalCost'},
                         'numOrders': {'$size': '$orderList'},
                         'restaurantLogo': '$restaurant.restaurantLogo',
                         'orderList.foodList': [],
@@ -595,7 +595,7 @@ def add_food(orderId):
         # Add new food's id into Order
         result = db.Order.update_one({'_id': ObjectId(orderId)},
                                      {'$push': {'foodIds': ObjectId(newFood)},
-                                      '$inc': {'orderPrice': data['foodPrice']}})
+                                      '$inc': {'totalCost': data['foodPrice']}})
 
         if result.matched_count == 0:
             raise Exception('Order not found.')
@@ -632,7 +632,7 @@ def foodorder(orderId, foodId):
                 raise Exception('Food not found')
 
             order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
-                                                        {"$inc": {"orderPrice": data['foodPrice'] -
+                                                        {"$inc": {"totalCost": data['foodPrice'] -
                                                                                 food_result['foodPrice']}})
             if order_result is None:
                 raise Exception('Failed to update order')
@@ -649,10 +649,10 @@ def foodorder(orderId, foodId):
             if deleted_food is None:
                 raise Exception("Food not found")
 
-            # Delete food id from Order, update orderPrice
+            # Delete food id from Order, update totalCost
             data = db.Order.find_one_and_update({'_id': ObjectId(orderId)},
                                                 {'$pull': {'foodIds': deleted_food['_id']},
-                                                 '$inc': {'orderPrice': -deleted_food['foodPrice']}})
+                                                 '$inc': {'totalCost': -deleted_food['foodPrice']}})
 
             if data is None:
                 raise Exception("Failed to update order")
@@ -843,7 +843,7 @@ def user_join_group_history(userID):
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'totalPrice': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
@@ -894,7 +894,7 @@ def user_supper_group_history(userID):
             },
             {
                 '$addFields': {
-                    'totalPrice': {'$sum': '$orderList.orderPrice'},
+                    'totalPrice': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
                     'restaurantLogo': '$restaurant.restaurantLogo'
                 }
