@@ -11,11 +11,15 @@ export type User = {
 
 export type Food = {
   foodId: string
+  restaurantId: string
+  foodMenuId: string
+  foodName: string
   comments?: string
   quantity: number
-  foodMenu: FoodMenu
-  foodPrice?: number
+  price: number
+  foodPrice: number //with add ons
   cancelAction?: CancelAction
+  custom?: Custom[]
 }
 
 export type Option = {
@@ -25,8 +29,8 @@ export type Option = {
 }
 
 export enum CancelAction {
-  contact = 'contact',
-  cancel = 'cancel',
+  CONTACT = 'Contact',
+  CANCEL = 'Cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -53,6 +57,12 @@ export type Restaurant = {
   restaurantLogo: string
   menu: FoodMenu[]
   allSection: string[]
+}
+
+export enum Restaurants {
+  MCDONALDS = "McDonald's",
+  ALAMAANS = "Al Amaan's",
+  KIMLYDIMSUM = 'Kimly Dim Sum',
 }
 
 export type Order = {
@@ -82,6 +92,7 @@ export type SupperGroup = {
   paymentInfo: PaymentInfo[]
   restaurantLogo?: string
   restaurantName: string
+  restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
   supperGroupId: number
@@ -89,7 +100,6 @@ export type SupperGroup = {
   totalPrice: number
   userIdList: string[]
   orderList?: Order[]
-  deliveryDuration?: number
   estArrivalTime?: number
   closingTime: number
 }
@@ -159,6 +169,8 @@ export enum SUPPER_ACTIONS {
   SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
   SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
+  SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
+  SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
 }
 
 type SetIsLoading = {
@@ -316,6 +328,16 @@ type SetEstimatedArrivalTime = {
   estArrivalTime: string
 }
 
+type SetEditOrderNumber = {
+  type: typeof SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER
+  editOrderNumber: number
+}
+
+type SetCounter = {
+  type: typeof SUPPER_ACTIONS.SET_COUNTER
+  counter: number
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -348,3 +370,5 @@ export type ActionTypes =
   | SetExpandAll
   | SetPaymentExpandedCount
   | SetEstimatedArrivalTime
+  | SetEditOrderNumber
+  | SetCounter

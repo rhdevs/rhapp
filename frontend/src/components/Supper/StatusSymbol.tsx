@@ -11,6 +11,7 @@ const MainContainer = styled.div<{
   borderWidth: string
   shadow?: string
   minWidth?: string
+  isDisabled?: boolean
 }>`
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
@@ -26,6 +27,7 @@ const MainContainer = styled.div<{
   align-items: center;
   background-color: ${(props) => props.backgroundColor ?? ''};
   box-shadow: ${(props) => props.shadow ?? ''};
+  ${(props) => props.isDisabled && 'cursor: not-allowed;'}
 `
 
 const IconContainer = styled.div<{ color: string }>`
@@ -64,6 +66,7 @@ type Props = {
   fontWeight?: number
   fontSize?: string
   minWidth?: string
+  isDisabled?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -92,9 +95,8 @@ export const StatusSymbol = (props: Props) => {
   if (props.backgroundColor === 'bluegrey') {
     BACKGROUND_COLOR = BLUE_GREY
   }
-
-  const BORDER_COLOR = props.border ?? BACKGROUND_COLOR === BLUE_GREY ? DARK_BLUE : RED
-  const BORDER_WIDTH = props.borderWidth ?? BACKGROUND_COLOR === BLUE_GREY ? '1px' : '3px'
+  const BORDER_COLOR = props.border ?? (BACKGROUND_COLOR === BLUE_GREY ? DARK_BLUE : RED)
+  const BORDER_WIDTH = props.borderWidth ?? (BACKGROUND_COLOR === BLUE_GREY ? '1px' : '3px')
   const TEXT_COLOR = props.color ?? 'black'
   const ICON_COLOR = props.iconColor ?? BLUE_GREY
   const RIGHT_ICON = props.rightIcon ?? <></>
@@ -110,6 +112,7 @@ export const StatusSymbol = (props: Props) => {
       shadow={props.shadow}
       onClick={props.onClick}
       minWidth={props.minWidth}
+      isDisabled={props.isDisabled}
     >
       {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
       {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}
