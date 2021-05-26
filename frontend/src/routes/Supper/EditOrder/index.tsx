@@ -20,10 +20,11 @@ import {
   setSelectedPaymentMethod,
   unixTo12HourTime,
   unixToFormattedTime,
+  // updateOrderDetails,
 } from '../../../store/supper/action'
-import { PaymentMethod, SplitACMethod } from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
-import { paymentMethods, restaurantList, supperGroupStub } from '../../../store/stubs'
+import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -71,7 +72,7 @@ const ButtonContainer = styled.div`
 `
 
 const PICSection = styled.div`
-  displau: flex;
+  display: flex;
   flex-direction: column;
   margin-bottom: 2.5rem;
 `
@@ -131,12 +132,12 @@ const DeliveryFeeInput = styled.input`
 
 type FormData = {
   supperGroupName: string
-  restuarant: string
   closingTime: number
   maxPrice: number
   estDeliveryFee: number
   splitDeliveryFee: SplitACMethod
   paymentMethod: number
+  phoneNumber: number
 }
 
 type PaymentInfoData = Record<string, string>
@@ -147,24 +148,17 @@ const EditOrder = () => {
     (state: RootState) => state.supper,
   )
   const params = useParams<{ supperGroupId: string }>()
-  const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroupStub?.costLimit ? true : false)
-  const { register, handleSubmit, watch, setValue, clearErrors, setError, control, errors } = useForm<
+  const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
+  const { register, handleSubmit, setValue, clearErrors, setError, reset, control, errors } = useForm<
     FormData,
     PaymentInfoData
   >({
     mode: 'all',
-    defaultValues: {
-      closingTime: supperGroupStub?.estArrivalTime,
-      maxPrice: supperGroupStub?.costLimit,
-    },
+    shouldUnregister: false,
   })
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    const selectedPM = supperGroup?.paymentInfo.map((pi) => {
-      return pi.paymentMethod
-    })
-    dispatch(setSelectedPaymentMethod(selectedPM))
   }, [dispatch])
 
   useEffect(() => {
@@ -172,7 +166,16 @@ const EditOrder = () => {
       return pi.paymentMethod
     })
     dispatch(setSelectedPaymentMethod(selectedPM))
-  }, [supperGroup])
+    if (supperGroup) {
+      reset({
+        closingTime: supperGroup.closingTime,
+        maxPrice: supperGroup.costLimit,
+        splitDeliveryFee: supperGroup.splitAdditionalCost,
+      })
+      setHasMaxPrice(supperGroup.costLimit ? true : false)
+    }
+  }, [supperGroup, reset])
+
   const RedAsterisk = <RedText>*</RedText>
 
   const orderInformationSection = () => {
@@ -182,7 +185,7 @@ const EditOrder = () => {
         <Input
           type="text"
           defaultValue={supperGroup?.supperGroupName ?? ''}
-          placeholder="Supper group name"
+          placeholder="Order name"
           name="supperGroupName"
           ref={register({
             required: true,
@@ -239,7 +242,7 @@ const EditOrder = () => {
           <StyledText>Est. Delivery Fees{RedAsterisk}</StyledText>
           <DeliveryFeeInput
             type="number"
-            placeholder="Delivery fee"
+            placeholder="e.g: 3"
             name="estDeliveryFee"
             defaultValue={supperGroup?.additionalCost}
             ref={register({
@@ -306,7 +309,7 @@ const EditOrder = () => {
                     counter <= 1
                       ? supperGroup?.paymentInfo.find((pi) => {
                           return pi.paymentMethod === pm
-                        })?.link
+                        })?.link ?? undefined
                       : undefined
                   }
                 />
@@ -320,6 +323,22 @@ const EditOrder = () => {
         })}
         {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
         {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
+        <StyledText topMargin>Phone Number{RedAsterisk}</StyledText>
+        <Input
+          type="number"
+          defaultValue={supperGroup?.phoneNumber}
+          placeholder="Phone Number"
+          name="phoneNumber"
+          ref={register({
+            required: true,
+            valueAsNumber: true,
+          })}
+          style={{
+            borderColor: errors.phoneNumber && 'red',
+            background: errors.phoneNumber && '#ffd1d1',
+          }}
+        />
+        {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
       </PICSection>
     )
   }
@@ -359,7 +378,6 @@ const EditOrder = () => {
   const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
-    if (!watch('splitDeliveryFee')) setValue('splitDeliveryFee', supperGroup?.splitAdditionalCost as SplitACMethod)
     setValue('paymentMethod', selectedPaymentMethod.length)
     if (errors.supperGroupName || errors.closingTime) {
       dispatch(setEditOrderNumber(1))
@@ -369,23 +387,76 @@ const EditOrder = () => {
       dispatch(setEditOrderNumber(2))
       return
     }
-    if (errors.paymentMethod) {
+    if (errors.paymentMethod || errors.phoneNumber) {
       dispatch(setEditOrderNumber(3))
       return
     }
 
     handleSubmit((data: FormData) => {
-      // GooglePay: "aweufsiooawoekf"
-      // PayLah!: "awejfjiiasjkdf"
-      // closingTime: 100453488
-      // estDeliveryFee: 3
-      // paymentMethod: 2
-      // splitDeliveryFee: "Equal"
-      // supperGroupName: "feed me"
+      let updatedOrderInfo
       if (data.supperGroupName !== supperGroup?.supperGroupName) {
+        updatedOrderInfo = { supperGroupName: data.supperGroupName }
+      }
+      if (data.closingTime !== supperGroup?.closingTime) {
+        updatedOrderInfo = { ...updatedOrderInfo, closingTime: data.closingTime }
+      }
+      if (hasMaxPrice) {
+        if (data.maxPrice !== supperGroup?.costLimit) {
+          updatedOrderInfo = { ...updatedOrderInfo, costLimit: data.maxPrice }
+        }
+      }
+      if (!hasMaxPrice && supperGroup?.costLimit) {
+        updatedOrderInfo = { ...updatedOrderInfo, costLimit: undefined }
+      }
+      if (data.estDeliveryFee !== supperGroup?.additionalCost) {
+        updatedOrderInfo = { ...updatedOrderInfo, additionalCost: data.estDeliveryFee }
+      }
+      if (data.splitDeliveryFee !== supperGroup?.splitAdditionalCost) {
+        updatedOrderInfo = { ...updatedOrderInfo, splitAdditionalCost: data.splitDeliveryFee }
+      }
+      const initialPI = supperGroup?.paymentInfo
+      const initialPM = supperGroup?.paymentInfo.map((pi) => {
+        return pi.paymentMethod
+      })
+      let newPI: PaymentInfo[] = []
+      const allPaymentMethods = Object.values(PaymentMethod)
+
+      allPaymentMethods
+        ?.filter((pm) => pm !== PaymentMethod.CASH)
+        .map((pm) => {
+          const initialLink = initialPI?.find((pi) => pi.paymentMethod === pm)?.link
+          if (
+            data[`${pm}`] !== initialLink ||
+            !data[`${pm}`] ||
+            (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm))
+          ) {
+            if (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm)) {
+              newPI = newPI.concat({ paymentMethod: pm, link: null })
+              return
+            }
+            if (!data[`${pm}`] && !initialPM?.includes(pm)) {
+              return
+            }
+            newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })
+          }
+        })
+      if (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH, link: null })
+      }
+      if (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
+      }
+      if (newPI.length) {
+        updatedOrderInfo = { ...updatedOrderInfo, paymentInfo: newPI }
+      }
+      if (data.phoneNumber !== supperGroup?.phoneNumber) {
+        updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
       console.log('Form was submitted!')
       console.log(data)
+      console.log('updatedOrderInfo', updatedOrderInfo)
+      //TODO: uncomment to send updated order details to backend
+      // dispatch(updateOrderDetails(params.supperGroupId, updatedOrderInfo))
     })()
   }
 
