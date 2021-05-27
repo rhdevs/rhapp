@@ -12,7 +12,7 @@ import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
   width: 100vw;
-  height: fit-content;
+  height: 100%;
   min-height: 100vh;
   background-color: #fafaf4;
   padding-bottom: 2rem;
@@ -35,8 +35,10 @@ const FieldHeader = styled.text`
 const InputText = styled.input`
   border-radius: 30px;
   border: 1px solid #d9d9d9;
-  padding: 5px 15px;
-  width: 75%;
+  padding: 5px 10px;
+  width: 90%;
+  margin: 0px 0px 0px 0px;
+  height: 35px;
 `
 
 const OrderContainer = styled.div`
@@ -113,17 +115,18 @@ export default function ConfirmOrder() {
   const { register, handleSubmit, errors } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
-  const params = useParams<{ supperGroupId: string; userId: string }>()
+  const params = useParams<{ supperGroupId: string }>()
   const { order, isLoading } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
-    dispatch(getUserOrder(params.supperGroupId, params.userId))
+    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
   }, [dispatch])
 
   const onClick = () => {
     handleSubmit((data) => {
       const updatedOrder = { ...order, userContact: data.number }
       console.log(updatedOrder)
+      //TODO: update backend order contact number
       //dispatch(updateOrderDetails(updatedOrder, params.orderId))
     })()
   }
@@ -138,13 +141,12 @@ export default function ConfirmOrder() {
           <NumberContainer>
             <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
             <InputText
-              type="text"
+              type="number"
               placeholder="Phone Number"
               name="number"
               ref={register({
                 required: true,
-                validate: (input) => input.trim().length !== 0,
-                pattern: /[0-9]+/i,
+                valueAsNumber: true,
               })}
               style={{
                 borderColor: errors.number && 'red',
@@ -153,8 +155,6 @@ export default function ConfirmOrder() {
             />
           </NumberContainer>
           {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-          {errors.number?.type === 'pattern' && <ErrorText>Numbers only!</ErrorText>}
-
           <OrderContainer>
             <Header>My Order</Header>
           </OrderContainer>
