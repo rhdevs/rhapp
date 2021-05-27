@@ -10,7 +10,7 @@ const MainContainer = styled.div`
 `
 
 const SectionHeaderContainer = styled.div`
-  padding: 10px 20px;
+  padding: 8px 20px 0px 20px;
 `
 
 const SectionHeader = styled.text`
@@ -19,7 +19,7 @@ const SectionHeader = styled.text`
 `
 
 const SectionBodyContainer = styled.div`
-  padding: 16px;
+  padding: 15px;
 `
 
 const FoodMenuContainer = styled.div`
@@ -70,18 +70,18 @@ type Props = {
 export const MenuSection = (props: Props) => {
   let QUANTITY
   const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
-  console.log(menuTabKey)
-  console.log(searchValue)
+  const sectionHeader = menuTabKey === '' ? 'All' : menuTabKey
+
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>{menuTabKey}</SectionHeader>
+        <SectionHeader>{sectionHeader}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
           {props.menu ? (
             props.menu
-              .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All' || menuTabKey === '')
+              .filter((foodMenu) => foodMenu.section === sectionHeader || sectionHeader === 'All')
               .map((foodMenu) => (
                 <>
                   <FoodAndQuantityContainer

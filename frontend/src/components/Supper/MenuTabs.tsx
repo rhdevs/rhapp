@@ -87,7 +87,6 @@ export const MenuTabs = (props: Props) => {
               value={section}
               onClick={() => {
                 menuTab = section
-                console.log(section)
                 dispatch(setMenuTabKey(section))
               }}
             >
