@@ -70,18 +70,17 @@ type Props = {
 export const MenuSection = (props: Props) => {
   let QUANTITY
   const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
-  const sectionHeader = menuTabKey === '' ? 'All' : menuTabKey
 
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>{sectionHeader}</SectionHeader>
+        <SectionHeader>{menuTabKey}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>
           {props.menu ? (
             props.menu
-              .filter((foodMenu) => foodMenu.section === sectionHeader || sectionHeader === 'All')
+              .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
               .map((foodMenu) => (
                 <>
                   <FoodAndQuantityContainer

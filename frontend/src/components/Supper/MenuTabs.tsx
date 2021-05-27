@@ -71,7 +71,7 @@ type Props = {
 export const MenuTabs = (props: Props) => {
   const dispatch = useDispatch()
 
-  let menuTab = ''
+  let menuTab = 'All'
 
   useEffect(() => {
     dispatch(setMenuTabKey(menuTab))
@@ -79,19 +79,21 @@ export const MenuTabs = (props: Props) => {
 
   return (
     <MainContainer>
-      <ToggleTabsContainer>
+      <ToggleTabsContainer defaultValue={'All'}>
         {props.menuSections ? (
           ['All'].concat(props.menuSections).map((section, idx) => (
-            <TextContainer
-              key={idx}
-              value={section}
-              onClick={() => {
-                menuTab = section
-                dispatch(setMenuTabKey(section))
-              }}
-            >
-              {section}
-            </TextContainer>
+            <>
+              <TextContainer
+                key={idx}
+                value={section}
+                onClick={() => {
+                  menuTab = section
+                  dispatch(setMenuTabKey(section))
+                }}
+              >
+                {section}
+              </TextContainer>
+            </>
           ))
         ) : (
           <></>
