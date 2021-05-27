@@ -2,32 +2,31 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-const Container = styled.label<{ checked?: boolean }>`
+const Container = styled.label<{ checked?: boolean; margin?: string; sizePercentage?: number }>`
   display: block;
   position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
+  margin: ${(props) => props.margin ?? ' auto 5px'};
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  width: fit-content;
-  height: fit-content;
+  height: ${(props) => (props.sizePercentage ?? 1) * 20}px;
+  width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
 `
 
-const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string }>`
+const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string; sizePercentage?: number }>`
   position: absolute;
   top: 0;
   left: 0;
-  height: 20px;
-  width: 20px;
+  height: ${(props) => (props.sizePercentage ?? 1) * 20}px;
+  width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   ${(props) =>
     props.checked
       ? `background-color: ${props.checkboxColor ?? '#002642'};
-        left: 7px;
-        top: 3px;
+        left: 35%;
+        top: 15%;
         width: 6px;
         height: 11px;
         border: solid white;
@@ -36,18 +35,18 @@ const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string }>`
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);`
       : `
-        background-color:#eee;
+        background-color:#fff;
         border-radius: 2px;
         border: 1px solid ${props.checkboxColor ?? '#002642'};
       `}
 `
 
-const Background = styled.div<{ checked?: boolean; checkboxColor?: string }>`
-  background-color: ${(props) => (props.checked ? props.checkboxColor ?? '#002642' : '#eee')};
+const Background = styled.div<{ checked?: boolean; checkboxColor?: string; sizePercentage?: number }>`
+  background-color: ${(props) => (props.checked ? props.checkboxColor ?? '#002642' : '#fff')};
   top: 0;
   left: 0;
-  height: 20px;
-  width: 20px;
+  height: ${(props) => (props.sizePercentage ?? 1) * 20}px;
+  width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   position: absolute;
   border-radius: 2px;
 `
@@ -55,7 +54,10 @@ const Background = styled.div<{ checked?: boolean; checkboxColor?: string }>`
 type Props = {
   checkboxColor?: string
   isChecked?: boolean
+  isDisabled?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  sizePercentage?: number
+  margin?: string
 }
 
 export const Checkbox = (props: Props) => {
@@ -65,16 +67,19 @@ export const Checkbox = (props: Props) => {
   const [isChecked, setIsChecked] = useState(props.isChecked ?? false)
 
   return (
-    <Container>
+    <Container sizePercentage={props.sizePercentage} margin={props.margin}>
       <Background
         onClick={(e) => {
-          setIsChecked(!isChecked)
-          props.onClick ? props.onClick(e) : null
+          if (!props.isDisabled) {
+            setIsChecked(!isChecked)
+            props.onClick ? props.onClick(e) : null
+          }
         }}
         checked={isChecked}
         checkboxColor={props.checkboxColor}
+        sizePercentage={props.sizePercentage}
       >
-        <Checkmark checked={isChecked} checkboxColor={props.checkboxColor} />
+        <Checkmark checked={isChecked} checkboxColor={props.checkboxColor} sizePercentage={props.sizePercentage} />
       </Background>
     </Container>
   )

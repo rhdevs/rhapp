@@ -447,7 +447,11 @@ const EditOrder = () => {
         newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
       }
       if (newPI.length) {
-        updatedOrderInfo = { ...updatedOrderInfo, paymentInfo: newPI }
+        //changes were made
+        const updatedPI = selectedPaymentMethod.map((pm) => {
+          return { paymentMethod: pm, link: data[`${pm}`] }
+        })
+        updatedOrderInfo = { ...updatedOrderInfo, paymentInfo: updatedPI }
       }
       if (data.phoneNumber !== supperGroup?.phoneNumber) {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }

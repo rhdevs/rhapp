@@ -16,7 +16,7 @@ const MainContainer = styled.div<{ isSticky?: boolean; width?: string }>`
 
 const Button = styled(AntdButton)`
   width: 100%;
-  height: 50px;
+  height: fit-content;
   border-radius: 5px;
   background: #de5f4c;
   border: 1px solid #de5f4c;

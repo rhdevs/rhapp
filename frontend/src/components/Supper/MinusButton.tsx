@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { setCount } from '../../store/supper/action'
 
 type Props = {
+  min?: number
   color?: string
   defaultValue?: number
   onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
@@ -28,11 +29,11 @@ export const MinusButton = (props: Props) => {
     BUTTON_COLOR = DARK_BLUE
   }
 
-  if (count === 0) {
-    if ((BUTTON_COLOR = LIGHT_RED)) {
+  if (count === props.min ?? 0) {
+    if (BUTTON_COLOR === LIGHT_RED) {
       BUTTON_COLOR = SHADED_RED
     }
-    if ((BUTTON_COLOR = DARK_BLUE)) {
+    if (BUTTON_COLOR === DARK_BLUE) {
       BUTTON_COLOR = SHADED_DARK_BLUE
     }
   }

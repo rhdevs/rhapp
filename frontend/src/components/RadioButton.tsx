@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { Radio } from 'antd'
 
 const StyledRadioButton = styled(Radio)<{ color: string; margin?: string }>`
-  ${(props) => `.ant-radio-checked .ant-radio-inner {
+  ${(props) => `.ant-radio-checked, .ant-radio-inner {
     border-color: ${props.color} !important ;
   }
 
@@ -21,16 +21,22 @@ const StyledRadioButton = styled(Radio)<{ color: string; margin?: string }>`
 
 type Props = {
   value: string
-  label?: string
+  label?: string | ReactElement
   color?: string
   margin?: string
+  defaultChecked?: boolean
 }
 
 export const RadioButton = (props: Props) => {
   const BLUE = '#002642'
 
   return (
-    <StyledRadioButton margin={props.margin} color={props.color ?? BLUE} value={props.value}>
+    <StyledRadioButton
+      defaultChecked={props.defaultChecked}
+      margin={props.margin}
+      color={props.color ?? BLUE}
+      value={props.value}
+    >
       {props.label}
     </StyledRadioButton>
   )

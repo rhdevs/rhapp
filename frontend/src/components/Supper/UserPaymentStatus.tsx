@@ -81,7 +81,6 @@ const NameText = styled.text<{ cancelName: boolean }>`
 
 const CheckboxContainer = styled.div`
   width: fit-content;
-  margin: -10px 0 0 0;
 `
 
 const PaymentMethodText = styled.text`
@@ -158,6 +157,7 @@ export const UserPaymentStatus = (props: Props) => {
         <LeftContainer>
           <CheckboxContainer>
             <Checkbox
+              margin="15px auto 0"
               isChecked={cancelName}
               onClick={() => {
                 setCancelName(!cancelName)

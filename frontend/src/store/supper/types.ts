@@ -24,11 +24,12 @@ export type Food = {
 
 export type Option = {
   name: string
-  isSelected: boolean
+  isSelected?: boolean
   price: number
 }
 
 export enum CancelAction {
+  REMOVE = 'Remove',
   CONTACT = 'Contact',
   CANCEL = 'Cancel',
 }
