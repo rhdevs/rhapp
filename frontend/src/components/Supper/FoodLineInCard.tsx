@@ -3,12 +3,13 @@ import React from 'react'
 import styled from 'styled-components'
 import editIcon from '../../assets/SupperEditIcon.svg'
 import deleteIcon from '../../assets/SupperDeleteIcon.svg'
+import { CancelAction } from '../../store/supper/types'
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{ padding?: string }>`
   height: fit-content;
   position: relative;
   width: 100%;
-  padding: 10px;
+  padding: ${(props) => props.padding ?? '10px'};
   display: flex;
   flex-direction: row;
 `
@@ -54,6 +55,7 @@ const CustomText = styled.text<{ fontPercentage?: number }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   line-height: 14px;
   font-weight: 200;
+  margin: auto 0;
 `
 
 const IconsContainer = styled.div`
@@ -67,9 +69,15 @@ const CommentsContainer = styled.div`
   flex-direction: column;
 `
 
-const CommentText = styled.text<{ fontPercentage?: number }>`
+const CancelActionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const BoldText = styled.text<{ fontPercentage?: number }>`
   font-weight: 400;
   font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
+  padding-right: 5px;
 `
 
 const Icon = styled.img`
@@ -78,6 +86,7 @@ const Icon = styled.img`
 
 type Props = {
   foodUserId?: string
+  padding?: string
   fontPercentage?: number
   foodName: string
   qty: number
@@ -85,13 +94,14 @@ type Props = {
   customisations?: string[]
   isEditable?: boolean
   comments?: string
+  cancelAction?: CancelAction
   onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const FoodLineInCard = (props: Props) => {
   return (
-    <MainContainer>
+    <MainContainer padding={props.padding}>
       <QuantityContainer fontPercentage={props.fontPercentage}>{props.qty}x</QuantityContainer>
       <SubContainer>
         <TopContainer>
@@ -109,9 +119,15 @@ export const FoodLineInCard = (props: Props) => {
             })}
             {props.comments && (
               <CommentsContainer>
-                <CommentText fontPercentage={props.fontPercentage}>Comments: </CommentText>
+                <BoldText fontPercentage={props.fontPercentage}>Comments:</BoldText>
                 <CustomText>{props.comments}</CustomText>
               </CommentsContainer>
+            )}
+            {props.cancelAction && (
+              <CancelActionContainer>
+                <BoldText fontPercentage={props.fontPercentage}>If unavailable:</BoldText>
+                <CustomText>{props.cancelAction}</CustomText>
+              </CancelActionContainer>
             )}
           </CustomisationContainer>
 

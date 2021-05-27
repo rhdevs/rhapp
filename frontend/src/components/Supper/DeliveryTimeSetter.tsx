@@ -6,7 +6,9 @@ import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'
 
-const TimerContainer = styled.div``
+const TimerContainer = styled.div<{ center?: boolean }>`
+  ${(props) => props.center && 'margin: auto'}
+`
 
 const ValueContainer = styled.text`
   font-size: 24px;
@@ -15,6 +17,7 @@ const ValueContainer = styled.text`
 `
 type Props = {
   default: number
+  center?: boolean
 }
 
 export const DeliveryTimeSetter = (props: Props) => {
@@ -36,7 +39,7 @@ export const DeliveryTimeSetter = (props: Props) => {
   }
 
   return (
-    <TimerContainer>
+    <TimerContainer center={props.center}>
       <MinusButton color="DARK_BLUE" onClick={subTime} />
       <ValueContainer>{deliveryTime} mins</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addTime} />

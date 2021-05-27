@@ -13,6 +13,8 @@ import { setOrder } from '../../../store/supper/action'
 import { SplitACMethod, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import InputRow from '../../../components/Mobile/InputRow'
+import { withSuccess } from 'antd/lib/modal/confirm'
 
 const Background = styled.div`
   height: 100vh;
@@ -39,6 +41,25 @@ const Header = styled.text`
   font-size: 16px;
 `
 
+const ErrorText = styled.p`
+  margin: 0;
+  color: #ff837a;
+  width: 100%;
+  text-align: center;
+  font-size: 17px;
+  font-family: 'Inter';
+`
+
+const RedText = styled.text`
+  color: red;
+  padding-right: 5px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 14px;
+`
+
 const VertInputContainer = styled.div`
   width: 85%;
   padding 5px 12px;
@@ -47,6 +68,14 @@ const VertInputContainer = styled.div`
 const HortInputContainer = styled.div`
   padding: 0px 0px 0px 15px;
   width: 50%;
+`
+
+const InputText = styled.input`
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 10px auto;
+  height: 35px;
 `
 
 const InputBox = styled(Input)`
@@ -65,9 +94,19 @@ const StyledRadioButtons = styled(Radio.Group)`
   }
 `
 
+const FixerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+type FormValues = {
+  orderName: string
+}
+
 export default function UserCreateOrder() {
   const [count, setCount] = useState(1)
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const RedAsterisk = <RedText>*</RedText>
   const initSupperGroup = {
     costLimit: 0,
     createdAt: 10000000,
@@ -90,23 +129,31 @@ export default function UserCreateOrder() {
 
   const history = useHistory()
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit, watch, errors } = useForm()
 
-  const onSubmit = (data) => console.log(data)
-
-  console.log(watch('Order Name'))
+  // const onSubmit = (data) => console.log(data)
 
   useEffect(() => {
-    setOrder(initSupperGroup)
+    //TODO: dispatch new order to backend
+    // setOrder(initSupperGroup)
   }, [])
 
+  const onClick = () => {
+    console.log(watch())
+    console.log(errors)
+    handleSubmit((data) => {
+      console.log(data)
+    })()
+    if (!errors) {
+      setCount(count + 1)
+    }
+    if (count > 3) {
+      console.log('success')
+    }
+  }
   const onConfirmDiscardClick = () => {
-    setOrder(initSupperGroup)
+    //TODO: discard changes
+    // setOrder(initSupperGroup)
     history.goBack()
   }
 
@@ -127,6 +174,7 @@ export default function UserCreateOrder() {
                     onClick={() => {
                       setCount(count + 1)
                       console.log()
+                      onClick()
                     }}
                     text="Next"
                     fontWeight={700}
@@ -136,7 +184,7 @@ export default function UserCreateOrder() {
               />
               <LineProgress currentStep={2} numberOfSteps={3} />
               <HortSectionContainer>
-                <Header>Est. Delivery Fees</Header>
+                <Header>Est. Delivery Fees {RedAsterisk}</Header>
                 <HortInputContainer>
                   <InputBox
                     type="number"
@@ -150,7 +198,7 @@ export default function UserCreateOrder() {
                 </HortInputContainer>
               </HortSectionContainer>
               <HortSectionContainer>
-                <Header>Split Delivery Fees</Header>
+                <Header>Split Delivery Fees {RedAsterisk}</Header>
                 <HortInputContainer>
                   <StyledRadioButtons>
                     <Radio value={1}>Equal</Radio>
@@ -165,26 +213,31 @@ export default function UserCreateOrder() {
             <Step>
               <TopNavBar
                 title="Create Order"
-                rightComponent={<UnderlinedButton onClick={() => setCount(count + 1)} text="Finish" fontWeight={700} />}
+                rightComponent={
+                  <UnderlinedButton
+                    onClick={() => {
+                      console.log('Finish')
+                      onClick()
+                    }}
+                    text="Finish"
+                    fontWeight={700}
+                  />
+                }
                 onLeftClick={() => setCount(count - 1)}
               />
               <LineProgress currentStep={3} numberOfSteps={3} />
               <VertSectionContainer>
-                <Header>Payment Method</Header>
+                <Header>Payment Method {RedAsterisk}</Header>
                 <PaymentMethodBubbles paymentMethods={paymentMethods} />
               </VertSectionContainer>
               <VertSectionContainer>
-                <Header>Phone Number</Header>
+                <Header>Phone Number {RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputBox
-                    type="text"
+                    type="number"
                     placeholder="Phone Number"
                     {...register('Phone Number', {
                       required: true,
-                      max: 99999999,
-                      min: 800000000,
-                      maxLength: 8,
-                      pattern: /[0-9]+/i,
                     })}
                   />
                 </VertInputContainer>
@@ -196,16 +249,7 @@ export default function UserCreateOrder() {
             <Step>
               <TopNavBar
                 title="Create Order"
-                rightComponent={
-                  <UnderlinedButton
-                    onClick={() => {
-                      handleSubmit(onSubmit)
-                      setCount(count + 1)
-                    }}
-                    text="Next"
-                    fontWeight={700}
-                  />
-                }
+                rightComponent={<UnderlinedButton onClick={onClick} text="Next" fontWeight={700} />}
                 onLeftClick={() =>
                   modalIsOpen && (
                     <ConfirmationModal
@@ -221,27 +265,30 @@ export default function UserCreateOrder() {
               />
               <LineProgress currentStep={1} numberOfSteps={3} />
               <VertSectionContainer>
-                <Header>Order Name</Header>
+                <Header>Order Name{RedAsterisk}</Header>
                 <VertInputContainer>
-                  <InputBox
+                  <InputText
                     type="text"
                     placeholder="Order Name"
-                    {...register('OrderName', {
+                    name="orderName"
+                    ref={register({
                       required: true,
                       validate: (input) => input.trim().length !== 0,
-                      minLength: 1,
-                      maxLength: 10,
                     })}
+                    style={{
+                      borderColor: errors.orderName && 'red',
+                      background: errors.orderName && '#ffd1d1',
+                    }}
                   />
-                  {errors.OrderName && <span>This field is required.</span>}
+                  {errors.orderName?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
-                <Header>Restaurant</Header>
+                <Header>Restaurant{RedAsterisk}</Header>
                 <RestaurantBubbles restaurantList={restaurantList} />
               </VertSectionContainer>
               <VertSectionContainer>
-                <Header>Closing Time</Header>
+                <Header>Closing Time{RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputBox
                     type="datetime-local"
@@ -251,8 +298,10 @@ export default function UserCreateOrder() {
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
-                <Header>Max Price</Header>
-                <MaxPriceFixer />
+                <Header>Max Price{RedAsterisk}</Header>
+                <FixerContainer>
+                  <MaxPriceFixer />
+                </FixerContainer>
               </VertSectionContainer>
             </Step>
           )

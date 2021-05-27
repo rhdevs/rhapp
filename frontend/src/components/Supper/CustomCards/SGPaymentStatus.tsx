@@ -1,8 +1,12 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
+import { setExpandAll, setPaymentExpandedCount } from '../../../store/supper/action'
 import { SplitACMethod, SupperGroup } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 import { MainCard } from '../MainCard'
+import { UnderlinedButton } from '../UnderlinedButton'
 import { UserPaymentStatus } from '../UserPaymentStatus'
 
 const HorizontalLine = styled.hr`
@@ -12,39 +16,66 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
+const StyledText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 10px auto;
+`
+
 type Props = {
-  supperGroup: SupperGroup
+  supperGroup?: SupperGroup | null
 }
 
 export const SGPaymentStatus = (props: Props) => {
+  const dispatch = useDispatch()
+  const { isExpandAll } = useSelector((state: RootState) => state.supper)
+  const buttonText = isExpandAll ? 'Expand all' : 'Collapse all'
+
   return (
     <MainCard flexDirection="column">
-      {props.supperGroup.orderList ? (
-        props.supperGroup.orderList.map((order, index) => {
-          const additionalCost =
-            props.supperGroup.splitAdditionalCost === SplitACMethod.EQUAL
-              ? props.supperGroup.additionalCost ?? 0 / props.supperGroup.userIdList.length
-              : ((props.supperGroup.additionalCost ?? 0) * order.totalCost) /
-                (props.supperGroup.currentFoodCost + (props.supperGroup.additionalCost ?? 0))
-          return (
-            <>
-              <UserPaymentStatus
-                key={index}
-                name={order.user.displayName}
-                phoneNumber={order.userContact}
-                telegramHandle={order.user.telegramHandle}
-                hasPaid={order.hasPaid}
-                foodList={order.foodList}
-                hasReceived={order.hasReceived}
-                totalCost={order.totalCost}
-                additionalCost={additionalCost}
-              />
-              {index + 1 !== props.supperGroup.orderList?.length && <HorizontalLine />}
-            </>
-          )
-        })
+      {props.supperGroup?.orderList && props.supperGroup?.orderList?.length ? (
+        <>
+          <UnderlinedButton
+            text={buttonText}
+            onClick={() => {
+              dispatch(setExpandAll(!isExpandAll))
+              if (!isExpandAll) {
+                dispatch(setPaymentExpandedCount(0))
+              } else {
+                dispatch(setPaymentExpandedCount(props.supperGroup?.orderList?.length ?? 0))
+              }
+            }}
+          />
+          {props.supperGroup.orderList.map((order, index) => {
+            const additionalCost =
+              props.supperGroup?.splitAdditionalCost === SplitACMethod.EQUAL
+                ? props.supperGroup?.additionalCost ?? 0 / props.supperGroup?.userIdList.length
+                : ((props.supperGroup?.additionalCost ?? 0) * order.totalCost) /
+                  (props.supperGroup?.currentFoodCost ?? 0 + (props.supperGroup?.additionalCost ?? 0))
+            return (
+              <>
+                <UserPaymentStatus
+                  key={index}
+                  name={order.user.displayName}
+                  phoneNumber={order.userContact}
+                  telegramHandle={order.user.telegramHandle}
+                  hasPaid={order.hasPaid}
+                  foodList={order.foodList}
+                  hasReceived={order.hasReceived}
+                  totalCost={order.totalCost}
+                  additionalCost={additionalCost}
+                  paymentMethod={order.paymentMethod}
+                  numOrders={props.supperGroup?.orderList?.length}
+                />
+                {index + 1 !== props.supperGroup?.orderList?.length && <HorizontalLine />}
+              </>
+            )
+          })}
+        </>
       ) : (
-        <>there are no orders!</>
+        <StyledText>No orders found!</StyledText>
       )}
     </MainCard>
   )

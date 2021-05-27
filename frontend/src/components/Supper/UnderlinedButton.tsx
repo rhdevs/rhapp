@@ -46,7 +46,7 @@ export const UnderlinedButton = (props: Props) => {
 
   return (
     <MainContainer alignItems={props.alignItems} onClick={props.onClick}>
-      <ButtonText fontWeight={props.fontWeight} fontSize={props.fontSize} color={COLOR}>
+      <ButtonText fontSize={props.fontSize} color={COLOR} fontWeight={props.fontWeight}>
         {props.text}
       </ButtonText>
       {props.rightIcon && (

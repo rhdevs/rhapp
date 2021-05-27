@@ -26,10 +26,10 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getSupperGroupById = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
+  await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -124,11 +124,12 @@ export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
 
 export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}`)
+  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}/menu`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
         restaurant: resp.data,
@@ -207,7 +208,7 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: resp.data,
+        collatedOrder: { ...resp.data, price: 0.0 },
       })
     })
     .catch((err) => {
@@ -324,7 +325,8 @@ export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Disp
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (newOrderDetails: any, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateOrderDetails = (orderId: string, newOrderDetails?: any) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!newOrderDetails) return
   dispatch(setIsLoading(true))
   const requestBody = newOrderDetails
   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
@@ -435,7 +437,8 @@ export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const setCount = (newCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setCount = (newCount?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (newCount === undefined) return
   dispatch({
     type: SUPPER_ACTIONS.SET_COUNT,
     count: newCount,
@@ -463,9 +466,10 @@ export const setExpandableCardStatus = (isExpanded: boolean) => (dispatch: Dispa
   })
 }
 
-export const setSelectedPaymentMethod = (selectedPaymentMethod: PaymentMethod[]) => (
+export const setSelectedPaymentMethod = (selectedPaymentMethod?: PaymentMethod[]) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  if (!selectedPaymentMethod) return
   dispatch({
     type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
     selectedPaymentMethod: selectedPaymentMethod,
@@ -479,7 +483,7 @@ export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: 
   })
 }
 
-export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus) => (
+export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus | null) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
@@ -495,7 +499,7 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
-export const unixTo12HourTime = (unixDate: number) => {
+export const unixTo12HourTime = (unixDate?: number) => {
   if (!unixDate) {
     return '-'
   }
@@ -513,7 +517,24 @@ export const unixTo12HourTime = (unixDate: number) => {
   return formattedTime
 }
 
-export const readableSupperGroupId = (supperGroupId: number) => {
+export const unixToFormattedTime = (unixDate?: number) => {
+  if (!unixDate) {
+    return '-'
+  }
+  const date = new Date(unixDate * 1000)
+  const hours = date.getHours()
+  const minutes = '0' + date.getMinutes()
+  const seconds = '0' + date.getSeconds()
+
+  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
+
+  return formattedTime
+}
+
+export const readableSupperGroupId = (supperGroupId?: number | string) => {
+  if (!supperGroupId) {
+    return 'RHSO#'
+  }
   const readableSupperGroupId = '0000000000' + supperGroupId
   return String('RHSO#' + readableSupperGroupId.substr(-4))
 }
@@ -532,5 +553,47 @@ export const setOrder = (updatedOrder: SupperGroup) => (dispatch: Dispatch<Actio
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
     supperGroup: updatedOrder,
+  })
+}
+
+export const setMenuTabKey = (section: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_MENU_TAB_KEY,
+    menuTabKey: section,
+  })
+}
+
+export const setExpandAll = (isExpandAll: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EXPAND_ALL,
+    isExpandAll: isExpandAll,
+  })
+}
+
+export const setPaymentExpandedCount = (expandedCount: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT,
+    expandedCount: expandedCount,
+  })
+}
+
+export const setEstimatedArrivalTime = (estArrivalTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME,
+    estArrivalTime: unixTo12HourTime(estArrivalTime),
+  })
+}
+
+export const setEditOrderNumber = (editOrderNumber: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER,
+    editOrderNumber: editOrderNumber,
+  })
+}
+
+export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_COUNTER,
+    counter: counter,
   })
 }

@@ -34,12 +34,14 @@ import { NotificationBar } from '../../components/Supper/NotificationBar'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
+import { Checkbox } from '../../components/Checkbox'
 
 export default function Supper() {
   return (
     <>
       <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
+      <Checkbox isChecked={true} />
       <BubbleSection title="Order Information" number={1}>
         hello
       </BubbleSection>
