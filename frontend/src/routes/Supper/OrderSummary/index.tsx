@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getCollatedOrder } from '../../../store/supper/action'
+import { getCollatedOrder, readableSupperGroupId } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -129,7 +129,7 @@ const OrderSummary = () => {
         <LoadingSpin />
       ) : (
         <>
-          <OrderIdText>{collatedOrder?.supperGroupId}</OrderIdText>
+          <OrderIdText>{readableSupperGroupId(collatedOrder?.supperGroupId)}</OrderIdText>
           <OrderSummaryCard collatedOrder={collatedOrder} />
           <TotalPriceText>
             Total Price
