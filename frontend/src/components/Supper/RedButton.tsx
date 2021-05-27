@@ -39,6 +39,7 @@ const TextField = styled.text`
 `
 
 type Props = {
+  htmlType?: 'button' | 'submit' | 'reset' | undefined
   isSticky?: boolean
   leftText?: string
   middleText?: string
@@ -50,7 +51,7 @@ type Props = {
 export const RedButton = (props: Props) => {
   return (
     <MainContainer isSticky={props.isSticky} width={props.width}>
-      <Button type="primary" onClick={props.onClick}>
+      <Button type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
         <ButtonTextContainer>
           <TextField>{props.leftText}</TextField>
           <TextField>{props.middleText}</TextField>
