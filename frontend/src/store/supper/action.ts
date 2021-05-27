@@ -531,7 +531,7 @@ export const unixToFormattedTime = (unixDate?: number) => {
   return formattedTime
 }
 
-export const readableSupperGroupId = (supperGroupId?: number) => {
+export const readableSupperGroupId = (supperGroupId?: number | string) => {
   if (!supperGroupId) {
     return 'RHSO#'
   }

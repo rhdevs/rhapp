@@ -70,7 +70,7 @@ const ButtonContainer = styled.div`
 `
 
 export default function UserViewOrder() {
-  const params = useParams<{ supperGroupId: string; userId: string }>()
+  const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
   const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
   const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
@@ -78,7 +78,7 @@ export default function UserViewOrder() {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getUserOrder(params.supperGroupId, params.userId))
+    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
   }, [dispatch])
 
   const deliveryFee =
