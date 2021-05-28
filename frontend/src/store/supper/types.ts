@@ -10,7 +10,7 @@ export type User = {
 }
 
 export type Food = {
-  foodId: string
+  foodId?: string
   restaurantId: string
   foodMenuId: string
   foodName: string
@@ -24,11 +24,12 @@ export type Food = {
 
 export type Option = {
   name: string
-  isSelected: boolean
+  isSelected?: boolean
   price: number
 }
 
 export enum CancelAction {
+  REMOVE = 'Remove',
   CONTACT = 'Contact',
   CANCEL = 'Cancel',
 }
@@ -39,7 +40,7 @@ export type Custom = {
   options: Option[]
   max: number | null
   min: number
-  customNumber: number //to order the sections in the order card
+  customNumber?: number //to order the sections in the order card
 }
 
 export type FoodMenu = {

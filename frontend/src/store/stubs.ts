@@ -344,6 +344,40 @@ export const foodMenuStub: FoodMenu[] = [
   { foodMenuId: 'mcm', restaurantId: 'mdn', foodMenuName: 'Mc Muffin', section: 'Breakfast', price: 3.0 },
 ]
 
+export const foodItemStub: FoodMenu = {
+  foodMenuId: 'snm',
+  restaurantId: 'mdn',
+  foodMenuName: 'Spicy McNuggets Meal',
+  price: 7.5,
+  custom: [
+    {
+      title: 'Sides',
+      options: [
+        { name: 'fries', price: 0, isSelected: true },
+        { name: 'corn cup', price: 0, isSelected: false },
+      ],
+      min: 1,
+      max: 1,
+      customNumber: 1,
+    },
+    {
+      title: 'Drinks',
+      options: [
+        { name: 'Coke Small', price: 0 },
+        { name: 'Coke medium', price: 0.5 },
+        { name: 'Coke Large', price: 1 },
+        { name: 'Coke No Sugar Small', price: 0 },
+        { name: 'Coke No Sugar Medium', price: 0.5 },
+        { name: 'Coke No Sugar large', price: 1 },
+      ],
+      min: 0,
+      max: 2,
+      customNumber: 1,
+    },
+  ],
+  section: 'Upsized Value Meals',
+}
+
 export const supperGroupStub: SupperGroup = {
   additionalCost: 3,
   comments: 'pls feed me',
