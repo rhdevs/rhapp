@@ -10,7 +10,7 @@ export type User = {
 }
 
 export type Food = {
-  foodId: string
+  foodId?: string
   restaurantId: string
   foodMenuId: string
   foodName: string
@@ -40,7 +40,7 @@ export type Custom = {
   options: Option[]
   max: number | null
   min: number
-  customNumber: number //to order the sections in the order card
+  customNumber?: number //to order the sections in the order card
 }
 
 export type FoodMenu = {

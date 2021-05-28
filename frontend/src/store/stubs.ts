@@ -353,8 +353,8 @@ export const foodItemStub: FoodMenu = {
     {
       title: 'Sides',
       options: [
-        { name: 'fries', price: 0 },
-        { name: 'corn cup', price: 0 },
+        { name: 'fries', price: 0, isSelected: true },
+        { name: 'corn cup', price: 0, isSelected: false },
       ],
       min: 1,
       max: 1,

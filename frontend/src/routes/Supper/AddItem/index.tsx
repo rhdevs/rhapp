@@ -13,10 +13,12 @@ import InputRow from '../../../components/Mobile/InputRow'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
-import { CancelAction, Custom, Option } from '../../../store/supper/types'
-import { getMenuFood } from '../../../store/supper/action'
+import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
+import {
+  // addFoodToOrder,
+  getMenuFood,
+} from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
-// import { foodItemStub } from '../../../store/stubs'
 
 const Background = styled.form`
   width: 100vw;
@@ -289,27 +291,73 @@ const AddItem = () => {
     mode: 'all',
     reValidateMode: 'onChange',
   })
-  const { menuFood, isLoading } = useSelector((state: RootState) => state.supper)
+  const { menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
+  const compulsoryFields: Custom[] =
+    menuFood?.custom?.filter((custom) => {
+      return custom.min !== 0
+    }) ?? []
 
   useEffect(() => {
     dispatch(getMenuFood(params.foodId))
-    console.log(menuFood)
   }, [dispatch])
 
   const onSubmit = (e) => {
     e.preventDefault()
     handleSubmit((data) => {
-      console.log(data)
+      const custom: Custom[] = (menuFood?.custom ?? []).map((cf) => {
+        const options: Option[] = Object.entries(watch())
+          .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments')
+          .map((entry) => {
+            const fieldName = entry[0]
+            const fieldDetails = [entry[1]].flat()
+            if (cf.title === fieldName) {
+              const k = cf.options.map(
+                (option) =>
+                  fieldDetails.map((fd) => {
+                    if (option.name === fd) {
+                      return { ...option, isSelected: true }
+                    }
+                    return { ...option, isSelected: false }
+                  })[0],
+              )
+              return k
+            } else {
+              console.log(cf.title, fieldName)
+              return {} as Option
+            }
+          })
+          .filter(Boolean)
+          .flat()
+          .filter((k) => k.name !== undefined) //to remove empty Option objects
+
+        return {
+          title: cf.title,
+          options: options,
+          max: cf.max,
+          min: cf.min,
+        }
+      })
+      const newFood: Food = {
+        restaurantId: menuFood?.restaurantId ?? '',
+        foodMenuId: menuFood?.foodMenuId ?? '',
+        foodName: menuFood?.foodMenuName ?? '',
+        comments: data.comments as string,
+        quantity: count,
+        price: menuFood?.price ?? 0,
+        foodPrice: menuFood?.price ?? 0,
+        cancelAction: data.cancelAction as CancelAction,
+        custom: custom,
+      }
+      console.log(newFood)
+      //TODO: Send new food to backend
+      //   dispatch(addFoodToOrder(newFood, params.orderId))
+      console.log(data, count)
     })()
   }
 
   const checkFormValidity = () => {
     if (watch('cancelAction')) {
       let count = 0
-      const compulsoryFields: Custom[] =
-        menuFood?.custom?.filter((custom) => {
-          return custom.min !== 0
-        }) ?? []
       compulsoryFields.map((custom) => {
         if (watch(`${custom.title}`) && watch(`${custom.title}`).length >= custom.min) {
           count++
@@ -323,6 +371,21 @@ const AddItem = () => {
     } else {
       return false
     }
+  }
+
+  const calculateAdditionalCost = () => {
+    let addOns = 0
+    Object.entries(watch()).map((entry) => {
+      const fieldName = entry[0]
+      const fieldDetails = [entry[1]].flat()
+      const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
+      originalCustom?.options.map((option) => {
+        fieldDetails?.map((fd) => {
+          if (option.name === fd) addOns += option.price
+        })
+      })
+    })
+    return addOns
   }
 
   return (
@@ -401,7 +464,12 @@ const AddItem = () => {
           <Spacer />
           <QuantityTracker center min={1} default={1} />
           <Spacer />
-          <AddUpdateCartButton isGrey={!checkFormValidity()} htmlType="submit" add currentTotal="7.90" />
+          <AddUpdateCartButton
+            isGrey={!checkFormValidity()}
+            htmlType="submit"
+            add
+            currentTotal={String(((menuFood?.price ?? 0) + calculateAdditionalCost()).toFixed(2))}
+          />
         </MainContainer>
       )}
     </Background>
