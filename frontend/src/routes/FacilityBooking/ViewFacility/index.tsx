@@ -6,13 +6,12 @@ import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { DateRange } from 'react-date-range'
 import { useHistory } from 'react-router-dom'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import Button from '../../../components/Mobile/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { Alert, DatePicker } from 'antd'
+import { Alert } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
@@ -230,7 +229,7 @@ export default function ViewFacility() {
             {AlertSection}
             <DateSelectorGroup>
               <Calendar
-                onChange={(value: any, event: any) => {
+                onChange={(value: Date) => {
                   dispatch(SetIsLoading(true))
                   dispatch(setViewDates(value, parseInt(params.facilityID)))
                 }}
