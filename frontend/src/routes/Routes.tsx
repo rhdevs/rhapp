@@ -112,11 +112,11 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
-            <PublicRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
-            <PublicRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
-            <PublicRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
+            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PublicRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />

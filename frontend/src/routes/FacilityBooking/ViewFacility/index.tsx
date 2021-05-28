@@ -31,7 +31,7 @@ import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
 import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css'
+import './calendar.css'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -288,10 +288,7 @@ export default function ViewFacility() {
                 />
               </div> */}
             </ActionButtonGroup>
-            <DateDisplayText>
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-            </DateDisplayText>
+            <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
             {!isLoading && (
               <EventsGroup>
                 {facilityBookings?.map((event) => (
@@ -329,9 +326,7 @@ export default function ViewFacility() {
                     </EventRightDisplay>
                   </EventCard>
                 ))}
-                {facilityBookings.length === 0 && (
-                  <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
-                )}
+                {facilityBookings.length === 0 && <p style={{ margin: '23px' }}>There are no bookings on this day!</p>}
               </EventsGroup>
             )}
             {isLoading && <LoadingSpin />}
