@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Controller, DeepMap, FieldError, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { Typography } from 'antd'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DownOutlined, UpOutlined } from '@ant-design/icons/lib/icons'
 import { Radio } from 'antd'
 import { RadioButton } from '../../../components/RadioButton'
-import { foodItemStub } from '../../../store/stubs'
 import { Checkbox } from '../../../components/Checkbox'
-import { CancelAction } from '../../../store/supper/types'
-import { Controller, useForm } from 'react-hook-form'
 import InputRow from '../../../components/Mobile/InputRow'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
-import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { CancelAction, Custom, Option } from '../../../store/supper/types'
 import { getMenuFood } from '../../../store/supper/action'
-import { useParams } from 'react-router-dom'
+import LoadingSpin from '../../../components/LoadingSpin'
+// import { foodItemStub } from '../../../store/stubs'
 
 const Background = styled.form`
   width: 100vw;
@@ -76,12 +76,24 @@ const ItemText = styled.text`
   font-size: 24px;
 `
 
-const CustomHeaders = styled.text<{ marginTop?: string }>`
+const CustomHeaders = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
+`
+
+const CustomHeadersContainer = styled.div<{ marginTop?: string }>`
+  display: flex;
+  flex-direction: column;
   margin-top: ${(props) => (props.marginTop ? props.marginTop : '1.5rem')};
+`
+
+const OptionTitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `
 
 const OptionText = styled.text`
@@ -92,69 +104,192 @@ const OptionText = styled.text`
 `
 
 const CancelActionContainer = styled.div`
-  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
 `
 
 const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
+  color: #ff4d4f;
   font-family: Inter;
   font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
+  font-weight: normal;
+  font-size: 14px;
+  white-space: nowrap;
 `
 
 const Spacer = styled.div`
   height: 0.7rem;
 `
 
-/**
-export const foodItemStub: FoodMenu = {
-  foodMenuId: 'snm',
-  restaurantId: 'mdn',
-  foodMenuName: 'Spicy McNuggets Meal',
-  price: 7.5,
-  custom: [
-    {
-      title: 'Sides',
-      options: [{ name: 'fries', price: 0 }],
-      min: 1,
-      max: 1,
-      customNumber: 1,
-    },
-  ],
-  section: 'Upsized Value Meals',
-}
-import { Checkbox } from 'antd';
-
-    <Checkbox.Group options={plainOptions} defaultValue={['Apple']} onChange={onChange} />
-
-<StyledRadioGroup
-            {...register('splitDeliveryFee', { required: true })}
-            onChange={(e) => {
-              clearErrors('splitDeliveryFee')
-              setValue('splitDeliveryFee', e.target.value)
-            }}
-            defaultValue={supperGroup?.splitAdditionalCost}
-          >
- */
-const { Text } = Typography
-
-const StyledText = styled(Text)`
+const SelectText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 200;
-  font-size: 14px;
+  font-weight: 300;
+  font-size: 12px;
+  padding-bottom: 5px;
 `
+
+const SingleOptions = ({
+  custom,
+  index,
+  register,
+  clearErrors,
+  setValue,
+  errors,
+  watch,
+}: {
+  custom: Custom
+  index: number
+  register
+  clearErrors: (name?: string | string[]) => void
+  setValue
+  errors: DeepMap<CustomData, FieldError>
+  watch
+}) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false)
+  const VIEW_TEXT = isExpanded ? 'View Less' : 'View More'
+  const ICON = isExpanded ? (
+    <UpOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
+  ) : (
+    <DownOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
+  )
+  const isCompulsory = custom.min !== 0
+  let text: string | undefined = 'Select '
+  if (isCompulsory) {
+    if ((custom.max ?? 0 > 1) && custom.min !== custom.max) {
+      text += `at least ${custom.min} and up to ${custom.max}`
+    } else {
+      text += `${custom.min}`
+    }
+  } else {
+    if (custom.max) {
+      text += `up to ${custom.max}`
+    } else {
+      text = undefined
+    }
+  }
+
+  return (
+    <CustomContainer key={index}>
+      <CustomHeadersContainer marginTop={index === 0 ? '10px' : undefined}>
+        <OptionTitleContainer>
+          <CustomHeaders>{custom.title}</CustomHeaders>
+          {errors[`${custom.title}`] && <RedText> • {custom.min} Required</RedText>}
+        </OptionTitleContainer>
+        <SelectText>{text}</SelectText>
+      </CustomHeadersContainer>
+      <OptionContainer>
+        {custom.max === 1 && isCompulsory ? (
+          <StyledRadioGroup
+            {...register(`${custom.title}`, { required: isCompulsory })}
+            onChange={(e) => {
+              clearErrors(`${custom.title}`)
+              setValue(`${custom.title}`, e.target.value)
+            }}
+            defaultValue={null}
+          >
+            {custom.options.map((option, index) => {
+              return (
+                <RadioButtonContainer key={index} isHidden={index >= 3 && !isExpanded}>
+                  <RadioButton
+                    margin="0 0 0 2px"
+                    value={option.name}
+                    label={
+                      <OptionText>
+                        {option.name}
+                        {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
+                      </OptionText>
+                    }
+                  />
+                </RadioButtonContainer>
+              )
+            })}
+          </StyledRadioGroup>
+        ) : (
+          <>
+            {custom.options.map((option, index) => (
+              <MultipleOptions
+                key={index}
+                custom={custom}
+                isCompulsory={isCompulsory}
+                index={index}
+                isExpanded={isExpanded}
+                option={option}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+              />
+            ))}
+          </>
+        )}
+        {custom.options.length > 3 && (
+          <ViewMoreLessButton onClick={() => setIsExpanded(!isExpanded)}>
+            {ICON}
+            {VIEW_TEXT}
+          </ViewMoreLessButton>
+        )}
+      </OptionContainer>
+    </CustomContainer>
+  )
+}
+
+const MultipleOptions = ({
+  custom,
+  isCompulsory,
+  index,
+  isExpanded,
+  option,
+  register,
+  setValue,
+  watch,
+}: {
+  custom: Custom
+  isCompulsory: boolean
+  index: number
+  isExpanded: boolean
+  option: Option
+  register
+  setValue
+  watch
+}) => {
+  const [isSelected, setIsSelected] = useState<boolean>(false)
+  const isDisabled = custom.max ? (watch(`${custom.title}`) ?? []).length >= custom.max : false
+  return (
+    <CheckboxContainer
+      {...register(`${custom.title}`, { required: isCompulsory })}
+      key={index}
+      onClick={() => {
+        if (isSelected) {
+          const newArr: string[] = (watch(`${custom.title}`) as string[])?.filter((i) => i !== option.name)
+          setValue(`${custom.title}`, newArr)
+          setIsSelected(false)
+        } else if (!isDisabled) {
+          const newArr: string[] = [option.name].concat(watch(`${custom.title}`) ?? [])
+          setValue(`${custom.title}`, newArr)
+          setIsSelected(true)
+        }
+      }}
+      isHidden={index >= 3 && !isExpanded}
+    >
+      <Checkbox margin="auto 10px auto 0" sizePercentage={0.9} isChecked={isSelected} isDisabled={isDisabled} />
+      <OptionText>
+        {option.name}
+        {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
+      </OptionText>
+    </CheckboxContainer>
+  )
+}
 
 type CustomData = Record<string, string | string[] | CancelAction>
 
 const AddItem = () => {
   const dispatch = useDispatch()
   const params = useParams<{ orderId: string; foodId: string }>()
-  const { register, setValue, handleSubmit, watch, clearErrors, errors, control } = useForm<CustomData>()
-  const RedAsterisk = <RedText>*</RedText>
-  const { count, menuFood } = useSelector((state: RootState) => state.supper)
+  const { register, setValue, handleSubmit, watch, clearErrors, errors, control } = useForm<CustomData>({
+    mode: 'all',
+    reValidateMode: 'onChange',
+  })
+  const { menuFood, isLoading } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     dispatch(getMenuFood(params.foodId))
@@ -164,151 +299,111 @@ const AddItem = () => {
   const onSubmit = (e) => {
     e.preventDefault()
     handleSubmit((data) => {
-      console.log(data, count)
+      console.log(data)
     })()
   }
+
+  const checkFormValidity = () => {
+    if (watch('cancelAction')) {
+      let count = 0
+      const compulsoryFields: Custom[] =
+        menuFood?.custom?.filter((custom) => {
+          return custom.min !== 0
+        }) ?? []
+      compulsoryFields.map((custom) => {
+        if (watch(`${custom.title}`) && watch(`${custom.title}`).length >= custom.min) {
+          count++
+        }
+      })
+      if (count === compulsoryFields.length) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+
   return (
     <Background onSubmit={onSubmit}>
       <TopNavBar title="Add Item" />
-      <MainContainer>
-        <ItemText>{foodItemStub.foodMenuName}</ItemText>
-        {foodItemStub.custom?.map((custom, index) => {
-          const [isExpanded, setIsExpanded] = useState<boolean>(false)
-          const VIEW_TEXT = isExpanded ? 'View Less' : 'View More'
-          const ICON = isExpanded ? (
-            <UpOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
-          ) : (
-            <DownOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
-          )
-          const isCompulsory = custom.min === 1
-          return (
-            <CustomContainer key={index}>
-              <CustomHeaders marginTop={index === 0 ? '10px' : undefined}>
-                {custom.title}
-                {isCompulsory && RedAsterisk} {(custom.max ?? 0) > 1 && <StyledText mark>Max {custom.max}</StyledText>}
-              </CustomHeaders>
-              <OptionContainer>
-                {custom.max === 1 && isCompulsory ? (
-                  <StyledRadioGroup
-                    {...register(`${custom.title}`, { required: isCompulsory })}
-                    onChange={(e) => {
-                      clearErrors(`${custom.title}`)
-                      setValue(`${custom.title}`, e.target.value)
-                    }}
-                    defaultValue={null}
-                  >
-                    {custom.options.map((option, index) => {
-                      return (
-                        <RadioButtonContainer key={index} isHidden={index >= 3 && !isExpanded}>
-                          <RadioButton
-                            margin="0 0 0 2px"
-                            value={option.name}
-                            label={<OptionText>{option.name}</OptionText>}
-                          />
-                        </RadioButtonContainer>
-                      )
-                    })}
-                  </StyledRadioGroup>
-                ) : (
-                  <>
-                    {custom.options.map((option, index) => {
-                      const [isSelected, setIsSelected] = useState<boolean>(false)
-                      const isDisabled = custom.max ? (watch(`${custom.title}`) ?? []).length >= custom.max : false
-                      return (
-                        <CheckboxContainer
-                          {...register(`${custom.title}`, { required: isCompulsory })}
-                          key={index}
-                          onClick={() => {
-                            if (isSelected) {
-                              const newArr: string[] = (watch(`${custom.title}`) as string[])?.filter(
-                                (i) => i !== option.name,
-                              )
-                              setValue(`${custom.title}`, newArr)
-                              setIsSelected(false)
-                            } else if (!isDisabled) {
-                              const newArr: string[] = [option.name].concat(watch(`${custom.title}`) ?? [])
-                              setValue(`${custom.title}`, newArr)
-                              setIsSelected(true)
-                            }
-                          }}
-                          isHidden={index >= 3 && !isExpanded}
-                        >
-                          <Checkbox
-                            margin="auto 10px auto 0"
-                            sizePercentage={0.9}
-                            isChecked={isSelected}
-                            isDisabled={isDisabled}
-                          />
-                          <OptionText>{option.name}</OptionText>
-                        </CheckboxContainer>
-                      )
-                    })}
-                  </>
-                )}
-                {custom.options.length > 3 && (
-                  <ViewMoreLessButton onClick={() => setIsExpanded(!isExpanded)}>
-                    {ICON}
-                    {VIEW_TEXT}
-                  </ViewMoreLessButton>
-                )}
-                {errors[`${custom.title}`] && <RedText>ERROR</RedText>}
-              </OptionContainer>
-            </CustomContainer>
-          )
-        })}
-        <CancelActionContainer>
-          <CustomHeaders>If this product is not available{RedAsterisk}</CustomHeaders>
-          <StyledRadioGroup
-            {...register('cancelAction', { required: true })}
-            onChange={(e) => {
-              clearErrors('cancelAction')
-              setValue('cancelAction', e.target.value as CancelAction)
-            }}
-            defaultValue={null}
-          >
-            <RadioButtonContainer>
-              <RadioButton
-                margin="0 0 0 2px"
-                value={CancelAction.REMOVE}
-                label={<OptionText>Remove it from my order</OptionText>}
-              />
-            </RadioButtonContainer>
-            <RadioButtonContainer>
-              <RadioButton
-                margin="0 0 0 2px"
-                value={CancelAction.CANCEL}
-                label={<OptionText>Cancel my entire order</OptionText>}
-              />
-            </RadioButtonContainer>
-            <RadioButtonContainer>
-              <RadioButton
-                margin="0 0 0 2px"
-                value={CancelAction.CONTACT}
-                label={<OptionText>Contact me </OptionText>}
-              />
-            </RadioButtonContainer>
-          </StyledRadioGroup>
-          {errors.cancelAction && <RedText>ERROR</RedText>}
-        </CancelActionContainer>
-        <Controller
-          name="comments"
-          render={({ onChange, value }) => (
-            <InputRow
-              placeholder="Additional comments e.g. BBQ Sauce"
-              textarea
-              value={value}
-              onChange={onChange}
-              {...register('comments')}
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <MainContainer>
+          <ItemText>{menuFood?.foodMenuName}</ItemText>
+          {menuFood?.custom?.map((custom, index) => (
+            <SingleOptions
+              custom={custom}
+              index={index}
+              key={index}
+              register={register}
+              clearErrors={clearErrors}
+              setValue={setValue}
+              errors={errors}
+              watch={watch}
             />
-          )}
-          control={control}
-          defaultValue={null}
-        />
-        <Spacer />
-        <QuantityTracker center min={1} default={1} />
-        <Spacer />
-        <AddUpdateCartButton htmlType="submit" add currentTotal="7.90" />
-      </MainContainer>
+          ))}
+          <CancelActionContainer>
+            <CustomHeadersContainer>
+              <OptionTitleContainer>
+                <CustomHeaders>If this product is not available</CustomHeaders>
+                {errors.cancelAction && <RedText> • 1 Required</RedText>}
+              </OptionTitleContainer>
+              <SelectText>Select 1</SelectText>
+            </CustomHeadersContainer>
+            <StyledRadioGroup
+              {...register('cancelAction', { required: true })}
+              onChange={(e) => {
+                clearErrors('cancelAction')
+                setValue('cancelAction', e.target.value as CancelAction)
+              }}
+              defaultValue={null}
+            >
+              <RadioButtonContainer>
+                <RadioButton
+                  margin="0 0 0 2px"
+                  value={CancelAction.REMOVE}
+                  label={<OptionText>Remove it from my order</OptionText>}
+                />
+              </RadioButtonContainer>
+              <RadioButtonContainer>
+                <RadioButton
+                  margin="0 0 0 2px"
+                  value={CancelAction.CANCEL}
+                  label={<OptionText>Cancel my entire order</OptionText>}
+                />
+              </RadioButtonContainer>
+              <RadioButtonContainer>
+                <RadioButton
+                  margin="0 0 0 2px"
+                  value={CancelAction.CONTACT}
+                  label={<OptionText>Contact me </OptionText>}
+                />
+              </RadioButtonContainer>
+            </StyledRadioGroup>
+          </CancelActionContainer>
+          <Controller
+            name="comments"
+            render={({ onChange, value }) => (
+              <InputRow
+                placeholder="Additional comments e.g. BBQ Sauce"
+                textarea
+                value={value}
+                onChange={onChange}
+                {...register('comments')}
+              />
+            )}
+            control={control}
+            defaultValue={null}
+          />
+          <Spacer />
+          <QuantityTracker center min={1} default={1} />
+          <Spacer />
+          <AddUpdateCartButton isGrey={!checkFormValidity()} htmlType="submit" add currentTotal="7.90" />
+        </MainContainer>
+      )}
     </Background>
   )
 }

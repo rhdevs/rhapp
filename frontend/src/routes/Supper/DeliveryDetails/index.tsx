@@ -183,7 +183,7 @@ const DeliveryDetails = () => {
                           required: true,
                           validate: (input) => input.trim().length !== 0,
                         })}
-                        hasError={errors.cancelReason ? true : false}
+                        haserror={errors.cancelReason ? true : false}
                       />
                     )}
                     control={control}

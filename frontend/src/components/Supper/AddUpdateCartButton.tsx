@@ -9,6 +9,8 @@ type Props = {
   width?: string
   leftText?: string
   currentTotal: string
+  isGrey?: boolean
+  isDisabled?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const AddUpdateCartButton = (props: Props) => {
@@ -17,9 +19,10 @@ export const AddUpdateCartButton = (props: Props) => {
 
   return (
     <RedButton
+      isGrey={props.isGrey ?? props.isDisabled}
       htmlType={props.htmlType}
       width={props.width ?? '100%'}
-      onClick={props.onClick}
+      onClick={props.isDisabled ? undefined : props.onClick}
       leftText={LEFT_TEXT}
       rightText={RIGHT_TEXT}
     />

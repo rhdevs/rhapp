@@ -14,7 +14,7 @@ const MainContainer = styled.div<{ isSticky?: boolean; width?: string }>`
   height: 60px;
 `
 
-const Button = styled(AntdButton)`
+const StyledRedButton = styled(AntdButton)`
   width: 100%;
   height: fit-content;
   border-radius: 5px;
@@ -38,6 +38,20 @@ const TextField = styled.text`
   font-size: 17px;
 `
 
+const StyledGreyButton = styled(AntdButton)`
+  width: 100%;
+  height: fit-content;
+  border-radius: 5px;
+  background: #ccc;
+  border: 1px solid #ccc;
+  &.ant-btn-primary:hover,
+  .ant-btn-primary:focus {
+    background: #ccc;
+    border: 1px solid #ccc;
+  }
+  --antd-wave-shadow-color: none;
+`
+
 type Props = {
   htmlType?: 'button' | 'submit' | 'reset' | undefined
   isSticky?: boolean
@@ -45,19 +59,30 @@ type Props = {
   middleText?: string
   rightText?: string
   width?: string
+  isGrey?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const RedButton = (props: Props) => {
   return (
     <MainContainer isSticky={props.isSticky} width={props.width}>
-      <Button type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
-        <ButtonTextContainer>
-          <TextField>{props.leftText}</TextField>
-          <TextField>{props.middleText}</TextField>
-          <TextField>{props.rightText}</TextField>
-        </ButtonTextContainer>
-      </Button>
+      {props.isGrey ? (
+        <StyledGreyButton type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
+          <ButtonTextContainer>
+            <TextField>{props.leftText}</TextField>
+            <TextField>{props.middleText}</TextField>
+            <TextField>{props.rightText}</TextField>
+          </ButtonTextContainer>
+        </StyledGreyButton>
+      ) : (
+        <StyledRedButton type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
+          <ButtonTextContainer>
+            <TextField>{props.leftText}</TextField>
+            <TextField>{props.middleText}</TextField>
+            <TextField>{props.rightText}</TextField>
+          </ButtonTextContainer>
+        </StyledRedButton>
+      )}
     </MainContainer>
   )
 }
