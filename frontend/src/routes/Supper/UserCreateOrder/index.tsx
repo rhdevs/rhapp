@@ -367,7 +367,7 @@ export default function UserCreateOrder() {
                   defaultValue={null}
                   render={() => <RestaurantBubbles defaultRestaurant={"McDonald's"} restaurantList={restaurantList} />}
                 />
-                {errors1.restaurant?.type === 'required' && <ErrorText>Restaurant is required.</ErrorText>}
+                {errors1.restaurant?.type === 'required' && <ErrorText>Selecting a restaurant is required.</ErrorText>}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Closing Time{RedAsterisk}</Header>
@@ -393,7 +393,7 @@ export default function UserCreateOrder() {
                       />
                     )}
                   />
-                  {errors1.closingTime?.type === 'required' && <ErrorText>Closing Time required.</ErrorText>}
+                  {errors1.closingTime?.type === 'required' && <ErrorText>Closing Time is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
