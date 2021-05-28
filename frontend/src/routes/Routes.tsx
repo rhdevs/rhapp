@@ -50,6 +50,7 @@ export enum PATHS {
   SUPPER_COMPONENTS_PAGE = '/supper/components',
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
+  USER_SUPPER_GROUP_CREATE_ORDER = '/supper/createorder',
   USER_JOIN_ORDER_MAIN_PAGE = '/supper/joinOrder',
   USER_SUPPER_GROUP_PLACE_ORDER = '/supper/:supperGroupId/:restaurantId/placeOrder',
   ORDER_SUMMARY = '/supper/view/summary',
@@ -110,6 +111,7 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
+const UserCreateOrder = React.lazy(() => import(/* webpackChunckName: "UserCreateOrder" */ './Supper/UserCreateOrder'))
 const UserJoinOrder = React.lazy(() => import(/* webpackChunckName: "UserJoinOrder" */ './Supper/UserJoinOrder'))
 const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
@@ -166,6 +168,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
+            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
             <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
             <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER} component={UserPlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
