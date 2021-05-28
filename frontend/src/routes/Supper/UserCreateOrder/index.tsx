@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Radio, Input } from 'antd'
+import { Radio, Input, TimePicker } from 'antd'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
@@ -10,11 +10,13 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { setOrder } from '../../../store/supper/action'
-import { SplitACMethod, SupperGroupStatus } from '../../../store/supper/types'
+import { SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import InputRow from '../../../components/Mobile/InputRow'
 import { withSuccess } from 'antd/lib/modal/confirm'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
 
 const Background = styled.div`
   height: 100vh;
@@ -61,7 +63,6 @@ const RedText = styled.text`
 `
 
 const VertInputContainer = styled.div`
-  width: 85%;
   padding 5px 12px;
 `
 
@@ -71,14 +72,21 @@ const HortInputContainer = styled.div`
 `
 
 const InputText = styled.input`
+  width: 80%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
-  margin: 10px auto;
+  margin: 5px auto 0 auto;
   height: 35px;
 `
 
 const InputBox = styled(Input)`
+  &.ant-input {
+    border-radius: 25px;
+  }
+`
+
+const TimeBox = styled(TimePicker)`
   &.ant-input {
     border-radius: 25px;
   }
@@ -100,14 +108,21 @@ const FixerContainer = styled.div`
 `
 
 type FormValues = {
-  orderName: string
+  supperGroupName: string
+  restaurant: string
+  selectTime: number
+  maxPrice: number
+  estDeliveryFee: number
+  phoneNumber: number
 }
 
 export default function UserCreateOrder() {
+  const dispatch = useDispatch()
+  const { selectedRestaurant, priceLimit } = useSelector((state: RootState) => state.supper)
   const [count, setCount] = useState(1)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const RedAsterisk = <RedText>*</RedText>
-  const initSupperGroup = {
+  const initSupperGroup: SupperGroup = {
     costLimit: 0,
     createdAt: 10000000,
     currentFoodCost: 0,
@@ -115,6 +130,7 @@ export default function UserCreateOrder() {
     numOrders: 0,
     ownerId: '',
     ownerName: '',
+    ownerTele: '',
     paymentInfo: [],
     restaurantLogo: '',
     restaurantName: '',
@@ -129,28 +145,35 @@ export default function UserCreateOrder() {
 
   const history = useHistory()
 
-  const { register, handleSubmit, watch, errors } = useForm()
-
+  const { register, handleSubmit, setValue, watch, control, errors } = useForm<FormValues>()
   // const onSubmit = (data) => console.log(data)
 
   useEffect(() => {
     //TODO: dispatch new order to backend
-    // setOrder(initSupperGroup)
-  }, [])
+    dispatch(setOrder(initSupperGroup))
+  }, [dispatch])
 
   const onClick = () => {
-    console.log(watch())
-    console.log(errors)
+    setValue('restaurant', selectedRestaurant)
+    if (priceLimit > 0) {
+      setValue('maxPrice', priceLimit)
+    }
+    //console.log(watch())
     handleSubmit((data) => {
-      console.log(data)
+      console.log('submitting' + data)
+      console.log('old count' + count)
+      if (errors === undefined) {
+        setCount(count + 1)
+        console.log('new count' + count)
+      } else {
+        console.log('errors' + errors.estDeliveryFee + errors.maxPrice + errors.restaurant + errors.selectTime)
+      }
+      if (count > 3) {
+        console.log('success')
+      }
     })()
-    if (!errors) {
-      setCount(count + 1)
-    }
-    if (count > 3) {
-      console.log('success')
-    }
   }
+
   const onConfirmDiscardClick = () => {
     //TODO: discard changes
     // setOrder(initSupperGroup)
@@ -189,12 +212,13 @@ export default function UserCreateOrder() {
                   <InputBox
                     type="number"
                     placeholder="e.g. $3"
-                    {...register('e.g. $3', {
+                    {...register('estDeliveryFee', {
                       min: 0,
                       maxLength: 12,
                       pattern: { value: /[0-9]+/i, message: 'Invalid input.' },
                     })}
                   />
+                  {errors.estDeliveryFee?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
                 </HortInputContainer>
               </HortSectionContainer>
               <HortSectionContainer>
@@ -236,10 +260,11 @@ export default function UserCreateOrder() {
                   <InputBox
                     type="number"
                     placeholder="Phone Number"
-                    {...register('Phone Number', {
+                    {...register('phoneNumber', {
                       required: true,
                     })}
                   />
+                  {errors.phoneNumber?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
             </Step>
@@ -270,38 +295,69 @@ export default function UserCreateOrder() {
                   <InputText
                     type="text"
                     placeholder="Order Name"
-                    name="orderName"
+                    name="supperGroupName"
                     ref={register({
                       required: true,
                       validate: (input) => input.trim().length !== 0,
                     })}
                     style={{
-                      borderColor: errors.orderName && 'red',
-                      background: errors.orderName && '#ffd1d1',
+                      borderColor: errors.supperGroupName && 'red',
+                      background: errors.supperGroupName && '#ffd1d1',
                     }}
                   />
-                  {errors.orderName?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
+                  {errors.supperGroupName?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Restaurant{RedAsterisk}</Header>
-                <RestaurantBubbles restaurantList={restaurantList} />
+                <Controller
+                  name="restaurant"
+                  control={control}
+                  rules={{ required: true }}
+                  render={() => <RestaurantBubbles defaultRestaurant={"McDonald's"} restaurantList={restaurantList} />}
+                />
+                {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required.</ErrorText>}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Closing Time{RedAsterisk}</Header>
                 <VertInputContainer>
-                  <InputBox
-                    type="datetime-local"
-                    placeholder="Select Time"
-                    {...register('Select Time', { required: true, pattern: /^\S+@\S+$/i })}
+                  <Controller
+                    name="selectTime"
+                    control={control}
+                    defaultValue={Date.now()}
+                    rules={{ required: true }}
+                    render={() => (
+                      <InputBox
+                        type="datetime-local"
+                        placeholder="select time"
+                        defaultValue={Date.now()}
+                        onChange={(time) => {
+                          console.log(time.timeStamp)
+                          setValue('selectTime', time.timeStamp)
+                        }}
+                        {...register('selectTime', { required: true, pattern: /^\S+@\S+$/i })}
+                        style={{
+                          borderColor: errors.selectTime && 'red',
+                          background: errors.selectTime && '#ffd1d1',
+                        }}
+                      />
+                    )}
                   />
+                  {errors.selectTime?.type === 'required' && <ErrorText>Closing Time required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Max Price{RedAsterisk}</Header>
                 <FixerContainer>
-                  <MaxPriceFixer />
+                  <Controller
+                    name="maxPrice"
+                    control={control}
+                    defaultValue={null}
+                    rules={{ required: true }}
+                    render={() => <MaxPriceFixer />}
+                  />
                 </FixerContainer>
+                {errors.maxPrice?.type === 'required' && <ErrorText>Setting a Max price is required.</ErrorText>}
               </VertSectionContainer>
             </Step>
           )
