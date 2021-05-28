@@ -758,6 +758,7 @@ def restaurant(restaurantId):
 def foodItem(foodMenuId):
     try:
         data = db.FoodMenu.find_one({"_id": ObjectId(foodMenuId)})
+        data['restaurantId'] = str(data.pop('restaurantId'))
         data['foodMenuId'] = str(data.pop('_id'))
         response = {"status": "success", "data": data}
         return make_response(response, 200)
