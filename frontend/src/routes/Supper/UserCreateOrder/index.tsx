@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Radio, Input, TimePicker } from 'antd'
+import { Radio, Switch, Input } from 'antd'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { setOrder, setSelectedPaymentMethod } from '../../../store/supper/action'
-import { PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { setOrder } from '../../../store/supper/action'
+import { SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
-import InputRow from '../../../components/Mobile/InputRow'
-import { withSuccess } from 'antd/lib/modal/confirm'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 const Background = styled.div`
   height: 100vh;
@@ -86,10 +85,19 @@ const InputBox = styled(Input)`
   }
 `
 
-const TimeBox = styled(TimePicker)`
-  &.ant-input {
-    border-radius: 25px;
+const StyledSwitch = styled(Switch)`
+  width: fit-content;
+  &.ant-switch-checked {
+    background-color: #002642;
   }
+`
+
+const PriceContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 `
 
 const StyledRadioButtons = styled(Radio.Group)`
@@ -126,9 +134,14 @@ type FormValues3 = {
 
 export default function UserCreateOrder() {
   const dispatch = useDispatch()
-  const { selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
+  const history = useHistory()
+  const { supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
+    (state: RootState) => state.supper,
+  )
   const [count, setCount] = useState(1)
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
+
   const RedAsterisk = <RedText>*</RedText>
   const initSupperGroup: SupperGroup = {
     costLimit: 0,
@@ -151,8 +164,6 @@ export default function UserCreateOrder() {
     closingTime: 10000000,
   }
 
-  const history = useHistory()
-
   const {
     register: register1,
     handleSubmit: handleSubmit1,
@@ -173,10 +184,8 @@ export default function UserCreateOrder() {
     setValue: setValue3,
     errors: errors3,
   } = useForm<FormValues3>()
-  // const onSubmit = (data) => console.log(data)
 
   useEffect(() => {
-    //TODO: dispatch new order to backend
     dispatch(setOrder(initSupperGroup))
   }, [dispatch])
 
@@ -187,7 +196,7 @@ export default function UserCreateOrder() {
     }
     //console.log(watch())
     handleSubmit1((data) => {
-      //TODO: dispatch info to backend
+      //TODO: update store
       console.log(data)
       setCount(count + 1)
     })()
@@ -195,7 +204,7 @@ export default function UserCreateOrder() {
 
   const onClick2 = () => {
     handleSubmit2((data) => {
-      //TODO: dispatch info to backend
+      //TODO: update store
       console.log(data)
       setCount(count + 1)
     })()
@@ -204,7 +213,8 @@ export default function UserCreateOrder() {
   const onClick3 = () => {
     setValue3('paymentMethod', selectedPaymentMethod)
     handleSubmit3((data) => {
-      //TODO: dispatch info to backend
+      //TODO: update store
+      //TODO: dispatch full updated info to backend
       console.log(data)
       console.log('success')
     })()
@@ -250,7 +260,7 @@ export default function UserCreateOrder() {
                   />
                 </HortInputContainer>
               </HortSectionContainer>
-              {errors2.estDeliveryFee?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+              {errors2.estDeliveryFee?.type === 'required' && <ErrorText>Estimated delivery fees required!</ErrorText>}
               <HortSectionContainer>
                 <Header>Split Delivery Fees {RedAsterisk}</Header>
                 <HortInputContainer>
@@ -296,7 +306,9 @@ export default function UserCreateOrder() {
                   {...register3('paymentMethod', { required: true })}
                   paymentMethods={paymentMethods}
                 />
-                {errors3.paymentMethod?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
+                {errors3.paymentMethod?.type === 'required' && (
+                  <ErrorText>Payment method(s) is/are required.</ErrorText>
+                )}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Phone Number {RedAsterisk}</Header>
@@ -314,7 +326,7 @@ export default function UserCreateOrder() {
                       background: errors3.phoneNumber && '#ffd1d1',
                     }}
                   />
-                  {errors3.phoneNumber?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
+                  {errors3.phoneNumber?.type === 'required' && <ErrorText>Phone Number is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
             </Step>
@@ -355,7 +367,7 @@ export default function UserCreateOrder() {
                       background: errors1.supperGroupName && '#ffd1d1',
                     }}
                   />
-                  {errors1.supperGroupName?.type === 'required' && <ErrorText>This field is required.</ErrorText>}
+                  {errors1.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
@@ -398,15 +410,26 @@ export default function UserCreateOrder() {
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Max Price{RedAsterisk}</Header>
-                <FixerContainer>
-                  <Controller
-                    name="maxPrice"
-                    control={control1}
-                    defaultValue={null}
-                    rules={{ required: true }}
-                    render={() => <MaxPriceFixer />}
+                <PriceContainer>
+                  Set maximum total price
+                  <StyledSwitch
+                    checkedChildren={<CheckOutlined />}
+                    unCheckedChildren={<CloseOutlined />}
+                    onClick={() => setHasMaxPrice(!hasMaxPrice)}
+                    defaultChecked={hasMaxPrice}
                   />
-                </FixerContainer>
+                </PriceContainer>
+                {hasMaxPrice && (
+                  <FixerContainer>
+                    <Controller
+                      name="maxPrice"
+                      control={control1}
+                      defaultValue={null}
+                      rules={{ required: true }}
+                      render={() => <MaxPriceFixer />}
+                    />
+                  </FixerContainer>
+                )}
                 {errors1.maxPrice?.type === 'required' && <ErrorText>Setting a Max price is required.</ErrorText>}
               </VertSectionContainer>
             </Step>
