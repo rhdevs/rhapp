@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -13,6 +13,7 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -72,6 +73,7 @@ const ButtonContainer = styled.div`
 export default function UserViewOrder() {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { supperGroup, selectedSupperGroupStatus, order } = useSelector((state: RootState) => state.supper)
   const supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
@@ -105,6 +107,7 @@ export default function UserViewOrder() {
         />
       ) : supperGroupIsCancelled ? (
         <SGCardWithStatus
+          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${supperGroup?.supperGroupId}`)}
           supperGroupStatus={SupperGroupStatus.CANCELLED}
           username={supperGroup?.ownerName ?? '-'}
           title={supperGroup?.supperGroupName ?? '-'}
@@ -114,6 +117,7 @@ export default function UserViewOrder() {
         />
       ) : (
         <SGCardWithStatus
+          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${supperGroup?.supperGroupId}`)}
           restaurantLogo={supperGroup?.restaurantLogo}
           isOwner={supperGroup?.ownerId === localStorage.userID}
           supperGroupStatus={supperGroup?.status}

@@ -2,7 +2,7 @@ import { FileZipTwoTone, ShareAltOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
@@ -18,6 +18,7 @@ import {
 } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -89,6 +90,7 @@ const StyledText = styled.text`
 const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { supperGroup, collatedOrder, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const [viewCollatedOrder, setViewCollatedOrder] = useState(false)
   let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
@@ -109,6 +111,7 @@ const ViewOrder = () => {
       <TopNavBar title="View Order" rightComponent={<ShareAltOutlined style={{ fontSize: '20px' }} />} />
       {supperGroupIsOpen ? (
         <JoinOrderSGCard
+          editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
           restaurantLogo={supperGroup?.restaurantLogo}
           cardMargin="0 23px"
           isOwner={supperGroup?.ownerId === localStorage.userID}
@@ -141,7 +144,18 @@ const ViewOrder = () => {
           <SummaryText>Summary</SummaryText>
           <FileZipTwoTone onClick={() => setViewCollatedOrder(!viewCollatedOrder)} />
         </SubContainer>
-        {supperGroupIsOpen && <UnderlinedButton fontWeight={200} text="Add Item" color="red" />}
+        {supperGroupIsOpen && (
+          <UnderlinedButton
+            onClick={() =>
+              history.push(
+                `${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`,
+              )
+            }
+            fontWeight={200}
+            text="Add Item"
+            color="red"
+          />
+        )}
       </SummaryContainer>
       <OrderSummaryCard
         margin="5px 23px"

@@ -69,6 +69,7 @@ type Props = {
   deliveryFee: string
   isOwner?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const ExpandableSGCard = (props: Props) => {
@@ -99,7 +100,7 @@ export const ExpandableSGCard = (props: Props) => {
               text={buttonText}
               rightIcon={arrowIcon}
             />
-            {props.isOwner && <EditIcon src={editIcon} alt="Edit Icon" />}
+            {props.isOwner && <EditIcon onClick={props.editOnClick} src={editIcon} alt="Edit Icon" />}
           </ExpandableButtonContainer>
         </LeftContainer>
         <RightContainer>

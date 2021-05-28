@@ -50,24 +50,28 @@ export enum PATHS {
   SUPPER_COMPONENTS_PAGE = '/supper/components',
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
-  USER_SUPPER_GROUP_CREATE_ORDER = '/supper/createorder',
-  USER_JOIN_ORDER_MAIN_PAGE = '/supper/joinOrder',
-  USER_SUPPER_GROUP_PLACE_ORDER = '/supper/:supperGroupId/:restaurantId/placeOrder',
+  USER_SUPPER_GROUP_CREATE_ORDER = '/supper/create/order',
+  USER_JOIN_ORDER_MAIN_PAGE = '/supper/join/order',
+  USER_JOIN_ORDER_MAIN_PAGE_BY_ID = '/supper/join/order/:supperGroupId',
+  USER_SUPPER_GROUP_PLACE_ORDER = '/supper',
+  USER_SUPPER_GROUP_PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
-  VIEW_ORDER = '/supper/view/order',
-  VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
-  USER_VIEW_ORDER = '/supper/view/order/:supperGroupId/:userId',
+  VIEW_ORDER = '/supper/view/owner/order',
+  VIEW_ORDER_BY_ID = '/supper/view/owner/order/:supperGroupId',
+  USER_VIEW_ORDER = '/supper/view/user/order',
+  USER_VIEW_ORDER_BY_ID = '/supper/view/user/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
   VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
-  CONFIRM_ORDER = '/supper/:supperGroupId/confirmOrder',
+  CONFIRM_ORDER = '/supper',
+  CONFIRM_ORDER_BY_ID = '/supper/:supperGroupId/confirm',
   PAYMENT_SCREEN = '/supper/view/payment',
   PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
   EDIT_ORDER = '/supper/edit/order',
   EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
-  ADD_ITEM = '/supper/order',
-  ADD_ITEM_BY_ID = '/supper/order/:orderId/add/:foodId',
+  ADD_ITEM = '/supper',
+  ADD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -169,13 +173,13 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
-            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
-            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER} component={UserPlaceOrder} />
+            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE_BY_ID} component={UserJoinOrder} />
+            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER_BY_ID} component={UserPlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
-            <PrivateRoute exact path={PATHS.USER_VIEW_ORDER} component={UserViewOrder} />
+            <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
-            <PrivateRoute exact path={PATHS.CONFIRM_ORDER} component={ConfirmOrder} />
+            <PrivateRoute exact path={PATHS.CONFIRM_ORDER_BY_ID} component={ConfirmOrder} />
             <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />

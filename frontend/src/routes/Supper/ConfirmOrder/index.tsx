@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -9,6 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { getUserOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -115,6 +116,7 @@ export default function ConfirmOrder() {
   const { register, handleSubmit, errors } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
+  const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const { order, isLoading } = useSelector((state: RootState) => state.supper)
 
@@ -127,7 +129,8 @@ export default function ConfirmOrder() {
       const updatedOrder = { ...order, userContact: data.number }
       console.log(updatedOrder)
       //TODO: update backend order contact number
-      //dispatch(updateOrderDetails(updatedOrder, params.orderId))
+      //dispatch(updateOrderDetails(updatedOrder, order.orderId))
+      history.push(`${PATHS.USER_VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 
