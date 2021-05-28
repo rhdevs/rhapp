@@ -12,7 +12,7 @@ import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import Button from '../../../components/Mobile/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { Alert } from 'antd'
+import { Alert, DatePicker } from 'antd'
 import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
@@ -30,6 +30,8 @@ import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -227,8 +229,14 @@ export default function ViewFacility() {
           <>
             {AlertSection}
             <DateSelectorGroup>
-              <DateRange
-                editableDateInputs={true}
+              <Calendar
+                onChange={(value: any, event: any) => {
+                  dispatch(SetIsLoading(true))
+                  dispatch(setViewDates(value, parseInt(params.facilityID)))
+                }}
+              />
+              {/* <DateRange
+                editableDateInputs={false}
                 color="#DE5F4C"
                 onChange={(item) => {
                   dispatch(SetIsLoading(true))
@@ -243,7 +251,7 @@ export default function ViewFacility() {
                     key: 'ViewDateSelection',
                   },
                 ]}
-              />
+              /> */}
             </DateSelectorGroup>
 
             <ActionButtonGroup>
