@@ -47,9 +47,9 @@ const StyledButton = styled(Button)`
 const DateDisplayText = styled.p`
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
-  text-align: right;
-  padding: 10px 23px 0px 0px;
+  font-size: 26px;
+  text-align: left;
+  padding: 10px 0px 0px 23px;
 `
 
 const Icon = styled.img`
@@ -233,6 +233,8 @@ export default function ViewFacility() {
                   dispatch(SetIsLoading(true))
                   dispatch(setViewDates(value, parseInt(params.facilityID)))
                 }}
+                prev2Label={null}
+                next2Label={null}
               />
               {/* <DateRange
                 editableDateInputs={false}
