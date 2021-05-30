@@ -164,6 +164,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM: {
       return { ...state, editFoodItem: action.editFoodItem }
+    }
     case SUPPER_ACTIONS.SET_MENU_TAB_KEY: {
       return { ...state, menuTabKey: action.menuTabKey }
     }
@@ -175,7 +176,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME: {
       return { ...state, estArrivalTime: action.estArrivalTime }
-
     }
     case SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER: {
       return { ...state, editOrderNumber: action.editOrderNumber }

@@ -9,7 +9,7 @@ import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartBut
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { getEditFoodItem, updateEditFoodItem } from '../../../store/supper/action'
-import { CancelAction, Food } from '../../../store/supper/types'
+import { Food } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const MainContainer = styled.div`
@@ -43,6 +43,15 @@ const Spacer = styled.div`
 //   line-height: 14px;
 // `
 
+const TextInput = styled.input`
+  width: 100%;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 5px auto 0 auto;
+  height: 35px;
+`
+
 type FormValues = {
   Sides: string
   Drinks: string
@@ -54,19 +63,17 @@ type FormValues = {
 
 const EditFoodItem = () => {
   const dispatch = useDispatch()
-  const { isLoading, editFoodItem } = useSelector((state: RootState) => state.supper)
+
+  const { isLoading, editFoodItem, count } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; itemId: string }>()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
-  const onSubmit = (data) => console.log(data)
-  // const onSubmit = (data: Food) => {
-  //   console.log(data)
-  //   dispatch(updateEditFoodItem(data, params.itemId))
-  //   console.log(errors)
-  // }
+  const { register, handleSubmit } = useForm<FormValues>()
+  const onSubmit = () => {
+    handleSubmit((data: Food) => {
+      console.log('Save changes!')
+      console.log(data)
+      dispatch(updateEditFoodItem(data, params.itemId))
+    })()
+  }
 
   useEffect(() => {
     dispatch(getEditFoodItem(params.supperGroupId, params.itemId))
@@ -79,9 +86,9 @@ const EditFoodItem = () => {
         <LoadingSpin />
       ) : (
         <MainCard flexDirection="column" isEditable={false} editIconSize="0rem" padding="25px">
-          <FoodItemHeader>{editFoodItem?.foodMenu.foodMenuName}</FoodItemHeader>
+          <FoodItemHeader>{editFoodItem?.foodName}</FoodItemHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {editFoodItem?.foodMenu.custom?.map((section) => {
+            {editFoodItem?.custom?.map((section) => {
               return (
                 <>
                   <SectionHeader>{section.title}</SectionHeader>
@@ -99,24 +106,24 @@ const EditFoodItem = () => {
             })}
 
             <SectionHeader>If this product is not available</SectionHeader>
-            <input {...register('cancelAction', { required: true })} type="radio" value={'contact'} label="Contact" />
+            <input {...register('cancelAction', { required: true })} type="radio" value={'contact'} name="Contact" />
             <br />
             <input {...register('cancelAction', { required: true })} type="radio" value="Cancel" label="Cancel" />
             <Spacer />
 
-            <input
+            <TextInput
               defaultValue={editFoodItem?.comments}
               {...register('comments')}
               placeholder="Additional comments e.g. BBQ Sauce"
             />
             <Spacer />
-
-            <div style={{ textAlignLast: 'center' }}>
-              <QuantityTracker default={editFoodItem?.quantity || 0} />
-            </div>
+            <QuantityTracker default={editFoodItem?.quantity || count} center={true} />
             <Spacer />
-            <input type="submit" />
-            <AddUpdateCartButton update currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'} />
+            <AddUpdateCartButton
+              onClick={onSubmit}
+              update
+              currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'}
+            />
           </form>
         </MainCard>
       )}

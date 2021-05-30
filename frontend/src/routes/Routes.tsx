@@ -55,7 +55,6 @@ export enum PATHS {
   USER_SUPPER_GROUP_PLACE_ORDER = '/supper/:supperGroupId/:restaurantId/placeOrder',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
-  EDIT_ORDER_BY_ID = '/supper/edit/:supperGroupId/:itemId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
   USER_VIEW_ORDER = '/supper/view/order/:supperGroupId/:userId',
@@ -67,6 +66,7 @@ export enum PATHS {
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
   EDIT_ORDER = '/supper/edit/order',
   EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
+  EDIT_ORDER_ITEM_BY_ID = '/supper/edit/order/:supperGroupId/:itemId',
   ADD_ITEM = '/supper/order',
   ADD_ITEM_BY_ID = '/supper/order/:orderId/add/:foodId',
 }
@@ -170,7 +170,6 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
-            <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditFoodItem} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
             <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
             <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER} component={UserPlaceOrder} />
@@ -183,6 +182,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
             <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditOrder} />
+            <PrivateRoute exact path={PATHS.EDIT_ORDER_ITEM_BY_ID} component={EditFoodItem} />
             <PrivateRoute exact path={PATHS.ADD_ITEM_BY_ID} component={AddItem} />
 
             <PublicRoute component={FallBack} />
