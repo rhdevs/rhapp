@@ -164,7 +164,7 @@ export const SGCardWithStatus = (props: Props) => {
                       <UnderlinedButton
                         fontSize="16px"
                         key={index}
-                        onClick={() => window.open(link, '_blank', 'noopener,noreferrer')}
+                        onClick={() => window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')}
                         text={pm.paymentMethod}
                         color="rgba(0, 38, 66, 0.7)"
                       />

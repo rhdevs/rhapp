@@ -3,6 +3,10 @@ import React, { ReactChild, ReactChildren, useState } from 'react'
 import styled from 'styled-components'
 
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setEditOrderNumber } from '../../store/supper/action'
+import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   margin: 0.5rem 1rem;
@@ -47,21 +51,40 @@ const ArrowContainer = styled.div`
   font-size: 18px;
 `
 
-const ChildContainer = styled.div`
-  margin: auto;
-  width: 85vw;
-  height: fit-content;
-  padding: 0 0.5rem;
+const ChildContainer = styled.div<{ canHide?: boolean; isClicked?: boolean }>`
+  ${(props) =>
+    (props.canHide ?? false) && !props.isClicked
+      ? `
+width: 0;
+height: 0;
+display: none;
+`
+      : `margin: auto;
+width: 85vw;
+height: fit-content;
+padding: 0 0.5rem;`}
 `
 
 type Props = {
+  isOpen?: boolean
+  canHide?: boolean //component can be hidden, not removed
   number: number
   title: string
   children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
 }
 
 export const BubbleSection = (props: Props) => {
-  const [isClicked, setIsClicked] = useState(false)
+  const { editOrderNumber } = useSelector((state: RootState) => state.supper)
+  const [isClicked, setIsClicked] = useState(props.isOpen ?? props.number === editOrderNumber)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (isClicked) dispatch(setEditOrderNumber(props.number))
+  }, [isClicked])
+
+  useEffect(() => {
+    setIsClicked(props.isOpen ?? false)
+  }, [props.isOpen])
 
   const arrowIcon = isClicked ? <CaretUpOutlined /> : <CaretDownOutlined />
   return (
@@ -69,7 +92,7 @@ export const BubbleSection = (props: Props) => {
       <SubContainer>
         <NumberContainer
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
           isClicked={isClicked}
         >
@@ -77,7 +100,7 @@ export const BubbleSection = (props: Props) => {
         </NumberContainer>
         <TitleText
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
           isClicked={isClicked}
         >
@@ -85,13 +108,15 @@ export const BubbleSection = (props: Props) => {
         </TitleText>
         <ArrowContainer
           onClick={() => {
-            setIsClicked(!isClicked)
+            setIsClicked(true)
           }}
         >
           {arrowIcon}
         </ArrowContainer>
       </SubContainer>
-      {isClicked && <ChildContainer>{props.children}</ChildContainer>}
+      <ChildContainer canHide={props.canHide} isClicked={isClicked}>
+        {props.canHide ? props.children : isClicked && props.children}
+      </ChildContainer>
     </MainContainer>
   )
 }

@@ -38,9 +38,12 @@ const initialState = {
   searchValue: '',
   tabsKey: '1',
   editFoodItem: null,
+  menuTabKey: '',
   isExpandAll: true,
   expandedCount: 0,
   estArrivalTime: unixTo12HourTime(Math.round(Date.now() / 1000)),
+  editOrderNumber: 1,
+  counter: 0,
 }
 
 type State = {
@@ -68,9 +71,12 @@ type State = {
   searchValue: string
   tabsKey: string
   editFoodItem: Food | null
+  menuTabKey: string
   isExpandAll: boolean
   expandedCount: number
   estArrivalTime: string
+  editOrderNumber: number
+  counter: number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -158,6 +164,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM: {
       return { ...state, editFoodItem: action.editFoodItem }
+    case SUPPER_ACTIONS.SET_MENU_TAB_KEY: {
+      return { ...state, menuTabKey: action.menuTabKey }
+    }
     case SUPPER_ACTIONS.SET_EXPAND_ALL: {
       return { ...state, isExpandAll: action.isExpandAll }
     }
@@ -167,6 +176,12 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME: {
       return { ...state, estArrivalTime: action.estArrivalTime }
 
+    }
+    case SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER: {
+      return { ...state, editOrderNumber: action.editOrderNumber }
+    }
+    case SUPPER_ACTIONS.SET_COUNTER: {
+      return { ...state, counter: action.counter }
     }
     default:
       return state

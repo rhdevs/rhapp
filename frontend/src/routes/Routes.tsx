@@ -50,16 +50,25 @@ export enum PATHS {
   SUPPER_COMPONENTS_PAGE = '/supper/components',
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
+  USER_SUPPER_GROUP_CREATE_ORDER = '/supper/createorder',
+  USER_JOIN_ORDER_MAIN_PAGE = '/supper/joinOrder',
+  USER_SUPPER_GROUP_PLACE_ORDER = '/supper/:supperGroupId/:restaurantId/placeOrder',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   EDIT_ORDER_BY_ID = '/supper/edit/:supperGroupId/:itemId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
+  USER_VIEW_ORDER = '/supper/view/order/:supperGroupId/:userId',
   VIEW_CART = '/supper/view/cart',
   VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
+  CONFIRM_ORDER = '/supper/:supperGroupId/confirmOrder',
   PAYMENT_SCREEN = '/supper/view/payment',
   PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
+  EDIT_ORDER = '/supper/edit/order',
+  EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
+  ADD_ITEM = '/supper/order',
+  ADD_ITEM_BY_ID = '/supper/order/:orderId/add/:foodId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -100,15 +109,22 @@ const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
 //SUPPER
-const SupperCompoenents = React.lazy(() => import('./Supper/componentsPage'))
+const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
+const UserCreateOrder = React.lazy(() => import(/* webpackChunckName: "UserCreateOrder" */ './Supper/UserCreateOrder'))
+const UserJoinOrder = React.lazy(() => import(/* webpackChunckName: "UserJoinOrder" */ './Supper/UserJoinOrder'))
+const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/EditFoodItem'))
+const UserViewOrder = React.lazy(() => import(/* webpackChunckName: "UserViewOrder" */ './Supper/UserViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
+const ConfirmOrder = React.lazy(() => import(/* webpackChunckName: "ConfirmOrder" */ './Supper/ConfirmOrder'))
 const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
+const EditOrder = React.lazy(() => import(/* webpackChunckName: "EditOrder" */ './Supper/EditOrder'))
+const AddItem = React.lazy(() => import(/* webpackChunckName: "AddItem" */ './Supper/AddItem'))
 
 export default class Routes extends React.Component {
   render() {
@@ -151,16 +167,23 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
-            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperCompoenents} />
+            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditFoodItem} />
+            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
+            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE} component={UserJoinOrder} />
+            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER} component={UserPlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
+            <PrivateRoute exact path={PATHS.USER_VIEW_ORDER} component={UserViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
+            <PrivateRoute exact path={PATHS.CONFIRM_ORDER} component={ConfirmOrder} />
             <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
+            <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditOrder} />
+            <PrivateRoute exact path={PATHS.ADD_ITEM_BY_ID} component={AddItem} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>

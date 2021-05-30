@@ -10,23 +10,28 @@ export type User = {
 }
 
 export type Food = {
-  foodId: string
+  foodId?: string
+  restaurantId: string
+  foodMenuId: string
+  foodName: string
   comments?: string
   quantity: number
-  foodMenu: FoodMenu
-  foodPrice?: number
+  price: number
+  foodPrice: number //with add ons
   cancelAction?: CancelAction
+  custom?: Custom[]
 }
 
 export type Option = {
   name: string
-  isSelected: boolean
+  isSelected?: boolean
   price: number
 }
 
 export enum CancelAction {
-  contact = 'contact',
-  cancel = 'cancel',
+  REMOVE = 'Remove',
+  CONTACT = 'Contact',
+  CANCEL = 'Cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -35,13 +40,14 @@ export type Custom = {
   options: Option[]
   max: number | null
   min: number
-  customNumber: number //to order the sections in the order card
+  customNumber?: number //to order the sections in the order card
 }
 
 export type FoodMenu = {
   foodMenuId: string
   restaurantId: string
   foodMenuName: string
+  section: string
   price: number
   custom?: Custom[]
 }
@@ -51,6 +57,13 @@ export type Restaurant = {
   name: string
   restaurantLogo: string
   menu: FoodMenu[]
+  allSection: string[]
+}
+
+export enum Restaurants {
+  MCDONALDS = "McDonald's",
+  ALAMAANS = "Al Amaan's",
+  KIMLYDIMSUM = 'Kimly Dim Sum',
 }
 
 export type Order = {
@@ -80,6 +93,7 @@ export type SupperGroup = {
   paymentInfo: PaymentInfo[]
   restaurantLogo?: string
   restaurantName: string
+  restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
   supperGroupId: number
@@ -87,9 +101,9 @@ export type SupperGroup = {
   totalPrice: number
   userIdList: string[]
   orderList?: Order[]
-  deliveryDuration?: number
   estArrivalTime?: number
   closingTime: number
+  phoneNumber?: number
 }
 
 export type CollatedOrder = {
@@ -122,7 +136,7 @@ export enum PaymentMethod {
 
 export type PaymentInfo = {
   paymentMethod: PaymentMethod
-  link?: string
+  link?: string | null
 }
 
 export enum SUPPER_ACTIONS {
@@ -154,9 +168,12 @@ export enum SUPPER_ACTIONS {
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
   GET_EDIT_FOOD_ITEM = 'SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM',
+  SET_MENU_TAB_KEY = 'SUPPER_ACTIONS.SET_MENU_TAB_KEY',
   SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
   SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
+  SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
+  SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
 }
 
 type SetIsLoading = {
@@ -297,6 +314,13 @@ type SetTabsKey = {
 type GetEditFoodItem = {
   type: typeof SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM
   editFoodItem: Food | null
+}
+
+type SetMenuTabKey = {
+  type: typeof SUPPER_ACTIONS.SET_MENU_TAB_KEY
+  menuTabKey: string
+}
+
 type SetExpandAll = {
   type: typeof SUPPER_ACTIONS.SET_EXPAND_ALL
   isExpandAll: boolean
@@ -310,6 +334,16 @@ type SetPaymentExpandedCount = {
 type SetEstimatedArrivalTime = {
   type: typeof SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME
   estArrivalTime: string
+}
+
+type SetEditOrderNumber = {
+  type: typeof SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER
+  editOrderNumber: number
+}
+
+type SetCounter = {
+  type: typeof SUPPER_ACTIONS.SET_COUNTER
+  counter: number
 }
 
 export type ActionTypes =
@@ -341,6 +375,9 @@ export type ActionTypes =
   | GetSearchedSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
+  | SetMenuTabKey
   | SetExpandAll
   | SetPaymentExpandedCount
   | SetEstimatedArrivalTime
+  | SetEditOrderNumber
+  | SetCounter

@@ -81,7 +81,6 @@ const NameText = styled.text<{ cancelName: boolean }>`
 
 const CheckboxContainer = styled.div`
   width: fit-content;
-  margin: -10px 0 0 0;
 `
 
 const PaymentMethodText = styled.text`
@@ -158,6 +157,7 @@ export const UserPaymentStatus = (props: Props) => {
         <LeftContainer>
           <CheckboxContainer>
             <Checkbox
+              margin="15px auto 0"
               isChecked={cancelName}
               onClick={() => {
                 setCancelName(!cancelName)
@@ -196,7 +196,7 @@ export const UserPaymentStatus = (props: Props) => {
             </DetailsContainer>
             {props.foodList.map((food, index) => {
               const customisations: string[] = []
-              food.foodMenu.custom?.map((custom) =>
+              food.custom?.map((custom) =>
                 custom.options.map((option) => {
                   if (option.isSelected) customisations.push(option.name)
                 }),
@@ -207,7 +207,7 @@ export const UserPaymentStatus = (props: Props) => {
                     padding="5px 15px 10px 15px"
                     fontPercentage={0.85}
                     key={index}
-                    foodName={food.foodMenu.foodMenuName}
+                    foodName={food.foodName}
                     qty={food.quantity}
                     price={food.foodPrice}
                     customisations={customisations}
