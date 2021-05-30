@@ -1,3 +1,4 @@
+import { Radio } from 'antd'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -5,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { RadioButton } from '../../../components/RadioButton'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
@@ -36,12 +38,12 @@ const Spacer = styled.div`
   height: 24px;
 `
 
-// const OptionText = styled.p`
-//   font-style: normal;
-//   font-weight: 200;
-//   font-size: 14px;
-//   line-height: 14px;
-// `
+const OptionText = styled.p`
+  font-style: normal;
+  font-weight: 200;
+  font-size: 14px;
+  line-height: 14px;
+`
 
 const TextInput = styled.input`
   width: 100%;
@@ -52,7 +54,20 @@ const TextInput = styled.input`
   height: 35px;
 `
 
-type FormValues = {
+const StyledRadioGroup = styled(Radio.Group)`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
+  ${(props) => props.isHidden && 'display: none;'}
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+`
+
+type HardCodedFormValues = {
   Sides: string
   Drinks: string
   others: string
@@ -60,14 +75,16 @@ type FormValues = {
   quantity: number
   cancelAction: string
 }
+type FormValues = Record<string, string | string[] | HardCodedFormValues>
 
 const EditFoodItem = () => {
   const dispatch = useDispatch()
 
   const { isLoading, editFoodItem, count } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; itemId: string }>()
-  const { register, handleSubmit } = useForm<FormValues>()
+  const { register, handleSubmit, setValue, clearErrors } = useForm<FormValues>()
   const onSubmit = () => {
+    console.log(count)
     handleSubmit((data: Food) => {
       console.log('Save changes!')
       console.log(data)
@@ -87,44 +104,68 @@ const EditFoodItem = () => {
       ) : (
         <MainCard flexDirection="column" isEditable={false} editIconSize="0rem" padding="25px">
           <FoodItemHeader>{editFoodItem?.foodName}</FoodItemHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <>
             {editFoodItem?.custom?.map((section) => {
               return (
                 <>
                   <SectionHeader>{section.title}</SectionHeader>
-                  {section.options.map((option, key) => {
-                    return (
-                      <>
-                        <input key={key} {...register('Sides', { required: true })} type="radio" value={option.name} />
-                        <br />
-                      </>
-                    )
-                  })}
-                  <Spacer />
+                  <StyledRadioGroup
+                    {...register(`${section.title}`, { required: true })}
+                    onChange={(e) => {
+                      clearErrors(`${section.title}`)
+                      setValue(`${section.title}`, e.target.value)
+                    }}
+                    defaultValue={() => {
+                      section.options.find((sectionOption) => sectionOption.isSelected === true)?.name
+                    }}
+                  >
+                    {section.options.map((option, key) => {
+                      return (
+                        <>
+                          <RadioButtonContainer key={key}>
+                            <RadioButton
+                              margin="0 0 0 2px"
+                              value={option.name}
+                              label={<OptionText>{option.name}</OptionText>}
+                            />
+                          </RadioButtonContainer>
+                        </>
+                      )
+                    })}
+                    <Spacer />
+                  </StyledRadioGroup>
                 </>
               )
             })}
+          </>
+          <SectionHeader>If this product is not available</SectionHeader>
+          <StyledRadioGroup
+            {...register(`cancelAction`, { required: true })}
+            onChange={(e) => {
+              clearErrors(`cancelAction`)
+              setValue(`cancelAction`, e.target.value)
+            }}
+            defaultValue={'Contact'}
+          >
+            <RadioButtonContainer key={'Contact'}>
+              <RadioButton margin="0 0 0 2px" value={'Contact'} label={<OptionText>{'Contact'}</OptionText>} />
+            </RadioButtonContainer>
+            <RadioButtonContainer key={'Cancel'}>
+              <RadioButton margin="0 0 0 2px" value={'Cancel'} label={<OptionText>{'Cancel'}</OptionText>} />
+            </RadioButtonContainer>
+          </StyledRadioGroup>
 
-            <SectionHeader>If this product is not available</SectionHeader>
-            <input {...register('cancelAction', { required: true })} type="radio" value={'contact'} name="Contact" />
-            <br />
-            <input {...register('cancelAction', { required: true })} type="radio" value="Cancel" label="Cancel" />
-            <Spacer />
+          <Spacer />
 
-            <TextInput
-              defaultValue={editFoodItem?.comments}
-              {...register('comments')}
-              placeholder="Additional comments e.g. BBQ Sauce"
-            />
-            <Spacer />
-            <QuantityTracker default={editFoodItem?.quantity || count} center={true} />
-            <Spacer />
-            <AddUpdateCartButton
-              onClick={onSubmit}
-              update
-              currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'}
-            />
-          </form>
+          <TextInput
+            defaultValue={editFoodItem?.comments}
+            {...register('comments')}
+            placeholder="Additional comments e.g. BBQ Sauce"
+          />
+          <Spacer />
+          <QuantityTracker default={editFoodItem?.quantity || count} center={true} />
+          <Spacer />
+          <AddUpdateCartButton onClick={onSubmit} update currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'} />
         </MainCard>
       )}
     </MainContainer>
