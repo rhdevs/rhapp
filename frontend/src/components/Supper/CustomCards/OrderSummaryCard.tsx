@@ -55,8 +55,8 @@ const EmptyCartImg = styled.img`
 type Props = {
   isEditable?: boolean
   foodList?: Food[]
-  onCancelOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  onCloseOrderClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onCancelOrderClick?: (arg0: boolean) => void
+  onCloseOrderClick?: (arg0: boolean) => void
   orderByUser?: boolean
   orderList?: Order[]
   margin?: string
@@ -80,9 +80,7 @@ export const OrderSummaryCard = (props: Props) => {
               defaultButtonColor="transparent"
               defaultTextColor="#de5f4c"
               buttonWidth="120px"
-              onButtonClick={() => {
-                props.onCancelOrderClick
-              }}
+              onButtonClick={props.onCancelOrderClick}
               isFlipButton={false}
               border="2px solid #de5f4c"
             />
@@ -92,9 +90,7 @@ export const OrderSummaryCard = (props: Props) => {
                 stopPropagation={true}
                 defaultButtonDescription="Close Order"
                 buttonWidth="120px"
-                onButtonClick={() => {
-                  props.onCloseOrderClick
-                }}
+                onButtonClick={props.onCloseOrderClick}
                 isFlipButton={false}
               />
             )}

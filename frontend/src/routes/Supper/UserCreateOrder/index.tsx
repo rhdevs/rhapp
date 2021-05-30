@@ -16,6 +16,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   height: 100vh;
@@ -145,7 +146,7 @@ export default function UserCreateOrder() {
   const RedAsterisk = <RedText>*</RedText>
   const initSupperGroup: SupperGroup = {
     costLimit: 0,
-    createdAt: 10000000,
+    createdAt: Math.round(Date.now() / 1000),
     currentFoodCost: 0,
     location: '',
     numOrders: 0,
@@ -157,11 +158,11 @@ export default function UserCreateOrder() {
     restaurantName: '',
     splitAdditionalCost: SplitACMethod.EQUAL,
     status: SupperGroupStatus.OPEN,
-    supperGroupId: 1,
+    supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
     userIdList: [],
-    closingTime: 10000000,
+    closingTime: Math.round(Date.now() / 1000),
   }
 
   const {
@@ -215,9 +216,11 @@ export default function UserCreateOrder() {
     handleSubmit3((data) => {
       //TODO: update store
       //TODO: dispatch full updated info to backend
+      //dispatch(createSupperGroup(...))
       console.log(data)
       console.log('success')
     })()
+    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -337,19 +340,18 @@ export default function UserCreateOrder() {
               <TopNavBar
                 title="Create Order"
                 rightComponent={<UnderlinedButton onClick={onClick1} text="Next" fontWeight={700} />}
-                onLeftClick={() =>
-                  modalIsOpen && (
-                    <ConfirmationModal
-                      title={'Discard Changes?'}
-                      hasLeftButton={true}
-                      leftButtonText={'Delete'}
-                      onLeftButtonClick={onConfirmDiscardClick}
-                      rightButtonText={'Cancel'}
-                      onRightButtonClick={onCancelClick}
-                    />
-                  )
-                }
+                onLeftClick={() => setModalIsOpen(true)}
               />
+              {modalIsOpen && (
+                <ConfirmationModal
+                  title={'Discard Changes?'}
+                  hasLeftButton={true}
+                  leftButtonText={'Delete'}
+                  onLeftButtonClick={onConfirmDiscardClick}
+                  rightButtonText={'Cancel'}
+                  onRightButtonClick={onCancelClick}
+                />
+              )}
               <LineProgress currentStep={1} numberOfSteps={3} />
               <VertSectionContainer>
                 <Header>Order Name{RedAsterisk}</Header>
@@ -409,7 +411,7 @@ export default function UserCreateOrder() {
                 </VertInputContainer>
               </VertSectionContainer>
               <VertSectionContainer>
-                <Header>Max Price{RedAsterisk}</Header>
+                <Header>Max Price</Header>
                 <PriceContainer>
                   Set maximum total price
                   <StyledSwitch
@@ -425,7 +427,6 @@ export default function UserCreateOrder() {
                       name="maxPrice"
                       control={control1}
                       defaultValue={null}
-                      rules={{ required: true }}
                       render={() => <MaxPriceFixer />}
                     />
                   </FixerContainer>

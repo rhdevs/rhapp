@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { PATHS } from '../../routes/Routes'
 import { FoodMenu, Order } from '../../store/supper/types'
 import { RootState } from '../../store/types'
 
@@ -65,11 +67,13 @@ type Props = {
   menu?: FoodMenu[]
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  supperGroupId?: string
 }
 
 export const MenuSection = (props: Props) => {
   let QUANTITY
   const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
+  const history = useHistory()
 
   return (
     <MainContainer>
@@ -84,11 +88,10 @@ export const MenuSection = (props: Props) => {
               .map((foodMenu) => (
                 <>
                   <FoodAndQuantityContainer
-                    onClick={() => {
-                      // TODO: Add route
-                      //history.push(/foodMenu.foodMenuId)
-                      console.log('Go to food page!')
-                    }}
+                    // TODO: UPDATE ORDERID!
+                    onClick={() =>
+                      history.push(`${PATHS.ADD_ITEM}/${props.supperGroupId}/order/1/add/${foodMenu.foodMenuId}`)
+                    }
                   >
                     <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
                     {

@@ -66,6 +66,7 @@ type Props = {
   isOwner?: boolean
   cardMargin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const JoinOrderSGCard = (props: Props) => {
@@ -82,7 +83,13 @@ export const JoinOrderSGCard = (props: Props) => {
   }
 
   return (
-    <MainCard margin={props.cardMargin} flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
+    <MainCard
+      margin={props.cardMargin}
+      flexDirection="column"
+      isEditable={props.isOwner}
+      editOnClick={props.editOnClick}
+      editIconSize="1rem"
+    >
       <TopSection>
         <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
         <TextSubContainer>

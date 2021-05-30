@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Button from '../../../components/Mobile/Button'
@@ -10,6 +10,7 @@ import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSu
 import { getCollatedOrder, readableSupperGroupId } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -100,6 +101,7 @@ type FormValues = {
 
 const OrderSummary = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const { collatedOrder, isLoading } = useSelector((state: RootState) => state.supper)
   const {
@@ -119,6 +121,7 @@ const OrderSummary = () => {
       //TODO: Update status and final delivery fee
       console.log(data)
       console.log(errors)
+      history.push(`${PATHS.USER_VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 

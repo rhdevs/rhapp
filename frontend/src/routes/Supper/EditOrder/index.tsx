@@ -25,7 +25,7 @@ import {
 import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
 
 const Background = styled.form`
@@ -144,6 +144,7 @@ type PaymentInfoData = Record<string, string>
 
 const EditOrder = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading, counter } = useSelector(
     (state: RootState) => state.supper,
   )
@@ -457,6 +458,7 @@ const EditOrder = () => {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
       console.log('Form was submitted!')
+      history.goBack()
       console.log(data)
       console.log('updatedOrderInfo', updatedOrderInfo)
       //TODO: uncomment to send updated order details to backend

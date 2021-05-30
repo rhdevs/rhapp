@@ -396,7 +396,7 @@ export const supperGroupStub: SupperGroup = {
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
   status: SupperGroupStatus.OPEN,
-  supperGroupId: 1,
+  supperGroupId: '1',
   supperGroupName: 'feed me',
   totalPrice: 15.7,
   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
