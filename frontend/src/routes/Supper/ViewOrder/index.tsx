@@ -93,7 +93,7 @@ const ViewOrder = () => {
   const history = useHistory()
   const { supperGroup, collatedOrder, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const [viewCollatedOrder, setViewCollatedOrder] = useState(false)
-  let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+  let supperGroupIsOpen = selectedSupperGroupStatus !== SupperGroupStatus.OPEN
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -103,7 +103,7 @@ const ViewOrder = () => {
   useEffect(() => {
     console.log(supperGroup?.status)
     dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
-    supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+    supperGroupIsOpen = selectedSupperGroupStatus !== SupperGroupStatus.OPEN
   }, [supperGroup?.status])
 
   return (
@@ -163,6 +163,7 @@ const ViewOrder = () => {
         collatedOrder={viewCollatedOrder ? collatedOrder : undefined}
         isEditable={supperGroupIsOpen}
         orderList={supperGroup?.orderList}
+        onCloseOrderClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
       />
       {supperGroupIsOpen ? (
         <TotalPriceText>Total Price: ${(supperGroup?.totalPrice ?? 0).toFixed(2)}</TotalPriceText>
