@@ -27,6 +27,7 @@ import { RootState } from '../../../store/types'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { useHistory, useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 
 const Background = styled.form`
   width: 100vw;
@@ -150,6 +151,7 @@ const EditOrder = () => {
   )
   const params = useParams<{ supperGroupId: string }>()
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const { register, handleSubmit, setValue, clearErrors, setError, reset, control, errors } = useForm<
     FormData,
     PaymentInfoData
@@ -466,13 +468,31 @@ const EditOrder = () => {
     })()
   }
 
+  const onCancelClick = () => {
+    setModalIsOpen(false)
+  }
+
+  const onConfirmDiscardClick = () => {
+    history.goBack()
+  }
+
   return (
     <Background onSubmit={onSubmit}>
-      <TopNavBar title="Edit Order" />
+      <TopNavBar title="Edit Order" onLeftClick={() => setModalIsOpen(true)} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
+          {modalIsOpen && (
+            <ConfirmationModal
+              title={'Discard Changes?'}
+              hasLeftButton={true}
+              leftButtonText={'Delete'}
+              onLeftButtonClick={onConfirmDiscardClick}
+              rightButtonText={'Cancel'}
+              onRightButtonClick={onCancelClick}
+            />
+          )}
           <BubbleSection canHide isOpen={editOrderNumber === 1} title="Order Information" number={1}>
             {orderInformationSection()}
           </BubbleSection>
