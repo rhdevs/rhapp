@@ -8,6 +8,8 @@ import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
 import EmptyCart from '../../../assets/EmptyCart.svg'
 import { OpenUserTelegram } from '../../TelegramShareButton'
+import { useDispatch } from 'react-redux'
+import { setFoodId } from '../../../store/supper/action'
 
 const EmptyCartContainer = styled.div`
   display: flex;
@@ -57,6 +59,7 @@ type Props = {
   foodList?: Food[]
   onCancelOrderClick?: (arg0: boolean) => void
   onCloseOrderClick?: (arg0: boolean) => void
+  onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
   orderList?: Order[]
   margin?: string
@@ -64,6 +67,8 @@ type Props = {
 }
 
 export const OrderSummaryCard = (props: Props) => {
+  const dispatch = useDispatch()
+
   const bottomButtons = () => {
     return (
       props.isEditable && (
@@ -188,9 +193,9 @@ export const OrderSummaryCard = (props: Props) => {
                         isEditable={props.isEditable}
                         comments={food.comments}
                         foodUserId={order.user.userID}
-                        onDeleteClick={() => {
-                          console.log('Deleted food!') //TODO: Delete food item from list!
-                          success('Successfully Deleted Item!')
+                        onDeleteClick={(e) => {
+                          dispatch(setFoodId(food.foodId))
+                          props.onDeleteClick && props.onDeleteClick(e)
                         }}
                         cancelAction={food.cancelAction}
                       />
@@ -233,9 +238,9 @@ export const OrderSummaryCard = (props: Props) => {
                   customisations={customisations}
                   isEditable={props.isEditable}
                   comments={food.comments}
-                  onDeleteClick={() => {
-                    console.log('Deleted food!') //TODO: Delete food item from list!
-                    success('Successfully Deleted Item!')
+                  onDeleteClick={(e) => {
+                    dispatch(setFoodId(food.foodId))
+                    props.onDeleteClick && props.onDeleteClick(e)
                   }}
                   cancelAction={food.cancelAction}
                 />
