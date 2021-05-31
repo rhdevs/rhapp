@@ -600,3 +600,10 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
     counter: counter,
   })
 }
+
+export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_FOOD_ID,
+    foodId: foodId,
+  })
+}
