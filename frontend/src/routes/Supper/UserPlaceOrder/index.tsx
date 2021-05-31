@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -17,6 +17,7 @@ import {
   unixTo12HourTime,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   height: 100vh;
@@ -36,6 +37,7 @@ const Restaurant = styled.text`
 
 export default function UserPlaceOrder() {
   const dispatch = useDispatch()
+  const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
 
   useEffect(() => {
@@ -58,6 +60,7 @@ export default function UserPlaceOrder() {
       ) : (
         <>
           <ExpandableSGCard
+            editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
             supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
@@ -72,8 +75,9 @@ export default function UserPlaceOrder() {
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
             <MenuTabs menuSections={restaurant?.allSection} />
-            <MenuSection menu={restaurant?.menu} />
+            <MenuSection supperGroupId={supperGroup?.supperGroupId} menu={restaurant?.menu} />
           </SearchBarContainer>
+          {/* If user has item in order, add 'View cart bottom button' &&& link to View cart page! at VIEW_CART/:supperGroupId */}
         </>
       )}
     </Background>

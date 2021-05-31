@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Controller, DeepMap, FieldError, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -19,6 +19,7 @@ import {
   getMenuFood,
 } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { PATHS } from '../../Routes'
 
 const Background = styled.form`
   width: 100vw;
@@ -286,7 +287,8 @@ type CustomData = Record<string, string | string[] | CancelAction>
 
 const AddItem = () => {
   const dispatch = useDispatch()
-  const params = useParams<{ orderId: string; foodId: string }>()
+  const history = useHistory()
+  const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
   const { register, setValue, handleSubmit, watch, clearErrors, errors, control } = useForm<CustomData>({
     mode: 'all',
     reValidateMode: 'onChange',
@@ -351,6 +353,7 @@ const AddItem = () => {
       console.log(newFood)
       //TODO: Send new food to backend
       //   dispatch(addFoodToOrder(newFood, params.orderId))
+      history.push(`${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
       console.log(data, count)
     })()
   }

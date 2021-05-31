@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -12,9 +12,11 @@ import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSu
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   width: 100vw;
   background: #fafaf4;
 `
@@ -57,6 +59,7 @@ const SubtotalText = styled.h3`
 
 const ViewCart = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
 
   useEffect(() => {
@@ -77,6 +80,7 @@ const ViewCart = () => {
       ) : (
         <>
           <ExpandableSGCard
+            editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
             supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
@@ -90,15 +94,24 @@ const ViewCart = () => {
           <>
             <MyOrderContainer>
               <MyOrderText>My Order</MyOrderText>
-              <UnderlinedButton text="Add Item" color="red" fontWeight={200} />
+              <UnderlinedButton
+                text="Add Item"
+                onClick={() =>
+                  history.push(
+                    `${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`,
+                  )
+                }
+                color="red"
+                fontWeight={200}
+              />
             </MyOrderContainer>
             <OrderSummaryCard isEditable foodList={order?.foodList} orderList={supperGroup?.orderList} />
-            <SubtotalText>Subtotal: ${order?.totalCost?.toFixed(2) ?? '-'}</SubtotalText>
+            <SubtotalText>Subtotal: ${(order?.totalCost ?? 0).toFixed(2)}</SubtotalText>
             <ButtonContainer>
               <Button
                 stopPropagation
                 defaultButtonDescription="Submit Order"
-                onButtonClick={() => console.log('submit order')}
+                onButtonClick={() => history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)}
                 isFlipButton={false}
               />
             </ButtonContainer>
