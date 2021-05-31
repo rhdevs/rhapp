@@ -311,6 +311,10 @@ export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispa
   dispatch(setIsLoading(false))
 }
 
+// export const updateSupperGroupStatus = (supperGroupStatus : SupperGroupStatus) => (dispatch:Dispatch<ActionTypes>) => {
+
+// }
+
 export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const requestBody = order

@@ -4,12 +4,14 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import {
+  deleteSupperGroup,
   getCollatedOrder,
   getSupperGroupById,
   readableSupperGroupId,
@@ -93,6 +95,8 @@ const ViewOrder = () => {
   const history = useHistory()
   const { supperGroup, collatedOrder, selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const [viewCollatedOrder, setViewCollatedOrder] = useState(false)
+  const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
   let supperGroupIsOpen = selectedSupperGroupStatus !== SupperGroupStatus.OPEN
 
   useEffect(() => {
@@ -106,8 +110,47 @@ const ViewOrder = () => {
     supperGroupIsOpen = selectedSupperGroupStatus !== SupperGroupStatus.OPEN
   }, [supperGroup?.status])
 
+  const onCloseCancelClick = () => {
+    setCloseModalIsOpen(false)
+  }
+
+  const onCloseConfirmClick = () => {
+    // TODO: Find endpoint to update suppergroup status
+    // dispatch(setSupperGroupStatus)
+    history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+  }
+
+  const onDeleteCancelClick = () => {
+    setDeleteModalIsOpen(false)
+  }
+
+  const onDeleteConfirmClick = () => {
+    dispatch(deleteSupperGroup(params.supperGroupId))
+    history.push(`${PATHS.SUPPER_HOME}`)
+  }
+
   return (
     <MainContainer>
+      {closeModalIsOpen && (
+        <ConfirmationModal
+          title={'Close Order Early?'}
+          hasLeftButton={true}
+          leftButtonText={'Confirm'}
+          onLeftButtonClick={onCloseConfirmClick}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={onCloseCancelClick}
+        />
+      )}
+      {deleteModalIsOpen && (
+        <ConfirmationModal
+          title={'Delete Supper Group?'}
+          hasLeftButton={true}
+          leftButtonText={'Confirm'}
+          onLeftButtonClick={onDeleteConfirmClick}
+          rightButtonText={'Cancel'}
+          onRightButtonClick={onDeleteCancelClick}
+        />
+      )}
       <TopNavBar title="View Order" rightComponent={<ShareAltOutlined style={{ fontSize: '20px' }} />} />
       {supperGroupIsOpen ? (
         <JoinOrderSGCard
@@ -163,7 +206,8 @@ const ViewOrder = () => {
         collatedOrder={viewCollatedOrder ? collatedOrder : undefined}
         isEditable={supperGroupIsOpen}
         orderList={supperGroup?.orderList}
-        onCloseOrderClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+        onCloseOrderClick={() => setCloseModalIsOpen(true)}
+        onDeleteGroupClick={() => setDeleteModalIsOpen(true)}
       />
       {supperGroupIsOpen ? (
         <TotalPriceText>Total Price: ${(supperGroup?.totalPrice ?? 0).toFixed(2)}</TotalPriceText>

@@ -57,7 +57,7 @@ const EmptyCartImg = styled.img`
 type Props = {
   isEditable?: boolean
   foodList?: Food[]
-  onCancelOrderClick?: (arg0: boolean) => void
+  onDeleteGroupClick?: (arg0: boolean) => void
   onCloseOrderClick?: (arg0: boolean) => void
   onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
@@ -85,7 +85,7 @@ export const OrderSummaryCard = (props: Props) => {
               defaultButtonColor="transparent"
               defaultTextColor="#de5f4c"
               buttonWidth="120px"
-              onButtonClick={props.onCancelOrderClick}
+              onButtonClick={props.onDeleteGroupClick}
               isFlipButton={false}
               border="2px solid #de5f4c"
             />
