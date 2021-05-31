@@ -2,7 +2,6 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { CollatedOrder, Food, Order } from '../../../store/supper/types'
-import useSnackbar from '../../../hooks/useSnackbar'
 import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
@@ -104,8 +103,6 @@ export const OrderSummaryCard = (props: Props) => {
       )
     )
   }
-
-  const [success] = useSnackbar('success')
 
   const cardContent = () => {
     if (props.collatedOrder || props.collatedOrder === null) {
