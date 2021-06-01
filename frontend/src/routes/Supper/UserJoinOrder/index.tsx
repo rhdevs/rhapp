@@ -38,7 +38,7 @@ export default function UserJoinOrder() {
       <TopNavBar title="Join Order" rightComponent={rightIcon} />
       <JoinOrderSGCard
         title={supperGroup?.supperGroupName ?? ''}
-        restaurant={supperGroup?.restaurantName}
+        restaurant={supperGroup?.restaurantName ?? ''}
         orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
         username={supperGroup?.ownerName ?? ''}
         currentAmount={supperGroup?.currentFoodCost ?? 0}
