@@ -530,13 +530,14 @@ def get_order(orderId):
             # Only 1 item in temp, can only access it like this otherwise its a mongo array object
             for item in temp:
                 data = item
-
             data['orderId'] = str(data.pop('_id'))
-            data['user']['_id'] = str(data['user']['_id'])
-
+            for user in data["user"]:
+                user['_id'] = str(user.pop('_id'))
             for food in data["foodList"]:
                 # rename _id field to foodId and unbox mongo object
                 food["foodId"] = str(food.pop('_id'))
+                food['restaurantId'] = str(food.pop('restaurantId'))
+                food['foodMenuId'] = str(food.pop('foodMenuId'))
 
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
