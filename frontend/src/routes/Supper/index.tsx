@@ -97,11 +97,7 @@ export default function Supper() {
         )}
       </SupperGroupContainer>
       <PlusButtonDiv>
-        <PlusButton
-          onClick={() => {
-            console.log('Make new supper group!')
-          }}
-        />
+        <PlusButton onClick={() => history.push(PATHS.USER_SUPPER_GROUP_CREATE_ORDER)} />
       </PlusButtonDiv>
       <BottomNavBar />
     </Background>

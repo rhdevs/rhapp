@@ -30,13 +30,16 @@ interface AuxProps {
   isEditable?: boolean
   editIconSize?: string
   margin?: string
+  editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const MainCard = (props: AuxProps) => {
   return (
     <MainContainer minHeight={props.minHeight} flexDirection={props.flexDirection} margin={props.margin}>
       {props.children}
-      {props.isEditable && <EditIcon editIconSize={props.editIconSize} src={editIcon} alt="Edit Icon" />}
+      {props.isEditable && (
+        <EditIcon onClick={props.editOnClick} editIconSize={props.editIconSize} src={editIcon} alt="Edit Icon" />
+      )}
     </MainContainer>
   )
 }
