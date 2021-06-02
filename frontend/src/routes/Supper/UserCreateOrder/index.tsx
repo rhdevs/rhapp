@@ -63,7 +63,7 @@ const RedText = styled.text`
 `
 
 const VertInputContainer = styled.div`
-  padding 5px 12px;
+  padding 5px 0 0 0;
 `
 
 const HortInputContainer = styled.div`
@@ -71,7 +71,7 @@ const HortInputContainer = styled.div`
   width: 45%;
 `
 
-const LinkBox = styled.input<{ flex?: boolean }>`
+const InputText = styled.input<{ flex?: boolean }>`
   width: 80%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
@@ -79,15 +79,6 @@ const LinkBox = styled.input<{ flex?: boolean }>`
   margin: 5px auto 0 auto;
   height: 35px;
   ${(props) => props.flex && 'display: flex;'}
-`
-
-const InputText = styled.input`
-  width: 90%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 5px auto 0 auto;
-  height: 35px;
 `
 
 const InputBox = styled(Input)`
@@ -336,7 +327,7 @@ export default function UserCreateOrder() {
                   .map((pm) => {
                     return (
                       selectedPaymentMethod.includes(pm) && (
-                        <LinkBox
+                        <InputText
                           flex
                           type="text"
                           name={pm}
@@ -369,6 +360,7 @@ export default function UserCreateOrder() {
                 <Header>Phone Number {RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputText
+                    flex
                     type="number"
                     placeholder="Phone Number"
                     name="phoneNumber"
@@ -409,6 +401,7 @@ export default function UserCreateOrder() {
                 <Header>Order Name{RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputText
+                    flex
                     type="text"
                     placeholder="Order Name"
                     name="supperGroupName"
