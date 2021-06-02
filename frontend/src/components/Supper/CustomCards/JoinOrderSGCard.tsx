@@ -105,9 +105,12 @@ export const JoinOrderSGCard = (props: Props) => {
             <StatusSymbol text={props.closingTime} />
             <StatusSymbol text={String(props.numberOfUsers)} type="numberOfUsers" />
           </FirstLineContainer>
-          <StatusSymbol type="estDeliveryFee" text={`${props.deliveryFee} (${props.splitACType})`} />
+          <StatusSymbol type="estDeliveryFee" text={`$${props.deliveryFee} (${props.splitACType})`} />
         </BubblesContainer>
-        <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
+        <RoundProgress
+          priceLimit={Number(props.priceLimit.toFixed(2))}
+          currentAmount={Number(props.currentAmount.toFixed(2))}
+        />
       </BottomSection>
     </MainCard>
   )
