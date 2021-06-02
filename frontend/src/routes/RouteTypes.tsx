@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Redirect, useHistory } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 
 const getIsLoggedIn = async () => {
@@ -69,15 +69,13 @@ type StateType = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AuthenticateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
-  const history = useHistory()
   if (localStorage.token) {
     return getIsLoggedIn() ? (
       <Route
         {...rest}
         render={(props) => {
           const state = props.location.state as StateType
-          const redirectUrl = state.from ?? '/'
-          history.replace('/')
+          const redirectUrl = state?.from ?? '/'
           return <Redirect push to={redirectUrl} />
         }}
       />
