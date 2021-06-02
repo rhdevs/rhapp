@@ -10,7 +10,7 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { setOrder } from '../../../store/supper/action'
-import { SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,6 +36,7 @@ const HortSectionContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: baseline;
 `
 
 const Header = styled.text`
@@ -44,11 +45,10 @@ const Header = styled.text`
 `
 
 const ErrorText = styled.p`
-  margin: 0;
+  margin: 5px 0 0 0;
   color: #ff837a;
   width: 100%;
   text-align: center;
-  font-size: 17px;
   font-family: 'Inter';
 `
 
@@ -71,8 +71,18 @@ const HortInputContainer = styled.div`
   width: 45%;
 `
 
-const InputText = styled.input`
+const LinkBox = styled.input<{ flex?: boolean }>`
   width: 80%;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 5px auto 0 auto;
+  height: 35px;
+  ${(props) => props.flex && 'display: flex;'}
+`
+
+const InputText = styled.input`
+  width: 90%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
@@ -184,18 +194,30 @@ export default function UserCreateOrder() {
     handleSubmit: handleSubmit3,
     setValue: setValue3,
     errors: errors3,
+    setError: setError3,
+    clearErrors: clearErrors3,
   } = useForm<FormValues3>()
 
   useEffect(() => {
     dispatch(setOrder(initSupperGroup))
   }, [dispatch])
 
+  useEffect(() => {
+    if (selectedPaymentMethod.length === 0 || pmError !== 0) {
+      setValue3('paymentMethod', undefined)
+      setError3('paymentMethod', { type: 'required' })
+    } else {
+      pmError = 0
+      clearErrors3('paymentMethod')
+      setValue3('paymentMethod', selectedPaymentMethod)
+    }
+  }, [selectedPaymentMethod])
+
   const onClick1 = () => {
     setValue1('restaurant', selectedRestaurant)
     if (priceLimit > 0) {
       setValue1('maxPrice', priceLimit)
     }
-    //console.log(watch())
     handleSubmit1((data) => {
       //TODO: update store
       console.log(data)
@@ -212,7 +234,6 @@ export default function UserCreateOrder() {
   }
 
   const onClick3 = () => {
-    setValue3('paymentMethod', selectedPaymentMethod)
     handleSubmit3((data) => {
       //TODO: update store
       //TODO: dispatch full updated info to backend
@@ -220,7 +241,7 @@ export default function UserCreateOrder() {
       console.log(data)
       console.log('success')
     })()
-    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    // history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -233,6 +254,7 @@ export default function UserCreateOrder() {
     setModalIsOpen(false)
   }
 
+  let pmError = 0
   const abstractSteps = () => {
     {
       switch (count) {
@@ -250,7 +272,7 @@ export default function UserCreateOrder() {
                 <HortInputContainer>
                   <InputText
                     type="number"
-                    placeholder="e.g $3"
+                    placeholder="$$$"
                     name="estDeliveryFee"
                     ref={register2({
                       required: true,
@@ -309,9 +331,39 @@ export default function UserCreateOrder() {
                   {...register3('paymentMethod', { required: true })}
                   paymentMethods={paymentMethods}
                 />
-                {errors3.paymentMethod?.type === 'required' && (
+                {paymentMethods
+                  .filter((pm) => pm !== PaymentMethod.CASH)
+                  .map((pm) => {
+                    return (
+                      selectedPaymentMethod.includes(pm) && (
+                        <LinkBox
+                          flex
+                          type="text"
+                          name={pm}
+                          ref={register3({
+                            required: true,
+                            validate: (input) => input.trim().length !== 0,
+                          })}
+                          style={{
+                            borderColor: errors3[`${pm}`] && 'red',
+                            background: errors3[`${pm}`] && '#ffd1d1',
+                          }}
+                          placeholder={pm + ' Link'}
+                        />
+                      )
+                    )
+                  })}
+                {selectedPaymentMethod.filter((pm) => {
+                  if (errors3[`${pm}`]) {
+                    return pmError++
+                  }
+                })}
+                {errors3.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
+                {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
+
+                {/* {errors3.paymentMethod?.type === 'required' && (
                   <ErrorText>Payment method(s) is/are required.</ErrorText>
-                )}
+                )} */}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Phone Number {RedAsterisk}</Header>
@@ -396,7 +448,6 @@ export default function UserCreateOrder() {
                         type="datetime-local"
                         placeholder="select time"
                         onChange={(input) => {
-                          console.log(input.target.value)
                           setValue1('closingTime', input.target.value)
                         }}
                         {...register1('closingTime', { required: true, pattern: /^\S+@\S+$/i })}

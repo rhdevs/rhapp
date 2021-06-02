@@ -95,7 +95,7 @@ const ErrorText = styled.p`
   color: #ff837a;
   width: 100%;
   text-align: center;
-  font-size: 17px;
+  font-size: 14px;
   font-family: 'Inter';
 `
 
