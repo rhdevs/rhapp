@@ -249,9 +249,5 @@ export const OrderSummaryCard = (props: Props) => {
       }
     }
   }
-  return (
-    <MainCard margin={props.margin} minHeight="10rem">
-      {cardContent()}
-    </MainCard>
-  )
+  return <MainCard margin={props.margin}>{cardContent()}</MainCard>
 }
