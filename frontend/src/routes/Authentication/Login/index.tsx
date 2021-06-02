@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
@@ -70,6 +70,8 @@ export default function Login() {
 
   const [error, setError] = useState({ message: '' })
 
+  const location = useLocation()
+
   const loginHandler = async () => {
     if (username !== '' && password !== '') {
       setError({ message: '' })
@@ -103,6 +105,7 @@ export default function Login() {
         .then((data) => {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          console.log(location)
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })

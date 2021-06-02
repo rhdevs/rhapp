@@ -293,10 +293,13 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
   dispatch(setIsLoading(false))
 }
 
-export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateSupperGroup = (supperGroupId: string, order?: Order, supperGroupStatus?: SupperGroupStatus) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(setIsLoading(true))
 
-  const requestBody = order
+  const requestBody = ((order && { order: order }) || (supperGroupStatus && { status: supperGroupStatus })) ?? {}
+  console.log(requestBody)
   put(ENDPOINTS.UPDATE_SUPPER_GROUP, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -310,10 +313,6 @@ export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispa
     })
   dispatch(setIsLoading(false))
 }
-
-// export const updateSupperGroupStatus = (supperGroupStatus : SupperGroupStatus) => (dispatch:Dispatch<ActionTypes>) => {
-
-// }
 
 export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))

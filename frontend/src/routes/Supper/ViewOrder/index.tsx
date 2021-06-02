@@ -17,6 +17,7 @@ import {
   readableSupperGroupId,
   setSelectedSupperGroupStatus,
   unixTo12HourTime,
+  updateSupperGroup,
 } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -116,7 +117,7 @@ const ViewOrder = () => {
 
   const onCloseConfirmClick = () => {
     // TODO: Find endpoint to update suppergroup status
-    // dispatch(setSupperGroupStatus)
+    dispatch(updateSupperGroup(params.supperGroupId, undefined, SupperGroupStatus.CLOSED))
     history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
   }
 
