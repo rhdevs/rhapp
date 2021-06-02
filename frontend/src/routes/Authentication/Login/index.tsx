@@ -70,8 +70,6 @@ export default function Login() {
 
   const [error, setError] = useState({ message: '' })
 
-  const location = useLocation()
-
   const loginHandler = async () => {
     if (username !== '' && password !== '') {
       setError({ message: '' })
@@ -105,7 +103,6 @@ export default function Login() {
         .then((data) => {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
-          console.log(location)
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
