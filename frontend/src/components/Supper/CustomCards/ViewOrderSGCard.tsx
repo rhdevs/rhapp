@@ -93,8 +93,8 @@ export const ViewOrderSGCard = (props: Props) => {
           width={50}
           moneyFontSize="15px"
           textFontSize="12px"
-          priceLimit={props.priceLimit}
-          currentAmount={props.currentAmount}
+          priceLimit={Number(props.priceLimit.toFixed(2))}
+          currentAmount={Number(props.currentAmount.toFixed(2))}
         />
       </BottomSection>
     </MainCard>

@@ -104,14 +104,17 @@ export const ExpandableSGCard = (props: Props) => {
           </ExpandableButtonContainer>
         </LeftContainer>
         <RightContainer>
-          <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
+          <RoundProgress
+            priceLimit={Number(props.priceLimit.toFixed(2))}
+            currentAmount={Number(props.currentAmount.toFixed(2))}
+          />
         </RightContainer>
       </TopContainer>
       {isExpanded ? (
         <BottomContainer>
           <StatusSymbol text={props.closingTime} />
           <StatusSymbol type="numberOfUsers" text={String(props.numberOfUsers)} />
-          <StatusSymbol type="deliveryFee" text={String(props.deliveryFee)} />
+          <StatusSymbol type="deliveryFee" text={props.deliveryFee} />
         </BottomContainer>
       ) : (
         <></>

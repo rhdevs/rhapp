@@ -46,7 +46,7 @@ export default function UserJoinOrder() {
         closingTime={unixTo12HourTime(supperGroup?.closingTime)}
         numberOfUsers={supperGroup?.userIdList.length ?? 0}
         splitACType={supperGroup?.splitAdditionalCost}
-        deliveryFee={'$' + String((supperGroup?.additionalCost ?? 0).toFixed(2))}
+        deliveryFee={String((supperGroup?.additionalCost ?? 0).toFixed(2))}
       />
       <ButtonContainer>
         <Button
