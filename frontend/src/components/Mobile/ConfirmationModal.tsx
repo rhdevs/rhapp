@@ -17,7 +17,7 @@ const OverlayContainer = styled.div`
 `
 
 const MainContainer = styled.div`
-  position: absolute;
+  position: fixed;
   background-color: #fff;
   width: 90vw;
   border-radius: 15px;
@@ -27,6 +27,7 @@ const MainContainer = styled.div`
   box-shadow: 0px 2px 5px 1px #888888;
   z-index: 1000;
 `
+
 const TitleText = styled.text`
   font-family: Inter;
   font-size: 16px;
