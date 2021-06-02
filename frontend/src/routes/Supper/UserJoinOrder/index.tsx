@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { RhAppQrCode } from '../../../components/RhAppQrCode'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { SplitACMethod } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
@@ -46,7 +45,6 @@ export default function UserJoinOrder() {
         splitACType={SplitACMethod.EQUAL}
         deliveryFee="10.70"
       />
-      <RhAppQrCode link="google.com" hasNoImage />
       <ButtonContainer>
         <Button
           onButtonClick={() =>

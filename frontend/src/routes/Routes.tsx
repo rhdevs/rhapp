@@ -173,7 +173,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
-            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE_BY_ID} component={UserJoinOrder} />
+            <PublicRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE_BY_ID} component={UserJoinOrder} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER_BY_ID} component={UserPlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
