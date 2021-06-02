@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { RhAppQrCode } from '../../../components/RhAppQrCode'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
@@ -48,6 +49,7 @@ export default function UserJoinOrder() {
         splitACType={supperGroup?.splitAdditionalCost}
         deliveryFee={String((supperGroup?.additionalCost ?? 0).toFixed(2))}
       />
+      <RhAppQrCode link="google.com" hasNoImage />
       <ButtonContainer>
         <Button
           onButtonClick={() =>
