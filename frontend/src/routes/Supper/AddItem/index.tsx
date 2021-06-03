@@ -343,12 +343,12 @@ const AddItem = () => {
         comments: data.comments as string,
         quantity: count,
         price: menuFood?.price ?? 0,
-        foodPrice: menuFood?.price ?? 0, //TODO: Update? is it total price of the Food selected or 1 quanitity of it
+        foodPrice: ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count,
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
       console.log(newFood)
-      //TODO: Send new food to backend
+      //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
       history.push(`${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
       console.log(data, count)
