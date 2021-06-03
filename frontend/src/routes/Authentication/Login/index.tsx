@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
 import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
