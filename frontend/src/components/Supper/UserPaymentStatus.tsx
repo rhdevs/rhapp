@@ -134,11 +134,6 @@ export const UserPaymentStatus = (props: Props) => {
     setIsExpanded(!isExpandAll)
   }, [isExpandAll])
 
-  useEffect(() => {
-    console.log(cancelName)
-    dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
-  }, [cancelName])
-
   const arrowIcon = isExpanded ? (
     <CaretUpOutlined
       onClick={() => {
@@ -167,12 +162,14 @@ export const UserPaymentStatus = (props: Props) => {
               isChecked={cancelName}
               onClick={() => {
                 setCancelName(!cancelName)
+                dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
               }}
             />
           </CheckboxContainer>
           <NameText
             onClick={() => {
               setCancelName(!cancelName)
+              dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
             }}
             cancelName={cancelName}
           >
