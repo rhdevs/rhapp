@@ -80,7 +80,7 @@ const StyledText = styled.text`
 
 const ButtonContainer = styled.div`
   display: flex;
-  margin: 23px 15px;
+  margin: 2.5rem 15px 23px 15px;
   justify-content: space-around;
 `
 
@@ -171,18 +171,17 @@ const OwnerView = (props: Props) => {
           paymentMethod={props.supperGroup?.paymentInfo}
         />
       )}
-      {props.supperGroupIsCompleted ? (
+      {!props.supperGroupIsCompleted ? (
         <ButtonContainer>
           <Button
             descriptionStyle={{ width: '100%' }}
             stopPropagation={true}
-            defaultButtonDescription="Mark Payment Complete"
-            updatedButtonDescription="Payment Completed"
+            defaultButtonDescription="Track Payment Progress"
             buttonWidth="200px"
             onButtonClick={() => {
               history.push(`${PATHS.PAYMENT_SCREEN}/${params.supperGroupId}`)
             }}
-            isFlipButton
+            isFlipButton={false}
           />
         </ButtonContainer>
       ) : (
