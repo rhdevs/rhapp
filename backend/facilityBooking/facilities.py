@@ -398,7 +398,7 @@ def supper_group(supperGroupId):
                         'as': 'userList'
                     }
                 },
-                {'$project': {'_id': 0, 'restaurant': 0, 'orderList._id': 0,
+                {'$project': {'_id': 0, 'restaurant': 0,
                               'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
                               }
                  }
@@ -413,6 +413,7 @@ def supper_group(supperGroupId):
                     suppergroup.pop('restaurantId'))
 
                 for order in data['orderList']:
+                    order['orderId'] = str(order.pop('_id'))
                     order['foodIds'] = list(
                         map(lambda x: str(x), order['foodIds']))
 
