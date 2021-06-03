@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const Container = styled.label<{ checked?: boolean; margin?: string; sizePercentage?: number }>`
   display: block;
   position: relative;
-  margin: ${(props) => props.margin ?? ' auto 5px'};
+  margin: ${(props) => props.margin ?? 'auto 5px'};
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;

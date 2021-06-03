@@ -54,9 +54,11 @@ export const SGPaymentStatus = (props: Props) => {
                 ? props.supperGroup?.additionalCost ?? 0 / props.supperGroup?.userIdList.length
                 : ((props.supperGroup?.additionalCost ?? 0) * order.totalCost) /
                   (props.supperGroup?.currentFoodCost ?? 0 + (props.supperGroup?.additionalCost ?? 0))
+            console.log(order)
             return (
               <>
                 <UserPaymentStatus
+                  orderId={order.orderId}
                   key={index}
                   name={order.user.displayName}
                   phoneNumber={order.userContact}
