@@ -491,7 +491,7 @@ def create_order():
 
         response = {"status": "success",
                     "message": "Order created successfully.",
-                    "data": data}
+                    "data": {'orderId': data['orderId']}}
 
         return make_response(response, 200)
     except Exception as e:
