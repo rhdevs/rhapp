@@ -171,7 +171,7 @@ const OwnerView = (props: Props) => {
           paymentMethod={props.supperGroup?.paymentInfo}
         />
       )}
-      {!props.supperGroupIsCompleted ? (
+      {props.supperGroupIsCompleted ? (
         <ButtonContainer>
           <Button
             descriptionStyle={{ width: '100%' }}
