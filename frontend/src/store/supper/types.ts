@@ -20,6 +20,7 @@ export type Food = {
   foodPrice: number //with add ons
   cancelAction?: CancelAction
   custom?: Custom[]
+  userIdList?: string[]
 }
 
 export type Option = {
@@ -31,7 +32,6 @@ export type Option = {
 export enum CancelAction {
   REMOVE = 'Remove',
   CONTACT = 'Contact',
-  CANCEL = 'Cancel',
 }
 
 // type Custom refers to a section in the customization page
