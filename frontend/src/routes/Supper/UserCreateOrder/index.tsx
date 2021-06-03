@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Radio, Switch, Input } from 'antd'
+import { Radio, Switch, Input, TimePicker } from 'antd'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { setOrder } from '../../../store/supper/action'
+import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
 import { PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
@@ -17,6 +17,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
+import moment from 'moment'
+import { updateIndexedAccessTypeNode } from 'typescript'
 
 const Background = styled.div`
   height: 100vh;
@@ -81,12 +83,11 @@ const InputText = styled.input<{ flex?: boolean }>`
   ${(props) => props.flex && 'display: flex;'}
 `
 
-const InputBox = styled(Input)`
-  &.ant-input {
-    border-radius: 25px;
-  }
+const StyledTimePicker = styled(TimePicker)`
+  width: 70%;
+  margin: 5px auto 0 auto;
+  display: flex;
 `
-
 const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
@@ -170,9 +171,12 @@ export default function UserCreateOrder() {
     register: register1,
     handleSubmit: handleSubmit1,
     setValue: setValue1,
+    setError: setError1,
     control: control1,
     errors: errors1,
+    clearErrors: clearErrors1,
   } = useForm<FormValues1>()
+
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -180,6 +184,7 @@ export default function UserCreateOrder() {
     control: control2,
     errors: errors2,
   } = useForm<FormValues2>()
+
   const {
     register: register3,
     handleSubmit: handleSubmit3,
@@ -204,40 +209,80 @@ export default function UserCreateOrder() {
     }
   }, [selectedPaymentMethod])
 
+  let updatedSPInfo
+
+  const onChange = (time, timeString) => {
+    if (!time || !timeString) {
+      setValue1('closingTime', undefined)
+      setError1('closingTime', { type: 'required' })
+      return
+    }
+    console.log(time._d)
+    console.log(timeString)
+    const currentUNIXDate = Math.round(Date.now() / 1000)
+
+    let epochClosingTime = moment(time._d).unix()
+    if (currentUNIXDate > epochClosingTime) {
+      epochClosingTime += 24 * 60 * 60 // Add a day
+    }
+    console.log(epochClosingTime)
+    console.log(unixTo12HourTime(epochClosingTime))
+    setValue1('closingTime', epochClosingTime)
+    clearErrors1('closingTime')
+    updatedSPInfo = { ...supperGroup, closingTime: epochClosingTime }
+  }
+
   const onClick1 = () => {
     setValue1('restaurant', selectedRestaurant)
-    if (priceLimit > 0) {
+    console.log(selectedRestaurant)
+    if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
     handleSubmit1((data) => {
-      //TODO: update store
-      console.log(data)
+      updatedSPInfo = {
+        ...supperGroup,
+        supperGroupName: data.supperGroupName,
+        restaurantName: data.restaurant,
+      }
+      if (hasMaxPrice) {
+        updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
+      }
+      setOrder(updatedSPInfo)
       setCount(count + 1)
     })()
   }
 
   const onClick2 = () => {
     handleSubmit2((data) => {
-      //TODO: update store
-      console.log(data)
+      updatedSPInfo = {
+        ...supperGroup,
+        additionalCost: data.estDeliveryFee,
+        SplitAdditionalCost: data.splitDeliveryFees,
+      }
+      setOrder(updatedSPInfo)
       setCount(count + 1)
     })()
   }
 
   const onClick3 = () => {
     handleSubmit3((data) => {
-      //TODO: update store
-      //TODO: dispatch full updated info to backend
-      //dispatch(createSupperGroup(...))
-      console.log(data)
+      updatedSPInfo = {
+        ...supperGroup,
+        paymentMethods: data.paymentMethod,
+        phoneNumber: data.phoneNumber,
+        ownerId: localStorage.userID,
+      }
+      setOrder(updatedSPInfo)
+      //TODO: fix dispatch full updated info to backend
+      console.log(updatedSPInfo)
+      dispatch(createSupperGroup(updatedSPInfo))
       console.log('success')
     })()
     // history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
-    //TODO: discard changes
-    // setOrder(initSupperGroup)
+    setOrder(initSupperGroup)
     history.goBack()
   }
 
@@ -351,10 +396,6 @@ export default function UserCreateOrder() {
                 })}
                 {errors3.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
                 {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
-
-                {/* {errors3.paymentMethod?.type === 'required' && (
-                  <ErrorText>Payment method(s) is/are required.</ErrorText>
-                )} */}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Phone Number {RedAsterisk}</Header>
@@ -437,13 +478,11 @@ export default function UserCreateOrder() {
                     defaultValue={Date.now()}
                     rules={{ required: true }}
                     render={() => (
-                      <InputBox
-                        type="datetime-local"
-                        placeholder="select time"
-                        onChange={(input) => {
-                          setValue1('closingTime', input.target.value)
-                        }}
-                        {...register1('closingTime', { required: true, pattern: /^\S+@\S+$/i })}
+                      <StyledTimePicker
+                        use12Hours
+                        format="h:mm a"
+                        onChange={onChange}
+                        ref={register1({ required: true })}
                         style={{
                           borderColor: errors1.closingTime && 'red',
                           background: errors1.closingTime && '#ffd1d1',
