@@ -10,7 +10,7 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
-import { PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -238,7 +238,7 @@ export default function UserCreateOrder() {
     if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
-    handleSubmit1((data) => {
+    handleSubmit1((data: FormValues1) => {
       updatedSPInfo = {
         ...supperGroup,
         supperGroupName: data.supperGroupName,
@@ -253,7 +253,7 @@ export default function UserCreateOrder() {
   }
 
   const onClick2 = () => {
-    handleSubmit2((data) => {
+    handleSubmit2((data: FormValues2) => {
       updatedSPInfo = {
         ...supperGroup,
         additionalCost: data.estDeliveryFee,
@@ -265,14 +265,54 @@ export default function UserCreateOrder() {
   }
 
   const onClick3 = () => {
-    handleSubmit3((data) => {
+    handleSubmit3((data: FormValues3) => {
       updatedSPInfo = {
         ...supperGroup,
         paymentMethods: data.paymentMethod,
         phoneNumber: data.phoneNumber,
         ownerId: localStorage.userID,
       }
+      const initialPI = supperGroup?.paymentInfo
+      const initialPM = supperGroup?.paymentInfo.map((pi) => {
+        return pi.paymentMethod
+      })
+      let newPI: PaymentInfo[] = []
+      const allPaymentMethods = Object.values(PaymentMethod)
+
+      allPaymentMethods
+        ?.filter((pm) => pm !== PaymentMethod.CASH)
+        .map((pm) => {
+          const initialLink = initialPI?.find((pi) => pi.paymentMethod === pm)?.link
+          if (
+            data[`${pm}`] !== initialLink ||
+            !data[`${pm}`] ||
+            (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm))
+          ) {
+            if (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm)) {
+              newPI = newPI.concat({ paymentMethod: pm, link: null })
+              return
+            }
+            if (!data[`${pm}`] && !initialPM?.includes(pm)) {
+              return
+            }
+            newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })
+          }
+        })
+      if (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH, link: null })
+      }
+      if (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
+      }
+      if (newPI.length) {
+        //changes were made
+        const updatedPI = selectedPaymentMethod.map((pm) => {
+          return { paymentMethod: pm, link: data[`${pm}`] }
+        })
+        updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
+      }
       setOrder(updatedSPInfo)
+      console.log(localStorage.userName, localStorage.userTele)
       //TODO: fix dispatch full updated info to backend
       console.log(updatedSPInfo)
       dispatch(createSupperGroup(updatedSPInfo))
