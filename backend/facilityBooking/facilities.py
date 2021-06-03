@@ -948,7 +948,7 @@ def collated_orders(supperGroupId):
                     'as': 'foods'
                 }
             },
-            {'$project': {'orderList': 0, '_id': 0, 'foods._id': 0}},
+            {'$project': {'_id': 0}},
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -957,13 +957,25 @@ def collated_orders(supperGroupId):
         for item in result:
             data = item
 
+        def mapUserId(foodList, orderList):
+            for order in orderList:
+                for foodId in order['foodIds']:
+                    for food in foodList:
+                        if str(food['_id']) == str(foodId):
+                            food['userID'] = order['userID']
+
+        mapUserId(data['foods'], data['orderList'])
+        data.pop('orderList')
+
         for food in data['foods']:
+            food.pop('_id')
             food['customHash'] = make_hash(food['custom'])
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
         data['collatedOrderList'] = []
         for food in data['foods']:
+<<<<<<< HEAD
             if not data['collatedOrderList']:
                 data['collatedOrderList'].append(food)
             elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and food['customHash'] == \
@@ -971,6 +983,20 @@ def collated_orders(supperGroupId):
                 data['collatedOrderList'][-1]['quantity'] += food['quantity']
             else:
                 data['collatedOrderList'].append(food)
+=======
+            if not data['collatedFoods']:
+                data['collatedFoods'].append(food)
+                data['collatedFoods'][-1]['userIdList'] = [food['userID']]
+                data['collatedFoods'][-1].pop('userID')
+            elif food['foodMenuId'] == data['collatedFoods'][-1]['foodMenuId'] and food['customHash'] == \
+                    data['collatedFoods'][-1]['customHash']:
+                data['collatedFoods'][-1]['quantity'] += food['quantity']
+                data['collatedFoods'][-1]['userIdList'].append(food['userID'])
+            else:
+                data['collatedFoods'].append(food)
+                data['collatedFoods'][-1]['userIdList'] = [food['userID']]
+                data['collatedFoods'][-1].pop('userID')
+>>>>>>> b0c443a10 (Collated orders now returns array of userID for each food)
 
         data.pop('foods')
         for food in data['collatedOrderList']:
