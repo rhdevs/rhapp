@@ -152,10 +152,17 @@ const EditOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-  const { register, handleSubmit, setValue, clearErrors, setError, reset, control, errors } = useForm<
-    FormData,
-    PaymentInfoData
-  >({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    clearErrors,
+    setError,
+    reset,
+    control,
+    errors,
+    formState: { touched },
+  } = useForm<FormData, PaymentInfoData>({
     mode: 'all',
     shouldUnregister: false,
   })
@@ -478,7 +485,12 @@ const EditOrder = () => {
 
   return (
     <Background onSubmit={onSubmit}>
-      <TopNavBar title="Edit Order" onLeftClick={() => setModalIsOpen(true)} />
+      <TopNavBar
+        title="Edit Order"
+        onLeftClick={() => {
+          Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
+        }}
+      />
       {isLoading ? (
         <LoadingSpin />
       ) : (

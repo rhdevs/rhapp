@@ -15,7 +15,7 @@ import {
   unixTo12HourTime,
   updateSupperGroup,
 } from '../../../store/supper/action'
-import { CollatedOrder, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { CollatedOrder, Restaurants, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import Button from '../../../components/Mobile/Button'
 
@@ -145,6 +145,7 @@ const OwnerView = (props: Props) => {
         <JoinOrderSGCard
           editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
           restaurantLogo={props.supperGroup?.restaurantLogo}
+          restaurant={props.supperGroup?.restaurantName as Restaurants}
           cardMargin="0 23px"
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           title={props.supperGroup?.supperGroupName ?? ''}
@@ -159,6 +160,10 @@ const OwnerView = (props: Props) => {
         />
       ) : (
         <SGCardWithStatus
+          onClick={() => {
+            history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)
+          }}
+          restaurant={props.supperGroup?.restaurantName as Restaurants}
           restaurantLogo={props.supperGroup?.restaurantLogo}
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           supperGroupStatus={props.supperGroup?.status}

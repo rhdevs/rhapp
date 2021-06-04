@@ -6,11 +6,12 @@ import notFound from '../../../assets/notFound.svg'
 import locationIcon from '../../../assets/LocationIcon.svg'
 import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { SGStatusBubble } from '../SGStatusBubble'
-import { PaymentInfo, PaymentMethod, SupperGroupStatus } from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, Restaurants, SupperGroupStatus } from '../../../store/supper/types'
 import Button from '../../Mobile/Button'
 import { OpenUserTelegram } from '../../TelegramShareButton'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { RoundImage } from '../RoundImage'
+import { getRestaurantLogo } from '../../../common/getRestaurantLogo'
 
 const BottomContainer = styled.div`
   margin: 8px 20px 0 15px;
@@ -94,6 +95,7 @@ const OwnerButtonContainer = styled.div`
 type Props = {
   title: string
   restaurantLogo?: string
+  restaurant?: Restaurants
   orderId: string
   username: string
   supperGroupStatus?: SupperGroupStatus
@@ -119,7 +121,7 @@ export const SGCardWithStatus = (props: Props) => {
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
+        <RoundImage image={getRestaurantLogo(props.restaurant)} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>

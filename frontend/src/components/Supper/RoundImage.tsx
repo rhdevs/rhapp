@@ -7,7 +7,7 @@ const Logo = styled.img`
   max-width: 64px;
   width: 100%;
   height: auto;
-  border: 2px rgba(0, 38, 66, 0.7) solid;
+  border: 1px rgba(0, 38, 66, 0.7) solid;
   border-radius: 50%;
   overflow: hidden;
   min-width: 100%;
