@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -23,6 +23,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+import { padStart } from 'lodash'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -96,16 +97,48 @@ const MachineSize = styled.p`
   color: #023666;
 `
 
+const EditDuration = styled.p`
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 20px;
+  text-align: left;
+`
+
 export default function ViewWashingMachine() {
   const { selectedBlock, selectedLevel, selectedMachine, isEdit, duration } = useSelector(
     (state: RootState) => state.laundry,
   )
   const dispatch = useDispatch()
   const params = useParams<{ machineId: string }>()
+  const [minuteState, useMinuteState] = useState('')
+  const [secondState, useSecondState] = useState('')
+
+  const [intervalID, setIntervalID] = useState<NodeJS.Timeout | undefined>()
 
   useEffect(() => {
     dispatch(SetSelectedMachineFromId(params.machineId))
-  }, [dispatch])
+    useMinuteState(
+      calculateRemainingTime('minutes', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+    )
+    useSecondState(
+      calculateRemainingTime('seconds', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+    )
+
+    if (selectedMachine != null) {
+      if (intervalID != undefined) {
+        clearInterval(intervalID)
+      }
+      const idinterval = setInterval(() => {
+        useMinuteState(
+          calculateRemainingTime('minutes', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+        )
+        useSecondState(
+          calculateRemainingTime('seconds', selectedMachine?.startTime as number, selectedMachine?.duration as number),
+        )
+      }, 1000)
+      setIntervalID(idinterval)
+    }
+  }, [dispatch, selectedMachine])
 
   const calculateRemainingTime = (type: string, startUNIX: number, duration: number) => {
     const endDateTime = new Date((startUNIX + duration) * 1000)
@@ -120,8 +153,7 @@ export default function ViewWashingMachine() {
 
     const timeDiffInSeconds = durationLeftInMiliSeconds / 1000
     const minutes: string = Math.floor(timeDiffInSeconds / 60).toFixed(0)
-    const seconds: string = (timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0)
-
+    const seconds: string = padStart((timeDiffInSeconds - 60 * parseInt(minutes)).toFixed(0), 2, '0')
     return type === 'minutes' ? minutes : type === 'seconds' ? seconds : ''
   }
 
@@ -130,23 +162,20 @@ export default function ViewWashingMachine() {
     let actions = <></>
     let subtitle = <></>
     let imagesrc = ''
+    const authorized = machine?.userID === localStorage.getItem('userID')
+
     const timeLeftGroup = (
       <TimeLeft>
         <TimeUnit>
-          <TimeLeftText>
-            {calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number)}
-          </TimeLeftText>{' '}
-          <TimeLabel>minutes</TimeLabel>
+          <TimeLeftText>{minuteState}</TimeLeftText> <TimeLabel>minutes</TimeLabel>
         </TimeUnit>
         <TimeLeftText> : </TimeLeftText>
         <TimeUnit>
-          <TimeLeftText>
-            {' '}
-            {calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number)}{' '}
-          </TimeLeftText>{' '}
-          <TimeLabel>seconds</TimeLabel>
+          <TimeLeftText> {secondState} </TimeLeftText> <TimeLabel>seconds</TimeLabel>
         </TimeUnit>
-        {!isEdit && <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>}
+        {!isEdit && authorized && machine?.job === WMStatus.INUSE && (
+          <UnderLineButton onClick={() => dispatch(SetEditMode())}>Edit</UnderLineButton>
+        )}
       </TimeLeft>
     )
     switch (machine?.job) {
@@ -164,7 +193,7 @@ export default function ViewWashingMachine() {
       case WMStatus.UNCOLLECTED:
         pageTitle = 'Collect Laundry'
         imagesrc = wm_uncollected
-        actions = (
+        actions = authorized ? (
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
@@ -178,13 +207,15 @@ export default function ViewWashingMachine() {
               history.back()
             }}
           />
+        ) : (
+          <div></div>
         )
         break
       case WMStatus.RESERVED:
         subtitle = timeLeftGroup
-        pageTitle = isEdit ? 'Edit Reservation' : 'Reservation'
+        pageTitle = 'Reservation'
         imagesrc = wm_reserved
-        actions = (
+        actions = authorized ? (
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
@@ -198,6 +229,8 @@ export default function ViewWashingMachine() {
               history.back()
             }}
           />
+        ) : (
+          <div></div>
         )
         break
     }
@@ -220,14 +253,24 @@ export default function ViewWashingMachine() {
   }
 
   const UseWashineMachine = (machine: WashingMachine | null) => {
-    if (machine?.job === WMStatus.RESERVED) {
+    const authorized = machine?.userID === localStorage.getItem('userID')
+    if (machine?.job === WMStatus.RESERVED && authorized) {
       return (
         <UseWashingMachineSection>
+          <EditDuration> Select Duration </EditDuration>
           <StyledSlider
             min={1}
             max={machine?.job === WMStatus.RESERVED && isEdit ? 15 : 120}
             tooltipVisible
-            onChange={(value: number) => dispatch(SetDuration(value))}
+            onChange={(value: number) => {
+              dispatch(SetDuration(value))
+              useMinuteState(
+                calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number),
+              )
+              useSecondState(
+                calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number),
+              )
+            }}
             value={duration}
             trackStyle={{ backgroundColor: '#023666' }}
             handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
@@ -267,15 +310,24 @@ export default function ViewWashingMachine() {
           )}
         </UseWashingMachineSection>
       )
-    } else if (machine?.job === WMStatus.INUSE) {
+    } else if (machine?.job === WMStatus.INUSE && authorized) {
       return (
         <UseWashingMachineSection>
+          {isEdit && <EditDuration> Select Duration </EditDuration>}
           {isEdit && (
             <StyledSlider
               min={1}
               max={120}
               tooltipVisible
-              onChange={(value: number) => dispatch(SetDuration(value))}
+              onChange={(value: number) => {
+                dispatch(SetDuration(value))
+                useMinuteState(
+                  calculateRemainingTime('minutes', machine?.startTime as number, machine?.duration as number),
+                )
+                useSecondState(
+                  calculateRemainingTime('seconds', machine?.startTime as number, machine?.duration as number),
+                )
+              }}
               value={duration}
               trackStyle={{ backgroundColor: '#023666' }}
               handleStyle={{ borderColor: '#023666', height: '15px', width: '15px' }}
@@ -289,7 +341,7 @@ export default function ViewWashingMachine() {
             updatedButtonColor="#DE5F4C"
             updatedTextColor="white"
             onButtonClick={() => {
-              if (isEdit) {
+              if (isEdit && authorized) {
                 dispatch(SetEditMode())
                 dispatch(UpdateJobDuration(machine.machineID))
                 dispatch(SetBlockLevelSelections(selectedBlock as string, selectedLevel as string))
@@ -300,7 +352,7 @@ export default function ViewWashingMachine() {
               }
             }}
           />
-          {isEdit && (
+          {isEdit && authorized && (
             <Button
               style={{ marginLeft: '23px' }}
               hasSuccessMessage={false}
@@ -316,7 +368,7 @@ export default function ViewWashingMachine() {
           )}
         </UseWashingMachineSection>
       )
-    } else if (machine?.job === WMStatus.AVAIL) {
+    } else if (machine?.job === WMStatus.AVAIL && authorized) {
       return (
         <UseWashingMachineSection>
           <Button

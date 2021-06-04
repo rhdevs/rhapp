@@ -29,7 +29,6 @@ export enum ENDPOINTS {
   MACHINE_LIST = '/location',
   LAUNDRY_MACHINE = '/laundry/machine',
   UPDATE_MACHINE = '/laundry/machine',
-  LAUNDRY_JOB = '/laundry/job',
   EDIT_DURATION = '/laundry/machine/editDuration',
 
   // SCHEDULING
@@ -79,6 +78,29 @@ export enum ENDPOINTS {
 
   // HOME
   SEARCH = '/search',
+
+  // SUPPER
+  ALL_RESTAURANTS = '/supper/restaurant',
+  GET_RESTAURANT = '/supper/restaurant',
+  GET_RESTAURANT_MENU = '/supper/restaurant',
+  GET_MENU_FOOD = '/supper/restaurant',
+  ADD_FOOD = '/supper',
+  GET_FOOD = '/supper',
+  EDIT_FOOD = '/supper',
+  DELETE_FOOD = '/supper',
+  GET_COLLATED_ORDER = '/supper',
+  GET_USER_ORDER = '/supper',
+  ALL_SUPPER_GROUPS = '/supper',
+  ADD_SUPPER_GROUP = '/supper',
+  GET_SUPPER_GROUP_BY_ID = '/supper',
+  ADD_ORDER = '/supper',
+  UPDATE_SUPPER_GROUP = '/supper',
+  DELETE_SUPPER_GROUP = '/supper',
+  GET_ORDER_IN_SUPPER_GROUP = '/supper',
+  UPDATE_ORDER_DETAILS = '/supper',
+  DELETE_ORDER = '/supper',
+  GET_ORDER_HISTORY = '/supper/user',
+  GET_SUPPER_GROUP_HISTORY = '/supper/user',
 }
 
 export enum DOMAINS {
@@ -87,6 +109,7 @@ export enum DOMAINS {
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
   AUTH = 'auth',
+  SUPPER = 'facility', //'supper',
 }
 
 export const DOMAIN_URL = {
@@ -110,6 +133,11 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/auth'
       : '//rhappmiddleware.herokuapp.com/rhappauth',
+  //TODO: update with supper domain url
+  SUPPER:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhappfacilities.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
 }
 
 async function makeRequest(
@@ -150,6 +178,13 @@ async function makeRequest(
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/auth'
           : '//rhappmiddleware.herokuapp.com/rhappauth'
+      break
+    //TODO: update with supper request url
+    case DOMAINS.SUPPER:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhappsocial.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
   }
   return axios({

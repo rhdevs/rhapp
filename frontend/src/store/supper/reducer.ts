@@ -1,33 +1,35 @@
 import { Reducer } from 'redux'
-import { ActionTypes, User, Restaurant, CollatedOrder, SupperGroup, SupperGroupStatus, Order } from '../supper/types'
+import { ActionTypes, Food, Restaurant, CollatedOrder, Order, FoodMenu, SupperGroup } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
   isLoading: false,
-  allOrders: [],
   collatedOrder: null,
-  supperGroup: null,
   order: null,
-  supperGroupStatus: SupperGroupStatus.OPEN,
-  owner: null,
   restaurant: null,
   allRestaurants: [],
-  user: null,
-  allUsers: [],
+  food: null,
+  supperGroup: null,
+  allSupperGroups: [],
+  menu: [],
+  menuFood: null,
+  orderHistory: [],
+  supperGroupHistory: [],
 }
 
 type State = {
   isLoading: boolean
-  allOrders: Order[]
   collatedOrder: CollatedOrder | null
-  supperGroup: SupperGroup | null
   order: Order | null
-  supperGroupStatus: SupperGroupStatus
-  owner: User | null
   restaurant: Restaurant | null
   allRestaurants: Restaurant[]
-  user: User | null
-  allUsers: User[]
+  food: Food | null
+  supperGroup: SupperGroup | null
+  allSupperGroups: SupperGroup[]
+  menu: FoodMenu[]
+  menuFood: FoodMenu | null
+  orderHistory: Order[]
+  supperGroupHistory: SupperGroup[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -35,41 +37,50 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_IS_LOADING: {
       return { ...state, isLoading: action.isLoading }
     }
-    case SUPPER_ACTIONS.GET_ALL_ORDERS: {
-      return { ...state, allOrders: action.allOrders }
-    }
-    case SUPPER_ACTIONS.GET_SUPPER_GROUP: {
-      return { ...state, supperGroup: action.supperGroup }
-    }
-    case SUPPER_ACTIONS.GET_ORDER: {
+    case SUPPER_ACTIONS.GET_ORDER_BY_ID: {
       return { ...state, order: action.order }
     }
-    case SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS: {
-      return { ...state, supperGroupStatus: action.supperGroupStatus }
+    case SUPPER_ACTIONS.GET_ORDER_BY_USER: {
+      return { ...state, order: action.order }
     }
     case SUPPER_ACTIONS.SET_SUPPER_GROUP: {
       return { ...state, supperGroup: action.supperGroup }
     }
-    case SUPPER_ACTIONS.SET_ORDER: {
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID: {
+      return { ...state, supperGroup: action.supperGroup }
+    }
+    case SUPPER_ACTIONS.SET_ORDER_BY_ID: {
       return { ...state, order: action.order }
     }
-    case SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS: {
-      return { ...state, supperGroupStatus: action.supperGroupStatus }
-    }
-    case SUPPER_ACTIONS.GET_OWNER_INFO: {
-      return { ...state, owner: action.owner }
-    }
-    case SUPPER_ACTIONS.GET_RESTAURANT_INFO: {
-      return { ...state, restaurant: action.restaurant }
-    }
-    case SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO: {
+    case SUPPER_ACTIONS.GET_ALL_RESTAURANTS: {
       return { ...state, allRestaurants: action.allRestaurants }
     }
-    case SUPPER_ACTIONS.GET_USER_INFO: {
-      return { ...state, user: action.user }
+    case SUPPER_ACTIONS.GET_RESTAURANT_BY_ID: {
+      return { ...state, restaurant: action.restaurant }
     }
-    case SUPPER_ACTIONS.GET_ALL_USERS: {
-      return { ...state, allUsers: action.allUsers }
+    case SUPPER_ACTIONS.GET_FOOD_BY_ID: {
+      return { ...state, food: action.food }
+    }
+    case SUPPER_ACTIONS.SET_FOOD_BY_ID: {
+      return { ...state, food: action.food }
+    }
+    case SUPPER_ACTIONS.GET_COLLATED_ORDER: {
+      return { ...state, collatedOrder: action.collatedOrder }
+    }
+    case SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS: {
+      return { ...state, allSupperGroups: action.allSupperGroups }
+    }
+    case SUPPER_ACTIONS.GET_RESTAURANT_MENU: {
+      return { ...state, menu: action.menu }
+    }
+    case SUPPER_ACTIONS.GET_MENU_FOOD: {
+      return { ...state, menuFood: action.menuFood }
+    }
+    case SUPPER_ACTIONS.GET_ORDER_HISTORY: {
+      return { ...state, orderHistory: action.orderHistory }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
+      return { ...state, supperGroupHistory: action.supperGroupHistory }
     }
     default:
       return state

@@ -1,12 +1,12 @@
 export type User = {
-  userId: string
+  _id: string
+  userID: string
   profilePictureUrl: string
   displayName: string
   telegramHandle: string
   block: number
   bio: string
   modules: string[]
-  contactNumber?: number
 }
 
 export type Food = {
@@ -14,6 +14,22 @@ export type Food = {
   comments?: string
   quantity: number
   foodMenu: FoodMenu
+  foodPrice?: number
+}
+
+export type Option = {
+  name: string
+  isSelected: boolean
+  price: number
+}
+
+// type Custom refers to a section in the customization page
+export type Custom = {
+  title: string
+  options: Option[]
+  max: number | null
+  min: number
+  customNumber: number //to order the sections in the order card
 }
 
 export type FoodMenu = {
@@ -21,19 +37,19 @@ export type FoodMenu = {
   restaurantId: string
   foodMenuName: string
   price: string
+  custom?: Custom[]
 }
 
 export type Restaurant = {
   restaurantId: string
   name: string
+  restaurantLogo: string
   menu: FoodMenu[]
-  closingTime: number
-  contactNumber?: number
 }
 
 export type Order = {
   orderId: string
-  userId: string
+  user: string
   supperGroupId: string
   userContact?: number
   foodList: Food[]
@@ -46,18 +62,20 @@ export type Order = {
 export type SupperGroup = {
   supperGroupId: string
   supperGroupName: string
-  ownerId: string
+  owner: string
   ownerName: string
   paymentInfo: PaymentInfo[]
   restaurantName: string
-  allUsers: string[]
+  allUsers: User[]
   orderList: Order[]
   additionalCost?: number //ie GST, delivery fee
-  splitAdditionalCost: string
+  splitAdditionalCost: SplitACMethod
   currentFoodCost: number //non inclusive of additionalCost
   costLimit: number
   status: string
-  comments: string
+  location: string //collection point
+  deliveryDuration: number
+  arrivalTime: number // = creationTime + estimated delivery duration
   closingTime: string
 }
 
@@ -65,6 +83,11 @@ export type CollatedOrder = {
   supperGroupId: string
   ownerId: string
   collatedOrderList: Food[]
+}
+
+export enum SplitACMethod {
+  PROPORTIONAL = 'Proportional',
+  EQUAL = 'Equal',
 }
 
 export enum SupperGroupStatus {
@@ -90,19 +113,21 @@ export type PaymentInfo = {
 
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
-  GET_ALL_ORDERS = 'SUPPER_ACTION.GET_ALL_ORDERS',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
-  GET_SUPPER_GROUP = 'SUPPER_ACTION.GET_SUPPER_GROUP',
-  GET_ORDER = 'SUPPER_ACTION.GET_ORDER',
-  GET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.GET_SUPPER_GROUP_STATUS',
-  SET_SUPPER_GROUP = 'SUPPER_ACTION.SET_SUPPER_GROUP',
-  SET_ORDER = 'SUPPER_ACTION.SET_ORDER',
-  SET_SUPPER_GROUP_STATUS = 'SUPPER_ACTION.SET_SUPPER_GROUP_STATUS',
-  GET_OWNER_INFO = 'SUPPER_ACTIONS.GET_OWNER_INFO',
-  GET_RESTAURANT_INFO = 'SUPPER_ACTIONS.GET_RESTAURANT_INFO',
-  GET_ALL_RESTAURANTS_INFO = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO',
-  GET_USER_INFO = 'SUPPER_ACTIONS.GET_USER_INFO',
-  GET_ALL_USERS = 'SUPPER_ACTIONS.GET_ALL_USERS',
+  GET_ORDER_BY_ID = 'SUPPER_ACTION.GET_ORDER_BY_ID',
+  GET_ORDER_BY_USER = 'SUPPER_ACTION.GET_ORDER_BY_USER',
+  SET_ORDER_BY_ID = 'SUPPER_ACTION.SET_ORDER_BY_ID',
+  GET_ALL_RESTAURANTS = 'SUPPER_ACTIONS.GET_ALL_RESTAURANTS',
+  GET_RESTAURANT_BY_ID = 'SUPPER_ACTIONS.GET_RESTAURANT_BY_ID',
+  GET_FOOD_BY_ID = 'SUPPER_ACTIONS.GET_FOOD_BY_ID',
+  SET_FOOD_BY_ID = 'SUPPER_ACTIONS.SET_FOOD_BY_ID',
+  SET_SUPPER_GROUP = 'SUPPER_ACTIONS.SET_SUPPER_GROUP',
+  GET_SUPPER_GROUP_BY_ID = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID',
+  GET_ALL_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS',
+  GET_RESTAURANT_MENU = 'SUPPER_ACTIONS.GET_RESTAURANT_MENU',
+  GET_MENU_FOOD = 'SUPPER_ACTIONS.GET_MENU_FOOD',
+  GET_ORDER_HISTORY = 'SUPPER_ACTIONS.GET_ORDER_HISTORY',
+  GET_SUPPER_GROUP_HISTORY = 'SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY',
 }
 
 type SetIsLoading = {
@@ -110,29 +135,44 @@ type SetIsLoading = {
   isLoading: boolean
 }
 
-type GetAllOrders = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_ORDERS
-  allOrders: Order[]
-}
-
 type GetCollatedOrder = {
   type: typeof SUPPER_ACTIONS.GET_COLLATED_ORDER
   collatedOrder: CollatedOrder | null
 }
 
-type GetSupperGroup = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP
-  supperGroup: SupperGroup | null
-}
-
-type GetOrder = {
-  type: typeof SUPPER_ACTIONS.GET_ORDER
+type GetOrderById = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_ID
   order: Order | null
 }
 
-type GetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
+type GetOrderByUser = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_BY_USER
+  order: Order | null
+}
+
+type SetOrderById = {
+  type: typeof SUPPER_ACTIONS.SET_ORDER_BY_ID
+  order: Order | null
+}
+
+type GetAllRestaurants = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS
+  allRestaurants: Restaurant[]
+}
+
+type GetRestaurantById = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_BY_ID
+  restaurant: Restaurant
+}
+
+type GetFoodById = {
+  type: typeof SUPPER_ACTIONS.GET_FOOD_BY_ID
+  food: Food
+}
+
+type SetFoodById = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_BY_ID
+  food: Food
 }
 
 type SetSupperGroup = {
@@ -140,52 +180,50 @@ type SetSupperGroup = {
   supperGroup: SupperGroup | null
 }
 
-type SetOrder = {
-  type: typeof SUPPER_ACTIONS.SET_ORDER
-  order: Order | null
+type GetSupperGroupById = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID
+  supperGroup: SupperGroup | null
 }
 
-type SetSupperGroupStatus = {
-  type: typeof SUPPER_ACTIONS.SET_SUPPER_GROUP_STATUS
-  supperGroupStatus: SupperGroupStatus
-}
-type GetOwnerInfo = {
-  type: typeof SUPPER_ACTIONS.GET_OWNER_INFO
-  owner: User | null
+type GetAllSupperGroups = {
+  type: typeof SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS
+  allSupperGroups: SupperGroup[]
 }
 
-type GetRestaurantInfo = {
-  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_INFO
-  restaurant: Restaurant | null
+type GetRestaurantMenu = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_MENU
+  menu: FoodMenu[]
 }
 
-type GetAllRestaurantsInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_RESTAURANTS_INFO
-  allRestaurants: Restaurant[]
+type GetMenuFood = {
+  type: typeof SUPPER_ACTIONS.GET_MENU_FOOD
+  menuFood: FoodMenu
 }
 
-type GetUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_USER_INFO
-  user: User | null
+type GetOrderHistory = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_HISTORY
+  orderHistory: Order[]
 }
 
-type GetAllUserInfo = {
-  type: typeof SUPPER_ACTIONS.GET_ALL_USERS
-  allUsers: User[]
+type GetSupperGroupHistory = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY
+  supperGroupHistory: SupperGroup[]
 }
 
 export type ActionTypes =
   | SetIsLoading
-  | GetOwnerInfo
-  | GetRestaurantInfo
-  | GetAllRestaurantsInfo
-  | GetUserInfo
-  | GetAllUserInfo
-  | GetOrder
-  | GetAllOrders
+  | GetAllRestaurants
+  | GetRestaurantById
+  | GetOrderById
+  | GetOrderByUser
   | GetCollatedOrder
-  | GetSupperGroup
-  | GetSupperGroupStatus
+  | SetOrderById
+  | GetFoodById
+  | SetFoodById
   | SetSupperGroup
-  | SetOrder
-  | SetSupperGroupStatus
+  | GetSupperGroupById
+  | GetAllSupperGroups
+  | GetRestaurantMenu
+  | GetMenuFood
+  | GetOrderHistory
+  | GetSupperGroupHistory

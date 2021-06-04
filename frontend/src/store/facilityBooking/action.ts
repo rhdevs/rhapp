@@ -30,13 +30,31 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
 export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  const adjustedStart = new Date(
+    ViewStartDate.getFullYear(),
+    ViewStartDate.getMonth(),
+    ViewStartDate.getDate(),
+    0,
+    0,
+    0,
+    0,
+  )
+  const adjustedEnd = new Date(
+    ViewEndDate.getFullYear(),
+    ViewEndDate.getMonth(),
+    ViewEndDate.getDate(),
+    23,
+    59,
+    59,
+    999,
+  )
   const querySubString =
     selectedFacilityId +
     '/' +
     '?startDate=' +
-    parseInt((ViewStartDate.getTime() / 1000).toFixed(0)) +
+    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
     '&endDate=' +
-    parseInt((ViewEndDate.getTime() / 1000).toFixed(0))
+    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
   let updatedFB: Booking[] = []
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
@@ -195,10 +213,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setViewDates = (newDates: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDates.ViewDateSelection.startDate
-  const endDate =
-    startDate === newDates.ViewDateSelection.endDate
-      ? dayjs(startDate).add(1, 'day').toDate()
-      : newDates.ViewDateSelection.endDate
+  const endDate = newDates.ViewDateSelection.endDate
 
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })
@@ -274,6 +289,8 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     newBookingToDate,
     newBookingCCA,
     newBookingDescription,
+    newBookingFacilityName,
+    facilityList,
     ccaList,
   } = getState().facilityBooking
 
@@ -287,8 +304,26 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     description: newBookingDescription,
   }
   if (selectedFacilityId === 0) {
+    //validate if selected facility id is zero
+    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
+      ?.facilityID
+    if (newSelectedFacilityId) {
+      dispatch(setSelectedFacility(newSelectedFacilityId))
+    } else {
+      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      dispatch(SetCreateBookingError('Try reentering facility name!'))
+      return
+    }
+  }
+  if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
+    //More than 2 weeks in advance
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    dispatch(SetCreateBookingError('Try reentering facility name!'))
+    dispatch(SetCreateBookingError('You cannot create a booking more than 2 weeks in advance!'))
+    return
+  } else if (new Date().getTime() > newBookingFromDate.getTime()) {
+    //Creating a booking in the past
+    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+    dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
     return
   }
   if (!isEdit) {
@@ -316,6 +351,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
         )
       }
     } else {
+      dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
       dispatch({
         type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
@@ -323,7 +359,8 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       })
     }
   } else {
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + selectedFacilityId, {
+    const { newBooking } = getState().facilityBooking
+    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + newBooking?.bookingID, {
       method: 'PUT',
       mode: 'cors',
       headers: {
@@ -347,6 +384,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
         )
       }
     } else {
+      dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
       dispatch({
         type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
