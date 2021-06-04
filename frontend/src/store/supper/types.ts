@@ -20,6 +20,7 @@ export type Food = {
   foodPrice: number //with add ons
   cancelAction?: CancelAction
   custom?: Custom[]
+  userIdList?: string[]
 }
 
 export type Option = {
@@ -31,7 +32,6 @@ export type Option = {
 export enum CancelAction {
   REMOVE = 'Remove',
   CONTACT = 'Contact',
-  CANCEL = 'Cancel',
 }
 
 // type Custom refers to a section in the customization page
@@ -173,6 +173,7 @@ export enum SUPPER_ACTIONS {
   SET_ESTIMATED_ARRIVAL_TIME = 'SUPPER_ACTIONS.SET_ESTIMATED_ARRIVAL_TIME',
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
   SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
+  SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
 }
 
 type SetIsLoading = {
@@ -340,6 +341,11 @@ type SetCounter = {
   counter: number
 }
 
+type SetFoodId = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_ID
+  foodId?: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -374,3 +380,4 @@ export type ActionTypes =
   | SetEstimatedArrivalTime
   | SetEditOrderNumber
   | SetCounter
+  | SetFoodId

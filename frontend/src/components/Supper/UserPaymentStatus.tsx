@@ -10,7 +10,7 @@ import { OpenUserTelegram } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setExpandAll, setPaymentExpandedCount } from '../../store/supper/action'
+import { setExpandAll, setPaymentExpandedCount, updateOrderDetails } from '../../store/supper/action'
 // import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
@@ -112,13 +112,14 @@ export const UserPaymentStatus = (props: Props) => {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
   const dispatch = useDispatch()
 
+  console.log(props.hasReceived)
   useEffect(() => {
     if (isExpandAll) {
       dispatch(setPaymentExpandedCount(0))
     } else {
       dispatch(setPaymentExpandedCount(props.numOrders ?? 0))
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (expandedCount === props.numOrders) {
@@ -157,18 +158,18 @@ export const UserPaymentStatus = (props: Props) => {
         <LeftContainer>
           <CheckboxContainer>
             <Checkbox
-              margin="15px auto 0"
+              margin="auto 5px auto 0"
               isChecked={cancelName}
               onClick={() => {
                 setCancelName(!cancelName)
-                //set order hasReceived to true
-                //TODO dispatch(updateOrderDetails({ hasReceived: true }, props.orderId))
+                dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
               }}
             />
           </CheckboxContainer>
           <NameText
             onClick={() => {
               setCancelName(!cancelName)
+              dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
             }}
             cancelName={cancelName}
           >
@@ -221,7 +222,7 @@ export const UserPaymentStatus = (props: Props) => {
                 </>
               )
             })}
-            <PaymentMethodText>Paid by {props.paymentMethod}</PaymentMethodText>
+            {props.hasPaid && <PaymentMethodText>Paid by {props.paymentMethod}</PaymentMethodText>}
           </>
         )}
       </>

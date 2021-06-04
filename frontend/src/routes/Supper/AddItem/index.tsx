@@ -14,10 +14,7 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import {
-  // addFoodToOrder,
-  getMenuFood,
-} from '../../../store/supper/action'
+import { addFoodToOrder, getMenuFood } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 
@@ -346,13 +343,13 @@ const AddItem = () => {
         comments: data.comments as string,
         quantity: count,
         price: menuFood?.price ?? 0,
-        foodPrice: menuFood?.price ?? 0,
+        foodPrice: ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count,
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
       console.log(newFood)
-      //TODO: Send new food to backend
-      //   dispatch(addFoodToOrder(newFood, params.orderId))
+      //TODO: TEST Send new food to backend
+      dispatch(addFoodToOrder(newFood, params.orderId))
       history.push(`${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
       console.log(data, count)
     })()
@@ -437,13 +434,6 @@ const AddItem = () => {
               <RadioButtonContainer>
                 <RadioButton
                   margin="0 0 0 2px"
-                  value={CancelAction.CANCEL}
-                  label={<OptionText>Cancel my entire order</OptionText>}
-                />
-              </RadioButtonContainer>
-              <RadioButtonContainer>
-                <RadioButton
-                  margin="0 0 0 2px"
                   value={CancelAction.CONTACT}
                   label={<OptionText>Contact me </OptionText>}
                 />
@@ -471,7 +461,7 @@ const AddItem = () => {
             isGrey={!checkFormValidity()}
             htmlType="submit"
             add
-            currentTotal={String(((menuFood?.price ?? 0) + calculateAdditionalCost()).toFixed(2))}
+            currentTotal={String((((menuFood?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
         </MainContainer>
       )}

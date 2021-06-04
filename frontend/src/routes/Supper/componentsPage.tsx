@@ -35,10 +35,12 @@ import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentSt
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
 import { Checkbox } from '../../components/Checkbox'
+import { RhAppQrCode } from '../../components/RhAppQrCode'
 
 export default function Supper() {
   return (
     <>
+      <RhAppQrCode link="google.com" />
       <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <Checkbox isChecked={true} />
