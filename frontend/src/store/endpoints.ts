@@ -8,13 +8,13 @@ export enum ENDPOINTS {
   REGISTER = '/register',
 
   // USERS
-  TELEGRAM_HANDLE = '/users/telegramID',
+  TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
   USER = '/user',
   USER_PROFILE = '/profile/',
   USER_PROFILE_PICTURE = '/profile/picture/',
-  USER_DETAILS = '/user/details',
-  EDIT_PROFILE = '/profile/edit',
-  USER_CCAS = '/user_CCA',
+  USER_DETAILS = '/user',
+  EDIT_PROFILE = '/profiles',
+  USER_CCAS = '/user_CCA', //TODO make backend route
   FRIEND = '/friend',
 
   // FACILITY
@@ -124,26 +124,32 @@ async function makeRequest(
     case DOMAINS.FACILITY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappfacilities.rhdevs.repl.co'
+          ? '//rhapp-backend.rhdevs.repl.co/facilities'
           : '//rhapp-middleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappevents.rhdevs.repl.co'
+          ? '//rhapp-backend.rhdevs.repl.co/scheduling'
           : '//rhapp-middleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhapplaundry.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhapplaundry'
+          ? '//rhapp-backend.rhdevs.repl.co/laundry'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.SOCIAL:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
+          ? '//rhapp-backend.rhdevs.repl.co/social'
           : '//rhapp-middleware.herokuapp.com/rhappsocial'
+      break
+    case DOMAINS.AUTH:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/auth'
+          : '//rhapp-middleware.herokuapp.com/rhappauth'
       break
   }
   return axios({
