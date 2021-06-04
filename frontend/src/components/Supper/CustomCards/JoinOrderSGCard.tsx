@@ -51,7 +51,7 @@ const FirstLineContainer = styled.div`
 type Props = {
   restaurantLogo?: string
   title: string
-  restaurant?: string
+  restaurant?: Restaurants
   orderId: string
   username: string
   priceLimit: number
@@ -76,7 +76,7 @@ export const JoinOrderSGCard = (props: Props) => {
       editIconSize="1rem"
     >
       <TopSection>
-        <RoundImage image={getRestaurantLogo(props.restaurant as Restaurants)} alt="Restaurant Logo" />
+        <RoundImage image={getRestaurantLogo(props.restaurant)} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>

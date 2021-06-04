@@ -2,7 +2,6 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { MainCard } from '../MainCard'
-import notFound from '../../../assets/notFound.svg'
 import locationIcon from '../../../assets/LocationIcon.svg'
 import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { SGStatusBubble } from '../SGStatusBubble'

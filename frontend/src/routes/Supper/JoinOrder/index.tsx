@@ -12,6 +12,7 @@ import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrde
 import { getSupperGroupById, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { Restaurants } from '../../../store/supper/types'
 
 const Background = styled.div`
   height: 100vh;
@@ -45,7 +46,7 @@ export default function JoinOrder() {
       <JoinOrderSGCard
         isOwner={supperGroup?.ownerId === localStorage.userID}
         title={supperGroup?.supperGroupName ?? ''}
-        restaurant={supperGroup?.restaurantName ?? ''}
+        restaurant={supperGroup?.restaurantName as Restaurants}
         orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
         username={supperGroup?.ownerId === localStorage.userID ? 'You' : supperGroup?.ownerName ?? ''}
         currentAmount={supperGroup?.currentFoodCost ?? 0}
