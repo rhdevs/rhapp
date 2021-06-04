@@ -857,7 +857,7 @@ const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) =
 
 export const fetchAllProfiles = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_PROFILES, DOMAINS.SOCIAL).then(async (resp) => {
-    const sortedProfiles = resp.sort((a, b) => {
+    const sortedProfiles = resp.data.sort((a, b) => {
       return a.displayName.localeCompare(b.displayName)
     })
     dispatch({ type: SCHEDULING_ACTIONS.GET_ALL_PROFILES, profileList: sortedProfiles })

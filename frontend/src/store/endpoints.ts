@@ -93,23 +93,23 @@ export const DOMAIN_URL = {
   FACILITY:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/facilities'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
   EVENT:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/scheduling'
-      : '//rhapp-middleware.herokuapp.com/rhappevents',
+      : '//rhappmiddleware.herokuapp.com/rhappevents',
   LAUNDRY:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/laundry'
-      : '//rhapp-middleware.herokuapp.com/rhapplaundry',
+      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
   SOCIAL:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/social'
-      : '//rhapp-middleware.herokuapp.com/rhappsocial',
+      : '//rhappmiddleware.herokuapp.com/rhappsocial',
   AUTH:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/auth'
-      : '//rhapp-middleware.herokuapp.com/rhappauth',
+      : '//rhappmiddleware.herokuapp.com/rhappauth',
 }
 
 async function makeRequest(
@@ -125,31 +125,31 @@ async function makeRequest(
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/facilities'
-          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
+          : '//rhappmiddleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/scheduling'
-          : '//rhapp-middleware.herokuapp.com/rhappevents'
+          : '//rhappmiddleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/laundry'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.SOCIAL:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/social'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.AUTH:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/auth'
-          : '//rhapp-middleware.herokuapp.com/rhappauth'
+          : '//rhappmiddleware.herokuapp.com/rhappauth'
       break
   }
   return axios({

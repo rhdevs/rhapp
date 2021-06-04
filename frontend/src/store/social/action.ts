@@ -13,15 +13,16 @@ const [error] = useSnackbar('error')
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
   get(ENDPOINTS.USER_DETAILS, DOMAINS.SOCIAL, '/' + userID).then((response) => {
-    if (response === '' || response === undefined) {
+    if (response.data === '' || response.data === undefined) {
       console.log(response.err)
     } else {
+      const data = JSON.parse(response.data)
       dispatch({
         type: SOCIAL_ACTIONS.GET_USER_DETAIL,
-        userId: response.userID,
-        avatar: response.profilePictureUrl,
-        name: response.displayName,
-        position: response.position,
+        userId: data.userID,
+        avatar: data.profilePictureUrl,
+        name: data.displayName,
+        position: data.position,
       })
     }
   })
@@ -225,8 +226,8 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    if (response.length > 0) {
-      const transformedPost = cloneDeep(response).map((post) => {
+    if (response.data.length > 0) {
+      const transformedPost = JSON.parse(cloneDeep(response.data)).map((post) => {
         post.date = post.createdAt
         post.postId = post.postID
         post.ccaId = post.ccaID
@@ -302,7 +303,7 @@ export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) =
 
 export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
-  const specificPost = response.data
+  const specificPost = JSON.parse(response.data)
 
   const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, profilePic } = specificPost
   const newPost = {

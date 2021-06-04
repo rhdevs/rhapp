@@ -26,12 +26,12 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
     dispatch(setIsLoading(true))
-    fetch(DOMAIN_URL.SOCIAL + '/profile/' + userID, {
+    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data[0] })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data.data[0] })
       })
       .catch((err) => console.log(err))
   }
@@ -46,7 +46,7 @@ export const fetchUserCCAs = (userID: string | null) => (dispatch: Dispatch<Acti
     })
       .then((resp) => resp.json())
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_CCAS, ccas: data.data })
       })
       .catch((err) => console.log(err))
   }
@@ -60,7 +60,7 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   })
     .then((resp) => resp.json())
     .then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: data })
+      dispatch({ type: PROFILE_ACTIONS.SET_ALL_CCAS, allCcas: data.data })
     })
   dispatch(setIsLoading(false))
 }
@@ -73,7 +73,7 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
     })
       .then((resp) => resp.json())
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_FRIENDS, friends: data.data })
       })
       .catch((err) => console.log(err))
   }
@@ -83,12 +83,12 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
 export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userID != null) {
     dispatch(setIsLoading(true))
-    await fetch(DOMAIN_URL.SOCIAL + '/post/' + userID, {
+    await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.SPECIFIC_POST + '/' + userID, {
       method: 'GET',
     })
       .then((resp) => resp.json())
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: data })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: JSON.parse(data.data) })
       })
       .catch((err) => console.log(err))
   }

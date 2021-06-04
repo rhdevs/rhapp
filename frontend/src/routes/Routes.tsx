@@ -95,34 +95,34 @@ export default class Routes extends React.Component {
             atActive={{ opacity: 1 }}
             className="switch-wrapper"
           >
-            <PrivateRoute exact path={PATHS.HOME_PAGE} component={Home} />
-            <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
+            <PublicRoute exact path={PATHS.HOME_PAGE} component={Home} />
+            <PublicRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
 
-            <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
-            <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
-            <PrivateRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
-            <PrivateRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
+            <PublicRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
+            <PublicRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
+            <PublicRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
+            <PublicRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
 
-            <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
-            <PrivateRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
-            <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE_WITH_PAGE_INDEX} component={EventList} />
-            <PrivateRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
-            <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
-            <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
+            <PublicRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
+            <PublicRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
+            <PublicRoute exact path={PATHS.EVENT_LIST_PAGE_WITH_PAGE_INDEX} component={EventList} />
+            <PublicRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
+            <PublicRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
+            <PublicRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
-            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
-            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <PublicRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+            <PublicRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
+            <PublicRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PublicRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
             <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
 
-            <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
-            <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
+            <PublicRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
+            <PublicRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
             <PublicRoute component={FallBack} />
