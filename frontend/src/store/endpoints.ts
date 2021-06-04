@@ -3,9 +3,9 @@ import axios from 'axios'
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
   // AUTH
-  LOGIN = '/auth/login',
-  IS_LOGGEDIN = '/auth/protected',
-  REGISTER = '/auth/register',
+  LOGIN = '/login',
+  IS_LOGGEDIN = '/protected',
+  REGISTER = '/register',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
@@ -68,14 +68,14 @@ export enum ENDPOINTS {
   ALL_FRIENDS = '/friend',
 
   // SOCIAL
-  ALL_PROFILES = '/profile/all',
-  OFFICIAL_POSTS = '/post/official',
-  ALL_POSTS = '/post/all',
-  FRIENDS_OF_USER_POSTS = '/post/friend',
-  SPECIFIC_POST = '/post/search',
-  DELETE_POST = '/post',
-  EDIT_POST = '/post/edit',
-  CREATE_POSTS = '/post',
+  ALL_PROFILES = '/profiles',
+  OFFICIAL_POSTS = '/posts/official',
+  ALL_POSTS = '/posts',
+  FRIENDS_OF_USER_POSTS = '/posts/friend',
+  SPECIFIC_POST = '/posts',
+  DELETE_POST = '/posts',
+  EDIT_POST = '/posts',
+  CREATE_POSTS = '/posts',
 
   // HOME
   SEARCH = '/search',
@@ -86,25 +86,30 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+  AUTH = 'auth',
 }
 
 export const DOMAIN_URL = {
   FACILITY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
+      ? '//rhapp-backend.rhdevs.repl.co/facilities'
       : '//rhapp-middleware.herokuapp.com/rhappfacilities',
   EVENT:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappevents.rhdevs.repl.co'
+      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
       : '//rhapp-middleware.herokuapp.com/rhappevents',
   LAUNDRY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhapplaundry.rhdevs.repl.co'
+      ? '//rhapp-backend.rhdevs.repl.co/laundry'
       : '//rhapp-middleware.herokuapp.com/rhapplaundry',
   SOCIAL:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappsocial.rhdevs.repl.co'
+      ? '//rhapp-backend.rhdevs.repl.co/social'
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
+  AUTH:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/auth'
+      : '//rhapp-middleware.herokuapp.com/rhappauth',
 }
 
 async function makeRequest(

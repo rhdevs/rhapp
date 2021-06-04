@@ -10,7 +10,7 @@ const getIsLoggedIn = async () => {
     return true
   } else {
     if (token) {
-      await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
+      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
         method: 'GET',
         mode: 'cors',
       }).then((resp) => {
