@@ -1,14 +1,15 @@
-import { ShareAltOutlined } from '@ant-design/icons'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { ShareAltOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
-import { readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import { getSupperGroupById, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -26,21 +27,27 @@ const ButtonContainer = styled.div`
   transform: translate(-50%, 0);
 `
 
-export default function UserJoinOrder() {
+export default function JoinOrder() {
   const rightIcon = <ShareAltOutlined />
   const { supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
+  const dispatch = useDispatch()
   // const supperGroup = { restaurantId = '605e183e0312ad1400fdc98c' }
+
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+  }, [dispatch])
 
   return (
     <Background>
       <TopNavBar title="Join Order" rightComponent={rightIcon} />
       <JoinOrderSGCard
+        isOwner={supperGroup?.ownerId === localStorage.userID}
         title={supperGroup?.supperGroupName ?? ''}
         restaurant={supperGroup?.restaurantName ?? ''}
         orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
-        username={supperGroup?.ownerName ?? ''}
+        username={supperGroup?.ownerId === localStorage.userID ? 'You' : supperGroup?.ownerName ?? ''}
         currentAmount={supperGroup?.currentFoodCost ?? 0}
         priceLimit={supperGroup?.costLimit ?? 50}
         closingTime={unixTo12HourTime(supperGroup?.closingTime)}

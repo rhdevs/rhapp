@@ -31,11 +31,17 @@ interface AuxProps {
   editIconSize?: string
   margin?: string
   editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const MainCard = (props: AuxProps) => {
   return (
-    <MainContainer minHeight={props.minHeight} flexDirection={props.flexDirection} margin={props.margin}>
+    <MainContainer
+      onClick={props.onClick}
+      minHeight={props.minHeight}
+      flexDirection={props.flexDirection}
+      margin={props.margin}
+    >
       {props.children}
       {props.isEditable && (
         <EditIcon onClick={props.editOnClick} editIconSize={props.editIconSize} src={editIcon} alt="Edit Icon" />
