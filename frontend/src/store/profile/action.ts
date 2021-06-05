@@ -88,7 +88,7 @@ export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispat
     })
       .then((resp) => resp.json())
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: JSON.parse(data.data) })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: JSON.parse(data.data) }) //TODO stop JSON.parse() after .json() by using get()
       })
       .catch((err) => console.log(err))
   }

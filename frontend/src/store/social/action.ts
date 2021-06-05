@@ -12,7 +12,7 @@ const [error] = useSnackbar('error')
 
 export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
   const userID = localStorage.getItem('userID')
-  get(ENDPOINTS.USER_DETAILS, DOMAINS.SOCIAL, '/' + userID).then((response) => {
+  get(ENDPOINTS.USER, DOMAINS.SOCIAL, '/' + userID).then((response) => {
     if (response.data === '' || response.data === undefined) {
       console.log(response.err)
     } else {

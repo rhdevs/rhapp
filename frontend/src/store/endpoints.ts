@@ -11,8 +11,7 @@ export enum ENDPOINTS {
   TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
   USER = '/user',
   USER_PROFILE = '/profile/',
-  USER_PROFILE_PICTURE = '/profile/picture/',
-  USER_DETAILS = '/user',
+  USER_PROFILE_PICTURE = '/profile/picture',
   EDIT_PROFILE = '/profiles',
   USER_CCAS = '/user_CCA', //TODO make backend route
   FRIEND = '/friend',
