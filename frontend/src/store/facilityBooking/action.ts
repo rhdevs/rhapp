@@ -17,12 +17,20 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
   })
     .then((resp) => resp.json())
     .then((data) => {
-      const uniqueLocationList = [...new Set(data.map((item: Facility) => item.facilityLocation))]
+      const uniqueLocationList = [
+        ...new Set(
+          data.map((item: Facility) => {
+            console.log(item.facilityName + item.facilityLocation)
+            item.facilityLocation
+          }),
+        ),
+      ]
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
         facilityList: data,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
+      console.log(data)
       dispatch(SetIsLoading(false))
     })
 }
