@@ -64,7 +64,9 @@ const ViewOrder = () => {
     <MainContainer>
       <TopNavBar
         title="View Order"
-        rightComponent={supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '20px' }} /> : undefined}
+        rightComponent={
+          supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: '#DE5F4C' }} /> : undefined
+        }
       />
       {supperGroup?.ownerId === localStorage.userID ? (
         <OwnerView

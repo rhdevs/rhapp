@@ -220,7 +220,7 @@ export default function UserCreateOrder() {
       console.log(data)
       console.log('success')
     })()
-    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {

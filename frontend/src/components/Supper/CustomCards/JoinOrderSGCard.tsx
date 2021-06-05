@@ -2,14 +2,11 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { MainCard } from '../MainCard'
-import notFound from '../../../assets/notFound.svg'
 import { RoundProgress } from '../RoundProgress'
 import { StatusSymbol } from '../StatusSymbol'
-import { SplitACMethod } from '../../../store/supper/types'
+import { Restaurants, SplitACMethod } from '../../../store/supper/types'
 import { RoundImage } from '../RoundImage'
-import MacDonald from '../../../assets/MacDonald.svg'
-import Alamaan from '../../../assets/Alamaan.svg'
-import Kimly from '../../../assets/Kimly.svg'
+import { getRestaurantLogo } from '../../../common/getRestaurantLogo'
 
 const TopSection = styled.div`
   display: flex;
@@ -54,7 +51,7 @@ const FirstLineContainer = styled.div`
 type Props = {
   restaurantLogo?: string
   title: string
-  restaurant?: string
+  restaurant?: Restaurants
   orderId: string
   username: string
   priceLimit: number
@@ -70,18 +67,6 @@ type Props = {
 }
 
 export const JoinOrderSGCard = (props: Props) => {
-  const getImage = (restaurant) => {
-    if (restaurant === 'MacDonald') {
-      return MacDonald
-    } else if (restaurant === 'Alamaan') {
-      return Alamaan
-    } else if (restaurant === 'Kimly') {
-      return Kimly
-    } else {
-      return notFound
-    }
-  }
-
   return (
     <MainCard
       margin={props.cardMargin}
@@ -91,7 +76,7 @@ export const JoinOrderSGCard = (props: Props) => {
       editIconSize="1rem"
     >
       <TopSection>
-        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
+        <RoundImage image={getRestaurantLogo(props.restaurant)} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>

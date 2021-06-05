@@ -53,7 +53,7 @@ type Props = {
 
 export const MainSGCard = (props: Props) => {
   return (
-    <MainCard flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
+    <MainCard onClick={props.onClick} flexDirection="column" isEditable={props.isOwner} editIconSize="1rem">
       <MainContainer>
         <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
         <SubContainer>
