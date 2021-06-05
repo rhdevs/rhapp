@@ -331,7 +331,7 @@ export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Disp
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (orderId?: string, newOrderDetails?: any) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(orderId, newOrderDetails)
   if (!newOrderDetails || !orderId) return
   dispatch(setIsLoading(true))
