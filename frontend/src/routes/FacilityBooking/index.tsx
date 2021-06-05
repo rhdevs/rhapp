@@ -12,6 +12,7 @@ import { Radio } from 'antd'
 import 'antd/dist/antd.css'
 import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
+import LOGOS from '../../assets/facilitiesLogos'
 
 const MainContainer = styled.div`
   width: 100%;
