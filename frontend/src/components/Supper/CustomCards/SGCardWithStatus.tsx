@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
 import { MainCard } from '../MainCard'
@@ -116,11 +116,15 @@ export const SGCardWithStatus = (props: Props) => {
   }
 
   const isCancelledCard = props.supperGroupStatus === SupperGroupStatus.CANCELLED
+  let image = getRestaurantLogo(props.restaurant)
+  useEffect(() => {
+    image = getRestaurantLogo(props.restaurant)
+  }, [props.restaurant])
 
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        <RoundImage image={getRestaurantLogo(props.restaurant)} alt="Restaurant Logo" />
+        <RoundImage image={image} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
