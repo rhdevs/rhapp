@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
-import dummyAvatar from '../../assets/dummyAvatar.svg'
 import { PATHS } from '../Routes'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
@@ -12,7 +11,9 @@ import { Radio } from 'antd'
 import 'antd/dist/antd.css'
 import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
-import LOGOS from '../../assets/facilitiesLogos'
+import LOGOS from '../../assets/facilitiesLogos/BandRoomCommunalHall.svg'
+import LOGO from '../../assets/facilitiesLogos'
+import DummyAvatar from '../../assets/dummyAvatar.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -31,6 +32,7 @@ const FacilityCard = styled.div`
 
 const FacilityAvatar = styled.img`
   padding: 20px;
+  max-height: 70px;
 `
 
 const FacilityHeader = styled.p`
@@ -138,6 +140,19 @@ export default function FacilityBooking() {
     dispatch(changeTab(e.target.value))
   }
 
+  function FacilityLogo(prop) {
+    switch (prop) {
+      case 0:
+        return <FacilityAvatar src={LOGOS} />
+      case 1:
+        return <div>testing</div>
+      case 2:
+        return <div>testing2</div>
+      default:
+        return <FacilityAvatar src={DummyAvatar} />
+    }
+  }
+
   return (
     <>
       <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
@@ -165,7 +180,7 @@ export default function FacilityBooking() {
                         dispatch(setSelectedFacility(facility.facilityID))
                       }}
                     >
-                      <FacilityAvatar src={dummyAvatar} />
+                      <FacilityLogo />
                       <FacilityLabels>
                         <FacilityHeader>{facility.facilityName}</FacilityHeader>
                         <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
