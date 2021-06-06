@@ -403,6 +403,7 @@ export const supperGroupStub: SupperGroup = {
   closingTime: 10000000,
   estArrivalTime: 100453488,
   orderList: orderList,
+  phoneNumber: 99999999,
 }
 
 // Restaurant = {

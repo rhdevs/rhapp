@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Radio, Switch, Input, TimePicker } from 'antd'
+import { Radio, Switch, TimePicker } from 'antd'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
@@ -10,7 +10,14 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
-import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import {
+  PaymentInfo,
+  PaymentMethod,
+  Restaurants,
+  SplitACMethod,
+  SupperGroup,
+  SupperGroupStatus,
+} from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,7 +25,6 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
-import { updateIndexedAccessTypeNode } from 'typescript'
 
 const Background = styled.div`
   height: 100vh;
@@ -165,7 +171,32 @@ export default function UserCreateOrder() {
     totalPrice: 0,
     userIdList: [],
     closingTime: Math.round(Date.now() / 1000),
+    phoneNumber: 0,
   }
+
+  // const initSupperGroup: SupperGroup = {
+  //   costLimit: 100,
+  //   createdAt: Math.round(Date.now() / 1000),
+  //   currentFoodCost: 0,
+  //   location: 'Carpark',
+  //   numOrders: 0,
+  //   ownerId: 'A1234567B',
+  //   ownerName: '',
+  //   ownerTele: '',
+  //   paymentInfo: [
+  //     { paymentMethod: PaymentMethod.PAYLAH, link: 'http://www.google.com' },
+  //     { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'www.google.com' },
+  //   ],
+  //   restaurantName: Restaurants.MCDONALDS,
+  //   splitAdditionalCost: SplitACMethod.EQUAL,
+  //   status: SupperGroupStatus.OPEN,
+  //   supperGroupId: '',
+  //   supperGroupName: 'TEST',
+  //   totalPrice: 0,
+  //   userIdList: [],
+  //   closingTime: Math.round(Date.now() / 1000),
+  //   phoneNumber: 99999999,
+  // }
 
   const {
     register: register1,
@@ -249,6 +280,7 @@ export default function UserCreateOrder() {
       }
       setOrder(updatedSPInfo)
       setCount(count + 1)
+      console.log('firstSubmit', updatedSPInfo)
     })()
   }
 
@@ -261,6 +293,7 @@ export default function UserCreateOrder() {
       }
       setOrder(updatedSPInfo)
       setCount(count + 1)
+      console.log('secondSubmit', updatedSPInfo)
     })()
   }
 
@@ -268,7 +301,7 @@ export default function UserCreateOrder() {
     handleSubmit3((data: FormValues3) => {
       updatedSPInfo = {
         ...supperGroup,
-        paymentMethods: data.paymentMethod,
+        paymentInfo: data.paymentMethod,
         phoneNumber: data.phoneNumber,
         ownerId: localStorage.userID,
       }
@@ -311,14 +344,16 @@ export default function UserCreateOrder() {
         })
         updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
       }
+      console.log('thirdSubmit', updatedSPInfo)
       setOrder(updatedSPInfo)
+      console.log(initSupperGroup)
       console.log(localStorage.userName, localStorage.userTele)
       //TODO: fix dispatch full updated info to backend
-      console.log(updatedSPInfo)
-      dispatch(createSupperGroup(updatedSPInfo))
+      const id = dispatch(createSupperGroup(initSupperGroup)) //updatedSPInfo
+      history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${id}`)
       console.log('success')
     })()
-    // history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    //history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -515,13 +550,14 @@ export default function UserCreateOrder() {
                   <Controller
                     name="closingTime"
                     control={control1}
-                    defaultValue={Date.now()}
                     rules={{ required: true }}
+                    defaultValue={Date.now()}
                     render={() => (
                       <StyledTimePicker
                         use12Hours
                         format="h:mm a"
                         onChange={onChange}
+                        name="closingTime"
                         ref={register1({ required: true })}
                         style={{
                           borderColor: errors1.closingTime && 'red',
