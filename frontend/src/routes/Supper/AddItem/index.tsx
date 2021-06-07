@@ -76,35 +76,35 @@ const AddItem = () => {
   const onSubmit = (e) => {
     e.preventDefault()
     handleSubmit((data) => {
-      const custom: Custom[] = (menuFood?.custom ?? []).map((cf) => {
+      const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
           .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments')
           .flatMap((entry) => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
-            if (cf.title === fieldName) {
-              const k = cf.options.map(
+            if (customFood.title === fieldName) {
+              const k = customFood.options.map(
                 (option) =>
-                  fieldDetails.map((fd) => {
-                    const isSelected = option.name === fd ? true : false
+                  fieldDetails.map((fieldDetail) => {
+                    const isSelected = option.name === fieldDetail ? true : false
                     return { ...option, isSelected: isSelected }
                   })[0],
               )
               return k
             } else {
-              console.log(cf.title, fieldName)
+              console.log(customFood.title, fieldName)
               return {} as Option
             }
           })
           .filter(Boolean)
-          //.flat()
           .filter((k) => k.name !== undefined) //to remove empty Option objects
+
         console.log(options)
         return {
-          title: cf.title,
+          title: customFood.title,
           options: options,
-          max: cf.max,
-          min: cf.min,
+          max: customFood.max,
+          min: customFood.min,
         }
       })
       const newFood: Food = {
@@ -144,8 +144,8 @@ const AddItem = () => {
       const fieldDetails = [entry[1]].flat()
       const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
       originalCustom?.options.map((option) => {
-        fieldDetails?.map((fd) => {
-          if (option.name === fd) addOns += option.price
+        fieldDetails?.map((fieldDetail) => {
+          if (option.name === fieldDetail) addOns += option.price
         })
       })
     })

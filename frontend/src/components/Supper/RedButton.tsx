@@ -21,9 +21,14 @@ const StyledRedButton = styled(AntdButton)`
   background: #de5f4c;
   border: 1px solid #de5f4c;
   &.ant-btn-primary:hover,
-  .ant-btn-primary:focus {
+  &.ant-btn-primary:focus,
+  &.ant-btn:hover,
+  &.ant-btn:focus {
     background: #de5f4c;
     border: 1px solid #de5f4c;
+  }
+  &.ant-btn-primary {
+    background: #de5f4c;
   }
 `
 
@@ -45,7 +50,10 @@ const StyledGreyButton = styled(AntdButton)`
   background: #ccc;
   border: 1px solid #ccc;
   &.ant-btn-primary:hover,
-  .ant-btn-primary:focus {
+  &.ant-btn-primary:focus,
+  &.ant-btn:hover,
+  &.ant-btn:focus,
+  &.ant-btn-primary {
     background: #ccc;
     border: 1px solid #ccc;
   }

@@ -48,7 +48,7 @@ export const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
   display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
   display: flex;
   flex-direction: row;
-  height: 25px;
+  min-height: 25px;
 `
 
 export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
@@ -56,14 +56,16 @@ export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
   flex-direction: row;
   width: fit-content;
   cursor: pointer;
-  height: 30px;
+  min-height: 30px;
   align-items: center;
   display: ${(props) => (props.isHidden ? 'none' : 'inherit')};
 `
 
 export const OptionText = styled.text`
+  flex: 95%;
   font-family: Inter;
   font-style: normal;
   font-weight: 200;
   font-size: 14px;
+  margin: 0 0 3px 2px;
 `
