@@ -13,7 +13,7 @@ import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { addFoodToOrder, getMenuFood } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import SingleOptions from './Components/SelectField'
+import SelectField from './Components/SelectField'
 import {
   CustomHeaders,
   CustomHeadersContainer,
@@ -53,7 +53,7 @@ const Spacer = styled.div`
   height: 0.7rem;
 `
 
-type CustomData = Record<string, string | string[] | CancelAction>
+export type CustomData = Record<string, string | string[] | CancelAction>
 
 const AddItem = () => {
   const dispatch = useDispatch()
@@ -161,7 +161,7 @@ const AddItem = () => {
         <MainContainer>
           <ItemText>{menuFood?.foodMenuName}</ItemText>
           {menuFood?.custom?.map((custom, index) => (
-            <SingleOptions
+            <SelectField
               custom={custom}
               index={index}
               key={index}

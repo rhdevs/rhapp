@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { DownOutlined, UpOutlined } from '@ant-design/icons/lib/icons'
+import { UpOutlined } from '@ant-design/icons/lib/icons'
 import { DeepMap, FieldError } from 'react-hook-form'
 import { Checkbox } from '../../../../components/Checkbox'
-import { CancelAction, Custom, Option } from '../../../../store/supper/types'
+import { Custom, Option } from '../../../../store/supper/types'
 import {
   CustomHeaders,
   CustomHeadersContainer,
@@ -15,6 +15,7 @@ import {
   StyledRadioGroup,
 } from './StyledComponents'
 import { RadioButton } from '../../../../components/RadioButton'
+import { CustomData } from '..'
 
 const CustomContainer = styled.div`
   display: flex;
@@ -42,9 +43,40 @@ const ViewMoreLessButton = styled.div`
   margin: 3px 5px;
 `
 
-type CustomData = Record<string, string | string[] | CancelAction>
+const SelectHelperText = (isCompulsory: boolean, custom: Custom) => {
+  let text: string | undefined = 'Select '
+  if (isCompulsory) {
+    if ((custom.max ?? 0 > 1) && custom.min !== custom.max) {
+      text += `at least ${custom.min} and up to ${custom.max}`
+    } else {
+      text += `${custom.min}`
+    }
+  } else {
+    if (custom.max) {
+      text += `up to ${custom.max}`
+    } else {
+      text = undefined
+    }
+  }
 
-const SingleOptions = ({
+  return <SelectText>{text}</SelectText>
+}
+
+const ViewMoreButton = (
+  setIsExpanded: { (value: React.SetStateAction<boolean>): void; (arg0: boolean): void },
+  isExpanded: boolean,
+) => {
+  return (
+    <ViewMoreLessButton onClick={() => setIsExpanded(!isExpanded)}>
+      <UpOutlined
+        style={{ fontSize: '10px', padding: '3px 5px 3px 3px', transform: !isExpanded ? 'rotate(180deg)' : 'none' }}
+      />
+      {isExpanded ? 'Show Less' : 'View More'}
+    </ViewMoreLessButton>
+  )
+}
+
+const SelectField = ({
   custom,
   index,
   register,
@@ -62,27 +94,7 @@ const SingleOptions = ({
   watch
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
-  const VIEW_TEXT = isExpanded ? 'View Less' : 'View More'
-  const ICON = isExpanded ? (
-    <UpOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
-  ) : (
-    <DownOutlined style={{ fontSize: '10px', padding: '3px 5px 3px 3px' }} />
-  )
   const isCompulsory = custom.min !== 0
-  let text: string | undefined = 'Select '
-  if (isCompulsory) {
-    if ((custom.max ?? 0 > 1) && custom.min !== custom.max) {
-      text += `at least ${custom.min} and up to ${custom.max}`
-    } else {
-      text += `${custom.min}`
-    }
-  } else {
-    if (custom.max) {
-      text += `up to ${custom.max}`
-    } else {
-      text = undefined
-    }
-  }
 
   return (
     <CustomContainer key={index}>
@@ -91,35 +103,19 @@ const SingleOptions = ({
           <CustomHeaders>{custom.title}</CustomHeaders>
           {errors[`${custom.title}`] && <RedText> • {custom.min} Required</RedText>}
         </OptionTitleContainer>
-        <SelectText>{text}</SelectText>
+        {SelectHelperText(isCompulsory, custom)}
       </CustomHeadersContainer>
       <OptionContainer>
         {custom.max === 1 && isCompulsory ? (
-          <StyledRadioGroup
-            {...register(`${custom.title}`, { required: isCompulsory })}
-            onChange={(e) => {
-              clearErrors(`${custom.title}`)
-              setValue(`${custom.title}`, e.target.value)
-            }}
-            defaultValue={null}
-          >
-            {custom.options.map((option, index) => {
-              return (
-                <RadioButtonContainer key={index} isHidden={index >= 3 && !isExpanded}>
-                  <RadioButton
-                    margin="0 0 0 2px"
-                    value={option.name}
-                    label={
-                      <OptionText>
-                        {option.name}
-                        {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
-                      </OptionText>
-                    }
-                  />
-                </RadioButtonContainer>
-              )
-            })}
-          </StyledRadioGroup>
+          <SingleOptions
+            key={index}
+            custom={custom}
+            isCompulsory={isCompulsory}
+            isExpanded={isExpanded}
+            register={register}
+            setValue={setValue}
+            clearErrors={clearErrors}
+          />
         ) : (
           <>
             {custom.options.map((option, index) => (
@@ -137,14 +133,53 @@ const SingleOptions = ({
             ))}
           </>
         )}
-        {custom.options.length > 3 && (
-          <ViewMoreLessButton onClick={() => setIsExpanded(!isExpanded)}>
-            {ICON}
-            {VIEW_TEXT}
-          </ViewMoreLessButton>
-        )}
+        {custom.options.length > 3 && ViewMoreButton(setIsExpanded, isExpanded)}
       </OptionContainer>
     </CustomContainer>
+  )
+}
+
+const SingleOptions = ({
+  custom,
+  isCompulsory,
+  isExpanded,
+  register,
+  setValue,
+  clearErrors,
+}: {
+  custom: Custom
+  isCompulsory: boolean
+  isExpanded: boolean
+  register
+  setValue
+  clearErrors: (name?: string | string[]) => void
+}) => {
+  return (
+    <StyledRadioGroup
+      {...register(`${custom.title}`, { required: isCompulsory })}
+      onChange={(e) => {
+        clearErrors(`${custom.title}`)
+        setValue(`${custom.title}`, e.target.value)
+      }}
+      defaultValue={null}
+    >
+      {custom.options.map((option, index) => {
+        return (
+          <RadioButtonContainer key={index} isHidden={index >= 3 && !isExpanded}>
+            <RadioButton
+              margin="0 0 0 2px"
+              value={option.name}
+              label={
+                <OptionText>
+                  {option.name}
+                  {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
+                </OptionText>
+              }
+            />
+          </RadioButtonContainer>
+        )
+      })}
+    </StyledRadioGroup>
   )
 }
 
@@ -195,4 +230,4 @@ const MultipleOptions = ({
   )
 }
 
-export default SingleOptions
+export default SelectField
