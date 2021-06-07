@@ -86,10 +86,8 @@ const AddItem = () => {
               const k = cf.options.map(
                 (option) =>
                   fieldDetails.map((fd) => {
-                    if (option.name === fd) {
-                      return { ...option, isSelected: true }
-                    }
-                    return { ...option, isSelected: false }
+                    const isSelected = option.name === fd ? true : false
+                    return { ...option, isSelected: isSelected }
                   })[0],
               )
               return k
@@ -128,22 +126,15 @@ const AddItem = () => {
     })()
   }
 
-  const checkFormValidity = () => {
+  const isFormFieldsValid = () => {
     if (watch('cancelAction')) {
-      let count = 0
-      compulsoryFields.map((custom) => {
-        if (watch(`${custom.title}`) && watch(`${custom.title}`).length >= custom.min) {
-          count++
-        }
-      })
-      if (count === compulsoryFields.length) {
-        return true
-      } else {
-        return false
-      }
-    } else {
-      return false
+      const satisfiedFields = compulsoryFields.filter(
+        (customField) => watch(`${customField.title}`) && watch(`${customField.title}`).length >= customField.min,
+      )
+      if (satisfiedFields.length === compulsoryFields.length) return true
     }
+
+    return false
   }
 
   const calculateAdditionalCost = () => {
@@ -231,7 +222,7 @@ const AddItem = () => {
           <QuantityTracker center min={1} default={1} />
           <Spacer />
           <AddUpdateCartButton
-            isGrey={!checkFormValidity()}
+            isGrey={!isFormFieldsValid()}
             htmlType="submit"
             add
             currentTotal={String((((menuFood?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
