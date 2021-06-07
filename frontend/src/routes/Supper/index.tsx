@@ -101,7 +101,7 @@ export default function Supper() {
                 const onClick = () => {
                   if (
                     supperGroup.ownerId === localStorage.userID ||
-                    supperGroup.userIdList.includes(localStorage.userID)
+                    (supperGroup.userIdList ?? []).includes(localStorage.userID)
                   ) {
                     //user is owner or already has an ongoing order
                     history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)

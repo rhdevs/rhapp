@@ -44,6 +44,7 @@ const initialState = {
   editOrderNumber: 1,
   counter: 0,
   foodId: undefined,
+  orderId: undefined,
 }
 
 type State = {
@@ -77,6 +78,7 @@ type State = {
   editOrderNumber: number
   counter: number
   foodId?: string
+  orderId?: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -182,6 +184,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_FOOD_ID: {
       return { ...state, foodId: action.foodId }
+    }
+    case SUPPER_ACTIONS.GET_ORDER_ID: {
+      return { ...state, orderId: action.orderId }
     }
     default:
       return state

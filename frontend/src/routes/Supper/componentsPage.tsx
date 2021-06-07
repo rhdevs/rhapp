@@ -1,5 +1,5 @@
 import React from 'react'
-
+import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { RoundProgress } from '../../components/Supper/RoundProgress'
@@ -36,10 +36,23 @@ import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
 import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
+import { RadioButton } from '../../components/RadioButton'
+
+const OptionText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 14px;
+`
 
 export default function Supper() {
   return (
     <>
+      <RadioButton
+        margin="0 0 3px 2px"
+        value="option.name"
+        label={<OptionText>McCafe Caramel Frappe With Oreo Medium (+$4.45)</OptionText>}
+      />
       <RhAppQrCode link="google.com" />
       <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />

@@ -283,7 +283,11 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: resp.data,
+        supperGroup: resp.data.supperGroup,
+      })
+      dispatch({
+        type: SUPPER_ACTIONS.GET_ORDER_ID,
+        orderId: resp.data.orderId,
       })
       console.log(resp)
     })

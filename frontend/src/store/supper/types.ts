@@ -174,6 +174,7 @@ export enum SUPPER_ACTIONS {
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
   SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
+  GET_ORDER_ID = 'SUPPER_ACTIONS.GET_ORDER_ID',
 }
 
 type SetIsLoading = {
@@ -346,6 +347,11 @@ type SetFoodId = {
   foodId?: string
 }
 
+type GetOrderId = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_ID
+  orderId?: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -381,3 +387,4 @@ export type ActionTypes =
   | SetEditOrderNumber
   | SetCounter
   | SetFoodId
+  | GetOrderId

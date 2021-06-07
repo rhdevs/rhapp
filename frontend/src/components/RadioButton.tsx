@@ -4,6 +4,10 @@ import styled from 'styled-components'
 import { Radio } from 'antd'
 
 const StyledRadioButton = styled(Radio)<{ color: string; margin?: string }>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 25px;
   ${(props) => `.ant-radio-checked, .ant-radio-inner {
     border-color: ${props.color} !important ;
   }
@@ -17,6 +21,11 @@ const StyledRadioButton = styled(Radio)<{ color: string; margin?: string }>`
   }
   ${props.margin && `margin: ${props.margin}`}
   `}
+`
+
+const LabelDiv = styled.div`
+  width: 100%;
+  white-space: pre-wrap;
 `
 
 type Props = {
@@ -37,7 +46,7 @@ export const RadioButton = (props: Props) => {
       color={props.color ?? BLUE}
       value={props.value}
     >
-      {props.label}
+      <LabelDiv>{props.label}</LabelDiv>
     </StyledRadioButton>
   )
 }

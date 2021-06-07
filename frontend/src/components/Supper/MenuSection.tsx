@@ -72,7 +72,7 @@ type Props = {
 
 export const MenuSection = (props: Props) => {
   let QUANTITY
-  const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
+  const { menuTabKey } = useSelector((state: RootState) => state.supper)
   const history = useHistory()
 
   return (

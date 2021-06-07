@@ -79,7 +79,7 @@ const AddItem = () => {
       const custom: Custom[] = (menuFood?.custom ?? []).map((cf) => {
         const options: Option[] = Object.entries(watch())
           .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments')
-          .map((entry) => {
+          .flatMap((entry) => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
             if (cf.title === fieldName) {
@@ -97,9 +97,9 @@ const AddItem = () => {
             }
           })
           .filter(Boolean)
-          .flat()
+          //.flat()
           .filter((k) => k.name !== undefined) //to remove empty Option objects
-
+        console.log(options)
         return {
           title: cf.title,
           options: options,
@@ -190,14 +190,14 @@ const AddItem = () => {
             >
               <RadioButtonContainer>
                 <RadioButton
-                  margin="0 0 0 2px"
+                  margin="0 0 3px 2px"
                   value={CancelAction.REMOVE}
                   label={<OptionText>Remove it from my order</OptionText>}
                 />
               </RadioButtonContainer>
               <RadioButtonContainer>
                 <RadioButton
-                  margin="0 0 0 2px"
+                  margin="0 0 3px 2px"
                   value={CancelAction.CONTACT}
                   label={<OptionText>Contact me </OptionText>}
                 />
