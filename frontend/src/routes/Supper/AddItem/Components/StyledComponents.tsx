@@ -45,10 +45,20 @@ export const StyledRadioGroup = styled(Radio.Group)`
 `
 
 export const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
-  ${(props) => props.isHidden && 'display: none;'}
+  display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
   display: flex;
   flex-direction: row;
   height: 25px;
+`
+
+export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  cursor: pointer;
+  height: 30px;
+  align-items: center;
+  display: ${(props) => (props.isHidden ? 'none' : 'inherit')};
 `
 
 export const OptionText = styled.text`

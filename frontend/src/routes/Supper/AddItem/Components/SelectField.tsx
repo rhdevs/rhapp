@@ -13,6 +13,7 @@ import {
   RedText,
   SelectText,
   StyledRadioGroup,
+  CheckboxContainer,
 } from './StyledComponents'
 import { RadioButton } from '../../../../components/RadioButton'
 import { CustomData } from '..'
@@ -25,16 +26,6 @@ const CustomContainer = styled.div`
 const OptionContainer = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
-  display: flex;
-  flex-direction: row;
-  width: fit-content;
-  cursor: pointer;
-  height: 30px;
-  align-items: center;
-  ${(props) => props.isHidden && 'display: none;'};
 `
 
 const ViewMoreLessButton = styled.div`
