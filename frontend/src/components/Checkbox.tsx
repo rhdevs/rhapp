@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-const Container = styled.label<{ checked?: boolean; margin?: string; sizePercentage?: number }>`
+const Container = styled.label<{
+  flexPercentage?: number
+  checked?: boolean
+  margin?: string
+  sizePercentage?: number
+}>`
   display: block;
   position: relative;
   margin: ${(props) => props.margin ?? 'auto 5px'};
@@ -14,6 +19,7 @@ const Container = styled.label<{ checked?: boolean; margin?: string; sizePercent
   user-select: none;
   height: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
+  ${(props) => props.flexPercentage && `flex: ${props.flexPercentage}%;`}
 `
 
 const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string; sizePercentage?: number }>`
@@ -58,6 +64,7 @@ type Props = {
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   sizePercentage?: number
   margin?: string
+  flexPercentage?: number
 }
 
 export const Checkbox = (props: Props) => {
@@ -67,7 +74,7 @@ export const Checkbox = (props: Props) => {
   const [isChecked, setIsChecked] = useState(props.isChecked ?? false)
 
   return (
-    <Container sizePercentage={props.sizePercentage} margin={props.margin}>
+    <Container flexPercentage={props.flexPercentage} sizePercentage={props.sizePercentage} margin={props.margin}>
       <Background
         onClick={(e) => {
           if (!props.isDisabled) {
