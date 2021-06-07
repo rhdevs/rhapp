@@ -20,7 +20,8 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
 const Background = styled.div`
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   width: 100vw;
   background: #fafaf4;
   position: relative;
