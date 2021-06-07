@@ -1,16 +1,23 @@
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
-
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import useSnackbar from '../../../hooks/useSnackbar'
+import {
+  deleteFoodInOrder,
+  getSupperGroupById,
+  getUserOrder,
+  readableSupperGroupId,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -61,16 +68,30 @@ const ViewCart = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [error] = useSnackbar('error')
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
   }, [dispatch])
 
-  const { supperGroup, order, isLoading } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, order, isLoading, foodId } = useSelector((state: RootState) => state.supper)
 
   console.log(supperGroup)
   console.log(order)
+
+  const onCancelClick = () => {
+    setModalIsOpen(false)
+  }
+
+  const onConfirmDiscardClick = () => {
+    if (order && foodId) dispatch(deleteFoodInOrder(params.supperGroupId, order.orderId, foodId))
+    else {
+      error('Failed to delete item, please try again.')
+      setModalIsOpen(false)
+    }
+  }
 
   return (
     <MainContainer>
@@ -79,6 +100,16 @@ const ViewCart = () => {
         <LoadingSpin />
       ) : (
         <>
+          {modalIsOpen && (
+            <ConfirmationModal
+              title={'Delete Item?'}
+              hasLeftButton={true}
+              leftButtonText={'Confirm'}
+              onLeftButtonClick={onConfirmDiscardClick}
+              rightButtonText={'Cancel'}
+              onRightButtonClick={onCancelClick}
+            />
+          )}
           <ExpandableSGCard
             editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
             isOwner={supperGroup?.ownerId === localStorage.userID}
@@ -105,7 +136,12 @@ const ViewCart = () => {
                 fontWeight={200}
               />
             </MyOrderContainer>
-            <OrderSummaryCard isEditable foodList={order?.foodList} orderList={supperGroup?.orderList} />
+            <OrderSummaryCard
+              isEditable
+              foodList={order?.foodList}
+              orderList={supperGroup?.orderList}
+              onDeleteClick={() => setModalIsOpen(true)}
+            />
             <SubtotalText>Subtotal: ${(order?.totalCost ?? 0).toFixed(2)}</SubtotalText>
             <ButtonContainer>
               <Button

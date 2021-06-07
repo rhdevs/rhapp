@@ -1,15 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
 import { MainCard } from '../MainCard'
-import notFound from '../../../assets/notFound.svg'
 import { RoundProgress } from '../RoundProgress'
 import { StatusSymbol } from '../StatusSymbol'
-import { SplitACMethod } from '../../../store/supper/types'
+import { Restaurants, SplitACMethod } from '../../../store/supper/types'
 import { RoundImage } from '../RoundImage'
-import MacDonald from '../../../assets/MacDonald.svg'
-import Alamaan from '../../../assets/Alamaan.svg'
-import Kimly from '../../../assets/Kimly.svg'
+import { getRestaurantLogo } from '../../../common/getRestaurantLogo'
 
 const TopSection = styled.div`
   display: flex;
@@ -54,7 +51,7 @@ const FirstLineContainer = styled.div`
 type Props = {
   restaurantLogo?: string
   title: string
-  restaurant?: string
+  restaurant?: Restaurants
   orderId: string
   username: string
   priceLimit: number
@@ -70,18 +67,10 @@ type Props = {
 }
 
 export const JoinOrderSGCard = (props: Props) => {
-  const getImage = (restaurant) => {
-    if (restaurant === 'MacDonald') {
-      return MacDonald
-    } else if (restaurant === 'Alamaan') {
-      return Alamaan
-    } else if (restaurant === 'Kimly') {
-      return Kimly
-    } else {
-      return notFound
-    }
-  }
-
+  let image = getRestaurantLogo(props.restaurant)
+  useEffect(() => {
+    image = getRestaurantLogo(props.restaurant)
+  }, [props.restaurant])
   return (
     <MainCard
       margin={props.cardMargin}
@@ -91,7 +80,7 @@ export const JoinOrderSGCard = (props: Props) => {
       editIconSize="1rem"
     >
       <TopSection>
-        <RoundImage image={props.restaurantLogo ?? notFound} alt="Restaurant Logo" />
+        <RoundImage image={image} alt="Restaurant Logo" />
         <TextSubContainer>
           <TitleContainer>{props.title}</TitleContainer>
           <OrderIdContainer>
@@ -105,9 +94,12 @@ export const JoinOrderSGCard = (props: Props) => {
             <StatusSymbol text={props.closingTime} />
             <StatusSymbol text={String(props.numberOfUsers)} type="numberOfUsers" />
           </FirstLineContainer>
-          <StatusSymbol type="estDeliveryFee" text={`${props.deliveryFee} (${props.splitACType})`} />
+          <StatusSymbol type="estDeliveryFee" text={`$${props.deliveryFee} (${props.splitACType})`} />
         </BubblesContainer>
-        <RoundProgress priceLimit={props.priceLimit} currentAmount={props.currentAmount} />
+        <RoundProgress
+          priceLimit={Number(props.priceLimit.toFixed(2))}
+          currentAmount={Number(props.currentAmount.toFixed(2))}
+        />
       </BottomSection>
     </MainCard>
   )

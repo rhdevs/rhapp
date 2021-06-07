@@ -312,10 +312,13 @@ export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dis
   console.log(`new Food details: ${newFoodItem}`)
 }
 
-export const updateSupperGroup = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateSupperGroup = (supperGroupId: string, order?: Order, supperGroupStatus?: SupperGroupStatus) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch(setIsLoading(true))
 
-  const requestBody = order
+  const requestBody = ((order && { order: order }) || (supperGroupStatus && { status: supperGroupStatus })) ?? {}
+  console.log(requestBody)
   put(ENDPOINTS.UPDATE_SUPPER_GROUP, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -347,8 +350,9 @@ export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Disp
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (orderId: string, newOrderDetails?: any) => (dispatch: Dispatch<ActionTypes>) => {
-  if (!newOrderDetails) return
+export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(orderId, newOrderDetails)
+  if (!newOrderDetails || !orderId) return
   dispatch(setIsLoading(true))
   const requestBody = newOrderDetails
   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
@@ -617,5 +621,12 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
   dispatch({
     type: SUPPER_ACTIONS.SET_COUNTER,
     counter: counter,
+  })
+}
+
+export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_FOOD_ID,
+    foodId: foodId,
   })
 }
