@@ -72,7 +72,6 @@ export enum PATHS {
   EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
   EDIT_ORDER_ITEM_BY_ID = '/supper/edit/order/:supperGroupId/:itemId',
   ADD_ITEM = '/supper/order',
-  ADD_ITEM_BY_ID = '/supper/order/:orderId/add/:foodId',
   ADD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
 }
 
