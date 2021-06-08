@@ -303,7 +303,7 @@ export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) =
 
 export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
-  const specificPost = JSON.parse(response.data)
+  const specificPost = JSON.parse(response.data.data)
 
   const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, profilePic } = specificPost
   const newPost = {
@@ -318,6 +318,7 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
     createdAt: createdAt,
     profilePic: profilePic,
   }
+  console.log(newPost)
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
     viewPost: newPost,

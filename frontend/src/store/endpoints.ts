@@ -17,11 +17,11 @@ export enum ENDPOINTS {
   FRIEND = '/friend',
 
   // FACILITY
-  FACILITY_LIST = '/facilities/all',
-  FACILITY = '/facility',
+  FACILITY_LIST = '/facilities',
+  FACILITY = '/facilities',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
-  VIEW_BOOKING = '/booking',
+  VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
@@ -57,7 +57,7 @@ export enum ENDPOINTS {
   LESSON_DETAILS = '/lesson',
 
   CCA_DETAILS = '/cca',
-  ALL_CCAS = '/cca/all',
+  ALL_CCAS = '/cca',
   CCA_MEMBER = '/user_CCA',
 
   EVENT_DETAILS = '/event',
