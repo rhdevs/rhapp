@@ -405,8 +405,8 @@ export default function UserCreateOrder() {
                           background: errors2.splitDeliveryFees && '#ffd1d1',
                         }}
                       >
-                        <Radio value={'equal'}>Equal</Radio>
-                        <Radio value={'Proportional'}>Proportional</Radio>
+                        <Radio value={SplitACMethod.EQUAL}>Equal</Radio>
+                        <Radio value={SplitACMethod.PROPORTIONAL}>Proportional</Radio>
                       </StyledRadioButtons>
                     )}
                   />
