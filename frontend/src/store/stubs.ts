@@ -205,7 +205,7 @@ export const foodList: Food[] = [
   {
     foodId: '12345364832764134',
     comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
-    cancelAction: CancelAction.CANCEL,
+    cancelAction: CancelAction.REMOVE,
     quantity: 1,
     foodMenuId: 'i3572f8whff582842',
     restaurantId: 'jkhw8237429dh8wqe',

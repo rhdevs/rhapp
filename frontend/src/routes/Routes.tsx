@@ -51,14 +51,14 @@ export enum PATHS {
   USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
   USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
   USER_SUPPER_GROUP_CREATE_ORDER = '/supper/create/order',
-  USER_JOIN_ORDER_MAIN_PAGE = '/supper/join/order',
-  USER_JOIN_ORDER_MAIN_PAGE_BY_ID = '/supper/join/order/:supperGroupId',
+  JOIN_ORDER_MAIN_PAGE = '/supper/join/order',
+  JOIN_ORDER_MAIN_PAGE_BY_ID = '/supper/join/order/:supperGroupId',
   USER_SUPPER_GROUP_PLACE_ORDER = '/supper',
   USER_SUPPER_GROUP_PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
-  VIEW_ORDER = '/supper/view/owner/order',
-  VIEW_ORDER_BY_ID = '/supper/view/owner/order/:supperGroupId',
+  VIEW_ORDER = '/supper/view/order',
+  VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
   USER_VIEW_ORDER = '/supper/view/user/order',
   USER_VIEW_ORDER_BY_ID = '/supper/view/user/order/:supperGroupId',
   VIEW_CART = '/supper/view/cart',
@@ -116,7 +116,7 @@ const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
 const UserCreateOrder = React.lazy(() => import(/* webpackChunckName: "UserCreateOrder" */ './Supper/UserCreateOrder'))
-const UserJoinOrder = React.lazy(() => import(/* webpackChunckName: "UserJoinOrder" */ './Supper/UserJoinOrder'))
+const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ './Supper/JoinOrder'))
 const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
@@ -173,8 +173,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
-            <PrivateRoute exact path={PATHS.USER_JOIN_ORDER_MAIN_PAGE_BY_ID} component={UserJoinOrder} />
-            <PublicRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER_BY_ID} component={UserPlaceOrder} />
+            <PublicRoute exact path={PATHS.JOIN_ORDER_MAIN_PAGE_BY_ID} component={JoinOrder} />
+            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER_BY_ID} component={UserPlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />

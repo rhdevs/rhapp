@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { HistoryOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
+import SupperGroupHistory from '../../assets/supper/SupperGroupHistory.svg'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import SearchBar from '../../components/Mobile/SearchBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
@@ -18,6 +18,7 @@ import {
 } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
+import LoadingSpin from '../../components/LoadingSpin'
 
 const Background = styled.div`
   height: 100vh;
@@ -47,12 +48,25 @@ const NoSupperGroupText = styled.text`
   margin-top: 2rem;
 `
 
+const SupperGroupHistoryImg = styled.img`
+  width: 2.5rem;
+  margin: 0 0 auto auto;
+`
+
 export default function Supper() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { searchValue, searchedSupperGroups, allSupperGroups } = useSelector((state: RootState) => state.supper)
+  const { searchValue, searchedSupperGroups, allSupperGroups, isLoading } = useSelector(
+    (state: RootState) => state.supper,
+  )
 
-  const rightIcon = <HistoryOutlined onClick={() => history.push(`${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`)} />
+  const rightIcon = (
+    <SupperGroupHistoryImg
+      src={SupperGroupHistory}
+      alt={'My Supper Groups'}
+      onClick={() => history.push(`${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`)}
+    />
+  )
 
   const onChange = (input: string) => {
     console.log(input)
@@ -76,30 +90,49 @@ export default function Supper() {
   return (
     <Background>
       <TopNavBar title="Supper Order" rightComponent={rightIcon} />
-      <SearchBar placeholder="Search for restaurants!" value={searchValue} onChange={onChange} />
-      <SupperGroupContainer>
-        {supperGroups ? (
-          supperGroups.map((supperGroup, index) => {
-            return (
-              <MainSGCard
-                key={index}
-                title={supperGroup.supperGroupName}
-                time={unixTo12HourTime(supperGroup.closingTime)}
-                users={supperGroup.numOrders}
-                orderId={readableSupperGroupId(supperGroup.supperGroupId)}
-              />
-            )
-          })
-        ) : searchValue ? (
-          <NoSupperGroupText>No supper groups found.</NoSupperGroupText>
-        ) : (
-          <NoSupperGroupText>Hungry? Start a supper group!</NoSupperGroupText>
-        )}
-      </SupperGroupContainer>
-      <PlusButtonDiv>
-        <PlusButton onClick={() => history.push(PATHS.USER_SUPPER_GROUP_CREATE_ORDER)} />
-      </PlusButtonDiv>
-      <BottomNavBar />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SearchBar placeholder="Search for restaurants!" value={searchValue} onChange={onChange} />
+          <SupperGroupContainer>
+            {supperGroups ? (
+              supperGroups.map((supperGroup, index) => {
+                const onClick = () => {
+                  if (
+                    supperGroup.ownerId === localStorage.userID ||
+                    supperGroup.userIdList.includes(localStorage.userID)
+                  ) {
+                    //user is owner or already has an ongoing order
+                    history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
+                  } else {
+                    //new SG to user
+                    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup.supperGroupId}`)
+                  }
+                }
+                return (
+                  <MainSGCard
+                    key={index}
+                    title={supperGroup.supperGroupName}
+                    time={unixTo12HourTime(supperGroup.closingTime)}
+                    users={supperGroup.numOrders}
+                    orderId={readableSupperGroupId(supperGroup.supperGroupId)}
+                    onClick={onClick}
+                  />
+                )
+              })
+            ) : searchValue ? (
+              <NoSupperGroupText>No supper groups found.</NoSupperGroupText>
+            ) : (
+              <NoSupperGroupText>Hungry? Start a supper group!</NoSupperGroupText>
+            )}
+          </SupperGroupContainer>
+          <PlusButtonDiv>
+            <PlusButton onClick={() => history.push(PATHS.USER_SUPPER_GROUP_CREATE_ORDER)} />
+          </PlusButtonDiv>
+          <BottomNavBar />
+        </>
+      )}
     </Background>
   )
 }

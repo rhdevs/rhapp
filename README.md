@@ -63,7 +63,6 @@ More Details coming soon! :-)
 * [Python Flask](https://flask.palletsprojects.com/en/1.1.x/)
 * [React with TS](https://reactjs.org/)
 * [Redux](https://react-redux.js.org/introduction/quick-start)
-* [PostgreSQL(?)](https://www.postgresql.org/)
 
 ### About Us
 We are a CCA from Raffles Hall, National University of Singapore. Frustrated by the modernisation efforts by the nature of a gigantuan organisation, we've decided to use our knowledge and skills to ease our day-to-day life in the hostel.

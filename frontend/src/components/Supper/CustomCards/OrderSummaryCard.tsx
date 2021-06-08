@@ -2,12 +2,13 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { CollatedOrder, Food, Order } from '../../../store/supper/types'
-import useSnackbar from '../../../hooks/useSnackbar'
 import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
 import EmptyCart from '../../../assets/EmptyCart.svg'
 import { OpenUserTelegram } from '../../TelegramShareButton'
+import { useDispatch } from 'react-redux'
+import { setFoodId } from '../../../store/supper/action'
 
 const EmptyCartContainer = styled.div`
   display: flex;
@@ -55,8 +56,9 @@ const EmptyCartImg = styled.img`
 type Props = {
   isEditable?: boolean
   foodList?: Food[]
-  onCancelOrderClick?: (arg0: boolean) => void
+  onDeleteGroupClick?: (arg0: boolean) => void
   onCloseOrderClick?: (arg0: boolean) => void
+  onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   orderByUser?: boolean
   orderList?: Order[]
   margin?: string
@@ -64,6 +66,8 @@ type Props = {
 }
 
 export const OrderSummaryCard = (props: Props) => {
+  const dispatch = useDispatch()
+
   const bottomButtons = () => {
     return (
       props.isEditable && (
@@ -80,7 +84,7 @@ export const OrderSummaryCard = (props: Props) => {
               defaultButtonColor="transparent"
               defaultTextColor="#de5f4c"
               buttonWidth="120px"
-              onButtonClick={props.onCancelOrderClick}
+              onButtonClick={props.onDeleteGroupClick}
               isFlipButton={false}
               border="2px solid #de5f4c"
             />
@@ -99,8 +103,6 @@ export const OrderSummaryCard = (props: Props) => {
       )
     )
   }
-
-  const [success] = useSnackbar('success')
 
   const cardContent = () => {
     if (props.collatedOrder || props.collatedOrder === null) {
@@ -188,9 +190,9 @@ export const OrderSummaryCard = (props: Props) => {
                         isEditable={props.isEditable}
                         comments={food.comments}
                         foodUserId={order.user.userID}
-                        onDeleteClick={() => {
-                          console.log('Deleted food!') //TODO: Delete food item from list!
-                          success('Successfully Deleted Item!')
+                        onDeleteClick={(e) => {
+                          dispatch(setFoodId(food.foodId))
+                          props.onDeleteClick && props.onDeleteClick(e)
                         }}
                         cancelAction={food.cancelAction}
                       />
@@ -233,9 +235,9 @@ export const OrderSummaryCard = (props: Props) => {
                   customisations={customisations}
                   isEditable={props.isEditable}
                   comments={food.comments}
-                  onDeleteClick={() => {
-                    console.log('Deleted food!') //TODO: Delete food item from list!
-                    success('Successfully Deleted Item!')
+                  onDeleteClick={(e) => {
+                    dispatch(setFoodId(food.foodId))
+                    props.onDeleteClick && props.onDeleteClick(e)
                   }}
                   cancelAction={food.cancelAction}
                 />
@@ -247,9 +249,5 @@ export const OrderSummaryCard = (props: Props) => {
       }
     }
   }
-  return (
-    <MainCard margin={props.margin} minHeight="10rem">
-      {cardContent()}
-    </MainCard>
-  )
+  return <MainCard margin={props.margin}>{cardContent()}</MainCard>
 }

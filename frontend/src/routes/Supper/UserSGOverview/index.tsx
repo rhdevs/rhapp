@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -30,16 +30,23 @@ const TabsContentContainer = styled.div`
 `
 
 export default function UserSGOverview() {
-  const param = useParams<{ section: string }>()
+  const params = useParams<{ section: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { joinedSupperGroupHistory, supperGroupHistory } = useSelector((state: RootState) => state.supper)
 
+  let section = params.section
+  if (!(params.section === 'created' || params.section === 'joined')) {
+    section = 'created'
+    history.replace(`${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`)
+  }
+
   const clickedHistorySection =
-    param.section === 'created'
+    section === 'created'
       ? supperGroupHistory.length
         ? supperGroupHistory
         : null
-      : param.section === 'joined'
+      : section === 'joined'
       ? joinedSupperGroupHistory.length
         ? joinedSupperGroupHistory
         : null
@@ -51,6 +58,7 @@ export default function UserSGOverview() {
         ? clickedHistorySection.map((supperGroup, index) => {
             return (
               <MainSGCard
+                onClick={() => history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)}
                 key={index}
                 title={supperGroup.supperGroupName}
                 time={unixTo12HourTime(supperGroup.closingTime)}
@@ -66,7 +74,7 @@ export default function UserSGOverview() {
   const onCreatedClick = `${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`
   const onJoinedClick = `${PATHS.USER_SUPPER_GROUP_OVERVIEW}/joined`
 
-  const key = param.section === 'created' ? '1' : '2'
+  const key = section === 'created' ? '1' : '2'
 
   useEffect(() => {
     dispatch(getSupperHistory(localStorage.userID))
