@@ -109,7 +109,7 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
-  SUPPER = 'supper', //'supper',
+  SUPPER = 'supper',
 }
 
 export const DOMAIN_URL = {
@@ -129,7 +129,6 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappsocial.rhdevs.repl.co'
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
-  //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappfacilities.rhdevs.repl.co'
@@ -169,7 +168,6 @@ async function makeRequest(
           ? '//rhappsocial.rhdevs.repl.co'
           : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
-    //TODO: update with supper request url
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
