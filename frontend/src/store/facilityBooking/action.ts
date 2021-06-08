@@ -23,7 +23,6 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
         facilityList: data,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
-      console.log(data)
       dispatch(SetIsLoading(false))
     })
 }
