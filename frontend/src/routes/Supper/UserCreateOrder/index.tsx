@@ -25,6 +25,7 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -133,11 +134,11 @@ type FormValues1 = {
 
 type FormValues2 = {
   estDeliveryFee: number
-  splitDeliveryFees: string
+  splitDeliveryFees: SplitACMethod
 }
 
 type FormValues3 = {
-  paymentMethod: string
+  paymentMethod: PaymentInfo[]
   phoneNumber: number
 }
 
@@ -173,30 +174,6 @@ export default function UserCreateOrder() {
     closingTime: Math.round(Date.now() / 1000),
     phoneNumber: 0,
   }
-
-  // const initSupperGroup: SupperGroup = {
-  //   costLimit: 100,
-  //   createdAt: Math.round(Date.now() / 1000),
-  //   currentFoodCost: 0,
-  //   location: 'Carpark',
-  //   numOrders: 0,
-  //   ownerId: 'A1234567B',
-  //   ownerName: '',
-  //   ownerTele: '',
-  //   paymentInfo: [
-  //     { paymentMethod: PaymentMethod.PAYLAH, link: 'http://www.google.com' },
-  //     { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'www.google.com' },
-  //   ],
-  //   restaurantName: Restaurants.MCDONALDS,
-  //   splitAdditionalCost: SplitACMethod.EQUAL,
-  //   status: SupperGroupStatus.OPEN,
-  //   supperGroupId: '',
-  //   supperGroupName: 'TEST',
-  //   totalPrice: 0,
-  //   userIdList: [],
-  //   closingTime: Math.round(Date.now() / 1000),
-  //   phoneNumber: 99999999,
-  // }
 
   const {
     register: register1,
@@ -237,6 +214,7 @@ export default function UserCreateOrder() {
       pmError = 0
       clearErrors3('paymentMethod')
       setValue3('paymentMethod', selectedPaymentMethod)
+      console.log('selectedPaymentMethod', selectedPaymentMethod)
     }
   }, [selectedPaymentMethod])
 
@@ -260,10 +238,11 @@ export default function UserCreateOrder() {
     console.log(unixTo12HourTime(epochClosingTime))
     setValue1('closingTime', epochClosingTime)
     clearErrors1('closingTime')
-    updatedSPInfo = { ...supperGroup, closingTime: epochClosingTime }
+    updatedSPInfo = { ...updatedSPInfo, closingTime: epochClosingTime }
   }
 
   const onClick1 = () => {
+    updatedSPInfo = { ...supperGroup }
     setValue1('restaurant', selectedRestaurant)
     console.log(selectedRestaurant)
     if (priceLimit > 0 && hasMaxPrice) {
@@ -271,36 +250,39 @@ export default function UserCreateOrder() {
     }
     handleSubmit1((data: FormValues1) => {
       updatedSPInfo = {
-        ...supperGroup,
+        ...updatedSPInfo,
         supperGroupName: data.supperGroupName,
         restaurantName: data.restaurant,
       }
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
       }
-      setOrder(updatedSPInfo)
       setCount(count + 1)
       console.log('firstSubmit', updatedSPInfo)
+      dispatch(setOrder(updatedSPInfo))
     })()
   }
 
   const onClick2 = () => {
+    updatedSPInfo = { ...supperGroup }
     handleSubmit2((data: FormValues2) => {
+      console.log('updatedSPInfo', updatedSPInfo)
       updatedSPInfo = {
-        ...supperGroup,
+        ...updatedSPInfo,
         additionalCost: data.estDeliveryFee,
-        SplitAdditionalCost: data.splitDeliveryFees,
+        splitAdditionalCost: data.splitDeliveryFees,
       }
-      setOrder(updatedSPInfo)
       setCount(count + 1)
       console.log('secondSubmit', updatedSPInfo)
+      dispatch(setOrder(updatedSPInfo))
     })()
   }
 
   const onClick3 = () => {
+    updatedSPInfo = { ...supperGroup }
     handleSubmit3((data: FormValues3) => {
       updatedSPInfo = {
-        ...supperGroup,
+        ...updatedSPInfo,
         paymentInfo: data.paymentMethod,
         phoneNumber: data.phoneNumber,
         ownerId: localStorage.userID,
@@ -343,17 +325,14 @@ export default function UserCreateOrder() {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
         updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
+        console.log('paymentInfo', updatedPI)
       }
       console.log('thirdSubmit', updatedSPInfo)
-      setOrder(updatedSPInfo)
-      console.log(initSupperGroup)
-      console.log(localStorage.userName, localStorage.userTele)
-      //TODO: fix dispatch full updated info to backend
-      const id = dispatch(createSupperGroup(initSupperGroup)) //updatedSPInfo
-      history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${id}`)
-      console.log('success')
+      dispatch(setOrder(updatedSPInfo))
+      dispatch(createSupperGroup(updatedSPInfo))
     })()
-    //history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    //TODO: Make sure supperGroupId returned
+    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -406,8 +385,9 @@ export default function UserCreateOrder() {
                     defaultValue={null}
                     render={() => (
                       <StyledRadioButtons
-                        onChange={(selected) => {
-                          setValue2('splitDeliveryFees', selected.target.value)
+                        onChange={(input) => {
+                          console.log(input.target.value)
+                          setValue2('splitDeliveryFees', input.target.value)
                         }}
                         {...register2('splitDeliveryFees', {
                           required: true,
@@ -417,8 +397,8 @@ export default function UserCreateOrder() {
                           background: errors2.splitDeliveryFees && '#ffd1d1',
                         }}
                       >
-                        <Radio value={1}>Equal</Radio>
-                        <Radio value={2}>Proportional</Radio>
+                        <Radio value={'equal'}>Equal</Radio>
+                        <Radio value={'Proportional'}>Proportional</Radio>
                       </StyledRadioButtons>
                     )}
                   />
