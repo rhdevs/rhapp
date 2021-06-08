@@ -344,6 +344,14 @@ export default function UserCreateOrder() {
     setModalIsOpen(false)
   }
 
+  const onLeftClick = () => {
+    if (supperGroup !== initSupperGroup || supperGroup === null) {
+      setModalIsOpen(true)
+    } else {
+      history.goBack()
+    }
+  }
+
   let pmError = 0
   const abstractSteps = () => {
     {
@@ -480,7 +488,7 @@ export default function UserCreateOrder() {
               <TopNavBar
                 title="Create Order"
                 rightComponent={<UnderlinedButton onClick={onClick1} text="Next" fontWeight={700} />}
-                onLeftClick={() => setModalIsOpen(true)}
+                onLeftClick={() => onLeftClick}
               />
               {modalIsOpen && (
                 <ConfirmationModal
