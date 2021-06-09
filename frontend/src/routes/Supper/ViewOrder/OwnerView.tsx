@@ -124,6 +124,7 @@ const OwnerView = (props: Props) => {
       {closeModalIsOpen && (
         <ConfirmationModal
           title={'Close Order Early?'}
+          description="Close supper group if you are ready to order! No new changes can  be made after supper group is closed."
           hasLeftButton={true}
           leftButtonText={'Confirm'}
           onLeftButtonClick={onCloseConfirmClick}
