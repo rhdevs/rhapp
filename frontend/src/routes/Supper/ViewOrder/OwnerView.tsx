@@ -199,9 +199,7 @@ const OwnerView = (props: Props) => {
             {props.supperGroupIsOpen && (
               <UnderlinedButton
                 onClick={() =>
-                  history.push(
-                    `${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${props.supperGroup?.restaurantId}/order`,
-                  )
+                  history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${props.supperGroup?.restaurantId}/order`)
                 }
                 fontWeight={200}
                 text="Add Item"

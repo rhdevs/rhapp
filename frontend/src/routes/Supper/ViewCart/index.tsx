@@ -128,9 +128,7 @@ const ViewCart = () => {
               <UnderlinedButton
                 text="Add Item"
                 onClick={() =>
-                  history.push(
-                    `${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`,
-                  )
+                  history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
                 }
                 color="red"
                 fontWeight={200}

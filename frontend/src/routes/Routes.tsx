@@ -53,8 +53,8 @@ export enum PATHS {
   USER_SUPPER_GROUP_CREATE_ORDER = '/supper/create/order',
   JOIN_ORDER_MAIN_PAGE = '/supper/join/order',
   JOIN_ORDER_MAIN_PAGE_BY_ID = '/supper/join/order/:supperGroupId',
-  USER_SUPPER_GROUP_PLACE_ORDER = '/supper',
-  USER_SUPPER_GROUP_PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
+  PLACE_ORDER = '/supper',
+  PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
@@ -117,7 +117,7 @@ const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
 const UserCreateOrder = React.lazy(() => import(/* webpackChunckName: "UserCreateOrder" */ './Supper/UserCreateOrder'))
 const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ './Supper/JoinOrder'))
-const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
+const PlaceOrder = React.lazy(() => import(/* webpackChunckName: "PlaceOrder" */ './Supper/PlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const UserViewOrder = React.lazy(() => import(/* webpackChunckName: "UserViewOrder" */ './Supper/UserViewOrder'))
@@ -174,7 +174,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
             <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
             <PublicRoute exact path={PATHS.JOIN_ORDER_MAIN_PAGE_BY_ID} component={JoinOrder} />
-            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_PLACE_ORDER_BY_ID} component={UserPlaceOrder} />
+            <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />

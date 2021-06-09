@@ -121,7 +121,7 @@ const AddItem = () => {
       console.log(newFood)
       //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
-      history.push(`${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
+      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
       console.log(data, count)
     })()
   }
