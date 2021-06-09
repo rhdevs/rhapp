@@ -68,6 +68,14 @@ type Props = {
 export const OrderSummaryCard = (props: Props) => {
   const dispatch = useDispatch()
 
+  const emptyCartImg = () => {
+    return (
+      <EmptyCartContainer>
+        <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
+      </EmptyCartContainer>
+    )
+  }
+
   const bottomButtons = () => {
     return (
       props.isEditable && (
@@ -108,9 +116,9 @@ export const OrderSummaryCard = (props: Props) => {
     if (props.collatedOrder || props.collatedOrder === null) {
       const collatedOrderList = props.collatedOrder?.collatedOrderList ?? []
       return (
-        <MainContainer>
+        <>
           {collatedOrderList.length <= 0 || collatedOrderList === null ? (
-            <EmptyCartContainer>No Orders</EmptyCartContainer>
+            <>{emptyCartImg()}</> //<EmptyCartContainer>No Orders</EmptyCartContainer>
           ) : (
             collatedOrderList.map((food, index) => {
               const customisations: string[] = []
@@ -126,26 +134,20 @@ export const OrderSummaryCard = (props: Props) => {
                   qty={food.quantity}
                   price={food.foodPrice}
                   customisations={customisations}
-                  isEditable={props.isEditable}
                   comments={food.comments}
                   cancelAction={food.cancelAction}
                 />
               )
             })
           )}
-          {bottomButtons()}
-        </MainContainer>
+        </>
       )
     } else if (props.orderByUser) {
-      if ((props.orderList?.length ?? 0) <= 0) {
-        return (
-          <MainContainer>
-            <EmptyCartContainer>
-              <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
-            </EmptyCartContainer>
-            {bottomButtons()}
-          </MainContainer>
-        )
+      if (
+        (props.orderList?.length ?? 0) <= 0 ||
+        props.orderList?.filter((order) => order.foodList.length).length === 0
+      ) {
+        return <>{emptyCartImg()}</>
       } else {
         let orderList = props.orderList
         if (orderList) {
@@ -156,13 +158,17 @@ export const OrderSummaryCard = (props: Props) => {
           }
         }
         return (
-          <MainContainer>
+          <>
             {orderList?.map((order, index) => {
               return (
                 <>
                   <NameText key={index}>
                     {order.user.userID === localStorage.getItem('userID') ? (
-                      'You'
+                      order.foodList.length ? (
+                        'You'
+                      ) : (
+                        <></>
+                      )
                     ) : (
                       <>
                         {order.user.displayName} (@
@@ -202,23 +208,15 @@ export const OrderSummaryCard = (props: Props) => {
                 </>
               )
             })}
-            {bottomButtons()}
-          </MainContainer>
+          </>
         )
       }
     } else {
       if ((props.foodList?.length ?? 0) <= 0) {
-        return (
-          <MainContainer>
-            <EmptyCartContainer>
-              <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
-            </EmptyCartContainer>
-            {bottomButtons()}
-          </MainContainer>
-        )
+        return <>{emptyCartImg()}</>
       } else {
         return (
-          <MainContainer>
+          <>
             {props.foodList?.map((food, index) => {
               const customisations: string[] = []
               food.custom?.map((custom) =>
@@ -243,11 +241,17 @@ export const OrderSummaryCard = (props: Props) => {
                 />
               )
             })}
-            {bottomButtons()}
-          </MainContainer>
+          </>
         )
       }
     }
   }
-  return <MainCard margin={props.margin}>{cardContent()}</MainCard>
+  return (
+    <MainCard margin={props.margin}>
+      <MainContainer>
+        {cardContent()}
+        {bottomButtons()}
+      </MainContainer>
+    </MainCard>
+  )
 }
