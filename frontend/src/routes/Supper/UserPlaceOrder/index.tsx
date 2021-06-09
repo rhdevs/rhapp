@@ -20,11 +20,11 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
 const Background = styled.div`
-  min-height: 100vh;
-  height: 100%;
   width: 100vw;
   background: #fafaf4;
   position: relative;
+  min-height: 100vh;
+  height: 100%;
 `
 const SearchBarContainer = styled.div`
   margin: 8px 20px;

@@ -91,7 +91,7 @@ export enum ENDPOINTS {
   GET_COLLATED_ORDER = '/supper/supperGroup',
   GET_USER_ORDER = '/supper/supperGroup',
   ALL_SUPPER_GROUPS = '/supper/supperGroup',
-  ADD_SUPPER_GROUP = '/supper',
+  ADD_SUPPER_GROUP = '/supper/supperGroup',
   GET_SUPPER_GROUP_BY_ID = '/supper/supperGroup',
   ADD_ORDER = '/supper/order',
   UPDATE_SUPPER_GROUP = '/supper/supperGroupId',
@@ -129,7 +129,6 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappsocial.rhdevs.repl.co'
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
-  //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhappfacilities.rhdevs.repl.co'
@@ -169,7 +168,6 @@ async function makeRequest(
           ? '//rhappsocial.rhdevs.repl.co'
           : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
-    //TODO: update with supper request url
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'

@@ -6,7 +6,6 @@ import messageIcon from '../../../assets/messageIcon.svg'
 import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { DateRange } from 'react-date-range'
 import { useHistory } from 'react-router-dom'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
@@ -30,6 +29,8 @@ import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
+import Calendar from 'react-calendar'
+import './calendar.css'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -46,9 +47,9 @@ const StyledButton = styled(Button)`
 const DateDisplayText = styled.p`
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
-  text-align: right;
-  padding: 10px 23px 0px 0px;
+  font-size: 26px;
+  text-align: left;
+  padding: 10px 0px 0px 23px;
 `
 
 const Icon = styled.img`
@@ -227,8 +228,16 @@ export default function ViewFacility() {
           <>
             {AlertSection}
             <DateSelectorGroup>
-              <DateRange
-                editableDateInputs={true}
+              <Calendar
+                onChange={(value: Date) => {
+                  dispatch(SetIsLoading(true))
+                  dispatch(setViewDates(value, parseInt(params.facilityID)))
+                }}
+                prev2Label={null}
+                next2Label={null}
+              />
+              {/* <DateRange
+                editableDateInputs={false}
                 color="#DE5F4C"
                 onChange={(item) => {
                   dispatch(SetIsLoading(true))
@@ -243,7 +252,7 @@ export default function ViewFacility() {
                     key: 'ViewDateSelection',
                   },
                 ]}
-              />
+              /> */}
             </DateSelectorGroup>
 
             <ActionButtonGroup>
@@ -280,10 +289,7 @@ export default function ViewFacility() {
                 />
               </div> */}
             </ActionButtonGroup>
-            <DateDisplayText>
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]} to{' '}
-              {ViewEndDate.getDate() + ' ' + months[ViewEndDate.getMonth()]}
-            </DateDisplayText>
+            <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
             {!isLoading && (
               <EventsGroup>
                 {facilityBookings?.map((event) => (
@@ -321,9 +327,7 @@ export default function ViewFacility() {
                     </EventRightDisplay>
                   </EventCard>
                 ))}
-                {facilityBookings.length === 0 && (
-                  <p style={{ margin: '23px' }}>There are no bookings in the selected range!</p>
-                )}
+                {facilityBookings.length === 0 && <p style={{ margin: '23px' }}>There are no bookings on this day!</p>}
               </EventsGroup>
             )}
             {isLoading && <LoadingSpin />}

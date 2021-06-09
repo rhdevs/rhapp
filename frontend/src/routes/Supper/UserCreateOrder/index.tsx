@@ -2,21 +2,30 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Radio, Switch, Input } from 'antd'
+import { Radio, Switch, TimePicker } from 'antd'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { setOrder } from '../../../store/supper/action'
-import { SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
+import {
+  PaymentInfo,
+  PaymentMethod,
+  Restaurants,
+  SplitACMethod,
+  SupperGroup,
+  SupperGroupStatus,
+} from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
+import moment from 'moment'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -36,6 +45,7 @@ const HortSectionContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: baseline;
 `
 
 const Header = styled.text`
@@ -44,11 +54,10 @@ const Header = styled.text`
 `
 
 const ErrorText = styled.p`
-  margin: 0;
+  margin: 5px 0 0 0;
   color: #ff837a;
   width: 100%;
   text-align: center;
-  font-size: 17px;
   font-family: 'Inter';
 `
 
@@ -63,7 +72,7 @@ const RedText = styled.text`
 `
 
 const VertInputContainer = styled.div`
-  padding 5px 12px;
+  padding 5px 0 0 0;
 `
 
 const HortInputContainer = styled.div`
@@ -71,21 +80,21 @@ const HortInputContainer = styled.div`
   width: 45%;
 `
 
-const InputText = styled.input`
+const InputText = styled.input<{ flex?: boolean }>`
   width: 80%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
   margin: 5px auto 0 auto;
   height: 35px;
+  ${(props) => props.flex && 'display: flex;'}
 `
 
-const InputBox = styled(Input)`
-  &.ant-input {
-    border-radius: 25px;
-  }
+const StyledTimePicker = styled(TimePicker)`
+  width: 70%;
+  margin: 5px auto 0 auto;
+  display: flex;
 `
-
 const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
@@ -125,11 +134,11 @@ type FormValues1 = {
 
 type FormValues2 = {
   estDeliveryFee: number
-  splitDeliveryFees: string
+  splitDeliveryFees: SplitACMethod
 }
 
 type FormValues3 = {
-  paymentMethod: string
+  paymentMethod: PaymentInfo[]
   phoneNumber: number
 }
 
@@ -163,15 +172,19 @@ export default function UserCreateOrder() {
     totalPrice: 0,
     userIdList: [],
     closingTime: Math.round(Date.now() / 1000),
+    phoneNumber: 0,
   }
 
   const {
     register: register1,
     handleSubmit: handleSubmit1,
     setValue: setValue1,
+    setError: setError1,
     control: control1,
     errors: errors1,
+    clearErrors: clearErrors1,
   } = useForm<FormValues1>()
+
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -179,53 +192,155 @@ export default function UserCreateOrder() {
     control: control2,
     errors: errors2,
   } = useForm<FormValues2>()
+
   const {
     register: register3,
     handleSubmit: handleSubmit3,
     setValue: setValue3,
     errors: errors3,
+    setError: setError3,
+    clearErrors: clearErrors3,
   } = useForm<FormValues3>()
 
   useEffect(() => {
     dispatch(setOrder(initSupperGroup))
   }, [dispatch])
 
+  useEffect(() => {
+    if (selectedPaymentMethod.length === 0 || pmError !== 0) {
+      setValue3('paymentMethod', undefined)
+      setError3('paymentMethod', { type: 'required' })
+    } else {
+      pmError = 0
+      clearErrors3('paymentMethod')
+      setValue3('paymentMethod', selectedPaymentMethod)
+      console.log('selectedPaymentMethod', selectedPaymentMethod)
+    }
+  }, [selectedPaymentMethod])
+
+  let updatedSPInfo
+
+  const onChange = (time, timeString) => {
+    if (!time || !timeString) {
+      setValue1('closingTime', undefined)
+      setError1('closingTime', { type: 'required' })
+      return
+    }
+    console.log(time._d)
+    console.log(timeString)
+    const currentUNIXDate = Math.round(Date.now() / 1000)
+
+    let epochClosingTime = moment(time._d).unix()
+    if (currentUNIXDate > epochClosingTime) {
+      epochClosingTime += 24 * 60 * 60 // Add a day
+    }
+    console.log(epochClosingTime)
+    console.log(unixTo12HourTime(epochClosingTime))
+    setValue1('closingTime', epochClosingTime)
+    clearErrors1('closingTime')
+    updatedSPInfo = { ...updatedSPInfo, closingTime: epochClosingTime }
+  }
+
   const onClick1 = () => {
+    updatedSPInfo = { ...supperGroup }
     setValue1('restaurant', selectedRestaurant)
-    if (priceLimit > 0) {
+    console.log(selectedRestaurant)
+    if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
-    //console.log(watch())
-    handleSubmit1((data) => {
-      //TODO: update store
-      console.log(data)
+    handleSubmit1((data: FormValues1) => {
+      updatedSPInfo = {
+        ...updatedSPInfo,
+        supperGroupName: data.supperGroupName,
+        restaurantName: data.restaurant,
+      }
+      if (hasMaxPrice) {
+        updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
+      }
       setCount(count + 1)
+      console.log('firstSubmit', updatedSPInfo)
+      dispatch(setOrder(updatedSPInfo))
     })()
   }
 
   const onClick2 = () => {
-    handleSubmit2((data) => {
-      //TODO: update store
-      console.log(data)
+    updatedSPInfo = { ...supperGroup }
+    handleSubmit2((data: FormValues2) => {
+      console.log('updatedSPInfo', updatedSPInfo)
+      updatedSPInfo = {
+        ...updatedSPInfo,
+        additionalCost: data.estDeliveryFee,
+        splitAdditionalCost: data.splitDeliveryFees,
+      }
       setCount(count + 1)
+      console.log('secondSubmit', updatedSPInfo)
+      dispatch(setOrder(updatedSPInfo))
     })()
   }
 
   const onClick3 = () => {
-    setValue3('paymentMethod', selectedPaymentMethod)
-    handleSubmit3((data) => {
-      //TODO: update store
-      //TODO: dispatch full updated info to backend
-      //dispatch(createSupperGroup(...))
-      console.log(data)
-      console.log('success')
+    updatedSPInfo = { ...supperGroup }
+    handleSubmit3((data: FormValues3) => {
+      updatedSPInfo = {
+        ...updatedSPInfo,
+        paymentInfo: data.paymentMethod,
+        phoneNumber: data.phoneNumber,
+        ownerId: localStorage.userID,
+      }
+      const initialPI = supperGroup?.paymentInfo
+      const initialPM = supperGroup?.paymentInfo.map((pi) => {
+        return pi.paymentMethod
+      })
+      let newPI: PaymentInfo[] = []
+      const allPaymentMethods = Object.values(PaymentMethod)
+
+      allPaymentMethods
+        ?.filter((pm) => pm !== PaymentMethod.CASH)
+        .map((pm) => {
+          const initialLink = initialPI?.find((pi) => pi.paymentMethod === pm)?.link
+          if (
+            data[`${pm}`] !== initialLink ||
+            !data[`${pm}`] ||
+            (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm))
+          ) {
+            if (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm)) {
+              newPI = newPI.concat({ paymentMethod: pm, link: null })
+              return
+            }
+            if (!data[`${pm}`] && !initialPM?.includes(pm)) {
+              return
+            }
+            newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })
+          }
+        })
+      if (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH, link: null })
+      }
+      if (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH)) {
+        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
+      }
+      if (newPI.length) {
+        //changes were made
+        const updatedPI = selectedPaymentMethod.map((pm) => {
+          return { paymentMethod: pm, link: data[`${pm}`] }
+        })
+        updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
+        console.log('paymentInfo', updatedPI)
+      }
+      console.log('thirdSubmit', updatedSPInfo)
+      dispatch(setOrder(updatedSPInfo))
+      dispatch(createSupperGroup(updatedSPInfo))
     })()
+<<<<<<< HEAD
+    //TODO: Make sure supperGroupId returned
+    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+=======
     history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+>>>>>>> minimain
   }
 
   const onConfirmDiscardClick = () => {
-    //TODO: discard changes
-    // setOrder(initSupperGroup)
+    setOrder(initSupperGroup)
     history.goBack()
   }
 
@@ -233,6 +348,15 @@ export default function UserCreateOrder() {
     setModalIsOpen(false)
   }
 
+  const onLeftClick = () => {
+    if (supperGroup !== initSupperGroup || supperGroup === null) {
+      setModalIsOpen(true)
+    } else {
+      history.goBack()
+    }
+  }
+
+  let pmError = 0
   const abstractSteps = () => {
     {
       switch (count) {
@@ -250,7 +374,7 @@ export default function UserCreateOrder() {
                 <HortInputContainer>
                   <InputText
                     type="number"
-                    placeholder="e.g $3"
+                    placeholder="$$$"
                     name="estDeliveryFee"
                     ref={register2({
                       required: true,
@@ -273,8 +397,9 @@ export default function UserCreateOrder() {
                     defaultValue={null}
                     render={() => (
                       <StyledRadioButtons
-                        onChange={(selected) => {
-                          setValue2('splitDeliveryFees', selected.target.value)
+                        onChange={(input) => {
+                          console.log(input.target.value)
+                          setValue2('splitDeliveryFees', input.target.value)
                         }}
                         {...register2('splitDeliveryFees', {
                           required: true,
@@ -284,8 +409,8 @@ export default function UserCreateOrder() {
                           background: errors2.splitDeliveryFees && '#ffd1d1',
                         }}
                       >
-                        <Radio value={1}>Equal</Radio>
-                        <Radio value={2}>Proportional</Radio>
+                        <Radio value={SplitACMethod.EQUAL}>Equal</Radio>
+                        <Radio value={SplitACMethod.PROPORTIONAL}>Proportional</Radio>
                       </StyledRadioButtons>
                     )}
                   />
@@ -309,14 +434,41 @@ export default function UserCreateOrder() {
                   {...register3('paymentMethod', { required: true })}
                   paymentMethods={paymentMethods}
                 />
-                {errors3.paymentMethod?.type === 'required' && (
-                  <ErrorText>Payment method(s) is/are required.</ErrorText>
-                )}
+                {paymentMethods
+                  .filter((pm) => pm !== PaymentMethod.CASH)
+                  .map((pm) => {
+                    return (
+                      selectedPaymentMethod.includes(pm) && (
+                        <InputText
+                          flex
+                          type="text"
+                          name={pm}
+                          ref={register3({
+                            required: true,
+                            validate: (input) => input.trim().length !== 0,
+                          })}
+                          style={{
+                            borderColor: errors3[`${pm}`] && 'red',
+                            background: errors3[`${pm}`] && '#ffd1d1',
+                          }}
+                          placeholder={pm + ' Link'}
+                        />
+                      )
+                    )
+                  })}
+                {selectedPaymentMethod.filter((pm) => {
+                  if (errors3[`${pm}`]) {
+                    return pmError++
+                  }
+                })}
+                {errors3.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
+                {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
               </VertSectionContainer>
               <VertSectionContainer>
                 <Header>Phone Number {RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputText
+                    flex
                     type="number"
                     placeholder="Phone Number"
                     name="phoneNumber"
@@ -340,7 +492,7 @@ export default function UserCreateOrder() {
               <TopNavBar
                 title="Create Order"
                 rightComponent={<UnderlinedButton onClick={onClick1} text="Next" fontWeight={700} />}
-                onLeftClick={() => setModalIsOpen(true)}
+                onLeftClick={() => onLeftClick}
               />
               {modalIsOpen && (
                 <ConfirmationModal
@@ -357,6 +509,7 @@ export default function UserCreateOrder() {
                 <Header>Order Name{RedAsterisk}</Header>
                 <VertInputContainer>
                   <InputText
+                    flex
                     type="text"
                     placeholder="Order Name"
                     name="supperGroupName"
@@ -389,17 +542,15 @@ export default function UserCreateOrder() {
                   <Controller
                     name="closingTime"
                     control={control1}
-                    defaultValue={Date.now()}
                     rules={{ required: true }}
+                    defaultValue={Date.now()}
                     render={() => (
-                      <InputBox
-                        type="datetime-local"
-                        placeholder="select time"
-                        onChange={(input) => {
-                          console.log(input.target.value)
-                          setValue1('closingTime', input.target.value)
-                        }}
-                        {...register1('closingTime', { required: true, pattern: /^\S+@\S+$/i })}
+                      <StyledTimePicker
+                        use12Hours
+                        format="h:mm a"
+                        onChange={onChange}
+                        name="closingTime"
+                        ref={register1({ required: true })}
                         style={{
                           borderColor: errors1.closingTime && 'red',
                           background: errors1.closingTime && '#ffd1d1',

@@ -289,6 +289,7 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
         type: SUPPER_ACTIONS.GET_ORDER_ID,
         orderId: resp.data.orderId,
       })
+      console.log(resp)
     })
     .catch((err) => {
       console.log(err)
