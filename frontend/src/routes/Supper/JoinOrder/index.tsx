@@ -59,9 +59,7 @@ export default function JoinOrder() {
       <ButtonContainer>
         <Button
           onButtonClick={() =>
-            history.push(
-              `${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`,
-            )
+            history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
           }
           defaultButtonDescription="Join Order"
           stopPropagation={true}
