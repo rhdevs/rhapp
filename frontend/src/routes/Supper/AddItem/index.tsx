@@ -10,7 +10,7 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import { addFoodToOrder, getMenuFood } from '../../../store/supper/action'
+import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import SelectField from './Components/SelectField'
@@ -24,6 +24,7 @@ import {
   SelectText,
   StyledRadioGroup,
 } from './Components/StyledComponents'
+import useSnackbar from '../../../hooks/useSnackbar'
 
 const Background = styled.form`
   width: 100vw;
@@ -63,18 +64,26 @@ const AddItem = () => {
     mode: 'all',
     reValidateMode: 'onChange',
   })
-  const { menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
   const compulsoryFields: Custom[] =
     menuFood?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
 
   useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getMenuFood(params.foodId))
   }, [dispatch])
 
   const onSubmit = (e) => {
     e.preventDefault()
+    const totalUserFoodCost = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count
+    const newCurrentCost = (supperGroup?.currentFoodCost ?? 0) + totalUserFoodCost
+    if (newCurrentCost > (supperGroup?.costLimit ?? 0)) {
+      const [error] = useSnackbar('error')
+      error('Supper group price limit exceeded, unable to add item.')
+      return
+    }
     handleSubmit((data) => {
       const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
