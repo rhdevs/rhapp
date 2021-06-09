@@ -51,9 +51,13 @@ export const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
   min-height: 25px;
 `
 
-export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
+export const CheckboxMainContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
+`
+
+export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
   width: fit-content;
   cursor: pointer;
   min-height: 30px;
@@ -62,10 +66,13 @@ export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
 `
 
 export const OptionText = styled.text`
-  flex: 95%;
   font-family: Inter;
   font-style: normal;
   font-weight: 200;
   font-size: 14px;
   margin: 0 0 3px 2px;
+`
+
+export const FlexDiv = styled.div<{ flex: number }>`
+  flex: ${(props) => props.flex}%;
 `
