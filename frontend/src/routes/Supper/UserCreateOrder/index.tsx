@@ -10,14 +10,7 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
-import {
-  PaymentInfo,
-  PaymentMethod,
-  Restaurants,
-  SplitACMethod,
-  SupperGroup,
-  SupperGroupStatus,
-} from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +18,6 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -331,12 +323,7 @@ export default function UserCreateOrder() {
       dispatch(setOrder(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
     })()
-<<<<<<< HEAD
-    //TODO: Make sure supperGroupId returned
-    history.push(`${PATHS.USER_JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
-=======
     history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
->>>>>>> minimain
   }
 
   const onConfirmDiscardClick = () => {

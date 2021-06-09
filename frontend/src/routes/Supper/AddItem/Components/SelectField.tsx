@@ -13,7 +13,9 @@ import {
   RedText,
   SelectText,
   StyledRadioGroup,
+  CheckboxMainContainer,
   CheckboxContainer,
+  FlexDiv,
 } from './StyledComponents'
 import { RadioButton } from '../../../../components/RadioButton'
 import { CustomData } from '..'
@@ -196,7 +198,7 @@ const MultipleOptions = ({
   const [isSelected, setIsSelected] = useState<boolean>(false)
   const isDisabled = custom.max ? (watch(`${custom.title}`) ?? []).length >= custom.max : false
   return (
-    <div style={{ width: '100%' }}>
+    <CheckboxMainContainer>
       <CheckboxContainer
         {...register(`${custom.title}`, { required: isCompulsory })}
         key={index}
@@ -213,19 +215,17 @@ const MultipleOptions = ({
         }}
         isHidden={index >= 3 && !isExpanded}
       >
-        <Checkbox
-          flexPercentage={5}
-          margin="auto 8px auto 0"
-          sizePercentage={0.9}
-          isChecked={isSelected}
-          isDisabled={isDisabled}
-        />
-        <OptionText>
-          {option.name}
-          {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
-        </OptionText>
+        <FlexDiv flex={5}>
+          <Checkbox margin="auto 8px auto 0" sizePercentage={0.9} isChecked={isSelected} isDisabled={isDisabled} />
+        </FlexDiv>
+        <FlexDiv flex={95}>
+          <OptionText>
+            {option.name}
+            {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
+          </OptionText>
+        </FlexDiv>
       </CheckboxContainer>
-    </div>
+    </CheckboxMainContainer>
   )
 }
 
