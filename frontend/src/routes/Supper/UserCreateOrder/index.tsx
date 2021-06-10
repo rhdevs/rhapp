@@ -402,7 +402,7 @@ export default function UserCreateOrder() {
                   <Controller
                     name="splitDeliveryFees"
                     control={control2}
-                    defaultValue={null}
+                    defaultValue={supperGroup?.splitAdditionalCost}
                     render={() => (
                       <StyledRadioButtons
                         onChange={(input) => {
