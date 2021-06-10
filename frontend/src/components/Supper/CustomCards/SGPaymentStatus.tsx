@@ -26,6 +26,7 @@ const StyledText = styled.text`
 
 type Props = {
   supperGroup?: SupperGroup | null
+  margin?: string
 }
 
 export const SGPaymentStatus = (props: Props) => {
@@ -34,7 +35,7 @@ export const SGPaymentStatus = (props: Props) => {
   const buttonText = isExpandAll ? 'Expand all' : 'Collapse all'
 
   return (
-    <MainCard flexDirection="column">
+    <MainCard margin={props.margin} flexDirection="column">
       {props.supperGroup?.orderList && props.supperGroup?.orderList?.length ? (
         <>
           <UnderlinedButton

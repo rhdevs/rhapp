@@ -103,6 +103,7 @@ type Props = {
   collectionTime?: string
   paymentMethod?: PaymentInfo[]
   isOwner?: boolean
+  isEditable?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   cancelReason?: string
 }
@@ -183,7 +184,12 @@ export const SGCardWithStatus = (props: Props) => {
       )}
       {props.isOwner ? (
         <OwnerButtonContainer>
-          <UnderlinedButton onClick={props.onClick} text="Update Order Details" color="red" fontSize="14px" />
+          <UnderlinedButton
+            onClick={(e) => props.isEditable && props.onClick && props.onClick(e)}
+            text="Update Order Details"
+            color={props.isEditable ? 'red' : '#00000073'}
+            fontSize="14px"
+          />
         </OwnerButtonContainer>
       ) : (
         <></>
