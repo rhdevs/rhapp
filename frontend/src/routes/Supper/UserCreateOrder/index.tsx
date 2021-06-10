@@ -32,6 +32,7 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -176,7 +177,7 @@ export default function UserCreateOrder() {
     supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
-    closingTime: Math.round(Date.now() / 1000),
+    closingTime: Math.round(Date.now() / 1000), //1623345120
     phoneNumber: 0,
   }
 
@@ -196,6 +197,7 @@ export default function UserCreateOrder() {
     setValue: setValue2,
     control: control2,
     errors: errors2,
+    clearErrors: clearErrors2,
   } = useForm<FormValues2>()
 
   const {
@@ -407,6 +409,7 @@ export default function UserCreateOrder() {
                       <StyledRadioButtons
                         onChange={(input) => {
                           console.log(input.target.value)
+                          clearErrors2('splitDeliveryFees')
                           setValue2('splitDeliveryFees', input.target.value)
                         }}
                         {...register2('splitDeliveryFees', {
@@ -554,19 +557,20 @@ export default function UserCreateOrder() {
               <VertSectionContainer>
                 <Header>Closing Time{RedAsterisk}</Header>
                 <VertInputContainer>
+                  {console.log(supperGroup?.closingTime)}
                   <Controller
                     name="closingTime"
                     control={control1}
                     rules={{ required: true }}
-                    defaultValue={Date.now()}
+                    defaultValue={null}
                     render={() => (
                       <StyledTimePicker
                         use12Hours
                         format="h:mm a"
                         onChange={onChange}
                         name="closingTime"
-                        defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
                         ref={register1({ required: true })}
+                        defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
                         style={{
                           borderColor: errors1.closingTime && 'red',
                           background: errors1.closingTime && '#ffd1d1',
