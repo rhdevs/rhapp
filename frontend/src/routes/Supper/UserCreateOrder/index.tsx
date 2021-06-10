@@ -9,8 +9,22 @@ import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { createSupperGroup, setIsLoading, setOrder, unixTo12HourTime } from '../../../store/supper/action'
-import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import {
+  createSupperGroup,
+  setIsLoading,
+  setCounter,
+  setOrder,
+  unixTo12HourTime,
+  unixToFormattedTime,
+} from '../../../store/supper/action'
+import {
+  PaymentInfo,
+  PaymentMethod,
+  Restaurants,
+  SplitACMethod,
+  SupperGroup,
+  SupperGroupStatus,
+} from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,7 +32,6 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -138,7 +151,7 @@ type FormValues3 = {
 export default function UserCreateOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
+  const { counter, isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
     (state: RootState) => state.supper,
   )
   const [count, setCount] = useState(1)
@@ -199,6 +212,7 @@ export default function UserCreateOrder() {
   }, [dispatch])
 
   useEffect(() => {
+    dispatch(setCounter(counter + 1))
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
       setValue3('paymentMethod', undefined)
       setError3('paymentMethod', { type: 'required' })
@@ -280,7 +294,7 @@ export default function UserCreateOrder() {
         ownerId: localStorage.userID,
       }
       const initialPI = supperGroup?.paymentInfo
-      const initialPM = supperGroup?.paymentInfo.map((pi) => {
+      const initialPM = supperGroup?.paymentInfo?.map((pi) => {
         return pi.paymentMethod
       })
       let newPI: PaymentInfo[] = []
@@ -325,7 +339,11 @@ export default function UserCreateOrder() {
       dispatch(createSupperGroup(updatedSPInfo))
       setIsLoading(false)
     })()
-    isLoading ?? history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    setIsLoading(true)
+    const addedSG = supperGroup
+    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${addedSG?.supperGroupId}`)
+    setIsLoading(false)
+    //isLoading ?? history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -365,6 +383,7 @@ export default function UserCreateOrder() {
                     type="number"
                     placeholder="$$$"
                     name="estDeliveryFee"
+                    defaultValue={supperGroup?.additionalCost}
                     ref={register2({
                       required: true,
                       valueAsNumber: true,
@@ -393,6 +412,7 @@ export default function UserCreateOrder() {
                         {...register2('splitDeliveryFees', {
                           required: true,
                         })}
+                        defaultValue={supperGroup?.splitAdditionalCost}
                         style={{
                           borderColor: errors2.splitDeliveryFees && 'red',
                           background: errors2.splitDeliveryFees && '#ffd1d1',
@@ -502,6 +522,7 @@ export default function UserCreateOrder() {
                     type="text"
                     placeholder="Order Name"
                     name="supperGroupName"
+                    defaultValue={supperGroup?.supperGroupName ?? ''}
                     ref={register1({
                       required: true,
                       validate: (input) => input.trim().length !== 0,
@@ -521,7 +542,12 @@ export default function UserCreateOrder() {
                   control={control1}
                   rules={{ required: true }}
                   defaultValue={null}
-                  render={() => <RestaurantBubbles defaultRestaurant={"McDonald's"} restaurantList={restaurantList} />}
+                  render={() => (
+                    <RestaurantBubbles
+                      defaultRestaurant={supperGroup?.restaurantName ?? Restaurants.MCDONALDS}
+                      restaurantList={restaurantList}
+                    />
+                  )}
                 />
                 {errors1.restaurant?.type === 'required' && <ErrorText>Selecting a restaurant is required.</ErrorText>}
               </VertSectionContainer>
@@ -539,6 +565,7 @@ export default function UserCreateOrder() {
                         format="h:mm a"
                         onChange={onChange}
                         name="closingTime"
+                        defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
                         ref={register1({ required: true })}
                         style={{
                           borderColor: errors1.closingTime && 'red',
@@ -566,7 +593,7 @@ export default function UserCreateOrder() {
                     <Controller
                       name="maxPrice"
                       control={control1}
-                      defaultValue={null}
+                      defaultValue={supperGroup?.costLimit}
                       render={() => <MaxPriceFixer />}
                     />
                   </FixerContainer>
