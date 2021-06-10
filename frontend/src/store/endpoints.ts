@@ -13,7 +13,7 @@ export enum ENDPOINTS {
   USER_PROFILE = '/profile/',
   USER_PROFILE_PICTURE = '/profile/picture',
   EDIT_PROFILE = '/profiles',
-  USER_CCAS = '/user_CCA', //TODO make backend route
+  USER_CCAS = '/user_CCA',
   FRIEND = '/friend',
 
   // FACILITY
