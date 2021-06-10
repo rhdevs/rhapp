@@ -36,7 +36,7 @@ export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Di
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: { ...resp.data, status: SupperGroupStatus.COMPLETED },
+        supperGroup: resp.data,
       })
     })
     .catch((err) => {
