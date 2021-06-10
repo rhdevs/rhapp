@@ -74,6 +74,7 @@ const ViewOrder = () => {
           supperGroup={supperGroup}
           collatedOrder={collatedOrder}
           supperGroupIsCompleted={supperGroupIsCompleted}
+          supperGroupIsCancelled={supperGroupIsCancelled}
         />
       ) : (
         <UserView

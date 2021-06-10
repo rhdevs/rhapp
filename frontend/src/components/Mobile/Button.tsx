@@ -1,8 +1,30 @@
 import React, { useState } from 'react'
+
+import styled from 'styled-components'
 import { Button as AntdButton } from 'antd'
 import { message } from 'antd'
 
+const StyledDescriptionText = styled.text<{ descriptionStyle?: React.CSSProperties }>`
+  ${(props) =>
+    props.descriptionStyle &&
+    `font-style: normal;
+  font-weight: 200;
+  font-size: 17px;
+`}
+`
+
+const MainContainer = styled.div<{ center?: boolean; containerPadding?: string }>`
+  ${(props) =>
+    props.center &&
+    `display: flex;
+    justify-content: center;
+    margin: 0 auto;`}
+  ${(props) => props.containerPadding && `padding: ${props.containerPadding};`}
+`
+
 type Props = {
+  center?: boolean
+  containerPadding?: string
   buttonIsPressed?: boolean
   hasSuccessMessage?: boolean
   stopPropagation: boolean
@@ -80,34 +102,39 @@ function Button(props: Props) {
   }
 
   return (
-    <AntdButton
-      htmlType={props.htmlType ?? 'button'}
-      danger
-      style={
-        props.style ?? {
-          background: buttonColour,
-          color: textColour,
-          borderRadius: '5px',
-          border: props.border ? props.border : props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
-          width: props.buttonWidth ? props.buttonWidth : '',
-          height: props.buttonHeight ? props.buttonHeight : '',
+    <MainContainer center={props.center} containerPadding={props.containerPadding}>
+      <AntdButton
+        htmlType={props.htmlType ?? 'button'}
+        danger
+        style={
+          props.style ?? {
+            background: buttonColour,
+            color: textColour,
+            borderRadius: '5px',
+            border: props.border ? props.border : props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
+            width: props.buttonWidth ? props.buttonWidth : '',
+            height: props.buttonHeight ? props.buttonHeight : '',
+          }
         }
-      }
-      onClick={(e) => {
-        {
-          props.stopPropagation && e.stopPropagation()
-        }
-        buttonIsPressed ? successfulRemove() : successfulAdd()
-        setButtonColour(buttonColourChooser(buttonIsPressed))
-        setTextColour(textColourChooser(buttonIsPressed))
-        setButtonIsPressed(!buttonIsPressed)
-        if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
-      }}
-    >
-      <text style={props.descriptionStyle ? props.descriptionStyle : undefined}>
-        {buttonDescriptionChooser(buttonIsPressed)}
-      </text>
-    </AntdButton>
+        onClick={(e) => {
+          {
+            props.stopPropagation && e.stopPropagation()
+          }
+          buttonIsPressed ? successfulRemove() : successfulAdd()
+          setButtonColour(buttonColourChooser(buttonIsPressed))
+          setTextColour(textColourChooser(buttonIsPressed))
+          setButtonIsPressed(!buttonIsPressed)
+          if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
+        }}
+      >
+        <StyledDescriptionText
+          descriptionStyle={props.descriptionStyle}
+          style={props.descriptionStyle ? props.descriptionStyle : undefined}
+        >
+          {buttonDescriptionChooser(buttonIsPressed)}
+        </StyledDescriptionText>
+      </AntdButton>
+    </MainContainer>
   )
 }
 

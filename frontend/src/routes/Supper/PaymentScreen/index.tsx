@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import LoadingSpin from '../../../components/LoadingSpin'
 
+import LoadingSpin from '../../../components/LoadingSpin'
+import Button from '../../../components/Mobile/Button'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SGPaymentStatus } from '../../../components/Supper/CustomCards/SGPaymentStatus'
-import { getSupperGroupById } from '../../../store/supper/action'
+import { deleteSupperGroup, getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -17,34 +20,21 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
-const BottomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-  margin: 0 auto;
-  padding-bottom: 3rem;
-  align-items: flex-end;
-`
-
-const SubContainer = styled.div`
-  width: 13rem;
-  display: flex;
-  justify-content: space-between;
-  margin: 7px 10px;
-`
-
-const StyledText = styled.text`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
 const PaymentScreen = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+
+  const onCancelClick = () => {
+    setModalIsOpen(false)
+  }
+
+  const onConfirmEndClick = () => {
+    dispatch(deleteSupperGroup(params.supperGroupId))
+    history.push(`${PATHS.SUPPER_HOME}`)
+  }
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -57,25 +47,29 @@ const PaymentScreen = () => {
         <LoadingSpin />
       ) : (
         <>
-          <SGPaymentStatus supperGroup={supperGroup} />
-          <BottomContainer>
-            <SubContainer>
-              <StyledText>Total Price</StyledText>
-              <StyledText>${(supperGroup?.currentFoodCost ?? 0).toFixed(2)}</StyledText>
-            </SubContainer>
-            <SubContainer>
-              <StyledText>Delivery Fee</StyledText>
-              <StyledText>${(supperGroup?.additionalCost ?? 0).toFixed(2)}</StyledText>
-            </SubContainer>
-            <SubContainer>
-              <StyledText>
-                <b>Total</b>
-              </StyledText>
-              <StyledText>
-                <b>${(supperGroup?.totalPrice ?? 0).toFixed(2)}</b>
-              </StyledText>
-            </SubContainer>
-          </BottomContainer>
+          {modalIsOpen && (
+            <ConfirmationModal
+              title="End Supper Group?"
+              description="All order and payment information will be deleted."
+              hasLeftButton={true}
+              leftButtonText={'End'}
+              onLeftButtonClick={onConfirmEndClick}
+              rightButtonText={'Cancel'}
+              onRightButtonClick={onCancelClick}
+            />
+          )}
+          <SGPaymentStatus margin="5px 23px" supperGroup={supperGroup} />
+          <Button
+            center
+            containerPadding="2rem 0"
+            stopPropagation
+            defaultButtonDescription="End Supper Group"
+            onButtonClick={() => {
+              console.log('Open modal')
+              setModalIsOpen(!modalIsOpen)
+            }}
+            isFlipButton={false}
+          />
         </>
       )}
     </MainContainer>

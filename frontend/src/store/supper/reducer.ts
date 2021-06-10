@@ -9,6 +9,7 @@ import {
   SupperGroup,
   PaymentMethod,
   SupperGroupStatus,
+  PaymentUpdateInfo,
 } from '../supper/types'
 import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
@@ -45,6 +46,7 @@ const initialState = {
   counter: 0,
   foodId: undefined,
   orderId: undefined,
+  paymentUpdateArray: [],
 }
 
 type State = {
@@ -79,6 +81,7 @@ type State = {
   counter: number
   foodId?: string
   orderId?: string
+  paymentUpdateArray: PaymentUpdateInfo[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -187,6 +190,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_ORDER_ID: {
       return { ...state, orderId: action.orderId }
+    }
+    case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {
+      return { ...state, paymentUpdateArray: action.paymentUpdateArray }
     }
     default:
       return state

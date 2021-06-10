@@ -78,17 +78,12 @@ const StyledText = styled.text`
   line-height: 14px;
 `
 
-const ButtonContainer = styled.div`
-  display: flex;
-  margin: 2.5rem 15px 23px 15px;
-  justify-content: space-around;
-`
-
 type Props = {
   supperGroupIsOpen: boolean
   supperGroup: SupperGroup | null
   collatedOrder: CollatedOrder | null
   supperGroupIsCompleted: boolean
+  supperGroupIsCancelled: boolean
 }
 
 const OwnerView = (props: Props) => {
@@ -167,6 +162,7 @@ const OwnerView = (props: Props) => {
           restaurant={props.supperGroup?.restaurantName as Restaurants}
           restaurantLogo={props.supperGroup?.restaurantLogo}
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
+          isEditable={!(props.supperGroupIsCompleted || props.supperGroupIsCancelled)}
           supperGroupStatus={props.supperGroup?.status}
           location={props.supperGroup?.location}
           collectionTime={unixTo12HourTime(props.supperGroup?.estArrivalTime)}
@@ -178,18 +174,18 @@ const OwnerView = (props: Props) => {
         />
       )}
       {props.supperGroupIsCompleted ? (
-        <ButtonContainer>
-          <Button
-            descriptionStyle={{ width: '100%' }}
-            stopPropagation={true}
-            defaultButtonDescription="Track Payment Progress"
-            buttonWidth="200px"
-            onButtonClick={() => {
-              history.push(`${PATHS.PAYMENT_SCREEN}/${params.supperGroupId}`)
-            }}
-            isFlipButton={false}
-          />
-        </ButtonContainer>
+        <Button
+          center
+          containerPadding="1rem 15px"
+          descriptionStyle={{ width: '100%' }}
+          stopPropagation={true}
+          defaultButtonDescription="Track Payment Progress"
+          buttonWidth="fit-content"
+          onButtonClick={() => {
+            history.push(`${PATHS.PAYMENT_SCREEN}/${params.supperGroupId}`)
+          }}
+          isFlipButton={false}
+        />
       ) : (
         <>
           <SummaryContainer>
