@@ -108,7 +108,6 @@ const AddItem = () => {
           .filter(Boolean)
           .filter((k) => k.name !== undefined) //to remove empty Option objects
 
-        console.log(options)
         return {
           title: customFood.title,
           options: options,

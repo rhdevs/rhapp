@@ -160,18 +160,14 @@ export const UserPaymentStatus = (props: Props) => {
               margin="auto 5px auto 0"
               isChecked={cancelName}
               onClick={() => {
-                console.log(props.hasReceived, props.name, !cancelName, 'checkk')
                 dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
-                // dispatch(updateOrderDetails(props.orderId, { hasReceived: !cancelName }))
                 setCancelName(!cancelName)
               }}
             />
           </CheckboxContainer>
           <NameText
             onClick={() => {
-              console.log(props.hasReceived, props.name, !cancelName, 'namee')
               dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
-              // dispatch(updateOrderDetails(props.orderId, { hasReceived: !cancelName }))
               setCancelName(!cancelName)
             }}
             cancelName={cancelName}

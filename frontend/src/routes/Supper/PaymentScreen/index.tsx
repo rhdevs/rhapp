@@ -65,7 +65,6 @@ const PaymentScreen = () => {
             stopPropagation
             defaultButtonDescription="End Supper Group"
             onButtonClick={() => {
-              console.log('Open modal')
               setModalIsOpen(!modalIsOpen)
             }}
             isFlipButton={false}

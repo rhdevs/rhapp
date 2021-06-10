@@ -46,7 +46,6 @@ const ViewOrder = () => {
   }, [dispatch, supperGroup?.ownerId])
 
   useEffect(() => {
-    console.log(supperGroup?.status)
     dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
     supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
     supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
