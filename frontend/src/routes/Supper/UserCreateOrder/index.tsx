@@ -9,7 +9,7 @@ import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
+import { createSupperGroup, setIsLoading, setOrder, unixTo12HourTime } from '../../../store/supper/action'
 import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
@@ -18,6 +18,7 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -137,7 +138,7 @@ type FormValues3 = {
 export default function UserCreateOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
+  const { isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
     (state: RootState) => state.supper,
   )
   const [count, setCount] = useState(1)
@@ -162,7 +163,6 @@ export default function UserCreateOrder() {
     supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
-    userIdList: [],
     closingTime: Math.round(Date.now() / 1000),
     phoneNumber: 0,
   }
@@ -321,9 +321,11 @@ export default function UserCreateOrder() {
       }
       console.log('thirdSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
+      setIsLoading(true)
       dispatch(createSupperGroup(updatedSPInfo))
+      setIsLoading(false)
     })()
-    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    isLoading ?? history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -336,10 +338,10 @@ export default function UserCreateOrder() {
   }
 
   const onLeftClick = () => {
-    if (supperGroup !== initSupperGroup || supperGroup === null) {
-      setModalIsOpen(true)
-    } else {
+    if (JSON.stringify(supperGroup) === JSON.stringify(initSupperGroup)) {
       history.goBack()
+    } else {
+      setModalIsOpen(true)
     }
   }
 
@@ -479,7 +481,7 @@ export default function UserCreateOrder() {
               <TopNavBar
                 title="Create Order"
                 rightComponent={<UnderlinedButton onClick={onClick1} text="Next" fontWeight={700} />}
-                onLeftClick={() => onLeftClick}
+                onLeftClick={onLeftClick}
               />
               {modalIsOpen && (
                 <ConfirmationModal
