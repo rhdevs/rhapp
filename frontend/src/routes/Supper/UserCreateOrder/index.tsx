@@ -16,6 +16,7 @@ import {
   setOrder,
   unixTo12HourTime,
   unixToFormattedTime,
+  setSelectedPaymentMethod,
 } from '../../../store/supper/action'
 import {
   PaymentInfo,
@@ -135,7 +136,7 @@ const FixerContainer = styled.div`
 type FormValues1 = {
   supperGroupName: string
   restaurant: string
-  closingTime: string
+  closingTime: number
   maxPrice: number
 }
 
@@ -177,7 +178,7 @@ export default function UserCreateOrder() {
     supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
-    closingTime: Math.round(Date.now() / 1000), //1623345120
+    closingTime: 0,
     phoneNumber: 0,
   }
 
@@ -189,6 +190,7 @@ export default function UserCreateOrder() {
     control: control1,
     errors: errors1,
     clearErrors: clearErrors1,
+    reset: reset1,
   } = useForm<FormValues1>()
 
   const {
@@ -198,6 +200,7 @@ export default function UserCreateOrder() {
     control: control2,
     errors: errors2,
     clearErrors: clearErrors2,
+    reset: reset2,
   } = useForm<FormValues2>()
 
   const {
@@ -226,6 +229,25 @@ export default function UserCreateOrder() {
     }
   }, [selectedPaymentMethod])
 
+  useEffect(() => {
+    setValue1('restaurant', selectedRestaurant)
+    clearErrors1('restaurant')
+  }, [selectedRestaurant])
+
+  useEffect(() => {
+    if (supperGroup) {
+      reset1({
+        restaurant: supperGroup.restaurantName,
+        closingTime: supperGroup.closingTime,
+        maxPrice: supperGroup.costLimit,
+      })
+      reset2({
+        splitDeliveryFees: supperGroup.splitAdditionalCost,
+      })
+      setHasMaxPrice(supperGroup.costLimit ? true : false)
+    }
+  }, [supperGroup, reset1, reset2])
+
   let updatedSPInfo
 
   const onChange = (time, timeString) => {
@@ -234,16 +256,15 @@ export default function UserCreateOrder() {
       setError1('closingTime', { type: 'required' })
       return
     }
-    console.log(time._d)
-    console.log(timeString)
+    console.log('time.d', time._d)
+    console.log('timeString', timeString)
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
     }
-    console.log(epochClosingTime)
-    console.log(unixTo12HourTime(epochClosingTime))
+    console.log('ECT', epochClosingTime)
     setValue1('closingTime', epochClosingTime)
     clearErrors1('closingTime')
     updatedSPInfo = { ...updatedSPInfo, closingTime: epochClosingTime }
@@ -251,8 +272,10 @@ export default function UserCreateOrder() {
 
   const onClick1 = () => {
     updatedSPInfo = { ...supperGroup }
-    setValue1('restaurant', selectedRestaurant)
-    console.log(selectedRestaurant)
+    //setValue1('restaurant', selectedRestaurant)
+    if (supperGroup?.closingTime == 0) {
+      setError1('closingTime', { type: 'required' })
+    }
     if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
@@ -337,14 +360,14 @@ export default function UserCreateOrder() {
       }
       console.log('thirdSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
-      setIsLoading(true)
-      dispatch(createSupperGroup(updatedSPInfo))
-      setIsLoading(false)
+      // setIsLoading(true)
+      // dispatch(createSupperGroup(updatedSPInfo))
+      // setIsLoading(false)
     })()
-    setIsLoading(true)
-    const addedSG = supperGroup
-    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${addedSG?.supperGroupId}`)
-    setIsLoading(false)
+    // setIsLoading(true)
+    // const addedSG = supperGroup
+    //history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${addedSG?.supperGroupId}`)
+    // setIsLoading(false)
     //isLoading ?? history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
@@ -557,12 +580,10 @@ export default function UserCreateOrder() {
               <VertSectionContainer>
                 <Header>Closing Time{RedAsterisk}</Header>
                 <VertInputContainer>
-                  {console.log(supperGroup?.closingTime)}
                   <Controller
                     name="closingTime"
                     control={control1}
                     rules={{ required: true }}
-                    defaultValue={null}
                     render={() => (
                       <StyledTimePicker
                         use12Hours
@@ -570,7 +591,7 @@ export default function UserCreateOrder() {
                         onChange={onChange}
                         name="closingTime"
                         ref={register1({ required: true })}
-                        defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
+                        //defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
                         style={{
                           borderColor: errors1.closingTime && 'red',
                           background: errors1.closingTime && '#ffd1d1',
@@ -597,8 +618,8 @@ export default function UserCreateOrder() {
                     <Controller
                       name="maxPrice"
                       control={control1}
-                      defaultValue={supperGroup?.costLimit}
-                      render={() => <MaxPriceFixer />}
+                      defaultValue={null}
+                      render={() => <MaxPriceFixer defaultValue={supperGroup?.costLimit ?? 0} />}
                     />
                   </FixerContainer>
                 )}
