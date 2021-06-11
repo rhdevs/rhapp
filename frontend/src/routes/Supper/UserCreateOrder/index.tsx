@@ -238,7 +238,6 @@ export default function UserCreateOrder() {
     if (supperGroup) {
       reset1({
         restaurant: supperGroup.restaurantName,
-        closingTime: supperGroup.closingTime,
         maxPrice: supperGroup.costLimit,
       })
       reset2({
@@ -272,10 +271,6 @@ export default function UserCreateOrder() {
 
   const onClick1 = () => {
     updatedSPInfo = { ...supperGroup }
-    //setValue1('restaurant', selectedRestaurant)
-    if (supperGroup?.closingTime == 0) {
-      setError1('closingTime', { type: 'required' })
-    }
     if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
@@ -284,6 +279,7 @@ export default function UserCreateOrder() {
         ...updatedSPInfo,
         supperGroupName: data.supperGroupName,
         restaurantName: data.restaurant,
+        closingTIme: data.closingTime,
       }
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
@@ -351,7 +347,6 @@ export default function UserCreateOrder() {
         newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
       }
       if (newPI.length) {
-        //changes were made
         const updatedPI = selectedPaymentMethod.map((pm) => {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
@@ -360,15 +355,9 @@ export default function UserCreateOrder() {
       }
       console.log('thirdSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
-      // setIsLoading(true)
-      // dispatch(createSupperGroup(updatedSPInfo))
-      // setIsLoading(false)
+      dispatch(createSupperGroup(updatedSPInfo))
     })()
-    // setIsLoading(true)
-    // const addedSG = supperGroup
-    //history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${addedSG?.supperGroupId}`)
-    // setIsLoading(false)
-    //isLoading ?? history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
@@ -584,6 +573,7 @@ export default function UserCreateOrder() {
                     name="closingTime"
                     control={control1}
                     rules={{ required: true }}
+                    defaultValue={null}
                     render={() => (
                       <StyledTimePicker
                         use12Hours
