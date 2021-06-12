@@ -39,13 +39,6 @@ const Spacer = styled.div`
   height: 24px;
 `
 
-const OptionText = styled.p`
-  font-style: normal;
-  font-weight: 200;
-  font-size: 14px;
-  line-height: 14px;
-`
-
 const TextInput = styled.input`
   width: 100%;
   border-radius: 30px;
@@ -83,7 +76,7 @@ export type CustomData = Record<string, string | string[] | CancelAction>
 const EditFoodItem = () => {
   const dispatch = useDispatch()
 
-  const { isLoading, editFoodItem, count } = useSelector((state: RootState) => state.supper)
+  const { isLoading, editFoodItem, count, supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; itemId: string }>()
   const { register, handleSubmit, setValue, watch, clearErrors, errors } = useForm<FormValues>()
   const onSubmit = () => {
@@ -93,6 +86,18 @@ const EditFoodItem = () => {
       console.log(data)
       dispatch(updateEditFoodItem(data, params.itemId))
     })()
+  }
+
+  const isOverSupperGroupLimit = () => {
+    const maximumLimit = supperGroup?.costLimit
+    const currentSupperGroupCost = supperGroup?.currentFoodCost as number
+    const currentFoodItemPrice = editFoodItem?.foodPrice as number
+
+    if (!maximumLimit) return false
+
+    // TODO: verify conditions
+    const isOverLimit = maximumLimit - (currentSupperGroupCost + currentFoodItemPrice)
+    return isOverLimit > 0
   }
 
   useEffect(() => {
@@ -149,7 +154,12 @@ const EditFoodItem = () => {
           <Spacer />
           <QuantityTracker default={editFoodItem?.quantity || count} center={true} />
           <Spacer />
-          <AddUpdateCartButton onClick={onSubmit} update currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'} />
+          <AddUpdateCartButton
+            onClick={onSubmit}
+            update
+            currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'}
+            isDisabled={isOverSupperGroupLimit()}
+          />
         </MainCard>
       )}
     </MainContainer>

@@ -127,7 +127,7 @@ export const OrderSummaryCard = (props: Props) => {
                   price={food.foodPrice}
                   customisations={customisations}
                   isEditable={props.isEditable}
-                  comments={food.comments}
+                  comments={food?.comments}
                   cancelAction={food.cancelAction}
                 />
               )

@@ -35,6 +35,7 @@ export const getEditFoodItem = (supperGroupId: string, foodItemId: string) => (d
     type: SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM,
     editFoodItem: foodList[1],
   })
+  dispatch(getSupperGroupById(supperGroupId))
   dispatch(setIsLoading(false))
 }
 
