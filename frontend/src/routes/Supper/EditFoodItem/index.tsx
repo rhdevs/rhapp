@@ -98,7 +98,7 @@ const EditFoodItem = () => {
 
     // TODO: verify conditions
     const isOverLimit = maximumLimit - (currentSupperGroupCost - originalFoodItemPrice + currentFoodItemPrice)
-    return isOverLimit > 0
+    return (isOverLimit > 0) as boolean
   }
 
   useEffect(() => {
@@ -144,9 +144,7 @@ const EditFoodItem = () => {
               <RadioButton margin="0 0 0 2px" value={CancelAction.REMOVE} label={'Remove it from my order'} />
             </RadioButtonContainer>
           </StyledRadioGroup>
-
           <Spacer />
-
           <TextInput
             defaultValue={editFoodItem?.comments || ''}
             {...register('comments')}
@@ -161,6 +159,10 @@ const EditFoodItem = () => {
             currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'}
             isDisabled={isOverSupperGroupLimit()}
           />
+          {
+            true && <p>Price over Supper Group limit. pls order an item of lower price or migrate to new order</p>
+            // TODO: error logging IDK HOW THANKS
+          }
         </MainCard>
       )}
     </MainContainer>
