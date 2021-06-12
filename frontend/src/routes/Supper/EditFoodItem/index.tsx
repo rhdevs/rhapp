@@ -92,11 +92,12 @@ const EditFoodItem = () => {
     const maximumLimit = supperGroup?.costLimit
     const currentSupperGroupCost = supperGroup?.currentFoodCost as number
     const currentFoodItemPrice = editFoodItem?.foodPrice as number
+    const originalFoodItemPrice = editFoodItem?.price as number
 
     if (!maximumLimit) return false
 
     // TODO: verify conditions
-    const isOverLimit = maximumLimit - (currentSupperGroupCost + currentFoodItemPrice)
+    const isOverLimit = maximumLimit - (currentSupperGroupCost - originalFoodItemPrice + currentFoodItemPrice)
     return isOverLimit > 0
   }
 
