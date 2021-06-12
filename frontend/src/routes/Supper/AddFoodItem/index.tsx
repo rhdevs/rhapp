@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { RadioButton } from '../../../components/RadioButton'
 import InputRow from '../../../components/Mobile/InputRow'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
@@ -13,18 +13,9 @@ import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import {
-  CustomHeaders,
-  CustomHeadersContainer,
-  OptionText,
-  OptionTitleContainer,
-  RadioButtonContainer,
-  RedText,
-  SelectText,
-  StyledRadioGroup,
-} from '../../../components/Supper/SelectField'
 import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
+import CancelActionField from '../../../components/Supper/CancelActionField'
 
 const Background = styled.form`
   width: 100vw;
@@ -38,23 +29,14 @@ const MainContainer = styled.div`
   margin: 0 auto;
 `
 
-const ItemText = styled.text`
+const FoodItemHeader = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
 `
 
-const CancelActionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Spacer = styled.div`
-  height: 0.7rem;
-`
-
-export type CustomData = Record<string, string | string[] | CancelAction>
+type CustomData = Record<string, string | string[] | CancelAction>
 
 const AddFoodItem = () => {
   const dispatch = useDispatch()
@@ -75,37 +57,43 @@ const AddFoodItem = () => {
     dispatch(getMenuFood(params.foodId))
   }, [dispatch])
 
+  const isOverSupperGroupLimit = () => {
+    const maximumLimit = supperGroup?.costLimit ?? 0
+    const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
+    const currentFoodItemPrice = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count ?? 0
+
+    const newSupperGroupCost = currentSupperGroupCost + currentFoodItemPrice
+
+    return (newSupperGroupCost > maximumLimit) as boolean
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
-    const totalUserFoodCost = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count
-    const newCurrentCost = (supperGroup?.currentFoodCost ?? 0) + totalUserFoodCost
-    if (newCurrentCost > (supperGroup?.costLimit ?? 0)) {
+    if (isOverSupperGroupLimit()) {
       const [error] = useSnackbar('error')
       error('Supper group price limit exceeded, unable to add item.')
       return
     }
+
     handleSubmit((data) => {
       const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
-          .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments')
+          .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments') //to not add to custom
           .flatMap((entry) => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
             if (customFood.title === fieldName) {
-              const k = customFood.options.map(
+              return customFood.options.map(
                 (option) =>
                   fieldDetails.map((fieldDetail) => {
-                    const isSelected = option.name === fieldDetail ? true : false
+                    const isSelected = (option.name === fieldDetail) as boolean
                     return { ...option, isSelected: isSelected }
                   })[0],
               )
-              return k
             } else {
-              console.log(customFood.title, fieldName)
               return {} as Option
             }
           })
-          .filter(Boolean)
           .filter((k) => k.name !== undefined) //to remove empty Option objects
 
         return {
@@ -115,6 +103,7 @@ const AddFoodItem = () => {
           min: customFood.min,
         }
       })
+
       const newFood: Food = {
         restaurantId: menuFood?.restaurantId ?? '',
         foodMenuId: menuFood?.foodMenuId ?? '',
@@ -167,7 +156,7 @@ const AddFoodItem = () => {
         <LoadingSpin />
       ) : (
         <MainContainer>
-          <ItemText>{menuFood?.foodMenuName}</ItemText>
+          <FoodItemHeader>{menuFood?.foodMenuName}</FoodItemHeader>
           {menuFood?.custom?.map((custom, index) => (
             <SelectField
               custom={custom}
@@ -180,43 +169,17 @@ const AddFoodItem = () => {
               watch={watch}
             />
           ))}
-          <CancelActionContainer>
-            <CustomHeadersContainer>
-              <OptionTitleContainer>
-                <CustomHeaders>If this product is not available</CustomHeaders>
-                {errors.cancelAction && <RedText> • 1 Required</RedText>}
-              </OptionTitleContainer>
-              <SelectText>Select 1</SelectText>
-            </CustomHeadersContainer>
-            <StyledRadioGroup
-              {...register('cancelAction', { required: true })}
-              onChange={(e) => {
-                clearErrors('cancelAction')
-                setValue('cancelAction', e.target.value as CancelAction)
-              }}
-              defaultValue={null}
-            >
-              <RadioButtonContainer>
-                <RadioButton
-                  margin="0 0 3px 2px"
-                  value={CancelAction.REMOVE}
-                  label={<OptionText>Remove it from my order</OptionText>}
-                />
-              </RadioButtonContainer>
-              <RadioButtonContainer>
-                <RadioButton
-                  margin="0 0 3px 2px"
-                  value={CancelAction.CONTACT}
-                  label={<OptionText>Contact me </OptionText>}
-                />
-              </RadioButtonContainer>
-            </StyledRadioGroup>
-          </CancelActionContainer>
+          <CancelActionField
+            cancelActionError={errors.cancelAction}
+            register={register}
+            clearErrors={clearErrors}
+            setValue={setValue}
+          />
           <Controller
             name="comments"
             render={({ onChange, value }) => (
               <InputRow
-                placeholder="Additional comments e.g. BBQ Sauce"
+                placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
                 textarea
                 value={value}
                 onChange={onChange}
@@ -226,9 +189,7 @@ const AddFoodItem = () => {
             control={control}
             defaultValue={null}
           />
-          <Spacer />
-          <QuantityTracker center min={1} default={1} />
-          <Spacer />
+          <QuantityTracker margin="0.7rem 0" center min={1} default={1} />
           <AddUpdateCartButton
             isGrey={!isFormFieldsValid()}
             htmlType="submit"

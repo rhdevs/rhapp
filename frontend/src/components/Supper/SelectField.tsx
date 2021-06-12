@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { UpOutlined } from '@ant-design/icons/lib/icons'
 import { DeepMap, FieldError } from 'react-hook-form'
 import { Checkbox } from '../Checkbox'
-import { Custom, Option } from '../../store/supper/types'
+import { CancelAction, Custom, Option } from '../../store/supper/types'
 import { RadioButton } from '../RadioButton'
-import { CustomData } from '../../routes/Supper/EditFoodItem'
 import { Radio } from 'antd'
-import { CheckboxMainContainer, FlexDiv } from '../../routes/Supper/AddItem/Components/StyledComponents'
 
-export const CustomHeadersContainer = styled.div<{ marginTop?: string }>`
+export type CustomData = Record<string, string | string[] | CancelAction>
+
+export const CustomHeadersContainer = styled.div<{ marginTop?: string | undefined }>`
   display: flex;
   flex-direction: column;
   margin-top: ${(props) => (props.marginTop ? props.marginTop : '1.5rem')};
@@ -56,7 +56,13 @@ export const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
   display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
   display: flex;
   flex-direction: row;
-  height: 25px;
+  min-height: 25px;
+`
+
+export const CheckboxMainContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 `
 
 export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
@@ -64,7 +70,7 @@ export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
   flex-direction: row;
   width: fit-content;
   cursor: pointer;
-  height: 30px;
+  min-height: 30px;
   align-items: center;
   display: ${(props) => (props.isHidden ? 'none' : 'inherit')};
 `
@@ -74,6 +80,8 @@ export const OptionText = styled.text`
   font-style: normal;
   font-weight: 200;
   font-size: 14px;
+  margin: 0 0 3px 2px;
+  word-break: break-all;
 `
 
 const CustomContainer = styled.div`
@@ -90,6 +98,10 @@ const ViewMoreLessButton = styled.div`
   cursor: default;
   width: fit-content;
   margin: 3px 5px;
+`
+
+export const FlexDiv = styled.div<{ flex: number }>`
+  flex: ${(props) => props.flex}%;
 `
 
 const SelectHelperText = (isCompulsory: boolean, custom: Custom) => {
@@ -147,7 +159,7 @@ const SelectField = ({
 
   return (
     <CustomContainer key={index}>
-      <CustomHeadersContainer marginTop={index === 0 ? '10px' : '0px'}>
+      <CustomHeadersContainer marginTop={index === 0 ? '10px' : undefined}>
         <OptionTitleContainer>
           <CustomHeaders>{custom.title}</CustomHeaders>
           {errors[`${custom.title}`] && <RedText> • {custom.min} Required</RedText>}

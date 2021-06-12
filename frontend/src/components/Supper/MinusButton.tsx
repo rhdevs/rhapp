@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { setCount } from '../../store/supper/action'
 
 type Props = {
-  min?: number
+  min?: number | undefined
   color?: string
   defaultValue?: number
   onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void

@@ -3,14 +3,14 @@ import React from 'react'
 
 import styled from 'styled-components'
 
-const MainContainer = styled.div<{ isSticky?: boolean; width?: string }>`
+const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: string | undefined }>`
   margin: auto;
   padding: 6px 15px;
   width: ${(props) => props.width ?? '100vw'};
   position: ${(props) => (props.isSticky ? 'fixed' : '')};
   bottom: 0;
   z-index: 1000;
-  background: #fafaf4;
+  background: ${(props) => (props.isSticky ? '#fafaf4' : 'transparent')};
   height: 60px;
 `
 
@@ -63,19 +63,23 @@ const StyledGreyButton = styled(AntdButton)`
 type Props = {
   htmlType?: 'button' | 'submit' | 'reset' | undefined
   isSticky?: boolean
-  leftText?: string
+  leftText?: string | undefined
   middleText?: string
   rightText?: string
   width?: string
-  isGrey?: boolean
-  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  isGrey?: boolean | undefined
+  onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
 }
 
 export const RedButton = (props: Props) => {
   return (
     <MainContainer isSticky={props.isSticky} width={props.width}>
       {props.isGrey ? (
-        <StyledGreyButton type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
+        <StyledGreyButton
+          type="primary"
+          htmlType={props.htmlType ?? 'button'}
+          onClick={props.onClick as React.MouseEventHandler<HTMLElement>}
+        >
           <ButtonTextContainer>
             <TextField>{props.leftText}</TextField>
             <TextField>{props.middleText}</TextField>
@@ -83,7 +87,11 @@ export const RedButton = (props: Props) => {
           </ButtonTextContainer>
         </StyledGreyButton>
       ) : (
-        <StyledRedButton type="primary" htmlType={props.htmlType ?? 'button'} onClick={props.onClick}>
+        <StyledRedButton
+          type="primary"
+          htmlType={props.htmlType ?? 'button'}
+          onClick={props.onClick as React.MouseEventHandler<HTMLElement>}
+        >
           <ButtonTextContainer>
             <TextField>{props.leftText}</TextField>
             <TextField>{props.middleText}</TextField>

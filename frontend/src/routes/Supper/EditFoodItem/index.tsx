@@ -1,21 +1,23 @@
-import { Radio } from 'antd'
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { RadioButton } from '../../../components/RadioButton'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getEditFoodItem, updateEditFoodItem } from '../../../store/supper/action'
-import { CancelAction, Food } from '../../../store/supper/types'
+import { getEditFoodItem, getMenuFood } from '../../../store/supper/action'
+import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
+import useSnackbar from '../../../hooks/useSnackbar'
+import CancelActionField from '../../../components/Supper/CancelActionField'
+import InputRow from '../../../components/Mobile/InputRow'
 
-const MainContainer = styled.div`
+const MainContainer = styled.form`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
@@ -23,95 +25,134 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
 `
-const FoodItemHeader = styled.p`
+
+const FoodItemHeader = styled.text`
+  font-family: Inter;
+  font-style: normal;
   font-weight: bold;
   font-size: 24px;
-  line-height: 14px;
 `
 
-const SectionHeader = styled.p`
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
-const Spacer = styled.div`
-  height: 24px;
-`
-
-const TextInput = styled.input`
-  width: 100%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 5px auto 0 auto;
-  height: 35px;
-`
-
-const StyledRadioGroup = styled(Radio.Group)`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-
-const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
-  display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
-  display: flex;
-  flex-direction: row;
-  height: 25px;
-`
-
-type HardCodedFormValues = {
-  Sides: string
-  Drinks: string
-  others: string
-  comments: string
-  quantity: number
-  cancelAction: string
-}
-
-type FormValues = Record<string, string | string[] | HardCodedFormValues>
-export type CustomData = Record<string, string | string[] | CancelAction>
+type CustomData = Record<string, string | string[] | CancelAction>
 
 const EditFoodItem = () => {
   const dispatch = useDispatch()
 
-  const { isLoading, editFoodItem, count, supperGroup } = useSelector((state: RootState) => state.supper)
-  const params = useParams<{ supperGroupId: string; itemId: string }>()
-  const { register, handleSubmit, setValue, watch, clearErrors, errors } = useForm<FormValues>()
-  const onSubmit = () => {
-    console.log(count)
+  const { isLoading, editFoodItem, menuFood, count, supperGroup } = useSelector((state: RootState) => state.supper)
+  const params = useParams<{ supperGroupId: string; foodId: string }>()
+  const { register, handleSubmit, setValue, watch, clearErrors, control, errors } = useForm<CustomData>()
+  const compulsoryFields: Custom[] =
+    menuFood?.custom?.filter((custom) => {
+      return custom.min !== 0
+    }) ?? []
+
+  const isOverSupperGroupLimit = () => {
+    const maximumLimit = supperGroup?.costLimit ?? 0
+    const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
+    const currentFoodItemPrice = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count
+    const originalFoodItemPrice = editFoodItem?.price ?? 0
+
+    const newSupperGroupCost = currentSupperGroupCost - originalFoodItemPrice + currentFoodItemPrice
+
+    return (newSupperGroupCost > maximumLimit) as boolean
+  }
+
+  const calculateAdditionalCost = () => {
+    let addOns = 0
+    Object.entries(watch()).map((entry) => {
+      const fieldName = entry[0]
+      const fieldDetails = [entry[1]].flat()
+      const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
+      originalCustom?.options.map((option) => {
+        fieldDetails?.map((fieldDetail) => {
+          if (option.name === fieldDetail) addOns += option.price
+        })
+      })
+    })
+    return addOns
+  }
+
+  const isFormFieldsValid = () => {
+    if (watch('cancelAction')) {
+      const satisfiedFields = compulsoryFields.filter(
+        (customField) => watch(`${customField.title}`) && watch(`${customField.title}`).length >= customField.min,
+      )
+      if (satisfiedFields.length === compulsoryFields.length) return true
+    }
+
+    return false
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    console.log(isOverSupperGroupLimit(), count)
+    if (isOverSupperGroupLimit()) {
+      const [error] = useSnackbar('error')
+      error('Supper group price limit exceeded, unable to add item.')
+      return
+    }
+
     handleSubmit((data: Food) => {
-      console.log('Save changes!')
-      console.log(data)
-      dispatch(updateEditFoodItem(data, params.itemId))
+      const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
+        const options: Option[] = Object.entries(watch())
+          .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments') //to not add to custom
+          .flatMap((entry) => {
+            const fieldName = entry[0]
+            const fieldDetails = [entry[1]].flat()
+            if (customFood.title === fieldName) {
+              return customFood.options.map(
+                (option) =>
+                  fieldDetails.map((fieldDetail) => {
+                    const isSelected = (option.name === fieldDetail) as boolean
+                    return { ...option, isSelected: isSelected }
+                  })[0],
+              )
+            } else {
+              return {} as Option
+            }
+          })
+          .filter((k) => k.name !== undefined) //to remove empty Option objects
+
+        return {
+          title: customFood.title,
+          options: options,
+          max: customFood.max,
+          min: customFood.min,
+        }
+      })
+
+      const newFood: Food = {
+        restaurantId: menuFood?.restaurantId ?? '',
+        foodMenuId: menuFood?.foodMenuId ?? '',
+        foodName: menuFood?.foodMenuName ?? '',
+        comments: data.comments as string,
+        quantity: count,
+        price: menuFood?.price ?? 0,
+        foodPrice: ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count,
+        cancelAction: data.cancelAction as CancelAction,
+        custom: custom,
+      }
+      console.log(newFood)
+      //TODO: Send info to backend and test
+      //dispatch(updateEditFoodItem(data, params.foodId))
+      // history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
+      console.log(data, count)
     })()
   }
 
-  const isOverSupperGroupLimit = () => {
-    const maximumLimit = supperGroup?.costLimit
-    const currentSupperGroupCost = supperGroup?.currentFoodCost as number
-    const currentFoodItemPrice = editFoodItem?.foodPrice as number
-    const originalFoodItemPrice = editFoodItem?.price as number
-
-    if (!maximumLimit) return false
-
-    // TODO: verify conditions
-    const isOverLimit = maximumLimit - (currentSupperGroupCost - originalFoodItemPrice + currentFoodItemPrice)
-    return (isOverLimit > 0) as boolean
-  }
-
   useEffect(() => {
-    dispatch(getEditFoodItem(params.supperGroupId, params.itemId))
+    dispatch(getEditFoodItem(params.supperGroupId, params.foodId))
+    dispatch(getMenuFood(params.foodId))
   }, [dispatch])
 
+  console.log(watch())
   return (
-    <MainContainer>
+    <MainContainer onSubmit={onSubmit}>
       <TopNavBar title="Edit Item" />
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <MainCard flexDirection="column" isEditable={false} editIconSize="0rem" padding="25px">
+        <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
           <FoodItemHeader>{editFoodItem?.foodName}</FoodItemHeader>
           <>
             {editFoodItem?.custom?.map((custom, index) => (
@@ -127,42 +168,34 @@ const EditFoodItem = () => {
               />
             ))}
           </>
-          <br />
-          <SectionHeader>If this product is not available</SectionHeader>
-          <StyledRadioGroup
-            {...register(`cancelAction`, { required: true })}
-            onChange={(e) => {
-              clearErrors(`cancelAction`)
-              setValue(`cancelAction`, e.target.value)
-            }}
-            defaultValue={'Contact'}
-          >
-            <RadioButtonContainer key={'Contact'}>
-              <RadioButton margin="0 0 0 2px" value={CancelAction.CONTACT} label={'Contact me '} />
-            </RadioButtonContainer>
-            <RadioButtonContainer key={'Cancel'}>
-              <RadioButton margin="0 0 0 2px" value={CancelAction.REMOVE} label={'Remove it from my order'} />
-            </RadioButtonContainer>
-          </StyledRadioGroup>
-          <Spacer />
-          <TextInput
-            defaultValue={editFoodItem?.comments || ''}
-            {...register('comments')}
-            placeholder="Additional comments e.g. BBQ Sauce"
+          <CancelActionField
+            cancelActionError={errors.cancelAction}
+            register={register}
+            clearErrors={clearErrors}
+            setValue={setValue}
+            defaultValue={editFoodItem?.cancelAction}
           />
-          <Spacer />
-          <QuantityTracker default={editFoodItem?.quantity || count} center={true} />
-          <Spacer />
+          <Controller
+            name="comments"
+            render={({ onChange, value }) => (
+              <InputRow
+                placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
+                textarea
+                value={value}
+                onChange={onChange}
+                {...register('comments')}
+              />
+            )}
+            control={control}
+            defaultValue={editFoodItem?.comments ?? null}
+          />
+          <QuantityTracker margin="0.7rem 0" default={editFoodItem?.quantity ?? 1} center min={1} />
           <AddUpdateCartButton
-            onClick={onSubmit}
+            isGrey={!isFormFieldsValid()}
+            htmlType="submit"
             update
-            currentTotal={editFoodItem?.foodPrice?.toString() || '0.00'}
-            isDisabled={isOverSupperGroupLimit()}
+            currentTotal={String((((menuFood?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
-          {
-            true && <p>Price over Supper Group limit. pls order an item of lower price or migrate to new order</p>
-            // TODO: error logging IDK HOW THANKS
-          }
         </MainCard>
       )}
     </MainContainer>

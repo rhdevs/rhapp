@@ -6,10 +6,11 @@ import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'
 
-const CounterContainer = styled.div<{ center?: boolean }>`
+const CounterContainer = styled.div<{ center?: boolean | undefined; margin?: string | undefined }>`
   display: flex;
   align-items: center;
   ${(props) => props.center && 'justify-content: center;'}
+  ${(props) => props.margin && `margin: ${props.margin};`}
 `
 
 const ValueContainer = styled.text`
@@ -23,6 +24,7 @@ type Props = {
   max?: number
   default: number
   center?: boolean
+  margin?: string
 }
 
 export const QuantityTracker = (props: Props) => {
@@ -48,7 +50,7 @@ export const QuantityTracker = (props: Props) => {
   }
 
   return (
-    <CounterContainer center={props.center}>
+    <CounterContainer center={props.center} margin={props.margin}>
       <MinusButton min={props.min} defaultValue={props.default} onClick={subFromCount} />
       <ValueContainer>{count}</ValueContainer>
       <PlusButton isAdding={true} onClick={addToCount} max={MAX} />
