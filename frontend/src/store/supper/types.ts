@@ -99,7 +99,7 @@ export type SupperGroup = {
   supperGroupId: string
   supperGroupName: string
   totalPrice: number
-  userIdList: string[]
+  userIdList?: string[]
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number

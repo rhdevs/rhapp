@@ -55,7 +55,7 @@ const Spacer = styled.div`
 
 export type CustomData = Record<string, string | string[] | CancelAction>
 
-const AddItem = () => {
+const AddFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
@@ -233,4 +233,4 @@ const AddItem = () => {
   )
 }
 
-export default AddItem
+export default AddFoodItem

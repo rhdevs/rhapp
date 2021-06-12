@@ -70,9 +70,10 @@ export enum PATHS {
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
   EDIT_ORDER = '/supper/edit/order',
   EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
-  EDIT_ORDER_ITEM_BY_ID = '/supper/edit/order/:supperGroupId/:itemId',
-  ADD_ITEM = '/supper/order',
-  ADD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
+  EDIT_FOOD_ITEM = '/supper/edit',
+  EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:itemId',
+  ADD_FOOD_ITEM = '/supper',
+  ADD_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -121,14 +122,14 @@ const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ '
 const UserPlaceOrder = React.lazy(() => import(/* webpackChunckName: "UserPlaceOrder" */ './Supper/UserPlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
-const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/EditFoodItem'))
 const UserViewOrder = React.lazy(() => import(/* webpackChunckName: "UserViewOrder" */ './Supper/UserViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
 const ConfirmOrder = React.lazy(() => import(/* webpackChunckName: "ConfirmOrder" */ './Supper/ConfirmOrder'))
 const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
 const EditOrder = React.lazy(() => import(/* webpackChunckName: "EditOrder" */ './Supper/EditOrder'))
-const AddItem = React.lazy(() => import(/* webpackChunckName: "AddItem" */ './Supper/AddItem'))
+const AddFoodItem = React.lazy(() => import(/* webpackChunckName: "AddFoodItem" */ './Supper/AddFoodItem'))
+const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "EditFoodItem" */ './Supper/EditFoodItem'))
 
 export default class Routes extends React.Component {
   render() {
@@ -186,8 +187,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
             <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditOrder} />
-            <PrivateRoute exact path={PATHS.EDIT_ORDER_ITEM_BY_ID} component={EditFoodItem} />
-            <PrivateRoute exact path={PATHS.ADD_ITEM_BY_ID} component={AddItem} />
+            <PrivateRoute exact path={PATHS.EDIT_FOOD_ITEM_BY_ID} component={EditFoodItem} />
+            <PrivateRoute exact path={PATHS.ADD_FOOD_ITEM_BY_ID} component={AddFoodItem} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>

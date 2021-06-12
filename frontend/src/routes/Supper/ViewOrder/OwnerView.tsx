@@ -154,7 +154,7 @@ const OwnerView = (props: Props) => {
           currentAmount={props.supperGroup?.currentFoodCost ?? 0}
           priceLimit={props.supperGroup?.costLimit ?? 50}
           closingTime={unixTo12HourTime(props.supperGroup?.closingTime)}
-          numberOfUsers={props.supperGroup?.userIdList.length ?? 0}
+          numberOfUsers={props.supperGroup?.userIdList?.length ?? 0}
           splitACType={props.supperGroup?.splitAdditionalCost}
           deliveryFee={'$' + String((props.supperGroup?.additionalCost ?? 0).toFixed(2))}
         />

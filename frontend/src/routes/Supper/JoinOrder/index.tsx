@@ -52,7 +52,7 @@ export default function JoinOrder() {
         currentAmount={supperGroup?.currentFoodCost ?? 0}
         priceLimit={supperGroup?.costLimit ?? 50}
         closingTime={unixTo12HourTime(supperGroup?.closingTime)}
-        numberOfUsers={supperGroup?.userIdList.length ?? 0}
+        numberOfUsers={supperGroup?.userIdList?.length ?? 0}
         splitACType={supperGroup?.splitAdditionalCost}
         deliveryFee={String((supperGroup?.additionalCost ?? 0).toFixed(2))}
       />

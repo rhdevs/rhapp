@@ -59,7 +59,7 @@ type Props = {
   closingTime: string
   numberOfUsers: number
   deliveryFee: string
-  splitACType?: SplitACMethod
+  splitACType?: SplitACMethod | undefined
   isOwner?: boolean
   cardMargin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
