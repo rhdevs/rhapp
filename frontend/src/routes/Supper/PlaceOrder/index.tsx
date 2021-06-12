@@ -62,7 +62,7 @@ export default function PlaceOrder() {
       ) : (
         <>
           <ExpandableSGCard
-            editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
+            editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
             supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}

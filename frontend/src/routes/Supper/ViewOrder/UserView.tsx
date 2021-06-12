@@ -89,7 +89,7 @@ const UserView = (props: Props) => {
         />
       ) : props.supperGroupIsCancelled ? (
         <SGCardWithStatus
-          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${props.supperGroup?.supperGroupId}`)}
+          onClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${props.supperGroup?.supperGroupId}`)}
           supperGroupStatus={SupperGroupStatus.CANCELLED}
           username={props.supperGroup?.ownerName ?? '-'}
           title={props.supperGroup?.supperGroupName ?? '-'}
@@ -99,7 +99,7 @@ const UserView = (props: Props) => {
         />
       ) : (
         <SGCardWithStatus
-          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${props.supperGroup?.supperGroupId}`)}
+          onClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${props.supperGroup?.supperGroupId}`)}
           restaurantLogo={props.supperGroup?.restaurantLogo}
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           supperGroupStatus={props.supperGroup?.status}

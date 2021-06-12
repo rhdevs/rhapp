@@ -38,7 +38,7 @@ export default function UserSGOverview() {
   let section = params.section
   if (!(params.section === 'created' || params.section === 'joined')) {
     section = 'created'
-    history.replace(`${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`)
+    history.replace(`${PATHS.SUPPER_GROUP_OVERVIEW}/created`)
   }
 
   const clickedHistorySection =
@@ -71,8 +71,8 @@ export default function UserSGOverview() {
     </TabsContentContainer>
   )
 
-  const onCreatedClick = `${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`
-  const onJoinedClick = `${PATHS.USER_SUPPER_GROUP_OVERVIEW}/joined`
+  const onCreatedClick = `${PATHS.SUPPER_GROUP_OVERVIEW}/created`
+  const onJoinedClick = `${PATHS.SUPPER_GROUP_OVERVIEW}/joined`
 
   const key = section === 'created' ? '1' : '2'
 

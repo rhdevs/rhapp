@@ -48,28 +48,29 @@ export enum PATHS {
   //SUPPER
   SUPPER_HOME = '/supper',
   SUPPER_COMPONENTS_PAGE = '/supper/components',
-  USER_SUPPER_GROUP_OVERVIEW = '/supper/overview',
-  USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION = '/supper/overview/:section',
-  USER_SUPPER_GROUP_CREATE_ORDER = '/supper/create/order',
-  JOIN_ORDER_MAIN_PAGE = '/supper/join/order',
-  JOIN_ORDER_MAIN_PAGE_BY_ID = '/supper/join/order/:supperGroupId',
+  SUPPER_GROUP_OVERVIEW = '/supper/overview',
+  SUPPER_GROUP_OVERVIEW_BY_SECTION = '/supper/overview/:section',
+  CREATE_SUPPER_GROUP = '/supper/create',
+  JOIN_ORDER = '/supper/join/order',
+  JOIN_ORDER_BY_ID = '/supper/join/order/:supperGroupId',
   PLACE_ORDER = '/supper',
   PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
-  USER_VIEW_ORDER = '/supper/view/user/order',
-  USER_VIEW_ORDER_BY_ID = '/supper/view/user/order/:supperGroupId',
+  USER_VIEW_ORDER = '/supper/view/user/order', //TODO: Remove after testing
+  USER_VIEW_ORDER_BY_ID = '/supper/view/user/order/:supperGroupId', //TODO: Remove after testing
   VIEW_CART = '/supper/view/cart',
   VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
   CONFIRM_ORDER = '/supper',
   CONFIRM_ORDER_BY_ID = '/supper/:supperGroupId/confirm',
-  PAYMENT_SCREEN = '/supper/view/payment',
-  PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
+  VIEW_PAYMENT_SCREEN = '/supper/view/payment',
+  VIEW_PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
+  DELIVERY_DETAILS = '/supper/order',
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
-  EDIT_ORDER = '/supper/edit/order',
-  EDIT_ORDER_BY_ID = '/supper/edit/order/:supperGroupId',
+  EDIT_SUPPER_GROUP = '/supper/edit/order',
+  EDIT_SUPPER_GROUP_BY_ID = '/supper/edit/order/:supperGroupId',
   EDIT_FOOD_ITEM = '/supper/edit',
   EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:itemId',
   ADD_FOOD_ITEM = '/supper',
@@ -117,7 +118,9 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
 const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
-const UserCreateOrder = React.lazy(() => import(/* webpackChunckName: "UserCreateOrder" */ './Supper/UserCreateOrder'))
+const CreateSupperGroup = React.lazy(
+  () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
+)
 const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ './Supper/JoinOrder'))
 const PlaceOrder = React.lazy(() => import(/* webpackChunckName: "PlaceOrder" */ './Supper/PlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
@@ -127,7 +130,7 @@ const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './
 const ConfirmOrder = React.lazy(() => import(/* webpackChunckName: "ConfirmOrder" */ './Supper/ConfirmOrder'))
 const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
-const EditOrder = React.lazy(() => import(/* webpackChunckName: "EditOrder" */ './Supper/EditOrder'))
+const EditSupperGroup = React.lazy(() => import(/* webpackChunckName: "EditSupperGroup" */ './Supper/EditSupperGroup'))
 const AddFoodItem = React.lazy(() => import(/* webpackChunckName: "AddFoodItem" */ './Supper/AddFoodItem'))
 const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "EditFoodItem" */ './Supper/EditFoodItem'))
 
@@ -174,19 +177,19 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
-            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_OVERVIEW_WITH_SECTION} component={UserSGOverview} />
-            <PrivateRoute exact path={PATHS.USER_SUPPER_GROUP_CREATE_ORDER} component={UserCreateOrder} />
-            <PublicRoute exact path={PATHS.JOIN_ORDER_MAIN_PAGE_BY_ID} component={JoinOrder} />
+            <PrivateRoute exact path={PATHS.SUPPER_GROUP_OVERVIEW_BY_SECTION} component={UserSGOverview} />
+            <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP} component={CreateSupperGroup} />
+            <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
             <PrivateRoute exact path={PATHS.CONFIRM_ORDER_BY_ID} component={ConfirmOrder} />
-            <PrivateRoute exact path={PATHS.PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
+            <PrivateRoute exact path={PATHS.VIEW_PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
-            <PrivateRoute exact path={PATHS.EDIT_ORDER_BY_ID} component={EditOrder} />
+            <PrivateRoute exact path={PATHS.EDIT_SUPPER_GROUP_BY_ID} component={EditSupperGroup} />
             <PrivateRoute exact path={PATHS.EDIT_FOOD_ITEM_BY_ID} component={EditFoodItem} />
             <PrivateRoute exact path={PATHS.ADD_FOOD_ITEM_BY_ID} component={AddFoodItem} />
 

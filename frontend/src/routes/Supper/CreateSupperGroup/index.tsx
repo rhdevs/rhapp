@@ -149,7 +149,7 @@ type FormValues3 = {
   phoneNumber: number
 }
 
-export default function UserCreateOrder() {
+export default function CreateSupperGroup() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { counter, isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
@@ -356,7 +356,7 @@ export default function UserCreateOrder() {
       dispatch(setOrder(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
     })()
-    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {

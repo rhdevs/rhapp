@@ -107,7 +107,7 @@ export default function UserViewOrder() {
         />
       ) : supperGroupIsCancelled ? (
         <SGCardWithStatus
-          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${supperGroup?.supperGroupId}`)}
+          onClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${supperGroup?.supperGroupId}`)}
           supperGroupStatus={SupperGroupStatus.CANCELLED}
           username={supperGroup?.ownerName ?? '-'}
           title={supperGroup?.supperGroupName ?? '-'}
@@ -117,7 +117,7 @@ export default function UserViewOrder() {
         />
       ) : (
         <SGCardWithStatus
-          onClick={() => history.push(`${PATHS.EDIT_ORDER}/${supperGroup?.supperGroupId}`)}
+          onClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${supperGroup?.supperGroupId}`)}
           restaurantLogo={supperGroup?.restaurantLogo}
           isOwner={supperGroup?.ownerId === localStorage.userID}
           supperGroupStatus={supperGroup?.status}

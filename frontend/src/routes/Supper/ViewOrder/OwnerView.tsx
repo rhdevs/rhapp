@@ -139,7 +139,7 @@ const OwnerView = (props: Props) => {
       )}
       {props.supperGroupIsOpen ? (
         <JoinOrderSGCard
-          editOnClick={() => history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)}
+          editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
           restaurantLogo={props.supperGroup?.restaurantLogo}
           restaurant={props.supperGroup?.restaurantName as Restaurants}
           cardMargin="0 23px"
@@ -157,7 +157,7 @@ const OwnerView = (props: Props) => {
       ) : (
         <SGCardWithStatus
           onClick={() => {
-            history.push(`${PATHS.EDIT_ORDER}/${params.supperGroupId}`)
+            history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)
           }}
           restaurant={props.supperGroup?.restaurantName as Restaurants}
           restaurantLogo={props.supperGroup?.restaurantLogo}
@@ -182,7 +182,7 @@ const OwnerView = (props: Props) => {
           defaultButtonDescription="Track Payment Progress"
           buttonWidth="fit-content"
           onButtonClick={() => {
-            history.push(`${PATHS.PAYMENT_SCREEN}/${params.supperGroupId}`)
+            history.push(`${PATHS.VIEW_PAYMENT_SCREEN}/${params.supperGroupId}`)
           }}
           isFlipButton={false}
         />

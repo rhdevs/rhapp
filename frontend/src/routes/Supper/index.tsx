@@ -64,7 +64,7 @@ export default function Supper() {
     <SupperGroupHistoryImg
       src={SupperGroupHistory}
       alt={'My Supper Groups'}
-      onClick={() => history.push(`${PATHS.USER_SUPPER_GROUP_OVERVIEW}/created`)}
+      onClick={() => history.push(`${PATHS.SUPPER_GROUP_OVERVIEW}/created`)}
     />
   )
 
@@ -107,7 +107,7 @@ export default function Supper() {
                     history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
                   } else {
                     //new SG to user
-                    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup.supperGroupId}`)
+                    history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
                   }
                 }
                 return (
@@ -128,7 +128,7 @@ export default function Supper() {
             )}
           </SupperGroupContainer>
           <PlusButtonDiv>
-            <PlusButton onClick={() => history.push(PATHS.USER_SUPPER_GROUP_CREATE_ORDER)} />
+            <PlusButton onClick={() => history.push(PATHS.CREATE_SUPPER_GROUP)} />
           </PlusButtonDiv>
           <BottomNavBar />
         </>

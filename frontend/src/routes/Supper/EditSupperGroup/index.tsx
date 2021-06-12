@@ -143,7 +143,7 @@ type FormData = {
 
 type PaymentInfoData = Record<string, string>
 
-const EditOrder = () => {
+const EditSupperGroup = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading, counter } = useSelector(
@@ -534,4 +534,4 @@ const EditOrder = () => {
   )
 }
 
-export default EditOrder
+export default EditSupperGroup
