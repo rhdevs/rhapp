@@ -11,8 +11,9 @@ import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartBut
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { getEditFoodItem, updateEditFoodItem } from '../../../store/supper/action'
-import { Food } from '../../../store/supper/types'
+import { CancelAction, Food } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import SelectField from './Components/SelectField'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -61,7 +62,7 @@ const StyledRadioGroup = styled(Radio.Group)`
 `
 
 const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
-  ${(props) => props.isHidden && 'display: none;'}
+  display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
   display: flex;
   flex-direction: row;
   height: 25px;
@@ -75,14 +76,16 @@ type HardCodedFormValues = {
   quantity: number
   cancelAction: string
 }
+
 type FormValues = Record<string, string | string[] | HardCodedFormValues>
+export type CustomData = Record<string, string | string[] | CancelAction>
 
 const EditFoodItem = () => {
   const dispatch = useDispatch()
 
   const { isLoading, editFoodItem, count } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; itemId: string }>()
-  const { register, handleSubmit, setValue, clearErrors } = useForm<FormValues>()
+  const { register, handleSubmit, setValue, watch, clearErrors, errors } = useForm<FormValues>()
   const onSubmit = () => {
     console.log(count)
     handleSubmit((data: Food) => {
@@ -105,39 +108,20 @@ const EditFoodItem = () => {
         <MainCard flexDirection="column" isEditable={false} editIconSize="0rem" padding="25px">
           <FoodItemHeader>{editFoodItem?.foodName}</FoodItemHeader>
           <>
-            {editFoodItem?.custom?.map((section) => {
-              return (
-                <>
-                  <SectionHeader>{section.title}</SectionHeader>
-                  <StyledRadioGroup
-                    {...register(`${section.title}`, { required: true })}
-                    onChange={(e) => {
-                      clearErrors(`${section.title}`)
-                      setValue(`${section.title}`, e.target.value)
-                    }}
-                    defaultValue={() => {
-                      section.options.find((sectionOption) => sectionOption.isSelected === true)?.name
-                    }}
-                  >
-                    {section.options.map((option, key) => {
-                      return (
-                        <>
-                          <RadioButtonContainer key={key}>
-                            <RadioButton
-                              margin="0 0 0 2px"
-                              value={option.name}
-                              label={<OptionText>{option.name}</OptionText>}
-                            />
-                          </RadioButtonContainer>
-                        </>
-                      )
-                    })}
-                    <Spacer />
-                  </StyledRadioGroup>
-                </>
-              )
-            })}
+            {editFoodItem?.custom?.map((custom, index) => (
+              <SelectField
+                custom={custom}
+                index={index}
+                key={index}
+                register={register}
+                clearErrors={clearErrors}
+                setValue={setValue}
+                errors={errors}
+                watch={watch}
+              />
+            ))}
           </>
+          <br />
           <SectionHeader>If this product is not available</SectionHeader>
           <StyledRadioGroup
             {...register(`cancelAction`, { required: true })}
@@ -148,17 +132,17 @@ const EditFoodItem = () => {
             defaultValue={'Contact'}
           >
             <RadioButtonContainer key={'Contact'}>
-              <RadioButton margin="0 0 0 2px" value={'Contact'} label={<OptionText>{'Contact'}</OptionText>} />
+              <RadioButton margin="0 0 0 2px" value={CancelAction.CONTACT} label={'Contact me '} />
             </RadioButtonContainer>
             <RadioButtonContainer key={'Cancel'}>
-              <RadioButton margin="0 0 0 2px" value={'Cancel'} label={<OptionText>{'Cancel'}</OptionText>} />
+              <RadioButton margin="0 0 0 2px" value={CancelAction.REMOVE} label={'Remove it from my order'} />
             </RadioButtonContainer>
           </StyledRadioGroup>
 
           <Spacer />
 
           <TextInput
-            defaultValue={editFoodItem?.comments}
+            defaultValue={editFoodItem?.comments || ''}
             {...register('comments')}
             placeholder="Additional comments e.g. BBQ Sauce"
           />
