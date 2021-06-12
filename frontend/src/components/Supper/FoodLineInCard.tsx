@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 
 import styled from 'styled-components'
 import editIcon from '../../assets/SupperEditIcon.svg'
 import deleteIcon from '../../assets/SupperDeleteIcon.svg'
 import { CancelAction } from '../../store/supper/types'
 
-const MainContainer = styled.div<{ padding?: string }>`
+const MainContainer = styled.div<{ padding?: string | undefined }>`
   height: fit-content;
   position: relative;
   width: 100%;
@@ -14,7 +14,7 @@ const MainContainer = styled.div<{ padding?: string }>`
   flex-direction: row;
 `
 
-const QuantityContainer = styled.div<{ fontPercentage?: number }>`
+const QuantityContainer = styled.div<{ fontPercentage?: number | undefined }>`
   width: 10%;
   font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
   line-height: 22px;
@@ -29,12 +29,12 @@ const TopContainer = styled.div`
   justify-content: space-between;
 `
 
-const TitleText = styled.text<{ fontPercentage?: number }>`
+const TitleText = styled.text<{ fontPercentage?: number | undefined }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
   line-height: 22px;
 `
 
-const MoneyText = styled.text<{ fontPercentage?: number }>`
+const MoneyText = styled.text<{ fontPercentage?: number | undefined }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   line-height: 14px;
   margin: auto 0;
@@ -51,7 +51,7 @@ const CustomisationContainer = styled.div`
   flex-direction: column;
 `
 
-const CustomText = styled.text<{ fontPercentage?: number }>`
+const CustomText = styled.text<{ fontPercentage?: number | undefined }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   line-height: 14px;
   font-weight: 200;
@@ -74,7 +74,7 @@ const CancelActionContainer = styled.div`
   flex-direction: row;
 `
 
-const BoldText = styled.text<{ fontPercentage?: number }>`
+const BoldText = styled.text<{ fontPercentage?: number | undefined }>`
   font-weight: 400;
   font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
   padding-right: 5px;
@@ -92,9 +92,9 @@ type Props = {
   qty: number
   price?: number
   customisations?: string[]
-  isEditable?: boolean
-  comments?: string
-  cancelAction?: CancelAction
+  isEditable?: boolean | undefined
+  comments?: string | undefined
+  cancelAction?: CancelAction | undefined
   onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onDeleteClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
@@ -133,8 +133,12 @@ export const FoodLineInCard = (props: Props) => {
 
           {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
-              <Icon onClick={props.onEditClick} src={editIcon} alt="Edit Icon" />
-              <Icon onClick={props.onDeleteClick} src={deleteIcon} alt="Edit Icon" />
+              <Icon onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} src={editIcon} alt="Edit Icon" />
+              <Icon
+                onClick={props.onDeleteClick as MouseEventHandler<HTMLImageElement>}
+                src={deleteIcon}
+                alt="Edit Icon"
+              />
             </IconsContainer>
           )}
         </BottomContainer>

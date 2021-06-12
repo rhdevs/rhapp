@@ -29,7 +29,7 @@ const MainContainer = styled.div`
 
 type Props = {
   restaurantList: string[]
-  defaultRestaurant?: Restaurants | string
+  defaultRestaurant?: Restaurants | string | undefined
   isDisabled?: boolean
 }
 

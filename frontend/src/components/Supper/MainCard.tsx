@@ -1,9 +1,13 @@
-import React, { ReactChild, ReactChildren } from 'react'
+import React, { MouseEventHandler, ReactChild, ReactChildren } from 'react'
 
 import styled from 'styled-components'
 import editIcon from '../../assets/SupperEditIcon.svg'
 
-const MainContainer = styled.div<{ flexDirection?: string; minHeight?: string; margin?: string }>`
+const MainContainer = styled.div<{
+  flexDirection?: string | undefined
+  minHeight?: string | undefined
+  margin?: string | undefined
+}>`
   position: relative;
   cursor: pointer;
   background-color: #ffffff;
@@ -16,7 +20,7 @@ const MainContainer = styled.div<{ flexDirection?: string; minHeight?: string; m
   flex-direction: ${(props) => props.flexDirection ?? ''};
 `
 
-const EditIcon = styled.img<{ editIconSize?: string }>`
+const EditIcon = styled.img<{ editIconSize?: string | undefined }>`
   position: absolute;
   margin: 5px 20px;
   right: 0;
@@ -29,7 +33,7 @@ interface AuxProps {
   minHeight?: string
   isEditable?: boolean
   editIconSize?: string
-  margin?: string
+  margin?: string | undefined
   editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
@@ -37,14 +41,19 @@ interface AuxProps {
 export const MainCard = (props: AuxProps) => {
   return (
     <MainContainer
-      onClick={props.onClick}
+      onClick={props.onClick as MouseEventHandler<HTMLDivElement>}
       minHeight={props.minHeight}
       flexDirection={props.flexDirection}
       margin={props.margin}
     >
       {props.children}
       {props.isEditable && (
-        <EditIcon onClick={props.editOnClick} editIconSize={props.editIconSize} src={editIcon} alt="Edit Icon" />
+        <EditIcon
+          onClick={props.editOnClick as MouseEventHandler<HTMLDivElement>}
+          editIconSize={props.editIconSize}
+          src={editIcon}
+          alt="Edit Icon"
+        />
       )}
     </MainContainer>
   )

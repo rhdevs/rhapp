@@ -5,7 +5,7 @@ import { CollatedOrder, Food, Order } from '../../../store/supper/types'
 import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
-import EmptyCart from '../../../assets/EmptyCart.svg'
+import EmptyCart_src from '../../../assets/EmptyCart.svg'
 import { OpenUserTelegram } from '../../TelegramShareButton'
 import { useDispatch } from 'react-redux'
 import { setFoodId } from '../../../store/supper/action'
@@ -68,10 +68,10 @@ type Props = {
 export const OrderSummaryCard = (props: Props) => {
   const dispatch = useDispatch()
 
-  const emptyCartImg = () => {
+  const EmptyCart = () => {
     return (
       <EmptyCartContainer>
-        <EmptyCartImg alt="Empty Cart" src={EmptyCart} />
+        <EmptyCartImg alt="Empty Cart" src={EmptyCart_src} />
       </EmptyCartContainer>
     )
   }
@@ -118,7 +118,7 @@ export const OrderSummaryCard = (props: Props) => {
       return (
         <>
           {collatedOrderList.length <= 0 || collatedOrderList === null ? (
-            <>{emptyCartImg()}</> //<EmptyCartContainer>No Orders</EmptyCartContainer>
+            <EmptyCart /> //<EmptyCartContainer>No Orders</EmptyCartContainer>
           ) : (
             collatedOrderList.map((food, index) => {
               const customisations: string[] = []
@@ -147,7 +147,7 @@ export const OrderSummaryCard = (props: Props) => {
         (props.orderList?.length ?? 0) <= 0 ||
         props.orderList?.filter((order) => order.foodList.length).length === 0
       ) {
-        return <>{emptyCartImg()}</>
+        return <EmptyCart />
       } else {
         let orderList = props.orderList
         if (orderList) {
@@ -213,7 +213,7 @@ export const OrderSummaryCard = (props: Props) => {
       }
     } else {
       if ((props.foodList?.length ?? 0) <= 0) {
-        return <>{emptyCartImg()}</>
+        return <EmptyCart />
       } else {
         return (
           <>

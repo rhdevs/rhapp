@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 
 import styled from 'styled-components'
 import { Button as AntdButton } from 'antd'
 import { message } from 'antd'
 
-const MainContainer = styled.div<{ center?: boolean; containerPadding?: string }>`
+const MainContainer = styled.div<{ center?: boolean | undefined; containerPadding?: string | undefined }>`
   ${(props) =>
     props.center &&
     `display: flex;
@@ -29,7 +29,7 @@ type Props = {
   buttonHeight?: string
   style?: React.CSSProperties
   descriptionStyle?: React.CSSProperties
-  onButtonClick?: (arg0: boolean) => void
+  onButtonClick?: ((arg0: boolean) => void) | undefined
   isFlipButton?: boolean
   border?: string
   htmlType?: 'button' | 'submit' | 'reset' | undefined
@@ -118,9 +118,7 @@ function Button(props: Props) {
           if (props.onButtonClick) props.onButtonClick(buttonIsPressed)
         }}
       >
-        <text style={props.descriptionStyle ? props.descriptionStyle : undefined}>
-          {buttonDescriptionChooser(buttonIsPressed)}
-        </text>
+        <text style={props.descriptionStyle as CSSProperties}>{buttonDescriptionChooser(buttonIsPressed)}</text>
       </AntdButton>
     </MainContainer>
   )
