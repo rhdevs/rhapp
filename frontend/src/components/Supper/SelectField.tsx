@@ -7,6 +7,7 @@ import { Custom, Option } from '../../store/supper/types'
 import { RadioButton } from '../RadioButton'
 import { CustomData } from '../../routes/Supper/EditFoodItem'
 import { Radio } from 'antd'
+import { CheckboxMainContainer, FlexDiv } from '../../routes/Supper/AddItem/Components/StyledComponents'
 
 export const CustomHeadersContainer = styled.div<{ marginTop?: string }>`
   display: flex;
@@ -215,7 +216,7 @@ const SingleOptions = ({
         return (
           <RadioButtonContainer key={index} isHidden={index >= 3 && !isExpanded}>
             <RadioButton
-              margin="0 0 0 2px"
+              margin="0 0 3px 2px"
               value={option.name}
               label={
                 <OptionText>
@@ -252,29 +253,36 @@ const MultipleOptions = ({
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false)
   const isDisabled = custom.max ? (watch(`${custom.title}`) ?? []).length >= custom.max : false
+
   return (
-    <CheckboxContainer
-      {...register(`${custom.title}`, { required: isCompulsory })}
-      key={index}
-      onClick={() => {
-        if (isSelected) {
-          const newArr: string[] = (watch(`${custom.title}`) as string[])?.filter((i) => i !== option.name)
-          setValue(`${custom.title}`, newArr)
-          setIsSelected(false)
-        } else if (!isDisabled) {
-          const newArr: string[] = [option.name].concat(watch(`${custom.title}`) ?? [])
-          setValue(`${custom.title}`, newArr)
-          setIsSelected(true)
-        }
-      }}
-      isHidden={index >= 3 && !isExpanded}
-    >
-      <Checkbox margin="auto 10px auto 0" sizePercentage={0.9} isChecked={isSelected} isDisabled={isDisabled} />
-      <OptionText>
-        {option.name}
-        {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
-      </OptionText>
-    </CheckboxContainer>
+    <CheckboxMainContainer>
+      <CheckboxContainer
+        {...register(`${custom.title}`, { required: isCompulsory })}
+        key={index}
+        onClick={() => {
+          if (isSelected) {
+            const newArr: string[] = (watch(`${custom.title}`) as string[])?.filter((i) => i !== option.name)
+            setValue(`${custom.title}`, newArr)
+            setIsSelected(false)
+          } else if (!isDisabled) {
+            const newArr: string[] = [option.name].concat(watch(`${custom.title}`) ?? [])
+            setValue(`${custom.title}`, newArr)
+            setIsSelected(true)
+          }
+        }}
+        isHidden={index >= 3 && !isExpanded}
+      >
+        <FlexDiv flex={5}>
+          <Checkbox margin="auto 8px auto 0" sizePercentage={0.9} isChecked={isSelected} isDisabled={isDisabled} />
+        </FlexDiv>
+        <FlexDiv flex={95}>
+          <OptionText>
+            {option.name}
+            {option.price !== 0 && ' (+$' + option.price.toFixed(2) + ')'}
+          </OptionText>
+        </FlexDiv>
+      </CheckboxContainer>
+    </CheckboxMainContainer>
   )
 }
 

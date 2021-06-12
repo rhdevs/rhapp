@@ -630,3 +630,35 @@ export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) 
     foodId: foodId,
   })
 }
+
+export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  console.log(orderId, hasReceived)
+  if (!orderId) return
+  if (hasReceived === undefined) return
+
+  const { paymentUpdateArray } = getState().supper
+  let newPaymentUpdate = paymentUpdateArray
+  const index = paymentUpdateArray.findIndex((payment) => payment.orderId === orderId)
+  const newPaymentUpdateInfo = {
+    orderId: orderId,
+    hasReceived: hasReceived,
+  }
+
+  if (index === -1) {
+    newPaymentUpdate = paymentUpdateArray.concat(newPaymentUpdateInfo)
+  } else {
+    newPaymentUpdate = paymentUpdateArray.map((payment) => {
+      if (payment.orderId === orderId) {
+        return newPaymentUpdateInfo
+      } else return payment
+    })
+  }
+
+  dispatch({
+    type: SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY,
+    paymentUpdateArray: newPaymentUpdate,
+  })
+}

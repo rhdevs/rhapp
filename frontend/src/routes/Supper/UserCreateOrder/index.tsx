@@ -33,7 +33,6 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;

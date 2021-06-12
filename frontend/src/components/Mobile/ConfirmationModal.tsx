@@ -26,6 +26,8 @@ const MainContainer = styled.div`
   padding: 15px;
   box-shadow: 0px 2px 5px 1px #888888;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
 `
 
 const TitleText = styled.text`
@@ -33,6 +35,14 @@ const TitleText = styled.text`
   font-size: 16px;
   font-weight: bold;
 `
+
+const DescriptionText = styled.text`
+  font-weight: 250;
+  font-size: 14px;
+  padding-top: 0.5rem;
+  color: #33363a;
+`
+
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -42,6 +52,7 @@ const ButtonContainer = styled.div`
 
 function ConfirmationModal({
   title,
+  description,
   hasLeftButton,
   leftButtonText,
   leftButtonTextColor,
@@ -58,6 +69,7 @@ function ConfirmationModal({
   left,
 }: {
   title: string
+  description?: string
   hasLeftButton?: boolean
   leftButtonText: string
   leftButtonTextColor?: string
@@ -83,6 +95,7 @@ function ConfirmationModal({
       <OverlayContainer onClick={onOverlayClick} />
       <MainContainer style={{ bottom: bottom ?? '50%', right: right ?? 0, left: left ?? 0, top: top }}>
         <TitleText>{title}</TitleText>
+        <DescriptionText>{description}</DescriptionText>
         <ButtonContainer>
           {hasLeftButton && (
             <Button

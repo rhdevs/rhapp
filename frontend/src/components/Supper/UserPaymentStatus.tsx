@@ -10,7 +10,7 @@ import { OpenUserTelegram } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setExpandAll, setPaymentExpandedCount, updateOrderDetails } from '../../store/supper/action'
+import { setExpandAll, setPaymentExpandedCount, setPaymentUpdateArray } from '../../store/supper/action'
 // import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
@@ -112,7 +112,6 @@ export const UserPaymentStatus = (props: Props) => {
   const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
   const dispatch = useDispatch()
 
-  console.log(props.hasReceived)
   useEffect(() => {
     if (isExpandAll) {
       dispatch(setPaymentExpandedCount(0))
@@ -161,15 +160,15 @@ export const UserPaymentStatus = (props: Props) => {
               margin="auto 5px auto 0"
               isChecked={cancelName}
               onClick={() => {
+                dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
                 setCancelName(!cancelName)
-                dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
               }}
             />
           </CheckboxContainer>
           <NameText
             onClick={() => {
+              dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
               setCancelName(!cancelName)
-              dispatch(updateOrderDetails(props.orderId, { hasReceived: cancelName }))
             }}
             cancelName={cancelName}
           >

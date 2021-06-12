@@ -10,7 +10,7 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import { addFoodToOrder, getMenuFood } from '../../../store/supper/action'
+import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import {
@@ -24,6 +24,7 @@ import {
   StyledRadioGroup,
 } from '../../../components/Supper/SelectField'
 import SelectField from '../../../components/Supper/SelectField'
+import useSnackbar from '../../../hooks/useSnackbar'
 
 const Background = styled.form`
   width: 100vw;
@@ -63,48 +64,55 @@ const AddFoodItem = () => {
     mode: 'all',
     reValidateMode: 'onChange',
   })
-  const { menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
   const compulsoryFields: Custom[] =
     menuFood?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
 
   useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getMenuFood(params.foodId))
   }, [dispatch])
 
   const onSubmit = (e) => {
     e.preventDefault()
+    const totalUserFoodCost = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count
+    const newCurrentCost = (supperGroup?.currentFoodCost ?? 0) + totalUserFoodCost
+    if (newCurrentCost > (supperGroup?.costLimit ?? 0)) {
+      const [error] = useSnackbar('error')
+      error('Supper group price limit exceeded, unable to add item.')
+      return
+    }
     handleSubmit((data) => {
-      const custom: Custom[] = (menuFood?.custom ?? []).map((cf) => {
+      const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
           .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments')
-          .map((entry) => {
+          .flatMap((entry) => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
-            if (cf.title === fieldName) {
-              const k = cf.options.map(
+            if (customFood.title === fieldName) {
+              const k = customFood.options.map(
                 (option) =>
-                  fieldDetails.map((fd) => {
-                    const isSelected = option.name === fd ? true : false
+                  fieldDetails.map((fieldDetail) => {
+                    const isSelected = option.name === fieldDetail ? true : false
                     return { ...option, isSelected: isSelected }
                   })[0],
               )
               return k
             } else {
-              console.log(cf.title, fieldName)
+              console.log(customFood.title, fieldName)
               return {} as Option
             }
           })
           .filter(Boolean)
-          .flat()
           .filter((k) => k.name !== undefined) //to remove empty Option objects
 
         return {
-          title: cf.title,
+          title: customFood.title,
           options: options,
-          max: cf.max,
-          min: cf.min,
+          max: customFood.max,
+          min: customFood.min,
         }
       })
       const newFood: Food = {
@@ -121,7 +129,7 @@ const AddFoodItem = () => {
       console.log(newFood)
       //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
-      history.push(`${PATHS.USER_SUPPER_GROUP_PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
+      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
       console.log(data, count)
     })()
   }
@@ -144,8 +152,8 @@ const AddFoodItem = () => {
       const fieldDetails = [entry[1]].flat()
       const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
       originalCustom?.options.map((option) => {
-        fieldDetails?.map((fd) => {
-          if (option.name === fd) addOns += option.price
+        fieldDetails?.map((fieldDetail) => {
+          if (option.name === fieldDetail) addOns += option.price
         })
       })
     })
@@ -190,14 +198,14 @@ const AddFoodItem = () => {
             >
               <RadioButtonContainer>
                 <RadioButton
-                  margin="0 0 0 2px"
+                  margin="0 0 3px 2px"
                   value={CancelAction.REMOVE}
                   label={<OptionText>Remove it from my order</OptionText>}
                 />
               </RadioButtonContainer>
               <RadioButtonContainer>
                 <RadioButton
-                  margin="0 0 0 2px"
+                  margin="0 0 3px 2px"
                   value={CancelAction.CONTACT}
                   label={<OptionText>Contact me </OptionText>}
                 />

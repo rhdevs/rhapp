@@ -20,7 +20,7 @@ import {
   setSelectedPaymentMethod,
   unixTo12HourTime,
   unixToFormattedTime,
-  // updateOrderDetails,
+  updateOrderDetails,
 } from '../../../store/supper/action'
 import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -470,8 +470,8 @@ const EditOrder = () => {
       history.goBack()
       console.log(data)
       console.log('updatedOrderInfo', updatedOrderInfo)
-      //TODO: uncomment to send updated order details to backend
-      // dispatch(updateOrderDetails(params.supperGroupId, updatedOrderInfo))
+      //TODO: TEST updated order details to backend
+      dispatch(updateOrderDetails(params.supperGroupId, updatedOrderInfo))
     })()
   }
 

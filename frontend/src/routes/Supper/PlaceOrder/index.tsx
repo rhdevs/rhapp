@@ -25,6 +25,7 @@ const Background = styled.div`
   position: relative;
   min-height: 100vh;
   height: 100%;
+  padding-bottom: 1rem;
 `
 const SearchBarContainer = styled.div`
   margin: 8px 20px;
@@ -36,7 +37,7 @@ const Restaurant = styled.text`
   margin-left: 30px;
 `
 
-export default function UserPlaceOrder() {
+export default function PlaceOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()

@@ -139,6 +139,11 @@ export type PaymentInfo = {
   link?: string | null
 }
 
+export type PaymentUpdateInfo = {
+  orderId: string
+  hasReceived: boolean
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
@@ -175,6 +180,8 @@ export enum SUPPER_ACTIONS {
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
   SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
+  GET_ORDER_ID = 'SUPPER_ACTIONS.GET_ORDER_ID',
+  SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
 }
 
 type SetIsLoading = {
@@ -352,6 +359,16 @@ type SetFoodId = {
   foodId?: string
 }
 
+type GetOrderId = {
+  type: typeof SUPPER_ACTIONS.GET_ORDER_ID
+  orderId?: string
+}
+
+type SetPaymentUpdateArray = {
+  type: typeof SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY
+  paymentUpdateArray: PaymentUpdateInfo[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -388,3 +405,5 @@ export type ActionTypes =
   | SetEditOrderNumber
   | SetCounter
   | SetFoodId
+  | GetOrderId
+  | SetPaymentUpdateArray
