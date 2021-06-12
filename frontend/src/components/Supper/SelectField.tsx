@@ -2,21 +2,78 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { UpOutlined } from '@ant-design/icons/lib/icons'
 import { DeepMap, FieldError } from 'react-hook-form'
-import { Checkbox } from '../../../../components/Checkbox'
-import { Custom, Option } from '../../../../store/supper/types'
-import {
-  CustomHeaders,
-  CustomHeadersContainer,
-  OptionText,
-  OptionTitleContainer,
-  RadioButtonContainer,
-  RedText,
-  SelectText,
-  StyledRadioGroup,
-  CheckboxContainer,
-} from './StyledComponents'
-import { RadioButton } from '../../../../components/RadioButton'
-import { CustomData } from '..'
+import { Checkbox } from '../Checkbox'
+import { Custom, Option } from '../../store/supper/types'
+import { RadioButton } from '../RadioButton'
+import { CustomData } from '../../routes/Supper/EditFoodItem'
+import { Radio } from 'antd'
+
+export const CustomHeadersContainer = styled.div<{ marginTop?: string }>`
+  display: flex;
+  flex-direction: column;
+  margin-top: ${(props) => (props.marginTop ? props.marginTop : '1.5rem')};
+`
+
+export const OptionTitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const CustomHeaders = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+`
+
+export const RedText = styled.text`
+  color: #ff4d4f;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  white-space: nowrap;
+`
+
+export const SelectText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  padding-bottom: 5px;
+`
+
+export const StyledRadioGroup = styled(Radio.Group)`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+export const RadioButtonContainer = styled.div<{ isHidden?: boolean }>`
+  display: ${(props) => (props.isHidden ? 'none !important' : 'inherit')};
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+`
+
+export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  cursor: pointer;
+  height: 30px;
+  align-items: center;
+  display: ${(props) => (props.isHidden ? 'none' : 'inherit')};
+`
+
+export const OptionText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 14px;
+`
 
 const CustomContainer = styled.div`
   display: flex;

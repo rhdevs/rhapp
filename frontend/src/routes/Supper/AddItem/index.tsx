@@ -13,7 +13,6 @@ import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { addFoodToOrder, getMenuFood } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import SelectField from './Components/SelectField'
 import {
   CustomHeaders,
   CustomHeadersContainer,
@@ -23,7 +22,8 @@ import {
   RedText,
   SelectText,
   StyledRadioGroup,
-} from './Components/StyledComponents'
+} from '../../../components/Supper/SelectField'
+import SelectField from '../../../components/Supper/SelectField'
 
 const Background = styled.form`
   width: 100vw;

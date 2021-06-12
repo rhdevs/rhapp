@@ -13,7 +13,7 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { getEditFoodItem, updateEditFoodItem } from '../../../store/supper/action'
 import { CancelAction, Food } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
-import SelectField from './Components/SelectField'
+import SelectField from '../../../components/Supper/SelectField'
 
 const MainContainer = styled.div`
   width: 100vw;
