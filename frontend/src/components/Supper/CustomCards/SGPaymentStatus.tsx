@@ -52,7 +52,7 @@ export const SGPaymentStatus = (props: Props) => {
           {props.supperGroup.orderList.map((order, index) => {
             const additionalCost =
               props.supperGroup?.splitAdditionalCost === SplitACMethod.EQUAL
-                ? props.supperGroup?.additionalCost ?? 0 / props.supperGroup?.userIdList.length
+                ? props.supperGroup?.additionalCost ?? 0 / (props.supperGroup?.userIdList?.length ?? 0)
                 : ((props.supperGroup?.additionalCost ?? 0) * order.totalCost) /
                   (props.supperGroup?.currentFoodCost ?? 0 + (props.supperGroup?.additionalCost ?? 0))
             return (
@@ -61,7 +61,7 @@ export const SGPaymentStatus = (props: Props) => {
                   orderId={order.orderId}
                   key={index}
                   name={order.user.displayName}
-                  phoneNumber={order.userContact}
+                  phoneNumber={order.userContact ?? 0} //TODO: CHECK whether should make type compulsory
                   telegramHandle={order.user.telegramHandle}
                   hasPaid={order.hasPaid}
                   foodList={order.foodList}
@@ -69,7 +69,7 @@ export const SGPaymentStatus = (props: Props) => {
                   totalCost={order.totalCost}
                   additionalCost={additionalCost}
                   paymentMethod={order.paymentMethod}
-                  numOrders={props.supperGroup?.orderList?.length}
+                  numOrders={props.supperGroup?.orderList?.length ?? 0}
                 />
                 {index + 1 !== props.supperGroup?.orderList?.length && <HorizontalLine />}
               </>

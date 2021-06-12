@@ -13,7 +13,6 @@ import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import SelectField from './Components/SelectField'
 import {
   CustomHeaders,
   CustomHeadersContainer,
@@ -23,7 +22,8 @@ import {
   RedText,
   SelectText,
   StyledRadioGroup,
-} from './Components/StyledComponents'
+} from '../../../components/Supper/SelectField'
+import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 
 const Background = styled.form`
@@ -56,7 +56,7 @@ const Spacer = styled.div`
 
 export type CustomData = Record<string, string | string[] | CancelAction>
 
-const AddItem = () => {
+const AddFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
@@ -241,4 +241,4 @@ const AddItem = () => {
   )
 }
 
-export default AddItem
+export default AddFoodItem

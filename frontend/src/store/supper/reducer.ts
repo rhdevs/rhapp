@@ -38,6 +38,7 @@ const initialState = {
   searchedSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
+  editFoodItem: null,
   menuTabKey: '',
   isExpandAll: true,
   expandedCount: 0,
@@ -73,6 +74,7 @@ type State = {
   searchedSupperGroups: SupperGroup[]
   searchValue: string
   tabsKey: string
+  editFoodItem: Food | null
   menuTabKey: string
   isExpandAll: boolean
   expandedCount: number
@@ -166,6 +168,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_TABS_KEY: {
       return { ...state, tabsKey: action.tabsKey }
+    }
+    case SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM: {
+      return { ...state, editFoodItem: action.editFoodItem }
     }
     case SUPPER_ACTIONS.SET_MENU_TAB_KEY: {
       return { ...state, menuTabKey: action.menuTabKey }

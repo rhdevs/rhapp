@@ -90,7 +90,7 @@ export const MenuSection = (props: Props) => {
                   <FoodAndQuantityContainer
                     // TODO: UPDATE ORDERID!
                     onClick={() =>
-                      history.push(`${PATHS.ADD_ITEM}/${props.supperGroupId}/order/1/add/${foodMenu.foodMenuId}`)
+                      history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/1/add/${foodMenu.foodMenuId}`)
                     }
                   >
                     <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>

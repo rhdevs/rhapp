@@ -70,7 +70,7 @@ export default function PlaceOrder() {
             priceLimit={supperGroup?.costLimit ?? 50}
             currentAmount={supperGroup?.currentFoodCost ?? 10}
             closingTime={unixTo12HourTime(supperGroup?.closingTime)}
-            numberOfUsers={supperGroup?.userIdList.length ?? 0}
+            numberOfUsers={supperGroup?.userIdList?.length ?? 0}
             deliveryFee={String(supperGroup?.additionalCost ?? '-')}
           />
           <Restaurant>{restaurant?.name ?? '-'}</Restaurant>

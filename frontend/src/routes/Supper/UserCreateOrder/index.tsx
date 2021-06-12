@@ -9,8 +9,23 @@ import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import { createSupperGroup, setOrder, unixTo12HourTime } from '../../../store/supper/action'
-import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import {
+  createSupperGroup,
+  setIsLoading,
+  setCounter,
+  setOrder,
+  unixTo12HourTime,
+  unixToFormattedTime,
+  setSelectedPaymentMethod,
+} from '../../../store/supper/action'
+import {
+  PaymentInfo,
+  PaymentMethod,
+  Restaurants,
+  SplitACMethod,
+  SupperGroup,
+  SupperGroupStatus,
+} from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -120,7 +135,7 @@ const FixerContainer = styled.div`
 type FormValues1 = {
   supperGroupName: string
   restaurant: string
-  closingTime: string
+  closingTime: number
   maxPrice: number
 }
 
@@ -137,7 +152,7 @@ type FormValues3 = {
 export default function UserCreateOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
+  const { counter, isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
     (state: RootState) => state.supper,
   )
   const [count, setCount] = useState(1)
@@ -162,8 +177,7 @@ export default function UserCreateOrder() {
     supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
-    userIdList: [],
-    closingTime: Math.round(Date.now() / 1000),
+    closingTime: 0,
     phoneNumber: 0,
   }
 
@@ -175,6 +189,7 @@ export default function UserCreateOrder() {
     control: control1,
     errors: errors1,
     clearErrors: clearErrors1,
+    reset: reset1,
   } = useForm<FormValues1>()
 
   const {
@@ -183,6 +198,8 @@ export default function UserCreateOrder() {
     setValue: setValue2,
     control: control2,
     errors: errors2,
+    clearErrors: clearErrors2,
+    reset: reset2,
   } = useForm<FormValues2>()
 
   const {
@@ -199,6 +216,7 @@ export default function UserCreateOrder() {
   }, [dispatch])
 
   useEffect(() => {
+    dispatch(setCounter(counter + 1))
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
       setValue3('paymentMethod', undefined)
       setError3('paymentMethod', { type: 'required' })
@@ -210,6 +228,24 @@ export default function UserCreateOrder() {
     }
   }, [selectedPaymentMethod])
 
+  useEffect(() => {
+    setValue1('restaurant', selectedRestaurant)
+    clearErrors1('restaurant')
+  }, [selectedRestaurant])
+
+  useEffect(() => {
+    if (supperGroup) {
+      reset1({
+        restaurant: supperGroup.restaurantName,
+        maxPrice: supperGroup.costLimit,
+      })
+      reset2({
+        splitDeliveryFees: supperGroup.splitAdditionalCost,
+      })
+      setHasMaxPrice(supperGroup.costLimit ? true : false)
+    }
+  }, [supperGroup, reset1, reset2])
+
   let updatedSPInfo
 
   const onChange = (time, timeString) => {
@@ -218,16 +254,15 @@ export default function UserCreateOrder() {
       setError1('closingTime', { type: 'required' })
       return
     }
-    console.log(time._d)
-    console.log(timeString)
+    console.log('time.d', time._d)
+    console.log('timeString', timeString)
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
     }
-    console.log(epochClosingTime)
-    console.log(unixTo12HourTime(epochClosingTime))
+    console.log('ECT', epochClosingTime)
     setValue1('closingTime', epochClosingTime)
     clearErrors1('closingTime')
     updatedSPInfo = { ...updatedSPInfo, closingTime: epochClosingTime }
@@ -235,8 +270,6 @@ export default function UserCreateOrder() {
 
   const onClick1 = () => {
     updatedSPInfo = { ...supperGroup }
-    setValue1('restaurant', selectedRestaurant)
-    console.log(selectedRestaurant)
     if (priceLimit > 0 && hasMaxPrice) {
       setValue1('maxPrice', priceLimit)
     }
@@ -245,6 +278,7 @@ export default function UserCreateOrder() {
         ...updatedSPInfo,
         supperGroupName: data.supperGroupName,
         restaurantName: data.restaurant,
+        closingTIme: data.closingTime,
       }
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
@@ -280,7 +314,7 @@ export default function UserCreateOrder() {
         ownerId: localStorage.userID,
       }
       const initialPI = supperGroup?.paymentInfo
-      const initialPM = supperGroup?.paymentInfo.map((pi) => {
+      const initialPM = supperGroup?.paymentInfo?.map((pi) => {
         return pi.paymentMethod
       })
       let newPI: PaymentInfo[] = []
@@ -312,7 +346,6 @@ export default function UserCreateOrder() {
         newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
       }
       if (newPI.length) {
-        //changes were made
         const updatedPI = selectedPaymentMethod.map((pm) => {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
@@ -336,10 +369,10 @@ export default function UserCreateOrder() {
   }
 
   const onLeftClick = () => {
-    if (supperGroup !== initSupperGroup || supperGroup === null) {
-      setModalIsOpen(true)
-    } else {
+    if (JSON.stringify(supperGroup) === JSON.stringify(initSupperGroup)) {
       history.goBack()
+    } else {
+      setModalIsOpen(true)
     }
   }
 
@@ -363,6 +396,7 @@ export default function UserCreateOrder() {
                     type="number"
                     placeholder="$$$"
                     name="estDeliveryFee"
+                    defaultValue={supperGroup?.additionalCost}
                     ref={register2({
                       required: true,
                       valueAsNumber: true,
@@ -381,16 +415,18 @@ export default function UserCreateOrder() {
                   <Controller
                     name="splitDeliveryFees"
                     control={control2}
-                    defaultValue={null}
+                    defaultValue={supperGroup?.splitAdditionalCost}
                     render={() => (
                       <StyledRadioButtons
                         onChange={(input) => {
                           console.log(input.target.value)
+                          clearErrors2('splitDeliveryFees')
                           setValue2('splitDeliveryFees', input.target.value)
                         }}
                         {...register2('splitDeliveryFees', {
                           required: true,
                         })}
+                        defaultValue={supperGroup?.splitAdditionalCost}
                         style={{
                           borderColor: errors2.splitDeliveryFees && 'red',
                           background: errors2.splitDeliveryFees && '#ffd1d1',
@@ -479,7 +515,7 @@ export default function UserCreateOrder() {
               <TopNavBar
                 title="Create Order"
                 rightComponent={<UnderlinedButton onClick={onClick1} text="Next" fontWeight={700} />}
-                onLeftClick={() => onLeftClick}
+                onLeftClick={onLeftClick}
               />
               {modalIsOpen && (
                 <ConfirmationModal
@@ -500,6 +536,7 @@ export default function UserCreateOrder() {
                     type="text"
                     placeholder="Order Name"
                     name="supperGroupName"
+                    defaultValue={supperGroup?.supperGroupName ?? ''}
                     ref={register1({
                       required: true,
                       validate: (input) => input.trim().length !== 0,
@@ -519,7 +556,12 @@ export default function UserCreateOrder() {
                   control={control1}
                   rules={{ required: true }}
                   defaultValue={null}
-                  render={() => <RestaurantBubbles defaultRestaurant={"McDonald's"} restaurantList={restaurantList} />}
+                  render={() => (
+                    <RestaurantBubbles
+                      defaultRestaurant={supperGroup?.restaurantName ?? Restaurants.MCDONALDS}
+                      restaurantList={restaurantList}
+                    />
+                  )}
                 />
                 {errors1.restaurant?.type === 'required' && <ErrorText>Selecting a restaurant is required.</ErrorText>}
               </VertSectionContainer>
@@ -530,7 +572,7 @@ export default function UserCreateOrder() {
                     name="closingTime"
                     control={control1}
                     rules={{ required: true }}
-                    defaultValue={Date.now()}
+                    defaultValue={null}
                     render={() => (
                       <StyledTimePicker
                         use12Hours
@@ -538,6 +580,7 @@ export default function UserCreateOrder() {
                         onChange={onChange}
                         name="closingTime"
                         ref={register1({ required: true })}
+                        //defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
                         style={{
                           borderColor: errors1.closingTime && 'red',
                           background: errors1.closingTime && '#ffd1d1',
@@ -565,7 +608,7 @@ export default function UserCreateOrder() {
                       name="maxPrice"
                       control={control1}
                       defaultValue={null}
-                      render={() => <MaxPriceFixer />}
+                      render={() => <MaxPriceFixer defaultValue={supperGroup?.costLimit ?? 0} />}
                     />
                   </FixerContainer>
                 )}

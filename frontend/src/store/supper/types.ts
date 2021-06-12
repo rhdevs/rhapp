@@ -99,7 +99,7 @@ export type SupperGroup = {
   supperGroupId: string
   supperGroupName: string
   totalPrice: number
-  userIdList: string[]
+  userIdList?: string[]
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number
@@ -172,6 +172,7 @@ export enum SUPPER_ACTIONS {
   GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
+  GET_EDIT_FOOD_ITEM = 'SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM',
   SET_MENU_TAB_KEY = 'SUPPER_ACTIONS.SET_MENU_TAB_KEY',
   SET_EXPAND_ALL = 'SUPPER_ACTIONS.SET_EXPAND_ALL',
   SET_PAYMENT_EXPANDED_COUNT = 'SUPPER_ACTIONS.SET_PAYMENT_EXPANDED_COUNT',
@@ -318,6 +319,11 @@ type SetTabsKey = {
   tabsKey: string
 }
 
+type GetEditFoodItem = {
+  type: typeof SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM
+  editFoodItem: Food | null
+}
+
 type SetMenuTabKey = {
   type: typeof SUPPER_ACTIONS.SET_MENU_TAB_KEY
   menuTabKey: string
@@ -380,6 +386,7 @@ export type ActionTypes =
   | GetMenuFood
   | GetOrderHistory
   | GetSupperGroupHistory
+  | GetEditFoodItem
   | GetJoinedSupperGroupHistory
   | SetCount
   | SetPriceLimit
