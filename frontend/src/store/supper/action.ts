@@ -281,11 +281,9 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch({
-        type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: resp.data,
-      })
-      console.log(resp)
+      console.log(resp.data)
+      dispatch(setOrder(resp.data))
+      //dispatch(getSupperGroupById(resp.data.supperGroupId))
     })
     .catch((err) => {
       console.log(err)

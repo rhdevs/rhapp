@@ -84,7 +84,7 @@ const UserView = (props: Props) => {
           priceLimit={props.supperGroup?.costLimit ?? 50}
           currentAmount={props.supperGroup?.currentFoodCost ?? 10}
           closingTime={unixTo12HourTime(props.supperGroup?.closingTime)}
-          numberOfUsers={props.supperGroup?.userIdList.length ?? 0}
+          numberOfUsers={props.supperGroup?.userIdList?.length ?? 0}
           deliveryFee={String(props.supperGroup?.additionalCost ?? '-')}
         />
       ) : props.supperGroupIsCancelled ? (
