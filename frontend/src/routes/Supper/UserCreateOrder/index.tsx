@@ -331,7 +331,7 @@ export default function UserCreateOrder() {
       dispatch(setOrder(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
     })()
-    history.push(`${PATHS.JOIN_ORDER_MAIN_PAGE}/${supperGroup?.supperGroupId}`)
+    history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
   }
 
   const onConfirmDiscardClick = () => {
