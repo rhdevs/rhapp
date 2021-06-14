@@ -333,19 +333,22 @@ export const updateSupperGroup = (supperGroupId: string, order?: Order, supperGr
   dispatch(setIsLoading(false))
 }
 
-export const addOrder = (order: Order, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const createOrder = (userId: string, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  const requestBody = order
-  post(ENDPOINTS.ADD_ORDER, DOMAINS.SUPPER, requestBody, {})
+  const requestBody = {
+    userID: userId,
+    supperGroupId: supperGroupId,
+  }
+  post(ENDPOINTS.CREATE_ORDER, DOMAINS.SUPPER, requestBody, {})
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getSupperGroupById(supperGroupId))
+      dispatch(setOrderId(resp.data.orderId))
     })
     .catch((err) => {
       console.log(err)
-      error('Failed to add order, please try again.')
+      error('Failed to create order, please try again.')
     })
   dispatch(setIsLoading(false))
 }
@@ -625,9 +628,18 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
 }
 
 export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!foodId) return
   dispatch({
     type: SUPPER_ACTIONS.SET_FOOD_ID,
     foodId: foodId,
+  })
+}
+
+export const setOrderId = (orderId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!orderId) return
+  dispatch({
+    type: SUPPER_ACTIONS.SET_ORDER_ID,
+    orderId: orderId,
   })
 }
 
