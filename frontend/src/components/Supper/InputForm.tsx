@@ -2,15 +2,17 @@ import React from 'react'
 import { FieldError, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { SetVerticalFormInput } from '../../store/supper/action'
+import { SetFormInput } from '../../store/supper/action'
 import { FormHeader } from './FormHeader'
 
-const VertSectionContainer = styled.div`
+const SectionContainer = styled.div<{ horizontal?: boolean }>`
   margin: 25px 35px;
+  ${(props) =>
+    props.horizontal && 'display: flex; flex-direction:row; justify-content: space-between; align-items: baseline;'}
 `
 
-const VertInputContainer = styled.div`
-  padding 5px 0 0 0;
+const InputContainer = styled.div<{ horizontal?: boolean }>`
+  ${(props) => (props.horizontal ? 'padding: 0px 0px 0px 15px; width: 45%;' : 'padding 5px 0 0 0;')}
 `
 
 const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
@@ -21,8 +23,7 @@ const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined 
   margin: 5px auto 0 auto;
   height: 35px;
   ${(props) => props.flex && 'display: flex;'}
-  ${(props) => props.error && 'borderColor: red;'}
-  ${(props) => props.error && 'background:#ffd1d1;'}
+  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const ErrorText = styled.p`
@@ -39,25 +40,26 @@ type Props = {
   inputPlaceHolder: string
   inputName: string
   inputDefaulValue: string | number
+  horizontal?: boolean
 }
 
 type FormValues = {
   input: string | number
 }
 
-export const VerticalInputForm = (props: Props) => {
+export const InputForm = (props: Props) => {
   const dispatch = useDispatch()
   const { register, handleSubmit, errors } = useForm<FormValues>()
 
   const updateInput = () => {
     handleSubmit((data: FormValues) => {
-      dispatch(SetVerticalFormInput(data.input))
+      dispatch(SetFormInput(data.input))
     })
   }
   return (
-    <VertSectionContainer>
+    <SectionContainer>
       <FormHeader headerName={props.headerName} />
-      <VertInputContainer>
+      <InputContainer>
         <InputText
           flex
           error={errors.input}
@@ -72,7 +74,7 @@ export const VerticalInputForm = (props: Props) => {
           })}
         />
         {errors.input?.type === 'required' && <ErrorText>{props.headerName} is required.</ErrorText>}
-      </VertInputContainer>
-    </VertSectionContainer>
+      </InputContainer>
+    </SectionContainer>
   )
 }

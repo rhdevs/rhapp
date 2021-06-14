@@ -182,7 +182,8 @@ export enum SUPPER_ACTIONS {
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
   GET_ORDER_ID = 'SUPPER_ACTIONS.GET_ORDER_ID',
   SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
-  SET_VERTICAL_FORM_INPUT = 'SUPPER_ACTIONS.SET_VERTICAL_FORM_INPUT',
+  SET_FORM_INPUT = 'SUPPER_ACTIONS.SET_FORM_INPUT',
+  SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
 }
 
 type SetIsLoading = {
@@ -370,9 +371,14 @@ type SetPaymentUpdateArray = {
   paymentUpdateArray: PaymentUpdateInfo[]
 }
 
-type SetVerticalFormInput = {
-  type: typeof SUPPER_ACTIONS.SET_VERTICAL_FORM_INPUT
-  verticalFormInput: string | number
+type SetFormInput = {
+  type: typeof SUPPER_ACTIONS.SET_FORM_INPUT
+  formInput: string | number
+}
+
+type SetCreateOrderPage = {
+  type: typeof SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE
+  createOrderPage: number
 }
 
 export type ActionTypes =
@@ -413,4 +419,5 @@ export type ActionTypes =
   | SetFoodId
   | GetOrderId
   | SetPaymentUpdateArray
-  | SetVerticalFormInput
+  | SetFormInput
+  | SetCreateOrderPage

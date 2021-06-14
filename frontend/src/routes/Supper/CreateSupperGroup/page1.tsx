@@ -6,7 +6,6 @@ import { LineProgress } from '../../../components/Supper/LineProgess'
 import { Switch, TimePicker } from 'antd'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
-import { VerticalInputForm } from '../../../components/Supper/VerticalInputForm'
 import { restaurantList } from '../../../store/stubs'
 import { Restaurants, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { FormHeader } from '../../../components/Supper/FormHeader'
@@ -16,8 +15,9 @@ import moment from 'moment'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { setOrder } from '../../../store/supper/action'
+import { SetCreateOrderPage, setOrder } from '../../../store/supper/action'
 import { useHistory } from 'react-router-dom'
+import { InputForm } from '../../../components/Supper/InputForm'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -54,8 +54,7 @@ const StyledSwitch = styled(Switch)<{ flex?: boolean; error?: FieldError | undef
   &.ant-switch-checked {
     background-color: #002642;
   }
-  ${(props) => props.error && 'borderColor: red;'}
-  ${(props) => props.error && 'background:#ffd1d1;'}
+  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const FixerContainer = styled.div`
@@ -74,8 +73,9 @@ export const CreateOrderPageOne = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, control, errors, clearErrors, reset } = useForm<FormValues>()
-  const { supperGroup, priceLimit, selectedRestaurant } = useSelector((state: RootState) => state.supper)
-  const [count, setCount] = useState(1)
+  const { supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
+    (state: RootState) => state.supper,
+  )
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
 
@@ -148,6 +148,7 @@ export const CreateOrderPageOne = () => {
 
   const onClick = () => {
     let updatedSPInfo = { ...initSupperGroup }
+    setValue('restaurant', selectedRestaurant)
     if (priceLimit > 0 && hasMaxPrice) {
       setValue('maxPrice', priceLimit)
     }
@@ -161,7 +162,7 @@ export const CreateOrderPageOne = () => {
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
       }
-      setCount(count + 1)
+      dispatch(SetCreateOrderPage(createOrderPage + 1))
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
     })()
@@ -185,7 +186,7 @@ export const CreateOrderPageOne = () => {
         />
       )}
       <LineProgress currentStep={1} numberOfSteps={3} />
-      <VerticalInputForm
+      <InputForm
         headerName={'Order Name'}
         inputType={'text'}
         inputName={'supperGroupName'}

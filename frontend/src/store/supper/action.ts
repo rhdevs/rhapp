@@ -663,9 +663,16 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
   })
 }
 
-export const SetVerticalFormInput = (verticalFormInput: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+export const SetFormInput = (formInput: string | number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
-    type: SUPPER_ACTIONS.SET_VERTICAL_FORM_INPUT,
-    verticalFormInput: verticalFormInput,
+    type: SUPPER_ACTIONS.SET_FORM_INPUT,
+    formInput: formInput,
+  })
+}
+
+export const SetCreateOrderPage = (createOrderPage: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE,
+    createOrderPage: createOrderPage,
   })
 }
