@@ -47,7 +47,7 @@ export default function PlaceOrder() {
     dispatch(getRestaurant(params.restaurantId))
   }, [dispatch])
 
-  const { supperGroup, restaurant, isLoading, searchValue } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, restaurant, isLoading, searchValue, orderId } = useSelector((state: RootState) => state.supper)
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))

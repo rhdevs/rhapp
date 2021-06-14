@@ -93,7 +93,7 @@ export enum ENDPOINTS {
   ALL_SUPPER_GROUPS = '/supper/supperGroup',
   ADD_SUPPER_GROUP = '/supper/supperGroup',
   GET_SUPPER_GROUP_BY_ID = '/supper/supperGroup',
-  ADD_ORDER = '/supper/order',
+  CREATE_ORDER = '/supper/order',
   UPDATE_SUPPER_GROUP = '/supper/supperGroupId',
   DELETE_SUPPER_GROUP = '/supper/supperGroup',
   GET_ORDER_IN_SUPPER_GROUP = '/supper/order',

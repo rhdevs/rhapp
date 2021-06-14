@@ -81,8 +81,8 @@ type State = {
   estArrivalTime: string
   editOrderNumber: number
   counter: number
-  foodId?: string
-  orderId?: string
+  foodId: string | undefined
+  orderId: string | undefined
   paymentUpdateArray: PaymentUpdateInfo[]
 }
 
@@ -193,7 +193,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_FOOD_ID: {
       return { ...state, foodId: action.foodId }
     }
-    case SUPPER_ACTIONS.GET_ORDER_ID: {
+    case SUPPER_ACTIONS.SET_ORDER_ID: {
       return { ...state, orderId: action.orderId }
     }
     case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {

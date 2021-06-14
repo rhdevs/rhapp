@@ -74,7 +74,7 @@ export type Order = {
   foodList: Food[]
   totalCost: number
   hasPaid: boolean //1 if user paid owner (user POV)
-  paymentMethod: PaymentMethod
+  paymentMethod?: PaymentMethod
   hasReceived: boolean //1 if owner received payment (owner POV)
   createdAt: number
 }
@@ -180,7 +180,7 @@ export enum SUPPER_ACTIONS {
   SET_EDIT_ORDER_NUMBER = 'SUPPER_ACTIONS.SET_EDIT_ORDER_NUMBER',
   SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
-  GET_ORDER_ID = 'SUPPER_ACTIONS.GET_ORDER_ID',
+  SET_ORDER_ID = 'SUPPER_ACTIONS.SET_ORDER_ID',
   SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
 }
 
@@ -356,12 +356,12 @@ type SetCounter = {
 
 type SetFoodId = {
   type: typeof SUPPER_ACTIONS.SET_FOOD_ID
-  foodId?: string
+  foodId: string
 }
 
 type GetOrderId = {
-  type: typeof SUPPER_ACTIONS.GET_ORDER_ID
-  orderId?: string
+  type: typeof SUPPER_ACTIONS.SET_ORDER_ID
+  orderId: string
 }
 
 type SetPaymentUpdateArray = {
