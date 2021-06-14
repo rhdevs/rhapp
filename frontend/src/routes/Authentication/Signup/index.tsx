@@ -105,7 +105,7 @@ export default function Signup() {
       telegramHandle: formData.telegram,
     }
     try {
-      await fetch(DOMAIN_URL.SOCIAL + '/auth/register', {
+      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.REGISTER, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -120,7 +120,7 @@ export default function Signup() {
               userID: formData.userId,
               passwordHash: passwordHash,
             }
-            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+            fetch(DOMAIN_URL.AUTH + ENDPOINTS.LOGIN, {
               method: 'POST',
               mode: 'cors',
               headers: {

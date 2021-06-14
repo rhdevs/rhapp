@@ -3,26 +3,25 @@ import axios from 'axios'
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
   // AUTH
-  LOGIN = '/auth/login',
-  IS_LOGGEDIN = '/auth/protected',
-  REGISTER = '/auth/register',
+  LOGIN = '/login',
+  IS_LOGGEDIN = '/protected',
+  REGISTER = '/register',
 
   // USERS
-  TELEGRAM_HANDLE = '/users/telegramID',
+  TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
   USER = '/user',
   USER_PROFILE = '/profile/',
-  USER_PROFILE_PICTURE = '/profile/picture/',
-  USER_DETAILS = '/user/details',
-  EDIT_PROFILE = '/profile/edit',
+  USER_PROFILE_PICTURE = '/profile/picture',
+  EDIT_PROFILE = '/profiles',
   USER_CCAS = '/user_CCA',
   FRIEND = '/friend',
 
   // FACILITY
-  FACILITY_LIST = '/facilities/all',
-  FACILITY = '/facility',
+  FACILITY_LIST = '/facilities',
+  FACILITY = '/facilities',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
-  VIEW_BOOKING = '/booking',
+  VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
 
   // LAUNDRY
@@ -58,7 +57,7 @@ export enum ENDPOINTS {
   LESSON_DETAILS = '/lesson',
 
   CCA_DETAILS = '/cca',
-  ALL_CCAS = '/cca/all',
+  ALL_CCAS = '/cca',
   CCA_MEMBER = '/user_CCA',
 
   EVENT_DETAILS = '/event',
@@ -67,14 +66,14 @@ export enum ENDPOINTS {
   ALL_FRIENDS = '/friend',
 
   // SOCIAL
-  ALL_PROFILES = '/profile/all',
-  OFFICIAL_POSTS = '/post/official',
-  ALL_POSTS = '/post/all',
-  FRIENDS_OF_USER_POSTS = '/post/friend',
-  SPECIFIC_POST = '/post/search',
-  DELETE_POST = '/post',
-  EDIT_POST = '/post/edit',
-  CREATE_POSTS = '/post',
+  ALL_PROFILES = '/profiles',
+  OFFICIAL_POSTS = '/posts/official',
+  ALL_POSTS = '/posts',
+  FRIENDS_OF_USER_POSTS = '/posts/friend',
+  SPECIFIC_POST = '/posts',
+  DELETE_POST = '/posts',
+  EDIT_POST = '/posts',
+  CREATE_POSTS = '/posts',
 
   // HOME
   SEARCH = '/search',
@@ -108,26 +107,31 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+  AUTH = 'auth',
   SUPPER = 'facility', //'supper',
 }
 
 export const DOMAIN_URL = {
   FACILITY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+      ? '//rhapp-backend.rhdevs.repl.co/facilities'
+      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
   EVENT:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappevents.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappevents',
+      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+      : '//rhappmiddleware.herokuapp.com/rhappevents',
   LAUNDRY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhapplaundry.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhapplaundry',
+      ? '//rhapp-backend.rhdevs.repl.co/laundry'
+      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
   SOCIAL:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappsocial.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappsocial',
+      ? '//rhapp-backend.rhdevs.repl.co/social'
+      : '//rhappmiddleware.herokuapp.com/rhappsocial',
+  AUTH:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/auth'
+      : '//rhappmiddleware.herokuapp.com/rhappauth',
   //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
@@ -147,26 +151,32 @@ async function makeRequest(
     case DOMAINS.FACILITY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappfacilities.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
+          ? '//rhapp-backend.rhdevs.repl.co/facilities'
+          : '//rhappmiddleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappevents.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappevents'
+          ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+          : '//rhappmiddleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhapplaundry.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhapplaundry'
+          ? '//rhapp-backend.rhdevs.repl.co/laundry'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.SOCIAL:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          ? '//rhapp-backend.rhdevs.repl.co/social'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
+      break
+    case DOMAINS.AUTH:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/auth'
+          : '//rhappmiddleware.herokuapp.com/rhappauth'
       break
     //TODO: update with supper request url
     case DOMAINS.SUPPER:
