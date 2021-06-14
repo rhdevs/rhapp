@@ -48,6 +48,7 @@ const initialState = {
   foodId: undefined,
   orderId: undefined,
   paymentUpdateArray: [],
+  verticalFormInput: '',
 }
 
 type State = {
@@ -84,6 +85,7 @@ type State = {
   foodId?: string
   orderId?: string
   paymentUpdateArray: PaymentUpdateInfo[]
+  verticalFormInput: string | number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -198,6 +200,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {
       return { ...state, paymentUpdateArray: action.paymentUpdateArray }
+    }
+    case SUPPER_ACTIONS.SET_VERTICAL_FORM_INPUT: {
+      return { ...state, verticalFormInput: action.verticalFormInput }
     }
     default:
       return state

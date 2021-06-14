@@ -662,3 +662,10 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
     paymentUpdateArray: newPaymentUpdate,
   })
 }
+
+export const SetVerticalFormInput = (verticalFormInput: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_VERTICAL_FORM_INPUT,
+    verticalFormInput: verticalFormInput,
+  })
+}

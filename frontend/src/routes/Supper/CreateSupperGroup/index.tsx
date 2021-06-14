@@ -102,6 +102,7 @@ const StyledTimePicker = styled(TimePicker)`
   margin: 5px auto 0 auto;
   display: flex;
 `
+
 const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
@@ -278,7 +279,7 @@ export default function CreateSupperGroup() {
         ...updatedSPInfo,
         supperGroupName: data.supperGroupName,
         restaurantName: data.restaurant,
-        closingTIme: data.closingTime,
+        closingTime: data.closingTime,
       }
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
@@ -360,7 +361,7 @@ export default function CreateSupperGroup() {
   }
 
   const onConfirmDiscardClick = () => {
-    setOrder(initSupperGroup)
+    dispatch(setOrder(initSupperGroup))
     history.goBack()
   }
 
