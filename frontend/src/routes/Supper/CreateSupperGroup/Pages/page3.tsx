@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { FormHeader } from '../../../components/Supper/FormHeader'
-import { LineProgress } from '../../../components/Supper/LineProgess'
-import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
-import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { paymentMethods } from '../../../store/stubs'
-import { createSupperGroup, SetCreateOrderPage, setOrder } from '../../../store/supper/action'
-import { PaymentInfo, PaymentMethod } from '../../../store/supper/types'
-import { PATHS } from '../../Routes'
+import TopNavBar from '../../../../components/Mobile/TopNavBar'
+import { FormHeader } from '../../../../components/Supper/FormHeader'
+import { LineProgress } from '../../../../components/Supper/LineProgess'
+import { PaymentMethodBubbles } from '../../../../components/Supper/PaymentMethodBubbles'
+import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
+import { paymentMethods } from '../../../../store/stubs'
+import { SetCreateOrderPage, setOrder, createSupperGroup } from '../../../../store/supper/action'
+import { PaymentInfo, PaymentMethod } from '../../../../store/supper/types'
+import { RootState } from '../../../../store/types'
+import { PATHS } from '../../../Routes'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -48,7 +49,7 @@ type FormValues = {
 export const CreateOrderPageThree = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { register, handleSubmit, setValue, errors, setError, clearErrors, reset } = useForm<FormValues>()
+  const { register, handleSubmit, setValue, errors, setError, clearErrors } = useForm<FormValues>()
   const { supperGroup, selectedPaymentMethod, createOrderPage } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
@@ -122,8 +123,14 @@ export const CreateOrderPageThree = () => {
       dispatch(setOrder(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
     })()
-    history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
+    dispatch(SetCreateOrderPage(1))
   }
+
+  useEffect(() => {
+    if (supperGroup?.supperGroupId !== null) {
+      history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
+    }
+  }, [supperGroup?.supperGroupId])
 
   return (
     <>

@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import { LineProgress } from '../../../components/Supper/LineProgess'
-import { Switch, TimePicker } from 'antd'
-import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
-import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
-import { restaurantList } from '../../../store/stubs'
-import { Restaurants, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
-import { FormHeader } from '../../../components/Supper/FormHeader'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../store/types'
+import { TimePicker, Switch } from 'antd'
 import moment from 'moment'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { SetCreateOrderPage, setOrder } from '../../../store/supper/action'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { InputForm } from '../../../components/Supper/InputForm'
+import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
+import TopNavBar from '../../../../components/Mobile/TopNavBar'
+import { FormHeader } from '../../../../components/Supper/FormHeader'
+import { InputForm } from '../../../../components/Supper/InputForm'
+import { LineProgress } from '../../../../components/Supper/LineProgess'
+import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
+import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
+import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
+import { restaurantList } from '../../../../store/stubs'
+import { setOrder, SetCreateOrderPage } from '../../../../store/supper/action'
+import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
+import { RootState } from '../../../../store/types'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -50,7 +50,7 @@ const PriceContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const StyledSwitch = styled(Switch)<{ flex?: boolean }>`
+const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
     background-color: #002642;
@@ -110,6 +110,11 @@ export const CreateOrderPageOne = () => {
     }
   }, [supperGroup, reset])
 
+  useEffect(() => {
+    setValue('restaurant', selectedRestaurant)
+    clearErrors('restaurant')
+  }, [selectedRestaurant])
+
   const onConfirmDiscardClick = () => {
     dispatch(setOrder(initSupperGroup))
     history.goBack()
@@ -148,7 +153,6 @@ export const CreateOrderPageOne = () => {
 
   const onClick = () => {
     let updatedSPInfo = { ...initSupperGroup }
-    setValue('restaurant', selectedRestaurant)
     if (priceLimit > 0 && hasMaxPrice) {
       setValue('maxPrice', priceLimit)
     }
