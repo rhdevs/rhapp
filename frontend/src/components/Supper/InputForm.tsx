@@ -49,9 +49,15 @@ type FormValues = {
 
 export const InputForm = (props: Props) => {
   const dispatch = useDispatch()
-  const { register, handleSubmit, errors } = useForm<FormValues>()
+  const { register, handleSubmit, errors, setValue, setError } = useForm<FormValues>()
 
-  const updateInput = () => {
+  const updateInput = (input) => {
+    if (!input) {
+      setValue('input', undefined)
+      setError('input', { type: 'required' })
+      return
+    }
+
     handleSubmit((data: FormValues) => {
       dispatch(SetFormInput(data.input))
     })

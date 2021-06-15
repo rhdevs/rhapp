@@ -2,18 +2,19 @@ import { Radio } from 'antd'
 import React, { useEffect } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
-import { InputForm } from '../../../../components/Supper/InputForm'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { SetCreateOrderPage, setOrder } from '../../../../store/supper/action'
 import { SplitACMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
+import { PATHS } from '../../../Routes'
 
 const HortSectionContainer = styled.div`
-  margin: 25px 35px;
+  margin: 25px 35px 5px 35px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -23,6 +24,17 @@ const HortSectionContainer = styled.div`
 const HortInputContainer = styled.div`
   padding: 0px 0px 0px 15px;
   width: 45%;
+`
+
+const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
+  width: 80%;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 5px auto 0 auto;
+  height: 35px;
+  ${(props) => props.flex && 'display: flex;'}
+  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const ErrorText = styled.p`
@@ -52,16 +64,17 @@ type FormValues = {
 
 export const CreateOrderPageTwo = () => {
   const dispatch = useDispatch()
-  const { register, handleSubmit, setValue, control, errors, clearErrors, reset } = useForm<FormValues>()
+  const history = useHistory()
+  const { register, handleSubmit, setValue, control, errors, setError, clearErrors, reset } = useForm<FormValues>()
   const { supperGroup, createOrderPage } = useSelector((state: RootState) => state.supper)
 
-  useEffect(() => {
-    if (supperGroup) {
-      reset({
-        splitDeliveryFees: supperGroup.splitAdditionalCost,
-      })
-    }
-  }, [supperGroup, reset])
+  // useEffect(() => {
+  //   if (supperGroup) {
+  //     reset({
+  //       splitDeliveryFees: supperGroup.splitAdditionalCost,
+  //     })
+  //   }
+  // }, [supperGroup, reset])
 
   const onLeftClick = () => {
     dispatch(SetCreateOrderPage(createOrderPage - 1))
@@ -72,7 +85,9 @@ export const CreateOrderPageTwo = () => {
   const onClick = () => {
     updatedSPInfo = { ...supperGroup }
     handleSubmit((data: FormValues) => {
-      console.log('updatedSPInfo', updatedSPInfo)
+      if (!data.estDeliveryFee) {
+        setError('estDeliveryFee', { type: 'required' })
+      }
       updatedSPInfo = {
         ...updatedSPInfo,
         additionalCost: data.estDeliveryFee,
@@ -82,6 +97,7 @@ export const CreateOrderPageTwo = () => {
       console.log('secondSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
     })()
+    history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
   }
 
   return (
@@ -92,14 +108,23 @@ export const CreateOrderPageTwo = () => {
         onLeftClick={onLeftClick}
       />
       <LineProgress currentStep={2} numberOfSteps={3} />
-      <InputForm
-        horizontal
-        headerName={'Est. Delivery Fees'}
-        inputType={'number'}
-        inputName={'estDeliveryFee'}
-        inputPlaceHolder={'$$$'}
-        inputDefaulValue={supperGroup?.additionalCost ?? 0}
-      />
+      <HortSectionContainer>
+        <FormHeader headerName={'Est. Delivery Fees'} />
+        <HortInputContainer>
+          <InputText
+            type="number"
+            placeholder="$$$"
+            name="estDeliveryFee"
+            defaultValue={supperGroup?.additionalCost ?? 0}
+            ref={register({
+              required: true,
+              valueAsNumber: true,
+            })}
+            error={errors.estDeliveryFee}
+          />
+        </HortInputContainer>
+      </HortSectionContainer>
+      {errors.estDeliveryFee?.type === 'required' && <ErrorText>Estimated delivery fees required!</ErrorText>}
       <HortSectionContainer>
         <FormHeader headerName={'Split Delivery Fees'} />
         <HortInputContainer>
@@ -112,8 +137,8 @@ export const CreateOrderPageTwo = () => {
                 error={errors.splitDeliveryFees}
                 onChange={(input) => {
                   console.log(input.target.value)
-                  clearErrors('splitDeliveryFees')
                   setValue('splitDeliveryFees', input.target.value)
+                  clearErrors('splitDeliveryFees')
                 }}
                 {...register('splitDeliveryFees', {
                   required: true,

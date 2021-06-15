@@ -126,11 +126,11 @@ export const CreateOrderPageThree = () => {
     dispatch(SetCreateOrderPage(1))
   }
 
-  useEffect(() => {
-    if (supperGroup?.supperGroupId !== null) {
-      history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
-    }
-  }, [supperGroup?.supperGroupId])
+  // useEffect(() => {
+  //   if (Number(supperGroup?.supperGroupId) >= 0 || supperGroup?.supperGroupId !== undefined) {
+  //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
+  //   }
+  // }, [supperGroup?.supperGroupId])
 
   return (
     <>

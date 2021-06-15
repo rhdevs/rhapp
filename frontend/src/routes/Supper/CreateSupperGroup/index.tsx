@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { RootState } from '../../../store/types'
 import { CreateOrderPageOne } from './Pages/page1'
@@ -13,9 +14,10 @@ const Background = styled.div`
   position: relative;
 `
 
-export default function CreateSupperGroup(props: Props) {
-  const { createOrderPage } = useSelector((state: RootState) => state.supper)
-
+export default function CreateSupperGroup() {
+  const params = useParams<{ page: string }>()
+  //const { createOrderPage } = useSelector((state: RootState) => state.supper)
+  console.log(params.page)
   const formPage = (page: number) => {
     if (page === 1) {
       return <CreateOrderPageOne />
@@ -26,5 +28,5 @@ export default function CreateSupperGroup(props: Props) {
     }
   }
 
-  return <Background>{formPage(createOrderPage)}</Background>
+  return <Background>{formPage(Number(params.page))}</Background>
 }

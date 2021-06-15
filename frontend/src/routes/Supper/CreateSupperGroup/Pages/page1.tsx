@@ -9,7 +9,6 @@ import { useHistory } from 'react-router-dom'
 import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
-import { InputForm } from '../../../../components/Supper/InputForm'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
@@ -18,6 +17,7 @@ import { restaurantList } from '../../../../store/stubs'
 import { setOrder, SetCreateOrderPage } from '../../../../store/supper/action'
 import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
+import { PATHS } from '../../../Routes'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -25,6 +25,17 @@ const VertSectionContainer = styled.div`
 
 const VertInputContainer = styled.div`
   padding 5px 0 0 0;
+`
+
+const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
+  width: 80%;
+  border-radius: 30px;
+  border: 1px solid #d9d9d9;
+  padding: 5px 10px;
+  margin: 5px auto 0 auto;
+  height: 35px;
+  ${(props) => props.flex && 'display: flex;'}
+  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const ErrorText = styled.p`
@@ -101,14 +112,18 @@ export const CreateOrderPageOne = () => {
   }
 
   useEffect(() => {
-    if (supperGroup) {
-      reset({
-        restaurant: supperGroup.restaurantName,
-        maxPrice: supperGroup.costLimit,
-      })
-      setHasMaxPrice(supperGroup.costLimit ? true : false)
-    }
-  }, [supperGroup, reset])
+    dispatch(setOrder(initSupperGroup))
+  }, [dispatch])
+
+  // useEffect(() => {
+  //   if (supperGroup) {
+  //     reset({
+  //       restaurant: supperGroup.restaurantName,
+  //       maxPrice: supperGroup.costLimit,
+  //     })
+  //     setHasMaxPrice(supperGroup.costLimit ? true : false)
+  //   }
+  // }, [supperGroup, reset])
 
   useEffect(() => {
     setValue('restaurant', selectedRestaurant)
@@ -170,6 +185,7 @@ export const CreateOrderPageOne = () => {
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
     })()
+    history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
   }
 
   return (
@@ -190,13 +206,24 @@ export const CreateOrderPageOne = () => {
         />
       )}
       <LineProgress currentStep={1} numberOfSteps={3} />
-      <InputForm
-        headerName={'Order Name'}
-        inputType={'text'}
-        inputName={'supperGroupName'}
-        inputPlaceHolder={'Order Name'}
-        inputDefaulValue={supperGroup?.supperGroupName ?? ''}
-      />
+      <VertSectionContainer>
+        <FormHeader headerName={'Order Name'} />
+        <VertInputContainer>
+          <InputText
+            flex
+            type="text"
+            placeholder="Order Name"
+            name="supperGroupName"
+            defaultValue={supperGroup?.supperGroupName ?? ''}
+            ref={register({
+              required: true,
+              validate: (input) => input.trim().length !== 0,
+            })}
+            error={errors.supperGroupName}
+          />
+          {errors.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
+        </VertInputContainer>
+      </VertSectionContainer>
       <VertSectionContainer>
         <FormHeader headerName={'Restaurant'} />
         <Controller

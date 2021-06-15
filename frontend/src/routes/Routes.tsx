@@ -51,6 +51,7 @@ export enum PATHS {
   SUPPER_GROUP_OVERVIEW = '/supper/overview',
   SUPPER_GROUP_OVERVIEW_BY_SECTION = '/supper/overview/:section',
   CREATE_SUPPER_GROUP = '/supper/create',
+  CREATE_SUPPER_GROUP_PAGE = '/supper/create/:page',
   JOIN_ORDER = '/supper/join/order',
   JOIN_ORDER_BY_ID = '/supper/join/order/:supperGroupId',
   PLACE_ORDER = '/supper',
@@ -178,7 +179,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.SUPPER_GROUP_OVERVIEW_BY_SECTION} component={UserSGOverview} />
-            <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP} component={CreateSupperGroup} />
+            <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_PAGE} component={CreateSupperGroup} />
             <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
