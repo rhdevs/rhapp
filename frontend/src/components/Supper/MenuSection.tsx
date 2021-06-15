@@ -70,10 +70,11 @@ const EmptyCOntainerText = styled.text`
 `
 
 type Props = {
-  menu?: FoodMenu[]
+  menu?: FoodMenu[] | undefined
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  supperGroupId?: string
+  supperGroupId?: string | undefined
+  orderId?: string | undefined
 }
 
 export const MenuSection = (props: Props) => {
@@ -97,9 +98,12 @@ export const MenuSection = (props: Props) => {
           <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
             <FoodAndQuantityContainer
               // TODO: UPDATE ORDERID!
-              onClick={() =>
-                history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/1/add/${foodMenu.foodMenuId}`)
-              }
+              onClick={() => {
+                if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
+                  history.push(
+                    `${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${foodMenu.foodMenuId}`,
+                  )
+              }}
             >
               <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
               {

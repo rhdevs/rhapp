@@ -64,7 +64,7 @@ const TextContainer = styled(Radio.Button)`
 `
 
 type Props = {
-  menuSections?: string[]
+  menuSections?: string[] | undefined
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
