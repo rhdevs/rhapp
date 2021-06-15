@@ -211,12 +211,9 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setViewDates = (newDates: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {
-  const startDate = newDates.ViewDateSelection.startDate
-  const endDate =
-    startDate === newDates.ViewDateSelection.endDate
-      ? dayjs(startDate).add(1, 'day').toDate()
-      : newDates.ViewDateSelection.endDate
+export const setViewDates = (newDate: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  const startDate = newDate
+  const endDate = newDate
 
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })

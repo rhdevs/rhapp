@@ -359,7 +359,7 @@ type SetFoodId = {
   foodId: string
 }
 
-type GetOrderId = {
+type SetOrderId = {
   type: typeof SUPPER_ACTIONS.SET_ORDER_ID
   orderId: string
 }
@@ -405,5 +405,5 @@ export type ActionTypes =
   | SetEditOrderNumber
   | SetCounter
   | SetFoodId
-  | GetOrderId
+  | SetOrderId
   | SetPaymentUpdateArray

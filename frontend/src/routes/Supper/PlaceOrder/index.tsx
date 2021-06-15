@@ -50,7 +50,6 @@ export default function PlaceOrder() {
   const { supperGroup, restaurant, isLoading, searchValue, orderId } = useSelector((state: RootState) => state.supper)
 
   const onChange = (input: string) => {
-    console.log(input)
     dispatch(setSearchValue(input))
   }
 
@@ -76,8 +75,17 @@ export default function PlaceOrder() {
           <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
-            <MenuTabs menuSections={restaurant?.allSection} />
-            <MenuSection supperGroupId={supperGroup?.supperGroupId} menu={restaurant?.menu} orderId={orderId} />
+            {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
+            <MenuSection
+              supperGroupId={supperGroup?.supperGroupId}
+              menu={
+                searchValue === ''
+                  ? restaurant?.menu
+                  : restaurant?.menu.filter((food) =>
+                      food.foodMenuName.toLowerCase().includes(searchValue.toLowerCase()),
+                    )
+              }
+            />
           </SearchBarContainer>
           {/* If user has item in order, add 'View cart bottom button' &&& link to View cart page! at VIEW_CART/:supperGroupId */}
         </>

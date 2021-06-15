@@ -29,6 +29,12 @@ const FoodMenuContainer = styled.div`
   flex-direction: column;
 `
 
+const FoodMainContainer = styled.div<{ noBottomBorder?: boolean }>`
+  ${(props) => !(props.noBottomBorder ?? false) && 'border-bottom: 1px rgba(0,0,0,0.15) solid;'}
+  padding-bottom: 1px;
+  min-height: 4rem;
+`
+
 const FoodAndQuantityContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -73,8 +79,53 @@ type Props = {
 
 export const MenuSection = (props: Props) => {
   let QUANTITY
-  const { menuTabKey } = useSelector((state: RootState) => state.supper)
+  const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
   const history = useHistory()
+
+  const menuItems = () => {
+    if (props.menu) {
+      if (searchValue !== '' && props.menu.length === 0) {
+        return (
+          <EmptyContainer>
+            {/* escape character for ' */}
+            <EmptyCOntainerText>No results for &#39;{searchValue}&#39;.</EmptyCOntainerText>
+          </EmptyContainer>
+        )
+      }
+      return props.menu
+        .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
+        .map((foodMenu, index) => (
+          <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
+            <FoodAndQuantityContainer
+              // TODO: UPDATE ORDERID!
+              onClick={() => {
+                if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
+                  history.push(
+                    `${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${foodMenu.foodMenuId}`,
+                  )
+              }}
+            >
+              <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
+              {
+                (QUANTITY = props.order?.foodList?.find((food) => {
+                  if (food.foodMenuId === foodMenu.foodMenuId) {
+                    return String(food.quantity)
+                  }
+                }))
+              }
+              <QuantityContainer>{QUANTITY}</QuantityContainer>
+            </FoodAndQuantityContainer>
+            <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
+          </FoodMainContainer>
+        ))
+    } else {
+      return (
+        <EmptyContainer>
+          <EmptyCOntainerText>Menu is currently empty.</EmptyCOntainerText>
+        </EmptyContainer>
+      )
+    }
+  }
 
   return (
     <MainContainer>
@@ -82,39 +133,7 @@ export const MenuSection = (props: Props) => {
         <SectionHeader>{menuTabKey}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
-        <FoodMenuContainer>
-          {props.menu ? (
-            props.menu
-              .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
-              .map((foodMenu) => (
-                <>
-                  <FoodAndQuantityContainer
-                    // TODO: UPDATE ORDERID!
-                    onClick={() =>
-                      history.push(
-                        `${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${foodMenu.foodMenuId}`,
-                      )
-                    }
-                  >
-                    <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-                    {
-                      (QUANTITY = props.order?.foodList?.find((food) => {
-                        if (food.foodMenuId === foodMenu.foodMenuId) {
-                          return String(food.quantity)
-                        }
-                      }))
-                    }
-                    <QuantityContainer>{QUANTITY}</QuantityContainer>
-                  </FoodAndQuantityContainer>
-                  <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
-                </>
-              ))
-          ) : (
-            <EmptyContainer>
-              <EmptyCOntainerText>Menu is currently empty.</EmptyCOntainerText>
-            </EmptyContainer>
-          )}
-        </FoodMenuContainer>
+        <FoodMenuContainer>{menuItems()}</FoodMenuContainer>
       </SectionBodyContainer>
     </MainContainer>
   )
