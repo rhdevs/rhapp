@@ -60,7 +60,7 @@ const EditIcon = styled.img`
 
 type Props = {
   supperGroupName: string
-  supperGroupId: string
+  supperGroupId: string | number
   ownerName: string
   priceLimit: number
   currentAmount: number

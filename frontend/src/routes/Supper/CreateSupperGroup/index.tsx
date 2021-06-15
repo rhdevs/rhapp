@@ -174,7 +174,7 @@ export default function CreateSupperGroup() {
     restaurantName: '',
     splitAdditionalCost: SplitACMethod.EQUAL,
     status: SupperGroupStatus.OPEN,
-    supperGroupId: '',
+    supperGroupId: undefined,
     supperGroupName: '',
     totalPrice: 0,
     closingTime: 0,

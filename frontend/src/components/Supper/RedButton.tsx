@@ -11,7 +11,12 @@ const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: strin
   bottom: 0;
   z-index: 1000;
   background: ${(props) => (props.isSticky ? '#fafaf4' : 'transparent')};
-  height: 60px;
+  height: ${(props) =>
+    props.isSticky
+      ? `4rem;
+  display: flex;
+  align-items: center;`
+      : `60px;`};
 `
 
 const StyledRedButton = styled(AntdButton)`

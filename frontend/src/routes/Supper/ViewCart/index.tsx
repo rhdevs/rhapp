@@ -86,7 +86,7 @@ const ViewCart = () => {
   }
 
   const onConfirmDiscardClick = () => {
-    if (order && foodId) dispatch(deleteFoodInOrder(params.supperGroupId, order.orderId, foodId))
+    if (order && foodId) dispatch(deleteFoodInOrder(order.orderId, foodId))
     else {
       error('Failed to delete item, please try again.')
       setModalIsOpen(false)

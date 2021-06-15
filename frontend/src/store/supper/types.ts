@@ -69,7 +69,7 @@ export enum Restaurants {
 export type Order = {
   orderId: string
   user: User
-  supperGroupId: string
+  supperGroupId: number | undefined
   userContact?: number
   foodList: Food[]
   totalCost: number
@@ -96,7 +96,7 @@ export type SupperGroup = {
   restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
-  supperGroupId: string
+  supperGroupId: number | undefined
   supperGroupName: string
   totalPrice: number
   userIdList?: string[]
@@ -107,7 +107,7 @@ export type SupperGroup = {
 }
 
 export type CollatedOrder = {
-  supperGroupId: string
+  supperGroupId: number | undefined
   ownerId: string
   collatedOrderList: Food[]
   price?: number
