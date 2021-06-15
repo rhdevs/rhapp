@@ -35,10 +35,11 @@ const ErrorText = styled.p`
   font-family: 'Inter';
 `
 
-const StyledTimePicker = styled(TimePicker)`
+const StyledTimePicker = styled(TimePicker)<{ error?: FieldError | undefined }>`
   width: 70%;
   margin: 5px auto 0 auto;
   display: flex;
+  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const PriceContainer = styled.div`
@@ -49,12 +50,11 @@ const PriceContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const StyledSwitch = styled(Switch)<{ flex?: boolean; error?: FieldError | undefined }>`
+const StyledSwitch = styled(Switch)<{ flex?: boolean }>`
   width: fit-content;
   &.ant-switch-checked {
     background-color: #002642;
   }
-  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const FixerContainer = styled.div`
