@@ -24,7 +24,7 @@ const initialState = {
   supperGroup: null,
   allSupperGroups: [],
   menu: [],
-  menuFood: null,
+  foodMenu: null,
   orderHistory: [],
   supperGroupHistory: [],
   joinedSupperGroupHistory: [],
@@ -48,6 +48,7 @@ const initialState = {
   foodId: undefined,
   orderId: undefined,
   paymentUpdateArray: [],
+  foodMenuId: '',
 }
 
 type State = {
@@ -60,7 +61,7 @@ type State = {
   supperGroup: SupperGroup | null
   allSupperGroups: SupperGroup[]
   menu: FoodMenu[]
-  menuFood: FoodMenu | null
+  foodMenu: FoodMenu | null
   orderHistory: Order[]
   supperGroupHistory: SupperGroup[]
   joinedSupperGroupHistory: SupperGroup[]
@@ -84,6 +85,7 @@ type State = {
   foodId: string | undefined
   orderId: string | undefined
   paymentUpdateArray: PaymentUpdateInfo[]
+  foodMenuId: string
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -128,7 +130,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
       return { ...state, menu: action.menu }
     }
     case SUPPER_ACTIONS.GET_MENU_FOOD: {
-      return { ...state, menuFood: action.menuFood }
+      return { ...state, foodMenu: action.foodMenu }
     }
     case SUPPER_ACTIONS.GET_ORDER_HISTORY: {
       return { ...state, orderHistory: action.orderHistory }
@@ -198,6 +200,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {
       return { ...state, paymentUpdateArray: action.paymentUpdateArray }
+    }
+    case SUPPER_ACTIONS.SET_MENU_FOOD_ID: {
+      return { ...state, foodMenuId: action.foodMenuId }
     }
     default:
       return state

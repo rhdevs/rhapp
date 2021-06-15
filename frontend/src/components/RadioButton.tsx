@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { Radio } from 'antd'
 
-const StyledRadioButton = styled(Radio)<{ color: string; margin?: string }>`
+const StyledRadioButton = styled(Radio)<{ color: string | undefined; margin?: string | undefined }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -33,7 +33,7 @@ type Props = {
   label?: string | ReactElement
   color?: string
   margin?: string
-  defaultChecked?: boolean
+  // defaultChecked?: boolean
 }
 
 export const RadioButton = (props: Props) => {
@@ -41,7 +41,7 @@ export const RadioButton = (props: Props) => {
 
   return (
     <StyledRadioButton
-      defaultChecked={props.defaultChecked}
+      // defaultChecked={props.defaultChecked}
       margin={props.margin}
       color={props.color ?? BLUE}
       value={props.value}

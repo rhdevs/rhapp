@@ -182,6 +182,7 @@ export enum SUPPER_ACTIONS {
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
   SET_ORDER_ID = 'SUPPER_ACTIONS.SET_ORDER_ID',
   SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
+  SET_MENU_FOOD_ID = 'SUPPER_ACTIONS.SET_MENU_FOOD_ID',
 }
 
 type SetIsLoading = {
@@ -251,7 +252,7 @@ type GetRestaurantMenu = {
 
 type GetMenuFood = {
   type: typeof SUPPER_ACTIONS.GET_MENU_FOOD
-  menuFood: FoodMenu
+  foodMenu: FoodMenu
 }
 
 type GetOrderHistory = {
@@ -369,6 +370,11 @@ type SetPaymentUpdateArray = {
   paymentUpdateArray: PaymentUpdateInfo[]
 }
 
+type SetMenuFoodId = {
+  type: typeof SUPPER_ACTIONS.SET_MENU_FOOD_ID
+  foodMenuId: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -407,3 +413,4 @@ export type ActionTypes =
   | SetFoodId
   | GetOrderId
   | SetPaymentUpdateArray
+  | SetMenuFoodId

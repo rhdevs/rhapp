@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { UpOutlined } from '@ant-design/icons/lib/icons'
 import { DeepMap, FieldError } from 'react-hook-form'
@@ -215,6 +215,10 @@ const SingleOptions = ({
   setValue
   clearErrors: (name?: string | string[]) => void
 }) => {
+  const selectedOption: string | null = custom.options.filter((option) => option.isSelected)[0].name ?? null
+  useEffect(() => {
+    if (selectedOption) setValue(`${custom.title}`, selectedOption)
+  }, [])
   return (
     <StyledRadioGroup
       {...register(`${custom.title}`, { required: isCompulsory })}
@@ -222,7 +226,7 @@ const SingleOptions = ({
         clearErrors(`${custom.title}`)
         setValue(`${custom.title}`, e.target.value)
       }}
-      defaultValue={null}
+      defaultValue={selectedOption}
     >
       {custom.options.map((option, index) => {
         return (
@@ -263,7 +267,7 @@ const MultipleOptions = ({
   setValue
   watch
 }) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false)
+  const [isSelected, setIsSelected] = useState<boolean>(option.isSelected ?? false)
   const isDisabled = custom.max ? (watch(`${custom.title}`) ?? []).length >= custom.max : false
 
   return (

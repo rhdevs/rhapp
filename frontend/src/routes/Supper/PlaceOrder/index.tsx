@@ -15,6 +15,7 @@ import {
   getSupperGroupById,
   getUserOrder,
   readableSupperGroupId,
+  setOrderId,
   setSearchValue,
   unixTo12HourTime,
 } from '../../../store/supper/action'
@@ -51,6 +52,10 @@ export default function PlaceOrder() {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getRestaurant(params.restaurantId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    if (order) {
+      console.log(order)
+      dispatch(setOrderId(order.orderId))
+    }
   }, [dispatch])
 
   const onChange = (input: string) => {
@@ -80,9 +85,10 @@ export default function PlaceOrder() {
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
             {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
+            {console.log(orderId, order)}
             <MenuSection
               supperGroupId={supperGroup?.supperGroupId}
-              orderId={orderId}
+              orderId={orderId ?? order?.orderId}
               menu={
                 searchValue === ''
                   ? restaurant?.menu
@@ -99,7 +105,6 @@ export default function PlaceOrder() {
               onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
             />
           )}
-          {/* If user has item in order, add 'View cart bottom button' &&& link to View cart page! at VIEW_CART/:supperGroupId */}
         </>
       )}
     </Background>

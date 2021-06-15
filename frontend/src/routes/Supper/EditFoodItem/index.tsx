@@ -9,7 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getEditFoodItem, getMenuFood } from '../../../store/supper/action'
+import { getFoodInOrder, getMenuFood } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
@@ -38,19 +38,21 @@ type CustomData = Record<string, string | string[] | CancelAction>
 const EditFoodItem = () => {
   const dispatch = useDispatch()
 
-  const { isLoading, editFoodItem, menuFood, count, supperGroup } = useSelector((state: RootState) => state.supper)
-  const params = useParams<{ supperGroupId: string; foodId: string }>()
-  const { register, handleSubmit, setValue, watch, clearErrors, control, errors } = useForm<CustomData>()
+  const { isLoading, food, count, supperGroup } = useSelector((state: RootState) => state.supper)
+  const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
+  const { register, handleSubmit, setValue, watch, clearErrors, reset, control, errors } = useForm<CustomData>({
+    shouldUnregister: false,
+  })
   const compulsoryFields: Custom[] =
-    menuFood?.custom?.filter((custom) => {
+    food?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
 
   const isOverSupperGroupLimit = () => {
     const maximumLimit = supperGroup?.costLimit ?? 0
     const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
-    const currentFoodItemPrice = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count
-    const originalFoodItemPrice = editFoodItem?.price ?? 0
+    const currentFoodItemPrice = ((food?.price ?? 0) + calculateAdditionalCost()) * count
+    const originalFoodItemPrice = food?.price ?? 0
 
     const newSupperGroupCost = currentSupperGroupCost - originalFoodItemPrice + currentFoodItemPrice
 
@@ -62,7 +64,7 @@ const EditFoodItem = () => {
     Object.entries(watch()).map((entry) => {
       const fieldName = entry[0]
       const fieldDetails = [entry[1]].flat()
-      const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
+      const originalCustom = food?.custom?.find((custom) => custom.title === fieldName)
       originalCustom?.options.map((option) => {
         fieldDetails?.map((fieldDetail) => {
           if (option.name === fieldDetail) addOns += option.price
@@ -93,7 +95,7 @@ const EditFoodItem = () => {
     }
 
     handleSubmit((data: Food) => {
-      const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
+      const custom: Custom[] = (food?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
           .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments') //to not add to custom
           .flatMap((entry) => {
@@ -122,28 +124,38 @@ const EditFoodItem = () => {
       })
 
       const newFood: Food = {
-        restaurantId: menuFood?.restaurantId ?? '',
-        foodMenuId: menuFood?.foodMenuId ?? '',
-        foodName: menuFood?.foodMenuName ?? '',
+        restaurantId: food?.restaurantId ?? '',
+        foodMenuId: food?.foodMenuId ?? '',
+        foodName: food?.foodName ?? '',
         comments: data.comments as string,
         quantity: count,
-        price: menuFood?.price ?? 0,
-        foodPrice: ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count,
+        price: food?.price ?? 0,
+        foodPrice: ((food?.price ?? 0) + calculateAdditionalCost()) * count,
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
       console.log(newFood)
       //TODO: Send info to backend and test
-      //dispatch(updateEditFoodItem(data, params.foodId))
-      // history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
+      //dispatch(updateFoodInOrder(newFood, params.orderId, params.foodId))
+      // history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
       console.log(data, count)
     })()
   }
 
   useEffect(() => {
-    dispatch(getEditFoodItem(params.supperGroupId, params.foodId))
-    dispatch(getMenuFood(params.foodId))
+    dispatch(getFoodInOrder(params.orderId, params.foodId))
   }, [dispatch])
+
+  useEffect(() => {
+    if (food) {
+      console.log(JSON.stringify(food))
+    }
+    if (food?.cancelAction) {
+      reset({
+        cancelAction: food?.cancelAction,
+      })
+    }
+  }, [food?.cancelAction, reset])
 
   console.log(watch())
   return (
@@ -153,9 +165,9 @@ const EditFoodItem = () => {
         <LoadingSpin />
       ) : (
         <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
-          <FoodItemHeader>{editFoodItem?.foodName}</FoodItemHeader>
+          <FoodItemHeader>{food?.foodName}</FoodItemHeader>
           <>
-            {editFoodItem?.custom?.map((custom, index) => (
+            {food?.custom?.map((custom, index) => (
               <SelectField
                 custom={custom}
                 index={index}
@@ -168,13 +180,17 @@ const EditFoodItem = () => {
               />
             ))}
           </>
-          <CancelActionField
-            cancelActionError={errors.cancelAction}
-            register={register}
-            clearErrors={clearErrors}
-            setValue={setValue}
-            defaultValue={editFoodItem?.cancelAction}
-          />
+          <>
+            {food?.cancelAction && (
+              <CancelActionField
+                cancelActionError={errors.cancelAction}
+                register={register}
+                clearErrors={clearErrors}
+                setValue={setValue}
+                defaultValue={food?.cancelAction as CancelAction}
+              />
+            )}
+          </>
           <Controller
             name="comments"
             render={({ onChange, value }) => (
@@ -187,14 +203,14 @@ const EditFoodItem = () => {
               />
             )}
             control={control}
-            defaultValue={editFoodItem?.comments ?? null}
+            defaultValue={food?.comments ?? null}
           />
-          <QuantityTracker margin="0.7rem 0" default={editFoodItem?.quantity ?? 1} center min={1} />
+          <QuantityTracker margin="0.7rem 0" default={food?.quantity ?? 1} center min={1} />
           <AddUpdateCartButton
             isGrey={!isFormFieldsValid()}
             htmlType="submit"
             update
-            currentTotal={String((((menuFood?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
+            currentTotal={String((((food?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
         </MainCard>
       )}

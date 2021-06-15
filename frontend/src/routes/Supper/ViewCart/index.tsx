@@ -18,6 +18,7 @@ import {
   readableSupperGroupId,
   unixTo12HourTime,
 } from '../../../store/supper/action'
+import { Food } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -70,16 +71,12 @@ const ViewCart = () => {
   const params = useParams<{ supperGroupId: string }>()
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [error] = useSnackbar('error')
+  const { supperGroup, order, isLoading, foodId } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
   }, [dispatch])
-
-  const { supperGroup, order, isLoading, foodId } = useSelector((state: RootState) => state.supper)
-
-  console.log(supperGroup)
-  console.log(order)
 
   const onCancelClick = () => {
     setModalIsOpen(false)
@@ -139,6 +136,13 @@ const ViewCart = () => {
               foodList={order?.foodList}
               orderList={supperGroup?.orderList}
               onDeleteClick={() => setModalIsOpen(true)}
+              onEditClick={(e, food?: Food) => {
+                console.log(params.supperGroupId, order?.orderId, food?.foodMenuId, '60633d8ee60eb942b8b27f1e')
+                if (params.supperGroupId && order?.orderId && food?.foodMenuId)
+                  history.push(
+                    `${PATHS.EDIT_FOOD_ITEM}/${params.supperGroupId}/order/${order?.orderId}/food/${food.foodId}`,
+                  )
+              }}
             />
             <SubtotalText>Subtotal: ${(order?.totalCost ?? 0).toFixed(2)}</SubtotalText>
             <ButtonContainer>

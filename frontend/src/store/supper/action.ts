@@ -185,7 +185,7 @@ export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_MENU_FOOD,
-        menuFood: resp.data,
+        foodMenu: resp.data,
       })
     })
     .catch((err) => {
@@ -195,7 +195,9 @@ export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
   dispatch(setIsLoading(false))
 }
 
-export const getFoodInOrder = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(orderId, foodId)
+  if (!(orderId && foodId)) return
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
     .then((resp) => {
@@ -240,6 +242,7 @@ export const getUserOrder = (supperGroupId: string | number, userId: string) => 
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log('THIS IS ORDER!!!!!!!!: ', resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_USER,
         order: resp.data,
@@ -629,7 +632,7 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const setFoodId = (foodId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!foodId) return
   dispatch({
     type: SUPPER_ACTIONS.SET_FOOD_ID,
@@ -637,7 +640,15 @@ export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) 
   })
 }
 
-export const setOrderId = (orderId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const setMenuFoodId = (foodMenuId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!foodMenuId) return
+  dispatch({
+    type: SUPPER_ACTIONS.SET_MENU_FOOD_ID,
+    foodMenuId: foodMenuId,
+  })
+}
+
+export const setOrderId = (orderId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!orderId) return
   dispatch({
     type: SUPPER_ACTIONS.SET_ORDER_ID,
