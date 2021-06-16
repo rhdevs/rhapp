@@ -10,7 +10,7 @@ import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { PaymentMethodBubbles } from '../../../../components/Supper/PaymentMethodBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { paymentMethods } from '../../../../store/stubs'
-import { SetCreateOrderPage, setOrder, createSupperGroup } from '../../../../store/supper/action'
+import { createSupperGroup, SetCreateOrderPage, setOrder } from '../../../../store/supper/action'
 import { PaymentInfo, PaymentMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -48,6 +48,7 @@ export const CreateOrderPageThree = () => {
 
   const onLeftClick = () => {
     dispatch(SetCreateOrderPage(createOrderPage - 1))
+    history.goBack()
   }
 
   let updatedSPInfo
@@ -104,15 +105,15 @@ export const CreateOrderPageThree = () => {
       console.log('thirdSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
+      dispatch(SetCreateOrderPage(1))
     })()
-    dispatch(SetCreateOrderPage(1))
   }
 
-  // useEffect(() => {
-  //   if (Number(supperGroup?.supperGroupId) >= 0 || supperGroup?.supperGroupId !== undefined) {
-  //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
-  //   }
-  // }, [supperGroup?.supperGroupId])
+  useEffect(() => {
+    if (supperGroup?.supperGroupId !== '' && supperGroup?.supperGroupId !== undefined) {
+      history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
+    }
+  }, [supperGroup?.supperGroupId])
 
   return (
     <>

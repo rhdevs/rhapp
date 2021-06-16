@@ -50,16 +50,17 @@ export const CreateOrderPageTwo = () => {
   const { register, handleSubmit, setValue, control, errors, setError, clearErrors, reset } = useForm<FormValues>()
   const { supperGroup, createOrderPage } = useSelector((state: RootState) => state.supper)
 
-  // useEffect(() => {
-  //   if (supperGroup) {
-  //     reset({
-  //       splitDeliveryFees: supperGroup.splitAdditionalCost,
-  //     })
-  //   }
-  // }, [supperGroup, reset])
+  useEffect(() => {
+    if (supperGroup) {
+      reset({
+        splitDeliveryFees: supperGroup.splitAdditionalCost,
+      })
+    }
+  }, [supperGroup, reset])
 
   const onLeftClick = () => {
     dispatch(SetCreateOrderPage(createOrderPage - 1))
+    history.goBack()
   }
 
   let updatedSPInfo

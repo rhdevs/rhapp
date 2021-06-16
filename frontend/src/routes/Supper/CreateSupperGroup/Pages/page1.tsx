@@ -14,11 +14,13 @@ import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
-import { setOrder, SetCreateOrderPage } from '../../../../store/supper/action'
+import { setOrder, SetCreateOrderPage, unixToFormattedTime } from '../../../../store/supper/action'
 import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, InputText } from '..'
+import LoadingSpin from '../../../../components/LoadingSpin'
+import { supper } from '../../../../store/supper/reducer'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -66,7 +68,7 @@ export const CreateOrderPageOne = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, control, errors, clearErrors, reset } = useForm<FormValues>()
-  const { supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
+  const { isLoading, supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
     (state: RootState) => state.supper,
   )
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -89,7 +91,7 @@ export const CreateOrderPageOne = () => {
     supperGroupId: '',
     supperGroupName: '',
     totalPrice: 0,
-    closingTime: 0,
+    closingTime: Math.round(Date.now() / 1000),
     phoneNumber: 0,
   }
 
@@ -97,19 +99,25 @@ export const CreateOrderPageOne = () => {
     dispatch(setOrder(initSupperGroup))
   }, [dispatch])
 
-  // useEffect(() => {
-  //   if (supperGroup) {
-  //     reset({
-  //       restaurant: supperGroup.restaurantName,
-  //       maxPrice: supperGroup.costLimit,
-  //     })
-  //     setHasMaxPrice(supperGroup.costLimit ? true : false)
-  //   }
-  // }, [supperGroup, reset])
+  useEffect(() => {
+    if (supperGroup) {
+      reset({
+        restaurant: supperGroup.restaurantName,
+        closingTime: supperGroup.closingTime,
+        maxPrice: supperGroup.costLimit,
+      })
+      clearErrors('restaurant')
+      clearErrors('closingTime')
+      setHasMaxPrice(supperGroup.costLimit ? true : false)
+    }
+  }, [supperGroup, reset])
 
   useEffect(() => {
-    setValue('restaurant', selectedRestaurant)
-    clearErrors('restaurant')
+    console.log(selectedRestaurant)
+    if (selectedRestaurant) {
+      setValue('restaurant', selectedRestaurant)
+      clearErrors('restaurant')
+    }
   }, [selectedRestaurant])
 
   const onConfirmDiscardClick = () => {
@@ -148,10 +156,16 @@ export const CreateOrderPageOne = () => {
     clearErrors('closingTime')
   }
 
+  let updatedSPInfo
+
   const onClick = () => {
-    let updatedSPInfo = { ...initSupperGroup }
+    updatedSPInfo = { ...supperGroup }
+    setValue('restaurant', selectedRestaurant)
     if (priceLimit > 0 && hasMaxPrice) {
       setValue('maxPrice', priceLimit)
+    }
+    if (updatedSPInfo.closingTime > initSupperGroup.closingTime) {
+      clearErrors('closingTime')
     }
     handleSubmit((data: FormValues) => {
       updatedSPInfo = {
@@ -166,8 +180,8 @@ export const CreateOrderPageOne = () => {
       dispatch(SetCreateOrderPage(createOrderPage + 1))
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
+      history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
     })()
-    history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
   }
 
   return (
@@ -238,7 +252,7 @@ export const CreateOrderPageOne = () => {
                 onChange={onChange}
                 name="closingTime"
                 ref={register({ required: true })}
-                //defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
+                defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
               />
             )}
           />
