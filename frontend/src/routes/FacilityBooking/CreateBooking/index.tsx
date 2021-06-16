@@ -218,12 +218,14 @@ export default function CreateBooking() {
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
-            <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
+            {/* <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}> */}
+            <input type="datetime-local" id="birthdaytime" name="birthdaytime">
               <DatePickerRow>
                 <StyledTitle>From</StyledTitle>
                 <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
               </DatePickerRow>
-            </DatePicker>
+            </input>
+            {/* </DatePicker> */}
             <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
               <DatePickerRow>
                 <StyledTitle>To</StyledTitle>
