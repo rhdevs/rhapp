@@ -98,7 +98,7 @@ export const CreateOrderPageTwo = () => {
             type="number"
             placeholder="$$$"
             name="estDeliveryFee"
-            defaultValue={supperGroup?.additionalCost ?? 0}
+            defaultValue={supperGroup?.additionalCost ?? ''}
             ref={register({
               required: true,
               valueAsNumber: true,

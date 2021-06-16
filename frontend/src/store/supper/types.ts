@@ -96,7 +96,7 @@ export type SupperGroup = {
   restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
-  supperGroupId: string
+  supperGroupId: string | undefined
   supperGroupName: string
   totalPrice: number
   userIdList?: string[]

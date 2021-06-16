@@ -86,7 +86,7 @@ export const CreateOrderPageOne = () => {
     restaurantName: '',
     splitAdditionalCost: SplitACMethod.EQUAL,
     status: SupperGroupStatus.OPEN,
-    supperGroupId: '',
+    supperGroupId: undefined,
     supperGroupName: '',
     totalPrice: 0,
     closingTime: Math.round(Date.now() / 1000),
