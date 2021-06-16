@@ -96,7 +96,7 @@ export type SupperGroup = {
   restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
-  supperGroupId: string
+  supperGroupId: string | undefined
   supperGroupName: string
   totalPrice: number
   userIdList?: string[]
@@ -182,6 +182,8 @@ export enum SUPPER_ACTIONS {
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
   SET_ORDER_ID = 'SUPPER_ACTIONS.SET_ORDER_ID',
   SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
+  SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
+  SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
 }
 
 type SetIsLoading = {
@@ -369,6 +371,16 @@ type SetPaymentUpdateArray = {
   paymentUpdateArray: PaymentUpdateInfo[]
 }
 
+type SetCreateOrderPage = {
+  type: typeof SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE
+  createOrderPage: number
+}
+
+type SetNewSupperGroupId = {
+  type: typeof SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID
+  newSupperGroupId: number
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -407,3 +419,5 @@ export type ActionTypes =
   | SetFoodId
   | GetOrderId
   | SetPaymentUpdateArray
+  | SetCreateOrderPage
+  | SetNewSupperGroupId
