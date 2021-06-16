@@ -78,7 +78,7 @@ export default function Login() {
         userID: username,
         passwordHash: passwordHash,
       }
-      await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -124,7 +124,7 @@ export default function Login() {
           <InputTextLabel>Username: </InputTextLabel>
           <Input
             type="text"
-            placeholder="A1234567B"
+            placeholder="Matric Number"
             value={username}
             onChange={(e) => {
               const newUsername = e.target.value
@@ -136,7 +136,7 @@ export default function Login() {
           <InputTextLabel>Password: </InputTextLabel>
           <Input.Password
             type="password"
-            placeholder="password1"
+            placeholder="Enter Password"
             onChange={(e) => {
               setPassword(e.target.value)
             }}
