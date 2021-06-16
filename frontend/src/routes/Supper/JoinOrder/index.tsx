@@ -9,7 +9,7 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
-import { getSupperGroupById, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import { createOrder, getSupperGroupById, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { Restaurants } from '../../../store/supper/types'
@@ -34,11 +34,15 @@ export default function JoinOrder() {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
   const dispatch = useDispatch()
-  // const supperGroup = { restaurantId = '605e183e0312ad1400fdc98c' }
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
+
+  const onClick = () => {
+    dispatch(createOrder(localStorage.userID, params.supperGroupId))
+    history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
+  }
 
   return (
     <Background>
@@ -57,13 +61,7 @@ export default function JoinOrder() {
         deliveryFee={String((supperGroup?.additionalCost ?? 0).toFixed(2))}
       />
       <ButtonContainer>
-        <Button
-          onButtonClick={() =>
-            history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
-          }
-          defaultButtonDescription="Join Order"
-          stopPropagation={true}
-        />
+        <Button onButtonClick={onClick} defaultButtonDescription="Join Order" stopPropagation={true} />
       </ButtonContainer>
       <BottomNavBar />
     </Background>
