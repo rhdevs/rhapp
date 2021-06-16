@@ -155,10 +155,14 @@ export default function CreateSupperGroup() {
   const { counter, isLoading, supperGroup, selectedRestaurant, priceLimit, selectedPaymentMethod } = useSelector(
     (state: RootState) => state.supper,
   )
-  const [count, setCount] = useState(1)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [count, setCount] = useState<number>(1)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
 
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
   const RedAsterisk = <RedText>*</RedText>
   const initSupperGroup: SupperGroup = {
     costLimit: 0,
@@ -396,15 +400,12 @@ export default function CreateSupperGroup() {
                     type="number"
                     placeholder="$$$"
                     name="estDeliveryFee"
-                    defaultValue={supperGroup?.additionalCost}
+                    defaultValue={supperGroup?.additionalCost ?? ''}
                     ref={register2({
                       required: true,
                       valueAsNumber: true,
                     })}
-                    style={{
-                      borderColor: errors2.estDeliveryFee && 'red',
-                      background: errors2.estDeliveryFee && '#ffd1d1',
-                    }}
+                    style={errors2.estDeliveryFee ? errorStyling : {}}
                   />
                 </HortInputContainer>
               </HortSectionContainer>
@@ -427,10 +428,7 @@ export default function CreateSupperGroup() {
                           required: true,
                         })}
                         defaultValue={supperGroup?.splitAdditionalCost}
-                        style={{
-                          borderColor: errors2.splitDeliveryFees && 'red',
-                          background: errors2.splitDeliveryFees && '#ffd1d1',
-                        }}
+                        style={errors2.splitDeliveryFees ? errorStyling : {}}
                       >
                         <Radio value={SplitACMethod.EQUAL}>Equal</Radio>
                         <Radio value={SplitACMethod.PROPORTIONAL}>Proportional</Radio>
@@ -499,10 +497,7 @@ export default function CreateSupperGroup() {
                       required: true,
                       valueAsNumber: true,
                     })}
-                    style={{
-                      borderColor: errors3.phoneNumber && 'red',
-                      background: errors3.phoneNumber && '#ffd1d1',
-                    }}
+                    style={errors3.phoneNumber ? errorStyling : {}}
                   />
                   {errors3.phoneNumber?.type === 'required' && <ErrorText>Phone Number is required.</ErrorText>}
                 </VertInputContainer>
@@ -541,10 +536,7 @@ export default function CreateSupperGroup() {
                       required: true,
                       validate: (input) => input.trim().length !== 0,
                     })}
-                    style={{
-                      borderColor: errors1.supperGroupName && 'red',
-                      background: errors1.supperGroupName && '#ffd1d1',
-                    }}
+                    style={errors1.supperGroupName ? errorStyling : {}}
                   />
                   {errors1.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
                 </VertInputContainer>
@@ -581,10 +573,7 @@ export default function CreateSupperGroup() {
                         name="closingTime"
                         ref={register1({ required: true })}
                         //defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
-                        style={{
-                          borderColor: errors1.closingTime && 'red',
-                          background: errors1.closingTime && '#ffd1d1',
-                        }}
+                        style={errors1.closingTime ? errorStyling : {}}
                       />
                     )}
                   />

@@ -32,12 +32,12 @@ interface AuxProps {
   children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
   flexDirection?: string
   minHeight?: string
-  isEditable?: boolean
+  isEditable?: boolean | undefined
   editIconSize?: string
   margin?: string | undefined
   padding?: string | undefined
-  editOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  editOnClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
+  onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
 }
 
 export const MainCard = (props: AuxProps) => {

@@ -114,7 +114,7 @@ export const BubbleSection = (props: Props) => {
           {arrowIcon}
         </ArrowContainer>
       </SubContainer>
-      <ChildContainer canHide={props.canHide} isClicked={isClicked}>
+      <ChildContainer canHide={props.canHide ?? false} isClicked={isClicked}>
         {props.canHide ? props.children : isClicked && props.children}
       </ChildContainer>
     </MainContainer>

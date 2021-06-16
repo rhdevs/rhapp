@@ -166,6 +166,10 @@ const EditSupperGroup = () => {
     mode: 'all',
     shouldUnregister: false,
   })
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -201,10 +205,7 @@ const EditSupperGroup = () => {
             required: true,
             validate: (input) => input.trim().length !== 0,
           })}
-          style={{
-            borderColor: errors.supperGroupName && 'red',
-            background: errors.supperGroupName && '#ffd1d1',
-          }}
+          style={errors.supperGroupName ? errorStyling : {}}
         />
         {errors.supperGroupName?.type === 'required' && <ErrorText>Order Name required!</ErrorText>}
         {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
@@ -221,10 +222,7 @@ const EditSupperGroup = () => {
               format="h:mm a"
               onChange={onChange}
               ref={register({ required: true })}
-              style={{
-                borderColor: errors.closingTime && 'red',
-                background: errors.closingTime && '#ffd1d1',
-              }}
+              style={errors.closingTime ? errorStyling : {}}
               defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
             />
           )}
@@ -254,17 +252,14 @@ const EditSupperGroup = () => {
             type="number"
             placeholder="e.g: 3"
             name="estDeliveryFee"
-            defaultValue={supperGroup?.additionalCost}
+            defaultValue={supperGroup?.additionalCost ?? ''}
             ref={register({
               required: true,
               validate: (input) => input.trim().length !== 0,
               valueAsNumber: true,
               min: 0,
             })}
-            style={{
-              borderColor: errors.estDeliveryFee && 'red',
-              background: errors.estDeliveryFee && '#ffd1d1',
-            }}
+            style={errors.estDeliveryFee ? errorStyling : {}}
           />
         </Wrapper>
         {errors.estDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
@@ -319,8 +314,8 @@ const EditSupperGroup = () => {
                     counter <= 1
                       ? supperGroup?.paymentInfo.find((pi) => {
                           return pi.paymentMethod === pm
-                        })?.link ?? undefined
-                      : undefined
+                        })?.link ?? ''
+                      : ''
                   }
                 />
               )
@@ -336,17 +331,14 @@ const EditSupperGroup = () => {
         <StyledText topMargin>Phone Number{RedAsterisk}</StyledText>
         <Input
           type="number"
-          defaultValue={supperGroup?.phoneNumber}
+          defaultValue={supperGroup?.phoneNumber ?? ''}
           placeholder="Phone Number"
           name="phoneNumber"
           ref={register({
             required: true,
             valueAsNumber: true,
           })}
-          style={{
-            borderColor: errors.phoneNumber && 'red',
-            background: errors.phoneNumber && '#ffd1d1',
-          }}
+          style={errors.phoneNumber ? errorStyling : {}}
         />
         {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
       </PICSection>

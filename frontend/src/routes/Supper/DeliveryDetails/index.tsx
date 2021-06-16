@@ -124,7 +124,10 @@ const DeliveryDetails = () => {
   )
   const currentUNIXDate = Math.round(Date.now() / 1000)
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
-
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(
@@ -213,10 +216,7 @@ const DeliveryDetails = () => {
                       required: true,
                       validate: (input) => input.trim().length !== 0,
                     })}
-                    style={{
-                      borderColor: errors.location && 'red',
-                      background: errors.location && '#ffd1d1',
-                    }}
+                    style={errors.location ? errorStyling : {}}
                   />
                   {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
                   {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}

@@ -207,7 +207,7 @@ const OwnerView = (props: Props) => {
           <OrderSummaryCard
             margin="5px 23px"
             orderByUser
-            collatedOrder={viewCollatedOrder ? props.collatedOrder : undefined}
+            collatedOrder={viewCollatedOrder ? props.collatedOrder : null}
             isEditable={props.supperGroupIsOpen}
             orderList={props.supperGroup?.orderList}
             onCloseOrderClick={() => setCloseModalIsOpen(true)}

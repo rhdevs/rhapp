@@ -110,6 +110,10 @@ const OrderSummary = () => {
     formState: { errors },
   } = useForm<FormValues>()
   const RedAsterisk = <RedText>*</RedText>
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
 
   useEffect(() => {
     dispatch(getCollatedOrder(params.supperGroupId))
@@ -150,13 +154,10 @@ const OrderSummary = () => {
                 min: 0,
                 validate: (input) => input.trim().length !== 0,
               })}
-              style={{
-                borderColor: errors.deliveryFee && 'red',
-                background: errors.deliveryFee && '#ffd1d1',
-              }}
+              style={errors.deliveryFee ? errorStyling : {}}
             />
           </DeliveryFeeContainer>
-          {errors.deliveryFee?.type === ('required' || 'validate') && <ErrorText>This is required!</ErrorText>}
+          {errors.deliveryFee?.type === ('required' || 'validate') && <ErrorText>Delivery Fee required!</ErrorText>}
           {errors.deliveryFee?.type === 'min' && <ErrorText>Invalid value!</ErrorText>}
 
           <ButtonContainer>
