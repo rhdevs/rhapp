@@ -3,7 +3,6 @@ import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
-import { foodList } from '../stubs'
 
 const [error] = useSnackbar('error')
 

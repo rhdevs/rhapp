@@ -164,7 +164,7 @@ const EditFoodItem = () => {
   return (
     <MainContainer onSubmit={onSubmit}>
       <TopNavBar title="Edit Item" />
-      {isLoading ? (
+      {isLoading || !food ? (
         <LoadingSpin />
       ) : (
         <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
@@ -183,17 +183,14 @@ const EditFoodItem = () => {
               />
             ))}
           </>
-          <>
-            {food?.cancelAction && (
-              <CancelActionField
-                cancelActionError={errors.cancelAction}
-                register={register}
-                clearErrors={clearErrors}
-                setValue={setValue}
-                defaultValue={food?.cancelAction as CancelAction}
-              />
-            )}
-          </>
+
+          <CancelActionField
+            cancelActionError={errors.cancelAction}
+            register={register}
+            clearErrors={clearErrors}
+            setValue={setValue}
+            defaultValue={food?.cancelAction as CancelAction}
+          />
           <Controller
             name="comments"
             render={({ onChange, value }) => (

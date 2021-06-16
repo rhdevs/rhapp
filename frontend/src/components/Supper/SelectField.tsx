@@ -81,7 +81,7 @@ export const OptionText = styled.text`
   font-weight: 200;
   font-size: 14px;
   margin: 0 0 3px 2px;
-  word-break: break-all;
+  word-break: break-word;
 `
 
 const CustomContainer = styled.div`
@@ -215,7 +215,7 @@ const SingleOptions = ({
   setValue
   clearErrors: (name?: string | string[]) => void
 }) => {
-  const selectedOption: string | null = custom.options.filter((option) => option.isSelected)[0].name ?? null
+  const selectedOption: string | null = custom.options.filter((option) => option.isSelected)[0]?.name ?? null
   useEffect(() => {
     if (selectedOption) setValue(`${custom.title}`, selectedOption)
   }, [])

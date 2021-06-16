@@ -10,14 +10,7 @@ import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { createSupperGroup, setSupperGroup, unixTo12HourTime } from '../../../store/supper/action'
-import {
-  PaymentInfo,
-  PaymentMethod,
-  Restaurants,
-  SplitACMethod,
-  SupperGroup,
-  SupperGroupStatus,
-} from '../../../store/supper/types'
+import { PaymentInfo, PaymentMethod, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { useHistory } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +18,6 @@ import { RootState } from '../../../store/types'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { PATHS } from '../../Routes'
 import moment from 'moment'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   height: 100vh;
@@ -152,6 +144,10 @@ export default function UserCreateOrder() {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
 
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
   const RedAsterisk = <RedText>*</RedText>
   const initSupperGroup: SupperGroup = {
     costLimit: 0,
@@ -167,7 +163,7 @@ export default function UserCreateOrder() {
     restaurantName: '',
     splitAdditionalCost: SplitACMethod.EQUAL,
     status: SupperGroupStatus.OPEN,
-    supperGroupId: '',
+    supperGroupId: undefined,
     supperGroupName: '',
     totalPrice: 0,
     userIdList: [],
@@ -375,10 +371,7 @@ export default function UserCreateOrder() {
                       required: true,
                       valueAsNumber: true,
                     })}
-                    style={{
-                      borderColor: errors2.estDeliveryFee && 'red',
-                      background: errors2.estDeliveryFee && '#ffd1d1',
-                    }}
+                    style={errors2.estDeliveryFee ? errorStyling : {}}
                   />
                 </HortInputContainer>
               </HortSectionContainer>
@@ -399,10 +392,7 @@ export default function UserCreateOrder() {
                         {...register2('splitDeliveryFees', {
                           required: true,
                         })}
-                        style={{
-                          borderColor: errors2.splitDeliveryFees && 'red',
-                          background: errors2.splitDeliveryFees && '#ffd1d1',
-                        }}
+                        style={errors2.splitDeliveryFees ? errorStyling : {}}
                       >
                         <Radio value={SplitACMethod.EQUAL}>Equal</Radio>
                         <Radio value={SplitACMethod.PROPORTIONAL}>Proportional</Radio>
@@ -442,10 +432,7 @@ export default function UserCreateOrder() {
                             required: true,
                             validate: (input) => input.trim().length !== 0,
                           })}
-                          style={{
-                            borderColor: errors3[`${pm}`] && 'red',
-                            background: errors3[`${pm}`] && '#ffd1d1',
-                          }}
+                          style={errors3[`${pm}`] ? errorStyling : {}}
                           placeholder={pm + ' Link'}
                         />
                       )
@@ -471,10 +458,7 @@ export default function UserCreateOrder() {
                       required: true,
                       valueAsNumber: true,
                     })}
-                    style={{
-                      borderColor: errors3.phoneNumber && 'red',
-                      background: errors3.phoneNumber && '#ffd1d1',
-                    }}
+                    style={errors3.phoneNumber ? errorStyling : {}}
                   />
                   {errors3.phoneNumber?.type === 'required' && <ErrorText>Phone Number is required.</ErrorText>}
                 </VertInputContainer>
@@ -512,10 +496,7 @@ export default function UserCreateOrder() {
                       required: true,
                       validate: (input) => input.trim().length !== 0,
                     })}
-                    style={{
-                      borderColor: errors1.supperGroupName && 'red',
-                      background: errors1.supperGroupName && '#ffd1d1',
-                    }}
+                    style={errors1.supperGroupName ? errorStyling : {}}
                   />
                   {errors1.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
                 </VertInputContainer>
@@ -546,10 +527,7 @@ export default function UserCreateOrder() {
                         onChange={onChange}
                         name="closingTime"
                         ref={register1({ required: true })}
-                        style={{
-                          borderColor: errors1.closingTime && 'red',
-                          background: errors1.closingTime && '#ffd1d1',
-                        }}
+                        style={errors1.closingTime ? errorStyling : {}}
                       />
                     )}
                   />
