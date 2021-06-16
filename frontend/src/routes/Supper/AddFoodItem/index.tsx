@@ -46,9 +46,9 @@ const AddFoodItem = () => {
     mode: 'all',
     reValidateMode: 'onChange',
   })
-  const { supperGroup, menuFood, isLoading, count } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, foodMenu, isLoading, count } = useSelector((state: RootState) => state.supper)
   const compulsoryFields: Custom[] =
-    menuFood?.custom?.filter((custom) => {
+    foodMenu?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
 
@@ -60,7 +60,7 @@ const AddFoodItem = () => {
   const isOverSupperGroupLimit = () => {
     const maximumLimit = supperGroup?.costLimit ?? 0
     const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
-    const currentFoodItemPrice = ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count ?? 0
+    const currentFoodItemPrice = ((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count ?? 0
 
     const newSupperGroupCost = currentSupperGroupCost + currentFoodItemPrice
 
@@ -76,20 +76,17 @@ const AddFoodItem = () => {
     }
 
     handleSubmit((data) => {
-      const custom: Custom[] = (menuFood?.custom ?? []).map((customFood) => {
+      const custom: Custom[] = (foodMenu?.custom ?? []).map((customFood) => {
         const options: Option[] = Object.entries(watch())
           .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments') //to not add to custom
           .flatMap((entry) => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
             if (customFood.title === fieldName) {
-              return customFood.options.map(
-                (option) =>
-                  fieldDetails.map((fieldDetail) => {
-                    const isSelected = (option.name === fieldDetail) as boolean
-                    return { ...option, isSelected: isSelected }
-                  })[0],
-              )
+              return customFood.options.map((option) => {
+                const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
+                return { ...option, isSelected: isSelected }
+              })
             } else {
               return {} as Option
             }
@@ -105,20 +102,20 @@ const AddFoodItem = () => {
       })
 
       const newFood: Food = {
-        restaurantId: menuFood?.restaurantId ?? '',
-        foodMenuId: menuFood?.foodMenuId ?? '',
-        foodName: menuFood?.foodMenuName ?? '',
+        restaurantId: foodMenu?.restaurantId ?? '',
+        foodMenuId: foodMenu?.foodMenuId ?? '',
+        foodName: foodMenu?.foodMenuName ?? '',
         comments: data.comments as string,
         quantity: count,
-        price: menuFood?.price ?? 0,
-        foodPrice: ((menuFood?.price ?? 0) + calculateAdditionalCost()) * count,
+        price: foodMenu?.price ?? 0,
+        foodPrice: ((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count,
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
       console.log(newFood)
       //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
-      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${menuFood?.restaurantId}/order`)
+      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
       console.log(data, count)
     })()
   }
@@ -139,7 +136,7 @@ const AddFoodItem = () => {
     Object.entries(watch()).map((entry) => {
       const fieldName = entry[0]
       const fieldDetails = [entry[1]].flat()
-      const originalCustom = menuFood?.custom?.find((custom) => custom.title === fieldName)
+      const originalCustom = foodMenu?.custom?.find((custom) => custom.title === fieldName)
       originalCustom?.options.map((option) => {
         fieldDetails?.map((fieldDetail) => {
           if (option.name === fieldDetail) addOns += option.price
@@ -156,8 +153,8 @@ const AddFoodItem = () => {
         <LoadingSpin />
       ) : (
         <MainContainer>
-          <FoodItemHeader>{menuFood?.foodMenuName}</FoodItemHeader>
-          {menuFood?.custom?.map((custom, index) => (
+          <FoodItemHeader>{foodMenu?.foodMenuName}</FoodItemHeader>
+          {foodMenu?.custom?.map((custom, index) => (
             <SelectField
               custom={custom}
               index={index}
@@ -194,7 +191,7 @@ const AddFoodItem = () => {
             isGrey={!isFormFieldsValid()}
             htmlType="submit"
             add
-            currentTotal={String((((menuFood?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
+            currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
         </MainContainer>
       )}

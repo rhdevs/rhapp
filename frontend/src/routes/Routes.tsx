@@ -73,7 +73,7 @@ export enum PATHS {
   EDIT_SUPPER_GROUP = '/supper/edit/order',
   EDIT_SUPPER_GROUP_BY_ID = '/supper/edit/order/:supperGroupId',
   EDIT_FOOD_ITEM = '/supper/edit',
-  EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:itemId',
+  EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:foodId',
   ADD_FOOD_ITEM = '/supper',
   ADD_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
 }
@@ -118,7 +118,7 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 //SUPPER
 const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
-const UserSGOverview = React.lazy(() => import(/* webpackChunckName: "UserSGOverview" */ './Supper/UserSGOverview'))
+const SGOverview = React.lazy(() => import(/* webpackChunckName: "SGOverview" */ './Supper/SGOverview'))
 const CreateSupperGroup = React.lazy(
   () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
 )
@@ -176,9 +176,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
 
-            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
-            <PrivateRoute exact path={PATHS.SUPPER_GROUP_OVERVIEW_BY_SECTION} component={UserSGOverview} />
+            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
+            <PrivateRoute exact path={PATHS.SUPPER_GROUP_OVERVIEW_BY_SECTION} component={SGOverview} />
             <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_BY_PAGE} component={CreateSupperGroup} />
             <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />

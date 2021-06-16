@@ -2,22 +2,26 @@ import React, { ReactElement } from 'react'
 
 import styled from 'styled-components'
 
-const MainContainer = styled.a<{ alignItems?: string }>`
+const MainContainer = styled.a<{ alignItems?: string | undefined }>`
   margin: 2px;
   display: flex;
   flex-direction: row;
   align-items: ${(props) => props.alignItems ?? ''};
 `
 
-const ButtonText = styled.text<{ color: string; fontSize?: string; fontWeight?: number | string }>`
+const ButtonText = styled.text<{
+  color: string
+  buttonFontSize?: string | undefined
+  buttonFontWeight?: number | string | undefined
+}>`
   color: ${(props) => props.color};
-  font-size: ${(props) => props.fontSize ?? '17px'};
-  font-weight: ${(props) => props.fontWeight ?? 'normal'};
+  font-size: ${(props) => props.buttonFontSize ?? '17px'};
+  font-weight: ${(props) => props.buttonFontWeight ?? 'normal'};
   text-decoration: underline;
   margin: 0 5px;
 `
 
-const StyledRightIcon = styled.div<{ color: string; fontSize?: string }>`
+const StyledRightIcon = styled.div<{ color: string; fontSize?: string | undefined }>`
   color: ${(props) => props.color};
   max-height: ${(props) => props.fontSize ?? '17px'};
   max-width: ${(props) => props.fontSize ?? '17px'};
@@ -45,8 +49,8 @@ export const UnderlinedButton = (props: Props) => {
   }
 
   return (
-    <MainContainer alignItems={props.alignItems} onClick={props.onClick}>
-      <ButtonText fontSize={props.fontSize} color={COLOR} fontWeight={props.fontWeight}>
+    <MainContainer alignItems={props.alignItems} onClick={props.onClick as React.MouseEventHandler<HTMLAnchorElement>}>
+      <ButtonText buttonFontSize={props.fontSize} color={COLOR} buttonFontWeight={props.fontWeight}>
         {props.text}
       </ButtonText>
       {props.rightIcon && (

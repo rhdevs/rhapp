@@ -3,14 +3,14 @@ import React from 'react'
 import { Progress } from 'antd'
 import styled from 'styled-components'
 
-const TextContainer = styled.text<{ fontSize?: string }>`
-  font-size: ${(props) => props.fontSize ?? '21px'};
+const TextContainer = styled.text<{ moneyFontSize?: string | undefined }>`
+  font-size: ${(props) => props.moneyFontSize ?? '21px'};
   font-weight: 600;
   color: rgba(0, 0, 0, 0.65);
 `
 
-const SubTextContainer = styled.text<{ fontSize?: string }>`
-  font-size: ${(props) => props.fontSize ?? '15px'};
+const SubTextContainer = styled.text<{ textFontSize?: string | undefined }>`
+  font-size: ${(props) => props.textFontSize ?? '15px'};
   font-weight: 300;
   color: rgba(0, 0, 0, 0.65);
 `
@@ -31,11 +31,11 @@ export const RoundProgress = (props: Props) => {
       format={() => {
         return (
           <>
-            <TextContainer fontSize={props.moneyFontSize}>
+            <TextContainer moneyFontSize={props.moneyFontSize}>
               ${Math.floor(amountLeft)}
               <br />
             </TextContainer>
-            <SubTextContainer fontSize={props.textFontSize}>left</SubTextContainer>
+            <SubTextContainer textFontSize={props.textFontSize}>left</SubTextContainer>
           </>
         )
       }}

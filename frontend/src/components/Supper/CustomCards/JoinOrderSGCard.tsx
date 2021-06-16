@@ -49,7 +49,7 @@ const FirstLineContainer = styled.div`
 `
 
 type Props = {
-  restaurantLogo?: string
+  restaurantLogo?: string | undefined
   title: string
   restaurant?: Restaurants
   orderId: string

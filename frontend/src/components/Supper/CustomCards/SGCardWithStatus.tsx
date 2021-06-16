@@ -93,19 +93,19 @@ const OwnerButtonContainer = styled.div`
 
 type Props = {
   title: string
-  restaurantLogo?: string
+  restaurantLogo?: string | undefined
   restaurant?: Restaurants
   orderId: string
   username: string
-  supperGroupStatus?: SupperGroupStatus
-  buttonTeleHandle?: string
-  location?: string
+  supperGroupStatus?: SupperGroupStatus | undefined
+  buttonTeleHandle?: string | undefined
+  location?: string | undefined
   collectionTime?: string
-  paymentMethod?: PaymentInfo[]
+  paymentMethod?: PaymentInfo[] | undefined
   isOwner?: boolean
   isEditable?: boolean
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  cancelReason?: string
+  cancelReason?: string | undefined
 }
 
 export const SGCardWithStatus = (props: Props) => {

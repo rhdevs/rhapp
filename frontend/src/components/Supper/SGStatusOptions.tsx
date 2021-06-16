@@ -23,7 +23,7 @@ const MainContainer = styled.div`
 
 type Props = {
   supperGroupStatusList: SupperGroupStatus[]
-  default?: SupperGroupStatus
+  default?: SupperGroupStatus | undefined
 }
 
 export const SGStatusOptions = (props: Props) => {

@@ -8,7 +8,7 @@ import { setCount } from '../../store/supper/action'
 type Props = {
   min?: number | undefined
   color?: string
-  defaultValue?: number
+  defaultValue?: number | undefined
   onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 

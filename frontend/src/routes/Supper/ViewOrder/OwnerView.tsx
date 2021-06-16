@@ -101,7 +101,8 @@ const OwnerView = (props: Props) => {
 
   const onCloseConfirmClick = () => {
     // TODO: Check if this works! (currently theres a middleware problem)
-    dispatch(updateSupperGroup(params.supperGroupId, undefined, SupperGroupStatus.CLOSED))
+    const updatedInfo = { supperGroupStatus: SupperGroupStatus.CLOSED }
+    dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
     history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
   }
 
@@ -207,7 +208,7 @@ const OwnerView = (props: Props) => {
           <OrderSummaryCard
             margin="5px 23px"
             orderByUser
-            collatedOrder={viewCollatedOrder ? props.collatedOrder : undefined}
+            collatedOrder={viewCollatedOrder ? props.collatedOrder : null}
             isEditable={props.supperGroupIsOpen}
             orderList={props.supperGroup?.orderList}
             onCloseOrderClick={() => setCloseModalIsOpen(true)}

@@ -119,6 +119,10 @@ export default function ConfirmOrder() {
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const { order, isLoading } = useSelector((state: RootState) => state.supper)
+  const errorStyling = {
+    borderColor: 'red',
+    background: '#ffd1d1',
+  }
 
   useEffect(() => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
@@ -151,10 +155,7 @@ export default function ConfirmOrder() {
                 required: true,
                 valueAsNumber: true,
               })}
-              style={{
-                borderColor: errors.number && 'red',
-                background: errors.number && '#ffd1d1',
-              }}
+              style={errors.number ? errorStyling : {}}
             />
           </NumberContainer>
           {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}

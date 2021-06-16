@@ -9,10 +9,13 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
+import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
 import {
   getRestaurant,
   getSupperGroupById,
+  getUserOrder,
   readableSupperGroupId,
+  setOrderId,
   setSearchValue,
   unixTo12HourTime,
 } from '../../../store/supper/action'
@@ -41,16 +44,30 @@ export default function PlaceOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
+  const { supperGroup, restaurant, isLoading, searchValue, orderId, order } = useSelector(
+    (state: RootState) => state.supper,
+  )
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getRestaurant(params.restaurantId))
+    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    if (order) {
+      console.log(order)
+      dispatch(setOrderId(order.orderId))
+    }
   }, [dispatch])
-
-  const { supperGroup, restaurant, isLoading, searchValue, orderId } = useSelector((state: RootState) => state.supper)
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))
+  }
+
+  const numberOfItems = () => {
+    let quantity = 0
+    order?.foodList.forEach((food) => {
+      quantity += food.quantity
+    })
+    return quantity
   }
 
   return (
@@ -76,8 +93,10 @@ export default function PlaceOrder() {
           <SearchBarContainer>
             <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
             {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
+            {console.log(orderId, order)}
             <MenuSection
               supperGroupId={supperGroup?.supperGroupId}
+              orderId={orderId ?? order?.orderId}
               menu={
                 searchValue === ''
                   ? restaurant?.menu
@@ -87,7 +106,13 @@ export default function PlaceOrder() {
               }
             />
           </SearchBarContainer>
-          {/* If user has item in order, add 'View cart bottom button' &&& link to View cart page! at VIEW_CART/:supperGroupId */}
+          {order?.foodList.length && (
+            <ViewCartButton
+              numberOfItems={numberOfItems()}
+              currentTotal={order?.totalCost}
+              onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+            />
+          )}
         </>
       )}
     </Background>

@@ -17,8 +17,8 @@ const ValueContainer = styled.text`
 `
 
 type Props = {
-  defaultValue?: number
-  center?: boolean
+  defaultValue?: number | undefined
+  center?: boolean | undefined
 }
 
 export const MaxPriceFixer = (props: Props) => {
@@ -42,7 +42,7 @@ export const MaxPriceFixer = (props: Props) => {
   }
 
   return (
-    <CounterContainer center={props.center}>
+    <CounterContainer center={props.center ?? false}>
       <MinusButton defaultValue={props.defaultValue} color="DARK_BLUE" onClick={subFromPriceLimit} />
       <ValueContainer>${priceLimit}</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />

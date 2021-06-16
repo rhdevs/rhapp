@@ -3,10 +3,10 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.label<{
-  flexPercentage?: number
-  checked?: boolean
-  margin?: string
-  sizePercentage?: number
+  flexPercentage?: number | undefined
+  checked?: boolean | undefined
+  margin?: string | undefined
+  sizePercentage?: number | undefined
 }>`
   display: block;
   position: relative;
@@ -22,7 +22,11 @@ const Container = styled.label<{
   ${(props) => props.flexPercentage && `flex: ${props.flexPercentage}%;`}
 `
 
-const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string; sizePercentage?: number }>`
+const Checkmark = styled.span<{
+  checked?: boolean | undefined
+  checkboxColor?: string | undefined
+  sizePercentage?: number | undefined
+}>`
   position: absolute;
   top: 0;
   left: 0;
@@ -47,7 +51,11 @@ const Checkmark = styled.span<{ checked?: boolean; checkboxColor?: string; sizeP
       `}
 `
 
-const Background = styled.div<{ checked?: boolean; checkboxColor?: string; sizePercentage?: number }>`
+const Background = styled.div<{
+  checked?: boolean | undefined
+  checkboxColor?: string | undefined
+  sizePercentage?: number | undefined
+}>`
   background-color: ${(props) => (props.checked ? props.checkboxColor ?? '#002642' : '#fff')};
   top: 0;
   left: 0;
@@ -71,6 +79,7 @@ export const Checkbox = (props: Props) => {
   useEffect(() => {
     setIsChecked(props.isChecked ?? false)
   }, [props.isChecked])
+
   const [isChecked, setIsChecked] = useState(props.isChecked ?? false)
 
   return (

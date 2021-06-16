@@ -47,7 +47,7 @@ function TopNavBar({
   title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
-  rightComponent?: ReactElement
+  rightComponent?: ReactElement | undefined
   centerComponent?: ReactElement
   onLeftClick?: () => void
 }) {

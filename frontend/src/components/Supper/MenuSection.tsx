@@ -73,7 +73,7 @@ type Props = {
   menu?: FoodMenu[] | undefined
   order?: Order
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  supperGroupId?: string | undefined
+  supperGroupId?: string | undefined | number
   orderId?: string | undefined
 }
 
@@ -97,11 +97,13 @@ export const MenuSection = (props: Props) => {
         .map((foodMenu, index) => (
           <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
             <FoodAndQuantityContainer
-              // TODO: UPDATE ORDERID!
               onClick={() => {
+                console.log(props.supperGroupId, props.orderId, foodMenu.foodMenuId)
                 if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
                   history.push(
-                    `${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${foodMenu.foodMenuId}`,
+                    `${PATHS.ADD_FOOD_ITEM}/${String(props.supperGroupId)}/order/${props.orderId}/add/${
+                      foodMenu.foodMenuId
+                    }`,
                   )
               }}
             >
@@ -130,7 +132,7 @@ export const MenuSection = (props: Props) => {
   return (
     <MainContainer>
       <SectionHeaderContainer>
-        <SectionHeader>{menuTabKey}</SectionHeader>
+        <SectionHeader>{searchValue === '' ? menuTabKey : `Results for '${searchValue}'`}</SectionHeader>
       </SectionHeaderContainer>
       <SectionBodyContainer>
         <FoodMenuContainer>{menuItems()}</FoodMenuContainer>

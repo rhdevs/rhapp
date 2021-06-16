@@ -1,9 +1,8 @@
-import { ActionTypes, Food, Order, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
+import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
-import { foodList } from '../stubs'
 
 const [error] = useSnackbar('error')
 
@@ -27,19 +26,7 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getEditFoodItem = (supperGroupId: string, foodItemId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  console.log(`fetching edit food Item with supperGroupId ${supperGroupId} and foodItemId ${foodItemId}`)
-  // TODO: fetch from DB or otherwise. Using Stub currently
-  dispatch({
-    type: SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM,
-    editFoodItem: foodList[1],
-  })
-  dispatch(getSupperGroupById(supperGroupId))
-  dispatch(setIsLoading(false))
-}
-
-export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
@@ -59,7 +46,7 @@ export const getSupperGroupById = (supperGroupId: string) => async (dispatch: Di
   dispatch(setIsLoading(false))
 }
 
-export const getSupperHistory = (userId) => (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperHistory = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${userId}/supperGroupHistory`)
     .then((resp) => {
@@ -78,9 +65,9 @@ export const getSupperHistory = (userId) => (dispatch: Dispatch<ActionTypes>) =>
   dispatch(setIsLoading(false))
 }
 
-export const getOrderInSupperGroup = (orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getOrderById = (orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_ORDER_IN_SUPPER_GROUP, DOMAINS.SUPPER, `/${orderId}`)
+  get(ENDPOINTS.GET_ORDER_BY_ID, DOMAINS.SUPPER, `/${orderId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -97,7 +84,7 @@ export const getOrderInSupperGroup = (orderId: string) => (dispatch: Dispatch<Ac
   dispatch(setIsLoading(false))
 }
 
-export const getOrderHistory = (userId) => (dispatch: Dispatch<ActionTypes>) => {
+export const getOrderHistory = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_ORDER_HISTORY, DOMAINS.SUPPER, `/${userId}/orderHistory`)
     .then((resp) => {
@@ -183,7 +170,7 @@ export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
       }
       dispatch({
         type: SUPPER_ACTIONS.GET_MENU_FOOD,
-        menuFood: resp.data,
+        foodMenu: resp.data,
       })
     })
     .catch((err) => {
@@ -193,7 +180,9 @@ export const getMenuFood = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
   dispatch(setIsLoading(false))
 }
 
-export const getFoodInOrder = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(orderId, foodId)
+  if (!(orderId && foodId)) return
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
     .then((resp) => {
@@ -231,13 +220,14 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
   dispatch(setIsLoading(false))
 }
 
-export const getUserOrder = (supperGroupId: string, userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getUserOrder = (supperGroupId: string | number, userId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log('THIS IS ORDER!!!!!!!!: ', resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_USER,
         order: resp.data,
@@ -295,7 +285,7 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
         throw resp.err
       }
       console.log(resp.data)
-      dispatch(setOrder(resp.data))
+      dispatch(setSupperGroup(resp.data))
       dispatch(setNewSupperGroupId(resp.data.supperGroupId))
     })
     .catch((err) => {
@@ -312,12 +302,10 @@ export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dis
   console.log(`new Food details: ${newFoodItem}`)
 }
 
-export const updateSupperGroup = (supperGroupId: string, order?: Order, supperGroupStatus?: SupperGroupStatus) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const updateSupperGroup = (supperGroupId: string | number, updatedInfo) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!(supperGroupId && updatedInfo)) return
   dispatch(setIsLoading(true))
-
-  const requestBody = ((order && { order: order }) || (supperGroupStatus && { status: supperGroupStatus })) ?? {}
+  const requestBody = updatedInfo
   console.log(requestBody)
   put(ENDPOINTS.UPDATE_SUPPER_GROUP, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}`)
     .then((resp) => {
@@ -333,11 +321,11 @@ export const updateSupperGroup = (supperGroupId: string, order?: Order, supperGr
   dispatch(setIsLoading(false))
 }
 
-export const createOrder = (userId: string, supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const createOrder = (userId: string, supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const requestBody = {
     userID: userId,
-    supperGroupId: supperGroupId,
+    supperGroupId: Number(supperGroupId),
   }
   post(ENDPOINTS.CREATE_ORDER, DOMAINS.SUPPER, requestBody, {})
     .then((resp) => {
@@ -363,7 +351,7 @@ export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispa
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderInSupperGroup(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
@@ -380,7 +368,7 @@ export const addFoodToOrder = (newFood: Food, orderId: string) => (dispatch: Dis
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderInSupperGroup(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
@@ -394,12 +382,12 @@ export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string
 ) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
-  put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/${foodId}`)
+  put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderInSupperGroup(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
@@ -409,7 +397,7 @@ export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string
 }
 //------------------------ DELETE -----------------------
 
-export const deleteSupperGroup = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteSupperGroup = (supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}`)
     .then((resp) => {
@@ -425,7 +413,7 @@ export const deleteSupperGroup = (supperGroupId: string) => (dispatch: Dispatch<
   dispatch(setIsLoading(false))
 }
 
-export const deleteOrder = (supperGroupId: string, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteOrder = (supperGroupId: string | number, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_ORDER, DOMAINS.SUPPER, {}, `/${orderId}`)
     .then((resp) => {
@@ -441,16 +429,14 @@ export const deleteOrder = (supperGroupId: string, orderId: string) => (dispatch
   dispatch(setIsLoading(false))
 }
 
-export const deleteFoodInOrder = (supperGroupId: string, orderId: string, foodId: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const deleteFoodInOrder = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderInSupperGroup(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
@@ -578,7 +564,7 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setOrder = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSupperGroup = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
     supperGroup: updatedOrder,
@@ -627,7 +613,7 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const setFoodId = (foodId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!foodId) return
   dispatch({
     type: SUPPER_ACTIONS.SET_FOOD_ID,
@@ -635,7 +621,15 @@ export const setFoodId = (foodId?: string) => (dispatch: Dispatch<ActionTypes>) 
   })
 }
 
-export const setOrderId = (orderId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const setMenuFoodId = (foodMenuId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!foodMenuId) return
+  dispatch({
+    type: SUPPER_ACTIONS.SET_MENU_FOOD_ID,
+    foodMenuId: foodMenuId,
+  })
+}
+
+export const setOrderId = (orderId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!orderId) return
   dispatch({
     type: SUPPER_ACTIONS.SET_ORDER_ID,

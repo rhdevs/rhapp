@@ -69,7 +69,7 @@ export enum Restaurants {
 export type Order = {
   orderId: string
   user: User
-  supperGroupId: string
+  supperGroupId: number | undefined
   userContact?: number
   foodList: Food[]
   totalCost: number
@@ -96,7 +96,7 @@ export type SupperGroup = {
   restaurantId?: string
   splitAdditionalCost: SplitACMethod
   status: SupperGroupStatus
-  supperGroupId: string | undefined
+  supperGroupId: number | undefined
   supperGroupName: string
   totalPrice: number
   userIdList?: string[]
@@ -107,7 +107,7 @@ export type SupperGroup = {
 }
 
 export type CollatedOrder = {
-  supperGroupId: string
+  supperGroupId: number | undefined
   ownerId: string
   collatedOrderList: Food[]
   price?: number
@@ -182,6 +182,7 @@ export enum SUPPER_ACTIONS {
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
   SET_ORDER_ID = 'SUPPER_ACTIONS.SET_ORDER_ID',
   SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
+  SET_MENU_FOOD_ID = 'SUPPER_ACTIONS.SET_MENU_FOOD_ID',
   SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
 }
@@ -253,7 +254,7 @@ type GetRestaurantMenu = {
 
 type GetMenuFood = {
   type: typeof SUPPER_ACTIONS.GET_MENU_FOOD
-  menuFood: FoodMenu
+  foodMenu: FoodMenu
 }
 
 type GetOrderHistory = {
@@ -371,6 +372,11 @@ type SetPaymentUpdateArray = {
   paymentUpdateArray: PaymentUpdateInfo[]
 }
 
+type SetMenuFoodId = {
+  type: typeof SUPPER_ACTIONS.SET_MENU_FOOD_ID
+  foodMenuId: string
+}
+
 type SetCreateOrderPage = {
   type: typeof SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE
   createOrderPage: number
@@ -419,5 +425,6 @@ export type ActionTypes =
   | SetFoodId
   | GetOrderId
   | SetPaymentUpdateArray
+  | SetMenuFoodId
   | SetCreateOrderPage
   | SetNewSupperGroupId

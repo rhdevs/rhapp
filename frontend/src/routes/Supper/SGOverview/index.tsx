@@ -29,7 +29,7 @@ const TabsContentContainer = styled.div`
   overflow: scroll;
 `
 
-export default function UserSGOverview() {
+export default function SGOverview() {
   const params = useParams<{ section: string }>()
   const dispatch = useDispatch()
   const history = useHistory()

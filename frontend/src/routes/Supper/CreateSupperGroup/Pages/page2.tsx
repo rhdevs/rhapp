@@ -1,15 +1,16 @@
-import { Radio } from 'antd'
 import React, { useEffect } from 'react'
 import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+
+import { Radio } from 'antd'
 import { ErrorText, InputText } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
-import { setCreateOrderPage, setOrder } from '../../../../store/supper/action'
+import { setCreateOrderPage, setSupperGroup } from '../../../../store/supper/action'
 import { SplitACMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -78,7 +79,7 @@ export const CreateOrderPageTwo = () => {
       }
       dispatch(setCreateOrderPage(createOrderPage + 1))
       console.log('secondSubmit', updatedSPInfo)
-      dispatch(setOrder(updatedSPInfo))
+      dispatch(setSupperGroup(updatedSPInfo))
     })()
     history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
   }

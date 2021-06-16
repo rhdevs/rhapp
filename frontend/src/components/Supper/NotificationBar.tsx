@@ -58,14 +58,14 @@ export const NotificationBar = (props: Props) => {
   return (
     <>
       <MainContainer>
-        <TextContainer onClick={props.onViewClick}>
+        <TextContainer onClick={props.onViewClick as React.MouseEventHandler<HTMLDivElement>}>
           <HeaderContainer>
             <SupperGroupName>{props.supperGroupName}</SupperGroupName>
             <TitleContent> has been updated!</TitleContent>
           </HeaderContainer>
           <SubHeader>Tap to view.</SubHeader>
         </TextContainer>
-        <IconContainer onClick={props.onCloseClick}>
+        <IconContainer onClick={props.onCloseClick as React.MouseEventHandler<HTMLDivElement>}>
           <CloseButton src={CloseIcon} alt="close symbol" />
         </IconContainer>
       </MainContainer>

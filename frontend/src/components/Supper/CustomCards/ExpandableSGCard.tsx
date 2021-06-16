@@ -60,7 +60,7 @@ const EditIcon = styled.img`
 
 type Props = {
   supperGroupName: string
-  supperGroupId: string
+  supperGroupId: string | number
   ownerName: string
   priceLimit: number
   currentAmount: number
@@ -100,7 +100,13 @@ export const ExpandableSGCard = (props: Props) => {
               text={buttonText}
               rightIcon={arrowIcon}
             />
-            {props.isOwner && <EditIcon onClick={props.editOnClick} src={editIcon} alt="Edit Icon" />}
+            {props.isOwner && (
+              <EditIcon
+                onClick={props.editOnClick as React.MouseEventHandler<HTMLImageElement>}
+                src={editIcon}
+                alt="Edit Icon"
+              />
+            )}
           </ExpandableButtonContainer>
         </LeftContainer>
         <RightContainer>

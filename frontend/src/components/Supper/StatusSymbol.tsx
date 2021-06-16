@@ -6,12 +6,12 @@ import { CarOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
-  backgroundColor?: string
+  backgroundColor?: string | undefined
   borderColor: string
   borderWidth: string
-  shadow?: string
-  minWidth?: string
-  isDisabled?: boolean
+  shadow?: string | undefined
+  minWidth?: string | undefined
+  isDisabled?: boolean | undefined
 }>`
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
@@ -110,7 +110,7 @@ export const StatusSymbol = (props: Props) => {
       borderColor={BORDER_COLOR}
       backgroundColor={BACKGROUND_COLOR}
       shadow={props.shadow}
-      onClick={props.onClick}
+      onClick={props.onClick as React.MouseEventHandler<HTMLDivElement>}
       minWidth={props.minWidth}
       isDisabled={props.isDisabled}
     >

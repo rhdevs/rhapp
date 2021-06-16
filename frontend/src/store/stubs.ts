@@ -297,7 +297,7 @@ export const orderList: Order[] = [
       bio: 'This is my bio, I am jane doe',
       modules: ['CS1010', 'CFG1000', 'CS2040S'],
     },
-    supperGroupId: '2',
+    supperGroupId: 2,
     userContact: 99234567,
     foodList: foodList,
     totalCost: 23,
@@ -309,7 +309,7 @@ export const orderList: Order[] = [
   {
     orderId: 'kajldskfhskfksdf',
     user: userProfileStub,
-    supperGroupId: '1',
+    supperGroupId: 1,
     userContact: 91234567,
     foodList: foodList,
     totalCost: 13,
@@ -396,7 +396,7 @@ export const supperGroupStub: SupperGroup = {
   restaurantName: "McDonald's",
   splitAdditionalCost: SplitACMethod.EQUAL,
   status: SupperGroupStatus.OPEN,
-  supperGroupId: '1',
+  supperGroupId: 1,
   supperGroupName: 'feed me',
   totalPrice: 15.7,
   userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
@@ -512,13 +512,14 @@ export const McDonaldstub: Restaurant = {
   menu: foodMenuStub,
   allSection: ['Value Meals', 'Upsized Value Meals', 'Ala Carte', 'Breakfast'],
 }
-export const supperGroupId = '1'
+
+export const supperGroupId = 1
 
 // supperGroupId: string;
 // ownerId: string;
 // collatedOrderList: Food[];
 export const dummyCollatedOrderList: CollatedOrder = {
-  supperGroupId: '1',
+  supperGroupId: 1,
   ownerId: 'A1234567B',
   collatedOrderList: foodList,
 }

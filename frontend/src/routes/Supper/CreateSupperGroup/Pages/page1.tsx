@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Controller, FieldError, useForm } from 'react-hook-form'
-import styled from 'styled-components'
-import { TimePicker, Switch } from 'antd'
-import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import moment from 'moment'
+
+import styled from 'styled-components'
+import { TimePicker, Switch } from 'antd'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
@@ -14,7 +15,7 @@ import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
-import { setOrder, unixToFormattedTime, setCreateOrderPage } from '../../../../store/supper/action'
+import { setSupperGroup, unixToFormattedTime, setCreateOrderPage } from '../../../../store/supper/action'
 import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -94,7 +95,7 @@ export const CreateOrderPageOne = () => {
   }
 
   useEffect(() => {
-    dispatch(setOrder(initSupperGroup))
+    dispatch(setSupperGroup(initSupperGroup))
   }, [dispatch])
 
   useEffect(() => {
@@ -119,7 +120,7 @@ export const CreateOrderPageOne = () => {
   }, [selectedRestaurant])
 
   const onConfirmDiscardClick = () => {
-    dispatch(setOrder(initSupperGroup))
+    dispatch(setSupperGroup(initSupperGroup))
     history.goBack()
   }
 
@@ -177,7 +178,7 @@ export const CreateOrderPageOne = () => {
       }
       dispatch(setCreateOrderPage(createOrderPage + 1))
       console.log('firstSubmit', updatedSPInfo)
-      dispatch(setOrder(updatedSPInfo))
+      dispatch(setSupperGroup(updatedSPInfo))
       history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
     })()
   }

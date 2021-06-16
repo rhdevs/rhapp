@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+
 import { ErrorText, InputText } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
@@ -10,7 +11,7 @@ import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { PaymentMethodBubbles } from '../../../../components/Supper/PaymentMethodBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { paymentMethods } from '../../../../store/stubs'
-import { createSupperGroup, setCreateOrderPage, setOrder } from '../../../../store/supper/action'
+import { createSupperGroup, setCreateOrderPage, setSupperGroup } from '../../../../store/supper/action'
 import { PaymentInfo, PaymentMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -105,7 +106,7 @@ export const CreateOrderPageThree = () => {
         console.log('paymentInfo', updatedPI)
       }
       console.log('thirdSubmit', updatedSPInfo)
-      dispatch(setOrder(updatedSPInfo))
+      dispatch(setSupperGroup(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
       dispatch(setCreateOrderPage(1))
       if (newSupperGroupId !== undefined) {
