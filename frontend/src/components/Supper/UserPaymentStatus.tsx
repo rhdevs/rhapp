@@ -102,7 +102,7 @@ type Props = {
   hasReceived: boolean
   totalCost: number
   additionalCost: number
-  paymentMethod: PaymentMethod
+  paymentMethod?: PaymentMethod | undefined
   numOrders?: number
 }
 
