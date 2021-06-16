@@ -171,13 +171,11 @@ export const editBookingFromDate = (newBookingFromDate: Date) => (
 
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
-  let newError = ''
-  if (duration > 4) {
-    newError = 'Exceeded Maximum Booking Duration of 4 hours!'
+  let newError: string
+  if (duration === 0) {
+    newError = 'End Date is the Same as Start Date!'
   } else if (duration < 0) {
     newError = 'End Date is before Start Date!'
-  } else if (duration === 0) {
-    newError = 'End Date is the Same as Start Date!'
   } else {
     newError = ''
   }
