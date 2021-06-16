@@ -27,20 +27,6 @@ export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getEditFoodItem = (supperGroupId: string | number, foodItemId: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch(setIsLoading(true))
-  console.log(`fetching edit food Item with supperGroupId ${supperGroupId} and foodItemId ${foodItemId}`)
-  // TODO: fetch from DB or otherwise. Using Stub currently
-  dispatch({
-    type: SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM,
-    editFoodItem: foodList[1],
-  })
-  dispatch(getSupperGroupById(supperGroupId))
-  dispatch(setIsLoading(false))
-}
-
 export const getSupperGroupById = (supperGroupId: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
@@ -300,8 +286,8 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
         throw resp.err
       }
       console.log(resp.data)
-      dispatch(setOrder(resp.data))
-      //dispatch(getSupperGroupById(resp.data.supperGroupId))
+      dispatch(setSupperGroup(resp.data))
+      dispatch(setNewSupperGroupId(resp.data.supperGroupId))
     })
     .catch((err) => {
       console.log(err)
@@ -579,7 +565,7 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setOrder = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSupperGroup = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
     supperGroup: updatedOrder,
@@ -681,5 +667,19 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
   dispatch({
     type: SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY,
     paymentUpdateArray: newPaymentUpdate,
+  })
+}
+
+export const setCreateOrderPage = (createOrderPage: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE,
+    createOrderPage: createOrderPage,
+  })
+}
+
+export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID,
+    newSupperGroupId: newSupperGroupId,
   })
 }

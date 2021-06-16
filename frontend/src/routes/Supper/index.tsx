@@ -132,7 +132,7 @@ export default function Supper() {
             )}
           </SupperGroupContainer>
           <PlusButtonDiv>
-            <PlusButton onClick={() => history.push(PATHS.CREATE_SUPPER_GROUP)} />
+            <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
           </PlusButtonDiv>
           <BottomNavBar />
         </>

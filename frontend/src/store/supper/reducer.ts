@@ -47,8 +47,10 @@ const initialState = {
   counter: 0,
   foodId: undefined,
   orderId: undefined,
+  newSupperGroupId: undefined,
   paymentUpdateArray: [],
   foodMenuId: '',
+  createOrderPage: 1,
 }
 
 type State = {
@@ -84,8 +86,10 @@ type State = {
   counter: number
   foodId: string | undefined
   orderId: string | undefined
+  newSupperGroupId: number | undefined
   paymentUpdateArray: PaymentUpdateInfo[]
   foodMenuId: string
+  createOrderPage: number
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -203,6 +207,12 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_MENU_FOOD_ID: {
       return { ...state, foodMenuId: action.foodMenuId }
+    }
+    case SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE: {
+      return { ...state, createOrderPage: action.createOrderPage }
+    }
+    case SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID: {
+      return { ...state, newSupperGroupId: action.newSupperGroupId }
     }
     default:
       return state
