@@ -86,8 +86,8 @@ const ViewCart = () => {
     if (order && foodId) dispatch(deleteFoodInOrder(order.orderId, foodId))
     else {
       error('Failed to delete item, please try again.')
-      setModalIsOpen(false)
     }
+    setModalIsOpen(false)
   }
 
   return (

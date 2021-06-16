@@ -62,6 +62,14 @@ export default function PlaceOrder() {
     dispatch(setSearchValue(input))
   }
 
+  const numberOfItems = () => {
+    let quantity = 0
+    order?.foodList.forEach((food) => {
+      quantity += food.quantity
+    })
+    return quantity
+  }
+
   return (
     <Background>
       <TopNavBar title="Place Order" />
@@ -100,7 +108,7 @@ export default function PlaceOrder() {
           </SearchBarContainer>
           {order?.foodList.length && (
             <ViewCartButton
-              numberOfItems={order?.foodList.length}
+              numberOfItems={numberOfItems()}
               currentTotal={order?.totalCost}
               onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
             />
