@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import { FieldError, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { ErrorText, InputText } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
@@ -20,25 +21,6 @@ const VertSectionContainer = styled.div`
 
 const VertInputContainer = styled.div`
   padding 5px 0 0 0;
-`
-
-const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
-  width: 80%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 5px auto 0 auto;
-  height: 35px;
-  ${(props) => props.flex && 'display: flex;'}
-  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
-`
-
-const ErrorText = styled.p`
-  margin: 5px 0 0 0;
-  color: #ff837a;
-  width: 100%;
-  text-align: center;
-  font-family: 'Inter';
 `
 
 type FormValues = {
@@ -170,7 +152,7 @@ export const CreateOrderPageThree = () => {
             return pmError++
           }
         })}
-        {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
+        {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required.</ErrorText>}
         {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
       </VertSectionContainer>
       <VertSectionContainer>

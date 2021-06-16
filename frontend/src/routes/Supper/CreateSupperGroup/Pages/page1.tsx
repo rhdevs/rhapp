@@ -18,6 +18,7 @@ import { setOrder, SetCreateOrderPage } from '../../../../store/supper/action'
 import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
+import { ErrorText, InputText } from '..'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -25,25 +26,6 @@ const VertSectionContainer = styled.div`
 
 const VertInputContainer = styled.div`
   padding 5px 0 0 0;
-`
-
-const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
-  width: 80%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 5px auto 0 auto;
-  height: 35px;
-  ${(props) => props.flex && 'display: flex;'}
-  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
-`
-
-const ErrorText = styled.p`
-  margin: 5px 0 0 0;
-  color: #ff837a;
-  width: 100%;
-  text-align: center;
-  font-family: 'Inter';
 `
 
 const StyledTimePicker = styled(TimePicker)<{ error?: FieldError | undefined }>`
@@ -238,7 +220,7 @@ export const CreateOrderPageOne = () => {
             />
           )}
         />
-        {errors.restaurant?.type === 'required' && <ErrorText>Selecting a restaurant is required.</ErrorText>}
+        {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required.</ErrorText>}
       </VertSectionContainer>
       <VertSectionContainer>
         <FormHeader headerName={'Closing Time'} />
@@ -284,7 +266,7 @@ export const CreateOrderPageOne = () => {
             />
           </FixerContainer>
         )}
-        {errors.maxPrice?.type === 'required' && <ErrorText>Setting a Max price is required.</ErrorText>}
+        {errors.maxPrice?.type === 'required' && <ErrorText>Max price is required.</ErrorText>}
       </VertSectionContainer>
     </>
   )

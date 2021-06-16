@@ -4,6 +4,7 @@ import { Controller, FieldError, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { ErrorText, InputText } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
@@ -24,25 +25,6 @@ const HortSectionContainer = styled.div`
 const HortInputContainer = styled.div`
   padding: 0px 0px 0px 15px;
   width: 45%;
-`
-
-const InputText = styled.input<{ flex?: boolean; error?: FieldError | undefined }>`
-  width: 80%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 5px auto 0 auto;
-  height: 35px;
-  ${(props) => props.flex && 'display: flex;'}
-  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
-`
-
-const ErrorText = styled.p`
-  margin: 5px 0 0 0;
-  color: #ff837a;
-  width: 100%;
-  text-align: center;
-  font-family: 'Inter';
 `
 
 const StyledRadioButtons = styled(Radio.Group)<{ error?: FieldError | undefined }>`
@@ -124,7 +106,7 @@ export const CreateOrderPageTwo = () => {
           />
         </HortInputContainer>
       </HortSectionContainer>
-      {errors.estDeliveryFee?.type === 'required' && <ErrorText>Estimated delivery fees required!</ErrorText>}
+      {errors.estDeliveryFee?.type === 'required' && <ErrorText>Estimated delivery fees required.</ErrorText>}
       <HortSectionContainer>
         <FormHeader headerName={'Split Delivery Fees'} />
         <HortInputContainer>
@@ -152,7 +134,7 @@ export const CreateOrderPageTwo = () => {
           />
         </HortInputContainer>
       </HortSectionContainer>
-      {errors.splitDeliveryFees?.type === 'required' && <ErrorText>Please select one option.</ErrorText>}
+      {errors.splitDeliveryFees?.type === 'required' && <ErrorText>Split Delivery Fee method is required.</ErrorText>}
     </>
   )
 }

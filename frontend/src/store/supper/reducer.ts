@@ -48,7 +48,6 @@ const initialState = {
   foodId: undefined,
   orderId: undefined,
   paymentUpdateArray: [],
-  formInput: '',
   createOrderPage: 1,
 }
 
@@ -86,7 +85,6 @@ type State = {
   foodId?: string
   orderId?: string
   paymentUpdateArray: PaymentUpdateInfo[]
-  formInput: string | number
   createOrderPage: number
 }
 
@@ -202,9 +200,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {
       return { ...state, paymentUpdateArray: action.paymentUpdateArray }
-    }
-    case SUPPER_ACTIONS.SET_FORM_INPUT: {
-      return { ...state, formInput: action.formInput }
     }
     case SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE: {
       return { ...state, createOrderPage: action.createOrderPage }
