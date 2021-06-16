@@ -1,30 +1,15 @@
-
-from flask import Flask, request, jsonify, Response, make_response
-from flask_cors import CORS, cross_origin
-import pymongo
-import json
+from db import *
+from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
 import os
+from datetime import datetime
 import time
-from bson.objectid import ObjectId
-import re
-import requests
+from flask_cors import cross_origin
+from flask import Blueprint
+import pymongo
+import sys
+sys.path.append("../db")
 
-app = Flask(__name__)
-CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
-
-DB_USERNAME = os.getenv('DB_USERNAME')
-DB_PWD = os.getenv('DB_PWD')
-# URL = "mongodb+srv://rhdevs-db-admin:{}@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority".format(DB_PWD)
-
-# client = pymongo.MongoClient(URL)
-# I understand that you do not to expose the implementation when using API when you return the error
-# but i think this causing a lot of confusion because the message is just failed without any proper further messages
-# I think for now its better to refactor the code to use default exception
-
-client = pymongo.MongoClient(
-    "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority")
-db = client["RHApp"]
+scheduling_api = Blueprint("scheduling", __name__)
 
 
 def renameEvent(event):
@@ -32,123 +17,119 @@ def renameEvent(event):
     return event
 
 
-@app.route("/")
+@scheduling_api.route("/")
 @cross_origin()
 def hello():
     return "Welcome the Raffles Hall Events server"
 
 
-@app.route("/timetable/<userID>", methods=["GET"])
+@scheduling_api.route("/timetable/<userID>", methods=["GET"])
 @cross_origin()
 def getUserTimetable(userID):
     try:
-        data = db.Lessons.find({"userID": userID})
+        data = list(db.Lessons.find({"userID": userID}))
+        if len(data) == 0:
+            raise Exception("No data found.")
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/all', methods=["GET"])
+@scheduling_api.route('/event', methods=["GET"])
 @cross_origin()
 def getAllEvents():
     try:
-        data = db.Events.find()
+        data = list(db.Events.find())
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/private/all', methods=["GET"])
+@scheduling_api.route('/event/private', methods=["GET"])
 @cross_origin()
 def getAllPrivateEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": True}})
-        response = []
+        response = {"status": "success", "data": []}
         for item in data:
-            item['eventID'] = item.pop('_id')
-            response.append(item)
+            item['eventID'] = str(item.pop('_id'))
+            response["data"].append(item)
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/private/<userID>/<startTime>', methods=["GET"])
+@scheduling_api.route('/event/private/<userID>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPrivateEventOfUserAfterTime(userID, startTime):
     try:
         data = db.Events.find({"isPrivate": {
                               "$eq": True}, "userID": userID, "startDateTime": {"$gte": int(startTime)}})
-        response = []
+        response = {"status": "success", "data": []}
         for item in data:
-            item['eventID'] = item.pop('_id')
-            response.append(item)
+            item['eventID'] = str(item.pop('_id'))
+            response["data"].append(item)
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/public/<pagination>/<startTime>', methods=["GET"])
+@scheduling_api.route('/event/public/<pagination>/<startTime>', methods=["GET"])
 @cross_origin()
 def getPublicEventsPagination(pagination, startTime=0):
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}, "startDateTime": {"$gte": int(startTime)}}, sort=[
                               ("startDateTime", pymongo.ASCENDING)]).skip(int(pagination) * 10).limit(10)
-        response = []
+        response = {"status": "success", "data": []}
         for item in data:
-            item['eventID'] = item.pop('_id')
-            response.append(item)
+            item['eventID'] = str(item.pop('_id'))
+            response["data"].append(item)
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/public/all', methods=["GET"])
+@scheduling_api.route('/event/public', methods=["GET"])
 @cross_origin()
 def getAllPublicEvents():
     try:
         data = db.Events.find({"isPrivate": {"$eq": False}})
-        response = []
+        response = {"status": "success", "data": []}
         for item in data:
-            item['eventID'] = item.pop('_id')
-            response.append(item)
+            item['eventID'] = str(item.pop('_id'))
+            response["data"].append(item)
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/afterTime/<startTime>', methods=["GET"])
-@cross_origin()
-def getEventAfterTime(startTime):
-    try:
-        data = db.Events.find({"startDateTime": {"$gt": int(startTime)}})
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
-
-
-@app.route('/event/public/afterTime/<startTime>', methods=["GET"])
+@scheduling_api.route('/event/public/afterTime/<startTime>', methods=["GET"])
 @cross_origin()
 def getPublicEventAfterTime(startTime):
     try:
-        data = db.Events.find(
-            {"startDateTime": {"$gt": int(startTime)}, "isPrivate": False})
+        data = list(db.Events.find(
+            {"startDateTime": {"$gt": int(startTime)}, "isPrivate": False}))
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/cca/all', methods=["GET"])
+@scheduling_api.route('/cca', methods=["GET"])
 @cross_origin()
 def getAllCCA():
     try:
-        response = db.CCA.find()
+        data = list(db.CCA.find({}, {'_id': 0}))
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/ccaID/<int:ccaID>', methods=["GET"])
-@app.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
+@scheduling_api.route('/event/ccaID/<int:ccaID>', methods=["GET"])
+@scheduling_api.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID, referenceTime=0):
     try:
@@ -156,52 +137,55 @@ def getEventsCCA(ccaID, referenceTime=0):
         startOfWeek = referenceTime - ((referenceTime - 345600) % 604800)
         endOfWeek = startOfWeek + 604800
         if referenceTime != 0:
-            response = db.Events.find({"ccaID": ccaID, "startDateTime": {
-                                      "$gte": int(startOfWeek), "$lte": int(endOfWeek)}})
+            data = list(db.Events.find({"ccaID": ccaID, "startDateTime": {
+                "$gte": int(startOfWeek), "$lte": int(endOfWeek)}}))
         else:
-            response = db.Events.find({"ccaID": ccaID})
+            data = list(db.Events.find({"ccaID": ccaID}))
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/event/eventID/<string:eventID>', methods=["GET"])
+@scheduling_api.route('/event/eventID/<string:eventID>', methods=["GET"])
 @cross_origin()
 def getEventsDetails(eventID):
     try:
-        response = db.Events.find_one({"_id": ObjectId(eventID)})
-        response = renameEvent(response)
-
+        data = list(db.Events.find_one({"_id": ObjectId(eventID)}))
+        response = {"status": "success", "data": []}
+        for item in data:
+            item['eventID'] = str(item.pop('_id'))
+            response["data"].append(item)
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(response, default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route('/cca/<int:ccaID>', methods=["GET"])
+@scheduling_api.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
 def getCCADetails(ccaID):
     try:
-        data = db.CCA.find({"ccaID": ccaID})
+        data = list(db.CCA.find({"ccaID": ccaID}, {'_id': 0}))
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response)
 
 
-@app.route("/user_CCA/<string:userID>", methods=['GET'])
+@scheduling_api.route("/user_CCA/<string:userID>", methods=['GET'])
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        data = db.UserCCA.find({"userID": userID})
-        entries = [w["ccaID"] for w in data]
-        response = db.CCA.find({"ccaID": {"$in": entries}})
-
-        return json.dumps(list(response), default=lambda o: str(o)), 200
-
+        CCAofUserID = db.UserCCA.find({"userID": userID})
+        entries = [w["ccaID"] for w in CCAofUserID]
+        data = list(db.CCA.find({"ccaID": {"$in": entries}}))
+        response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e)}, 400
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/user_event/<string:userID>/all", methods=['GET'])
+@scheduling_api.route("/user_event/<string:userID>/", methods=['GET'])
 @cross_origin()
 def getUserAttendanceAll(userID):
     try:
@@ -209,15 +193,14 @@ def getUserAttendanceAll(userID):
 
         entries = [ObjectId(w['eventID']) for w in data]
         data = db.Events.find({"_id": {"$in": entries}})
-        response = map(renameEvent, data)
-
-        return json.dumps(list(response), default=lambda o: str(o)), 200
-
+        response = list(map(renameEvent, data))
+        response = {"status": "success", "data": response}
     except Exception as e:
-        return {"err": str(e)}, 400
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/user_event/<userID>/<int:referenceTime>", methods=["GET"])
+@scheduling_api.route("/user_event/<userID>/<int:referenceTime>", methods=["GET"])
 @cross_origin()
 def getUserAttendance(userID, referenceTime):
     try:
@@ -235,76 +218,48 @@ def getUserAttendance(userID, referenceTime):
 
         response = filter(correctWeek, data)
         response = map(renameEvent, response)
-
+        response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/user_event/<eventID>", methods=["GET"])
+@scheduling_api.route("/user_event/<eventID>", methods=["GET"])
 @cross_origin()
 def getEventAttendees(eventID):
     try:
         response = db.Attendance.find({"eventID": eventID})
+        response = {"status": "success", "data": list(response)}
+
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response)
 
 
-@app.route("/user_CCA/<int:ccaID>", methods=["GET"])
+@scheduling_api.route("/user_CCA/<int:ccaID>", methods=["GET"])
 @cross_origin()
 def getCCAMembers(ccaID):
     try:
         response = db.UserCCA.find({"ccaID": ccaID})
+        response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/user_CCA", methods=["GET"])
+@scheduling_api.route("/user_CCA/", methods=["GET"])
 @cross_origin()
 def getCCAMembersName():
     try:
         ccaName = str(request.args.get('ccaName'))
         response = db.UserCCA.find({"ccaName": ccaName})
+        response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response)
 
 
-@app.route("/user_CCA/add", methods=['POST'])
-@cross_origin()
-def addUserCCA():
-    try:
-        data = request.get_json()
-        userID = data.get('userID')
-        ccaID = data.get('ccaID')  # list of integers
-
-        deleteQuery = {"userID": userID}
-        db.UserCCA.delete_many(deleteQuery)
-
-        body = []
-        for cca in ccaID:
-            item = {
-                "userID": userID,
-                "ccaID": cca
-            }
-
-            body.append(item)
-        if len(body) != 0:
-            receipt = db.UserCCA.insert_many(body)
-
-            response = {}
-            response["_id"] = str(receipt.inserted_ids)
-        else:
-            response = "User has no more CCAs"
-
-        return {"message": response}, 200
-    except Exception as e:
-        return {"err": str(e)}, 400
-
-
-@ app.route("/permissions/<userID>", methods=["GET"])
+@ scheduling_api.route("/permissions/<userID>", methods=["GET"])
 @ cross_origin()
 def getUserPermissions(userID):
     try:
@@ -313,13 +268,14 @@ def getUserPermissions(userID):
         results = db.Profiles.find({"userID": {"$in": donors}})
         response = [{info: profile[info] for info in profile.keys()
                      & {'userID', 'displayName'}} for profile in results]
+        response = {"status": "success", "data": list(response)}
 
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(response), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@ app.route("/permissions", methods=['DELETE', 'POST'])
+@ scheduling_api.route("/permissions", methods=['DELETE', 'POST'])
 @ cross_origin()
 def addDeletePermissions():
     try:
@@ -341,11 +297,11 @@ def addDeletePermissions():
             })
 
     except Exception as e:
-        return {"err": str(e)}, 400
-    return {"message": "Action successful"}, 200
+        return {"err": str(e), "status": "failed"}, 400
+    return {"status": "success"}, 200
 
 
-@app.route("/event/add", methods=['POST'])
+@scheduling_api.route("/event/", methods=['POST'])
 @cross_origin()
 def createEvent():
     try:
@@ -387,24 +343,25 @@ def createEvent():
             }
             db.Attendance.update(attendance, {'$set': attendance}, upsert=True)
 
-        return json.dumps(body, default=lambda o: str(o)), 200
+        response = {"status": "success", "data": body}
 
     except Exception as e:
-        return {"err": str(e)}, 400
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/event/delete/<eventID>", methods=['DELETE'])
+@scheduling_api.route("/event/<eventID>", methods=['DELETE'])
 @cross_origin()
 def deleteEvent(eventID):
     try:
         db.Events.delete_one({"_id": ObjectId(eventID)})
 
     except Exception as e:
-        return {"err": str(e)}, 400
-    return {"message": "successful"}, 200
+        return {"err": str(e), "status": "failed"}, 400
+    return {"status": "success"}, 200
 
 
-@app.route("/event/edit", methods=['PUT'])
+@scheduling_api.route("/event/", methods=['PUT'])
 @cross_origin()
 def editEvent():
     try:
@@ -438,19 +395,18 @@ def editEvent():
         result = db.Events.update_one(
             {"_id": ObjectId(eventID)}, {'$set': body})
         if int(result.matched_count) > 0:
-            return {'message': "Event changed"}, 200
+            return {"status": "success"}, 200
         else:
             receipt = db.Events.insert_one(body)
             body["eventID"] = str(receipt.inserted_id)
-
-            return {"message": body}, 200
+            response = {"status": "success", "data": body}
 
     except Exception as e:
-        return {"err": str(e)}, 400
-    return {'message': "Event changed"}, 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/user_event", methods=['POST', 'DELETE'])
+@scheduling_api.route("/user_event/", methods=['POST', 'DELETE'])
 @cross_origin()
 def editAttendance():
     try:
@@ -468,32 +424,33 @@ def editAttendance():
             db.Attendance.delete_many(body)
 
     except Exception as e:
-        return {"err": str(e)}, 400
-    return {'message': "Attendance edited"}, 200
+        return {"err": str(e), "status": "failed"}, 400
+    return {"status": "success"}, 200
 
 
-@app.route("/nusmods/<userID>", methods=["GET"])
+@scheduling_api.route("/nusmods/<userID>", methods=["GET"])
 @cross_origin()
 def getMods(userID):
     try:
         data = db.NUSMods.find({"userID": userID})
+        response = {"status": "success", "data": list(data)}
     except Exception as e:
-        return {"err": str(e)}, 400
-    return json.dumps(list(data), default=lambda o: str(o)), 200
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
 
 
-@app.route("/nusmods/delete/<userID>", methods=['DELETE'])
-@cross_origin()
-def deleteMods(userID):
-    try:
-        db.NUSMods.delete_one({"userID": userID})
+# @scheduling_api.route("/nusmods/<userID>", methods=['DELETE'])
+# @cross_origin()
+# def deleteMods(userID):
+#     try:
+#         db.NUSMods.delete_one({"userID": userID})
 
-    except Exception as e:
-        return {"err": str(e)}, 400
-    return {"message": "successful"}, 200
+#     except Exception as e:
+#         return {"err": str(e), "status": "failed"}, 400
+#     return {"status": "success"}, 200
 
 
-@app.route("/nusmods/deleteMod", methods=['PUT'])
+@scheduling_api.route("/nusmods/", methods=['DELETE'])
 @cross_origin()
 def deleteOneMod():
     try:
@@ -516,15 +473,13 @@ def deleteOneMod():
 
         db.NUSMods.update_one(
             {"userID": userID}, {'$set': body})
-        return {'message': "successful"}, 200
+        return {"status": "success"}, 200
 
     except Exception as e:
-
-        return {"err": str(e)}, 400
-    return {"message": "successful"}, 200
+        return {"err": str(e), "status": "failed"}, 400
 
 
-@app.route("/nusmods", methods=['PUT'])
+@scheduling_api.route("/nusmods", methods=['POST'])
 @cross_origin()
 def addMods():
     try:
@@ -539,15 +494,13 @@ def addMods():
 
         db.NUSMods.update_one(
             {"userID": userID}, {'$set': body}, upsert=True)
-        return {'message': "successful"}, 200
+        return {"status": "success"}, 200
 
     except Exception as e:
-
-        return {"err": str(e)}, 400
-    return {"message": "successful"}, 200
+        return {"err": str(e), "status": "failed"}, 400
 
 
-@app.route("/nusmods/addNUSMods", methods=['PUT'])
+@scheduling_api.route("/nusmods/addNUSMods", methods=['POST'])
 @cross_origin()
 def addNUSModsEvents():
 
@@ -615,16 +568,12 @@ def addNUSModsEvents():
 
         body = {"userID": userID,
                 "mods": indexed_output}
-                
+
         db.NUSMods.update_one({"userID": userID}, {"$set": body}, upsert=True)
-
-        return json.dumps(db.NUSMods.find_one({"userID": userID}), default=lambda o: str(o)), 200
-
+        print(oneModuleArray)
+        data = list(db.NUSMods.find_one({"userID": userID}))
+        response = {"status": "success", "data": data}
     except Exception as e:
 
-        return {"err": str(e)}, 400
-
-
-if __name__ == "__main__":
-    # app.run(threaded=True, debug=True)
-    app.run('0.0.0.0', port=8080)
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response, 200)
