@@ -14,13 +14,11 @@ import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
-import { setOrder, SetCreateOrderPage, unixToFormattedTime } from '../../../../store/supper/action'
+import { setOrder, unixToFormattedTime, setCreateOrderPage } from '../../../../store/supper/action'
 import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, InputText } from '..'
-import LoadingSpin from '../../../../components/LoadingSpin'
-import { supper } from '../../../../store/supper/reducer'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -68,7 +66,7 @@ export const CreateOrderPageOne = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, control, errors, clearErrors, reset } = useForm<FormValues>()
-  const { isLoading, supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
+  const { supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
     (state: RootState) => state.supper,
   )
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -177,7 +175,7 @@ export const CreateOrderPageOne = () => {
       if (hasMaxPrice) {
         updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
       }
-      dispatch(SetCreateOrderPage(createOrderPage + 1))
+      dispatch(setCreateOrderPage(createOrderPage + 1))
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
       history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)

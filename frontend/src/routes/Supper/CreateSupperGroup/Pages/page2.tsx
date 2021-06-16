@@ -9,7 +9,7 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
-import { SetCreateOrderPage, setOrder } from '../../../../store/supper/action'
+import { setCreateOrderPage, setOrder } from '../../../../store/supper/action'
 import { SplitACMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -59,7 +59,7 @@ export const CreateOrderPageTwo = () => {
   }, [supperGroup, reset])
 
   const onLeftClick = () => {
-    dispatch(SetCreateOrderPage(createOrderPage - 1))
+    dispatch(setCreateOrderPage(createOrderPage - 1))
     history.goBack()
   }
 
@@ -76,7 +76,7 @@ export const CreateOrderPageTwo = () => {
         additionalCost: data.estDeliveryFee,
         splitAdditionalCost: data.splitDeliveryFees,
       }
-      dispatch(SetCreateOrderPage(createOrderPage + 1))
+      dispatch(setCreateOrderPage(createOrderPage + 1))
       console.log('secondSubmit', updatedSPInfo)
       dispatch(setOrder(updatedSPInfo))
     })()
