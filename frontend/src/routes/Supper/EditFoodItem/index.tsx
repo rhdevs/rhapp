@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -9,13 +9,14 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getFoodInOrder } from '../../../store/supper/action'
+import { getFoodInOrder, updateFoodInOrder } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
 import InputRow from '../../../components/Mobile/InputRow'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -37,6 +38,7 @@ type CustomData = Record<string, string | string[] | CancelAction>
 
 const EditFoodItem = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { isLoading, food, count, supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
@@ -102,13 +104,10 @@ const EditFoodItem = () => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
             if (customFood.title === fieldName) {
-              return customFood.options.map(
-                (option) =>
-                  fieldDetails.map((fieldDetail) => {
-                    const isSelected = (option.name === fieldDetail) as boolean
-                    return { ...option, isSelected: isSelected }
-                  })[0],
-              )
+              return customFood.options.map((option) => {
+                const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
+                return { ...option, isSelected: isSelected }
+              })
             } else {
               return {} as Option
             }
@@ -136,9 +135,8 @@ const EditFoodItem = () => {
       }
       console.log(newFood)
       //TODO: Send info to backend and test
-      //dispatch(updateFoodInOrder(newFood, params.orderId, params.foodId))
-      // history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
-      console.log(data, count)
+      dispatch(updateFoodInOrder(newFood, params.orderId, params.foodId))
+      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
     })()
   }
 
@@ -148,16 +146,21 @@ const EditFoodItem = () => {
 
   useEffect(() => {
     if (food) {
-      console.log(JSON.stringify(food))
-    }
-    if (food?.cancelAction) {
-      reset({
+      const initialFormData = {
+        comments: food?.comments,
         cancelAction: food?.cancelAction,
+      }
+      food.custom?.forEach((custom) => {
+        const selectedOptions = custom.options.filter((option) => option.isSelected)
+        if (selectedOptions) {
+          //add `'title': ['value1', 'value2',...]` to object (dynamically)
+          initialFormData[custom.title] = selectedOptions.map((option) => option.name)
+        }
       })
+      reset(initialFormData)
     }
-  }, [food?.cancelAction, reset])
+  }, [food, reset])
 
-  console.log(watch())
   return (
     <MainContainer onSubmit={onSubmit}>
       <TopNavBar title="Edit Item" />

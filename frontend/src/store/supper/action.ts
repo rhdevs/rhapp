@@ -1,4 +1,4 @@
-import { ActionTypes, Food, Order, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
+import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -317,14 +317,10 @@ export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dis
   console.log(`new Food details: ${newFoodItem}`)
 }
 
-export const updateSupperGroup = (
-  supperGroupId: string | number,
-  order?: Order,
-  supperGroupStatus?: SupperGroupStatus,
-) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateSupperGroup = (supperGroupId: string | number, updatedInfo) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!(supperGroupId && updatedInfo)) return
   dispatch(setIsLoading(true))
-
-  const requestBody = ((order && { order: order }) || (supperGroupStatus && { status: supperGroupStatus })) ?? {}
+  const requestBody = updatedInfo
   console.log(requestBody)
   put(ENDPOINTS.UPDATE_SUPPER_GROUP, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}`)
     .then((resp) => {
@@ -401,7 +397,7 @@ export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string
 ) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
-  put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/${foodId}`)
+  put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err

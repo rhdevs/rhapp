@@ -101,7 +101,8 @@ const OwnerView = (props: Props) => {
 
   const onCloseConfirmClick = () => {
     // TODO: Check if this works! (currently theres a middleware problem)
-    dispatch(updateSupperGroup(params.supperGroupId, undefined, SupperGroupStatus.CLOSED))
+    const updatedInfo = { supperGroupStatus: SupperGroupStatus.CLOSED }
+    dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
     history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
   }
 

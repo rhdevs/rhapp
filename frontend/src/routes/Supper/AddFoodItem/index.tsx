@@ -83,13 +83,10 @@ const AddFoodItem = () => {
             const fieldName = entry[0]
             const fieldDetails = [entry[1]].flat()
             if (customFood.title === fieldName) {
-              return customFood.options.map(
-                (option) =>
-                  fieldDetails.map((fieldDetail) => {
-                    const isSelected = (option.name === fieldDetail) as boolean
-                    return { ...option, isSelected: isSelected }
-                  })[0],
-              )
+              return customFood.options.map((option) => {
+                const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
+                return { ...option, isSelected: isSelected }
+              })
             } else {
               return {} as Option
             }

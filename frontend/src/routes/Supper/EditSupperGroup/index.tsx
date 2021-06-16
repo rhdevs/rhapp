@@ -20,7 +20,7 @@ import {
   setSelectedPaymentMethod,
   unixTo12HourTime,
   unixToFormattedTime,
-  updateOrderDetails,
+  updateSupperGroup,
 } from '../../../store/supper/action'
 import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -463,7 +463,7 @@ const EditSupperGroup = () => {
       console.log(data)
       console.log('updatedOrderInfo', updatedOrderInfo)
       //TODO: TEST updated order details to backend
-      dispatch(updateOrderDetails(params.supperGroupId, updatedOrderInfo))
+      dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
     })()
   }
 
