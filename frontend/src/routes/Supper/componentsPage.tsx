@@ -83,7 +83,6 @@ export default function Supper() {
       <DeliveryTimeSetter default={20} />
       <QuantityTracker default={5} />
       <SGStatusBubble text={SupperGroupStatus.ORDERED} />
-      ksdfajkhdkjfhskldf
       <RoundProgress currentAmount={10} />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <SGCardWithStatus
