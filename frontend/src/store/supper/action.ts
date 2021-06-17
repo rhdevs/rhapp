@@ -564,10 +564,10 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setSupperGroup = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSupperGroup = (updatedSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
-    supperGroup: updatedOrder,
+    supperGroup: updatedSupperGroup,
   })
 }
 
@@ -670,6 +670,7 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
 }
 
 export const setCreateOrderPage = (createOrderPage: number) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(createOrderPage, 'THIS IS CREATEORDERNUMERR')
   dispatch({
     type: SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE,
     createOrderPage: createOrderPage,
