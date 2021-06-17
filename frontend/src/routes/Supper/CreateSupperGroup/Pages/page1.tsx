@@ -16,10 +16,11 @@ import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbl
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
 import { setSupperGroup, unixToFormattedTime, setCreateOrderPage } from '../../../../store/supper/action'
-import { SupperGroup, SplitACMethod, SupperGroupStatus, Restaurants } from '../../../../store/supper/types'
+import { SupperGroup, SupperGroupStatus } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, InputText } from '..'
+import LoadingSpin from '../../../../components/LoadingSpin'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -59,7 +60,7 @@ const FixerContainer = styled.div`
 type FormValues = {
   supperGroupName: string
   restaurant: string
-  closingTime: number
+  closingTime: number | undefined
   maxPrice: number
 }
 
@@ -67,7 +68,7 @@ export const CreateOrderPageOne = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, control, errors, clearErrors, reset } = useForm<FormValues>()
-  const { supperGroup, priceLimit, selectedRestaurant, createOrderPage } = useSelector(
+  const { supperGroup, priceLimit, selectedRestaurant, createOrderPage, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -85,17 +86,21 @@ export const CreateOrderPageOne = () => {
     paymentInfo: [],
     restaurantLogo: '',
     restaurantName: '',
-    splitAdditionalCost: SplitACMethod.EQUAL,
+    splitAdditionalCost: undefined,
     status: SupperGroupStatus.OPEN,
     supperGroupId: undefined,
     supperGroupName: '',
     totalPrice: 0,
-    closingTime: Math.round(Date.now() / 1000),
+    closingTime: undefined,
     phoneNumber: 0,
   }
 
   useEffect(() => {
-    dispatch(setSupperGroup(initSupperGroup))
+    dispatch(setCreateOrderPage(1))
+  }, [])
+
+  useEffect(() => {
+    if (!supperGroup) dispatch(setSupperGroup(initSupperGroup))
   }, [dispatch])
 
   useEffect(() => {
@@ -112,7 +117,6 @@ export const CreateOrderPageOne = () => {
   }, [supperGroup, reset])
 
   useEffect(() => {
-    console.log(selectedRestaurant)
     if (selectedRestaurant) {
       setValue('restaurant', selectedRestaurant)
       clearErrors('restaurant')
@@ -142,15 +146,12 @@ export const CreateOrderPageOne = () => {
       setError('closingTime', { type: 'required' })
       return
     }
-    console.log('time.d', time._d)
-    console.log('timeString', timeString)
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
     }
-    console.log('ECT', epochClosingTime)
     setValue('closingTime', epochClosingTime)
     clearErrors('closingTime')
   }
@@ -163,7 +164,7 @@ export const CreateOrderPageOne = () => {
     if (priceLimit > 0 && hasMaxPrice) {
       setValue('maxPrice', priceLimit)
     }
-    if (updatedSPInfo.closingTime > initSupperGroup.closingTime) {
+    if (updatedSPInfo.closingTime) {
       clearErrors('closingTime')
     }
     handleSubmit((data: FormValues) => {
@@ -179,7 +180,7 @@ export const CreateOrderPageOne = () => {
       dispatch(setCreateOrderPage(createOrderPage + 1))
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
-      history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
+      history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
     })()
   }
 
@@ -190,97 +191,104 @@ export const CreateOrderPageOne = () => {
         rightComponent={<UnderlinedButton onClick={onClick} text="Next" fontWeight={700} />}
         onLeftClick={onLeftClick}
       />
-      {modalIsOpen && (
-        <ConfirmationModal
-          title={'Discard Changes?'}
-          hasLeftButton={true}
-          leftButtonText={'Delete'}
-          onLeftButtonClick={onConfirmDiscardClick}
-          rightButtonText={'Cancel'}
-          onRightButtonClick={onCancelClick}
-        />
-      )}
-      <LineProgress currentStep={1} numberOfSteps={3} />
-      <VertSectionContainer>
-        <FormHeader headerName={'Order Name'} />
-        <VertInputContainer>
-          <InputText
-            flex
-            type="text"
-            placeholder="Order Name"
-            name="supperGroupName"
-            defaultValue={supperGroup?.supperGroupName ?? ''}
-            ref={register({
-              required: true,
-              validate: (input) => input.trim().length !== 0,
-            })}
-            error={errors.supperGroupName}
-          />
-          {errors.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
-        </VertInputContainer>
-      </VertSectionContainer>
-      <VertSectionContainer>
-        <FormHeader headerName={'Restaurant'} />
-        <Controller
-          name="restaurant"
-          control={control}
-          rules={{ required: true }}
-          defaultValue={null}
-          render={() => (
-            <RestaurantBubbles
-              defaultRestaurant={supperGroup?.restaurantName ?? Restaurants.MCDONALDS}
-              restaurantList={restaurantList}
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          {modalIsOpen && (
+            <ConfirmationModal
+              title={'Discard Changes?'}
+              hasLeftButton={true}
+              leftButtonText={'Delete'}
+              onLeftButtonClick={onConfirmDiscardClick}
+              rightButtonText={'Cancel'}
+              onRightButtonClick={onCancelClick}
             />
           )}
-        />
-        {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required.</ErrorText>}
-      </VertSectionContainer>
-      <VertSectionContainer>
-        <FormHeader headerName={'Closing Time'} />
-        <VertInputContainer>
-          <Controller
-            name="closingTime"
-            control={control}
-            rules={{ required: true }}
-            defaultValue={null}
-            render={() => (
-              <StyledTimePicker
-                use12Hours
-                error={errors.closingTime}
-                format="h:mm a"
-                onChange={onChange}
-                name="closingTime"
-                ref={register({ required: true })}
-                defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
+          <LineProgress currentStep={1} numberOfSteps={3} />
+          <VertSectionContainer>
+            <FormHeader headerName={'Order Name'} isCompulsory />
+            <VertInputContainer>
+              <InputText
+                flex
+                type="text"
+                placeholder="Order Name"
+                name="supperGroupName"
+                defaultValue={supperGroup?.supperGroupName ?? ''}
+                ref={register({
+                  required: true,
+                  validate: (input) => input.trim().length !== 0,
+                })}
+                error={errors.supperGroupName}
               />
-            )}
-          />
-          {errors.closingTime?.type === 'required' && <ErrorText>Closing Time is required.</ErrorText>}
-        </VertInputContainer>
-      </VertSectionContainer>
-      <VertSectionContainer>
-        <FormHeader headerName={'Max Price'} />
-        <PriceContainer>
-          Set maximum total price
-          <StyledSwitch
-            checkedChildren={<CheckOutlined />}
-            unCheckedChildren={<CloseOutlined />}
-            onClick={() => setHasMaxPrice(!hasMaxPrice)}
-            defaultChecked={hasMaxPrice}
-          />
-        </PriceContainer>
-        {hasMaxPrice && (
-          <FixerContainer>
+              {errors.supperGroupName?.type === 'required' && <ErrorText>Order name is required.</ErrorText>}
+            </VertInputContainer>
+          </VertSectionContainer>
+          <VertSectionContainer>
+            <FormHeader headerName={'Restaurant'} isCompulsory />
             <Controller
-              name="maxPrice"
+              name="restaurant"
               control={control}
+              rules={{ required: true }}
               defaultValue={null}
-              render={() => <MaxPriceFixer defaultValue={supperGroup?.costLimit ?? 0} />}
+              render={() => (
+                <RestaurantBubbles defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
+              )}
             />
-          </FixerContainer>
-        )}
-        {errors.maxPrice?.type === 'required' && <ErrorText>Max price is required.</ErrorText>}
-      </VertSectionContainer>
+            {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required.</ErrorText>}
+          </VertSectionContainer>
+          <VertSectionContainer>
+            <FormHeader headerName={'Closing Time'} isCompulsory />
+            <VertInputContainer>
+              <Controller
+                name="closingTime"
+                control={control}
+                rules={{ required: true }}
+                defaultValue={null}
+                render={() => (
+                  <StyledTimePicker
+                    use12Hours
+                    error={errors.closingTime}
+                    format="h:mm a"
+                    onChange={onChange}
+                    name="closingTime"
+                    ref={register({ required: true })}
+                    {...(supperGroup?.closingTime && {
+                      defaultValue: moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss'),
+                    })}
+                  />
+                )}
+              />
+              {errors.closingTime?.type === 'required' && <ErrorText>Closing Time is required.</ErrorText>}
+            </VertInputContainer>
+          </VertSectionContainer>
+          <VertSectionContainer>
+            <FormHeader headerName={'Max Price'} />
+            <PriceContainer>
+              Set maximum total price
+              <StyledSwitch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onClick={() => setHasMaxPrice(!hasMaxPrice)}
+                defaultChecked={hasMaxPrice}
+              />
+            </PriceContainer>
+            {hasMaxPrice && (
+              <>
+                <FixerContainer>
+                  <Controller
+                    name="maxPrice"
+                    control={control}
+                    defaultValue={null}
+                    render={() => <MaxPriceFixer defaultValue={supperGroup?.costLimit} />}
+                  />
+                </FixerContainer>
+                {errors.maxPrice?.type === 'required' && <ErrorText>Max price is required.</ErrorText>}
+              </>
+            )}
+          </VertSectionContainer>
+        </>
+      )}
     </>
   )
 }

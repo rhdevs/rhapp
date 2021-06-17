@@ -52,12 +52,12 @@ export const CreateOrderPageTwo = () => {
   const { supperGroup, createOrderPage } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
-    if (supperGroup) {
+    if (supperGroup?.splitAdditionalCost) {
       reset({
         splitDeliveryFees: supperGroup.splitAdditionalCost,
       })
     }
-  }, [supperGroup, reset])
+  }, [supperGroup?.splitAdditionalCost, reset])
 
   const onLeftClick = () => {
     dispatch(setCreateOrderPage(createOrderPage - 1))
@@ -93,7 +93,7 @@ export const CreateOrderPageTwo = () => {
       />
       <LineProgress currentStep={2} numberOfSteps={3} />
       <HortSectionContainer>
-        <FormHeader headerName={'Est. Delivery Fees'} />
+        <FormHeader isCompulsory headerName={'Est. Delivery Fees'} />
         <HortInputContainer>
           <InputText
             type="number"
@@ -110,7 +110,7 @@ export const CreateOrderPageTwo = () => {
       </HortSectionContainer>
       {errors.estDeliveryFee?.type === 'required' && <ErrorText>Estimated delivery fees required.</ErrorText>}
       <HortSectionContainer>
-        <FormHeader headerName={'Split Delivery Fees'} />
+        <FormHeader isCompulsory headerName={'Split Delivery Fees'} />
         <HortInputContainer>
           <Controller
             name="splitDeliveryFees"
