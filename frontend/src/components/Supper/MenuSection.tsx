@@ -71,14 +71,13 @@ const EmptyCOntainerText = styled.text`
 
 type Props = {
   menu?: FoodMenu[] | undefined
-  order?: Order
+  order?: Order | null
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   supperGroupId?: string | undefined | number
   orderId?: string | undefined
 }
 
 export const MenuSection = (props: Props) => {
-  let QUANTITY
   const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
   const history = useHistory()
 
@@ -94,32 +93,28 @@ export const MenuSection = (props: Props) => {
       }
       return props.menu
         .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
-        .map((foodMenu, index) => (
-          <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
-            <FoodAndQuantityContainer
-              onClick={() => {
-                console.log(props.supperGroupId, props.orderId, foodMenu.foodMenuId)
-                if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
-                  history.push(
-                    `${PATHS.ADD_FOOD_ITEM}/${String(props.supperGroupId)}/order/${props.orderId}/add/${
-                      foodMenu.foodMenuId
-                    }`,
-                  )
-              }}
-            >
-              <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-              {
-                (QUANTITY = props.order?.foodList?.find((food) => {
-                  if (food.foodMenuId === foodMenu.foodMenuId) {
-                    return String(food.quantity)
-                  }
-                }))
-              }
-              <QuantityContainer>{QUANTITY}</QuantityContainer>
-            </FoodAndQuantityContainer>
-            <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
-          </FoodMainContainer>
-        ))
+        .map((foodMenu, index) => {
+          const QUANTITY = props.order?.foodList?.find((food) => food.foodMenuId === foodMenu.foodMenuId)?.quantity
+          return (
+            <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
+              <FoodAndQuantityContainer
+                onClick={() => {
+                  console.log(props.supperGroupId, props.orderId, foodMenu.foodMenuId)
+                  if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
+                    history.push(
+                      `${PATHS.ADD_FOOD_ITEM}/${String(props.supperGroupId)}/order/${props.orderId}/add/${
+                        foodMenu.foodMenuId
+                      }`,
+                    )
+                }}
+              >
+                <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
+                <QuantityContainer>{QUANTITY && `x${QUANTITY}`}</QuantityContainer>
+              </FoodAndQuantityContainer>
+              <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
+            </FoodMainContainer>
+          )
+        })
     } else {
       return (
         <EmptyContainer>
