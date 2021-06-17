@@ -111,6 +111,8 @@ export const CreateOrderPageThree = () => {
       if (newSupperGroupId !== undefined) {
         dispatch(setCreateOrderPage(1))
         history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
+      } else {
+        history.push(PATHS.SUPPER_HOME)
       }
     })()
   }
