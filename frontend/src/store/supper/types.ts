@@ -124,7 +124,9 @@ export enum SupperGroupStatus {
   ORDERED = 'Ordered',
   ARRIVED = 'Arrived',
   CANCELLED = 'Cancelled',
-  COMPLETED = 'Completed',
+  AWAITING_PAYMENT = 'Awaiting Payment',
+  ALL_PAID = 'All Paid',
+  COMPLETED = 'Completed', //TODO: Remove after design is confirmed
 }
 
 export enum PaymentMethod {
