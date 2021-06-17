@@ -670,7 +670,6 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
 }
 
 export const setCreateOrderPage = (createOrderPage: number) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(createOrderPage, 'THIS IS CREATEORDERNUMERR')
   dispatch({
     type: SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE,
     createOrderPage: createOrderPage,

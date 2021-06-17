@@ -52,12 +52,12 @@ export const CreateOrderPageTwo = () => {
   const { supperGroup, createOrderPage } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
-    if (supperGroup) {
+    if (supperGroup?.splitAdditionalCost) {
       reset({
         splitDeliveryFees: supperGroup.splitAdditionalCost,
       })
     }
-  }, [supperGroup, reset])
+  }, [supperGroup?.splitAdditionalCost, reset])
 
   const onLeftClick = () => {
     dispatch(setCreateOrderPage(createOrderPage - 1))
