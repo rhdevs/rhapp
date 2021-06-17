@@ -133,6 +133,7 @@ const ViewCart = () => {
             </MyOrderContainer>
             <OrderSummaryCard
               isEditable
+              ownerId={supperGroup?.ownerId}
               foodList={order?.foodList}
               orderList={supperGroup?.orderList}
               onDeleteClick={() => setModalIsOpen(true)}

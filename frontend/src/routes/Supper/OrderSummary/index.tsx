@@ -125,7 +125,7 @@ const OrderSummary = () => {
       //TODO: Update status and final delivery fee
       console.log(data)
       console.log(errors)
-      history.push(`${PATHS.USER_VIEW_ORDER}/${params.supperGroupId}`)
+      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 

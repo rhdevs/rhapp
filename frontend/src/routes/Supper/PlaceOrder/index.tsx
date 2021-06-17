@@ -31,13 +31,20 @@ const Background = styled.div`
   padding-bottom: 1rem;
 `
 const SearchBarContainer = styled.div`
-  margin: 8px 20px;
+  margin: 0 20px 8px 20px;
+`
+
+const StickyContainer = styled.div`
+  position: sticky;
+  left: 0;
+  top: 4.4rem;
+  background: #fafaf4;
 `
 
 const Restaurant = styled.text`
   font-weight: 700;
   font-size: 24px;
-  margin-left: 30px;
+  margin-left: 5px;
 `
 
 export default function PlaceOrder() {
@@ -89,11 +96,12 @@ export default function PlaceOrder() {
             numberOfUsers={supperGroup?.userIdList?.length ?? 0}
             deliveryFee={String(supperGroup?.additionalCost ?? '-')}
           />
-          <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
           <SearchBarContainer>
-            <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
-            {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
-            {console.log(orderId, order)}
+            <StickyContainer>
+              <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
+              <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
+              {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
+            </StickyContainer>
             <MenuSection
               supperGroupId={supperGroup?.supperGroupId}
               orderId={orderId ?? order?.orderId}
@@ -107,11 +115,15 @@ export default function PlaceOrder() {
             />
           </SearchBarContainer>
           {order?.foodList.length && (
-            <ViewCartButton
-              numberOfItems={numberOfItems()}
-              currentTotal={order?.totalCost}
-              onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
-            />
+            <>
+              <br />
+              <br />
+              <ViewCartButton
+                numberOfItems={numberOfItems()}
+                currentTotal={order?.totalCost}
+                onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+              />
+            </>
           )}
         </>
       )}

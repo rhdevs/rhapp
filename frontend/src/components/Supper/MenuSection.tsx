@@ -92,10 +92,12 @@ export const MenuSection = (props: Props) => {
           </EmptyContainer>
         )
       }
-      return props.menu
-        .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
-        .map((foodMenu, index) => (
-          <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
+      const selectedMenuItems: FoodMenu[] = props.menu.filter(
+        (foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All',
+      )
+      return selectedMenuItems.length ? (
+        selectedMenuItems.map((foodMenu, index) => (
+          <FoodMainContainer key={index} noBottomBorder={index + 1 === selectedMenuItems.length}>
             <FoodAndQuantityContainer
               onClick={() => {
                 console.log(props.supperGroupId, props.orderId, foodMenu.foodMenuId)
@@ -120,6 +122,11 @@ export const MenuSection = (props: Props) => {
             <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
           </FoodMainContainer>
         ))
+      ) : (
+        <EmptyContainer>
+          <EmptyCOntainerText>Oops! There are no items in this section.</EmptyCOntainerText>
+        </EmptyContainer>
+      )
     } else {
       return (
         <EmptyContainer>
