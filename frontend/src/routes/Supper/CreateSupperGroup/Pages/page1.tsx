@@ -104,16 +104,10 @@ export const CreateOrderPageOne = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (priceLimit > 0) {
-      clearErrors('maxPrice')
-    }
-  }, [priceLimit])
-
-  useEffect(() => {
     if (supperGroup) {
       reset({
         restaurant: supperGroup.restaurantName,
-        closingTime: supperGroup?.closingTime,
+        closingTime: supperGroup.closingTime,
         maxPrice: supperGroup.costLimit,
       })
       clearErrors('restaurant')
@@ -167,13 +161,8 @@ export const CreateOrderPageOne = () => {
   const onClick = () => {
     updatedSPInfo = { ...supperGroup }
     setValue('restaurant', selectedRestaurant)
-    if (priceLimit >= 0 && hasMaxPrice) {
-      if (priceLimit === 0) {
-        setError('maxPrice', { type: 'min' })
-      } else {
-        clearErrors('maxPrice')
-        setValue('maxPrice', priceLimit)
-      }
+    if (priceLimit > 0 && hasMaxPrice) {
+      setValue('maxPrice', priceLimit)
     }
     if (updatedSPInfo.closingTime) {
       clearErrors('closingTime')
@@ -295,7 +284,6 @@ export const CreateOrderPageOne = () => {
                   />
                 </FixerContainer>
                 {errors.maxPrice?.type === 'required' && <ErrorText>Max price is required.</ErrorText>}
-                {errors.maxPrice?.type === 'min' && <ErrorText>Max price cannot be zero.</ErrorText>}
               </>
             )}
           </VertSectionContainer>

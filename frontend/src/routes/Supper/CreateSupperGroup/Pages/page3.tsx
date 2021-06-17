@@ -108,14 +108,19 @@ export const CreateOrderPageThree = () => {
       console.log('thirdSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
-      dispatch(setCreateOrderPage(1))
       if (newSupperGroupId !== undefined) {
-        history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
-      } else {
-        history.push(PATHS.SUPPER_HOME)
+        dispatch(setCreateOrderPage(1))
+        history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
       }
     })()
   }
+
+  //can try if the above does not work
+  // useEffect(() => {
+  //   if (newSupperGroupId) {
+  //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
+  //   }
+  // }, [newSupperGroupId])
 
   return (
     <>
@@ -126,7 +131,7 @@ export const CreateOrderPageThree = () => {
       />
       <LineProgress currentStep={3} numberOfSteps={3} />
       <VertSectionContainer>
-        <FormHeader headerName={'Payment Method'} />
+        <FormHeader headerName={'Payment Method'} isCompulsory />
         <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
@@ -159,7 +164,7 @@ export const CreateOrderPageThree = () => {
         {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
       </VertSectionContainer>
       <VertSectionContainer>
-        <FormHeader headerName={'Phone Number'} />
+        <FormHeader headerName={'Phone Number'} isCompulsory />
         <VertInputContainer>
           <InputText
             flex
