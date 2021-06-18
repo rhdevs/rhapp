@@ -82,7 +82,7 @@ export type Order = {
 export type SupperGroup = {
   additionalCost?: number //ie GST, delivery fee
   comments?: string
-  costLimit: number
+  costLimit: number | undefined // can have no limit
   createdAt: number
   currentFoodCost: number //non inclusive of additionalCost
   location: string //collection point
@@ -124,7 +124,9 @@ export enum SupperGroupStatus {
   ORDERED = 'Ordered',
   ARRIVED = 'Arrived',
   CANCELLED = 'Cancelled',
-  COMPLETED = 'Completed',
+  AWAITING_PAYMENT = 'Awaiting Payment',
+  ALL_PAID = 'All Paid',
+  COMPLETED = 'Completed', //TODO: Remove after design is confirmed
 }
 
 export enum PaymentMethod {

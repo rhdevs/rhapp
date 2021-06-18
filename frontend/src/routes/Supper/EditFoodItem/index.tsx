@@ -51,7 +51,8 @@ const EditFoodItem = () => {
     }) ?? []
 
   const isOverSupperGroupLimit = () => {
-    const maximumLimit = supperGroup?.costLimit ?? 0
+    const maximumLimit = supperGroup?.costLimit
+    if (!maximumLimit) return false
     const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
     const currentFoodItemPrice = ((food?.price ?? 0) + calculateAdditionalCost()) * count
     const originalFoodItemPrice = food?.price ?? 0

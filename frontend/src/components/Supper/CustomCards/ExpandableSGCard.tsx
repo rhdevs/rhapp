@@ -111,7 +111,7 @@ export const ExpandableSGCard = (props: Props) => {
         </LeftContainer>
         <RightContainer>
           <RoundProgress
-            priceLimit={Number(props.priceLimit.toFixed(2))}
+            priceLimit={props.priceLimit ? Number(props.priceLimit.toFixed(2)) : undefined}
             currentAmount={Number(props.currentAmount.toFixed(2))}
           />
         </RightContainer>

@@ -64,6 +64,7 @@ type Props = {
   orderList?: Order[] | undefined
   margin?: string
   collatedOrder?: CollatedOrder | null
+  ownerId?: string | undefined
 }
 
 export const OrderSummaryCard = (props: Props) => {
@@ -103,7 +104,9 @@ export const OrderSummaryCard = (props: Props) => {
               descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
               stopPropagation={true}
               defaultButtonDescription={
-                props.orderByUser || props.collatedOrder !== undefined ? 'Delete Group' : 'Cancel Order'
+                props.orderByUser || props.collatedOrder !== undefined || props.ownerId === localStorage.userID
+                  ? 'Delete Group'
+                  : 'Cancel Order'
               }
               defaultButtonColor="transparent"
               defaultTextColor="#de5f4c"
@@ -112,7 +115,7 @@ export const OrderSummaryCard = (props: Props) => {
               isFlipButton={false}
               border="2px solid #de5f4c"
             />
-            {(props.orderByUser || props.collatedOrder !== undefined) && (
+            {(props.orderByUser || props.collatedOrder !== undefined || props.ownerId === localStorage.userID) && (
               <Button
                 descriptionStyle={{ width: '100%', whiteSpace: 'normal' }}
                 stopPropagation={true}

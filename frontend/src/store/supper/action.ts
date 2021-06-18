@@ -413,7 +413,8 @@ export const deleteSupperGroup = (supperGroupId: string | number) => (dispatch: 
   dispatch(setIsLoading(false))
 }
 
-export const deleteOrder = (supperGroupId: string | number, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteOrder = (supperGroupId: string | number, orderId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!orderId) return
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_ORDER, DOMAINS.SUPPER, {}, `/${orderId}`)
     .then((resp) => {

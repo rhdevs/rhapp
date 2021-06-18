@@ -91,9 +91,11 @@ export const MenuSection = (props: Props) => {
           </EmptyContainer>
         )
       }
-      return props.menu
-        .filter((foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All')
-        .map((foodMenu, index) => {
+      const selectedMenuItems: FoodMenu[] = props.menu.filter(
+        (foodMenu) => foodMenu.section === menuTabKey || menuTabKey === 'All',
+      )
+      return selectedMenuItems.length ? (
+        selectedMenuItems.map((foodMenu, index) => {
           const QUANTITY = props.order?.foodList?.find((food) => food.foodMenuId === foodMenu.foodMenuId)?.quantity
           return (
             <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
@@ -114,6 +116,11 @@ export const MenuSection = (props: Props) => {
             </FoodMainContainer>
           )
         })
+      ) : (
+        <EmptyContainer>
+          <EmptyCOntainerText>Oops! There are no items in this section.</EmptyCOntainerText>
+        </EmptyContainer>
+      )
     } else {
       return (
         <EmptyContainer>

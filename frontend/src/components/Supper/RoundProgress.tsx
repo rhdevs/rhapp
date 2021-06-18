@@ -15,8 +15,14 @@ const SubTextContainer = styled.text<{ textFontSize?: string | undefined }>`
   color: rgba(0, 0, 0, 0.65);
 `
 
+const NoLimitText = styled.text<{ textFontSize?: string | undefined }>`
+  font-size: ${(props) => props.textFontSize ?? '15px'};
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.65);
+`
+
 type Props = {
-  priceLimit: number
+  priceLimit?: number | undefined
   currentAmount: number
   width?: number
   moneyFontSize?: string
@@ -24,6 +30,21 @@ type Props = {
 }
 
 export const RoundProgress = (props: Props) => {
+  if (!props.priceLimit) {
+    return (
+      <Progress
+        format={() => {
+          return (
+            <>
+              <NoLimitText textFontSize={props.textFontSize}>No Limit</NoLimitText>
+            </>
+          )
+        }}
+        type="circle"
+        width={props.width ?? 80}
+      />
+    )
+  }
   const percentage = (props.currentAmount / props.priceLimit) * 100
   const amountLeft = props.priceLimit - props.currentAmount
   return (

@@ -7,7 +7,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getUserOrder } from '../../../store/supper/action'
+import { getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -132,9 +132,9 @@ export default function ConfirmOrder() {
     handleSubmit((data) => {
       const updatedOrder = { ...order, userContact: data.number }
       console.log(updatedOrder)
-      //TODO: update backend order contact number
-      //dispatch(updateOrderDetails(updatedOrder, order.orderId))
-      history.push(`${PATHS.USER_VIEW_ORDER}/${params.supperGroupId}`)
+      //TODO: Test update order
+      dispatch(updateOrderDetails(order?.orderId, updatedOrder))
+      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 

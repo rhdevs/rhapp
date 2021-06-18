@@ -58,7 +58,8 @@ const AddFoodItem = () => {
   }, [dispatch])
 
   const isOverSupperGroupLimit = () => {
-    const maximumLimit = supperGroup?.costLimit ?? 0
+    const maximumLimit = supperGroup?.costLimit
+    if (!maximumLimit) return false
     const currentSupperGroupCost = supperGroup?.currentFoodCost ?? 0
     const currentFoodItemPrice = ((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count ?? 0
 
