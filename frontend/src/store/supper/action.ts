@@ -286,7 +286,7 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       }
       console.log(resp.data)
       dispatch(setSupperGroup(resp.data))
-      dispatch(setNewSupperGroupId(resp.data.supperGroupId))
+      dispatch(setNewSupperGroupId(resp.data.supperGroup.supperGroupId))
     })
     .catch((err) => {
       console.log(err)
@@ -565,10 +565,10 @@ export const setTabsKey = (section: string) => (dispatch: Dispatch<ActionTypes>)
   })
 }
 
-export const setSupperGroup = (updatedOrder: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSupperGroup = (updatedSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
-    supperGroup: updatedOrder,
+    supperGroup: updatedSupperGroup,
   })
 }
 

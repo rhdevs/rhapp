@@ -133,10 +133,10 @@ const DeliveryFeeInput = styled.input`
 
 type FormData = {
   supperGroupName: string
-  closingTime: number
-  maxPrice: number
+  closingTime: number | undefined
+  maxPrice: number | undefined
   estDeliveryFee: number
-  splitDeliveryFee: SplitACMethod
+  splitDeliveryFee: SplitACMethod | undefined
   paymentMethod: number
   phoneNumber: number
 }

@@ -29,7 +29,7 @@ export const MinusButton = (props: Props) => {
     BUTTON_COLOR = DARK_BLUE
   }
 
-  if (count === props.min ?? 0) {
+  if (count === (props.min ?? 0)) {
     if (BUTTON_COLOR === LIGHT_RED) {
       BUTTON_COLOR = SHADED_RED
     }
@@ -42,7 +42,7 @@ export const MinusButton = (props: Props) => {
     <>
       <MinusCircleFilled
         style={{
-          color: BUTTON_COLOR, //'#EB5757'
+          color: BUTTON_COLOR,
           fontSize: '25px',
         }}
         onClick={props.onClick}

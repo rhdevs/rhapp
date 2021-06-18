@@ -17,6 +17,7 @@ const RedText = styled.text`
 
 type Props = {
   headerName: string
+  isCompulsory?: boolean
 }
 
 export const FormHeader = (props: Props) => {
@@ -25,7 +26,7 @@ export const FormHeader = (props: Props) => {
   return (
     <Header>
       {props.headerName}
-      {RedAsterisk}
+      {props.isCompulsory && RedAsterisk}
     </Header>
   )
 }

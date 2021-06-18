@@ -94,7 +94,7 @@ export type SupperGroup = {
   restaurantLogo?: string
   restaurantName: string
   restaurantId?: string
-  splitAdditionalCost: SplitACMethod
+  splitAdditionalCost: SplitACMethod | undefined
   status: SupperGroupStatus
   supperGroupId: number | undefined
   supperGroupName: string
@@ -102,7 +102,7 @@ export type SupperGroup = {
   userIdList?: string[]
   orderList?: Order[]
   estArrivalTime?: number
-  closingTime: number
+  closingTime: number | undefined
   phoneNumber: number
 }
 
