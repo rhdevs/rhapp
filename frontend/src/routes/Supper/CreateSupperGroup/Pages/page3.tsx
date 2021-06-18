@@ -50,9 +50,11 @@ export const CreateOrderPageThree = () => {
   }, [selectedPaymentMethod])
 
   useEffect(() => {
-    dispatch(setCreateOrderPage(1))
-    history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
-  }, [newSupperGroupId])
+    if (newSupperGroupId !== undefined) {
+      dispatch(setCreateOrderPage(1))
+      history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
+    }
+  }, [newSupperGroupId, supperGroup])
 
   const onLeftClick = () => {
     dispatch(setCreateOrderPage(createOrderPage - 1))
@@ -114,22 +116,8 @@ export const CreateOrderPageThree = () => {
 
       dispatch(setSupperGroup(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
-
-      // if (newSupperGroupId !== undefined) {
-      //   dispatch(setCreateOrderPage(1))
-      //   history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
-      // } else {
-      //   history.push(PATHS.SUPPER_HOME)
-      // }
     })()
   }
-
-  //can try if the above does not work
-  // useEffect(() => {
-  //   if (newSupperGroupId) {
-  //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup?.supperGroupId}`)
-  //   }
-  // }, [newSupperGroupId])
 
   return (
     <>

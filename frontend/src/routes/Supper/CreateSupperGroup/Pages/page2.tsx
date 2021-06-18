@@ -81,7 +81,7 @@ export const CreateOrderPageTwo = () => {
       console.log('secondSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
     })()
-    history.push(`${PATHS.CREATE_SUPPER_GROUP}/${createOrderPage}`)
+    history.push(`${PATHS.CREATE_SUPPER_GROUP}/3`)
   }
 
   return (
