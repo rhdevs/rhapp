@@ -145,12 +145,12 @@ export default function CreateBooking() {
     }
   }
 
-  const handleFromDateChange = (newDate: Date) => {
-    dispatch(editBookingFromDate(newDate))
+  const handleFromDateChange = (newDate: string) => {
+    dispatch(editBookingFromDate(new Date(newDate)))
   }
 
-  const handleToDateChange = (newDate: Date) => {
-    dispatch(editBookingToDate(newDate))
+  const handleToDateChange = (newDate: string) => {
+    dispatch(editBookingToDate(new Date(newDate)))
   }
 
   const setCca = (newCCA: string) => {
@@ -218,20 +218,22 @@ export default function CreateBooking() {
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
-            {/* <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}> */}
-            <input type="datetime-local" id="birthdaytime" name="birthdaytime">
-              <DatePickerRow>
-                <StyledTitle>From</StyledTitle>
-                <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
-              </DatePickerRow>
-            </input>
-            {/* </DatePicker> */}
-            <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
-              <DatePickerRow>
-                <StyledTitle>To</StyledTitle>
-                <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
-              </DatePickerRow>
-            </DatePicker>
+            <DatePickerRow>
+              <StyledTitle>From</StyledTitle>
+              <input
+                type="datetime-local"
+                value={newBookingFromDate.toISOString().slice(0, -8)}
+                onChange={(event) => handleFromDateChange(event.target.value)}
+              />
+            </DatePickerRow>
+            <DatePickerRow>
+              <StyledTitle>To</StyledTitle>
+              <input
+                type="datetime-local"
+                value={newBookingToDate.toISOString().slice(0, -8)}
+                onChange={(event) => handleToDateChange(event.target.value)}
+              />
+            </DatePickerRow>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
               newBookingToDate,
             )
