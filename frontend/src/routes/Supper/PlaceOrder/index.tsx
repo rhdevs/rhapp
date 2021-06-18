@@ -97,6 +97,7 @@ export default function PlaceOrder() {
             <MenuSection
               supperGroupId={supperGroup?.supperGroupId}
               orderId={orderId ?? order?.orderId}
+              order={order}
               menu={
                 searchValue === ''
                   ? restaurant?.menu
