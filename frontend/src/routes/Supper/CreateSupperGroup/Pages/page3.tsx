@@ -49,6 +49,11 @@ export const CreateOrderPageThree = () => {
     }
   }, [selectedPaymentMethod])
 
+  useEffect(() => {
+    dispatch(setCreateOrderPage(1))
+    history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
+  }, [newSupperGroupId])
+
   const onLeftClick = () => {
     dispatch(setCreateOrderPage(createOrderPage - 1))
     history.goBack()
@@ -106,14 +111,16 @@ export const CreateOrderPageThree = () => {
         console.log('paymentInfo', updatedPI)
       }
       console.log('thirdSubmit', updatedSPInfo)
+
       dispatch(setSupperGroup(updatedSPInfo))
       dispatch(createSupperGroup(updatedSPInfo))
-      if (newSupperGroupId !== undefined) {
-        dispatch(setCreateOrderPage(1))
-        history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
-      } else {
-        history.push(PATHS.SUPPER_HOME)
-      }
+
+      // if (newSupperGroupId !== undefined) {
+      //   dispatch(setCreateOrderPage(1))
+      //   history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
+      // } else {
+      //   history.push(PATHS.SUPPER_HOME)
+      // }
     })()
   }
 
