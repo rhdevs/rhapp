@@ -153,6 +153,11 @@ export default function CreateBooking() {
     dispatch(editBookingToDate(new Date(newDate)))
   }
 
+  const convertLocalTime = (date: Date) => {
+    const newDate = new Date(date.getTime() + 28800000)
+    return newDate.toISOString().slice(0, -8)
+  }
+
   const setCca = (newCCA: string) => {
     dispatch(editBookingCCA(newCCA))
   }
@@ -222,7 +227,7 @@ export default function CreateBooking() {
               <StyledTitle>From</StyledTitle>
               <input
                 type="datetime-local"
-                value={newBookingFromDate.toISOString().slice(0, -8)}
+                value={convertLocalTime(newBookingFromDate)}
                 onChange={(event) => handleFromDateChange(event.target.value)}
               />
             </DatePickerRow>
@@ -230,7 +235,7 @@ export default function CreateBooking() {
               <StyledTitle>To</StyledTitle>
               <input
                 type="datetime-local"
-                value={newBookingToDate.toISOString().slice(0, -8)}
+                value={convertLocalTime(newBookingToDate)}
                 onChange={(event) => handleToDateChange(event.target.value)}
               />
             </DatePickerRow>
