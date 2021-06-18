@@ -5,9 +5,7 @@ import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { Alert, AutoComplete, Input } from 'antd'
-import { DatePicker } from 'antd-mobile'
 import { CheckOutlined } from '@ant-design/icons'
-import enUs from 'antd-mobile/lib/date-picker/locale/en_US'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
@@ -144,12 +142,17 @@ export default function CreateBooking() {
     }
   }
 
-  const handleFromDateChange = (newDate: Date) => {
-    dispatch(editBookingFromDate(newDate))
+  const handleFromDateChange = (newDate: string) => {
+    dispatch(editBookingFromDate(new Date(newDate)))
   }
 
-  const handleToDateChange = (newDate: Date) => {
-    dispatch(editBookingToDate(newDate))
+  const handleToDateChange = (newDate: string) => {
+    dispatch(editBookingToDate(new Date(newDate)))
+  }
+
+  const convertLocalTime = (date: Date) => {
+    const newDate = new Date(date.getTime() + 28800000)
+    return newDate.toISOString().slice(0, -8)
   }
 
   const setCca = (newCCA: string) => {
@@ -217,18 +220,22 @@ export default function CreateBooking() {
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
-            <DatePicker mode="datetime" locale={enUs} value={newBookingFromDate} onChange={handleFromDateChange}>
-              <DatePickerRow>
-                <StyledTitle>From</StyledTitle>
-                <span>{`${toCustomDateFormat(newBookingFromDate)}`}</span>
-              </DatePickerRow>
-            </DatePicker>
-            <DatePicker mode="datetime" locale={enUs} value={newBookingToDate} onChange={handleToDateChange}>
-              <DatePickerRow>
-                <StyledTitle>To</StyledTitle>
-                <span>{`${toCustomDateFormat(newBookingToDate)}`}</span>
-              </DatePickerRow>
-            </DatePicker>
+            <DatePickerRow>
+              <StyledTitle>From</StyledTitle>
+              <input
+                type="datetime-local"
+                value={convertLocalTime(newBookingFromDate)}
+                onChange={(event) => handleFromDateChange(event.target.value)}
+              />
+            </DatePickerRow>
+            <DatePickerRow>
+              <StyledTitle>To</StyledTitle>
+              <input
+                type="datetime-local"
+                value={convertLocalTime(newBookingToDate)}
+                onChange={(event) => handleToDateChange(event.target.value)}
+              />
+            </DatePickerRow>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
               newBookingToDate,
             )
