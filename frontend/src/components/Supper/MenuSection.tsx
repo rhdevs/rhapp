@@ -99,7 +99,6 @@ export const MenuSection = (props: Props) => {
             <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
               <FoodAndQuantityContainer
                 onClick={() => {
-                  console.log(props.supperGroupId, props.orderId, foodMenu.foodMenuId)
                   if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
                     history.push(
                       `${PATHS.ADD_FOOD_ITEM}/${String(props.supperGroupId)}/order/${props.orderId}/add/${
