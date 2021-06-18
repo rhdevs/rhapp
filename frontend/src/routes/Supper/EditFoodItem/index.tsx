@@ -9,7 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getFoodInOrder, updateFoodInOrder } from '../../../store/supper/action'
+import { getFoodInOrder, resetFoodState, updateFoodInOrder } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
@@ -90,7 +90,6 @@ const EditFoodItem = () => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(isOverSupperGroupLimit(), count)
     if (isOverSupperGroupLimit()) {
       const [error] = useSnackbar('error')
       error('Supper group price limit exceeded, unable to add item.')
@@ -98,50 +97,93 @@ const EditFoodItem = () => {
     }
 
     handleSubmit((data: Food) => {
-      const custom: Custom[] = (food?.custom ?? []).map((customFood) => {
-        const options: Option[] = Object.entries(watch())
-          .filter((e) => e[0] !== 'cancelAction' && e[0] !== 'comments') //to not add to custom
-          .flatMap((entry) => {
-            const fieldName = entry[0]
-            const fieldDetails = [entry[1]].flat()
-            if (customFood.title === fieldName) {
-              return customFood.options.map((option) => {
-                const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
-                return { ...option, isSelected: isSelected }
-              })
-            } else {
-              return {} as Option
-            }
-          })
-          .filter((k) => k.name !== undefined) //to remove empty Option objects
-
-        return {
-          title: customFood.title,
-          options: options,
-          max: customFood.max,
-          min: customFood.min,
-        }
-      })
-
-      const newFood: Food = {
-        restaurantId: food?.restaurantId ?? '',
-        foodMenuId: food?.foodMenuId ?? '',
-        foodName: food?.foodName ?? '',
-        comments: data.comments as string,
-        quantity: count,
-        price: food?.price ?? 0,
-        foodPrice: ((food?.price ?? 0) + calculateAdditionalCost()) * count,
-        cancelAction: data.cancelAction as CancelAction,
-        custom: custom,
+      const initialFoodInfo = food
+      let updatedFoodInfo
+      if (initialFoodInfo?.comments !== data.comments) {
+        updatedFoodInfo = { ...updatedFoodInfo, comments: data.comments as string }
       }
-      console.log(newFood)
-      //TODO: Send info to backend and test
-      dispatch(updateFoodInOrder(newFood, params.orderId, params.foodId))
+      if (initialFoodInfo?.quantity !== count) {
+        updatedFoodInfo = { ...updatedFoodInfo, quantity: count }
+      }
+      const newFoodPrice = ((food?.price ?? 0) + calculateAdditionalCost()) * count
+      if (initialFoodInfo?.foodPrice !== newFoodPrice) {
+        updatedFoodInfo = { ...updatedFoodInfo, foodPrice: newFoodPrice }
+      }
+      if (initialFoodInfo?.cancelAction !== (data.cancelAction as CancelAction)) {
+        updatedFoodInfo = { ...updatedFoodInfo, cancelAction: data.cancelAction as CancelAction }
+      }
+
+      const updatedCustom: Custom[] = []
+      //convert data from watch to [ [[option title], [option's details]] , ...]
+      let formData = Object.entries(watch())
+      formData = formData.filter((entry) => entry[0] !== 'cancelAction' && entry[0] !== 'comments') //remove cancelAction and comments details
+      formData.forEach((custom) => {
+        const optionTitle = custom[0]
+        /* Convert data array with indiv option names
+         * eg: "Contact" => ["Contact"]
+         * eg: ["Remove Shredded Lettuce", "Remove McSpicy Patty"] => ["Remove Shredded Lettuce", "Remove McSpicy Patty"]
+         */
+        const optionDetails = [custom[1]].flat()
+        const initialOptionDetail = initialFoodInfo?.custom?.find((initCustom) => initCustom.title === optionTitle)
+        // Convert initial options to array of selected names => ["selectedOptionName1", "selectedOptionName2", ...]
+        const selectedInitialOptions = initialOptionDetail?.options
+          ?.map((option) => {
+            if (option.isSelected) return option.name
+          })
+          ?.filter(Boolean) as string[] // to remove falsy values
+        if (!selectedInitialOptions) return
+
+        // Get names of fields that are were updated (ie difference between both arrays)
+        const fieldDifference1 = optionDetails.filter((x) => !selectedInitialOptions.includes(x))
+        const fieldDifference2 = selectedInitialOptions.filter((x) => !optionDetails.includes(x))
+        if (!(fieldDifference1.length || fieldDifference2.length)) return
+        const fieldDifference = fieldDifference1.concat(fieldDifference2)
+
+        let options: Option[] = []
+        let chosenCustom
+        // Collate updated options
+        fieldDifference.forEach((name, index) => {
+          const chosenOption = initialOptionDetail?.options.find((initOption) => initOption.name === name)
+          if (!chosenOption) return
+          if (chosenOption?.isSelected && !optionDetails.includes(chosenOption.name)) {
+            //if option was selected previously and not in the chosen options
+            const updatedOption = { ...chosenOption, isSelected: false }
+            options.push(updatedOption)
+          } else if (!chosenOption?.isSelected && optionDetails.includes(chosenOption.name)) {
+            //if option was not selected previously and is in the chosen options
+            const updatedOption = { ...chosenOption, isSelected: true }
+            options.push(updatedOption)
+          }
+          //keep all unchanged options
+          if (index + 1 === fieldDifference.length) {
+            const unchangedOptions = initialOptionDetail?.options.filter(
+              (option) => !fieldDifference.includes(option.name),
+            )
+            options = options.concat(unchangedOptions ?? [])
+          }
+          // Original custom that has been updated by user
+          chosenCustom = initialFoodInfo?.custom?.find((custom) =>
+            custom.options.find((option) => option.name === name),
+          )
+          if (!chosenCustom) return
+        })
+        // Push collated options into custom
+        const optionCustom = { ...chosenCustom, options: options }
+        updatedCustom.push(optionCustom)
+      })
+      if (updatedCustom.length) {
+        updatedFoodInfo = { ...updatedFoodInfo, custom: updatedCustom }
+      }
+
+      console.log(updatedFoodInfo)
+      //TODO: Test update food, currently it deletes the options?!
+      dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
       history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
     })()
   }
 
   useEffect(() => {
+    dispatch(resetFoodState())
     dispatch(getFoodInOrder(params.orderId, params.foodId))
   }, [dispatch])
 

@@ -377,9 +377,7 @@ export const addFoodToOrder = (newFood: Food, orderId: string) => (dispatch: Dis
   dispatch(setIsLoading(false))
 }
 
-export const updateFoodInOrder = (newFood: Food, orderId: string, foodId: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const updateFoodInOrder = (newFood, orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
   put(ENDPOINTS.EDIT_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}`)
@@ -619,6 +617,13 @@ export const setFoodId = (foodId: string | undefined) => (dispatch: Dispatch<Act
   dispatch({
     type: SUPPER_ACTIONS.SET_FOOD_ID,
     foodId: foodId,
+  })
+}
+
+export const resetFoodState = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.RESET_FOOD_STATE,
+    food: null,
   })
 }
 
