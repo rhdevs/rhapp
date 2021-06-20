@@ -82,6 +82,7 @@ def SweepAll():
     except Exception as e:
         raise Exception("Sweeping Failed " + str(e))
 
+
 db.LaundryMachine.create_index('userID')
 
 
