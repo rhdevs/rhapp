@@ -61,7 +61,7 @@ export const SGPaymentStatus = (props: Props) => {
                   orderId={order.orderId}
                   key={index}
                   name={order.user.displayName}
-                  phoneNumber={order.userContact ?? 0} //TODO: CHECK whether should make type compulsory
+                  phoneNumber={order.userContact} //TODO: CHECK whether should make type compulsory
                   telegramHandle={order.user.telegramHandle}
                   hasPaid={order.hasPaid}
                   foodList={order.foodList}

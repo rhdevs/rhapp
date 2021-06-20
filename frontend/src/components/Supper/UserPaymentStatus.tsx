@@ -11,7 +11,6 @@ import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { setExpandAll, setPaymentExpandedCount, setPaymentUpdateArray } from '../../store/supper/action'
-// import { updateOrderDetails } from '../../store/supper/action'
 
 const MainContainer = styled.div`
   display: flex;
@@ -151,27 +150,21 @@ export const UserPaymentStatus = (props: Props) => {
     />
   )
 
+  const onClick = () => {
+    dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
+    // const newOrderDetails = { hasReceived: !cancelName }
+    // dispatch(updateOrderDetails(props.orderId, newOrderDetails))
+    setCancelName(!cancelName)
+  }
+
   return (
     <MainContainer>
       <TopContainer>
         <LeftContainer>
           <CheckboxContainer>
-            <Checkbox
-              margin="auto 5px auto 0"
-              isChecked={cancelName}
-              onClick={() => {
-                dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
-                setCancelName(!cancelName)
-              }}
-            />
+            <Checkbox margin="auto 5px auto 0" isChecked={cancelName} onClick={onClick} />
           </CheckboxContainer>
-          <NameText
-            onClick={() => {
-              dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
-              setCancelName(!cancelName)
-            }}
-            cancelName={cancelName}
-          >
+          <NameText onClick={onClick} cancelName={cancelName}>
             {props.name}
           </NameText>
         </LeftContainer>
