@@ -193,7 +193,7 @@ export default function ViewBooking() {
                 </TimeDetails>
                 <EventOwnerDetails>
                   <CardSubtitle>Created by</CardSubtitle>
-                  <p style={{ textAlign: 'right' }}>{selectedBooking?.userID}</p>
+                  <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
                 </EventOwnerDetails>
                 <>
                   <CardSubtitle>Additional Note</CardSubtitle>
