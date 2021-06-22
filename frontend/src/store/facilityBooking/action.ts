@@ -429,8 +429,15 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
           })
             .then((resp) => resp.json())
             .then((cca) => {
-              console.log(cca)
               booking.data[0].ccaName = cca.data[0].ccaName
+            })
+          await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + booking.data[0].userID, {
+            method: 'GET',
+            mode: 'cors',
+          })
+            .then((resp) => resp.json())
+            .then((user) => {
+              booking.data[0].displayName = user.data[0].displayName
             })
         })
 
