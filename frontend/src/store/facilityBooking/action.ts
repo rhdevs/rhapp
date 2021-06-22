@@ -438,6 +438,7 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
             .then((resp) => resp.json())
             .then((user) => {
               booking.data[0].displayName = user.data[0].displayName
+              dispatch(SetIsLoading(false))
             })
         })
 
