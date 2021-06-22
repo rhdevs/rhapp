@@ -1,5 +1,6 @@
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
+from AuthFunction import authenticate
 import os
 from datetime import datetime
 import time
@@ -7,7 +8,7 @@ from flask_cors import cross_origin
 from flask import Blueprint
 import pymongo
 import sys
-sys.path.append("../db")
+sys.path.append("../")
 
 facilities_api = Blueprint("facilities", __name__)
 
@@ -89,6 +90,12 @@ def check_bookings(facilityID):
 def add_booking():
     try:
         formData = request.get_json()
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), formData["userID"])):
+            raise Exception("Authentication Failure")
+
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
