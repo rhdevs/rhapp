@@ -308,7 +308,7 @@ export default function ViewFacility() {
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
-                        <b> {event?.ccaName} </b>
+                        <b> {event?.ccaName ? event.ccaName : 'Nothing here'} </b>
                         {event.eventName}
                       </EventNormalLabel>
                     </EventLabels>

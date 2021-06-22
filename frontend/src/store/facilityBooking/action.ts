@@ -69,8 +69,9 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
         })
           .then((resp) => resp.json())
           .then(async (cca) => {
-            booking.ccaName = cca[0]?.ccaName
+            booking.ccaName = cca.data[0]?.ccaName
           })
+        console.log(booking)
         return booking
       })
     })
@@ -422,7 +423,6 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
         .then((resp) => resp.json())
         .then(async (facility) => {
           booking.data[0].facilityName = facility.data[0].facilityName
-          console.log(booking.data[0].ccaID)
           await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.data[0].ccaID, {
             method: 'GET',
             mode: 'cors',
