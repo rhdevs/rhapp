@@ -60,6 +60,7 @@ const ActionButtonGroup = styled.div`
   justify-content: space-between;
   display: flex;
   padding: 0px 23px 0px 23px;
+  float: right;
 `
 
 const EventsGroup = styled.div``
@@ -236,25 +237,7 @@ export default function ViewFacility() {
                 prev2Label={null}
                 next2Label={null}
               />
-              {/* <DateRange
-                editableDateInputs={false}
-                color="#DE5F4C"
-                onChange={(item) => {
-                  dispatch(SetIsLoading(true))
-                  dispatch(setViewDates(item, parseInt(params.facilityID)))
-                }}
-                moveRangeOnFirstSelection={false}
-                rangeColors={['#DE5F4C', '#002642']}
-                ranges={[
-                  {
-                    startDate: ViewStartDate,
-                    endDate: ViewEndDate,
-                    key: 'ViewDateSelection',
-                  },
-                ]}
-              /> */}
             </DateSelectorGroup>
-
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
@@ -308,7 +291,7 @@ export default function ViewFacility() {
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
-                        <b> {event?.ccaName ? event.ccaName : 'Nothing here'} </b>
+                        <b> {event?.ccaName ? event.ccaName : 'Bug!'} </b>
                         {event.eventName}
                       </EventNormalLabel>
                     </EventLabels>

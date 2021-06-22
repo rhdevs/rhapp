@@ -95,9 +95,9 @@ const CardDurationLabel = styled.p`
 const CardTimeLabel = styled.p`
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   margin: 5px;
-  text-align: left;
+  text-align: right;
   color: #666666;
 `
 
@@ -181,13 +181,19 @@ export default function ViewBooking() {
               <DetailsGroup>
                 <TimeDetails>
                   <CardDurationLabel>
-                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hrs
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hr
                   </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
-                        <CardTimeLabel>{formatDate(selectedBooking.startTime)}</CardTimeLabel>
-                        <CardTimeLabel>{formatDate(selectedBooking.endTime)}</CardTimeLabel>
+                        <CardTimeLabel>
+                          <b>Start Time: </b>
+                          {formatDate(selectedBooking.startTime)}
+                        </CardTimeLabel>
+                        <CardTimeLabel>
+                          <b>End Time: </b>
+                          {formatDate(selectedBooking.endTime)}
+                        </CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>
