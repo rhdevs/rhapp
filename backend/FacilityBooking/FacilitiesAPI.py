@@ -101,8 +101,30 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
-        data = list(db.Bookings.find({"userID": userID}, {
-                    "_id": 0}).sort([("startTime", 1)]))
+        pipeline = [
+            {'$match':
+                {'$and': [
+                    {'userID': userID},
+                    {"endTime": {"$gte": datetime.now().timestamp()}}
+                ]}
+             },
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$project': {'_id': 0, 'cca': 0}}
+        ]
+
+        data = list(db.Bookings.aggregate(pipeline))
+        data.sort(
+            key=lambda x: x.get('startTime'), reverse=False)
+
         response = {"status": "success", "data": data}
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
@@ -113,8 +135,32 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
-        data = list(db.Bookings.find({"facilityID": int(facilityID), "startTime": {"$gte": int(
-            request.args.get('startTime'))}, "endTime": {"$lte": int(request.args.get('endTime'))}}, {"_id": 0}).sort([("startTime", 1)]))
+        pipeline = [
+            {'$match':
+                {'$and': [
+                    {'facilityID': int(facilityID)},
+                    {'startTime': {'$gte': int(
+                        request.args.get('startTime'))}},
+                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                ]}
+             },
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$project': {'_id': 0, 'cca': 0}}
+        ]
+
+        data = list(db.Bookings.aggregate(pipeline))
+        data.sort(
+            key=lambda x: x.get('startTime'), reverse=False)
+
         response = {"status": "success", "data": data}
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
