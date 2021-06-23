@@ -7,6 +7,7 @@ import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
 import {
+  SetIsLoading,
   deleteMyBooking,
   editMyBooking,
   fetchSelectedFacility,
@@ -94,9 +95,9 @@ const CardDurationLabel = styled.p`
 const CardTimeLabel = styled.p`
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   margin: 5px;
-  text-align: left;
+  text-align: right;
   color: #666666;
 `
 
@@ -131,10 +132,10 @@ export default function ViewBooking() {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          if (data.data === '' || data.data === undefined) {
             console.log(data.err)
           } else {
-            openTelegram(data.telegramHandle)
+            openTelegram(data.data)
           }
         })
     } catch (err) {
@@ -147,7 +148,7 @@ export default function ViewBooking() {
     window.open(site)
   }
   useEffect(() => {
-    // dispatch(SetIsLoading(false))
+    dispatch(SetIsLoading(true))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
   }, [dispatch])
 
@@ -180,13 +181,19 @@ export default function ViewBooking() {
               <DetailsGroup>
                 <TimeDetails>
                   <CardDurationLabel>
-                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hrs
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hr
                   </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
-                        <CardTimeLabel>{formatDate(selectedBooking.startTime)}</CardTimeLabel>
-                        <CardTimeLabel>{formatDate(selectedBooking.endTime)}</CardTimeLabel>
+                        <CardTimeLabel>
+                          <b>Start Time: </b>
+                          {formatDate(selectedBooking.startTime)}
+                        </CardTimeLabel>
+                        <CardTimeLabel>
+                          <b>End Time: </b>
+                          {formatDate(selectedBooking.endTime)}
+                        </CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>
