@@ -132,10 +132,10 @@ export default function ViewBooking() {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          if (data.data === '' || data.data === undefined) {
             console.log(data.err)
           } else {
-            openTelegram(data.telegramHandle)
+            openTelegram(data.data)
           }
         })
     } catch (err) {
