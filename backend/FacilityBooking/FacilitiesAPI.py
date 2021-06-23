@@ -45,12 +45,50 @@ def get_facility_name(facilityID):
     return make_response(response)
 
 
-@ facilities_api.route('/bookings/<bookingID>', methods=["GET"])
+@ facilities_api.route('/bookings/<int:bookingID>', methods=["GET"])
 @ cross_origin(supports_credentials=True)
 def get_one_booking(bookingID):
     try:
-        data = list(db.Bookings.find(
-            {"bookingID": int(bookingID)}, {"_id": 0}))
+        pipeline = [
+            {'$match': {
+                'bookingID': bookingID
+            }},
+            {'$lookup': {
+                'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+            }},
+            {'$unwind': {'path': '$profile', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'displayName': '$profile.displayName'
+            }},
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$lookup': {
+                'from': 'Facilities',
+                        'localField': 'facilityID',
+                        'foreignField': 'facilityID',
+                        'as': 'facility'
+            }},
+            {'$unwind': {'path': '$facility', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'facilityName': '$facility.facilityName'
+            }},
+            {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
+        ]
+
+        bookingInfo = db.Bookings.aggregate(pipeline)
+        for booking in bookingInfo:
+            data = booking
         response = {"status": "success", "data": data}
         if len(data) == 0:
             raise Exception("Booking not found")
