@@ -11,9 +11,10 @@ import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
 
 const LoginContainer = styled.div`
-  height: 100%;
+  height: 100vh !important;
   background-color: #ffffff;
-  margin: 23px;
+  margin: 0px 23px;
+  padding-top: 100px;
   text-align: center;
 `
 
