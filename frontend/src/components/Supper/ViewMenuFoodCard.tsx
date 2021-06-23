@@ -3,6 +3,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import Button from '../Mobile/Button'
+import { FoodLineInCard } from './FoodLineInCard'
 
 const MainCard = styled.div`
   display: flex;
@@ -51,9 +52,10 @@ const SubHeaderText = styled.text`
 const CustomCard = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  margin: 8px 8px 15px 8px;
+  padding: 5px 8px;
+  margin: 5px 8px 15px 8px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
@@ -78,7 +80,18 @@ export const ViewMenuFoodCard = () => {
       <SubHeaderContainer>
         <SubHeaderText>In Your Cart</SubHeaderText>
       </SubHeaderContainer>
-      <CustomCard></CustomCard>
+      <CustomCard>
+        <FoodLineInCard
+          isEditable
+          foodName={'Small French Fries'}
+          qty={2}
+          quantitySize={18}
+          fontPercentage={0.9}
+          quantityWeight={600}
+          moneyWeight={500}
+          price={6.6}
+        />
+      </CustomCard>
       <ButtonContainer>
         <Button defaultButtonDescription={'Add Another'} stopPropagation={true} isFlipButton={false} />
       </ButtonContainer>
