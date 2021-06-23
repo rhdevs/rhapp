@@ -170,19 +170,6 @@ def add_booking():
     return make_response(response)
 
 
-@ facilities_api.route('/bookings/<bookingID>', methods=['GET'])
-@ cross_origin(supports_credentials=True)
-def get_booking(bookingID):
-    try:
-        data = list(db.Bookings.find(
-            {"bookingID": int(bookingID)}, {"_id": 0}))
-        response = {"status": "success", "data": data}
-    except Exception as e:
-        print(e)
-        return {"err": str(e), "status": "failed"}, 400
-    return make_response(response)
-
-
 @ facilities_api.route('/bookings/<bookingID>', methods=['PUT'])
 @ cross_origin(supports_credentials=True)
 def edit_booking(bookingID):
