@@ -115,7 +115,7 @@ export default function PlaceOrder() {
               }
             />
           </SearchBarContainer>
-          {order?.foodList.length && (
+          {order?.foodList.length ? (
             <>
               <br />
               <br />
@@ -125,6 +125,8 @@ export default function PlaceOrder() {
                 onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
               />
             </>
+          ) : (
+            <></>
           )}
         </>
       )}
