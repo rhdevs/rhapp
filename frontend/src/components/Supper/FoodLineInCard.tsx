@@ -1,7 +1,7 @@
+import { EditOutlined } from '@ant-design/icons'
 import React, { MouseEventHandler } from 'react'
 
 import styled from 'styled-components'
-import editIcon from '../../assets/SupperEditIcon.svg'
 import { CancelAction } from '../../store/supper/types'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
@@ -22,6 +22,7 @@ const QuantityContainer = styled.div<{
   font-size: ${(props) => (props.quantitySize ? props.quantitySize : (props.fontPercentage ?? 1) * 17)}px;
   font-weight: ${(props) => props.quantityWeight ?? 400};
   line-height: 22px;
+  color: #de5f4c;
 `
 
 const SubContainer = styled.div`
@@ -86,8 +87,10 @@ const BoldText = styled.text<{ fontPercentage?: number | undefined }>`
   padding-right: 5px;
 `
 
-const Icon = styled.img`
-  padding: 7px 0px 0px 7px;
+const Icon = styled(EditOutlined)`
+  padding: 0px 0px 0px 7px;
+  font-size: 20px;
+  color: #de5f4c;
 `
 
 type Props = {
@@ -97,7 +100,7 @@ type Props = {
   quantitySize?: number
   quantityWeight?: number
   moneyWeight?: number
-  foodName: string
+  foodName?: string
   qty: number
   price?: number
   customisations?: string[]
@@ -120,7 +123,7 @@ export const FoodLineInCard = (props: Props) => {
       </QuantityContainer>
       <SubContainer>
         <TopContainer>
-          <TitleText fontPercentage={props.fontPercentage}>{props.foodName}</TitleText>
+          {props.foodName ?? <TitleText fontPercentage={props.fontPercentage}>{props.foodName}</TitleText>}
           <MoneyText moneyWeight={props.moneyWeight} fontPercentage={props.fontPercentage}>
             ${props.price?.toFixed(2)}
           </MoneyText>
@@ -150,7 +153,7 @@ export const FoodLineInCard = (props: Props) => {
 
           {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
-              <Icon onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} src={editIcon} alt="Edit Icon" />
+              <Icon color={'red'} onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} alt="Edit Icon" />
             </IconsContainer>
           )}
         </BottomContainer>

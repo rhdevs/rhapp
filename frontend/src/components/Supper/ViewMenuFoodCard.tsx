@@ -3,7 +3,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import Button from '../Mobile/Button'
-import { FoodLineInCard } from './FoodLineInCard'
+import { FoodVariationInCard } from './FoodVariationInCard'
 
 const MainCard = styled.div`
   display: flex;
@@ -20,6 +20,7 @@ const MainCard = styled.div`
   z-index: 1000;
   border-radius: 20px;
   max-width: 300px;
+  min-height: 250px;
   box-shadow: 0px 4px 4px 4px rgba(0.1, 0.1, 0.1, 0.1);
 `
 
@@ -71,6 +72,7 @@ const ButtonContainer = styled.div`
 //type Props = {}
 
 export const ViewMenuFoodCard = () => {
+  const custom = ['Fries', 'Apple pie']
   return (
     <MainCard>
       <Header>
@@ -81,11 +83,12 @@ export const ViewMenuFoodCard = () => {
         <SubHeaderText>In Your Cart</SubHeaderText>
       </SubHeaderContainer>
       <CustomCard>
-        <FoodLineInCard
+        <FoodVariationInCard
           isEditable
-          foodName={'Small French Fries'}
+          foodName={'Hello'}
+          customisations={custom}
           qty={2}
-          quantitySize={18}
+          quantitySize={16}
           fontPercentage={0.9}
           quantityWeight={600}
           moneyWeight={500}
