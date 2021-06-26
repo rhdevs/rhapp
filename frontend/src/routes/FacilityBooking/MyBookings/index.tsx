@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import dummyAvatar from '../../../assets/dummyAvatar.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
@@ -20,6 +19,23 @@ import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
+
+import AlumniRoom from '../../../assets/facilitiesLogos/AlumniRoom.svg'
+import BandRoom from '../../../assets/facilitiesLogos/BandRoom.svg'
+import BasketballCourt from '../../../assets/facilitiesLogos/BasketballCourt.svg'
+import ConferenceRoomKFH from '../../../assets/facilitiesLogos/ConferenceRoomKFH.svg'
+import ConferenceRoomUL from '../../../assets/facilitiesLogos/ConferenceRoomUL.svg'
+import DanceStudio from '../../../assets/facilitiesLogos/DanceStudio.svg'
+import Foyer from '../../../assets/facilitiesLogos/Foyer.svg'
+import Gym from '../../../assets/facilitiesLogos/Gym.svg'
+import HardCourt from '../../../assets/facilitiesLogos/HardCourt.svg'
+import MainAreaCommHall from '../../../assets/facilitiesLogos/MainAreaCommHall.svg'
+import MainAreaUL from '../../../assets/facilitiesLogos/MainAreaUL.svg'
+import MeetingRoomLL from '../../../assets/facilitiesLogos/MeetingRoomLL.svg'
+import PoolAreaLL from '../../../assets/facilitiesLogos/PoolAreaLL.svg'
+import Stage from '../../../assets/facilitiesLogos/Stage.svg'
+import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
+import DummyAvatar from '../../../assets/dummyAvatar.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -43,7 +59,9 @@ const BookingCard = styled.div`
 `
 
 const BookingAvatar = styled.img`
-  padding: 20px;
+  padding: 10px;
+  width: 30%;
+  max-height 70px;
 `
 
 const BookingHeader = styled.p`
@@ -88,6 +106,43 @@ const ActionButton = styled.img`
   padding: 15px;
 `
 
+function FacilityLogo(props: { facilityID: number }) {
+  switch (props.facilityID) {
+    case 1:
+      return <BookingAvatar src={MainAreaUL} />
+    case 2:
+      return <BookingAvatar src={ConferenceRoomUL} />
+    case 3:
+      return <BookingAvatar src={AlumniRoom} />
+    case 4:
+      return <BookingAvatar src={Foyer} />
+    case 5:
+      return <BookingAvatar src={Stage} />
+    case 6:
+      return <BookingAvatar src={MainAreaCommHall} />
+    case 7:
+      return <BookingAvatar src={BandRoom} />
+    case 8:
+      return <BookingAvatar src={PoolAreaLL} />
+    case 9:
+      return <BookingAvatar src={TVRoom} />
+    case 10:
+      return <BookingAvatar src={MeetingRoomLL} />
+    case 11:
+      return <BookingAvatar src={ConferenceRoomKFH} />
+    case 12:
+      return <BookingAvatar src={HardCourt} />
+    case 13:
+      return <BookingAvatar src={BasketballCourt} />
+    case 14:
+      return <BookingAvatar src={Gym} />
+    case 15:
+      return <BookingAvatar src={DanceStudio} />
+    default:
+      return <BookingAvatar src={DummyAvatar} />
+  }
+}
+
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -117,7 +172,7 @@ export default function ViewMyBookings() {
                 if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
                     <BookingCard key={booking.bookingID}>
-                      <BookingAvatar src={dummyAvatar} />
+                      <FacilityLogo key={booking.facilityID} facilityID={booking.facilityID} />
                       <BookingLabels
                         onClick={() => {
                           history.push('/facility/booking/view/' + booking.bookingID)
