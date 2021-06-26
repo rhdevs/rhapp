@@ -338,3 +338,63 @@ def user_telegram(userID):
         print(e)
         return {"err": str(e), "status": "failed"}, 400
     return make_response(response)
+
+
+@ facilities_api.route('/bookings/blockout', methods=["POST"])
+@ cross_origin(supports_credentials=True)
+def blockout():
+    try:
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), "RH_JCRC")):
+            raise Exception("Auth Failure")
+        formData = request.get_json()
+
+        print(formData)
+
+        formData["startTime"] = int(formData["startTime"])
+        formData["endTime"] = int(formData["endTime"])
+
+        if (len(formData["facilities"]) == 1) and (formData["facilities"][0] == 0):
+            formData["facilities"] = list(
+                map(lambda x: x["facilityID"],
+                    list(db.Facilities.find({}))
+                    )
+            )
+
+        for facilityID in formData["facilities"]:
+            db.Bookings.delete_many({
+                "facilityID": facilityID,
+                "endTime": {
+                    "$gt": formData.get('startTime')
+                },
+                "startTime": {
+                    "$lt": formData.get('endTime')
+                }
+            })
+
+            lastbookingID = list(db.Bookings.find().sort(
+                [('_id', pymongo.DESCENDING)]).limit(1))
+            newBookingID = 1 if len(lastbookingID) == 0 else int(
+                lastbookingID[0].get("bookingID")) + 1
+
+            db.Bookings.insert_one({
+                "bookingID": newBookingID,
+                "facilityID": facilityID,
+                "eventName": "JCRC Blockout",
+                "description": "JCRC Blockout",
+                "userID": "RH_JCRC",
+                "ccaID": 80,
+                "startTime": formData["startTime"],
+                "endTime": formData["endTime"],
+            })
+
+        formData["action"] = "Blockout"
+        db.BookingLogs.insert_one(formData)
+
+        response = {"status": "success"}
+    except Exception as e:
+        print(e)
+        return {"err": str(e), "status": "failed"}, 400
+    return make_response(response)
