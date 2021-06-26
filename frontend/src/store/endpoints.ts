@@ -102,6 +102,7 @@ export enum ENDPOINTS {
   GET_ORDER_HISTORY = '/user',
   GET_SUPPER_GROUP_HISTORY = '/user',
   GET_JOINED_SUPPER_GROUP_HISTORY = '/user',
+  UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supperGroup',
 }
 
 export enum DOMAINS {
