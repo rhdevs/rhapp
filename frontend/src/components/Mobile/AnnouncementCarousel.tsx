@@ -3,6 +3,12 @@ import styled from 'styled-components'
 
 import StyledCarousel from './StyledCarousel'
 
+import banner1 from '../../assets/banners/banner1.jpeg'
+import banner2 from '../../assets/banners/banner2.jpeg'
+import banner3 from '../../assets/banners/banner3.jpeg'
+import banner4 from '../../assets/banners/banner4.jpeg'
+import banner5 from '../../assets/banners/banner5.jpeg'
+
 const CarouselCard = styled.div`
   height: 160px;
   @media only screen and (min-width: 768px) {
@@ -24,26 +30,38 @@ const CarouselCard = styled.div`
 
 const CarouselCard1 = styled(CarouselCard)`
   &:before {
-    background-image: url('https://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhockfest2019.jpg?sfvrsn=aa9c34b9_2');
+    background-image: url(${banner1});
   }
 `
-
 const CarouselCard2 = styled(CarouselCard)`
   &:before {
-    background-image: url(https://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhag2018.jpg?sfvrsn=15df5fdb_2);
+    background-image: url(${banner2});
   }
 `
 const CarouselCard3 = styled(CarouselCard)`
   &:before {
-    background-image: url(https://nus.edu.sg/osa/images/default-source/raffles-hall/homepage-carousel-banner/rhbash2018.jpg?sfvrsn=a3a67915_2);
+    background-image: url(${banner3});
   }
 `
+const CarouselCard4 = styled(CarouselCard)`
+  &:before {
+    background-image: url(${banner4});
+  }
+`
+const CarouselCard5 = styled(CarouselCard)`
+  &:before {
+    background-image: url(${banner5});
+  }
+`
+
 export default function AnnouncementCarousel() {
   return (
     <StyledCarousel autoplay>
       <CarouselCard1 />
       <CarouselCard2 />
       <CarouselCard3 />
+      <CarouselCard4 />
+      <CarouselCard5 />
     </StyledCarousel>
   )
 }

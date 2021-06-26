@@ -1,6 +1,7 @@
 from AuthFunction import authenticate
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
+from AuthFunction import authenticate
 import os
 from datetime import datetime
 import time
@@ -8,7 +9,6 @@ from flask_cors import cross_origin
 from flask import Blueprint
 import pymongo
 import sys
-
 sys.path.append("../")
 
 facilities_api = Blueprint("facilities", __name__)
@@ -47,12 +47,50 @@ def get_facility_name(facilityID):
     return make_response(response)
 
 
-@ facilities_api.route('/bookings/<bookingID>', methods=["GET"])
+@ facilities_api.route('/bookings/<int:bookingID>', methods=["GET"])
 @ cross_origin(supports_credentials=True)
 def get_one_booking(bookingID):
     try:
-        data = list(db.Bookings.find(
-            {"bookingID": int(bookingID)}, {"_id": 0}))
+        pipeline = [
+            {'$match': {
+                'bookingID': bookingID
+            }},
+            {'$lookup': {
+                'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+            }},
+            {'$unwind': {'path': '$profile', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'displayName': '$profile.displayName'
+            }},
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$lookup': {
+                'from': 'Facilities',
+                        'localField': 'facilityID',
+                        'foreignField': 'facilityID',
+                        'as': 'facility'
+            }},
+            {'$unwind': {'path': '$facility', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'facilityName': '$facility.facilityName'
+            }},
+            {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
+        ]
+
+        bookingInfo = db.Bookings.aggregate(pipeline)
+        for booking in bookingInfo:
+            data = booking
         response = {"status": "success", "data": data}
         if len(data) == 0:
             raise Exception("Booking not found")
@@ -65,8 +103,50 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
-        data = list(db.Bookings.find({"userID": userID}, {
-                    "_id": 0}).sort([("startTime", 1)]))
+        pipeline = [
+            {'$match':
+                {'$and': [
+                    {'userID': userID},
+                    {"endTime": {"$gte": datetime.now().timestamp()}}
+                ]}
+             },
+            {'$lookup': {
+                'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+            }},
+            {'$unwind': {'path': '$profile', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'displayName': '$profile.displayName'
+            }},
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$lookup': {
+                'from': 'Facilities',
+                        'localField': 'facilityID',
+                        'foreignField': 'facilityID',
+                        'as': 'facility'
+            }},
+            {'$unwind': {'path': '$facility', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'facilityName': '$facility.facilityName'
+            }},
+            {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
+        ]
+
+        data = list(db.Bookings.aggregate(pipeline))
+        data.sort(
+            key=lambda x: x.get('startTime'), reverse=False)
+
         response = {"status": "success", "data": data}
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
@@ -77,8 +157,52 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
-        data = list(db.Bookings.find({"facilityID": int(facilityID), "startTime": {"$gte": int(
-            request.args.get('startTime'))}, "endTime": {"$lte": int(request.args.get('endTime'))}}, {"_id": 0}).sort([("startTime", 1)]))
+        pipeline = [
+            {'$match':
+                {'$and': [
+                    {'facilityID': int(facilityID)},
+                    {'startTime': {'$gte': int(
+                        request.args.get('startTime'))}},
+                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                ]}
+             },
+            {'$lookup': {
+                'from': 'Profiles',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+            }},
+            {'$unwind': {'path': '$profile', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'displayName': '$profile.displayName'
+            }},
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$lookup': {
+                'from': 'Facilities',
+                        'localField': 'facilityID',
+                        'foreignField': 'facilityID',
+                        'as': 'facility'
+            }},
+            {'$unwind': {'path': '$facility', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'facilityName': '$facility.facilityName'
+            }},
+            {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
+        ]
+
+        data = list(db.Bookings.aggregate(pipeline))
+        data.sort(
+            key=lambda x: x.get('startTime'), reverse=False)
+
         response = {"status": "success", "data": data}
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
@@ -91,6 +215,12 @@ def check_bookings(facilityID):
 def add_booking():
     try:
         formData = request.get_json()
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), formData["userID"])):
+            raise Exception("Authentication Failure")
+
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
@@ -131,19 +261,6 @@ def add_booking():
         print(e)
         return {"err": str(e), "status": "failed"}, 400
 
-    return make_response(response)
-
-
-@ facilities_api.route('/bookings/<bookingID>', methods=['GET'])
-@ cross_origin(supports_credentials=True)
-def get_booking(bookingID):
-    try:
-        data = list(db.Bookings.find(
-            {"bookingID": int(bookingID)}, {"_id": 0}))
-        response = {"status": "success", "data": data}
-    except Exception as e:
-        print(e)
-        return {"err": str(e), "status": "failed"}, 400
     return make_response(response)
 
 

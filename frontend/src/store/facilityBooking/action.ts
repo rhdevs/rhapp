@@ -61,18 +61,8 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then(async (data) => {
-      updatedFB = await data.data.map((booking: Booking) => {
-        fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then(async (cca) => {
-            booking.ccaName = cca[0]?.ccaName
-          })
-        return booking
-      })
+    .then(async (res) => {
+      updatedFB = res.data
     })
 
   dispatch({
@@ -87,26 +77,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
   await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
     .then((resp) => resp)
     .then((bookingList) => {
-      const fetchedList: Booking[] = bookingList.data
-      newList = fetchedList.map((booking) => {
-        fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, {
-          method: 'GET',
-          mode: 'cors',
-        })
-          .then((resp) => resp.json())
-          .then(async (userCCA) => {
-            booking.ccaName = userCCA.data[0].ccaName
-            await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + booking.facilityID, {
-              method: 'GET',
-              mode: 'cors',
-            })
-              .then((resp) => resp.json())
-              .then((facility) => {
-                booking.facilityName = facility.data[0].facilityName
-              })
-          })
-        return booking
-      })
+      newList = bookingList.data
     })
   dispatch({
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
@@ -415,27 +386,9 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   })
     .then((resp) => resp.json())
     .then(async (booking) => {
-      await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + booking.data[0].facilityID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then(async (facility) => {
-          booking.data[0].facilityName = facility.data[0].facilityName
-          console.log(booking.data[0].ccaID)
-          await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.data[0].ccaID, {
-            method: 'GET',
-            mode: 'cors',
-          })
-            .then((resp) => resp.json())
-            .then((cca) => {
-              console.log(cca)
-              booking.data[0].ccaName = cca.data[0].ccaName
-            })
-        })
-
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data[0] })
-      return booking.data[0]
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
+      dispatch(SetIsLoading(false))
+      return booking.data
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
