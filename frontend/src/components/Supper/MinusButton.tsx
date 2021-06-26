@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { useEffect } from 'react'
 import { setCount } from '../../store/supper/action'
+import { V1_BLUE, V1_RED } from '../../common/colours'
 
 type Props = {
   min?: number | undefined
@@ -13,8 +14,6 @@ type Props = {
 }
 
 export const MinusButton = (props: Props) => {
-  const DARK_BLUE = '#002642'
-  const LIGHT_RED = '#EB5757'
   const SHADED_RED = 'rgba(235, 87, 87, 0.5)'
   const SHADED_DARK_BLUE = 'rgba(0,38,66, 0.5)'
   const dispatch = useDispatch()
@@ -24,16 +23,16 @@ export const MinusButton = (props: Props) => {
     dispatch(setCount(props.defaultValue))
   }, [dispatch])
 
-  let BUTTON_COLOR = LIGHT_RED
+  let BUTTON_COLOR = V1_RED
   if (props.color === 'DARK_BLUE') {
-    BUTTON_COLOR = DARK_BLUE
+    BUTTON_COLOR = V1_BLUE
   }
 
   if (count === (props.min ?? 0)) {
-    if (BUTTON_COLOR === LIGHT_RED) {
+    if (BUTTON_COLOR === V1_RED) {
       BUTTON_COLOR = SHADED_RED
     }
-    if (BUTTON_COLOR === DARK_BLUE) {
+    if (BUTTON_COLOR === V1_BLUE) {
       BUTTON_COLOR = SHADED_DARK_BLUE
     }
   }

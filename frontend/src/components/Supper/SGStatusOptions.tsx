@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { setSelectedSupperGroupStatus } from '../../store/supper/action'
 import { SupperGroupStatus } from '../../store/supper/types'
+import { V1_BLUE } from '../../common/colours'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -27,7 +28,6 @@ type Props = {
 }
 
 export const SGStatusOptions = (props: Props) => {
-  const DARK_BLUE = '#002642'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
   const { selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
@@ -44,7 +44,7 @@ export const SGStatusOptions = (props: Props) => {
         if (selectedSupperGroupStatus === supperGroupStatus) {
           return (
             <StatusSymbol
-              border={DARK_BLUE}
+              border={V1_BLUE}
               color="white"
               borderWidth="1px"
               backgroundColor="bluegrey"
@@ -62,8 +62,8 @@ export const SGStatusOptions = (props: Props) => {
               onClick={() => {
                 dispatch(setSelectedSupperGroupStatus(supperGroupStatus))
               }}
-              border={DARK_BLUE}
-              color={DARK_BLUE}
+              border={V1_BLUE}
+              color={V1_BLUE}
               borderWidth="1px"
               shadow="0px 4px 4px 0px #6b6b6b"
               key={index}

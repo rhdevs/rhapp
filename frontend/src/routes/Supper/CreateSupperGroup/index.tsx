@@ -3,6 +3,7 @@ import { FieldError } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 import { CreateOrderPageOne } from './Pages/page1'
 import { CreateOrderPageTwo } from './Pages/page2'
 import { CreateOrderPageThree } from './Pages/page3'
@@ -10,7 +11,7 @@ import { CreateOrderPageThree } from './Pages/page3'
 const Background = styled.div`
   height: 100vh;
   width: 100vw;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
   position: relative;
 `
 

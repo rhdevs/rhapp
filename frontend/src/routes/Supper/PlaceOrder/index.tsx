@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -24,7 +25,7 @@ import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   width: 100vw;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
   position: relative;
   min-height: 100vh;
   height: 100%;
@@ -38,7 +39,7 @@ const StickyContainer = styled.div`
   position: sticky;
   left: 0;
   top: 4.4rem;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
 `
 
 const Restaurant = styled.text`

@@ -17,12 +17,13 @@ import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
 import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 const MainContainer = styled.form`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
   display: flex;
   flex-direction: column;
 `

@@ -21,6 +21,7 @@ import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, InputText } from '..'
 import LoadingSpin from '../../../../components/LoadingSpin'
+import { V1_BLUE } from '../../../../common/colours'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -48,7 +49,7 @@ const PriceContainer = styled.div`
 const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
-    background-color: #002642;
+    background-color: ${V1_BLUE};
   }
 `
 

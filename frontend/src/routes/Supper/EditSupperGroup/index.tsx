@@ -28,12 +28,13 @@ import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { useHistory, useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { V1_BACKGROUND, V1_BLUE } from '../../../common/colours'
 
 const Background = styled.form`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
   padding-bottom: 3rem;
 `
 
@@ -98,7 +99,7 @@ const ErrorText = styled.p`
 const StyledSwitch = styled(Switch)`
   width: fit-content;
   &.ant-switch-checked {
-    background-color: #002642;
+    background-color: ${V1_BLUE};
   }
 `
 

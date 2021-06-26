@@ -16,12 +16,13 @@ import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
 import UserView from './UserView'
+import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
 
 const MainContainer = styled.div`
   width: 100vw;
   height: fit-content;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
   padding-bottom: 2rem;
 `
 
@@ -64,7 +65,7 @@ const ViewOrder = () => {
       <TopNavBar
         title="View Order"
         rightComponent={
-          supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: '#DE5F4C' }} /> : undefined
+          supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: V1_RED }} /> : undefined
         }
       />
       {supperGroup?.ownerId === localStorage.userID ? (

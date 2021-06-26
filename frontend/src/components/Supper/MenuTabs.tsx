@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Radio } from 'antd'
 import { setMenuTabKey } from '../../store/supper/action'
 import { useDispatch } from 'react-redux'
+import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 
 const MainContainer = styled.div`
   overflow: auto;
@@ -13,45 +14,45 @@ const MainContainer = styled.div`
   left: 0;
   top: 4.4rem;
   padding-bottom: 10px;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
 `
 
 const ToggleTabsContainer = styled(Radio.Group)`
   .ant-radio-button-wrapper:hover {
-    color: #de5f4c;
+    color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
-    border-right-color: #de5f4c;
-    border-left-color: #de5f4c;
+    border-right-color: ${V1_RED};
+    border-left-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover:before {
     color: white;
-    background: #de5f4c;
-    border-color: #de5f4c;
+    background: ${V1_RED};
+    border-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
     color: white;
-    background: #de5f4c;
-    border-color: #de5f4c;
+    background: ${V1_RED};
+    border-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
-    border-color: #de5f4c;
+    border-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     color: white;
-    background: #de5f4c;
-    border-color: #de5f4c;
+    background: ${V1_RED};
+    border-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover {
     color: white;
-    background: #de5f4c;
-    border-color: #de5f4c;
+    background: ${V1_RED};
+    border-color: ${V1_RED};
   }
 
   .ant-radio-button-wrapper {

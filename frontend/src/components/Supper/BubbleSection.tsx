@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setEditOrderNumber } from '../../store/supper/action'
 import { RootState } from '../../store/types'
+import { V1_BLUE } from '../../common/colours'
 
 const MainContainer = styled.div`
   margin: 0.5rem 1rem;
@@ -27,14 +28,14 @@ const NumberContainer = styled.div<{ isClicked?: boolean }>`
   display: flex;
   justify-content: center;
   margin: 1rem;
-  background-color: ${(props) => (props.isClicked ? '#002642' : 'white')};
+  background-color: ${(props) => (props.isClicked ? V1_BLUE : 'white')};
 `
 
 const NumberText = styled.text<{ isClicked?: boolean }>`
   margin: auto;
   font-size: 21px;
   font-family: 'Inter';
-  color: ${(props) => (props.isClicked ? 'white' : '#002642')};
+  color: ${(props) => (props.isClicked ? 'white' : V1_BLUE)};
 `
 
 const TitleText = styled.text<{ isClicked?: boolean }>`
@@ -43,7 +44,7 @@ const TitleText = styled.text<{ isClicked?: boolean }>`
   font-weight: 500;
   font-size: 21px;
   font-family: 'Inter';
-  color: #002642;
+  color: ${V1_BLUE};
 `
 
 const ArrowContainer = styled.div`

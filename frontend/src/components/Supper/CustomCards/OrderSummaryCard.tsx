@@ -9,6 +9,7 @@ import EmptyCart_src from '../../../assets/EmptyCart.svg'
 import { OpenUserTelegram } from '../../TelegramShareButton'
 import { useDispatch } from 'react-redux'
 import { setFoodId } from '../../../store/supper/action'
+import { V1_RED } from '../../../common/colours'
 
 const EmptyCartContainer = styled.div`
   display: flex;
@@ -109,11 +110,11 @@ export const OrderSummaryCard = (props: Props) => {
                   : 'Cancel Order'
               }
               defaultButtonColor="transparent"
-              defaultTextColor="#de5f4c"
+              defaultTextColor={V1_RED}
               buttonWidth="120px"
               onButtonClick={props.onDeleteGroupClick}
               isFlipButton={false}
-              border="2px solid #de5f4c"
+              border={`2px solid ${V1_RED}`}
             />
             {(props.orderByUser || props.collatedOrder !== undefined || props.ownerId === localStorage.userID) && (
               <Button

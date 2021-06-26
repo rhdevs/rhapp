@@ -16,12 +16,13 @@ import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 const Background = styled.form`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
 `
 
 const MainContainer = styled.div`
