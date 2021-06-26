@@ -80,29 +80,29 @@ export enum ENDPOINTS {
   SEARCH = '/search',
 
   // SUPPER
-  ALL_RESTAURANTS = '/supper/restaurants',
-  GET_RESTAURANT = '/supper/restaurant',
-  GET_RESTAURANT_MENU = '/supper/restaurant',
-  GET_MENU_FOOD = '/supper/restaurant/food',
-  ADD_FOOD = '/supper/order',
-  GET_FOOD = '/supper/order',
-  EDIT_FOOD = '/supper/order',
-  DELETE_FOOD = '/supper/order',
-  GET_COLLATED_ORDER = '/supper/supperGroup',
-  GET_USER_ORDER = '/supper/supperGroup',
-  ALL_SUPPER_GROUPS = '/supper/supperGroup',
-  ADD_SUPPER_GROUP = '/supper/supperGroup',
-  GET_SUPPER_GROUP_BY_ID = '/supper/supperGroup',
-  CREATE_ORDER = '/supper/order',
-  UPDATE_SUPPER_GROUP = '/supper/supperGroup',
-  DELETE_SUPPER_GROUP = '/supper/supperGroup',
-  GET_ORDER_BY_ID = '/supper/order',
-  UPDATE_ORDER_DETAILS = '/supper/order',
-  DELETE_ORDER = '/supper/order',
-  GET_ORDER_HISTORY = '/supper/user',
-  GET_SUPPER_GROUP_HISTORY = '/supper/user',
-  GET_JOINED_SUPPER_GROUP_HISTORY = '/supper/user',
-  UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supper/supperGroup',
+  ALL_RESTAURANTS = '/restaurants',
+  GET_RESTAURANT = '/restaurant',
+  GET_RESTAURANT_MENU = '/restaurant',
+  GET_MENU_FOOD = '/restaurant/food',
+  ADD_FOOD = '/order',
+  GET_FOOD = '/order',
+  EDIT_FOOD = '/order',
+  DELETE_FOOD = '/order',
+  GET_COLLATED_ORDER = '/supperGroup',
+  GET_USER_ORDER = '/supperGroup',
+  ALL_SUPPER_GROUPS = '/supperGroup',
+  ADD_SUPPER_GROUP = '/supperGroup',
+  GET_SUPPER_GROUP_BY_ID = '/supperGroup',
+  CREATE_ORDER = '/order',
+  UPDATE_SUPPER_GROUP = '/supperGroup',
+  DELETE_SUPPER_GROUP = '/supperGroup',
+  GET_ORDER_BY_ID = '/order',
+  UPDATE_ORDER_DETAILS = '/order',
+  DELETE_ORDER = '/order',
+  GET_ORDER_HISTORY = '/user',
+  GET_SUPPER_GROUP_HISTORY = '/user',
+  GET_JOINED_SUPPER_GROUP_HISTORY = '/user',
+  UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supperGroup',
 }
 
 export enum DOMAINS {
@@ -132,7 +132,7 @@ export const DOMAIN_URL = {
       : '//rhapp-middleware.herokuapp.com/rhappsocial',
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
+      ? '//rhapp-backend.rhdevs.repl.co/supper'
       : '//rhappmiddleware.herokuapp.com/rhappsupper',
 }
 
@@ -172,7 +172,7 @@ async function makeRequest(
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
+          ? '//rhapp-backend.rhdevs.repl.co/supper'
           : '//rhappmiddleware.herokuapp.com/rhappsupper'
       break
   }
