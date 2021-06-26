@@ -171,7 +171,7 @@ async function makeRequest(
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
+          ? '//rhapp-backend.rhdevs.repl.co/supper'
           : '//rhappmiddleware.herokuapp.com/rhappsupper'
       break
   }
