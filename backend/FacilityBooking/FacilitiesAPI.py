@@ -215,6 +215,12 @@ def add_booking():
     try:
         formData = request.get_json()
 
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), formData["userID"])):
+            raise Exception("Authentication Failure")
+
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
