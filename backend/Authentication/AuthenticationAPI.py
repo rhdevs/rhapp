@@ -63,43 +63,6 @@ def check_for_token(func):
     return decorated
 
 
-def authenticate(token, username):
-    # if request does not have a token
-    if not token:
-        return False
-
-    # verify the user
-    try:
-        data = jwt.decode(
-            token, app.config['SECRET_KEY'], algorithms=["HS256"])
-        currentUser = db.User.find_one(
-            {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-        currentUsername = currentUser['userID']
-
-        # If username supplied,
-        if username and username != currentUsername and currentUsername != "RH_JCRC":
-            raise Exception("Wrong UserID")
-    except Exception as e:
-        print(e)
-        return False
-
-    # check if token has expired (compare time now with createdAt field in document + timedelta)
-    originalToken = db.Session.find_one(
-        {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-    oldTime = originalToken['createdAt']
-    # print(datetime.datetime.now())
-    # print(oldTime)
-    if datetime.datetime.now() > oldTime + datetime.timedelta(minutes=2):
-        return False
-
-    # recreate session (with createdAt updated to now)
-    #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
-    #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-    db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
-        '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
-    return True
-
-
 """
 Register route:
 Within POST request, obtain userID, password and email and add to User table in Mongo, if userID has not been registered previously
