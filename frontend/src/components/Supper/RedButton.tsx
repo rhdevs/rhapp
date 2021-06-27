@@ -2,6 +2,7 @@ import { Button as AntdButton } from 'antd'
 import React from 'react'
 
 import styled from 'styled-components'
+import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 
 const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: string | undefined }>`
   margin: auto;
@@ -10,7 +11,7 @@ const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: strin
   position: ${(props) => (props.isSticky ? 'fixed' : '')};
   bottom: 0;
   z-index: 1000;
-  background: ${(props) => (props.isSticky ? '#fafaf4' : 'transparent')};
+  background: ${(props) => (props.isSticky ? V1_BACKGROUND : 'transparent')};
   height: ${(props) =>
     props.isSticky
       ? `4rem;
@@ -23,17 +24,17 @@ const StyledRedButton = styled(AntdButton)`
   width: 100%;
   height: fit-content;
   border-radius: 5px;
-  background: #de5f4c;
-  border: 1px solid #de5f4c;
+  background: ${V1_RED};
+  border: 1px solid ${V1_RED};
   &.ant-btn-primary:hover,
   &.ant-btn-primary:focus,
   &.ant-btn:hover,
   &.ant-btn:focus {
-    background: #de5f4c;
-    border: 1px solid #de5f4c;
+    background: ${V1_RED};
+    border: 1px solid ${V1_RED};
   }
   &.ant-btn-primary {
-    background: #de5f4c;
+    background: ${V1_RED};
   }
 `
 

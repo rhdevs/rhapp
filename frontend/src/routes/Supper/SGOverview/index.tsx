@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { MainSGCard } from '../../../components/Supper/CustomCards/MainSGCard'
@@ -20,7 +21,7 @@ import { PATHS } from '../../Routes'
 const Background = styled.div`
   height: 100vh;
   width: 100vw;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
   position: relative;
 `
 

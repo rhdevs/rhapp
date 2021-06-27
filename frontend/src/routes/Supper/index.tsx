@@ -19,11 +19,12 @@ import {
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
+import { V1_BACKGROUND } from '../../common/colours'
 
 const Background = styled.div`
   height: 100vh;
   width: 100vw;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
   position: relative;
 `
 

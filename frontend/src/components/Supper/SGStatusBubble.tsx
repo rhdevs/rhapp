@@ -1,6 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
+import { V1_RED } from '../../common/colours'
 import { SupperGroupStatus } from '../../store/supper/types'
 
 const MainContainer = styled.div<{
@@ -35,12 +36,10 @@ type Props = {
 }
 
 export const SGStatusBubble = (props: Props) => {
-  const RED = '#de5f4c'
-
   const BACKGROUND_COLOR = props.backgroundColor ?? 'rgba(222, 95, 76, 0.35);'
 
   return (
-    <MainContainer borderColor={RED} backgroundColor={BACKGROUND_COLOR}>
+    <MainContainer borderColor={V1_RED} backgroundColor={BACKGROUND_COLOR}>
       <TextContainer>{props.text}</TextContainer>
     </MainContainer>
   )

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -15,7 +16,7 @@ const MainContainer = styled.div`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
   padding-bottom: 2rem;
 `
 

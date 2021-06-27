@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Progress } from 'antd'
 import styled from 'styled-components'
+import { V1_RED } from '../../common/colours'
 
 const TextContainer = styled.text<{ moneyFontSize?: string | undefined }>`
   font-size: ${(props) => props.moneyFontSize ?? '21px'};
@@ -63,7 +64,7 @@ export const RoundProgress = (props: Props) => {
       type="circle"
       percent={percentage}
       width={props.width ?? 80}
-      strokeColor="#DE5F4C"
+      strokeColor={V1_RED}
     />
   )
 }

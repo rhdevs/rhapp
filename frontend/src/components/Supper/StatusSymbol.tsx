@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import Friends from '../../assets/Friends.svg'
 import { CarOutlined } from '@ant-design/icons'
+import { V1_BLUE, V1_RED } from '../../common/colours'
 
 const MainContainer = styled.div<{
   hasCustomMargin: boolean
@@ -72,8 +73,6 @@ type Props = {
 
 export const StatusSymbol = (props: Props) => {
   const BLUE_GREY = 'rgba(0, 38, 66, 0.7)'
-  const DARK_BLUE = '#002642'
-  const RED = '#de5f4c'
 
   const hasCustomMargin = props.hasNoLeftMargin ?? false
   const PEOPLE_ICON = <img src={Friends} alt="Friends Icon" />
@@ -95,7 +94,7 @@ export const StatusSymbol = (props: Props) => {
   if (props.backgroundColor === 'bluegrey') {
     BACKGROUND_COLOR = BLUE_GREY
   }
-  const BORDER_COLOR = props.border ?? (BACKGROUND_COLOR === BLUE_GREY ? DARK_BLUE : RED)
+  const BORDER_COLOR = props.border ?? (BACKGROUND_COLOR === BLUE_GREY ? V1_BLUE : V1_RED)
   const BORDER_WIDTH = props.borderWidth ?? (BACKGROUND_COLOR === BLUE_GREY ? '1px' : '3px')
   const TEXT_COLOR = props.color ?? 'black'
   const ICON_COLOR = props.iconColor ?? BLUE_GREY

@@ -2,6 +2,7 @@ import React from 'react'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
+import { V1_BLUE, V1_RED } from '../../common/colours'
 
 type Props = {
   color?: string
@@ -11,15 +12,13 @@ type Props = {
 }
 
 export const PlusButton = (props: Props) => {
-  const DARK_BLUE = '#002642'
-  const LIGHT_RED = '#EB5757'
   const SHADED_RED = 'rgba(235, 87, 87, 0.5)'
   const CREATE_SIZE = '48.7px'
   const COUNTING_SIZE = '25px'
 
   const { count } = useSelector((state: RootState) => state.supper)
 
-  let BUTTON_COLOR = LIGHT_RED
+  let BUTTON_COLOR = V1_RED
   let BUTTON_SIZE = CREATE_SIZE
   let SHADOW_FILTER = 'drop-shadow(2px 2.5px 3px rgba(0, 0, 0, 0.15))'
 
@@ -34,7 +33,7 @@ export const PlusButton = (props: Props) => {
   }
 
   if (props.color === 'DARK_BLUE') {
-    BUTTON_COLOR = DARK_BLUE
+    BUTTON_COLOR = V1_BLUE
   }
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
+import { V1_BLUE } from '../common/colours'
 
 const Container = styled.label<{
   flexPercentage?: number | undefined
@@ -34,7 +35,7 @@ const Checkmark = styled.span<{
   width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   ${(props) =>
     props.checked
-      ? `background-color: ${props.checkboxColor ?? '#002642'};
+      ? `background-color: ${props.checkboxColor ?? V1_BLUE};
         left: 35%;
         top: 15%;
         width: 6px;
@@ -47,7 +48,7 @@ const Checkmark = styled.span<{
       : `
         background-color:#fff;
         border-radius: 2px;
-        border: 1px solid ${props.checkboxColor ?? '#002642'};
+        border: 1px solid ${props.checkboxColor ?? V1_BLUE};
       `}
 `
 
@@ -56,7 +57,7 @@ const Background = styled.div<{
   checkboxColor?: string | undefined
   sizePercentage?: number | undefined
 }>`
-  background-color: ${(props) => (props.checked ? props.checkboxColor ?? '#002642' : '#fff')};
+  background-color: ${(props) => (props.checked ? props.checkboxColor ?? V1_BLUE : '#fff')};
   top: 0;
   left: 0;
   height: ${(props) => (props.sizePercentage ?? 1) * 20}px;

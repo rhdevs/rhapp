@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -26,7 +27,7 @@ const MainContainer = styled.div`
   min-height: 100vh;
   height: 100%;
   width: 100vw;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
 `
 
 const ButtonContainer = styled.div`

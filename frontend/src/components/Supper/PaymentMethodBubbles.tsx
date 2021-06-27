@@ -7,6 +7,7 @@ import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { setSelectedPaymentMethod } from '../../store/supper/action'
+import { V1_BLUE } from '../../common/colours'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -32,7 +33,6 @@ type Props = {
 }
 
 export const PaymentMethodBubbles = (props: Props) => {
-  const DARK_BLUE = '#002642'
   const CHECK_ICON = <CheckIcon src={tick} alt="Check Icon" />
 
   const { selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
@@ -54,7 +54,7 @@ export const PaymentMethodBubbles = (props: Props) => {
                     ),
                   )
                 }}
-                border={DARK_BLUE}
+                border={V1_BLUE}
                 color="white"
                 borderWidth="1px"
                 backgroundColor="bluegrey"
@@ -72,8 +72,8 @@ export const PaymentMethodBubbles = (props: Props) => {
                 onClick={() => {
                   dispatch(setSelectedPaymentMethod(selectedPaymentMethod.concat(paymentMethod)))
                 }}
-                border={DARK_BLUE}
-                color={DARK_BLUE}
+                border={V1_BLUE}
+                color={V1_BLUE}
                 borderWidth="1px"
                 shadow="0px 4px 4px 0px #6b6b6b"
                 key={index}

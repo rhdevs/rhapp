@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -17,7 +18,7 @@ const MainContainer = styled.div`
   width: 100vw;
   min-height: 100vh;
   height: 100%;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
 `
 
 const PaymentScreen = () => {
