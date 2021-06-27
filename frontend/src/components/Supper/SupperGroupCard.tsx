@@ -22,6 +22,8 @@ const RestaurantLogo = styled.img`
   display: flex;
   justify-content: center;
   border-radius: 10px;
+  height: 80px;
+  width: 80px;
 `
 
 const RightContainer = styled.div`
@@ -86,6 +88,7 @@ const StyledSkeleton = styled(Skeleton)<{ width?: string; height?: string; borde
 
 type Props = {
   supperGroup?: SupperGroup | undefined
+  restaurantName?: string | undefined
   supperGroupId?: number | undefined
   ownerId?: string
   ownerName?: string
@@ -114,6 +117,7 @@ export const SupperGroupCard = (props: Props) => {
     // if details still dont show after 20s, show error
     if (isLoading) {
       const [error] = useSnackbar('error')
+      //TODO: Check if we should update to another error message
       error("Oh no! something went wrong.. we can't find the supper group :(")
     }
   }, 20000)
@@ -122,6 +126,8 @@ export const SupperGroupCard = (props: Props) => {
     color: 'rgba(0, 0, 0, 0.65)',
     paddingRight: '5px',
   } // For time, car and user
+
+  const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
   const supperGroupId = getReadableSupperGroupId(props.supperGroupId ?? props.supperGroup?.supperGroupId)
   const ownerName = `(${
     (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
@@ -153,7 +159,7 @@ export const SupperGroupCard = (props: Props) => {
         {isLoading ? (
           <StyledSkeleton active paragraph={false} height="80px" width="80px" borderRadius="10px" />
         ) : (
-          <RestaurantLogo src={getRestaurantLogo(Restaurants.ALAMAANS)} alt="Restaurant logo" />
+          <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />
         )}
       </LeftContainer>
       <RightContainer>
