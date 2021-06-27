@@ -1,4 +1,3 @@
-import { LeftOutlined } from '@ant-design/icons'
 import React from 'react'
 
 import styled from 'styled-components'
@@ -6,6 +5,7 @@ import { foodList } from '../../store/stubs'
 import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { FoodLineInCard } from './FoodLineInCard'
+import { LeftOutlined } from '@ant-design/icons'
 
 const MainCard = styled.div`
   display: flex;
@@ -35,7 +35,7 @@ const HeaderText = styled.text`
   font-weight: 700;
   font-size: 24px;
   line-height: 20px;
-  color: #000000;
+  color: black;
 `
 
 const SubHeaderContainer = styled.div`
@@ -47,7 +47,7 @@ const SubHeaderText = styled.text`
   font-weight: 500;
   font-size: 18px;
   line-height: 14px;
-  color: #000000;
+  color: black;
 `
 
 const CustomCard = styled.div`
@@ -57,7 +57,7 @@ const CustomCard = styled.div`
   align-items: center;
   padding: 5px 5px;
   margin: 5px 8px 15px 8px;
-  background: #ffffff;
+  background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
   width: 94%;

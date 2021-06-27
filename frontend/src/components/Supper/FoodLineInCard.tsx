@@ -1,7 +1,7 @@
-import { EditOutlined } from '@ant-design/icons'
 import React, { MouseEventHandler } from 'react'
 
 import styled from 'styled-components'
+import editIcon from '../../assets/RedSupperEditIcon.svg'
 import { CancelAction } from '../../store/supper/types'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
@@ -85,7 +85,7 @@ const BoldText = styled.text<{ fontPercentage?: number | undefined }>`
   padding-right: 5px;
 `
 
-const Icon = styled(EditOutlined)`
+const Icon = styled.img`
   padding: 0px 0px 0px 7px;
   font-size: 20px;
   color: #de5f4c;
@@ -143,7 +143,7 @@ export const FoodLineInCard = (props: Props) => {
 
           {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
-              <Icon color={'red'} onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} alt="Edit Icon" />
+              <Icon onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} src={editIcon} alt="Edit Icon" />
             </IconsContainer>
           )}
         </BottomContainer>
