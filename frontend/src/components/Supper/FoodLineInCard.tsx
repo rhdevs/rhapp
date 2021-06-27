@@ -2,6 +2,7 @@ import React, { MouseEventHandler } from 'react'
 
 import styled from 'styled-components'
 import editIcon from '../../assets/RedSupperEditIcon.svg'
+import { V1_RED } from '../../common/colours'
 import { CancelAction } from '../../store/supper/types'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
@@ -19,8 +20,7 @@ const QuantityContainer = styled.div<{
 }>`
   width: 10%;
   font-size: ${(props) => (props.quantitySize ? props.quantitySize : (props.fontPercentage ?? 1) * 17)}px;
-  line-height: 22px;
-  color: #de5f4c;
+  color: ${V1_RED};
 `
 
 const SubContainer = styled.div`
@@ -35,12 +35,10 @@ const TopContainer = styled.div`
 const TitleText = styled.text<{ fontPercentage?: number | undefined }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
   font-weight: 500;
-  line-height: 22px;
 `
 
 const MoneyText = styled.text<{ fontPercentage?: number | undefined }>`
-  font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
-  line-height: 14px;
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 15}px;
   margin: auto 0;
 `
 
@@ -88,7 +86,7 @@ const BoldText = styled.text<{ fontPercentage?: number | undefined }>`
 const Icon = styled.img`
   padding: 0px 0px 0px 7px;
   font-size: 20px;
-  color: #de5f4c;
+  color: ${V1_RED};
 `
 
 type Props = {

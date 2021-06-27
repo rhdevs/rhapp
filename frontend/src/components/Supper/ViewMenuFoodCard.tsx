@@ -6,10 +6,11 @@ import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { FoodLineInCard } from './FoodLineInCard'
 import { LeftOutlined } from '@ant-design/icons'
+import { V1_BACKGROUND } from '../../common/colours'
 
 const MainCard = styled.div`
   display: flex;
-  background: #fafaf4;
+  background: ${V1_BACKGROUND};
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
@@ -70,9 +71,21 @@ const ButtonContainer = styled.div`
   margin: 10px 0px 15px 0px;
 `
 
+const NoResultsContainer = styled.div`
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+`
+
+const NoResultsText = styled.text`
+  font-size: 14px;
+  text-align: center;
+`
+
 type Props = {
   foodList: Food[]
   foodId: string | undefined
+  menuFoodName: string | undefined
 }
 
 export const ViewMenuFoodCard = (props: Props) => {
@@ -80,41 +93,63 @@ export const ViewMenuFoodCard = (props: Props) => {
 
   return (
     <MainCard>
-      <Header>
-        <LeftOutlined style={{ color: 'black', padding: '5px 20px 0 0px' }} />
-        <HeaderText>{foodName}</HeaderText>
-      </Header>
-      <SubHeaderContainer>
-        <SubHeaderText>In Your Cart</SubHeaderText>
-      </SubHeaderContainer>
-      <CustomCard>
-        {props.foodList
-          .filter((food) => food.foodId === props.foodId)
-          .map((food, index) => {
-            const customisations: string[] = []
-            food.custom?.map((custom) =>
-              custom.options.map((option) => {
-                if (option.isSelected) customisations.push(option.name)
-              }),
-            )
-            return (
-              <FoodLineInCard
-                isEditable
-                key={index}
-                foodName={food.foodName}
-                fontPercentage={0.85}
-                qty={food.quantity}
-                price={food.foodPrice}
-                customisations={customisations}
-                comments={food?.comments}
-                cancelAction={food.cancelAction}
-              />
-            )
-          })}
-      </CustomCard>
-      <ButtonContainer>
-        <Button defaultButtonDescription={'Add Another'} stopPropagation={true} isFlipButton={false} />
-      </ButtonContainer>
+      {foodName ? (
+        <>
+          <Header>
+            <LeftOutlined style={{ color: 'black', padding: '5px 20px 0 0px' }} />
+            <HeaderText>{foodName}</HeaderText>
+          </Header>
+          <SubHeaderContainer>
+            <SubHeaderText>In Your Cart</SubHeaderText>
+          </SubHeaderContainer>
+          <CustomCard>
+            {props.foodList
+              .filter((food) => food.foodId === props.foodId)
+              .map((food, index) => {
+                const customisations: string[] = []
+                food.custom?.map((custom) =>
+                  custom.options.map((option) => {
+                    if (option.isSelected) customisations.push(option.name)
+                  }),
+                )
+                return (
+                  <FoodLineInCard
+                    isEditable
+                    key={index}
+                    foodName={food.foodName}
+                    fontPercentage={0.85}
+                    qty={food.quantity}
+                    price={food.foodPrice}
+                    customisations={customisations}
+                    comments={food?.comments}
+                    cancelAction={food.cancelAction}
+                  />
+                )
+              })}
+          </CustomCard>
+          <ButtonContainer>
+            <Button defaultButtonDescription={'Add Another'} stopPropagation={true} isFlipButton={false} />
+          </ButtonContainer>{' '}
+        </>
+      ) : (
+        <>
+          <Header>
+            <LeftOutlined style={{ color: 'black', padding: '5px 20px 0 0px' }} />
+            <HeaderText>{props.menuFoodName}</HeaderText>
+          </Header>
+          <CustomCard>
+            <NoResultsContainer>
+              <NoResultsText>
+                Oops we misread your order! <br />
+                Click back to return or button below to add food into cart!
+              </NoResultsText>
+            </NoResultsContainer>
+          </CustomCard>
+          <ButtonContainer>
+            <Button defaultButtonDescription={'Add item'} stopPropagation={true} isFlipButton={false} />
+          </ButtonContainer>
+        </>
+      )}
     </MainCard>
   )
 }
