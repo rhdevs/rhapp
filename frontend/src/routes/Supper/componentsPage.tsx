@@ -130,7 +130,7 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
-      <ViewMenuFoodCard />
+      <ViewMenuFoodCard foodList={foodList} foodId={'12345364832764134'} />
     </>
   )
 }

@@ -2,8 +2,10 @@ import { LeftOutlined } from '@ant-design/icons'
 import React from 'react'
 
 import styled from 'styled-components'
+import { foodList } from '../../store/stubs'
+import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
-import { FoodVariationInCard } from './FoodVariationInCard'
+import { FoodLineInCard } from './FoodLineInCard'
 
 const MainCard = styled.div`
   display: flex;
@@ -16,7 +18,6 @@ const MainCard = styled.div`
   left: 4.27%;
   right: 3.47%;
   top: 18.18%;
-  bottom: 35.57%;
   z-index: 1000;
   border-radius: 20px;
   max-width: 300px;
@@ -27,14 +28,13 @@ const MainCard = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 20px 15px;
+  padding: 15px 15px;
 `
 
 const HeaderText = styled.text`
-  font-style: normal;
   font-weight: 700;
   font-size: 24px;
-  line-height: 14px;
+  line-height: 20px;
   color: #000000;
 `
 
@@ -55,7 +55,7 @@ const CustomCard = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 5px 8px;
+  padding: 5px 5px;
   margin: 5px 8px 15px 8px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -67,33 +67,50 @@ const CustomCard = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 10px 0px 15px 0px;
 `
 
-//type Props = {}
+type Props = {
+  foodList: Food[]
+  foodId: string | undefined
+}
 
-export const ViewMenuFoodCard = () => {
-  const custom = ['Fries', 'Apple pie']
+export const ViewMenuFoodCard = (props: Props) => {
+  const foodName = foodList.find((food) => food.foodId === props.foodId)?.foodName
+
   return (
     <MainCard>
       <Header>
-        <LeftOutlined style={{ color: 'black', padding: '0px 25px 0 6px' }} />
-        <HeaderText>McSpicy Meal</HeaderText>
+        <LeftOutlined style={{ color: 'black', padding: '5px 20px 0 0px' }} />
+        <HeaderText>{foodName}</HeaderText>
       </Header>
       <SubHeaderContainer>
         <SubHeaderText>In Your Cart</SubHeaderText>
       </SubHeaderContainer>
       <CustomCard>
-        <FoodVariationInCard
-          isEditable
-          foodName={'Hello'}
-          customisations={custom}
-          qty={2}
-          quantitySize={16}
-          fontPercentage={0.9}
-          quantityWeight={600}
-          moneyWeight={500}
-          price={6.6}
-        />
+        {props.foodList
+          .filter((food) => food.foodId === props.foodId)
+          .map((food, index) => {
+            const customisations: string[] = []
+            food.custom?.map((custom) =>
+              custom.options.map((option) => {
+                if (option.isSelected) customisations.push(option.name)
+              }),
+            )
+            return (
+              <FoodLineInCard
+                isEditable
+                key={index}
+                foodName={food.foodName}
+                fontPercentage={0.85}
+                qty={food.quantity}
+                price={food.foodPrice}
+                customisations={customisations}
+                comments={food?.comments}
+                cancelAction={food.cancelAction}
+              />
+            )
+          })}
       </CustomCard>
       <ButtonContainer>
         <Button defaultButtonDescription={'Add Another'} stopPropagation={true} isFlipButton={false} />
