@@ -37,6 +37,7 @@ import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
 import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
+import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -48,6 +49,7 @@ const OptionText = styled.text`
 export default function Supper() {
   return (
     <>
+      <SupperGroupCard />
       <RadioButton
         margin="0 0 3px 2px"
         value="option.name"

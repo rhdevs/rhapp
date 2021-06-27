@@ -12,7 +12,7 @@ import { PlusButton } from '../../components/Supper/PlusButton'
 import {
   getAllSupperGroups,
   getSearchedSupperGroups,
-  readableSupperGroupId,
+  getReadableSupperGroupId,
   setSearchValue,
   unixTo12HourTime,
 } from '../../store/supper/action'
@@ -121,7 +121,7 @@ export default function Supper() {
                     title={supperGroup.supperGroupName}
                     time={unixTo12HourTime(supperGroup.closingTime)}
                     users={supperGroup.numOrders}
-                    orderId={readableSupperGroupId(supperGroup.supperGroupId)}
+                    orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
                     onClick={onClick}
                   />
                 )

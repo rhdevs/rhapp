@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getCollatedOrder, readableSupperGroupId } from '../../../store/supper/action'
+import { getCollatedOrder, getReadableSupperGroupId } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -137,7 +137,7 @@ const OrderSummary = () => {
         <LoadingSpin />
       ) : (
         <>
-          <OrderIdText>{readableSupperGroupId(collatedOrder?.supperGroupId)}</OrderIdText>
+          <OrderIdText>{getReadableSupperGroupId(collatedOrder?.supperGroupId)}</OrderIdText>
           <OrderSummaryCard collatedOrder={collatedOrder} />
           <TotalPriceText>
             Total Price

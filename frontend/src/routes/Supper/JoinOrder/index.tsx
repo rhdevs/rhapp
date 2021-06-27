@@ -9,7 +9,12 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
-import { createOrder, getSupperGroupById, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import {
+  createOrder,
+  getSupperGroupById,
+  getReadableSupperGroupId,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { Restaurants } from '../../../store/supper/types'
@@ -52,7 +57,7 @@ export default function JoinOrder() {
         isOwner={supperGroup?.ownerId === localStorage.userID}
         title={supperGroup?.supperGroupName ?? ''}
         restaurant={supperGroup?.restaurantName as Restaurants}
-        orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+        orderId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
         username={supperGroup?.ownerId === localStorage.userID ? 'You' : supperGroup?.ownerName ?? ''}
         currentAmount={supperGroup?.currentFoodCost ?? 0}
         priceLimit={supperGroup?.costLimit ?? 50}
