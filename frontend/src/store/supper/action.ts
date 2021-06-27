@@ -675,6 +675,13 @@ export const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) =
   })
 }
 
+export const updateSupperGroupPaymentStatus = (supperGroupId: string, paymentUpdateArray) => {
+  if (!(paymentUpdateArray?.length || paymentUpdateArray)) return
+  const requestBody = paymentUpdateArray
+  console.log(paymentUpdateArray)
+  put(ENDPOINTS.UPDATE_SUPPER_GROUP_PAYMENT_STATUS, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/payment`)
+}
+
 export const setCreateOrderPage = (createOrderPage: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE,

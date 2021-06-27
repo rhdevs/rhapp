@@ -4,6 +4,7 @@ import pymongo
 import json
 from datetime import datetime
 from threading import Thread
+from bson.objectid import ObjectId
 
 
 def removeObjectID(xs):
@@ -227,6 +228,371 @@ def delete_booking(bookingID):
     return {"message": "Booking Deleted"}, 200
 
 
+@app.route('/supper', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def all_supper_group():
+    try:
+        all_supper_group = list(db.SupperGroup.find(
+            {}, {'supperGroupId': 1, '_id': 0}).sort('createdAt', -1))
+
+        print(all_supper_group)
+
+        # I hate mongo
+
+        data = []
+        for supperGroup in all_supper_group:
+            pipeline = [
+                {'$match': {'supperGroupId': supperGroup['supperGroupId']}},
+                {
+                    '$lookup': {
+                        'from': 'Order',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'orders'
+                    }
+                },
+                {
+                    '$addFields': {
+                        'totalPrice': {'$sum': '$orders.orderPrice'}
+                    }
+                },
+                {'$project': {'orders': 0, '_id': 0}}
+            ]
+            result = db.SupperGroup.aggregate(pipeline)
+            info = None
+            for suppergroup in result:
+                info = suppergroup
+
+            if info == None:
+                raise Exception('Order group not found.')
+            data.append(info)
+
+        response = {"status": "success", "data": data}
+
+        return make_response(response, 200)
+    except Exception as e:
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+<<<<<<< HEAD
+=======
+
+@app.route('/supper/supperGroup', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def create_supper_group():
+    try:
+        data = request.get_json()
+        data["createdAt"] = int(datetime.now().timestamp())
+        db.SupperGroup.insert_one(data)
+
+        response = {"status": "success",
+                    "message": "Successfully created supper group!"}
+
+        return make_response(response, 200)
+    except Exception as e:
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+>>>>>>> 6025c470d (Add restaurant routes)
+
+@app.route('/supper/supperGroup/<int:supperGroupId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def supper_group(supperGroupId):
+    try:
+        if request.method == "GET":
+            pipeline = [
+                {'$match': {'supperGroupId': supperGroupId}},
+                {
+                    '$lookup': {
+                        'from': 'Order',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'orders'
+                    }
+                },
+                {
+                    '$addFields': {
+                        'totalPrice': {'$sum': '$orders.orderPrice'}
+                    }
+                },
+                {'$project': {'orders': 0, '_id': 0}}
+            ]
+
+            result = db.SupperGroup.aggregate(pipeline)
+
+            data = None
+            for suppergroup in result:
+                data = suppergroup
+
+            if data == None:
+                raise Exception('Order group not found.')
+
+            response = {"status": "success", "data": data}
+
+        elif request.method == "PUT":  # Edit supper group details
+            formData = request.get_json()
+
+            db.SupperGroup.update_one({"supperGroupId": supperGroupId}, {
+                "$set": formData})
+
+            response = {"status": "success", "message": "Supper Group edited"}
+        elif request.method == "DELETE":
+            data = db.SupperGroup.find({'supperGroupId': supperGroupId})
+
+            if (len(data) == 0):
+                raise Exception("Supper group not found")
+
+            db.SupperGroup.delete_one({"supperGroupId": supperGroupId})
+            db.Order.delete_many({'supperGroupId': supperGroupId})
+            response = {"status": "success", "message": "Supper Group Deleted"}
+
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def create_order():
+    try:
+        data = request.get_json()
+        db.Order.insert_one(data)
+        response = {"status": "success",
+                    "message": "Order created successfully."}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order/<orderId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def getorder(orderId):
+    try:
+        if request.method == 'GET':
+            pipeline = [
+                {'$match': {"_id": ObjectId(orderId)}},
+                {
+                    '$lookup': {
+                        'from': 'FoodOrder',
+                        'localField': 'foodIds',
+                        'foreignField': '_id',
+                        'as': 'foodList'
+                    }
+                },
+                {'$project': {'foodIds': 0}}
+            ]
+
+            temp = db.Order.aggregate(pipeline)
+
+            # Only 1 item in temp, can only access it like this otherwise its a mongo array object
+            for item in temp:
+                data = item
+
+            data['orderId'] = str(data.pop('_id'))
+
+            for food in data["foodList"]:
+                # rename _id field to foodId and unbox mongo object
+                food["foodId"] = str(food.pop('_id'))
+
+            response = {"status": "success", "data": data}
+        elif request.method == 'PUT':
+            data = request.get_json()
+            db.Order.update_one({"_id": ObjectId(orderId)},
+                                {"$set": data})
+
+            response = {"status": "success",
+                        "message": "Successfully edited order!"}
+
+        elif request.method == 'DELETE':
+
+            result = db.Order.delete_one({"_id": ObjectId(orderId)})
+            if result.deleted_count == 0:
+                raise Exception("Order not found")
+
+            response = {"status": "success",
+                        "message": "Successfully deleted order!"}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order/<orderId>/food', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def add_food(orderId):
+    try:
+        data = request.get_json()
+        # Add food into FoodOrder
+        newFood = db.FoodOrder.insert_one(data).inserted_id
+
+        # Add new food's id into Order
+        result = db.Order.update_one({'_id': ObjectId(orderId)},
+                                     {'$push': {'foodIds': ObjectId(newFood)},
+                                     '$inc': {'orderPrice': data['foodPrice']}})
+        if result.matched_count != 1:
+            raise Exception('Order not found.')
+        if result.modified_count != 1:
+            raise Exception('Update failed.')
+
+        response = {"status": "success",
+                    "message": "Food added successfully."}
+
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/order/<orderId>/food/<foodId>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def foodorder(orderId, foodId):
+    try:
+        if request.method == 'GET':
+            # Route doesn't seem necessary
+            data = {}
+            response = {"status": "success", "data": data}
+        elif request.method == 'PUT':
+            data = request.get_json()
+            result = db.FoodOrder.update_one({"_id": ObjectId(foodId)},
+                                             {"$set": data})
+
+            if result.matched_count == 0:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully edited food!"}
+
+        elif request.method == 'DELETE':
+            data = db.Order.find_one({'_id': ObjectId(orderId)})
+            if data == None:
+                raise Exception("Order not found")
+
+            result = db.FoodOrder.delete_one({"_id": ObjectId(foodId)})
+            if result.deleted_count == 0:
+                raise Exception("Food not found")
+
+            data["foodIds"].remove(ObjectId(foodId))
+
+            db.Order.update_one({'_id': ObjectId(orderId)}, {'$set': data})
+
+            response = {"status": "success",
+                        "message": "Successfully deleted food!"}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def all_restaurants():
+    try:
+        restaurants = db.Restaurants.find({}, {'_id': 0})
+        response = {"status": "success", "data": list(
+            restaurants)}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/<int:restaurantId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_restaurant(restaurantId):
+    try:
+        restaurant = db.Restaurants.find_one(
+            {'restaurantId': restaurantId}, {'_id': 0})
+        response = {"status": "success", "data": restaurant}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/<int:restaurantId>/menu', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def restaurant(restaurantId):
+    try:
+        pipeline = [
+            {'$match': {'restaurantId': restaurantId}},
+            {
+                '$lookup': {
+                    'from': 'FoodMenu',
+                    'localField': 'restaurantId',
+                    'foreignField': 'restaurantId',
+                    'as': 'menu'
+                }
+            },
+            {'$project': {'_id': 0, 'menu._id': 0}}
+        ]
+
+        data = db.Restaurants.aggregate(pipeline)
+
+        restaurant = None
+        for item in data:
+            restaurant = item
+
+        response = {"status": "success", "data": restaurant}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/restaurant/food/<int:foodMenuId>', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def foodItem(foodMenuId):
+    try:
+        data = db.FoodMenu.find_one({"foodMenuId": foodMenuId}, {'_id': 0})
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@app.route('/supper/user/<userID>/orderHistory', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def user_order_history(userID):
+    try:
+        pipeline = [
+            {'$match': {"userID": userID}},
+            {
+                '$lookup': {
+                    'from': 'FoodOrder',
+                    'localField': 'foodIds',
+                    'foreignField': '_id',
+                    'as': 'foodList'
+                }
+            },
+            {'$project': {'foodIds': 0}}
+        ]
+
+        orders = db.Order.aggregate(pipeline)
+
+        data = []
+        for order in orders:
+            order['orderId'] = str(order.pop('_id'))
+            for food in order["foodList"]:
+                food["foodId"] = str(food.pop('_id'))
+            data.append(order)
+
+        response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+###########################################################
+
+
 def keep_alive():
     t = Thread(target=run)
     t.start()
@@ -238,6 +604,7 @@ def run():
 
 keep_alive()
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    app.run(threaded=True, debug=True)
 #   keep_alive();
 #   app.run('0.0.0.0', port=8080)

@@ -9,7 +9,7 @@ import Button from '../../../components/Mobile/Button'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SGPaymentStatus } from '../../../components/Supper/CustomCards/SGPaymentStatus'
-import { deleteSupperGroup, getSupperGroupById } from '../../../store/supper/action'
+import { deleteSupperGroup, getSupperGroupById, updateSupperGroupPaymentStatus } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -24,7 +24,7 @@ const PaymentScreen = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, isLoading, paymentUpdateArray } = useSelector((state: RootState) => state.supper)
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
   const onCancelClick = () => {
@@ -42,7 +42,13 @@ const PaymentScreen = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="Payment" />
+      <TopNavBar
+        title="Payment"
+        onLeftClick={() => {
+          updateSupperGroupPaymentStatus(params.supperGroupId, paymentUpdateArray)
+          history.goBack()
+        }}
+      />
       {isLoading ? (
         <LoadingSpin />
       ) : (

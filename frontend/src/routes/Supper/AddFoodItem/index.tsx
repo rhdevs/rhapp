@@ -94,12 +94,7 @@ const AddFoodItem = () => {
           })
           .filter((k) => k.name !== undefined) //to remove empty Option objects
 
-        return {
-          title: customFood.title,
-          options: options,
-          max: customFood.max,
-          min: customFood.min,
-        }
+        return { ...customFood, options: options }
       })
 
       const newFood: Food = {
