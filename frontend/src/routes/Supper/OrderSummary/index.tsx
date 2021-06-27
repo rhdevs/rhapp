@@ -11,12 +11,13 @@ import { getCollatedOrder, readableSupperGroupId } from '../../../store/supper/a
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 const MainContainer = styled.div`
   width: 100vw;
   height: 100%;
   min-height: 100vh;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
   display: flex;
   flex-direction: column;
 `

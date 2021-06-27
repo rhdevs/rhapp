@@ -14,12 +14,13 @@ import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } fr
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 const Background = styled.div`
   width: 100vw;
   min-height: 100vh;
   height: 100%;
-  background-color: #fafaf4;
+  background-color: ${V1_BACKGROUND};
 `
 
 const MainContainer = styled.div`

@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { Radio } from 'antd'
+import { V1_BLUE } from '../common/colours'
 
 const StyledRadioButton = styled(Radio)<{ color: string | undefined; margin?: string | undefined }>`
   display: flex;
@@ -33,19 +34,11 @@ type Props = {
   label?: string | ReactElement
   color?: string
   margin?: string
-  // defaultChecked?: boolean
 }
 
 export const RadioButton = (props: Props) => {
-  const BLUE = '#002642'
-
   return (
-    <StyledRadioButton
-      // defaultChecked={props.defaultChecked}
-      margin={props.margin}
-      color={props.color ?? BLUE}
-      value={props.value}
-    >
+    <StyledRadioButton margin={props.margin} color={props.color ?? V1_BLUE} value={props.value}>
       <LabelDiv>{props.label}</LabelDiv>
     </StyledRadioButton>
   )

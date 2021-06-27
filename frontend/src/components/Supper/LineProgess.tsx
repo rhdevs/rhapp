@@ -1,6 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
+import { V1_BLUE } from '../../common/colours'
 
 const MainContainer = styled.div`
   margin: 2px;
@@ -13,7 +14,7 @@ const TextContainer = styled.text`
 `
 
 const ProgressBar = styled.div<{ isColored: boolean; borderRadius: string }>`
-  background-color: ${(props) => `${props.isColored ? '#002642' : '#C4C4C4'}`};
+  background-color: ${(props) => `${props.isColored ? V1_BLUE : '#C4C4C4'}`};
   width: 2.5rem;
   height: 10px;
   border-radius: ${(props) => `${props.borderRadius}`};

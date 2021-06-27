@@ -5,6 +5,7 @@ import { MainCard } from '../MainCard'
 import { RoundProgress } from '../RoundProgress'
 import { StatusSymbol } from '../StatusSymbol'
 import notFound from '../../../assets/notFound.svg'
+import { V1_BLUE } from '../../../common/colours'
 
 const TopSection = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ const RestaurantLogo = styled.img`
   min-height: 100%;
   height: 64px;
   width: 64px;
-  border: 1px #002642 solid;
+  border: 1px ${V1_BLUE} solid;
   border-radius: 50%;
   overflow: hidden;
 `

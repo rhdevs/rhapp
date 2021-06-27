@@ -14,6 +14,7 @@ import { setCreateOrderPage, setSupperGroup } from '../../../../store/supper/act
 import { SplitACMethod } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
+import { V1_BLUE } from '../../../../common/colours'
 
 const HortSectionContainer = styled.div`
   margin: 25px 35px 5px 35px;
@@ -30,11 +31,11 @@ const HortInputContainer = styled.div`
 
 const StyledRadioButtons = styled(Radio.Group)<{ error?: FieldError | undefined }>`
   .ant-radio-checked .ant-radio-inner {
-    border-color: #002642;
+    border-color: ${V1_BLUE};
   }
 
   .ant-radio-inner::after {
-    background-color: #002642;
+    background-color: ${V1_BLUE};
   }
 
   ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
