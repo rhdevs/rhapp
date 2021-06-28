@@ -93,7 +93,7 @@ def register():
                             "position": position
                             })
         db.Profiles.insert_one({"userID": userID,
-                               "displayName": displayName,
+                                "displayName": displayName,
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
@@ -117,7 +117,7 @@ def login():
     userID = req['userID']
     passwordHash = req['passwordHash']
     # authenticate the credentials
-    if not db.User.find({'userID': userID, 'passwordHash': passwordHash}).limit(1):
+    if not db.User.find_one({'userID': userID, 'passwordHash': passwordHash}):
         return jsonify({'message': 'Invalid credentials'}), 403
     # insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
