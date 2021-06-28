@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { Restaurants, SplitACMethod, SupperGroup } from '../../store/supper/types'
 import { MainCard } from './MainCard'
-import { Progress } from 'antd'
+import { Dropdown, Menu, Progress } from 'antd'
 import { getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, MoreOutlined, ShareAltOutlined, UserOutlined } from '@ant-design/icons'
@@ -21,6 +21,7 @@ const LeftContainer = styled.div`
   padding-right: 10px;
   margin: auto;
 `
+
 const RestaurantLogo = styled.img`
   margin: auto;
   display: flex;
@@ -132,6 +133,26 @@ export const SupperGroupCard = (props: Props) => {
     paddingRight: '2px',
   } // For time, car and user
 
+  const onShareClick = () => {
+    //TODO: @xinyee add share modal
+    console.log('Show modal to share supper group')
+  }
+
+  const dropDownComponent = () => {
+    //TODO: Update with finalised dropdown component
+    return (
+      <Menu>
+        <Menu.Item key="0">
+          <a href="#">1st menu item</a>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <a href="#">2nd menu item</a>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="3">3rd menu item</Menu.Item>
+      </Menu>
+    )
+  }
   const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
   const supperGroupId = getReadableSupperGroupId(props.supperGroupId ?? props.supperGroup?.supperGroupId)
   const ownerName = `(${
@@ -141,9 +162,17 @@ export const SupperGroupCard = (props: Props) => {
   })`
   const topIcon =
     (props.ownerId ?? props.supperGroup?.ownerId) == localStorage.userID ? (
-      <MoreOutlined style={{ position: 'absolute', right: '18px', transform: 'rotate(90deg)', fontSize: '18px' }} />
+      <Dropdown overlay={dropDownComponent} trigger={['click']}>
+        <MoreOutlined
+          onClick={(e) => e.preventDefault()}
+          style={{ position: 'absolute', right: '18px', transform: 'rotate(90deg)', fontSize: '18px' }}
+        />
+      </Dropdown>
     ) : (
-      <ShareAltOutlined style={{ color: V1_RED, position: 'absolute', right: '18px', fontSize: '18px' }} />
+      <ShareAltOutlined
+        onClick={onShareClick}
+        style={{ color: V1_RED, position: 'absolute', right: '18px', fontSize: '18px' }}
+      />
     )
   const idText = `${supperGroupId} ${ownerName}`
   const supperGroupName = props.supperGroupName ?? props.supperGroup?.supperGroupName
@@ -173,8 +202,8 @@ export const SupperGroupCard = (props: Props) => {
           </LeftContainer>
           <RightContainer>
             <ErrorText>
-              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or{' '}
-              <u onClick={() => history.goBack()}>go back</u>
+              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or
+              <u onClick={() => history.goBack()}> go back</u>
             </ErrorText>
           </RightContainer>
         </>
