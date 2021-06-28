@@ -38,6 +38,7 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
+import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -131,6 +132,13 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
+      <ViewMenuFoodCard
+        foodList={foodList}
+        foodId={'12345364832764134'}
+        menuFoodName={'McGriddles with Egg Meal'}
+        supperGroupId={1}
+        orderId="1"
+      />
     </>
   )
 }

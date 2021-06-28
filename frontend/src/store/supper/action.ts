@@ -285,7 +285,7 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
         throw resp.err
       }
       console.log(resp.data)
-      dispatch(setSupperGroup(resp.data))
+      dispatch(setSupperGroup(resp.data.supperGroup))
       dispatch(setNewSupperGroupId(resp.data.supperGroup.supperGroupId))
     })
     .catch((err) => {
