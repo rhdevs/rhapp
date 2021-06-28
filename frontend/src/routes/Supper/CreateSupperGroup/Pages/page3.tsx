@@ -50,9 +50,9 @@ export const CreateOrderPageThree = () => {
   }, [selectedPaymentMethod])
 
   useEffect(() => {
-    if (newSupperGroupId !== undefined) {
+    if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
       dispatch(setCreateOrderPage(1))
-      history.push(`${PATHS.JOIN_ORDER}/${newSupperGroupId}`)
+      history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
   }, [newSupperGroupId, supperGroup])
 

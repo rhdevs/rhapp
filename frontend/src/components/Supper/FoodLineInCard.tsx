@@ -1,8 +1,8 @@
 import React, { MouseEventHandler } from 'react'
 
 import styled from 'styled-components'
-import editIcon from '../../assets/SupperEditIcon.svg'
-import deleteIcon from '../../assets/SupperDeleteIcon.svg'
+import editIcon from '../../assets/RedSupperEditIcon.svg'
+import { V1_RED } from '../../common/colours'
 import { CancelAction } from '../../store/supper/types'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
@@ -14,10 +14,13 @@ const MainContainer = styled.div<{ padding?: string | undefined }>`
   flex-direction: row;
 `
 
-const QuantityContainer = styled.div<{ fontPercentage?: number | undefined }>`
+const QuantityContainer = styled.div<{
+  fontPercentage?: number | undefined
+  quantitySize?: number | undefined
+}>`
   width: 10%;
-  font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
-  line-height: 22px;
+  font-size: ${(props) => (props.quantitySize ? props.quantitySize : (props.fontPercentage ?? 1) * 17)}px;
+  color: ${V1_RED};
 `
 
 const SubContainer = styled.div`
@@ -31,18 +34,18 @@ const TopContainer = styled.div`
 
 const TitleText = styled.text<{ fontPercentage?: number | undefined }>`
   font-size: ${(props) => (props.fontPercentage ?? 1) * 17}px;
-  line-height: 22px;
+  font-weight: 500;
 `
 
 const MoneyText = styled.text<{ fontPercentage?: number | undefined }>`
-  font-size: ${(props) => (props.fontPercentage ?? 1) * 14}px;
-  line-height: 14px;
+  font-size: ${(props) => (props.fontPercentage ?? 1) * 15}px;
   margin: auto 0;
 `
 
 const BottomContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 `
 
 const CustomisationContainer = styled.div`
@@ -81,13 +84,16 @@ const BoldText = styled.text<{ fontPercentage?: number | undefined }>`
 `
 
 const Icon = styled.img`
-  padding: 7px 7px 0 7px;
+  padding: 0px 0px 0px 7px;
+  font-size: 20px;
+  color: ${V1_RED};
 `
 
 type Props = {
   foodUserId?: string
   padding?: string
   fontPercentage?: number
+  quantitySize?: number
   foodName: string
   qty: number
   price?: number
@@ -102,7 +108,9 @@ type Props = {
 export const FoodLineInCard = (props: Props) => {
   return (
     <MainContainer padding={props.padding}>
-      <QuantityContainer fontPercentage={props.fontPercentage}>{props.qty}x</QuantityContainer>
+      <QuantityContainer quantitySize={props.quantitySize} fontPercentage={props.fontPercentage}>
+        {props.qty}x
+      </QuantityContainer>
       <SubContainer>
         <TopContainer>
           <TitleText fontPercentage={props.fontPercentage}>{props.foodName}</TitleText>
@@ -134,11 +142,6 @@ export const FoodLineInCard = (props: Props) => {
           {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
               <Icon onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} src={editIcon} alt="Edit Icon" />
-              <Icon
-                onClick={props.onDeleteClick as MouseEventHandler<HTMLImageElement>}
-                src={deleteIcon}
-                alt="Edit Icon"
-              />
             </IconsContainer>
           )}
         </BottomContainer>
