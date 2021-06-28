@@ -9,6 +9,7 @@ import { LeftOutlined } from '@ant-design/icons'
 import { V1_BACKGROUND } from '../../common/colours'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
+import { MainCard } from './MainCard'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -22,7 +23,7 @@ const OverlayBackground = styled.div`
   z-index: 999;
 `
 
-const MainCard = styled.div`
+const ModalCard = styled.div`
   display: flex;
   background: ${V1_BACKGROUND};
   flex-direction: column;
@@ -63,20 +64,6 @@ const SubHeaderText = styled.text`
   font-size: 18px;
   line-height: 14px;
   color: black;
-`
-
-const CustomCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 5px 5px;
-  margin: 5px 8px 15px 8px;
-  background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  width: 94%;
-  height: 50%;
 `
 
 const ButtonContainer = styled.div`
@@ -139,7 +126,7 @@ export const ViewMenuFoodCard = (props: Props) => {
 
   return (
     <OverlayBackground>
-      <MainCard>
+      <ModalCard>
         {foodName && filteredFoodList.length > 1 ? (
           <>
             <Header>
@@ -149,7 +136,7 @@ export const ViewMenuFoodCard = (props: Props) => {
             <SubHeaderContainer>
               <SubHeaderText>In Your Cart</SubHeaderText>
             </SubHeaderContainer>
-            <CustomCard>
+            <MainCard flexDirection="column" margin="5px 8px 15px 8px" padding="5px">
               {filteredFoodList.map((food, index) => {
                 const customisations: string[] = []
                 food.custom?.map((custom) =>
@@ -174,7 +161,7 @@ export const ViewMenuFoodCard = (props: Props) => {
                   />
                 )
               })}
-            </CustomCard>
+            </MainCard>
             {addButton()}
           </>
         ) : (
@@ -183,7 +170,7 @@ export const ViewMenuFoodCard = (props: Props) => {
               <BackButton />
               <HeaderText>{props.menuFoodName}</HeaderText>
             </Header>
-            <CustomCard>
+            <MainCard flexDirection="column" margin="5px 8px 15px 8px" padding="5px">
               <NoResultsContainer>
                 <NoResultsText>
                   {/* TODO: Update error message? */}
@@ -195,11 +182,11 @@ export const ViewMenuFoodCard = (props: Props) => {
                     ' or the button below to add food into cart!'}
                 </NoResultsText>
               </NoResultsContainer>
-            </CustomCard>
+            </MainCard>
             {props.supperGroupId && props.orderId && props.foodId && addButton(true)}
           </>
         )}
-      </MainCard>
+      </ModalCard>
     </OverlayBackground>
   )
 }
