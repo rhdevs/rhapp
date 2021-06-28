@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { Restaurants, SplitACMethod, SupperGroup } from '../../store/supper/types'
 import { MainCard } from './MainCard'
-import { Progress, Skeleton } from 'antd'
+import { Progress } from 'antd'
 import { getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
-import useSnackbar from '../../hooks/useSnackbar'
+import { Skeleton } from '../Skeleton'
+import { onRefresh } from '../../common/reloadPage'
+import { useHistory } from 'react-router-dom'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -76,14 +78,10 @@ const StyledProgessBar = styled(Progress)`
   margin: 0 10px 0 0;
 `
 
-const StyledSkeleton = styled(Skeleton)<{ width?: string; height?: string; borderRadius?: string }>`
-  width: ${(props) => props.width ?? '100px'};
-  &.ant-skeleton.ant-skeleton-active .ant-skeleton-content .ant-skeleton-title,
-  .ant-skeleton.ant-skeleton-active .ant-skeleton-content .ant-skeleton-paragraph > li {
-    height: ${(props) => props.height ?? '12px'};
-    margin: 5px 0;
-    ${(props) => props.borderRadius && `border-radius: ${props.borderRadius};`}
-  }
+const ErrorText = styled.text`
+  text-align: center;
+  color: ${V1_RED};
+  font-family: 'Inter';
 `
 
 type Props = {
@@ -112,13 +110,13 @@ export const SupperGroupCard = (props: Props) => {
       props.numOrders)
       ? false
       : true
+  const [hasError, setHasError] = useState<boolean>(false)
+  const history = useHistory()
 
   setTimeout(() => {
     // if details still dont show after 20s, show error
     if (isLoading) {
-      const [error] = useSnackbar('error')
-      //TODO: Check if we should update to another error message
-      error("Oh no! something went wrong.. we can't find the supper group :(")
+      setHasError(true)
     }
   }, 20000)
 
@@ -155,50 +153,63 @@ export const SupperGroupCard = (props: Props) => {
 
   return (
     <MainCard flexDirection="row" minHeight="fit-content">
-      <LeftContainer>
-        {isLoading ? (
-          <StyledSkeleton active paragraph={false} height="80px" width="80px" borderRadius="10px" />
-        ) : (
-          <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />
-        )}
-      </LeftContainer>
-      <RightContainer>
-        <StyledGroupIdText>{isLoading ? <StyledSkeleton active paragraph={false} /> : idText}</StyledGroupIdText>
-        <StyledGroupNameText>
-          {isLoading ? <StyledSkeleton active paragraph={false} height="14px" width="200px" /> : supperGroupName}
-        </StyledGroupNameText>
-        {isLoading ? (
-          <StyledSkeleton active paragraph={false} width="150px" />
-        ) : (
-          <GroupInfoContainer>
-            <InfoSubContainer>
-              <FieldTimeOutlined style={iconStyle} />
-              {closingTime}
-            </InfoSubContainer>
-            <InfoSubContainer color={V1_RED}>
-              <UserOutlined style={iconStyle} />
-              {numberOfUsers}
-            </InfoSubContainer>
-            <InfoSubContainer>
-              <CarOutlined style={iconStyle} />
-              {deliveryCost} {splitMethodIcon}
-            </InfoSubContainer>
-          </GroupInfoContainer>
-        )}
-        {isLoading ? (
-          <StyledSkeleton active paragraph={false} width="150px" />
-        ) : (
-          <GroupCostInfoContainer>
-            <StyledProgessBar
-              strokeColor={V1_RED}
-              strokeWidth={12}
-              percent={percentageInProgressBar}
-              showInfo={false}
-            />
-            {amountLeft}
-          </GroupCostInfoContainer>
-        )}
-      </RightContainer>
+      {hasError ? (
+        <>
+          <LeftContainer>
+            <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />
+          </LeftContainer>
+          <RightContainer>
+            <ErrorText>
+              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or{' '}
+              <u onClick={() => history.goBack()}>go back</u>
+            </ErrorText>
+          </RightContainer>
+        </>
+      ) : (
+        <>
+          {hasError}
+          <LeftContainer>
+            {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
+          </LeftContainer>
+          <RightContainer>
+            <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
+            <StyledGroupNameText>
+              {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
+            </StyledGroupNameText>
+            {isLoading ? (
+              <Skeleton width="150px" />
+            ) : (
+              <GroupInfoContainer>
+                <InfoSubContainer>
+                  <FieldTimeOutlined style={iconStyle} />
+                  {closingTime}
+                </InfoSubContainer>
+                <InfoSubContainer color={V1_RED}>
+                  <UserOutlined style={iconStyle} />
+                  {numberOfUsers}
+                </InfoSubContainer>
+                <InfoSubContainer>
+                  <CarOutlined style={iconStyle} />
+                  {deliveryCost} {splitMethodIcon}
+                </InfoSubContainer>
+              </GroupInfoContainer>
+            )}
+            {isLoading ? (
+              <Skeleton width="180px" />
+            ) : (
+              <GroupCostInfoContainer>
+                <StyledProgessBar
+                  strokeColor={V1_RED}
+                  strokeWidth={12}
+                  percent={percentageInProgressBar}
+                  showInfo={false}
+                />
+                {amountLeft}
+              </GroupCostInfoContainer>
+            )}
+          </RightContainer>
+        </>
+      )}
     </MainCard>
   )
 }
