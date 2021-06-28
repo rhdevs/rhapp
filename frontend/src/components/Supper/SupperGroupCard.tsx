@@ -161,7 +161,7 @@ export const SupperGroupCard = (props: Props) => {
       : props.ownerName ?? props.supperGroup?.ownerName ?? '-'
   })`
   const topIcon =
-    (props.ownerId ?? props.supperGroup?.ownerId) == localStorage.userID ? (
+    (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID ? (
       <Dropdown overlay={dropDownComponent} trigger={['click']}>
         <MoreOutlined
           onClick={(e) => e.preventDefault()}
