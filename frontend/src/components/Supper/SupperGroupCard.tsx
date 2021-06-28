@@ -7,10 +7,12 @@ import { MainCard } from './MainCard'
 import { Progress } from 'antd'
 import { getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
-import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
+import { CarOutlined, FieldTimeOutlined, MoreOutlined, ShareAltOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
 import { onRefresh } from '../../common/reloadPage'
 import { useHistory } from 'react-router-dom'
+import EqualCircle from '../../assets/supper/EqualCircle.svg'
+import PercentCircle from '../../assets/supper/PercentCircle.svg'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -38,7 +40,7 @@ const RightContainer = styled.div`
 const StyledGroupIdText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 200;
   font-size: 12px;
 `
 
@@ -46,7 +48,7 @@ const StyledGroupNameText = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
 `
 
 const GroupInfoContainer = styled.div`
@@ -59,7 +61,7 @@ const InfoSubContainer = styled.div<{ color?: string }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 10px 0 0;
+  padding-right: 4px;
   ${(props) => props.color && `color: ${props.color};`}
 `
 
@@ -75,13 +77,18 @@ const GroupCostInfoContainer = styled.div`
 
 const StyledProgessBar = styled(Progress)`
   width: 100px;
-  margin: 0 10px 0 0;
+  margin-right: 10px;
 `
 
 const ErrorText = styled.text`
   text-align: center;
   color: ${V1_RED};
   font-family: 'Inter';
+`
+
+const Icon = styled.img`
+  padding-left: 5px;
+  height: 14px;
 `
 
 type Props = {
@@ -122,7 +129,7 @@ export const SupperGroupCard = (props: Props) => {
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',
-    paddingRight: '5px',
+    paddingRight: '2px',
   } // For time, car and user
 
   const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
@@ -132,6 +139,12 @@ export const SupperGroupCard = (props: Props) => {
       ? 'You'
       : props.ownerName ?? props.supperGroup?.ownerName ?? '-'
   })`
+  const topIcon =
+    (props.ownerId ?? props.supperGroup?.ownerId) == localStorage.userID ? (
+      <MoreOutlined style={{ position: 'absolute', right: '18px', transform: 'rotate(90deg)', fontSize: '18px' }} />
+    ) : (
+      <ShareAltOutlined style={{ color: V1_RED, position: 'absolute', right: '18px', fontSize: '18px' }} />
+    )
   const idText = `${supperGroupId} ${ownerName}`
   const supperGroupName = props.supperGroupName ?? props.supperGroup?.supperGroupName
   const closingTime = unixTo12HourTime(props.closingTime ?? props.supperGroup?.closingTime)
@@ -141,15 +154,15 @@ export const SupperGroupCard = (props: Props) => {
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
-    splitMethodIcon = '='
+    splitMethodIcon = <Icon src={EqualCircle} alt="Equal" />
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
-    splitMethodIcon = '%'
+    splitMethodIcon = <Icon src={PercentCircle} alt="Proprotional" />
   }
   const costLimit = props.costLimit ?? props.supperGroup?.costLimit
   const currentAmount = props.currentFoodCost ?? props.supperGroup?.currentFoodCost ?? 0
 
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
-  const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)}left` : 'No Limit'
+  const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
 
   return (
     <MainCard flexDirection="row" minHeight="fit-content">
@@ -167,11 +180,11 @@ export const SupperGroupCard = (props: Props) => {
         </>
       ) : (
         <>
-          {hasError}
           <LeftContainer>
             {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
           </LeftContainer>
           <RightContainer>
+            {topIcon}
             <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
             <StyledGroupNameText>
               {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}

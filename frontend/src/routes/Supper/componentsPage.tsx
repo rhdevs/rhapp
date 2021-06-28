@@ -49,7 +49,7 @@ const OptionText = styled.text`
 export default function Supper() {
   return (
     <>
-      <SupperGroupCard />
+      <SupperGroupCard supperGroup={supperGroupStub} />
       <RadioButton
         margin="0 0 3px 2px"
         value="option.name"
