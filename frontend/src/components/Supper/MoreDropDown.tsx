@@ -28,7 +28,6 @@ type Props = {
 export const MoreDropDown = (props: Props) => {
   const [isVisible, setIsVisible] = useState<boolean>(false)
   const history = useHistory()
-  //TODO: Update with finalised dropdown component
   let userType
   if (props.ownerId === localStorage.userID) {
     userType = UserType.OWNER
@@ -54,17 +53,13 @@ export const MoreDropDown = (props: Props) => {
 
   const onShareClick = () => {
     setIsVisible(false)
-    console.log('share!!')
     setTimeout(() => props.shareModalSetter(true), 200)
   }
   const shareIcon = <ShareAltOutlined style={antdIconStyling} />
 
   const onLeaveGroup = () => {
     setIsVisible(false)
-    console.log('hld')
     setTimeout(() => props.leaveModalSetter(true), 200)
-    //TODO: Dispatch leave group and confirmation modal
-    console.log('leave group!')
   }
 
   const leaveIcon = <Icon src={doorIcon} alt="Leave Icon" height="19px" paddingLeft="0" verticalAlign="sub" />
