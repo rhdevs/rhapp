@@ -8,7 +8,7 @@ import { ExpandableSGCard } from '../../../components/Supper/CustomCards/Expanda
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { readableSupperGroupId, unixTo12HourTime, updateOrderDetails } from '../../../store/supper/action'
+import { getReadableSupperGroupId, unixTo12HourTime, updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 
@@ -79,7 +79,7 @@ const UserView = (props: Props) => {
         <ExpandableSGCard
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           supperGroupName={props.supperGroup?.supperGroupName ?? ''}
-          supperGroupId={readableSupperGroupId(props.supperGroup?.supperGroupId)}
+          supperGroupId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
           ownerName={props.supperGroup?.ownerName ?? ''}
           priceLimit={props.supperGroup?.costLimit ?? 50}
           currentAmount={props.supperGroup?.currentFoodCost ?? 10}
@@ -93,7 +93,7 @@ const UserView = (props: Props) => {
           supperGroupStatus={SupperGroupStatus.CANCELLED}
           username={props.supperGroup?.ownerName ?? '-'}
           title={props.supperGroup?.supperGroupName ?? '-'}
-          orderId={readableSupperGroupId(props.supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
           buttonTeleHandle={props.supperGroup?.ownerTele}
           cancelReason={props.supperGroup?.comments}
         />
@@ -107,7 +107,7 @@ const UserView = (props: Props) => {
           collectionTime={unixTo12HourTime(props.supperGroup?.estArrivalTime)}
           username={props.supperGroup?.ownerName ?? '-'}
           title={props.supperGroup?.supperGroupName ?? '-'}
-          orderId={readableSupperGroupId(props.supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
           buttonTeleHandle={props.supperGroup?.ownerTele}
           paymentMethod={props.supperGroup?.paymentInfo}
         />

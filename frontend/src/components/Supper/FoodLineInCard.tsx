@@ -1,8 +1,10 @@
-import React, { MouseEventHandler } from 'react'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import editIcon from '../../assets/RedSupperEditIcon.svg'
 import { V1_RED } from '../../common/colours'
+import { PATHS } from '../../routes/Routes'
 import { CancelAction } from '../../store/supper/types'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
@@ -91,6 +93,9 @@ const Icon = styled.img`
 
 type Props = {
   foodUserId?: string
+  supperGroupId?: number | undefined
+  orderId?: string | undefined
+  foodId?: string | undefined
   padding?: string
   fontPercentage?: number
   quantitySize?: number
@@ -106,6 +111,16 @@ type Props = {
 }
 
 export const FoodLineInCard = (props: Props) => {
+  const history = useHistory()
+
+  const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (props.onEditClick) {
+      return props.onEditClick(e)
+    } else {
+      history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${props.foodId}`)
+    }
+  }
+
   return (
     <MainContainer padding={props.padding}>
       <QuantityContainer quantitySize={props.quantitySize} fontPercentage={props.fontPercentage}>
@@ -141,7 +156,7 @@ export const FoodLineInCard = (props: Props) => {
 
           {props.isEditable && (props.foodUserId ?? localStorage.userID) === localStorage.userID && (
             <IconsContainer>
-              <Icon onClick={props.onEditClick as MouseEventHandler<HTMLImageElement>} src={editIcon} alt="Edit Icon" />
+              <Icon onClick={onEditClick} src={editIcon} alt="Edit Icon" />
             </IconsContainer>
           )}
         </BottomContainer>

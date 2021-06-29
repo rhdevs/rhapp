@@ -11,7 +11,12 @@ import { ExpandableSGCard } from '../../../components/Supper/CustomCards/Expanda
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import { getSupperGroupById, getUserOrder, readableSupperGroupId, unixTo12HourTime } from '../../../store/supper/action'
+import {
+  getSupperGroupById,
+  getUserOrder,
+  getReadableSupperGroupId,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -98,7 +103,7 @@ export default function UserViewOrder() {
         <ExpandableSGCard
           isOwner={supperGroup?.ownerId === localStorage.userID}
           supperGroupName={supperGroup?.supperGroupName ?? ''}
-          supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          supperGroupId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
           ownerName={supperGroup?.ownerName ?? ''}
           priceLimit={supperGroup?.costLimit ?? 50}
           currentAmount={supperGroup?.currentFoodCost ?? 10}
@@ -112,7 +117,7 @@ export default function UserViewOrder() {
           supperGroupStatus={SupperGroupStatus.CANCELLED}
           username={supperGroup?.ownerName ?? '-'}
           title={supperGroup?.supperGroupName ?? '-'}
-          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
           buttonTeleHandle={supperGroup?.ownerTele}
           cancelReason={supperGroup?.comments}
         />
@@ -126,7 +131,7 @@ export default function UserViewOrder() {
           collectionTime={unixTo12HourTime(supperGroup?.estArrivalTime)}
           username={supperGroup?.ownerName ?? '-'}
           title={supperGroup?.supperGroupName ?? '-'}
-          orderId={readableSupperGroupId(supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
           buttonTeleHandle={supperGroup?.ownerTele}
           paymentMethod={supperGroup?.paymentInfo}
         />

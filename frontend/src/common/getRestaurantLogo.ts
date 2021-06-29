@@ -1,6 +1,6 @@
-import McDonald from '../assets/McDonald.svg'
-import Alamaan from '../assets/Alamaan.svg'
-import Kimly from '../assets/Kimly.svg'
+import McDonald from '../assets/supper/restaurantLogos/McDonald.svg'
+import Alamaan from '../assets/supper/restaurantLogos/Alamaan.svg'
+import Kimly from '../assets/supper/restaurantLogos/Kimly.svg'
 import notFound from '../assets/notFound.svg'
 import { Restaurants } from '../store/supper/types'
 

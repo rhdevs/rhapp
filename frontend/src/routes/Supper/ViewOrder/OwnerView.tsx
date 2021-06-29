@@ -11,7 +11,7 @@ import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardW
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import {
   deleteSupperGroup,
-  readableSupperGroupId,
+  getReadableSupperGroupId,
   unixTo12HourTime,
   updateSupperGroup,
 } from '../../../store/supper/action'
@@ -146,7 +146,7 @@ const OwnerView = (props: Props) => {
           cardMargin="0 23px"
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           title={props.supperGroup?.supperGroupName ?? ''}
-          orderId={readableSupperGroupId(props.supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
           username={props.supperGroup?.ownerName ?? ''}
           currentAmount={props.supperGroup?.currentFoodCost ?? 0}
           priceLimit={props.supperGroup?.costLimit ?? 50}
@@ -169,7 +169,7 @@ const OwnerView = (props: Props) => {
           collectionTime={unixTo12HourTime(props.supperGroup?.estArrivalTime)}
           username={props.supperGroup?.ownerName ?? '-'}
           title={props.supperGroup?.supperGroupName ?? '-'}
-          orderId={readableSupperGroupId(props.supperGroup?.supperGroupId)}
+          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
           buttonTeleHandle={props.supperGroup?.ownerTele}
           paymentMethod={props.supperGroup?.paymentInfo}
         />

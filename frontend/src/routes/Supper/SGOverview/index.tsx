@@ -12,7 +12,7 @@ import { ToggleCreatedJoined } from '../../../components/Supper/ToggleCreatedJoi
 import {
   getAllUserJoinedSupperGroup,
   getSupperHistory,
-  readableSupperGroupId,
+  getReadableSupperGroupId,
   unixTo12HourTime,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
@@ -64,7 +64,7 @@ export default function SGOverview() {
                 title={supperGroup.supperGroupName}
                 time={unixTo12HourTime(supperGroup.closingTime)}
                 users={supperGroup.numOrders}
-                orderId={readableSupperGroupId(supperGroup.supperGroupId)}
+                orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
               />
             )
           })

@@ -10,7 +10,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
-import { getSupperGroupById, readableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
+import { getSupperGroupById, getReadableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
@@ -168,7 +168,7 @@ const DeliveryDetails = () => {
           <LoadingSpin />
         ) : (
           <>
-            <StyledSGIdText>{readableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
+            <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
             {supperGroupIsCancelled ? (

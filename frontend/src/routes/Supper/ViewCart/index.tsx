@@ -16,7 +16,7 @@ import {
   deleteFoodInOrder,
   getSupperGroupById,
   getUserOrder,
-  readableSupperGroupId,
+  getReadableSupperGroupId,
   unixTo12HourTime,
 } from '../../../store/supper/action'
 import { Food } from '../../../store/supper/types'
@@ -112,7 +112,7 @@ const ViewCart = () => {
             editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
             isOwner={supperGroup?.ownerId === localStorage.userID}
             supperGroupName={supperGroup?.supperGroupName ?? ''}
-            supperGroupId={readableSupperGroupId(supperGroup?.supperGroupId)}
+            supperGroupId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
             ownerName={supperGroup?.ownerName ?? ''}
             priceLimit={supperGroup?.costLimit ?? 50}
             currentAmount={supperGroup?.currentFoodCost ?? 10}

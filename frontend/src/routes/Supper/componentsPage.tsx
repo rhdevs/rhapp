@@ -37,6 +37,7 @@ import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
 import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
+import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
 
 const OptionText = styled.text`
@@ -49,6 +50,7 @@ const OptionText = styled.text`
 export default function Supper() {
   return (
     <>
+      <SupperGroupCard supperGroup={supperGroupStub} />
       <RadioButton
         margin="0 0 3px 2px"
         value="option.name"
@@ -130,7 +132,13 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
-      <ViewMenuFoodCard foodList={foodList} foodId={'12345364832764134'} menuFoodName={'McGriddles with Egg Meal'} />
+      {/* <ViewMenuFoodCard
+        foodList={foodList}
+        foodId={'12345364832764134'}
+        menuFoodName={'McGriddles with Egg Meal'}
+        supperGroupId={1}
+        orderId="1"
+      /> */}
     </>
   )
 }
