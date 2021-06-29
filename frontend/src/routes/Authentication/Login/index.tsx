@@ -14,17 +14,17 @@ const LoginContainer = styled.div`
   height: 100vh !important;
   background-color: #ffffff;
   margin: 0px 23px;
-  padding-top: 100px;
+  padding-top: 70px;
   text-align: center;
 `
 
 const InputTextLabel = styled.text`
   float: left;
-  font-size: 15px;
+  font-size: 17px;
   padding: 0px 0px 4px 0px;
   font-family: Inter;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 200;
 `
 
 const Logo = styled.img`
@@ -35,14 +35,16 @@ const Logo = styled.img`
 
 const PostButton = styled.div`
   text-align: center;
+  .ant-btn {
+    font-size: 17px;
+    letter-spacing: 0em;
+    text-align: center;
+    font-weight: 200;
+  }
   .ant-btn-primary {
     background-color: #de5f4c;
     border-color: #de5f4c;
-    font-size: 14px;
-    letter-spacing: 0em;
-    text-align: center;
     width: 100%;
-    border-radius: 8px;
     margin-top: 10px;
   }
   .ant-btn-primary:focus {
@@ -60,6 +62,22 @@ const PostButton = styled.div`
 `
 const AlertGroup = styled.div`
   margin: 23px;
+`
+const StyledUsernameInput = styled.div`
+  .ant-input {
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: 200;
+  }
+`
+const StyledPasswordInput = styled.div`
+  .ant-input-password {
+    border-radius: 20px;
+    font-size: 20px;
+  }
+  .ant-input {
+    border-radius: 15px;
+  }
 `
 
 export default function Login() {
@@ -123,26 +141,30 @@ export default function Login() {
           <Logo src={logo} />
           <br />
           <InputTextLabel>Username: </InputTextLabel>
-          <Input
-            type="text"
-            placeholder="Matric Number"
-            value={username}
-            onChange={(e) => {
-              const newUsername = e.target.value
-              setUsername(newUsername.toUpperCase())
-            }}
-          />
+          <StyledUsernameInput>
+            <Input
+              type="text"
+              placeholder="Matric Number"
+              value={username}
+              onChange={(e) => {
+                const newUsername = e.target.value
+                setUsername(newUsername.toUpperCase())
+              }}
+            />
+          </StyledUsernameInput>
           <br />
           <br />
           <InputTextLabel>Password: </InputTextLabel>
-          <Input.Password
-            type="password"
-            placeholder="Enter Password"
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-            onPressEnter={loginHandler}
-          />
+          <StyledPasswordInput>
+            <Input.Password
+              type="password"
+              placeholder="Enter Password"
+              onChange={(e) => {
+                setPassword(e.target.value)
+              }}
+              onPressEnter={loginHandler}
+            />
+          </StyledPasswordInput>
           <br /> <br />
           {error.message !== '' && (
             <AlertGroup>
@@ -150,14 +172,16 @@ export default function Login() {
             </AlertGroup>
           )}
           <PostButton>
-            <Button type="primary" block onClick={loginHandler}>
+            <Button type="primary" shape="round" size="large" block onClick={loginHandler}>
               Login
             </Button>
           </PostButton>
           <br />
           <PostButton>
             <Button
-              type="dashed"
+              type="default"
+              shape="round"
+              size="large"
               block
               onClick={() => {
                 history.push(PATHS.SIGNUP_PAGE)
