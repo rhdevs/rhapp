@@ -79,6 +79,7 @@ const VenueOptions = styled.label`
 const Venueinput = styled.input`
   display: flex;
   justify-content: space-around;
+  filter: invert(4%) sepia(0%) saturate(0%) hue-rotate(153deg) brightness(95%) contrast(88%);
 `
 
 const TimeSelectionContainer = styled.div`
@@ -155,27 +156,27 @@ function JCRCBlockOutModal({
 
             <VenueOptions>
               Band Room
-              <input type="checkbox"></input>
+              <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
 
             <VenueOptions>
               Conference Room
-              <input type="checkbox"></input>
+              <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
 
             <VenueOptions>
               Lounge
-              <input type="checkbox"></input>
+              <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
 
             <VenueOptions>
               Hardcourt
-              <input type="checkbox"></input>
+              <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
 
             <VenueOptions>
               Main Area
-              <input type="checkbox"></input>
+              <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
           </VenueSelection>
         </VenueSelectionContainer>
