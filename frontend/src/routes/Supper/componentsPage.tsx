@@ -38,7 +38,7 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
-import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
+import { ShareCard } from '../../components/Supper/ShareCard'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -139,6 +139,7 @@ export default function Supper() {
         supperGroupId={1}
         orderId="1"
       /> */}
+      <ShareCard telelink={'www.google.com'} />
     </>
   )
 }
