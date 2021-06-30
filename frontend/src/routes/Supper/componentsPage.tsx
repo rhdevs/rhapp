@@ -38,7 +38,7 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
-import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
+// import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
 
 const OptionText = styled.text`
   font-family: Inter;

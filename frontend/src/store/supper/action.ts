@@ -395,7 +395,8 @@ export const updateFoodInOrder = (newFood, orderId: string, foodId: string) => (
 }
 //------------------------ DELETE -----------------------
 
-export const deleteSupperGroup = (supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteSupperGroup = (supperGroupId?: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!supperGroupId) return
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}`)
     .then((resp) => {
