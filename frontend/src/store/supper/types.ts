@@ -146,6 +146,12 @@ export type PaymentUpdateInfo = {
   hasReceived: boolean
 }
 
+export enum UserType {
+  OWNER = 'Owner',
+  USER = 'User',
+  WATCHER = 'Watcher',
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',

@@ -4,25 +4,19 @@ import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { Restaurants, SplitACMethod, SupperGroup } from '../../store/supper/types'
 import { MainCard } from './MainCard'
-import { Dropdown, Menu, Progress } from 'antd'
-import { getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
+import { Progress } from 'antd'
+import { deleteSupperGroup, getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
-import {
-  CarOutlined,
-  DeleteOutlined,
-  FieldTimeOutlined,
-  MoreOutlined,
-  ShareAltOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
 import { onRefresh } from '../../common/reloadPage'
 import { useHistory } from 'react-router-dom'
 import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
+import { MoreDropDown } from './MoreDropDown'
+import ConfirmationModal from '../Mobile/ConfirmationModal'
+import { useDispatch } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
-import redEditIcon from '../../assets/RedSupperEditIcon.svg'
-import doorIcon from '../../assets/supper/DoorIcon.svg'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -118,12 +112,6 @@ type Props = {
   userIdList?: string[] | undefined
 }
 
-enum UserType {
-  OWNER = 'Owner',
-  USER = 'User',
-  WATCHER = 'Watcher',
-}
-
 export const SupperGroupCard = (props: Props) => {
   const isLoading =
     props.supperGroup ??
@@ -136,7 +124,11 @@ export const SupperGroupCard = (props: Props) => {
       ? false
       : true
   const [hasError, setHasError] = useState<boolean>(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const history = useHistory()
+  const dispatch = useDispatch()
 
   setTimeout(() => {
     // if details still dont show after 20s, show error
@@ -150,106 +142,23 @@ export const SupperGroupCard = (props: Props) => {
     paddingRight: '2px',
   } // For time, car and user
 
-  const onShareClick = () => {
-    //TODO: @xinyee add share modal
-    console.log('Show modal to share supper group')
-  }
-
-  const dropDownComponent = (ownerId: string | undefined, userIdList: string[] | undefined) => {
-    //TODO: Update with finalised dropdown component
-    let userType
-    if (ownerId === localStorage.userID) {
-      userType = UserType.OWNER
-    } else if (userIdList?.includes(localStorage.userID)) {
-      userType = UserType.USER
-    } else {
-      userType = UserType.WATCHER
-    }
-
-    const antdIconStyling = { color: V1_RED, margin: 'auto 5px auto 0', verticalAlign: 'text-top', fontSize: '18px' }
-    const onEditClick = () => {
-      history.push(`${PATHS.EDIT_SUPPER_GROUP}/${props.supperGroupId ?? props.supperGroup?.supperGroupId}`)
-    }
-    const editIcon = <Icon src={redEditIcon} alt="Edit Icon" style={{ paddingRight: '5px' }} />
-
-    const onDeleteClick = () => {
-      //TODO: Add delete group confirmation modal
-      console.log('delete group!')
-    }
-    const deleteIcon = <DeleteOutlined style={antdIconStyling} />
-
-    const onShareClick = () => {
-      //TODO: @xinyee Add share group modal
-      console.log('share!!')
-    }
-    const shareIcon = <ShareAltOutlined style={antdIconStyling} />
-
-    const onLeaveGroup = () => {
-      //TODO: Dispatch leave group and confirmation modal
-      console.log('leave group!')
-    }
-    const leaveIcon = <Icon src={doorIcon} alt="Edit Icon" style={{ padding: '0 5px 0 0', height: '18px' }} />
-    switch (userType) {
-      case UserType.OWNER:
-        return (
-          <Menu>
-            <Menu.Item key="0" onClick={onEditClick}>
-              {editIcon} Edit Group
-            </Menu.Item>
-            <Menu.Item key="1" onClick={onDeleteClick}>
-              {deleteIcon} Delete Group
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item key="2" onClick={onShareClick}>
-              {shareIcon} Share Group
-            </Menu.Item>
-          </Menu>
-        )
-      case UserType.USER:
-        return (
-          <Menu>
-            <Menu.Item key="0" onClick={onLeaveGroup}>
-              {leaveIcon} Leave Group
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item key="2" onClick={onShareClick}>
-              {shareIcon} Share Group
-            </Menu.Item>
-          </Menu>
-        )
-      case UserType.WATCHER: //fallthrough
-      default:
-        return (
-          <Menu>
-            <Menu.Item key="0">
-              <a href="#" onClick={onShareClick}>
-                {shareIcon}Share Group
-              </a>
-            </Menu.Item>
-          </Menu>
-        )
-    }
-  }
   const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
-  const supperGroupId = getReadableSupperGroupId(props.supperGroupId ?? props.supperGroup?.supperGroupId)
+  const rawSupperGroupId = props.supperGroupId ?? props.supperGroup?.supperGroupId
+  const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
   const ownerName = `(${
     (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
       ? 'You'
       : props.ownerName ?? props.supperGroup?.ownerName ?? '-'
   })`
   const topIcon = (
-    <Dropdown
-      overlay={dropDownComponent(
-        props.ownerId ?? props.supperGroup?.ownerId,
-        props.userIdList ?? props.supperGroup?.userIdList,
-      )}
-      trigger={['click']}
-    >
-      <MoreOutlined
-        onClick={(e) => e.preventDefault()}
-        style={{ position: 'absolute', transform: 'rotate(90deg)', right: '18px', fontSize: '18px' }}
-      />
-    </Dropdown>
+    <MoreDropDown
+      ownerId={props.ownerId ?? props.supperGroup?.ownerId}
+      userIdList={props.userIdList ?? props.supperGroup?.userIdList}
+      supperGroupId={rawSupperGroupId}
+      shareModalSetter={setIsShareModalOpen}
+      deleteModalSetter={setIsDeleteModalOpen}
+      leaveModalSetter={setIsLeaveModalOpen}
+    />
   )
 
   const idText = `${supperGroupId} ${ownerName}`
@@ -260,7 +169,6 @@ export const SupperGroupCard = (props: Props) => {
   const splitMethod = props.splitAdditionalCost ?? props.supperGroup?.splitAdditionalCost
   let splitMethodIcon
 
-  // TODO: Add tool tip? const onSplitMethodIconClick = () => {}
   if (splitMethod === SplitACMethod.EQUAL) {
     splitMethodIcon = <Icon src={EqualCircle} alt="Equal" />
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
@@ -272,8 +180,50 @@ export const SupperGroupCard = (props: Props) => {
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
   const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
 
+  const shareModal = (
+    //TODO: @xinyee Add share group modal
+    <></>
+  )
+
+  const deleteModal = (
+    <ConfirmationModal
+      title="Delete group?"
+      description="Deleting group will remove everyone's cart and delete supper group."
+      hasLeftButton={true}
+      leftButtonText={'Confirm'}
+      onLeftButtonClick={() => {
+        dispatch(deleteSupperGroup(rawSupperGroupId))
+        //TODO: Check if this should be the action after deletion
+        history.goBack()
+      }}
+      rightButtonText={'Cancel'}
+      onRightButtonClick={() => setIsDeleteModalOpen(false)}
+    />
+  )
+
+  const leaveModal = (
+    <ConfirmationModal
+      title="Leave group?"
+      description="You will be removed from the supper group."
+      hasLeftButton={true}
+      leftButtonText={'Confirm'}
+      onLeftButtonClick={() => {
+        // dispatch(leaveSupperGroup(rawSupperGroupId))
+        //TODO: Check if this should be the action after leave
+        history.push(`${PATHS.SUPPER_HOME}`)
+      }}
+      rightButtonText={'Cancel'}
+      onRightButtonClick={() => setIsLeaveModalOpen(false)}
+    />
+  )
+
   return (
     <MainCard flexDirection="row" minHeight="fit-content">
+      <>
+        {isShareModalOpen && shareModal}
+        {isDeleteModalOpen && deleteModal}
+        {isLeaveModalOpen && leaveModal}
+      </>
       {hasError ? (
         <>
           <LeftContainer>
@@ -292,7 +242,7 @@ export const SupperGroupCard = (props: Props) => {
             {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
           </LeftContainer>
           <RightContainer>
-            {topIcon}
+            {!isLoading && topIcon}
             <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
             <StyledGroupNameText>
               {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
