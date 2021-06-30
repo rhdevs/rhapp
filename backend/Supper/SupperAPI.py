@@ -52,13 +52,6 @@ def make_hash(o):
     return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
-# for leewah
-# import ssl
-# myclient = client = pymongo.MongoClient(
-#     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority",
-#     ssl_cert_reqs=ssl.CERT_NONE)
-
-
 
 # session format : {userID: {
 #                           sessionID: VALUE
@@ -973,50 +966,67 @@ def order_payments(supperGroupId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/supperGroup/<int:supperGroupId>/user/<userID>', methods=['GET'])
+@supper_api.route('/supperGroup/<int:supperGroupId>/user/<userID>', methods=['GET', 'DELETE'])
 @cross_origin(supports_credentials=True)
 def user_order(supperGroupId, userID):
     try:
-        pipeline = [
-            {'$match': {'userID': userID, 'supperGroupId': supperGroupId}},
-            {
-                '$lookup': {
-                    'from': 'FoodOrder',
-                    'localField': 'foodIds',
-                    'foreignField': '_id',
-                    'as': 'foodList'
-                }
-            },
-            {
-                '$lookup': {
-                    'from': 'Profiles',
-                    'localField': userID,
-                    'foreignField': 'userID',
-                    'as': 'user'
-                }
-            },
-            {'$project': {'foodIds': 0}}
-        ]
+        if request.method == 'GET':
+            pipeline = [
+                {'$match': {'userID': userID, 'supperGroupId': supperGroupId}},
+                {
+                    '$lookup': {
+                        'from': 'FoodOrder',
+                        'localField': 'foodIds',
+                        'foreignField': '_id',
+                        'as': 'foodList'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'Profiles',
+                        'localField': userID,
+                        'foreignField': 'userID',
+                        'as': 'user'
+                    }
+                },
+                {'$project': {'foodIds': 0}}
+            ]
 
-        temp = db.Order.aggregate(pipeline)
-        data = None
+            temp = db.Order.aggregate(pipeline)
+            data = None
 
-        # Only 1 item in temp, can only access it like this otherwise its a mongo array object
-        for item in temp:
-            data = item
+            # Only 1 item in temp, can only access it like this otherwise its a mongo array object
+            for item in temp:
+                data = item
 
-        if data is None:
-            raise Exception("User " + str(userID) + " was not found in supper group " + str(supperGroupId))
+            if data is None:
+                raise Exception("User " + str(userID) + " was not found in supper group " + str(supperGroupId))
 
-        data['orderId'] = str(data.pop('_id'))
+            data['orderId'] = str(data.pop('_id'))
 
-        for food in data["foodList"]:
-            # rename _id field to foodId and unbox mongo object
-            food["foodId"] = str(food.pop('_id'))
-            food["restaurantId"] = str(food.pop('restaurantId'))
-            food["foodMenuId"] = str(food.pop('foodMenuId'))
+            for food in data["foodList"]:
+                # rename _id field to foodId and unbox mongo object
+                food["foodId"] = str(food.pop('_id'))
+                food["restaurantId"] = str(food.pop('restaurantId'))
+                food["foodMenuId"] = str(food.pop('foodMenuId'))
 
-        response = {"status": "success", "data": data}
+            response = {"status": "success", "data": data}
+        elif request.method == 'DELETE':
+            order_info = list(db.Order.find(
+                {'userID': userID}, {'foodIds': 1, '_id': 1}))
+            if order_info:
+                order_info = order_info[0]
+            foods = order_info['foodIds']
+
+            result = db.Order.delete_one({"_id": order_info['_id']})
+            if result.deleted_count == 0:
+                raise Exception("Order not found")
+
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
+
+            response = {"status": "success",
+                        "message": "Successfully deleted order!"}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
