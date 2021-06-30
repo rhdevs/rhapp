@@ -131,11 +131,11 @@ export const SupperGroupCard = (props: Props) => {
   const dispatch = useDispatch()
 
   setTimeout(() => {
-    // if details still dont show after 20s, show error
+    // if details still dont show after 10s, show error
     if (isLoading) {
       setHasError(true)
     }
-  }, 20000)
+  }, 10000)
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',
