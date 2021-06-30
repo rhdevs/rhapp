@@ -6,13 +6,12 @@ import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
 
 import { PATHS } from '../../Routes'
-import logo from '../../../assets/white_logo.png'
+import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
-  background-color: #ffffff;
   margin: 0px 23px;
   padding-top: 70px;
   text-align: center;
@@ -134,7 +133,7 @@ export default function Login() {
   }
 
   return (
-    <div style={{ backgroundColor: '#ffffff' }}>
+    <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <LoginContainer>
