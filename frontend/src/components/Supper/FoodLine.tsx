@@ -9,18 +9,32 @@ import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
 
-const Background = styled.div<{ color?: string; hasFoodName?: boolean; margin?: string }>`
+const Background = styled.div<{
+  backgroundColor?: string
+  hasFoodName?: boolean
+  margin?: string
+  padding?: string
+  hasNoQuantity?: boolean | undefined
+  borderRadius?: string
+}>`
   display: grid;
-  grid-template-columns: 10% auto auto;
+  grid-template-columns: ${(props) => (props.hasNoQuantity ? '' : '10%')} auto auto;
   grid-template-rows: max-content;
   ${(props) =>
     props.hasFoodName
-      ? `grid-template-areas: "quantity name price" ". main icon";`
-      : `grid-template-areas: "quantity main price" ". main icon";`}
+      ? `grid-template-areas: "${props.hasNoQuantity ? '' : `quantity`} name price"  "${
+          props.hasNoQuantity ? '' : `.`
+        } main icon";`
+      : `grid-template-areas: "${props.hasNoQuantity ? '' : `quantity`} main price"  "${
+          props.hasNoQuantity ? '' : `.`
+        } main icon";`}
   gap: 0px 10px;
   justify-items: stretch;
   margin: ${(props) => props.margin ?? '10px'};
+  ${(props) => props.padding && `padding: ${props.padding};`}
   align-items: baseline;
+  ${(props) => props.backgroundColor && `background: ${props.backgroundColor};`}
+  ${(props) => props.borderRadius && `border-radius: ${props.borderRadius};`}
 `
 
 const QuantityContainer = styled.div`
@@ -104,6 +118,10 @@ const StyledEditedText = styled.text`
 `
 
 type Props = {
+  backgroundColor?: string
+  borderRadius?: string
+  margin?: string
+  padding?: string
   supperGroupId?: number
   orderId?: string
   foodId?: string
@@ -122,7 +140,7 @@ type Props = {
   wasEditedModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const FoodLine = (props: Props) => {
-  const isLoading = props.food || (props.quantity && props.foodPrice && props.cancelAction) ? false : true
+  const isLoading = props.food || (props.foodPrice && props.cancelAction) ? false : true
   const [hasError, setHasError] = useState<boolean>(false)
   setTimeout(() => {
     if (isLoading) {
@@ -164,8 +182,15 @@ export const FoodLine = (props: Props) => {
   return (
     <>
       {!hasError && (
-        <Background hasFoodName={hasFoodName}>
-          <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
+        <Background
+          borderRadius={props.borderRadius}
+          backgroundColor={props.backgroundColor}
+          hasNoQuantity={quantity ? false : true}
+          margin={props.margin}
+          padding={props.padding}
+          hasFoodName={hasFoodName}
+        >
+          {quantity && <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>}
           {foodName && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
