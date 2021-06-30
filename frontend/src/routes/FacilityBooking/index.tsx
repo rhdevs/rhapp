@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
+import JCRCBlockOutIcon from '../../assets/JCRCBlockOut.svg'
 import { PATHS } from '../Routes'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
@@ -27,6 +28,7 @@ import PoolAreaLL from '../../assets/facilitiesLogos/PoolAreaLL.svg'
 import Stage from '../../assets/facilitiesLogos/Stage.svg'
 import TVRoom from '../../assets/facilitiesLogos/TVRoom.svg'
 import DummyAvatar from '../../assets/dummyAvatar.svg'
+import JCRCBlockOutModal from '../../components/Mobile/JCRCBlockOutModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -135,6 +137,7 @@ export default function FacilityBooking() {
   const { facilityList, locationList, selectedTab, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
+  const [JCRCBlockOutPopUp, setJCRCBlockOutPopUp] = useState(true)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
@@ -146,6 +149,15 @@ export default function FacilityBooking() {
       src={bookingsIcon}
       onClick={() => {
         history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+      }}
+    />
+  )
+
+  const JCRCBlockOutButton = (
+    <img
+      src={JCRCBlockOutIcon}
+      onClick={() => {
+        setJCRCBlockOutPopUp(true)
       }}
     />
   )
@@ -191,9 +203,23 @@ export default function FacilityBooking() {
     }
   }
 
+  const onConfirmDeleteClick = () => {
+    setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+    // dispatch(DeletePost(postId))
+  }
+
+  const onDeleteClick = () => {
+    setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+  }
+
   return (
     <>
-      <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
+      <TopNavBar
+        title={'Facilities'}
+        leftIcon={true}
+        centerComponent={JCRCBlockOutButton}
+        rightComponent={MyBookingIcon}
+      />
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && (
@@ -208,6 +234,16 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             <StyledBodyDiv>
+              {JCRCBlockOutPopUp && (
+                <JCRCBlockOutModal
+                  title={'Facilities Blocking'}
+                  hasLeftButton={true}
+                  leftButtonText={'Done'}
+                  onLeftButtonClick={onConfirmDeleteClick}
+                  rightButtonText={'Cancel'}
+                  onRightButtonClick={onDeleteClick}
+                />
+              )}
               {facilityList.map((facility) => {
                 if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
                   return (
