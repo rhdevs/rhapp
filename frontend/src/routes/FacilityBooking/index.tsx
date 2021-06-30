@@ -137,7 +137,7 @@ export default function FacilityBooking() {
   const { facilityList, locationList, selectedTab, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
-  const [JCRCBlockOutPopUp, setJCRCBlockOutPopUp] = useState(true)
+  const [JCRCBlockOutPopUp, setJCRCBlockOutPopUp] = useState(false)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
@@ -234,7 +234,7 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             <StyledBodyDiv>
-              {!JCRCBlockOutPopUp && (
+              {JCRCBlockOutPopUp && (
                 <JCRCBlockOutModal
                   title={'Facilities Blocking'}
                   hasLeftButton={true}
