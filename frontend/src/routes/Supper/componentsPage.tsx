@@ -140,7 +140,7 @@ export default function Supper() {
         supperGroupId={1}
         orderId="1"
       /> */}
-      <ShareCard telelink={'www.google.com'} />
+      <ShareCard />
     </>
   )
 }

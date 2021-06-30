@@ -1,9 +1,10 @@
-import { CloseOutlined, CopyFilled } from '@ant-design/icons'
 import React from 'react'
 
 import styled from 'styled-components'
 import { RhAppQrCode } from '../RhAppQrCode'
 import { MainCard } from './MainCard'
+import { CloseOutlined, CopyFilled } from '@ant-design/icons'
+import telegram_black from '../../assets/telegram_black.svg'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -23,7 +24,7 @@ const QRContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 30px 0px;
+  margin: 20px 0;
 `
 
 const QRCode = styled(CloseOutlined)`
@@ -33,17 +34,24 @@ const QRCode = styled(CloseOutlined)`
 const QRLinkContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   border: 1px solid #d9d9d9;
   box-sizing: border-box;
   height: 31px;
   border-radius: 2px;
+  width: 100%;
+  margin: 20px 30px 0 30px;
 `
 
-const LinkContainer = styled.input``
+const LinkContainer = styled.div`
+  padding: 0px 10px;
+  align-items: center;
+`
+
+const LinkText = styled.text``
 
 const CopyButtonContainer = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 0px 5px;
@@ -51,13 +59,16 @@ const CopyButtonContainer = styled.div`
   box-sizing: border-box;
 `
 
-const ButtonContainer = styled.img``
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
-type Props = {
-  telelink: string | undefined
-}
+const Button = styled.img`
+  width: 40px;
+`
 
-export const ShareCard = (props: Props) => {
+export const ShareCard = () => {
   return (
     <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
       <HeaderContainer>
@@ -67,13 +78,17 @@ export const ShareCard = (props: Props) => {
       <QRContainer>
         <RhAppQrCode link="google.com" />
         <QRLinkContainer>
-          <LinkContainer>{props.telelink}</LinkContainer>
+          <LinkContainer>
+            <LinkText>www.google.com</LinkText>
+          </LinkContainer>
           <CopyButtonContainer>
             <CopyFilled />
           </CopyButtonContainer>
         </QRLinkContainer>
       </QRContainer>
-      <ButtonContainer src={'../../assets/telegram_black.svg'} alt="tele button" />
+      <ButtonContainer>
+        <Button src={telegram_black} alt="tele button" />
+      </ButtonContainer>
     </MainCard>
   )
 }
