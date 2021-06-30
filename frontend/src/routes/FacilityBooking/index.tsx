@@ -234,7 +234,7 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             <StyledBodyDiv>
-              {JCRCBlockOutPopUp && (
+              {!JCRCBlockOutPopUp && (
                 <JCRCBlockOutModal
                   title={'Facilities Blocking'}
                   hasLeftButton={true}
