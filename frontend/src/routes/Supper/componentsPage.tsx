@@ -53,7 +53,7 @@ export default function Supper() {
   return (
     <>
       <div style={{ width: '80vw' }}>
-        <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
+        <FoodLine wasEdited backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
       <OrderCard
         isEditable
