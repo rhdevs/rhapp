@@ -58,6 +58,10 @@ const PostButton = styled.div`
     background: #de5f4c;
     border-color: #de5f4c;
   }
+  .ant-btn-default: {
+    float: left;
+    width: 50% !important;
+  }
 `
 const AlertGroup = styled.div`
   margin: 0px;
@@ -186,6 +190,17 @@ export default function Login() {
               }}
             >
               Register
+            </Button>
+            <Button
+              type="default"
+              shape="round"
+              size="large"
+              block
+              onClick={() => {
+                history.push(PATHS.FORGET_PASSWORD_PAGE)
+              }}
+            >
+              Forget Password
             </Button>
           </PostButton>
         </LoginContainer>
