@@ -102,6 +102,12 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), userID)):
+            raise Exception("Auth Failure")
+
         pipeline = [
             {'$match':
                 {'$and': [
@@ -269,6 +275,7 @@ def add_booking():
 def edit_booking(bookingID):
     try:
         formData = request.get_json()
+
         if not formData.get("ccaID"):
             formData["ccaID"] = int(0)
         else:
@@ -278,6 +285,12 @@ def edit_booking(bookingID):
 
         if (len(data) == 0):
             raise Exception("Booking not found")
+
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), data[0].userID)):
+            raise Exception("Auth Failure")
 
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
             "$set": request.get_json()})
@@ -302,6 +315,12 @@ def delete_booking(bookingID):
     try:
 
         data = list(db.Bookings.find({"bookingID": int(bookingID)}))
+
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), data[0].userID)):
+            raise Exception("Auth Failure")
 
         if (len(data) == 0):
             raise Exception("Booking not found")
