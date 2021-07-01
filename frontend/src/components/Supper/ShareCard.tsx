@@ -5,6 +5,7 @@ import { RhAppQrCode } from '../RhAppQrCode'
 import { MainCard } from './MainCard'
 import { CloseOutlined, CopyFilled } from '@ant-design/icons'
 import telegram_black from '../../assets/telegram_black.svg'
+import { useHistory } from 'react-router-dom'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -27,7 +28,7 @@ const QRContainer = styled.div`
   margin: 20px 0;
 `
 
-const QRCode = styled(CloseOutlined)`
+const CloseButton = styled(CloseOutlined)`
   font-size: 21px;
 `
 
@@ -68,26 +69,40 @@ const Button = styled.img`
   width: 40px;
 `
 
-export const ShareCard = () => {
+type Props = {
+  header: string
+  copyLink: string
+  qrLink: string
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  copyOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+}
+
+export const ShareCard = (props: Props) => {
+  const history = useHistory()
+
+  const onCloseClick = () => {
+    history.goBack()
+  }
+
   return (
     <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
       <HeaderContainer>
-        <HeaderText>Share supper group link</HeaderText>
-        <QRCode />
+        <HeaderText>{props.header}</HeaderText>
+        <CloseButton onClick={onCloseClick} />
       </HeaderContainer>
       <QRContainer>
-        <RhAppQrCode link="google.com" />
+        <RhAppQrCode link={props.qrLink} />
         <QRLinkContainer>
           <LinkContainer>
-            <LinkText>www.google.com</LinkText>
+            <LinkText>{props.copyLink}</LinkText>
           </LinkContainer>
           <CopyButtonContainer>
-            <CopyFilled />
+            <CopyFilled onClick={props.copyOnClick} />
           </CopyButtonContainer>
         </QRLinkContainer>
       </QRContainer>
       <ButtonContainer>
-        <Button src={telegram_black} alt="tele button" />
+        <Button src={telegram_black} alt="tele button" onClick={props.onClick} />
       </ButtonContainer>
     </MainCard>
   )

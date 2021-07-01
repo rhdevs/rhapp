@@ -140,7 +140,7 @@ export default function Supper() {
         supperGroupId={1}
         orderId="1"
       /> */}
-      <ShareCard />
+      <ShareCard header={'Share supper group link'} qrLink={'www.google.com'} copyLink={'www.telemelink.com'} />
     </>
   )
 }
