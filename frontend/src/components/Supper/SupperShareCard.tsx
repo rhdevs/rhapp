@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { RhAppQrCode } from '../RhAppQrCode'
 import { MainCard } from './MainCard'
 import { CloseOutlined, CopyFilled } from '@ant-design/icons'
-import telegram_black from '../../assets/telegram_black.svg'
 import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../routes/Routes'
+import { SGTelegramShareButton } from './SGTelegramShareButton'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -37,7 +39,6 @@ const QRLinkContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   border: 1px solid #d9d9d9;
-  box-sizing: border-box;
   height: 31px;
   border-radius: 2px;
   width: 100%;
@@ -47,6 +48,8 @@ const QRLinkContainer = styled.div`
 const LinkContainer = styled.div`
   padding: 0px 10px;
   align-items: center;
+  overflow: hidden;
+  width: 90%;
 `
 
 const LinkText = styled.text``
@@ -65,20 +68,13 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `
 
-const Button = styled.img`
-  width: 40px;
-`
-
 type Props = {
-  header: string
-  copyLink: string
-  qrLink: string
-  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  copyOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  supperGroupId: string
 }
 
-export const ShareCard = (props: Props) => {
+export const SupperShareCard = (props: Props) => {
   const history = useHistory()
+  const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.supperGroupId}`
 
   const onCloseClick = () => {
     history.goBack()
@@ -87,22 +83,24 @@ export const ShareCard = (props: Props) => {
   return (
     <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
       <HeaderContainer>
-        <HeaderText>{props.header}</HeaderText>
+        <HeaderText>Share supper group link</HeaderText>
         <CloseButton onClick={onCloseClick} />
       </HeaderContainer>
       <QRContainer>
-        <RhAppQrCode link={props.qrLink} />
+        <RhAppQrCode link={link} />
         <QRLinkContainer>
           <LinkContainer>
-            <LinkText>{props.copyLink}</LinkText>
+            <LinkText>{link}</LinkText>
           </LinkContainer>
-          <CopyButtonContainer>
-            <CopyFilled onClick={props.copyOnClick} />
-          </CopyButtonContainer>
+          <CopyToClipboard text={link}>
+            <CopyButtonContainer>
+              <CopyFilled />
+            </CopyButtonContainer>
+          </CopyToClipboard>
         </QRLinkContainer>
       </QRContainer>
       <ButtonContainer>
-        <Button src={telegram_black} alt="tele button" onClick={props.onClick} />
+        <SGTelegramShareButton url={link} text={'Click the link to join the supper group!'} />
       </ButtonContainer>
     </MainCard>
   )

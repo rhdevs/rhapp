@@ -38,7 +38,7 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
-import { ShareCard } from '../../components/Supper/ShareCard'
+import { SupperShareCard } from '../../components/Supper/SupperShareCard'
 // import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
 
 const OptionText = styled.text`
@@ -140,7 +140,7 @@ export default function Supper() {
         supperGroupId={1}
         orderId="1"
       /> */}
-      <ShareCard header={'Share supper group link'} qrLink={'www.google.com'} copyLink={'www.telemelink.com'} />
+      <SupperShareCard supperGroupId={'jksnefel'} />
     </>
   )
 }
