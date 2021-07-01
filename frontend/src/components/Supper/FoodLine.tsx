@@ -8,6 +8,7 @@ import { CancelAction, Food } from '../../store/supper/types'
 import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
+import { onRefresh } from '../../common/reloadPage'
 
 const Background = styled.div<{
   backgroundColor?: string
@@ -90,7 +91,7 @@ const Icon = styled.img`
 
 const StyledText = styled.text<{ color?: string }>`
   font-style: normal;
-  font-weight: 300;
+  font-weight: 200;
   font-size: 12px;
   line-height: 15px;
   color: ${(props) => props.color ?? 'black'};
@@ -117,6 +118,12 @@ const StyledEditedText = styled.text`
   color: ${V1_RED};
 `
 
+const ErrorText = styled.text`
+  text-align: center;
+  color: ${V1_RED};
+  font-family: 'Inter';
+`
+
 type Props = {
   backgroundColor?: string
   borderRadius?: string
@@ -136,6 +143,7 @@ type Props = {
   comments?: string
   cancelAction?: CancelAction
   // Actions
+  showError?: boolean
   isCancelActionClickable?: boolean
   cancelActionModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
   isEditable?: boolean
@@ -185,17 +193,24 @@ export const FoodLine = (props: Props) => {
   const onOwnerEditClick = () => {
     if (props.wasEditedModalSetter) props.wasEditedModalSetter(true)
   }
-  return (
-    <>
-      {!hasError && (
-        <Background
-          borderRadius={props.borderRadius}
-          backgroundColor={props.backgroundColor}
-          hasNoQuantity={hasNoQuantity}
-          margin={props.margin}
-          padding={props.padding}
-          hasFoodName={hasFoodName}
-        >
+
+  const content = () => {
+    if (hasError) {
+      if (props.showError) {
+        return (
+          <>
+            <ErrorText>
+              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or
+              <u onClick={() => history.goBack()}> go back</u>.
+            </ErrorText>
+          </>
+        )
+      } else {
+        return <></>
+      }
+    } else {
+      return (
+        <>
           {quantity && !hasNoQuantity && (
             <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
           )}
@@ -235,8 +250,20 @@ export const FoodLine = (props: Props) => {
               )}
             </IconContainer>
           )}
-        </Background>
-      )}
-    </>
+        </>
+      )
+    }
+  }
+  return (
+    <Background
+      borderRadius={props.borderRadius}
+      backgroundColor={props.backgroundColor}
+      hasNoQuantity={hasNoQuantity}
+      margin={props.margin}
+      padding={props.padding}
+      hasFoodName={hasFoodName}
+    >
+      {content()}
+    </Background>
   )
 }
