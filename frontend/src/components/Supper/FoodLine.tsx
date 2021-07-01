@@ -18,7 +18,7 @@ const Background = styled.div<{
   borderRadius?: string
 }>`
   display: grid;
-  grid-template-columns: ${(props) => (props.hasNoQuantity ? '' : '10%')} auto auto;
+  grid-template-columns: ${(props) => (props.hasNoQuantity ? '' : '8%')} auto auto;
   grid-template-rows: max-content;
   ${(props) =>
     props.hasFoodName
@@ -122,16 +122,20 @@ type Props = {
   borderRadius?: string
   margin?: string
   padding?: string
+  // Required parameters for editing
   supperGroupId?: number
   orderId?: string
-  foodId?: string
+  // Food details parameters
   food?: Food
+  hasNoQuantity?: boolean
+  foodId?: string
   quantity?: number
   foodName?: string
   foodPrice?: number
   customisations?: string[]
   comments?: string
   cancelAction?: CancelAction
+  // Actions
   isCancelActionClickable?: boolean
   cancelActionModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
   isEditable?: boolean
@@ -150,6 +154,8 @@ export const FoodLine = (props: Props) => {
   const history = useHistory()
   const foodId = props.food?.foodId ?? props.foodId
   const quantity = props.food?.quantity ?? props.quantity
+  let hasNoQuantity = props.hasNoQuantity
+  if (hasNoQuantity === undefined) hasNoQuantity = quantity ? false : true
   const foodName = props.food?.foodName ?? props.foodName
   const hasFoodName = foodName ? true : false
   const price = `$${(props.food?.foodPrice ?? props.foodPrice ?? 0).toFixed(2)}`
@@ -185,12 +191,14 @@ export const FoodLine = (props: Props) => {
         <Background
           borderRadius={props.borderRadius}
           backgroundColor={props.backgroundColor}
-          hasNoQuantity={quantity ? false : true}
+          hasNoQuantity={hasNoQuantity}
           margin={props.margin}
           padding={props.padding}
           hasFoodName={hasFoodName}
         >
-          {quantity && <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>}
+          {quantity && !hasNoQuantity && (
+            <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
+          )}
           {foodName && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
