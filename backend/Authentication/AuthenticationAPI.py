@@ -1,3 +1,6 @@
+from flask_mail import Mail, Message
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from db import *
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 import os
@@ -9,26 +12,25 @@ from functools import wraps
 from flask import Blueprint
 from flask import current_app
 sys.path.append("../")
-from db import *
-from main import *
 
 authentication_api = Blueprint("authentication", __name__)
 
 #### FORGOT PASSWORD STUFF ####
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask_mail import Mail, Message
 
-current_app.config['MAIL_SERVER']='smtp.googlemail.com'
-current_app.config['MAIL_PORT'] = 587
-current_app.config['MAIL_USERNAME'] = 'example@gmail.com'
-current_app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
-current_app.config['MAIL_USE_TLS'] = True
-current_app.config['MAIL_USE_SSL'] = False
-mail = Mail(current_app)
+
+def load_mail():
+    current_app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+    current_app.config['MAIL_PORT'] = 587
+    current_app.config['MAIL_USERNAME'] = 'example@gmail.com'
+    current_app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')
+    current_app.config['MAIL_USE_TLS'] = True
+    current_app.config['MAIL_USE_SSL'] = False
+    return Mail(current_app)
 
 # Uncomment the create_index command if you need to recreate the expiration index for Session collection
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
 # db.Session.create_index("createdAt", expireAfterSeconds = 120)
+
 
 db.PasswordResetSession.create_index("createdAt", expireAfterSeconds=300)
 
@@ -108,7 +110,7 @@ def register():
                             "position": position
                             })
         db.Profiles.insert_one({"userID": userID,
-                               "displayName": displayName,
+                                "displayName": displayName,
                                 "bio": bio,
                                 "block": block,
                                 "telegramHandle": telegramHandle,
@@ -174,6 +176,7 @@ def logout():
         return jsonify({'message': 'An error occurred'}), 500
     return jsonify({'message': 'You have been successfully logged out'}), 200
 
+
 """
 https://stackoverflow.com/questions/23039734/flask-login-password-reset
 https://www.youtube.com/watch?v=zYWpEJAHvaI
@@ -183,12 +186,13 @@ Asks the user for email to send password reset token.
 Check if email exists in database of users.
 If so, create reset token (valid for fixed period eg 15 mins?), send link with /auth/reset?token=<token> to user email
 """
-#@authentication_api.route('/forgot', methods=['GET'])
-#def renderForgotPage():
+# @authentication_api.route('/forgot', methods=['GET'])
+# def renderForgotPage():
 #    pass #render form template to submit email here
 
 ser = Serializer("secret", expires_in=60)
 db.PasswordResetSession.create_index("createdAt", expireAfterSeconds=300)
+
 
 @authentication_api.route('/forgot', methods=['POST'])
 def submitEmail():
@@ -199,10 +203,11 @@ def submitEmail():
     # if there is a user associated with the email, create password reset token then send email with reset token
     if associatedUser:
         newResetToken = ser.dumps(associatedUser['userID']).decode('utf-8')
-        db.PasswordResetSession.insert_one({'userID': associatedUser['userID'], 'email': email})
+        db.PasswordResetSession.insert_one(
+            {'userID': associatedUser['userID'], 'email': email})
         msg = Message('Password Reset for RHApp',
-                sender = current_app.config.get("MAIL_USERNAME"),
-                recipients = [email])
+                      sender=current_app.config.get("MAIL_USERNAME"),
+                      recipients=[email])
         msg.body = f'''To reset your password, please visit this URL: 
         
         {url_for('reset_token', token=newResetToken,_external=True)}
@@ -210,10 +215,10 @@ def submitEmail():
         If you didn't request for a password reset, please ignore this message.
         
         '''
+        mail = load_mail()
         mail.send(msg)
     # print message regardless of whether email is valid or not
     return jsonify({'message': 'You will receive an email if there is an account associated with the email address'}), 200
- 
 
 
 """
@@ -221,22 +226,23 @@ Reset route:
 Check if the token is valid.
 If valid, ask for their password, hash on client-side, update relevant DB User entry
 """
+
+
 @authentication_api.route('/auth/reset/<token>', methods=['GET'])
 def reset_token(token):
-    try: 
+    try:
         associatedUser = ser.loads(token)['userID']
     except:
         associatedUser = None
-    userRequestingReset = db.PasswordResetSession.find_one({'userID': associatedUser['userID']})
+    userRequestingReset = db.PasswordResetSession.find_one(
+        {'userID': associatedUser['userID']})
     print("userRequestingReset: " + userRequestingReset)
     if ((associatedUser is None) or (userRequestingReset is None)):
         return jsonify({'message': "Token is invalid or expired. Please try again."}), 403
     return jsonify({'message': "Redirecting to password reset page"}), 403
 
 
-#TODO: 
-#@authentication_api.route('/reset/<token>', methods=['POST'])
+# TODO:
+# @authentication_api.route('/reset/<token>', methods=['POST'])
 # update DB User entry with password
 # remove token from PasswordResetSession table
-
-
