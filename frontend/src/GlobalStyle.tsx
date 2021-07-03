@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
+// TODO: Fix this error (not changed bc it will mess up our current ui since different weights are not imported)
 const GlobalStyle = createGlobalStyle`
   body {
     color: #fafaf4

@@ -5,8 +5,7 @@ import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
 import { Food, PaymentMethod } from '../../store/supper/types'
 import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
-import telegram_black from '../../assets/telegram_black.svg'
-import { OpenUserTelegram } from '../TelegramShareButton'
+import { TelegramShareButton } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
@@ -179,13 +178,7 @@ export const UserPaymentStatus = (props: Props) => {
           <>
             <DetailsContainer>
               {props.phoneNumber}
-              <img
-                onClick={() => {
-                  OpenUserTelegram(props.telegramHandle)
-                }}
-                src={telegram_black}
-                alt="Telegram Icon"
-              />
+              <TelegramShareButton telegramHandle={props.telegramHandle} />
             </DetailsContainer>
             {props.foodList.map((food, index) => {
               const customisations: string[] = []

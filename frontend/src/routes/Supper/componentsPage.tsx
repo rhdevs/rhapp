@@ -38,6 +38,8 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
+import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
+import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
 
 const OptionText = styled.text`
@@ -50,6 +52,18 @@ const OptionText = styled.text`
 export default function Supper() {
   return (
     <>
+      <div style={{ width: '80vw' }}>
+        <FoodLine wasEdited backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
+      </div>
+      <OrderCard
+        order={orderList[0]}
+        ownerId={'A1234567B'}
+        // isEditable
+        supperGroupStatus={supperGroupStub.status}
+        // ownerId={localStorage.userID}
+        // foodList={foodList}
+        supperGroup={supperGroupStub}
+      />
       <SupperGroupCard supperGroup={supperGroupStub} />
       <RadioButton
         margin="0 0 3px 2px"
