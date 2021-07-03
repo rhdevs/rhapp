@@ -147,7 +147,7 @@ export const OrderCard = (props: Props) => {
   const wasEdited = props.wasEdited ?? false
   const supperGroupId = props.supperGroup?.supperGroupId ?? props.order?.supperGroupId ?? props.supperGroupId
   const orderId = props.order?.orderId ?? props.orderId
-  const isOwner = localStorage.userID === (props.supperGroup?.ownerId ?? props.ownerId)
+  const isOwner = localStorage.userID !== (props.supperGroup?.ownerId ?? props.ownerId)
   const supperGroupStatus = props.supperGroup?.status ?? props.supperGroupStatus
   const supperGroupIsOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
@@ -206,7 +206,13 @@ export const OrderCard = (props: Props) => {
       <>
         <EmptyCart />
         <EmptyTextContainer>
-          Cart is empty. <UnderlinedButton text="Add item" fontSize="12px" color="red" />
+          Cart is empty.{' '}
+          <UnderlinedButton
+            onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+            text="Add item"
+            fontSize="12px"
+            color="red"
+          />
         </EmptyTextContainer>
       </>
     )
