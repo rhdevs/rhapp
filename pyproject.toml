@@ -8,14 +8,15 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.8"
 pymongo = "^3.11.2"
 flask = "^1.1.2"
-bson = "^0.5.10"
 dnspython = "^2.0.0"
 flask-cors = "^3.0.10"
 pyjwt = "^2.0.1"
-jwt = "^1.2.0"
 gevent = "^21.1.2"
 db = "^0.1.1"
 apscheduler = "^3.7.0"
+jwt = "^1.2.0"
+Flask-Mail = "^0.9.1"
+itsdangerous = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 
