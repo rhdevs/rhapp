@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { Input, Space, Button, Alert } from 'antd'
 import { useParams, useHistory } from 'react-router-dom'
-import { post, ENDPOINTS, DOMAINS } from '../../../store/endpoints'
+import { post, ENDPOINTS, DOMAINS, get } from '../../../store/endpoints'
+import sha256 from 'crypto-js/sha256'
+import InvalidToken from '../../ErrorPages/InvalidToken'
 
 const MainContainer = styled.div`
   height: 100vh;
@@ -37,28 +39,39 @@ const AlertGroup = styled.div`
   margin: 0px;
 `
 
-const handleClick = () => {
-  alert('Comfirmation Modal HERE')
-}
-
 export default function ChangePassword() {
   const [password1, setPassword1] = useState('')
   const [password2, setPassword2] = useState('')
   const [error, setError] = useState({ message: '' })
+  const [validToken, setTokenValidity] = useState(true)
   const history = useHistory()
   const params = useParams<{ resetToken: string }>()
+
+  useEffect(() => {
+    get(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, `/${params.resetToken}`)
+      .then((resp) => resp.json())
+      .then((resp) => {
+        if (resp.status !== 200) {
+          setTokenValidity(false)
+        }
+      })
+  }, [])
 
   const handleSubmission = () => {
     if (password1 !== password2) {
       setError({ message: 'Passwords do not match' })
       return
     }
-    post(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, {})
+    const requestBody = {
+      newPasswordHash: sha256(password1).toString(),
+    }
+    post(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, requestBody, {}, `/${params.resetToken}`)
       .then((resp) => resp.json())
       .then((resp) => {
-        if (resp.status === 'failed') {
-          throw resp.err
+        if (resp.status === 403) {
+          setError({ message: resp.message })
         } else {
+          // TODO
           history.push('/')
         }
       })
@@ -68,7 +81,9 @@ export default function ChangePassword() {
       })
   }
 
-  return (
+  return validToken ? (
+    <InvalidToken />
+  ) : (
     <>
       <TopNavBar title={'Reset Password'} leftIcon={true} />
       <MainContainer>
