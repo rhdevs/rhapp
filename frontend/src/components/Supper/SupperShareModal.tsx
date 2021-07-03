@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { RhAppQrCode } from '../RhAppQrCode'
 import { MainCard } from './MainCard'
 import { CloseOutlined, CopyFilled } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import telegram_black from '../../assets/telegram_black.svg'
@@ -87,14 +86,14 @@ const Button = styled.img`
 
 type Props = {
   supperGroupId: string
-  shareModalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  teleShareModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const SupperShareModal = (props: Props) => {
   const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.supperGroupId}`
 
   const onCloseClick = () => {
-    props.shareModalSetter(false)
+    props.teleShareModalSetter(false)
   }
 
   const onShareClick = () => {
@@ -103,7 +102,7 @@ export const SupperShareModal = (props: Props) => {
 
   return (
     <OverlayBackground>
-      <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
+      <MainCard flexDirection="column" margin="80px 30px;" padding="25px 35px;" minHeight="340px;">
         <HeaderContainer>
           <HeaderText>Share supper group link</HeaderText>
           <CloseButton onClick={onCloseClick} />
