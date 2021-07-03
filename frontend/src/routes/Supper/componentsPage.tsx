@@ -40,7 +40,7 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-// import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
+// import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -50,6 +50,7 @@ const OptionText = styled.text`
 `
 
 export default function Supper() {
+  // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   return (
     <>
       <div style={{ width: '80vw' }}>
@@ -146,13 +147,16 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
-      {/* <ViewMenuFoodCard
-        foodList={foodList}
-        foodId={'12345364832764134'}
-        menuFoodName={'McGriddles with Egg Meal'}
-        supperGroupId={1}
-        orderId="1"
-      /> */}
+      {/* {isFoodMenuModalOpen && (
+        <ViewMenuFoodModal
+          foodList={foodList}
+          foodId={'12345364832764134'}
+          menuFoodName={'McGriddles with Egg Meal'}
+          supperGroupId={1}
+          orderId="1"
+          viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
+        />
+      )} */}
     </>
   )
 }

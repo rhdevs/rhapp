@@ -17,6 +17,7 @@ import { MoreDropDown } from './MoreDropDown'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
 import { useDispatch } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
+import { SupperShareModal } from './SupperShareModal'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -180,10 +181,7 @@ export const SupperGroupCard = (props: Props) => {
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
   const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
 
-  const shareModal = (
-    //TODO: @xinyee Add share group modal
-    <></>
-  )
+  const shareModal = <SupperShareModal supperGroupId={supperGroupId} teleShareModalSetter={setIsShareModalOpen} />
 
   const deleteModal = (
     <ConfirmationModal

@@ -15,6 +15,7 @@ const OverlayBackground = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
   top: 0;
   left: 0;
   right: 0;
@@ -89,10 +90,10 @@ type Props = {
   menuFoodName: string | undefined
   supperGroupId: number | undefined
   orderId: string | undefined
-  onBackClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  viewMenuFoodModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const ViewMenuFoodCard = (props: Props) => {
+export const ViewMenuFoodModal = (props: Props) => {
   const foodName = foodList.find((food) => food.foodId === props.foodId)?.foodName
   const filteredFoodList = props.foodList.filter((food) => food.foodId === props.foodId)
   const history = useHistory()
@@ -103,10 +104,12 @@ export const ViewMenuFoodCard = (props: Props) => {
     }
   }, [filteredFoodList])
 
+  const onBackClick = () => {
+    props.viewMenuFoodModalSetter(false)
+  }
+
   const BackButton = () => {
-    return (
-      <LeftOutlined style={{ color: 'black', padding: '5px 15px 0 0', margin: 'auto 0' }} onClick={props.onBackClick} />
-    )
+    return <LeftOutlined style={{ color: 'black', padding: '5px 15px 0 0', margin: 'auto 0' }} onClick={onBackClick} />
   }
 
   const addButton = (isFirstFood?: boolean) => {
