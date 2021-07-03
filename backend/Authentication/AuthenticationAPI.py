@@ -19,10 +19,12 @@ authentication_api = Blueprint("authentication", __name__)
 
 
 def load_mail():
-    current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
+    current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     current_app.config['MAIL_PORT'] = 587
-    current_app.config['MAIL_USERNAME'] = 'example@u.nus.edu' #input your own NUS acc email
-    current_app.config['MAIL_PASSWORD'] = 'examplepassword'   #input your own NUS acc password
+    # input your own NUS acc email
+    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
+    # input your own NUS acc password
+    current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
     current_app.config['MAIL_USE_TLS'] = True
     current_app.config['MAIL_USE_SSL'] = False
     return Mail(current_app)
@@ -33,6 +35,7 @@ def load_mail():
 
 # Uncomment the below create_index command if you need to recreate the expiration index for PasswordResetSession collection
 #db.PasswordResetSession.create_index("resetTokenCreatedAt", expireAfterSeconds=300)
+
 
 """
 Decorative function: 
@@ -192,6 +195,7 @@ If so, create reset token (valid for fixed period eg 15 mins?), send link with /
 
 ser = Serializer("secret", expires_in=300)
 
+
 @authentication_api.route('/forgot', methods=['POST'])
 def submitEmail():
     formData = request.get_json()
@@ -199,15 +203,15 @@ def submitEmail():
     # search email in DB
     associatedUser = db.User.find_one({
         "email": email
-        })
+    })
     # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
     if associatedUser:
         mail = load_mail()
         newResetToken = ser.dumps(associatedUser['userID']).decode('utf-8')
         db.PasswordResetSession.insert_one(
-            {'userID': associatedUser['userID'], 
-            'email': email
-            })
+            {'userID': associatedUser['userID'],
+             'email': email
+             })
         msg = Message('Password Reset for RHApp',
                       sender=current_app.config.get("MAIL_USERNAME"),
                       recipients=[email])
@@ -229,6 +233,7 @@ Check if the token is valid.
 If valid, ask for their password, hash on client-side, update relevant DB User entry
 """
 
+
 @authentication_api.route('/reset/<token>', methods=['GET'])
 def reset_token(token):
     try:
@@ -239,10 +244,11 @@ def reset_token(token):
         return jsonify({'message': "Token is invalid or expired. Please try again."}), 403
     userRequestingReset = db.PasswordResetSession.find_one({
         'userID': associatedUser
-        })
+    })
     if userRequestingReset is None:
         return jsonify({'message': "An error was encountered. Please try again."}), 405
     return jsonify({'message': "Redirecting to password reset page"}), 200
+
 
 @authentication_api.route('/reset/<token>', methods=['POST'])
 def update_token(token):
@@ -256,7 +262,7 @@ def update_token(token):
         db.User.update(
             {
                 'userID': associatedUserID
-            }, 
+            },
             {
                 '$set': {'passwordHash': newPasswordHash}
             }
