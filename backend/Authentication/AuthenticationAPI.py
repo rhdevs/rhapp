@@ -193,7 +193,7 @@ If so, create reset token (valid for fixed period eg 15 mins?), send link with /
 # def renderForgotPage():
 #    pass #render form template to submit email here
 
-ser = Serializer("secret", expires_in=300)
+ser = Serializer(os.environ['SERIALIZER_SECRET'], expires_in=300)
 
 
 @authentication_api.route('/forgot', methods=['POST'])
