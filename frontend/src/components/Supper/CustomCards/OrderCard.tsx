@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { MainCard } from '../MainCard'
 import { UnderlinedButton } from '../UnderlinedButton'
 import EmptyCart_src from '../../../assets/EmptyCart.svg'
-import { CollatedOrder, Food, Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { CollatedOrder, Food, Order, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { V1_RED } from '../../../common/colours'
 import { useHistory } from 'react-router-dom'
@@ -75,6 +75,47 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
+const PriceMainContainer = styled.div`
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-template-rows: auto;
+  grid-row-gap: 5px;
+  align-items: center;
+  padding-top: 7px;
+`
+
+const TotalTitleText = styled.text`
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+  padding-top: 5px;
+`
+
+const TotalPriceText = styled.text`
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+  justify-self: end;
+  padding-top: 5px;
+`
+
+const PriceTitleText = styled.text`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+`
+
+const PriceText = styled.text`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+  justify-self: end;
+`
+
 type Props = {
   supperGroup?: SupperGroup
   ownerId: string | undefined
@@ -84,8 +125,13 @@ type Props = {
   collatedOrder?: CollatedOrder
   order?: Order
   foodList?: Food[]
+  deliveryCost?: number
+  numberOfUsers?: number
+  splitCostMethod?: SplitACMethod
+  supperTotalCost?: number
   supperGroupId?: number | undefined
   orderId?: string | undefined
+  restaurantId?: string | undefined
 }
 
 export const OrderCard = (props: Props) => {
@@ -96,7 +142,6 @@ export const OrderCard = (props: Props) => {
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
-  const isOrderListEmpty = ((orderList?.length ?? 0) <= 0) as boolean
   const isFoodListEmpty = ((foodList?.length ?? 0) <= 0) as boolean
   const isCollatedFoodListEmpty = (collatedFoodList?.length ?? 0 <= 0) as boolean
   const wasEdited = props.wasEdited ?? false
@@ -108,10 +153,46 @@ export const OrderCard = (props: Props) => {
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const canEditUserFood = isOwner && !supperGroupIsOpenOrPending
   const isEditable = props.isEditable ?? (!isOwner && supperGroupIsOpenOrPending)
+  const restaurantId = props.supperGroup?.restaurantId ?? props.restaurantId
+  let subTotal
+  let deliveryFee
+  let total
+  if (props.supperGroup && isOwner) {
+    subTotal = props.supperGroup?.currentFoodCost ?? 0
+    deliveryFee = props.supperGroup?.additionalCost ?? 0
+    total = props.supperGroup?.totalPrice ?? 0
+  } else {
+    const numberOfUsers = props.numberOfUsers ?? 1
+    const isEqualMethod = props.splitCostMethod === SplitACMethod.EQUAL
+    subTotal = props.order?.totalCost ?? 0
+    total = props.supperTotalCost ?? 0
+    deliveryFee =
+      (isEqualMethod
+        ? (props.supperGroup?.additionalCost ?? 0) / numberOfUsers
+        : total //to prevent infinity
+        ? (subTotal / total) * (props.supperGroup?.additionalCost ?? 0)
+        : 0) ?? 0
+  }
 
-  // const priceSection = () => {
+  subTotal = `$${subTotal.toFixed(2)}`
+  deliveryFee = `$${deliveryFee.toFixed(2)}`
+  total = `$${total.toFixed(2)}`
 
-  // }
+  const PriceSection = () => {
+    return (
+      <PriceMainContainer>
+        <PriceTitleText>Subtotal</PriceTitleText>
+        <PriceText>{subTotal}</PriceText>
+
+        <PriceTitleText>Delivery Fee</PriceTitleText>
+        <PriceText>{deliveryFee}</PriceText>
+
+        <TotalTitleText>Total</TotalTitleText>
+        <TotalPriceText>{total}</TotalPriceText>
+      </PriceMainContainer>
+    )
+  }
+
   const EmptyCart = () => {
     return (
       <EmptyCartContainer>
@@ -119,10 +200,31 @@ export const OrderCard = (props: Props) => {
       </EmptyCartContainer>
     )
   }
+
+  const OwnerEmptyCartSection = () => {
+    return (
+      <>
+        <EmptyCart />
+        <EmptyTextContainer>
+          Cart is empty. <UnderlinedButton text="Add item" fontSize="12px" color="red" />
+        </EmptyTextContainer>
+      </>
+    )
+  }
+
   //TODO: Add was edited modal
   const wasEditedModal = <></>
   //TODO: Add cancel action modal
   const cancelActionModal = <></>
+
+  const RedPlusButton = () => {
+    return (
+      <PlusCircleFilled
+        onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+        style={{ fontSize: '20px', color: V1_RED }}
+      />
+    )
+  }
 
   const onEditClick = (foodId: string | undefined) => {
     if (!foodId) {
@@ -141,12 +243,7 @@ export const OrderCard = (props: Props) => {
   const userViewFoodContent = () => (
     <>
       {isFoodListEmpty ? (
-        <>
-          <EmptyCart />
-          <EmptyTextContainer>
-            Cart is empty. <UnderlinedButton text="Add item" fontSize="12px" color="red" />
-          </EmptyTextContainer>
-        </>
+        <OwnerEmptyCartSection />
       ) : (
         <>
           {foodList?.map((food, index) => {
@@ -172,6 +269,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
+          <PriceSection />
         </>
       )}
     </>
@@ -206,6 +304,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
+          <PriceSection />
         </>
       )}
     </>
@@ -228,62 +327,67 @@ export const OrderCard = (props: Props) => {
         console.log(formattedFoodList)
       }
     }
-    console.log(formattedFoodList)
 
     return (
       <>
-        {isOrderListEmpty ? (
-          <EmptyCart />
-        ) : (
-          <>
-            {formattedFoodList?.map((order, orderIndex) => {
-              const isOwnerFood = order.user.userID === localStorage.userID
-              const telegramHandle = order.user.telegramHandle
-              const topSection = (
-                <CardHeaderContainer>
-                  <NameContainer>
-                    {!isOwnerFood && <TelegramShareButton margin="0 5px 0 0" telegramHandle={telegramHandle} />}
-                    <NameText isOwner={isOwnerFood}>{isOwnerFood ? 'You' : order.user.displayName}</NameText>
-                  </NameContainer>
-                  {ownerFoodIsEditable && isOwnerFood && (
-                    <PlusCircleFilled style={{ fontSize: '20px', color: V1_RED }} />
-                  )}
-                </CardHeaderContainer>
-              )
-              const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
+        {formattedFoodList?.map((order) => {
+          const isOwnerFood = order.user.userID === localStorage.userID
+          const telegramHandle = order.user.telegramHandle
+          const isOrderEmpty = ((order.foodList?.length ?? 0) <= 0) as boolean
+          const topSection = (
+            <CardHeaderContainer>
+              <NameContainer>
+                {!isOwnerFood && <TelegramShareButton margin="0 5px 0 0" telegramHandle={telegramHandle} />}
+                <NameText isOwner={isOwnerFood}>{isOwnerFood ? 'You' : order.user.displayName}</NameText>
+              </NameContainer>
+              {ownerFoodIsEditable && isOwnerFood && <RedPlusButton />}
+            </CardHeaderContainer>
+          )
+          const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
 
-              return (
-                <>
-                  {topSection}
-                  {order.foodList?.map((food, foodIndex) => {
-                    const customisations: string[] = []
-                    food.custom?.map((custom) =>
-                      custom.options.map((option) => {
-                        if (option.isSelected) customisations.push(option.name)
-                      }),
-                    )
-                    return (
-                      <FoodLine
-                        key={foodIndex}
-                        margin="5px 0"
-                        isEditable={isOrderEditable}
-                        onEditClick={() => onEditClick(food.foodId)}
-                        wasEdited={wasEdited}
-                        wasEditedModalSetter={setIsEditedModalOpen}
-                        isCancelActionClickable={isOwner}
-                        cancelActionModalSetter={setIsCancelActionModalOpen}
-                        food={food}
-                        supperGroupId={supperGroupId}
-                        orderId={orderId}
-                      />
-                    )
-                  })}
-                  {orderIndex + 1 !== orderList?.length && <HorizontalLine />}
-                </>
-              )
-            })}
-          </>
-        )}
+          const EmptyCartContainer = () => {
+            if (isOwnerFood) {
+              return <OwnerEmptyCartSection />
+            } else {
+              return <EmptyCart />
+            }
+          }
+
+          return (
+            <>
+              {topSection}
+              {isOrderEmpty ? (
+                <EmptyCartContainer />
+              ) : (
+                order.foodList?.map((food, foodIndex) => {
+                  const customisations: string[] = []
+                  food.custom?.map((custom) =>
+                    custom.options.map((option) => {
+                      if (option.isSelected) customisations.push(option.name)
+                    }),
+                  )
+                  return (
+                    <FoodLine
+                      key={foodIndex}
+                      margin="5px 0"
+                      isEditable={isOrderEditable}
+                      onEditClick={() => onEditClick(food.foodId)}
+                      wasEdited={wasEdited}
+                      wasEditedModalSetter={setIsEditedModalOpen}
+                      isCancelActionClickable={isOwner}
+                      cancelActionModalSetter={setIsCancelActionModalOpen}
+                      food={food}
+                      supperGroupId={supperGroupId}
+                      orderId={orderId}
+                    />
+                  )
+                })
+              )}
+              <HorizontalLine />
+            </>
+          )
+        })}
+        <PriceSection />
       </>
     )
   }
@@ -300,7 +404,7 @@ export const OrderCard = (props: Props) => {
         <>
           <CardHeaderContainer>
             <MyOrderText>My Order</MyOrderText>
-            {isEditable && <PlusCircleFilled style={{ fontSize: '20px', color: V1_RED }} />}
+            {isEditable && <RedPlusButton />}
           </CardHeaderContainer>
           {userViewFoodContent()}
         </>
