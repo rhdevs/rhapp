@@ -51,7 +51,6 @@ const OptionText = styled.text`
 `
 
 export default function Supper() {
-  // const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(true)
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   return (
     <>
@@ -159,7 +158,6 @@ export default function Supper() {
           viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
         />
       )} */}
-      {/* {isShareModalOpen && <SupperShareModal supperGroupId={'jksnefel'} shareModalSetter={setIsShareModalOpen} />} */}
     </>
   )
 }
