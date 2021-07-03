@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import styled from 'styled-components'
 import { RhAppQrCode } from '../RhAppQrCode'
@@ -6,8 +6,22 @@ import { MainCard } from './MainCard'
 import { CloseOutlined, CopyFilled } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
-import { SGTelegramShareButton } from './SGTelegramShareButton'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import telegram_black from '../../assets/telegram_black.svg'
+import { teleShareWithText } from '../../common/telegramMethods'
+import { TelegramShareButton } from '../TelegramShareButton'
+
+const OverlayBackground = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+`
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -68,11 +82,15 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `
 
+const Button = styled.img`
+  width: 40px;
+`
+
 type Props = {
   supperGroupId: string
 }
 
-export const SupperShareCard = (props: Props) => {
+export const SupperShareModal = (props: Props) => {
   const history = useHistory()
   const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.supperGroupId}`
 
@@ -80,28 +98,34 @@ export const SupperShareCard = (props: Props) => {
     history.goBack()
   }
 
+  const onShareClick = () => {
+    return teleShareWithText(link, 'Click the link to join the supper group!')
+  }
+
   return (
-    <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
-      <HeaderContainer>
-        <HeaderText>Share supper group link</HeaderText>
-        <CloseButton onClick={onCloseClick} />
-      </HeaderContainer>
-      <QRContainer>
-        <RhAppQrCode link={link} />
-        <QRLinkContainer>
-          <LinkContainer>
-            <LinkText>{link}</LinkText>
-          </LinkContainer>
-          <CopyToClipboard text={link}>
-            <CopyButtonContainer>
-              <CopyFilled />
-            </CopyButtonContainer>
-          </CopyToClipboard>
-        </QRLinkContainer>
-      </QRContainer>
-      <ButtonContainer>
-        <SGTelegramShareButton url={link} text={'Click the link to join the supper group!'} />
-      </ButtonContainer>
-    </MainCard>
+    <OverlayBackground>
+      <MainCard flexDirection="column" padding="25px 35px;" minHeight="340px;">
+        <HeaderContainer>
+          <HeaderText>Share supper group link</HeaderText>
+          <CloseButton onClick={onCloseClick} />
+        </HeaderContainer>
+        <QRContainer>
+          <RhAppQrCode link={link} />
+          <QRLinkContainer>
+            <LinkContainer>
+              <LinkText>{link}</LinkText>
+            </LinkContainer>
+            <CopyToClipboard text={link}>
+              <CopyButtonContainer>
+                <CopyFilled />
+              </CopyButtonContainer>
+            </CopyToClipboard>
+          </QRLinkContainer>
+        </QRContainer>
+        <ButtonContainer>
+          <Button src={telegram_black} alt="telegram share button" onClick={onShareClick} />
+        </ButtonContainer>
+      </MainCard>
+    </OverlayBackground>
   )
 }

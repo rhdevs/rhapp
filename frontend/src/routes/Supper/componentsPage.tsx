@@ -38,7 +38,7 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
-import { SupperShareCard } from '../../components/Supper/SupperShareCard'
+import { SupperShareModal } from '../../components/Supper/SupperShareModal'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
@@ -154,7 +154,7 @@ export default function Supper() {
         supperGroupId={1}
         orderId="1"
       /> */}
-      <SupperShareCard supperGroupId={'jksnefel'} />
+      <SupperShareModal supperGroupId={'jksnefel'} />
     </>
   )
 }

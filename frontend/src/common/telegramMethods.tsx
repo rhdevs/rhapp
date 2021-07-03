@@ -1,10 +1,5 @@
-type Props = {
-  url: string
-  text: string
-}
-
-export const teleShareWithText = (props: Props) => {
-  const link = `https://t.me/share/url?url=${props.url}&text=${props.text}`
+export const teleShareWithText = (url: string, text: string) => {
+  const link = `https://t.me/share/url?url=${url}&text=${text}`
 
   window.open(link)
 }
