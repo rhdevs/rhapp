@@ -9,7 +9,6 @@ import { PATHS } from '../../routes/Routes'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import telegram_black from '../../assets/telegram_black.svg'
 import { teleShareWithText } from '../../common/telegramMethods'
-import { TelegramShareButton } from '../TelegramShareButton'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -88,14 +87,14 @@ const Button = styled.img`
 
 type Props = {
   supperGroupId: string
+  shareModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const SupperShareModal = (props: Props) => {
-  const history = useHistory()
   const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.supperGroupId}`
 
   const onCloseClick = () => {
-    history.goBack()
+    props.shareModalSetter(false)
   }
 
   const onShareClick = () => {

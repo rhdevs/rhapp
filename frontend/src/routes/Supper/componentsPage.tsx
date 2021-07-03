@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -38,10 +38,10 @@ import { Checkbox } from '../../components/Checkbox'
 import { RhAppQrCode } from '../../components/RhAppQrCode'
 import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
-import { SupperShareModal } from '../../components/Supper/SupperShareModal'
+// import { SupperShareModal } from '../../components/Supper/SupperShareModal'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-// import { ViewMenuFoodCard } from '../../components/Supper/ViewMenuFoodCard'
+// import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -51,6 +51,8 @@ const OptionText = styled.text`
 `
 
 export default function Supper() {
+  // const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(true)
+  // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   return (
     <>
       <div style={{ width: '80vw' }}>
@@ -147,14 +149,17 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <MenuSection menu={foodMenuStub} />
-      {/* <ViewMenuFoodCard
-        foodList={foodList}
-        foodId={'12345364832764134'}
-        menuFoodName={'McGriddles with Egg Meal'}
-        supperGroupId={1}
-        orderId="1"
-      /> */}
-      <SupperShareModal supperGroupId={'jksnefel'} />
+      {/* {isFoodMenuModalOpen && (
+        <ViewMenuFoodModal
+          foodList={foodList}
+          foodId={'12345364832764134'}
+          menuFoodName={'McGriddles with Egg Meal'}
+          supperGroupId={1}
+          orderId="1"
+          viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
+        />
+      )} */}
+      {/* {isShareModalOpen && <SupperShareModal supperGroupId={'jksnefel'} shareModalSetter={setIsShareModalOpen} />} */}
     </>
   )
 }
