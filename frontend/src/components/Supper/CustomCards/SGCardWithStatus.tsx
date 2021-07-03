@@ -7,7 +7,7 @@ import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { SGStatusBubble } from '../SGStatusBubble'
 import { PaymentInfo, PaymentMethod, Restaurants, SupperGroupStatus } from '../../../store/supper/types'
 import Button from '../../Mobile/Button'
-import { OpenUserTelegram } from '../../TelegramShareButton'
+import { openUserTelegram } from '../../../common/telegramMethods'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { RoundImage } from '../RoundImage'
 import { getRestaurantLogo } from '../../../common/getRestaurantLogo'
@@ -111,7 +111,7 @@ type Props = {
 export const SGCardWithStatus = (props: Props) => {
   const onClick = () => {
     {
-      props.buttonTeleHandle && OpenUserTelegram(props.buttonTeleHandle)
+      props.buttonTeleHandle && openUserTelegram(props.buttonTeleHandle)
     }
     return undefined
   }

@@ -56,10 +56,13 @@ export default function Supper() {
         <FoodLine wasEdited backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
       <OrderCard
-        isEditable
+        order={orderList[0]}
+        ownerId={'A1234567B'}
+        // isEditable
         supperGroupStatus={supperGroupStub.status}
-        ownerId={localStorage.userID}
-        foodList={foodList}
+        // ownerId={localStorage.userID}
+        // foodList={foodList}
+        supperGroup={supperGroupStub}
       />
       <SupperGroupCard supperGroup={supperGroupStub} />
       <RadioButton

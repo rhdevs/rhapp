@@ -6,7 +6,7 @@ import Button from '../../Mobile/Button'
 import { FoodLineInCard } from '../FoodLineInCard'
 import { MainCard } from '../MainCard'
 import EmptyCart_src from '../../../assets/EmptyCart.svg'
-import { OpenUserTelegram } from '../../TelegramShareButton'
+import { openUserTelegram } from '../../../common/telegramMethods'
 import { useDispatch } from 'react-redux'
 import { setFoodId } from '../../../store/supper/action'
 import { V1_RED } from '../../../common/colours'
@@ -192,7 +192,7 @@ export const OrderSummaryCard = (props: Props) => {
                     ) : (
                       <>
                         {order.user.displayName} (@
-                        <text onClick={() => OpenUserTelegram(order.user.telegramHandle)}>
+                        <text onClick={() => openUserTelegram(order.user.telegramHandle)}>
                           {order.user.telegramHandle}
                         </text>
                         )
