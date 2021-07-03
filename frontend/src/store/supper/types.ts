@@ -120,6 +120,7 @@ export enum SplitACMethod {
 
 export enum SupperGroupStatus {
   OPEN = 'Open',
+  PENDING = 'Pending', // When order price exceeds 90% of cost limit
   CLOSED = 'Closed',
   ORDERED = 'Ordered',
   ARRIVED = 'Arrived',

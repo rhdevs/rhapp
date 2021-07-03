@@ -1,21 +1,35 @@
 import React from 'react'
-import Button from './Mobile/Button'
+
+import styled from 'styled-components'
+import telegram_black from '../assets/telegram_black.svg'
+import { openUserTelegram } from '../common/telegramMethods'
+
+const StyledIcon = styled.img<{ margin?: string; padding?: string; size?: string }>`
+  ${(props) => props.margin && `margin: ${props.margin}`}
+  ${(props) => props.padding && `padding: ${props.padding}`}
+  ${(props) => props.size && `width: ${props.size}`}
+  ${(props) => props.size && `height: ${props.size}`}
+`
 
 type Props = {
-  url: string
-  text: string
+  telegramHandle: string
+  margin?: string
+  padding?: string
+  size?: string
 }
 
 export const TelegramShareButton = (props: Props) => {
-  const onClick = () => {
-    const link = `https://t.me/share/url?url=${props.url}&text=${props.text}`
-
-    window.open(link)
-  }
-  return <Button stopPropagation={true} defaultButtonDescription="Share" onButtonClick={onClick} isFlipButton={false} />
-}
-
-export const OpenUserTelegram = (telegramHandle: string) => {
-  const site = 'https://telegram.me/' + telegramHandle
-  return window.open(site)
+  return (
+    <StyledIcon
+      margin={props.margin}
+      padding={props.padding}
+      width={props.size}
+      height={props.size}
+      onClick={() => {
+        openUserTelegram(props.telegramHandle)
+      }}
+      src={telegram_black}
+      alt="Telegram Icon"
+    />
+  )
 }
