@@ -14,9 +14,7 @@ from gevent.pywsgi import WSGIServer
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = "Content-Type"
-# TODO
 app.config['SECRET_KEY'] = AUTH_SECRET_KEY
-#app.config['SECRET_KEY'] = os.getenv('AUTH_SECRET_KEY')
 
 app.register_blueprint(laundry_api, url_prefix="/laundry")
 app.register_blueprint(social_api, url_prefix="/social")
