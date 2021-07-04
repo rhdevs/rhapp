@@ -50,6 +50,7 @@ export default function ForgetPassword() {
   const history = useHistory()
   const [email, setEmail] = useState('')
   const [error, setError] = useState({ message: '' })
+  const [success, setSuccess] = useState(false)
 
   const changePasswordHandler = async () => {
     if (email === '') {
@@ -60,10 +61,9 @@ export default function ForgetPassword() {
       return
     } else {
       post(ENDPOINTS.FORGET_PASSWORD, DOMAINS.AUTH, { email: email })
-        .then((resp) => resp.json())
         .then((resp) => {
-          if (resp.status === 'failed') {
-            throw resp.err
+          if (resp.status === 'success') {
+            setSuccess(true)
           }
         })
         .catch((err) => {
@@ -93,6 +93,11 @@ export default function ForgetPassword() {
         {error.message !== '' && (
           <AlertGroup>
             <Alert message={error.message} type="error" closable showIcon />
+          </AlertGroup>
+        )}
+        {success && (
+          <AlertGroup>
+            <Alert message={'Please check your email for the reset link.'} type="success" showIcon />
           </AlertGroup>
         )}
         <ButtonDiv>

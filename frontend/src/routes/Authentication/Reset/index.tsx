@@ -44,6 +44,7 @@ export default function ChangePassword() {
   const [password2, setPassword2] = useState('')
   const [error, setError] = useState({ message: '' })
   const [validToken, setTokenValidity] = useState(true)
+  const [success, setSuccess] = useState(false)
   const history = useHistory()
   const params = useParams<{ resetToken: string }>()
 
@@ -51,7 +52,7 @@ export default function ChangePassword() {
     get(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, `/${params.resetToken}`)
       .then((resp) => resp.json())
       .then((resp) => {
-        if (resp.status !== 200) {
+        if (resp.status !== 'success') {
           setTokenValidity(false)
         }
       })
@@ -68,11 +69,10 @@ export default function ChangePassword() {
     post(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, requestBody, {}, `/${params.resetToken}`)
       .then((resp) => resp.json())
       .then((resp) => {
-        if (resp.status === 403) {
+        if (resp.status !== 'success') {
           setError({ message: resp.message })
         } else {
-          // TODO
-          history.push('/')
+          setSuccess(true)
         }
       })
       .catch((err) => {
@@ -90,6 +90,11 @@ export default function ChangePassword() {
         {error.message !== '' && (
           <AlertGroup>
             <Alert message={error.message} type="error" closable showIcon />
+          </AlertGroup>
+        )}
+        {success && (
+          <AlertGroup>
+            <Alert message={'Success! Your password has been changed.'} type="success" showIcon />
           </AlertGroup>
         )}
         <div>
