@@ -198,33 +198,36 @@ ser = Serializer(os.environ['SERIALIZER_SECRET'], expires_in=300)
 
 @authentication_api.route('/forgot', methods=['POST'])
 def submitEmail():
-    formData = request.get_json()
-    email = formData["email"]
-    # search email in DB
-    associatedUser = db.User.find_one({
-        "email": email
-    })
-    # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
-    if associatedUser:
-        mail = load_mail()
-        newResetToken = ser.dumps(associatedUser['userID']).decode('utf-8')
-        db.PasswordResetSession.insert_one(
-            {'userID': associatedUser['userID'],
-             'email': email
-             })
-        msg = Message('Password Reset for RHApp',
-                      sender=current_app.config.get("MAIL_USERNAME"),
-                      recipients=[email])
-        msg.body = f'''To reset your password, please visit this URL:\n 
-        
-        {url_for('authentication.reset_token', token=newResetToken,_external=True)}\n
+    try:
+        formData = request.get_json()
+        email = formData["email"]
+        # search email in DB
+        associatedUser = db.User.find_one({
+            "email": email
+        })
+        # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
+        if associatedUser:
+            mail = load_mail()
+            newResetToken = ser.dumps(associatedUser['userID']).decode('utf-8')
+            db.PasswordResetSession.insert_one(
+                {'userID': associatedUser['userID'],
+                 'email': email
+                 })
+            msg = Message('Password Reset for RHApp',
+                          sender=current_app.config.get("MAIL_USERNAME"),
+                          recipients=[email])
+            msg.body = f'''To reset your password, please visit this URL:\n 
+            
+            {url_for('authentication.reset_token', token=newResetToken,_external=True)}\n
 
-        If you didn't request for a password reset, please ignore this message.
-        
-        '''
-        mail.send(msg)
-    # print message regardless of whether email is valid or not
-    return jsonify({'message': 'You will receive an email if there is an account associated with the email address'}), 200
+            If you didn't request for a password reset, please ignore this message.
+            
+            '''
+            mail.send(msg)
+        # print message regardless of whether email is valid or not
+        return jsonify({'status': 'success', 'message': 'You will receive an email if there is an account associated with the email address'}), 200
+    except Exception as e:
+        return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
 
 
 """
@@ -237,34 +240,40 @@ If valid, ask for their password, hash on client-side, update relevant DB User e
 @authentication_api.route('/reset/<token>', methods=['GET'])
 def reset_token(token):
     try:
-        associatedUser = ser.loads(token)
-    except:
-        associatedUser = None
-    if associatedUser is None:
-        return jsonify({'message': "Token is invalid or expired. Please try again."}), 403
-    userRequestingReset = db.PasswordResetSession.find_one({
-        'userID': associatedUser
-    })
-    if userRequestingReset is None:
-        return jsonify({'message': "An error was encountered. Please try again."}), 405
-    return jsonify({'message': "Redirecting to password reset page"}), 200
+        try:
+            associatedUser = ser.loads(token)
+        except:
+            associatedUser = None
+        if associatedUser is None:
+            return jsonify({'status': 'failed', 'message': "Token is invalid or expired. Please try again."}), 403
+        userRequestingReset = db.PasswordResetSession.find_one({
+            'userID': associatedUser
+        })
+        if userRequestingReset is None:
+            return jsonify({'status': 'failed', 'message': "An error was encountered. Please try again."}), 405
+        return jsonify({'status': 'success', 'message': "Redirecting to password reset page"}), 200
+    except Exception as e:
+        return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
 
 
 @authentication_api.route('/reset/<token>', methods=['POST'])
 def update_token(token):
-    formData = request.get_json()
-    associatedUserID = ser.loads(token)
-    newPasswordHash = formData['newPasswordHash']
-    # update DB User entry with password
-    if not db.User.find_one({'userID': associatedUserID}):
-        return jsonify({'message': 'Invalid credentials'}), 403
-    else:
-        db.User.update(
-            {
-                'userID': associatedUserID
-            },
-            {
-                '$set': {'passwordHash': newPasswordHash}
-            }
-        )
-        return jsonify({'message': "Password updated successfully"}), 200
+    try:
+        formData = request.get_json()
+        associatedUserID = ser.loads(token)
+        newPasswordHash = formData['newPasswordHash']
+        # update DB User entry with password
+        if not db.User.find_one({'userID': associatedUserID}):
+            return jsonify({'status': 'failed', 'message': 'Invalid credentials'}), 403
+        else:
+            db.User.update(
+                {
+                    'userID': associatedUserID
+                },
+                {
+                    '$set': {'passwordHash': newPasswordHash}
+                }
+            )
+            return jsonify({'status': 'success', 'message': "Password updated successfully"}), 200
+    except Exception as e:
+        return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
