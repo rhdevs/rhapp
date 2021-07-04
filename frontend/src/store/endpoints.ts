@@ -110,30 +110,36 @@ export enum DOMAINS {
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
+  AUTH = 'auth',
   SUPPER = 'supper',
 }
 
 export const DOMAIN_URL = {
   FACILITY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+      ? '//rhapp-backend.rhdevs.repl.co/facilities'
+      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
   EVENT:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappevents.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappevents',
+      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+      : '//rhappmiddleware.herokuapp.com/rhappevents',
   LAUNDRY:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhapplaundry.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhapplaundry',
+      ? '//rhapp-backend.rhdevs.repl.co/laundry'
+      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
   SOCIAL:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappsocial.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappsocial',
+      ? '//rhapp-backend.rhdevs.repl.co/social'
+      : '//rhappmiddleware.herokuapp.com/rhappsocial',
+  AUTH:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/auth'
+      : '//rhappmiddleware.herokuapp.com/rhappauth',
+  //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/supper'
-      : '//rhappmiddleware.herokuapp.com/rhappsupper',
+      ? '//rhappfacilities.rhdevs.repl.co'
+      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
 }
 
 async function makeRequest(
@@ -148,32 +154,39 @@ async function makeRequest(
     case DOMAINS.FACILITY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappfacilities.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappfacilities'
+          ? '//rhapp-backend.rhdevs.repl.co/facilities'
+          : '//rhappmiddleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappevents.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappevents'
+          ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+          : '//rhappmiddleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhapplaundry.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhapplaundry'
+          ? '//rhapp-backend.rhdevs.repl.co/laundry'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.SOCIAL:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          ? '//rhapp-backend.rhdevs.repl.co/social'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
+    case DOMAINS.AUTH:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/auth'
+          : '//rhappmiddleware.herokuapp.com/rhappauth'
+      break
+    //TODO: update with supper request url
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/supper'
-          : '//rhappmiddleware.herokuapp.com/rhappsupper'
+          ? '//rhappsocial.rhdevs.repl.co'
+          : '//rhapp-middleware.herokuapp.com/rhappsocial'
       break
   }
   return axios({
