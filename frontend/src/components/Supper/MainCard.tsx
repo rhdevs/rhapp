@@ -7,6 +7,7 @@ const MainContainer = styled.div<{
   flexDirection?: string | undefined
   minHeight?: string | undefined
   margin?: string | undefined
+  borderRadius?: string | undefined
   padding?: string | undefined
 }>`
   position: relative;
@@ -14,7 +15,7 @@ const MainContainer = styled.div<{
   background-color: #ffffff;
   margin: ${(props) => props.margin ?? '23px'};
   min-height: ${(props) => props.minHeight ?? '70px'};
-  border-radius: 20px;
+  border-radius: ${(props) => props.borderRadius ?? '20px'};
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   padding: ${(props) => props.padding ?? '15px'};
@@ -36,6 +37,7 @@ interface AuxProps {
   editIconSize?: string
   margin?: string | undefined
   padding?: string | undefined
+  borderRadius?: string | undefined
   editOnClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
   onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
 }
@@ -47,6 +49,7 @@ export const MainCard = (props: AuxProps) => {
       minHeight={props.minHeight}
       flexDirection={props.flexDirection}
       margin={props.margin}
+      borderRadius={props.borderRadius}
       padding={props.padding}
     >
       {props.children}

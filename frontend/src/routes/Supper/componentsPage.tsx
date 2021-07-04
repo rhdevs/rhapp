@@ -40,7 +40,11 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
+<<<<<<< HEAD
 import { ContactModal } from '../../components/Supper/ContactModal'
+=======
+import { InformationCard } from '../../components/Supper/InformationCard'
+>>>>>>> minimain
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
@@ -148,6 +152,7 @@ export default function Supper() {
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
+      <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
       {isContactModalOpen && <ContactModal contactModalSetter={setIsContactModalOpen}/>}
       {/* {isFoodMenuModalOpen && (
