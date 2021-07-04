@@ -50,11 +50,15 @@ export default function ChangePassword() {
 
   useEffect(() => {
     get(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, `/${params.resetToken}`)
-      .then((resp) => resp.json())
       .then((resp) => {
+        console.log(resp)
         if (resp.status !== 'success') {
           setTokenValidity(false)
         }
+      })
+      .catch((err) => {
+        console.log(err)
+        setTokenValidity(false)
       })
   }, [])
 
@@ -67,7 +71,6 @@ export default function ChangePassword() {
       newPasswordHash: sha256(password1).toString(),
     }
     post(ENDPOINTS.RESET_PASSWORD, DOMAINS.AUTH, requestBody, {}, `/${params.resetToken}`)
-      .then((resp) => resp.json())
       .then((resp) => {
         if (resp.status !== 'success') {
           setError({ message: resp.message })
@@ -81,7 +84,7 @@ export default function ChangePassword() {
       })
   }
 
-  return validToken ? (
+  return !validToken ? (
     <InvalidToken />
   ) : (
     <>
