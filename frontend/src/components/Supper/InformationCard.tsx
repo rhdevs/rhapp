@@ -15,17 +15,24 @@ const InformationSymbol = styled(InfoCircleOutlined)`
 const InformationContainer = styled.div`
   padding: 0 10px 0 0;
   overflow-wrap: anywhere;
+  align-items: center;
 `
 
 const InformationText = styled.text``
 
 type Props = {
   content: string
+  marginTop?: string | undefined
+  marginBottom?: string | undefined
 }
 
 export const InformationCard = (props: Props) => {
   return (
-    <MainCard margin="20px ;" borderRadius="10px" padding="20px 10px;">
+    <MainCard
+      margin={`${props.marginTop ?? '20px'} 20px ${props.marginBottom ?? '20px'} 20px`}
+      borderRadius="10px"
+      padding="20px 10px;"
+    >
       <SymbolContainer>
         <InformationSymbol />
       </SymbolContainer>
