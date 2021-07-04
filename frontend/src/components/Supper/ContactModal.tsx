@@ -7,6 +7,7 @@ import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import telegram_black from '../../assets/telegram_black.svg'
 import { openUserTelegram } from '../../common/telegramMethods'
+import { Food, Order } from '../../store/supper/types'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -26,6 +27,7 @@ const HeaderContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin: 0 5px;
 `
 
 const HeaderText = styled.text`
@@ -39,48 +41,104 @@ const CloseButton = styled(CloseOutlined)`
   font-size: 21px;
 `
 
-const ContactsContainer = styled.div``
+const ContactsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px 20px;
+  align-items: flex-end;
+`
 
-const IdentityContainer = styled.div``
+const IdentityContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+`
 
-const NameContainer = styled.div``
+const IdentitySymbol = styled(UserOutlined)`
+  font-size: 20px;
+`
 
-const Name = styled.text``
+const NameContainer = styled.div`
+  padding: 0 10px;
+`
+
+const Name = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 14px;
+`
+
+const ButtonContainer = styled.div``
 
 const Button = styled.img`
-  width: 40px;
+  width: 25px;
 `
 
 type Prop = {
+  orderList: Order[]
+  foodList: Food[]
+  foodId: string
   contactModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ContactModal = (props: Prop) => {
+  const filteredFoodList = props.foodList.find((food) => food.foodId === props.foodId)
+  const contacts = filteredFoodList?.userIdList
+	let userDetails: string[][] = []
+
+	contacts?.map((userId) => {
+		let detail: string[] = []
+		props.orderList
+			.filter((order) => order.user.userID === userId)
+			.map((order) => {
+				detail = [userId, order.user.displayName, order.user.telegramHandle]
+				userDetails.push(detail)
+			})
+
   const onCloseClick = () => {
     props.contactModalSetter(false)
   }
 
-  const onContactClick = () => {
-    return openUserTelegram('v')
+  const onContactClick = (telegramhandle: string) => {
+    return openUserTelegram(telegramhandle)
   }
 
   return (
     <OverlayBackground>
-      <MainCard flexDirection="column" margin="80px 30px;" padding="25px 35px;" minHeight="340px;">
+      <MainCard flexDirection="column" margin="80px 30px" padding="20px 25px" minHeight="340px">
         <HeaderContainer>
           <HeaderText>Contact Users</HeaderText>
           <CloseButton onClick={onCloseClick} />
         </HeaderContainer>
-        <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
-        <ContactsContainer>
-          <IdentityContainer>
-            <UserOutlined />
-            <NameContainer>
-              <Name>Gou Gou</Name>
-            </NameContainer>
-          </IdentityContainer>
-          <Button src={telegram_black} alt="telegram share button" onClick={onContactClick} />
-        </ContactsContainer>
+        <FoodLine
+          backgroundColor="#EEEEEE"
+          food={filteredFoodList}
+          borderRadius="10px"
+          padding="10px"
+          margin="10px 0"
+          hasNoQuantity
+        /> 
+        {userDetails.every((userDetail) => {
+						let index = userDetail[0]
+						let name = userDetail[1]
+						let tele = userDetail[2]
+						return (
+						<ContactsContainer key={index}>
+              <IdentityContainer>
+                <IdentitySymbol />
+                <NameContainer>
+                  <Name>{name}</Name>
+                </NameContainer>
+              </IdentityContainer>
+              <ButtonContainer>
+                <Button src={telegram_black} alt="telegram share button" onClick={onContactClick(tele)} />
+              </ButtonContainer>
+            </ContactsContainer>)
+				})
+        }
       </MainCard>
     </OverlayBackground>
   )

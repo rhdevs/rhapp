@@ -40,11 +40,8 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-<<<<<<< HEAD
 import { ContactModal } from '../../components/Supper/ContactModal'
-=======
 import { InformationCard } from '../../components/Supper/InformationCard'
->>>>>>> minimain
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
@@ -154,7 +151,7 @@ export default function Supper() {
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
-      {isContactModalOpen && <ContactModal contactModalSetter={setIsContactModalOpen}/>}
+      {isContactModalOpen && <ContactModal contactModalSetter={setIsContactModalOpen} />}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
           foodList={foodList}
@@ -165,6 +162,6 @@ export default function Supper() {
           viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
         />
       )} */}
-    </ContactModal>
+    </>
   )
 }
