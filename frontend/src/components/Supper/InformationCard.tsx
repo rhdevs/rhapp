@@ -5,7 +5,7 @@ import { MainCard } from './MainCard'
 import { InfoCircleOutlined } from '@ant-design/icons'
 
 const SymbolContainer = styled.div`
-  padding: 2px 10px 0 10px;
+  padding: 1px 10px 0 10px;
 `
 
 const InformationSymbol = styled(InfoCircleOutlined)`
@@ -15,7 +15,8 @@ const InformationSymbol = styled(InfoCircleOutlined)`
 const InformationContainer = styled.div`
   padding: 0 10px 0 0;
   overflow-wrap: anywhere;
-  align-items: center;
+  display: flex;
+  align-items: baseline;
 `
 
 const InformationText = styled.text``
