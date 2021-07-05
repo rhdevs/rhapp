@@ -151,7 +151,14 @@ export default function Supper() {
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
-      {isContactModalOpen && <ContactModal contactModalSetter={setIsContactModalOpen} />}
+      {isContactModalOpen && (
+        <ContactModal
+          orderList={orderList}
+          foodList={foodList}
+          foodId={'12345364832764134'}
+          contactModalSetter={setIsContactModalOpen}
+        />
+      )}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
           foodList={foodList}

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { foodList } from '../../store/stubs'
 import { FoodLine } from './FoodLine'
 import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
@@ -40,8 +39,9 @@ const HeaderText = styled.text`
 const CloseButton = styled(CloseOutlined)`
   font-size: 21px;
 `
+const ContactsContainer = styled.div``
 
-const ContactsContainer = styled.div`
+const ContactCard = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -56,11 +56,13 @@ const IdentityContainer = styled.div`
 `
 
 const IdentitySymbol = styled(UserOutlined)`
-  font-size: 20px;
+  font-size: 25px;
 `
 
 const NameContainer = styled.div`
   padding: 0 10px;
+  display: flex;
+  align-items: center;
 `
 
 const Name = styled.text`
@@ -87,28 +89,27 @@ type Prop = {
 export const ContactModal = (props: Prop) => {
   const filteredFoodList = props.foodList.find((food) => food.foodId === props.foodId)
   const contacts = filteredFoodList?.userIdList
-	let userDetails: string[][] = []
-
-	contacts?.map((userId) => {
-		let detail: string[] = []
-		props.orderList
-			.filter((order) => order.user.userID === userId)
-			.map((order) => {
-				detail = [userId, order.user.displayName, order.user.telegramHandle]
-				userDetails.push(detail)
-			})
+  const userDetails: string[][] = [
+    ['1', 'Gougou', 'v'],
+    ['2', 'Moumou', 'y'],
+  ]
+  contacts?.map((userId) => {
+    let detail: string[] = []
+    props.orderList
+      .filter((order) => order.user.userID === userId)
+      .map((order) => {
+        detail = [userId, order.user.displayName, order.user.telegramHandle]
+        userDetails.push(detail)
+      })
+  })
 
   const onCloseClick = () => {
     props.contactModalSetter(false)
   }
 
-  const onContactClick = (telegramhandle: string) => {
-    return openUserTelegram(telegramhandle)
-  }
-
   return (
     <OverlayBackground>
-      <MainCard flexDirection="column" margin="80px 30px" padding="20px 25px" minHeight="340px">
+      <MainCard flexDirection="column" margin="80px 30px" padding="20px 25px" minHeight="320px">
         <HeaderContainer>
           <HeaderText>Contact Users</HeaderText>
           <CloseButton onClick={onCloseClick} />
@@ -120,25 +121,33 @@ export const ContactModal = (props: Prop) => {
           padding="10px"
           margin="10px 0"
           hasNoQuantity
-        /> 
-        {userDetails.every((userDetail) => {
-						let index = userDetail[0]
-						let name = userDetail[1]
-						let tele = userDetail[2]
-						return (
-						<ContactsContainer key={index}>
-              <IdentityContainer>
-                <IdentitySymbol />
-                <NameContainer>
-                  <Name>{name}</Name>
-                </NameContainer>
-              </IdentityContainer>
-              <ButtonContainer>
-                <Button src={telegram_black} alt="telegram share button" onClick={onContactClick(tele)} />
-              </ButtonContainer>
-            </ContactsContainer>)
-				})
-        }
+        />
+        <ContactsContainer>
+          {userDetails.map((userDetail) => {
+            const index = userDetail[0]
+            const name = userDetail[1]
+            const tele = userDetail[2]
+            return (
+              <ContactCard key={index}>
+                <IdentityContainer>
+                  <IdentitySymbol />
+                  <NameContainer>
+                    <Name>{name}</Name>
+                  </NameContainer>
+                </IdentityContainer>
+                <ButtonContainer>
+                  <Button
+                    src={telegram_black}
+                    alt="telegram share button"
+                    onClick={() => {
+                      openUserTelegram(tele)
+                    }}
+                  />
+                </ButtonContainer>
+              </ContactCard>
+            )
+          })}
+        </ContactsContainer>
       </MainCard>
     </OverlayBackground>
   )
