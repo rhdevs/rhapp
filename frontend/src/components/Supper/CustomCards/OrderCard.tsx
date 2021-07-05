@@ -107,6 +107,8 @@ const PriceTitleText = styled.text`
   font-weight: 500;
   font-size: 14px;
   line-height: 14px;
+  display: flex;
+  align-items: center;
 `
 
 const PriceText = styled.text`
@@ -140,6 +142,16 @@ const SubtotalPrice = styled.text`
   line-height: 14px;
 `
 
+const UpdateTextButton = styled.text`
+  padding: 0 7px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+  text-decoration-line: underline;
+  color: ${V1_RED};
+`
+
 type Props = {
   supperGroup?: SupperGroup
   ownerId: string | undefined
@@ -162,12 +174,13 @@ export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const [isEditedModalOpen, setIsEditedModalOpen] = useState<boolean>(false)
+  const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
   const isFoodListEmpty = ((foodList?.length ?? 0) <= 0) as boolean
-  const isCollatedFoodListEmpty = (collatedFoodList?.length ?? 0 <= 0) as boolean
+  const isCollatedFoodListEmpty = ((collatedFoodList?.length ?? 0) <= 0) as boolean
   const wasEdited = props.wasEdited ?? false
   const supperGroupId = props.supperGroup?.supperGroupId ?? props.order?.supperGroupId ?? props.supperGroupId
   const orderId = props.order?.orderId ?? props.orderId
@@ -202,13 +215,18 @@ export const OrderCard = (props: Props) => {
   deliveryFee = `$${deliveryFee.toFixed(2)}`
   total = `$${total.toFixed(2)}`
 
-  const PriceSection = () => {
+  //TODO: Add update delivery modal
+  const updateDeliveryModal = <></>
+  const PriceSection = ({ update }: { update?: boolean }) => {
     return (
       <PriceMainContainer>
         <PriceTitleText>Subtotal</PriceTitleText>
         <PriceText>{subTotal}</PriceText>
 
-        <PriceTitleText>Delivery Fee</PriceTitleText>
+        <PriceTitleText>
+          Delivery Fee{' '}
+          {update && <UpdateTextButton onClick={() => setIsUpdateDeliveryModalOpen(true)}>update</UpdateTextButton>}
+        </PriceTitleText>
         <PriceText>{deliveryFee}</PriceText>
 
         <TotalTitleText>Total</TotalTitleText>
@@ -308,7 +326,9 @@ export const OrderCard = (props: Props) => {
   const collatedFoodContent = () => (
     <>
       {isCollatedFoodListEmpty ? (
-        <EmptyCart />
+        <>
+          <EmptyCart />
+        </>
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
@@ -334,7 +354,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
-          <PriceSection />
+          <PriceSection update={isEditable} />
         </>
       )}
     </>
@@ -408,7 +428,7 @@ export const OrderCard = (props: Props) => {
                       margin="5px 0"
                       isEditable={isOrderEditable}
                       onEditClick={() => onEditClick(food.foodId)}
-                      wasEdited //={wasEdited}
+                      wasEdited={wasEdited}
                       wasEditedModalSetter={setIsEditedModalOpen}
                       isCancelActionClickable={isOwner}
                       cancelActionOnClick={cancelActionOnClick}
@@ -427,7 +447,7 @@ export const OrderCard = (props: Props) => {
             </>
           )
         })}
-        <PriceSection />
+        <PriceSection update={isEditable} />
       </>
     )
   }
@@ -437,6 +457,7 @@ export const OrderCard = (props: Props) => {
       <>
         {isEditedModalOpen && wasEditedModal}
         {isCancelActionModalOpen && cancelActionModal}
+        {isUpdateDeliveryModalOpen && updateDeliveryModal}
       </>
       {isOwner ? (
         <Tabs valueNamesArr={['User', 'Food']} childrenArr={[ownerViewFoodContent(), collatedFoodContent()]} />
