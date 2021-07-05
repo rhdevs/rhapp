@@ -1,1 +1,7 @@
-Flask==1.1.1
+pymongo >= 3.11.2
+flask >= 1.1.2
+dnspython >= 2.0.0
+flask-cors >= 3.0.10
+gevent >= 21.1.2
+PyJWT >= 1.2.0
+flask-mail >= 0.9.1

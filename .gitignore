@@ -37,3 +37,6 @@ yarn-error.log/
 /.env
 .env/
 */.env
+
+# IDE stuff
+.idea/

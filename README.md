@@ -67,7 +67,7 @@ More Details coming soon! :-)
 ### About Us
 We are a CCA from Raffles Hall, National University of Singapore. Frustrated by the modernisation efforts by the nature of a gigantuan organisation, we've decided to use our knowledge and skills to ease our day-to-day life in the hostel.
 
-With us, we have 3 main departments; The `Developers`, The Designers and The Product Managers!
+With us, we have 2 main departments; The `Developers` and The Product Managers!
 
 ## Getting Started
 To run the application on your local machine, follow the steps below.
