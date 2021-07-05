@@ -27,6 +27,7 @@ def load_mail():
     current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
     current_app.config['MAIL_USE_TLS'] = True
     current_app.config['MAIL_USE_SSL'] = False
+    current_app.config['SERVER_NAME'] = 'rhapp.lol'
     return Mail(current_app)
 
 # Uncomment the create_index command if you need to recreate the expiration index for Session collection
@@ -213,12 +214,14 @@ def submitEmail():
                 {'userID': associatedUser['userID'],
                  'email': email
                  })
+            with current_app.test_request_context():
+                redirectUrl = url_for('authentication.reset_token', token=newResetToken,_external=True)
             msg = Message('Password Reset for RHApp',
                           sender=current_app.config.get("MAIL_USERNAME"),
                           recipients=[email])
             msg.body = f'''To reset your password, please visit this URL:\n 
             
-            {url_for('authentication.reset_token', token=newResetToken,_external=True)}\n
+            {redirectUrl}\n
 
             If you didn't request for a password reset, please ignore this message.
             
