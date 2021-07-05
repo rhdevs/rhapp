@@ -7,8 +7,6 @@ import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import telegram_black from '../../assets/telegram_black.svg'
 import { openUserTelegram } from '../../common/telegramMethods'
 import { Food, Order } from '../../store/supper/types'
-import { V1_RED } from '../../common/colours'
-import { Skeleton } from '../Skeleton'
 
 const OverlayBackground = styled.div`
   position: fixed;
