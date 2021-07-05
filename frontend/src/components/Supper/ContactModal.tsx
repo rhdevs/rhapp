@@ -7,6 +7,8 @@ import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import telegram_black from '../../assets/telegram_black.svg'
 import { openUserTelegram } from '../../common/telegramMethods'
 import { Food, Order } from '../../store/supper/types'
+import { V1_RED } from '../../common/colours'
+import { Skeleton } from '../Skeleton'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -72,6 +74,16 @@ const Name = styled.text`
   font-size: 16px;
   line-height: 14px;
 `
+const EmptyContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+`
+
+const EmptyContact = styled.text`
+  font-size: 15px;
+  font-weight: 400;
+`
 
 const ButtonContainer = styled.div``
 
@@ -89,17 +101,15 @@ type Prop = {
 export const ContactModal = (props: Prop) => {
   const filteredFoodList = props.foodList.find((food) => food.foodId === props.foodId)
   const contacts = filteredFoodList?.userIdList
-  const userDetails: string[][] = [
-    ['1', 'Gougou', 'v'],
-    ['2', 'Moumou', 'y'],
-  ]
+  let userDetails: string[][] | undefined
+
   contacts?.map((userId) => {
     let detail: string[] = []
     props.orderList
       .filter((order) => order.user.userID === userId)
       .map((order) => {
         detail = [userId, order.user.displayName, order.user.telegramHandle]
-        userDetails.push(detail)
+        userDetails?.push(detail)
       })
   })
 
@@ -109,7 +119,7 @@ export const ContactModal = (props: Prop) => {
 
   return (
     <OverlayBackground>
-      <MainCard flexDirection="column" margin="80px 30px" padding="20px 25px" minHeight="320px">
+      <MainCard flexDirection="column" margin="100px 30px" padding="20px 25px" minHeight="300px">
         <HeaderContainer>
           <HeaderText>Contact Users</HeaderText>
           <CloseButton onClick={onCloseClick} />
@@ -123,30 +133,36 @@ export const ContactModal = (props: Prop) => {
           hasNoQuantity
         />
         <ContactsContainer>
-          {userDetails.map((userDetail) => {
-            const index = userDetail[0]
-            const name = userDetail[1]
-            const tele = userDetail[2]
-            return (
-              <ContactCard key={index}>
-                <IdentityContainer>
-                  <IdentitySymbol />
-                  <NameContainer>
-                    <Name>{name}</Name>
-                  </NameContainer>
-                </IdentityContainer>
-                <ButtonContainer>
-                  <Button
-                    src={telegram_black}
-                    alt="telegram share button"
-                    onClick={() => {
-                      openUserTelegram(tele)
-                    }}
-                  />
-                </ButtonContainer>
-              </ContactCard>
-            )
-          })}
+          {userDetails ? (
+            userDetails.map((userDetail) => {
+              const index = userDetail[0]
+              const name = userDetail[1]
+              const tele = userDetail[2]
+              return (
+                <ContactCard key={index}>
+                  <IdentityContainer>
+                    <IdentitySymbol />
+                    <NameContainer>
+                      <Name>{name}</Name>
+                    </NameContainer>
+                  </IdentityContainer>
+                  <ButtonContainer>
+                    <Button
+                      src={telegram_black}
+                      alt="telegram share button"
+                      onClick={() => {
+                        openUserTelegram(tele)
+                      }}
+                    />
+                  </ButtonContainer>
+                </ContactCard>
+              )
+            })
+          ) : (
+            <EmptyContainer>
+              <EmptyContact>No contact available</EmptyContact>
+            </EmptyContainer>
+          )}
         </ContactsContainer>
       </MainCard>
     </OverlayBackground>
