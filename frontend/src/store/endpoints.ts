@@ -3,9 +3,9 @@ import axios from 'axios'
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
   // AUTH
-  LOGIN = '/auth/login',
-  IS_LOGGEDIN = '/auth/protected',
-  REGISTER = '/auth/register',
+  LOGIN = '/login',
+  IS_LOGGEDIN = '/protected',
+  REGISTER = '/register',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID',
@@ -138,8 +138,8 @@ export const DOMAIN_URL = {
   //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+    ? '//rhapp-backend.rhdevs.repl.co/supper'
+    : '//rhappmiddleware.herokuapp.com/rhappsupper',
 }
 
 async function makeRequest(
@@ -185,8 +185,8 @@ async function makeRequest(
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          ? '//rhapp-backend.rhdevs.repl.co/supper'
+          : '//rhapp-middleware.herokuapp.com/rhappsupper'
       break
   }
   return axios({
