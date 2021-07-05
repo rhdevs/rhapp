@@ -6,7 +6,7 @@ import NotFoundCatImg from '../../../assets/notFound.svg'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: #fafaf4;
   text-align: center;
 `

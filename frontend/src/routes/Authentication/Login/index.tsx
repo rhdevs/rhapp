@@ -13,7 +13,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 const LoginContainer = styled.div`
   height: 100vh !important;
   margin: 0px 23px;
-  padding-top: 70px;
+  padding-top: 50px;
   text-align: center;
 `
 
@@ -58,9 +58,13 @@ const PostButton = styled.div`
     background: #de5f4c;
     border-color: #de5f4c;
   }
+  .ant-btn-default: {
+    float: left;
+    width: 50% !important;
+  }
 `
 const AlertGroup = styled.div`
-  margin: 23px;
+  margin: 0px;
 `
 const StyledUsernameInput = styled.div`
   .ant-input {
@@ -152,7 +156,6 @@ export default function Login() {
             />
           </StyledUsernameInput>
           <br />
-          <br />
           <InputTextLabel>Password: </InputTextLabel>
           <StyledPasswordInput>
             <Input.Password
@@ -164,7 +167,7 @@ export default function Login() {
               onPressEnter={loginHandler}
             />
           </StyledPasswordInput>
-          <br /> <br />
+          <br />
           {error.message !== '' && (
             <AlertGroup>
               <Alert message={error.message} type="error" closable showIcon />
@@ -187,6 +190,17 @@ export default function Login() {
               }}
             >
               Register
+            </Button>
+            <Button
+              type="default"
+              shape="round"
+              size="large"
+              block
+              onClick={() => {
+                history.push(PATHS.FORGET_PASSWORD_PAGE)
+              }}
+            >
+              Forget Password
             </Button>
           </PostButton>
         </LoginContainer>
