@@ -13,6 +13,7 @@ import useSnackbar from '../../../hooks/useSnackbar'
 import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
+import { openUserTelegram } from '../../../common/telegramMethods'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -116,6 +117,29 @@ const PriceText = styled.text`
   justify-self: end;
 `
 
+const SubtotalContainer = styled.div`
+  padding: 10px 0 8px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const SubtotalText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+`
+
+const SubtotalPrice = styled.text`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+`
+
 type Props = {
   supperGroup?: SupperGroup
   ownerId: string | undefined
@@ -147,7 +171,7 @@ export const OrderCard = (props: Props) => {
   const wasEdited = props.wasEdited ?? false
   const supperGroupId = props.supperGroup?.supperGroupId ?? props.order?.supperGroupId ?? props.supperGroupId
   const orderId = props.order?.orderId ?? props.orderId
-  const isOwner = localStorage.userID !== (props.supperGroup?.ownerId ?? props.ownerId)
+  const isOwner = localStorage.userID === (props.supperGroup?.ownerId ?? props.ownerId)
   const supperGroupStatus = props.supperGroup?.status ?? props.supperGroupStatus
   const supperGroupIsOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
@@ -350,7 +374,7 @@ export const OrderCard = (props: Props) => {
             </CardHeaderContainer>
           )
           const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
-
+          const orderSubtotal = `$${order.totalCost.toFixed(2)}`
           const EmptyCartContainer = () => {
             if (isOwnerFood) {
               return <OwnerEmptyCartSection />
@@ -359,6 +383,12 @@ export const OrderCard = (props: Props) => {
             }
           }
 
+          const cancelActionOnClick = () => {
+            if (!isOwnerFood) {
+              console.log('jdahshfs')
+              return openUserTelegram(telegramHandle)
+            }
+          }
           return (
             <>
               {topSection}
@@ -378,10 +408,10 @@ export const OrderCard = (props: Props) => {
                       margin="5px 0"
                       isEditable={isOrderEditable}
                       onEditClick={() => onEditClick(food.foodId)}
-                      wasEdited={wasEdited}
+                      wasEdited //={wasEdited}
                       wasEditedModalSetter={setIsEditedModalOpen}
                       isCancelActionClickable={isOwner}
-                      cancelActionModalSetter={setIsCancelActionModalOpen}
+                      cancelActionOnClick={cancelActionOnClick}
                       food={food}
                       supperGroupId={supperGroupId}
                       orderId={orderId}
@@ -389,6 +419,10 @@ export const OrderCard = (props: Props) => {
                   )
                 })
               )}
+              <SubtotalContainer>
+                <SubtotalText>Subtotal</SubtotalText>
+                <SubtotalPrice>{orderSubtotal}</SubtotalPrice>
+              </SubtotalContainer>
               <HorizontalLine />
             </>
           )
