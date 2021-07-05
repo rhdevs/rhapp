@@ -78,7 +78,7 @@ export default function Login() {
         userID: username,
         passwordHash: passwordHash,
       }
-      await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.LOGIN, {
         method: 'POST',
         mode: 'cors',
         headers: {
