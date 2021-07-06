@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { V1_RED } from '../../common/colours'
 import editIcon from '../../assets/RedSupperEditIcon.svg'
 
-import { CancelAction, Food } from '../../store/supper/types'
+import { CancelAction, Food, UpdateAction, Updates } from '../../store/supper/types'
 import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
@@ -19,7 +19,7 @@ const Background = styled.div<{
   borderRadius?: string
 }>`
   display: grid;
-  grid-template-columns: ${(props) => (props.hasNoQuantity ? '' : '8%')} auto auto;
+  grid-template-columns: ${(props) => (props.hasNoQuantity ? '' : '5%')} auto auto;
   grid-template-rows: max-content;
   ${(props) =>
     props.hasFoodName
@@ -59,7 +59,7 @@ const FoodNameContainer = styled.div`
   line-height: 17px;
 `
 
-const PriceContainer = styled.div`
+const PriceContainer = styled.div<{ color?: string }>`
   grid-area: price;
   font-family: Inter;
   font-style: normal;
@@ -68,6 +68,7 @@ const PriceContainer = styled.div`
   line-height: 14px;
   justify-self: end;
   padding-right: 5px;
+  color: ${(props) => props.color};
 `
 
 const MainContainer = styled.div`
@@ -142,9 +143,11 @@ type Props = {
   customisations?: string[]
   comments?: string
   cancelAction?: CancelAction
+  updates?: Updates
   // Actions
   showError?: boolean
   isCancelActionClickable?: boolean
+  cancelActionOnClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   cancelActionModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
   isEditable?: boolean
   onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
@@ -175,6 +178,8 @@ export const FoodLine = (props: Props) => {
   )
   const comments = props.food?.comments ?? props.comments
   const cancelAction = props.food?.cancelAction ?? props.cancelAction
+  const updates = props.food?.updates ?? props.updates
+  const wasEdited = props.wasEdited ?? updates ? true : false
 
   const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (props.onEditClick) {
@@ -183,10 +188,14 @@ export const FoodLine = (props: Props) => {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${foodId}`)
     }
   }
-  const onCancelActionClick = (e: { preventDefault: () => void }) => {
+  const onCancelActionClick = (e, cancelAction?: CancelAction) => {
     e.preventDefault()
-    if (props.cancelActionModalSetter) {
-      props.cancelActionModalSetter(true)
+    if (cancelAction === CancelAction.CONTACT) {
+      if (props.cancelActionOnClick) {
+        props.cancelActionOnClick(e)
+      } else if (props.cancelActionModalSetter) {
+        props.cancelActionModalSetter(true)
+      }
     }
   }
 
@@ -209,6 +218,12 @@ export const FoodLine = (props: Props) => {
         return <></>
       }
     } else {
+      let priceValue = price
+      if (updates?.updateAction === UpdateAction.REMOVE) {
+        priceValue = '$0.00'
+      } else if (updates?.updateAction === UpdateAction.UPDATE) {
+        priceValue = `$${(updates.updatedPrice ?? 0).toFixed(2)}`
+      }
       return (
         <>
           {quantity && !hasNoQuantity && (
@@ -217,10 +232,17 @@ export const FoodLine = (props: Props) => {
           {foodName && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
-          <PriceContainer>{isLoading ? <Skeleton width="35px" /> : price}</PriceContainer>
+          <PriceContainer color={wasEdited ? V1_RED : 'black'}>
+            {isLoading ? <Skeleton width="35px" /> : priceValue}
+          </PriceContainer>
           <MainContainer>
             {isLoading ? (
               <Skeleton width="200px" height="50px" />
+            ) : wasEdited ? (
+              <>
+                {updates?.change && <StyledText color={V1_RED}>Change: {updates?.change}</StyledText>}
+                <StyledText color={V1_RED}>Reason: {updates?.reason ?? '-'}</StyledText>
+              </>
             ) : (
               <>
                 {customisations?.map((custom, index) => {
@@ -234,19 +256,28 @@ export const FoodLine = (props: Props) => {
                 )}
                 <ExtraTextContainer>
                   <BoldText>If unavailable: </BoldText>
-                  <StyledText onClick={onCancelActionClick} color={props.isCancelActionClickable ? V1_RED : 'black'}>
+                  <StyledText
+                    onClick={(e) => onCancelActionClick(e, cancelAction)}
+                    color={props.isCancelActionClickable ? V1_RED : 'black'}
+                  >
                     {cancelAction}
                   </StyledText>
                 </ExtraTextContainer>
               </>
             )}
           </MainContainer>
-          {!isLoading && (props.isEditable || props.wasEdited) && (
-            <IconContainer wasEdited={props.wasEdited}>
+          {!isLoading && (props.isEditable || wasEdited) && (
+            <IconContainer wasEdited={wasEdited}>
               {props.isEditable ? (
                 <Icon onClick={onEditClick} src={editIcon} alt="Edit Icon" />
               ) : (
-                <StyledEditedText onClick={onOwnerEditClick}>(edited)</StyledEditedText>
+                <StyledEditedText onClick={onOwnerEditClick}>
+                  {updates?.updateAction === UpdateAction.UPDATE
+                    ? `(edited)`
+                    : updates?.updateAction === UpdateAction.REMOVE
+                    ? `(not avail)`
+                    : ''}
+                </StyledEditedText>
               )}
             </IconContainer>
           )}

@@ -22,6 +22,7 @@ import {
   supperGroupStatusList,
   foodMenuStub,
   supperGroupStub,
+  dummyCollatedOrderList,
 } from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
@@ -55,9 +56,10 @@ export default function Supper() {
   return (
     <>
       <div style={{ width: '80vw' }}>
-        <FoodLine wasEdited backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
+        <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
       <OrderCard
+        collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}
         ownerId={'A1234567B'}
         // isEditable

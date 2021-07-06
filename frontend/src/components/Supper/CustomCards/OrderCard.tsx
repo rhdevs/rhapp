@@ -13,6 +13,7 @@ import useSnackbar from '../../../hooks/useSnackbar'
 import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
+import { openUserTelegram } from '../../../common/telegramMethods'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -106,6 +107,8 @@ const PriceTitleText = styled.text`
   font-weight: 500;
   font-size: 14px;
   line-height: 14px;
+  display: flex;
+  align-items: center;
 `
 
 const PriceText = styled.text`
@@ -114,6 +117,39 @@ const PriceText = styled.text`
   font-size: 14px;
   line-height: 14px;
   justify-self: end;
+`
+
+const SubtotalContainer = styled.div`
+  padding: 10px 0 8px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const SubtotalText = styled.text`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+`
+
+const SubtotalPrice = styled.text`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 14px;
+`
+
+const UpdateTextButton = styled.text`
+  padding: 0 7px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+  text-decoration-line: underline;
+  color: ${V1_RED};
 `
 
 type Props = {
@@ -138,16 +174,17 @@ export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const [isEditedModalOpen, setIsEditedModalOpen] = useState<boolean>(false)
+  const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
   const isFoodListEmpty = ((foodList?.length ?? 0) <= 0) as boolean
-  const isCollatedFoodListEmpty = (collatedFoodList?.length ?? 0 <= 0) as boolean
+  const isCollatedFoodListEmpty = ((collatedFoodList?.length ?? 0) <= 0) as boolean
   const wasEdited = props.wasEdited ?? false
   const supperGroupId = props.supperGroup?.supperGroupId ?? props.order?.supperGroupId ?? props.supperGroupId
   const orderId = props.order?.orderId ?? props.orderId
-  const isOwner = localStorage.userID !== (props.supperGroup?.ownerId ?? props.ownerId)
+  const isOwner = localStorage.userID === (props.supperGroup?.ownerId ?? props.ownerId)
   const supperGroupStatus = props.supperGroup?.status ?? props.supperGroupStatus
   const supperGroupIsOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
@@ -178,13 +215,18 @@ export const OrderCard = (props: Props) => {
   deliveryFee = `$${deliveryFee.toFixed(2)}`
   total = `$${total.toFixed(2)}`
 
-  const PriceSection = () => {
+  //TODO: Add update delivery modal
+  const updateDeliveryModal = <></>
+  const PriceSection = ({ update }: { update?: boolean }) => {
     return (
       <PriceMainContainer>
         <PriceTitleText>Subtotal</PriceTitleText>
         <PriceText>{subTotal}</PriceText>
 
-        <PriceTitleText>Delivery Fee</PriceTitleText>
+        <PriceTitleText>
+          Delivery Fee{' '}
+          {update && <UpdateTextButton onClick={() => setIsUpdateDeliveryModalOpen(true)}>update</UpdateTextButton>}
+        </PriceTitleText>
         <PriceText>{deliveryFee}</PriceText>
 
         <TotalTitleText>Total</TotalTitleText>
@@ -284,7 +326,9 @@ export const OrderCard = (props: Props) => {
   const collatedFoodContent = () => (
     <>
       {isCollatedFoodListEmpty ? (
-        <EmptyCart />
+        <>
+          <EmptyCart />
+        </>
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
@@ -310,7 +354,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
-          <PriceSection />
+          <PriceSection update={isEditable} />
         </>
       )}
     </>
@@ -350,7 +394,7 @@ export const OrderCard = (props: Props) => {
             </CardHeaderContainer>
           )
           const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
-
+          const orderSubtotal = `$${order.totalCost.toFixed(2)}`
           const EmptyCartContainer = () => {
             if (isOwnerFood) {
               return <OwnerEmptyCartSection />
@@ -359,6 +403,12 @@ export const OrderCard = (props: Props) => {
             }
           }
 
+          const cancelActionOnClick = () => {
+            if (!isOwnerFood) {
+              console.log('jdahshfs')
+              return openUserTelegram(telegramHandle)
+            }
+          }
           return (
             <>
               {topSection}
@@ -381,7 +431,7 @@ export const OrderCard = (props: Props) => {
                       wasEdited={wasEdited}
                       wasEditedModalSetter={setIsEditedModalOpen}
                       isCancelActionClickable={isOwner}
-                      cancelActionModalSetter={setIsCancelActionModalOpen}
+                      cancelActionOnClick={cancelActionOnClick}
                       food={food}
                       supperGroupId={supperGroupId}
                       orderId={orderId}
@@ -389,11 +439,15 @@ export const OrderCard = (props: Props) => {
                   )
                 })
               )}
+              <SubtotalContainer>
+                <SubtotalText>Subtotal</SubtotalText>
+                <SubtotalPrice>{orderSubtotal}</SubtotalPrice>
+              </SubtotalContainer>
               <HorizontalLine />
             </>
           )
         })}
-        <PriceSection />
+        <PriceSection update={isEditable} />
       </>
     )
   }
@@ -403,6 +457,7 @@ export const OrderCard = (props: Props) => {
       <>
         {isEditedModalOpen && wasEditedModal}
         {isCancelActionModalOpen && cancelActionModal}
+        {isUpdateDeliveryModalOpen && updateDeliveryModal}
       </>
       {isOwner ? (
         <Tabs valueNamesArr={['User', 'Food']} childrenArr={[ownerViewFoodContent(), collatedFoodContent()]} />
