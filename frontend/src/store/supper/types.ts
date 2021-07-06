@@ -154,6 +154,12 @@ export enum UserType {
   WATCHER = 'Watcher',
 }
 
+export type UserDetails = {
+  userId: string
+  name: string
+  telegramHandle: string
+}
+
 export type Updates = {
   updateAction?: UpdateAction
   reason?: string
