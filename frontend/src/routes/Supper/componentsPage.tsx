@@ -43,7 +43,7 @@ import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
-import { NotificationBar } from '../../components/Supper/NotificationBar'
+// import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`

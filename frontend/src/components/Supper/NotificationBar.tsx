@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { closeSupperNotification, getSupperNotification } from '../../store/supper/action'
+import { /*closeSupperNotification,*/ getSupperNotification } from '../../store/supper/action'
 
 const Container = styled.div`
   position: fixed;
