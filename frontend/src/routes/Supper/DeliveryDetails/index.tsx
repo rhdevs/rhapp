@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
@@ -10,11 +10,18 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
-import { getSupperGroupById, getReadableSupperGroupId, setEstimatedArrivalTime } from '../../../store/supper/action'
+import {
+  getSupperGroupById,
+  getReadableSupperGroupId,
+  setEstimatedArrivalTime,
+  updateSupperGroup,
+  unixTo12HourTime,
+} from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
 import { V1_BACKGROUND } from '../../../common/colours'
+import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 
 const Background = styled.div`
   width: 100vw;
@@ -116,36 +123,91 @@ type FormValues = {
 }
 
 const DeliveryDetails = () => {
-  const { register, handleSubmit, watch, errors, control } = useForm<FormValues>()
+  const { register, handleSubmit, reset, watch, errors, control } = useForm<FormValues>({
+    shouldUnregister: false,
+  })
+  const history = useHistory()
   const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
   const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
+  const [orderStatusHasError, setOrderStatusHasError] = useState<boolean>(false)
+  const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
   const currentUNIXDate = Math.round(Date.now() / 1000)
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
   const errorStyling = {
     borderColor: 'red',
     background: '#ffd1d1',
   }
+
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(
       setEstimatedArrivalTime(
-        calculateArrivalTime(supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20),
+        calculateArrivalTime(
+          supperGroup?.estArrivalTime ? Math.round((supperGroup?.estArrivalTime - currentUNIXDate) / 60) : 20,
+        ),
       ),
     )
   }, [dispatch])
 
-  const onClick = () => {
-    console.log(watch())
+  // To set initial fields with suppergroup details
+  useEffect(() => {
+    reset({
+      location: supperGroup?.location,
+      cancelReason: supperGroup?.comments,
+    })
+  }, [reset, supperGroup])
+
+  // To control status error
+  useEffect(() => {
+    if (
+      selectedSupperGroupStatus === SupperGroupStatus.ORDERED ||
+      selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+      selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
+    ) {
+      setOrderStatusHasError(false)
+    }
+  }, [selectedSupperGroupStatus])
+
+  const onSubmit = () => {
+    // Check if status is filled
+    if (
+      selectedSupperGroupStatus !== SupperGroupStatus.ORDERED &&
+      selectedSupperGroupStatus !== SupperGroupStatus.ARRIVED &&
+      selectedSupperGroupStatus !== SupperGroupStatus.CANCELLED
+    ) {
+      setOrderStatusHasError(true)
+      return
+    }
     handleSubmit((data) => {
-      console.log('Save changes!')
-      //TODO: Update status, delivery time, delivery duration (estArrivalTime, deliveryTime) and location
-      console.log(selectedSupperGroupStatus + ',' + estArrivalTime + ',' + deliveryTime + ',' + data.location)
-      console.log(errors)
-      //TODO: Update comments when status === cancelled
+      const initialGroup = supperGroup
+      if (
+        initialGroup?.status === selectedSupperGroupStatus &&
+        unixTo12HourTime(initialGroup?.estArrivalTime) === estArrivalTime &&
+        initialGroup?.comments === data.cancelReason &&
+        initialGroup?.location === data.location
+      ) {
+        // No changes were made - ignore submission
+        return
+      }
+      console.log(Math.round(Date.now() / 1000) + 60 * deliveryTime)
+      if (selectedSupperGroupStatus === SupperGroupStatus.CANCELLED) {
+        const updatedInfo = {
+          status: selectedSupperGroupStatus,
+          comments: data.cancelReason,
+        }
+        dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+      } else {
+        const updatedInfo = {
+          status: selectedSupperGroupStatus,
+          estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime,
+          location: data.location,
+        }
+        dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+      }
     })()
   }
 
@@ -155,22 +217,55 @@ const DeliveryDetails = () => {
   }
 
   useEffect(() => {
-    if (deliveryTime !== (supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20)) {
+    if (
+      deliveryTime !==
+      (supperGroup?.estArrivalTime ? Math.round((supperGroup?.estArrivalTime - currentUNIXDate) / 60) : 20)
+    ) {
       dispatch(setEstimatedArrivalTime(calculateArrivalTime(deliveryTime)))
     }
   }, [deliveryTime])
 
+  // Transform unix time to minutes
+  const defaultDeliveryTime = supperGroup?.estArrivalTime
+    ? Math.round((supperGroup?.estArrivalTime - currentUNIXDate) / 60)
+    : 20
+
+  const onLeftClick = () => {
+    if (
+      supperGroup?.status === selectedSupperGroupStatus &&
+      unixTo12HourTime(supperGroup?.estArrivalTime) === estArrivalTime &&
+      supperGroup?.comments === watch('cancelReason') &&
+      supperGroup?.location === watch('location')
+    ) {
+      // No changes were made
+      history.goBack()
+    } else {
+      setHasChangedModal(true)
+    }
+  }
+
   return (
     <Background>
-      <TopNavBar title="Delivery Details" />
+      <TopNavBar title="Delivery Details" onLeftClick={onLeftClick} />
       <MainContainer>
         {isLoading ? (
           <LoadingSpin />
         ) : (
           <>
+            {hasChangedModal && (
+              <ConfirmationModal
+                title="Discard Changes?"
+                hasLeftButton
+                leftButtonText="Delete"
+                onLeftButtonClick={() => history.goBack()}
+                rightButtonText="Cancel"
+                onRightButtonClick={() => setHasChangedModal(false)}
+              />
+            )}
             <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
             <StyledText>Order Status</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
+            {orderStatusHasError && <ErrorText>Status required!</ErrorText>}
             {supperGroupIsCancelled ? (
               <CancellationBox>
                 <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
@@ -179,7 +274,7 @@ const DeliveryDetails = () => {
                     name="cancelReason"
                     render={({ onChange, value }) => (
                       <InputRow
-                        placeholder="Tell us what your event is about!"
+                        placeholder="e.g. Driver cancelled, Restaurant cancelled.."
                         textarea
                         value={value}
                         onChange={onChange}
@@ -193,7 +288,7 @@ const DeliveryDetails = () => {
                     control={control}
                     defaultValue={null}
                   />
-                  {errors.cancelReason?.type && <ErrorText>This is required!</ErrorText>}
+                  {errors.cancelReason?.type && <ErrorText>Reason for cancellation required!</ErrorText>}
                 </CancellationInputBox>
               </CancellationBox>
             ) : (
@@ -202,10 +297,7 @@ const DeliveryDetails = () => {
                   <StyledText>Delivery Time</StyledText>
                   <StyledTimeText>{estArrivalTime}</StyledTimeText>
                 </DeliveryTimeContainer>
-                <DeliveryTimeSetter
-                  center
-                  default={supperGroup?.estArrivalTime ? supperGroup?.estArrivalTime - currentUNIXDate : 20}
-                />
+                <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
                 <br />
                 <StyledText>Collection Point {RedAsterisk}</StyledText>
                 <>
@@ -219,7 +311,7 @@ const DeliveryDetails = () => {
                     })}
                     style={errors.location ? errorStyling : {}}
                   />
-                  {errors.location?.type === 'required' && <ErrorText>This is required!</ErrorText>}
+                  {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
                   {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
                 </>
               </>
@@ -237,7 +329,7 @@ const DeliveryDetails = () => {
                   fontSize: '17px',
                   lineHeight: '22px',
                 }}
-                onButtonClick={onClick}
+                onButtonClick={onSubmit}
                 isFlipButton={false}
               />
             </ButtonContainer>
