@@ -153,6 +153,12 @@ export enum UserType {
   WATCHER = 'Watcher',
 }
 
+export type UserDetails = {
+  userId: string
+  name: string
+  telegramHandle: string
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',

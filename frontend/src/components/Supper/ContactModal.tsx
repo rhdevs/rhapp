@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { FoodLine } from './FoodLine'
 import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
-import telegram_black from '../../assets/telegram_black.svg'
-import { openUserTelegram } from '../../common/telegramMethods'
-import { Food, Order } from '../../store/supper/types'
+import { Food, Order, UserDetails } from '../../store/supper/types'
+import { TelegramShareButton } from '../TelegramShareButton'
+import { userDetailsStub } from '../../store/stubs'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -46,7 +46,7 @@ const ContactCard = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 5px 20px;
-  align-items: flex-end;
+  align-items: end;
 `
 
 const IdentityContainer = styled.div`
@@ -70,8 +70,8 @@ const Name = styled.text`
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  line-height: 14px;
 `
+
 const EmptyContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -85,28 +85,24 @@ const EmptyContact = styled.text`
 
 const ButtonContainer = styled.div``
 
-const Button = styled.img`
-  width: 25px;
-`
-
 type Prop = {
   orderList: Order[]
-  foodList: Food[]
-  foodId: string
+  food: Food
   contactModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ContactModal = (props: Prop) => {
-  const filteredFoodList = props.foodList.find((food) => food.foodId === props.foodId)
-  const contacts = filteredFoodList?.userIdList
-  let userDetails: string[][] | undefined
+  const contacts = props.food.userIdList
+  let userDetails: UserDetails[] | undefined
 
   contacts?.map((userId) => {
-    let detail: string[] = []
+    let detail: UserDetails
     props.orderList
       .filter((order) => order.user.userID === userId)
       .map((order) => {
-        detail = [userId, order.user.displayName, order.user.telegramHandle]
+        detail.userId = userId
+        detail.name = order.user.displayName
+        detail.telegramHandle = order.user.telegramHandle
         userDetails?.push(detail)
       })
   })
@@ -124,7 +120,7 @@ export const ContactModal = (props: Prop) => {
         </HeaderContainer>
         <FoodLine
           backgroundColor="#EEEEEE"
-          food={filteredFoodList}
+          food={props.food}
           borderRadius="10px"
           padding="10px"
           margin="10px 0"
@@ -132,26 +128,17 @@ export const ContactModal = (props: Prop) => {
         />
         <ContactsContainer>
           {userDetails ? (
-            userDetails.map((userDetail) => {
-              const index = userDetail[0]
-              const name = userDetail[1]
-              const tele = userDetail[2]
+            userDetails.map((userDetail: UserDetails) => {
               return (
-                <ContactCard key={index}>
+                <ContactCard key={userDetail.userId}>
                   <IdentityContainer>
                     <IdentitySymbol />
                     <NameContainer>
-                      <Name>{name}</Name>
+                      <Name>{userDetail.name}</Name>
                     </NameContainer>
                   </IdentityContainer>
                   <ButtonContainer>
-                    <Button
-                      src={telegram_black}
-                      alt="telegram share button"
-                      onClick={() => {
-                        openUserTelegram(tele)
-                      }}
-                    />
+                    <TelegramShareButton telegramHandle={userDetail.telegramHandle} size="26px" />
                   </ButtonContainer>
                 </ContactCard>
               )

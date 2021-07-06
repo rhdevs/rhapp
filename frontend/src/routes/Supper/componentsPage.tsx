@@ -152,12 +152,7 @@ export default function Supper() {
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
       {isContactModalOpen && (
-        <ContactModal
-          orderList={orderList}
-          foodList={foodList}
-          foodId={'12345364832764134'}
-          contactModalSetter={setIsContactModalOpen}
-        />
+        <ContactModal orderList={orderList} food={foodList[0]} contactModalSetter={setIsContactModalOpen} />
       )}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
