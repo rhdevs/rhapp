@@ -13,6 +13,7 @@ import {
   CancelAction,
   Food,
   SupperNotification,
+  UserDetails,
 } from './supper/types'
 
 /**
@@ -319,6 +320,12 @@ export const orderList: Order[] = [
     hasReceived: false, //1 if owner received payment (owner POV)
     createdAt: 12,
   },
+]
+
+export const userDetailsStub: UserDetails[] = [
+  { userId: '1', name: 'Gougou', telegramHandle: 'gg' },
+  { userId: '2', name: 'Moumou has a really really long name...', telegramHandle: 'mm' },
+  { userId: '3', name: 'Poupou', telegramHandle: 'pp' },
 ]
 
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]

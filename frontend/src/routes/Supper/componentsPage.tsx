@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -41,6 +41,7 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
+import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
@@ -54,6 +55,7 @@ const OptionText = styled.text`
 
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
+  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   return (
     <>
       {/* <NotificationBar /> */}
@@ -153,6 +155,9 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
+      {isContactModalOpen && (
+        <ContactModal orderList={orderList} food={foodList[0]} contactModalSetter={setIsContactModalOpen} />
+      )}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
           foodList={foodList}
