@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import bookingsIcon from '../../assets/bookingsIcon.svg'
-import dummyAvatar from '../../assets/dummyAvatar.svg'
 import { PATHS } from '../Routes'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
@@ -12,6 +11,22 @@ import { Radio } from 'antd'
 import 'antd/dist/antd.css'
 import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
+import AlumniRoom from '../../assets/facilitiesLogos/AlumniRoom.svg'
+import BandRoom from '../../assets/facilitiesLogos/BandRoom.svg'
+import BasketballCourt from '../../assets/facilitiesLogos/BasketballCourt.svg'
+import ConferenceRoomKFH from '../../assets/facilitiesLogos/ConferenceRoomKFH.svg'
+import ConferenceRoomUL from '../../assets/facilitiesLogos/ConferenceRoomUL.svg'
+import DanceStudio from '../../assets/facilitiesLogos/DanceStudio.svg'
+import Foyer from '../../assets/facilitiesLogos/Foyer.svg'
+import Gym from '../../assets/facilitiesLogos/Gym.svg'
+import HardCourt from '../../assets/facilitiesLogos/HardCourt.svg'
+import MainAreaCommHall from '../../assets/facilitiesLogos/MainAreaCommHall.svg'
+import MainAreaUL from '../../assets/facilitiesLogos/MainAreaUL.svg'
+import MeetingRoomLL from '../../assets/facilitiesLogos/MeetingRoomLL.svg'
+import PoolAreaLL from '../../assets/facilitiesLogos/PoolAreaLL.svg'
+import Stage from '../../assets/facilitiesLogos/Stage.svg'
+import TVRoom from '../../assets/facilitiesLogos/TVRoom.svg'
+import DummyAvatar from '../../assets/dummyAvatar.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -29,7 +44,9 @@ const FacilityCard = styled.div`
 `
 
 const FacilityAvatar = styled.img`
-  padding: 20px;
+  padding: 10px;
+  width: 30%;
+  max-height 70px;
 `
 
 const FacilityHeader = styled.p`
@@ -137,6 +154,43 @@ export default function FacilityBooking() {
     dispatch(changeTab(e.target.value))
   }
 
+  function FacilityLogo(props: { facilityID: number }) {
+    switch (props.facilityID) {
+      case 1:
+        return <FacilityAvatar src={MainAreaUL} />
+      case 2:
+        return <FacilityAvatar src={ConferenceRoomUL} />
+      case 3:
+        return <FacilityAvatar src={AlumniRoom} />
+      case 4:
+        return <FacilityAvatar src={Foyer} />
+      case 5:
+        return <FacilityAvatar src={Stage} />
+      case 6:
+        return <FacilityAvatar src={MainAreaCommHall} />
+      case 7:
+        return <FacilityAvatar src={BandRoom} />
+      case 8:
+        return <FacilityAvatar src={PoolAreaLL} />
+      case 9:
+        return <FacilityAvatar src={TVRoom} />
+      case 10:
+        return <FacilityAvatar src={MeetingRoomLL} />
+      case 11:
+        return <FacilityAvatar src={ConferenceRoomKFH} />
+      case 12:
+        return <FacilityAvatar src={HardCourt} />
+      case 13:
+        return <FacilityAvatar src={BasketballCourt} />
+      case 14:
+        return <FacilityAvatar src={Gym} />
+      case 15:
+        return <FacilityAvatar src={DanceStudio} />
+      default:
+        return <FacilityAvatar src={DummyAvatar} />
+    }
+  }
+
   return (
     <>
       <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
@@ -164,7 +218,7 @@ export default function FacilityBooking() {
                         dispatch(setSelectedFacility(facility.facilityID))
                       }}
                     >
-                      <FacilityAvatar src={dummyAvatar} />
+                      <FacilityLogo key={facility.facilityID} facilityID={facility.facilityID} />
                       <FacilityLabels>
                         <FacilityHeader>{facility.facilityName}</FacilityHeader>
                         <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>

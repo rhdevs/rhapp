@@ -20,7 +20,8 @@ export type Food = {
   foodPrice: number //with add ons
   cancelAction?: CancelAction
   custom?: Custom[]
-  userIdList?: string[]
+  userIdList?: string[] // for owner to contact users with the same food in collated view
+  updates?: Updates // for owner updates
 }
 
 export type Option = {
@@ -81,7 +82,7 @@ export type Order = {
 
 export type SupperGroup = {
   additionalCost?: number //ie GST, delivery fee
-  comments?: string
+  comments?: string // for cancel reason
   costLimit: number | undefined // can have no limit
   createdAt: number
   currentFoodCost: number //non inclusive of additionalCost
@@ -157,6 +158,18 @@ export type UserDetails = {
   userId: string
   name: string
   telegramHandle: string
+}
+
+export type Updates = {
+  updateAction?: UpdateAction
+  reason?: string
+  change?: string
+  updatedPrice?: number
+}
+
+export enum UpdateAction {
+  UPDATE = 'Update',
+  REMOVE = 'Remove',
 }
 
 export enum SUPPER_ACTIONS {
