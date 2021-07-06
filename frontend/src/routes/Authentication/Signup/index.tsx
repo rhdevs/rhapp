@@ -105,7 +105,7 @@ export default function Signup() {
       telegramHandle: formData.telegram,
     }
     try {
-      await fetch(DOMAIN_URL.SOCIAL + '/auth/register', {
+      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.REGISTER, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -120,7 +120,7 @@ export default function Signup() {
               userID: formData.userId,
               passwordHash: passwordHash,
             }
-            fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.LOGIN, {
+            fetch(DOMAIN_URL.AUTH + ENDPOINTS.LOGIN, {
               method: 'POST',
               mode: 'cors',
               headers: {
@@ -178,6 +178,11 @@ export default function Signup() {
     }
     if (formData.userId.length !== 9 || formData.userId[0] !== 'A' || !formData.userId[8].match(/[A-Z]/i)) {
       setError({ message: 'Please check that your NUS ID is your matriculation number' })
+      pass = false
+      return pass
+    }
+    if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
+      setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
       pass = false
       return pass
     }
