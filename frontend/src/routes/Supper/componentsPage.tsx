@@ -41,8 +41,9 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-import { ContactModal } from '../../components/Supper/ContactModal'
+// import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
+import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
@@ -54,7 +55,7 @@ const OptionText = styled.text`
 
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
-  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   return (
     <>
       <div style={{ width: '80vw' }}>
@@ -123,6 +124,36 @@ export default function Supper() {
           { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
         ]}
       />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.CANCELLED}
+        username="Zhou BaoBao"
+        title="f> SUPPER FRIENDS long long long name just checking how it looks like"
+        orderId="RHSO#1002"
+        cancelReason="Lazy to order"
+        isOwner
+      />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.ORDERED}
+        username="Zhou BaoBao"
+        title="f> SUPPER FRIENDS"
+        orderId="RHSO#1002"
+        isOwner
+      />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        username="Zhou BaoBao"
+        location="Basketball Court"
+        collectionTime="12:30AM"
+        title="f> SUPPER FRIENDS long long long name just checking how it looks like"
+        orderId="RHSO#1002"
+        paymentMethod={[
+          { paymentMethod: PaymentMethod.CASH },
+          { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
+        ]}
+        isOwner
+      />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
@@ -153,9 +184,9 @@ export default function Supper() {
       <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
-      {isContactModalOpen && (
+      {/* {isContactModalOpen && (
         <ContactModal orderList={orderList} food={foodList[0]} contactModalSetter={setIsContactModalOpen} />
-      )}
+      )} */}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
           foodList={foodList}
