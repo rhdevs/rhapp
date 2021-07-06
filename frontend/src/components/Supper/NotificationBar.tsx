@@ -1,74 +1,111 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
 import styled from 'styled-components'
-import CloseIcon from '../../assets/CloseIcon.svg'
+import { CloseOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../routes/Routes'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
+import { closeSupperNotification, getSupperNotification } from '../../store/supper/action'
+
+const Container = styled.div`
+  position: fixed;
+  left: 0;
+  top: 4.5rem;
+  width: 100%;
+  z-index: 1000;
+`
 
 const MainContainer = styled.div`
+  border-radius: 5px;
   display: flex;
-  background: white;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 5px 10px;
-  position: sticky;
-  top: 1rem;
-  left: 0;
-  z-index: 1000;
-  border-radius: 10px;
-  max-width: 300px;
+  width: 85vw;
+  max-width: 400px;
+  margin: auto;
+  padding: 10px 15px;
+  background-color: white;
   box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 6px 16px rgba(0, 0, 0, 0.08),
     0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 `
 
-const HeaderContainer = styled.div``
-
-const TextContainer = styled.div`
+const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  flex: 95%;
 `
 
-const IconContainer = styled.div`
-  padding: 0px 5px;
+const RightContainer = styled.div`
+  flex: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
-const SupperGroupName = styled.text`
-  font-size: 14px;
-  font-weight: bold;
-`
-
-const TitleContent = styled.text`
-  font-size: 14px;
+const HeaderText = styled.text`
+  font-style: normal;
   font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
 `
-const SubHeader = styled.text`
-  font-size: 13px;
+
+const GroupNameText = styled.text`
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 18px;
+`
+
+const DescriptionText = styled.text`
+  font-style: normal;
   font-weight: 200;
+  font-size: 13px;
+  line-height: 18px;
+  padding-top: 3px;
 `
-const CloseButton = styled.img``
 
-type Props = {
-  supperGroupName: string
-  onViewClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  onCloseClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-}
+export const NotificationBar = () => {
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const [isVisible, setIsVisible] = useState<boolean>(false)
 
-export const NotificationBar = (props: Props) => {
+  const { supperNotifications } = useSelector((state: RootState) => state.supper)
+  const onNotifClick = () => {
+    setIsVisible(false)
+    //TODO: Currently it will only open the first notification, should have an interface for when there is more than 1
+    history.push(`${PATHS.VIEW_ORDER}/${supperNotifications[0].supperGroupId}`)
+  }
+
+  const onCloseClick = () => {
+    //Close notification
+    setIsVisible(false)
+    // dispatch(closeSupperNotification(supperNotifications[0]))
+  }
+
+  useEffect(() => {
+    dispatch(getSupperNotification())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (supperNotifications.length) setIsVisible(true)
+  }, [supperNotifications])
+
   return (
-    <>
-      <MainContainer>
-        <TextContainer onClick={props.onViewClick as React.MouseEventHandler<HTMLDivElement>}>
-          <HeaderContainer>
-            <SupperGroupName>{props.supperGroupName}</SupperGroupName>
-            <TitleContent> has been updated!</TitleContent>
-          </HeaderContainer>
-          <SubHeader>Tap to view.</SubHeader>
-        </TextContainer>
-        <IconContainer onClick={props.onCloseClick as React.MouseEventHandler<HTMLDivElement>}>
-          <CloseButton src={CloseIcon} alt="close symbol" />
-        </IconContainer>
-      </MainContainer>
-    </>
+    <Container>
+      {isVisible && (
+        <MainContainer>
+          <LeftContainer onClick={onNotifClick}>
+            <HeaderText>
+              <GroupNameText>{supperNotifications[0].supperGroupName}</GroupNameText> has been updated!
+            </HeaderText>
+            <DescriptionText>Tap to view.</DescriptionText>
+          </LeftContainer>
+          <RightContainer>
+            <CloseOutlined onClick={onCloseClick} />
+          </RightContainer>
+        </MainContainer>
+      )}
+    </Container>
   )
 }

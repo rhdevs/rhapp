@@ -31,7 +31,7 @@ import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbl
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 import { MenuSection } from '../../components/Supper/MenuSection'
-import { NotificationBar } from '../../components/Supper/NotificationBar'
+import { NotificationBarOld } from '../../components/Supper/NotificationBarOld'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
@@ -42,6 +42,7 @@ import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 import { InformationCard } from '../../components/Supper/InformationCard'
+import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
 const OptionText = styled.text`
@@ -55,6 +56,8 @@ export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   return (
     <>
+      {/* <NotificationBar /> */}
+      {/* supperGroupName={'f> SUPPER FRIENDS'} /> */}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
@@ -75,7 +78,7 @@ export default function Supper() {
         label={<OptionText>McCafe Caramel Frappe With Oreo Medium (+$4.45)</OptionText>}
       />
       <RhAppQrCode link="google.com" />
-      <NotificationBar supperGroupName="THIS IS THE GROUP naME" />
+      <NotificationBarOld supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <Checkbox isChecked={true} />
       <BubbleSection title="Order Information" number={1}>
@@ -148,7 +151,6 @@ export default function Supper() {
       />
       {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
-      <NotificationBar supperGroupName={'f> SUPPER FRIENDS'} />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
       {/* {isFoodMenuModalOpen && (

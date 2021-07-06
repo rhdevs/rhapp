@@ -79,6 +79,7 @@ export enum ENDPOINTS {
   SEARCH = '/search',
 
   // SUPPER
+  GET_SUPPER_NOTIFICATIONS = '/notifications',
   ALL_RESTAURANTS = '/restaurants',
   GET_RESTAURANT = '/restaurant',
   GET_RESTAURANT_MENU = '/restaurant',
