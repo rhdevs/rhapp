@@ -98,13 +98,14 @@ const CancellationInputBox = styled.div`
   }
 `
 
-const ErrorText = styled.p`
+const ErrorText = styled.p<{ padding?: string }>`
   margin: 0;
   color: #ff837a;
   width: 100%;
   text-align: center;
   font-size: 14px;
   font-family: 'Inter';
+  ${(props) => props.padding && `padding: ${props.padding};`}
 `
 
 const RedText = styled.text`
@@ -263,9 +264,9 @@ const DeliveryDetails = () => {
               />
             )}
             <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
-            <StyledText>Order Status</StyledText>
+            <StyledText>Order Status {RedAsterisk}</StyledText>
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
-            {orderStatusHasError && <ErrorText>Status required!</ErrorText>}
+            {orderStatusHasError && <ErrorText padding="5px 0 0 0">Status required!</ErrorText>}
             {supperGroupIsCancelled ? (
               <CancellationBox>
                 <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
