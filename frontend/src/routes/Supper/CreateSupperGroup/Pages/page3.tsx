@@ -28,7 +28,8 @@ type FormValues = {
   paymentMethod: PaymentInfo[]
   phoneNumber: number
 }
-
+//payment method
+//phone number
 export const CreateOrderPageThree = () => {
   const dispatch = useDispatch()
   const history = useHistory()

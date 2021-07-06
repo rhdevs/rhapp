@@ -16,12 +16,12 @@ import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbl
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
 import { setSupperGroup, unixToFormattedTime, setCreateOrderPage } from '../../../../store/supper/action'
-import { SupperGroup, SupperGroupStatus } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
-import { ErrorText, InputText } from '..'
+import { ErrorText, initSupperGroup, InputText } from '..'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import { V1_BLUE } from '../../../../common/colours'
+import { Restaurants } from '../../../../store/supper/types'
 
 const VertSectionContainer = styled.div`
   margin: 25px 35px;
@@ -60,9 +60,9 @@ const FixerContainer = styled.div`
 
 type FormValues = {
   supperGroupName: string
-  restaurant: string
+  restaurant: Restaurants
   closingTime: number | undefined
-  maxPrice: number
+  maxPrice: number | undefined
 }
 
 export const CreateOrderPageOne = () => {
@@ -75,51 +75,24 @@ export const CreateOrderPageOne = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
 
-  const initSupperGroup: SupperGroup = {
-    costLimit: 0,
-    createdAt: Math.round(Date.now() / 1000),
-    currentFoodCost: 0,
-    location: '',
-    numOrders: 0,
-    ownerId: '',
-    ownerName: '',
-    ownerTele: '',
-    paymentInfo: [],
-    restaurantLogo: '',
-    restaurantName: '',
-    splitAdditionalCost: undefined,
-    status: SupperGroupStatus.OPEN,
-    supperGroupId: undefined,
-    supperGroupName: '',
-    totalPrice: 0,
-    closingTime: undefined,
-    phoneNumber: 0,
-  }
-
-  useEffect(() => {
-    dispatch(setCreateOrderPage(1))
-  }, [])
-
-  useEffect(() => {
-    if (!supperGroup) dispatch(setSupperGroup(initSupperGroup))
-  }, [dispatch])
-
   useEffect(() => {
     if (supperGroup) {
       reset({
-        restaurant: supperGroup.restaurantName,
+        supperGroupName: supperGroup.supperGroupName,
+        restaurant: supperGroup.restaurantName as Restaurants,
         closingTime: supperGroup.closingTime,
         maxPrice: supperGroup.costLimit,
       })
-      clearErrors('restaurant')
-      clearErrors('closingTime')
+      if (supperGroup.restaurantName) clearErrors('restaurant')
+      if (supperGroup.closingTime) clearErrors('closingTime')
       setHasMaxPrice(supperGroup.costLimit ? true : false)
     }
   }, [supperGroup, reset])
 
+  // Control restaurants validity
   useEffect(() => {
     if (selectedRestaurant) {
-      setValue('restaurant', selectedRestaurant)
+      setValue('restaurant', selectedRestaurant as Restaurants)
       clearErrors('restaurant')
     }
   }, [selectedRestaurant])

@@ -104,7 +104,7 @@ export type SupperGroup = {
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number | undefined
-  phoneNumber: number
+  phoneNumber?: number
 }
 
 export type CollatedOrder = {

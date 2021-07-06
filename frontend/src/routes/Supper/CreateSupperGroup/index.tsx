@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FieldError } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { setSupperGroup } from '../../../store/supper/action'
+import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 import { CreateOrderPageOne } from './Pages/page1'
 import { CreateOrderPageTwo } from './Pages/page2'
 import { CreateOrderPageThree } from './Pages/page3'
@@ -34,8 +38,34 @@ export const InputText = styled.input<{ flex?: boolean; error?: FieldError | und
   ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
+export const initSupperGroup: SupperGroup = {
+  costLimit: undefined,
+  createdAt: Math.round(Date.now() / 1000),
+  currentFoodCost: 0,
+  location: '',
+  numOrders: 0,
+  ownerId: localStorage.userID,
+  ownerName: '',
+  ownerTele: '',
+  paymentInfo: [],
+  restaurantName: '',
+  splitAdditionalCost: undefined,
+  status: SupperGroupStatus.OPEN,
+  supperGroupId: undefined,
+  supperGroupName: '',
+  totalPrice: 0,
+  closingTime: undefined,
+}
+
 export default function CreateSupperGroup() {
   const params = useParams<{ page: string }>()
+  const { supperGroup } = useSelector((state: RootState) => state.supper)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!supperGroup) dispatch(setSupperGroup(initSupperGroup))
+  }, [])
+
   console.log(params.page)
   const formPage = (page: number) => {
     if (page === 1) {
