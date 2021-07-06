@@ -44,9 +44,12 @@
 </details>
 
 ## The Project
+
 <!-- Insert screenshots -->
+
 This projects is build by RHDevs on December.
 More Details coming soon! :-)
+
 <div>
 <img src="assets/logos/blue_logo.png" alt="Logo" width="60" height="60">
 <img src="assets/logos/darkblue_logo.png" alt="Logo" width="60" height="60">
@@ -60,22 +63,26 @@ More Details coming soon! :-)
 
 ### Built With
 
-* [Python Flask](https://flask.palletsprojects.com/en/1.1.x/)
-* [React with TS](https://reactjs.org/)
-* [Redux](https://react-redux.js.org/introduction/quick-start)
+- [Python Flask](https://flask.palletsprojects.com/en/1.1.x/)
+- [React with TS](https://reactjs.org/)
+- [Redux](https://react-redux.js.org/introduction/quick-start)
 
 ### About Us
+
 We are a CCA from Raffles Hall, National University of Singapore. Frustrated by the modernisation efforts by the nature of a gigantuan organisation, we've decided to use our knowledge and skills to ease our day-to-day life in the hostel.
 
-With us, we have 2 main departments; The `Developers` and The Product Managers!
+With us, we have 2 main departments; The `Developers` and The Designers!
 
 ## Getting Started
+
 To run the application on your local machine, follow the steps below.
 To view the hosted application, [click here instead (Coming Soon!)](http://lmao.com)
 
 ### Prerequisites
+
 Please ensure that you have the following dependencies installed before carrying on!
-* Python 3 and pip3
+
+- Python 3 and pip3
   ```sh
   # MacOS Developers
     brew install python
@@ -85,26 +92,26 @@ Please ensure that you have the following dependencies installed before carrying
     sudo apt update
     sudo apt-get install python3
   ```
-* Flask 
-  * Refer to https://flask.palletsprojects.com/en/1.0.x/installation/
+- Flask
+  - Refer to https://flask.palletsprojects.com/en/1.0.x/installation/
     ```sh
     pip install Flask
     ```
-* NodeJS and NPM
-  ```sh
-  # MacOS Developers
-  # Windows
-    ## Refer to 
-  # Debian/Ubuntu
-  ```
-* PostgreSQL (?)
+- NodeJS and NPM
   ```sh
   # MacOS Developers
   # Windows
     ## Refer to
   # Debian/Ubuntu
   ```
-* yarn
+- PostgreSQL (?)
+  ```sh
+  # MacOS Developers
+  # Windows
+    ## Refer to
+  # Debian/Ubuntu
+  ```
+- yarn
   ```sh
     # MacOS Developers
         brew install yarn
@@ -113,25 +120,29 @@ Please ensure that you have the following dependencies installed before carrying
     # Debian/Ubuntu
         sudo apt update && sudo apt install yarn
   ```
-* Python 3 Virtual Env 
+- Python 3 Virtual Env
+
   ```sh
   ## Unix
   python3 -m venv venv
   virtualenv venv
   . venv/bin/activate
-  
+
   ## Windows
   py -3 -m venv venv
   \Python27\Scripts\virtualenv.exe venv
   venv\Scripts\activate
-  
+
   ```
 
 ### Installation
+
 #### Running both instances for testing
+
 Run `yarn start:all` or `npm run start:all`
 
 #### Backend-only
+
 1. Ensure your venv is up (check pre-requisite)
 2. Run `export FLASK_APP=testpy.py` to set entry file
 3. Run `flask run` to start flask server
@@ -139,14 +150,16 @@ Run `yarn start:all` or `npm run start:all`
 5. To share new dependencies, run `pip freeze --local > requirements.txt`
 
 #### Frontend-only
+
 1. Copy and paste `.env.template` to fill up the env variables and save as `frontend/.env`
 2. run `yarn` in `/frontend` to install dependencies
 3. run `yarn start` to start front-end
 4. Go to http://localhost:3000/ to view the frontend
 
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
+
 Our Application is currently not yet ready for open source contributions
 
 <!-- Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -158,21 +171,25 @@ Our Application is currently not yet ready for open source contributions
 5. Open a Pull Request -->
 
 ## License
-Distributed under the  GPL-3.0 License. See `LICENSE` for more information.
+
+Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 
 ## Contact
+
 Social Media: [LinkedIn][linkedin-url] | [Instagram][instagram-url]
 Project Link: [Github Repo](https://github.com/rhdevs/rhapp) | [Application (Coming Soon!)](https://google.com)
 
 ## Acknowledgements
-* []()
-* []()
-* []()
+
+- []()
+- []()
+- []()
 
 ## Useful Tools and Links
-* [ReactRouter](https://reactrouter.com/web/api/BrowserRouter)
-* [Styled Components (in-line styling)](https://github.com/styled-components/styled-components)
-* [Emotion (in-line styling)](https://emotion.sh/docs/introduction)
+
+- [ReactRouter](https://reactrouter.com/web/api/BrowserRouter)
+- [Styled Components (in-line styling)](https://github.com/styled-components/styled-components)
+- [Emotion (in-line styling)](https://emotion.sh/docs/introduction)
 
 [issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
 [issues-url]: https://github.com/rhdevs/rhapp/issues
