@@ -19,12 +19,12 @@ authentication_api = Blueprint("authentication", __name__)
 
 
 def load_mail():
-    current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
     current_app.config['MAIL_PORT'] = 587
-    # input your own NUS acc email
-    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
-    # input your own NUS acc password
-    current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
+    # to test input your own NUS acc email
+    current_app.config['MAIL_USERNAME'] = 'e0273872@u.nus.edu' #os.environ['EMAIL_USER']
+    # to test input your own NUS acc password
+    current_app.config['MAIL_PASSWORD'] = 'Latenesscoud289' #os.environ['EMAIL_PW']
     current_app.config['MAIL_USE_TLS'] = True
     current_app.config['MAIL_USE_SSL'] = False
     current_app.config['SERVER_NAME'] = 'rhapp.lol'
@@ -83,6 +83,19 @@ def check_for_token(func):
 
     return decorated
 
+
+
+def getPasswordResetToken(requestingUser):
+    return jwt.encode({'userID': requestingUser,
+                       'exp':  datetime.datetime.utcnow() + datetime.timedelta(seconds=180)},
+                        key=current_app.config['PASSWORD_RESET_SECRET'],
+                        algorithm="HS256")
+
+def decodePasswordResetTokenUser(token):
+    tokenData = jwt.decode(token, 
+               current_app.config['PASSWORD_RESET_SECRET'], 
+               algorithms=["HS256"])
+    return tokenData['userID']
 
 """
 Register route:
@@ -190,12 +203,6 @@ Asks the user for email to send password reset token.
 Check if email exists in database of users.
 If so, create reset token (valid for fixed period eg 15 mins?), send link with /auth/reset?token=<token> to user email
 """
-# @authentication_api.route('/forgot', methods=['GET'])
-# def renderForgotPage():
-#    pass #render form template to submit email here
-
-ser = Serializer(os.environ['SERIALIZER_SECRET'], expires_in=300)
-
 
 @authentication_api.route('/forgot', methods=['POST'])
 def submitEmail():
@@ -207,9 +214,12 @@ def submitEmail():
             "email": email
         })
         # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
+        print("debugging 0a")
         if associatedUser:
+            print("debugging 0b")
             mail = load_mail()
-            newResetToken = ser.dumps(associatedUser['userID']).decode('utf-8')
+            print("debugging 0c")
+            newResetToken = getPasswordResetToken(associatedUser['userID'])
             db.PasswordResetSession.insert_one(
                 {'userID': associatedUser['userID'],
                  'email': email
@@ -227,9 +237,12 @@ def submitEmail():
             
             '''
             mail.send(msg)
+            #to reset the domain, prevent subsequent requests being routed to rhapp.lol instead of repl server
+            current_app.config.update(SERVER_NAME=None)
         # print message regardless of whether email is valid or not
         return jsonify({'status': 'success', 'message': 'You will receive an email if there is an account associated with the email address'}), 200
     except Exception as e:
+        print(e)
         return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
 
 
@@ -244,13 +257,13 @@ If valid, ask for their password, hash on client-side, update relevant DB User e
 def reset_token(token):
     try:
         try:
-            associatedUser = ser.loads(token)
-        except:
-            associatedUser = None
-        if associatedUser is None:
+            associatedUserID = decodePasswordResetTokenUser(token)
+        except Exception as e:
+            associatedUserID = None
+        if associatedUserID is None:
             return jsonify({'status': 'failed', 'message': "Token is invalid or expired. Please try again."}), 403
         userRequestingReset = db.PasswordResetSession.find_one({
-            'userID': associatedUser
+            'userID': associatedUserID
         })
         if userRequestingReset is None:
             return jsonify({'status': 'failed', 'message': "An error was encountered. Please try again."}), 405
@@ -263,20 +276,19 @@ def reset_token(token):
 def update_token(token):
     try:
         formData = request.get_json()
-        associatedUserID = ser.loads(token)
+        associatedUserID = decodePasswordResetTokenUser(token)
         newPasswordHash = formData['newPasswordHash']
         # update DB User entry with password
         if not db.User.find_one({'userID': associatedUserID}):
             return jsonify({'status': 'failed', 'message': 'Invalid credentials'}), 403
         else:
             db.User.update(
-                {
-                    'userID': associatedUserID
-                },
-                {
-                    '$set': {'passwordHash': newPasswordHash}
+                {'userID': associatedUserID},
+                {'$set': {'passwordHash': newPasswordHash}
                 }
             )
+            #remove PasswordResetSession entry from the collection
+            db.PasswordResetSession.delete_many({'userID': associatedUserID})
             return jsonify({'status': 'success', 'message': "Password updated successfully"}), 200
     except Exception as e:
         return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
