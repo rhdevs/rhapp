@@ -130,14 +130,13 @@ export default function Supper() {
         title="f> SUPPER FRIENDS long long long name just checking how it looks like"
         orderId="RHSO#1002"
         cancelReason="Lazy to order"
-        isOwner
       />
       <SGStatusCard
-        supperGroupStatus={SupperGroupStatus.ORDERED}
+        supperGroupStatus={SupperGroupStatus.ARRIVED}
         username="Zhou BaoBao"
         title="f> SUPPER FRIENDS"
         orderId="RHSO#1002"
-        isOwner
+        statusOnly
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.ARRIVED}
@@ -152,7 +151,6 @@ export default function Supper() {
           { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
           { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
         ]}
-        isOwner
       />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />

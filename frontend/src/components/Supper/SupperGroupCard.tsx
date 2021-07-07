@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
-import { Restaurants, SplitACMethod, SupperGroup } from '../../store/supper/types'
+import { Restaurants, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
 import { deleteSupperGroup, getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
@@ -18,6 +18,7 @@ import ConfirmationModal from '../Mobile/ConfirmationModal'
 import { useDispatch } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './SupperShareModal'
+import { SGStatusCard } from './CustomCards/SGStatusCard'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -98,7 +99,7 @@ const Icon = styled.img`
 `
 
 type Props = {
-  supperGroup?: SupperGroup | undefined
+  supperGroup: SupperGroup | undefined
   restaurantName?: string | undefined
   supperGroupId?: number | undefined
   ownerId?: string
@@ -110,6 +111,9 @@ type Props = {
   costLimit?: number | undefined
   currentFoodCost?: number
   numOrders?: number
+  cancelReason?: string | undefined
+  collectionTime?: string
+  statusOnly?: boolean | undefined
   userIdList?: string[] | undefined
 }
 
@@ -130,6 +134,9 @@ export const SupperGroupCard = (props: Props) => {
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const history = useHistory()
   const dispatch = useDispatch()
+  const IsOpenOrPending =
+    props.supperGroup?.status === SupperGroupStatus.OPEN || props.supperGroup?.status === SupperGroupStatus.PENDING
+  const showStatusOnly = props.statusOnly ?? false
 
   setTimeout(() => {
     // if details still dont show after 10s, show error
@@ -146,11 +153,8 @@ export const SupperGroupCard = (props: Props) => {
   const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
   const rawSupperGroupId = props.supperGroupId ?? props.supperGroup?.supperGroupId
   const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
-  const ownerName = `(${
-    (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
-      ? 'You'
-      : props.ownerName ?? props.supperGroup?.ownerName ?? '-'
-  })`
+  const isOwner = (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
+  const ownerName = `(${isOwner ? 'You' : props.ownerName ?? props.supperGroup?.ownerName ?? '-'})`
   const topIcon = (
     <MoreDropDown
       ownerId={props.ownerId ?? props.supperGroup?.ownerId}
@@ -215,7 +219,7 @@ export const SupperGroupCard = (props: Props) => {
     />
   )
 
-  return (
+  return IsOpenOrPending ? (
     <MainCard flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
@@ -280,5 +284,16 @@ export const SupperGroupCard = (props: Props) => {
         </>
       )}
     </MainCard>
+  ) : (
+    <SGStatusCard
+      supperGroupStatus={props.supperGroup?.status}
+      username={idText}
+      title={supperGroupName}
+      orderId={supperGroupId}
+      isOwner={isOwner}
+      statusOnly={showStatusOnly}
+      collectionTime={props.collectionTime}
+      paymentMethod={props.supperGroup?.paymentInfo}
+    />
   )
 }
