@@ -17,11 +17,13 @@ sys.path.append("../")
 authentication_api = Blueprint("authentication", __name__)
 
 #### FORGOT PASSWORD STUFF ####
+
+
 def load_mail():
     current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
     current_app.config['MAIL_PORT'] = 587
     # to test input your own NUS acc email
-    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
+    current_app.config['MAIL_USERNAME'] = "raffleshalldevs@outlook"
     # to test input your own NUS acc password
     current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
     current_app.config['MAIL_USE_TLS'] = True
@@ -41,6 +43,7 @@ def load_mail():
 check_for_token function: 
 checks for and verifies token. Used in /protected
 """
+
 
 def check_for_token(func):
     def decorated(*args, **kwargs):
@@ -87,18 +90,19 @@ getPasswordResetToken and decodePasswordResetTokenUser:
 Aux functions used for JWT operations in /forgot and /reset routes.
 """
 
+
 def getPasswordResetToken(requestingUser):
     return jwt.encode({'userID': requestingUser,
                        'exp':  datetime.datetime.utcnow() + datetime.timedelta(seconds=180)},
-                        key=current_app.config['PASSWORD_RESET_SECRET'],
-                        algorithm="HS256")
+                      key=current_app.config['PASSWORD_RESET_SECRET'],
+                      algorithm="HS256")
+
 
 def decodePasswordResetTokenUser(token):
-    tokenData = jwt.decode(token, 
-               current_app.config['PASSWORD_RESET_SECRET'], 
-               algorithms=["HS256"])
+    tokenData = jwt.decode(token,
+                           current_app.config['PASSWORD_RESET_SECRET'],
+                           algorithms=["HS256"])
     return tokenData['userID']
-
 
 
 """
@@ -219,11 +223,8 @@ def submitEmail():
             "email": email
         })
         # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
-        print("debugging 0a")
         if associatedUser:
-            print("debugging 0b")
             mail = load_mail()
-            print("debugging 0c")
             newResetToken = getPasswordResetToken(associatedUser['userID'])
             db.PasswordResetSession.insert_one(
                 {'userID': associatedUser['userID'],
@@ -243,12 +244,13 @@ def submitEmail():
             
             '''
             mail.send(msg)
-            #to reset the domain, prevent subsequent requests being routed to rhapp.lol instead of repl server
+            # to reset the domain, prevent subsequent requests being routed to rhapp.lol instead of repl server
             current_app.config.update(SERVER_NAME=None)
         # print message regardless of whether email is valid or not
         return jsonify({'status': 'success', 'message': 'You will receive an email if there is an account associated with the email address'}), 200
     except Exception as e:
         print(e)
+        current_app.config.update(SERVER_NAME=None)
         return jsonify({'status': 'failed', 'message': 'An error was encountered.'}), 500
 
 
@@ -291,9 +293,9 @@ def update_token(token):
             db.User.update(
                 {'userID': associatedUserID},
                 {'$set': {'passwordHash': newPasswordHash}
-                }
+                 }
             )
-            #remove PasswordResetSession entry from the collection
+            # remove PasswordResetSession entry from the collection
             db.PasswordResetSession.delete_many({'userID': associatedUserID})
             return jsonify({'status': 'success', 'message': "Password updated successfully"}), 200
     except Exception as e:
