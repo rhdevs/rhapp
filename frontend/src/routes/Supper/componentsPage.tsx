@@ -58,8 +58,6 @@ export default function Supper() {
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   return (
     <>
-      {/* <NotificationBar /> */}
-      {/* supperGroupName={'f> SUPPER FRIENDS'} /> */}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
