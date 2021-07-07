@@ -1,12 +1,47 @@
-import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus } from '../supper/types'
+import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus, SupperNotification } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
+import { supperNotifStub } from '../stubs'
 
 const [error] = useSnackbar('error')
 
 //------------------------ GET --------------------------
+export const getSupperNotification = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS,
+    supperNotifications: supperNotifStub,
+  })
+  // get(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, `/${localStorage.userID}`)
+  //   .then((resp) => {
+  //     if (resp.status === 'failed') {
+  //       throw resp.err
+  //     }
+  //     dispatch({
+  //       type: SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS,
+  //       supperNotifications: resp.data,
+  //     })
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+}
+
+export const closeSupperNotification = (notification: SupperNotification) => (dispatch: Dispatch<ActionTypes>) => {
+  const requestBody = notification
+  put(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, requestBody)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getSupperNotification())
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
 export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)

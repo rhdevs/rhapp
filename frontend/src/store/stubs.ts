@@ -12,6 +12,7 @@ import {
   CollatedOrder,
   CancelAction,
   Food,
+  SupperNotification,
   UserDetails,
 } from './supper/types'
 
@@ -530,3 +531,5 @@ export const dummyCollatedOrderList: CollatedOrder = {
   ownerId: 'A1234567B',
   collatedOrderList: foodList,
 }
+
+export const supperNotifStub: SupperNotification[] = [{ supperGroupId: 1, supperGroupName: 'feed me!' }]
