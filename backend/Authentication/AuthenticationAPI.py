@@ -1,3 +1,4 @@
+import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from db import *
@@ -207,6 +208,7 @@ Check if email exists in database of users.
 If so, create reset token (valid for fixed period eg 15 mins?), send link with /auth/reset?token=<token> to user email
 """
 
+
 @authentication_api.route('/forgot', methods=['POST'])
 def submitEmail():
     try:
@@ -228,7 +230,8 @@ def submitEmail():
                  'email': email
                  })
             with current_app.test_request_context():
-                redirectUrl = url_for('authentication.reset_token', token=newResetToken,_external=True)
+                redirectUrl = url_for(
+                    'authentication.reset_token', token=newResetToken, _external=True)
             msg = Message('Password Reset for RHApp',
                           sender=current_app.config.get("MAIL_USERNAME"),
                           recipients=[email])
