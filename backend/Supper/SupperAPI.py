@@ -84,6 +84,9 @@ def closeSupperGroup(supperGroupId):
                                       {"$set": data})
     # print("Supper Group Closed")
 
+def deleteSupperGroup(supperGroupId):
+    db.SupperGroup.delete_one({'supperGroupId': supperGroupId})
+
 
 @supper_api.route('/supperGroup', methods=['GET'])
 @cross_origin(supports_credentials=True)
@@ -174,7 +177,9 @@ def create_supper_group():
 
         # Add scheduler to close supper group order
         closingTime = datetime.fromtimestamp(supperGroupData['closingTime'])
+        deleteDate = datetime.fromtimestamp(supperGroupData['createdAt']) + datetime.timedelta(days=5)
         sched.add_job(closeSupperGroup, 'date', run_date=closingTime, args=[newsupperGroupID])
+        sched.add_job(deleteSupperGroup, 'date', run_date=deleteDate, args=[newsupperGroupID])
         if not sched.running:
             sched.start()
 
