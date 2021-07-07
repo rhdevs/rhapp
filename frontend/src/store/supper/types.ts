@@ -172,6 +172,11 @@ export enum UpdateAction {
   REMOVE = 'Remove',
 }
 
+export type SupperNotification = {
+  supperGroupId: number
+  supperGroupName: string
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
@@ -214,6 +219,7 @@ export enum SUPPER_ACTIONS {
   SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
   RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
+  GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
 }
 
 type SetIsLoading = {
@@ -421,6 +427,11 @@ type ResetFoodState = {
   food: null
 }
 
+type GetSupperNotifications = {
+  type: typeof SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS
+  supperNotifications: SupperNotification[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -463,3 +474,4 @@ export type ActionTypes =
   | SetCreateOrderPage
   | SetNewSupperGroupId
   | ResetFoodState
+  | GetSupperNotifications
