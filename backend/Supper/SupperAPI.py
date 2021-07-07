@@ -616,6 +616,44 @@ def food_order(orderId, foodId):
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
+@supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
+@cross_origin(supports_credentials=True)
+def owner_edit_order(foodId):
+    try:
+        if request.method == 'GET':
+            data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
+
+            data['orderId'] = str(data.pop('_id'))
+            data['restaurantId'] = str(data['restaurantId'])
+            data['foodMenuId'] = str(data['foodMenuId'])
+
+            response = {"status": "success",
+                        "data": data}
+
+        elif request.method == 'PUT':
+            data = request.get_json()
+
+            if data['updates']['updateAction'] == 'Update':
+                if not data['updates']['reason'] & data['updates']['change'] & data['updates']['updatedPrice']:
+                    raise Exception('Update incomplete')
+            elif data['updates']['updateAction'] == 'Remove':
+                if not data['updates']['reason']:
+                    raise Exception('Update incomplete')
+
+            result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
+                                                           {"$set": data})
+            if result is None:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully updated food!",
+                        "data": data}
+
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
 
 @supper_api.route('/restaurant', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
