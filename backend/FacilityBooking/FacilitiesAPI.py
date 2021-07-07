@@ -167,9 +167,9 @@ def check_bookings(facilityID):
             {'$match':
                 {'$and': [
                     {'facilityID': int(facilityID)},
-                    {'startTime': {'$gte': int(
-                        request.args.get('startTime'))}},
-                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                    {'startTime': {'$lte': int(
+                        request.args.get('endTime'))}},
+                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
                 ]}
              },
             {'$lookup': {

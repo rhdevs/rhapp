@@ -22,9 +22,9 @@ def load_mail():
     current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     current_app.config['MAIL_PORT'] = 587
     # input your own NUS acc email
-    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
+    current_app.config['MAIL_USERNAME'] = "raffleshalldevs@gmail.com"
     # input your own NUS acc password
-    current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
+    current_app.config['MAIL_PASSWORD'] = "raffleshall"
     current_app.config['MAIL_USE_TLS'] = True
     current_app.config['MAIL_USE_SSL'] = False
     current_app.config['SERVER_NAME'] = 'rhapp.lol'
@@ -194,7 +194,7 @@ If so, create reset token (valid for fixed period eg 15 mins?), send link with /
 # def renderForgotPage():
 #    pass #render form template to submit email here
 
-ser = Serializer(os.environ['SERIALIZER_SECRET'], expires_in=300)
+ser = Serializer("what", expires_in=300)
 
 
 @authentication_api.route('/forgot', methods=['POST'])
@@ -215,7 +215,8 @@ def submitEmail():
                  'email': email
                  })
             with current_app.test_request_context():
-                redirectUrl = url_for('authentication.reset_token', token=newResetToken,_external=True)
+                redirectUrl = url_for(
+                    'authentication.reset_token', token=newResetToken, _external=True)
             msg = Message('Password Reset for RHApp',
                           sender=current_app.config.get("MAIL_USERNAME"),
                           recipients=[email])
