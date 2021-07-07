@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -9,7 +9,7 @@ import { QuantityTracker } from '../../components/Supper/QuantityTracker'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
-import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
+import { PaymentMethod, Restaurants, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSGCard'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
@@ -44,6 +44,7 @@ import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
+import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -57,6 +58,7 @@ const OptionText = styled.text`
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
       <div style={{ width: '80vw' }}>
@@ -127,20 +129,22 @@ export default function Supper() {
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.CANCELLED}
+        restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
         title="f> SUPPER FRIENDS long long long name just checking how it looks like"
         orderId="RHSO#1002"
         cancelReason="Lazy to order"
       />
       <SGStatusCard
-        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        supperGroupStatus={SupperGroupStatus.ORDERED}
+        restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
         title="f> SUPPER FRIENDS"
         orderId="RHSO#1002"
-        statusOnly
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.ARRIVED}
+        restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
         location="Basketball Court"
         collectionTime="12:30AM"

@@ -281,6 +281,7 @@ export const SupperGroupCard = (props: Props) => {
   ) : (
     <SGStatusCard
       supperGroupStatus={props.supperGroup?.status}
+      restaurantLogo={restaurantLogo}
       username={idText}
       title={supperGroupName}
       orderId={supperGroupId}

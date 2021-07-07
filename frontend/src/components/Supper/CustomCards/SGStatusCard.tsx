@@ -105,7 +105,7 @@ const OwnerButtonContainer = styled.div`
 type Props = {
   isOwner?: boolean
   supperGroupStatus?: SupperGroupStatus | undefined
-  restaurantLogo?: string | undefined // change to compulsory
+  restaurantLogo: string | undefined // change to compulsory
   title: string | undefined
   orderId: string
   username: string
@@ -135,11 +135,7 @@ export const SGStatusCard = (props: Props) => {
   return (
     <MainCard flexDirection="column">
       <TopSection>
-        {props.restaurantLogo ? (
-          <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
-        ) : (
-          <Skeleton image />
-        )}
+        <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
         <TextSubContainer>
           <OrderIdContainer>
             {props.orderId} ({props.isOwner ? 'You' : props.username})
