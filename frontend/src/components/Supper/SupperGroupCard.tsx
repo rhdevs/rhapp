@@ -100,21 +100,15 @@ const Icon = styled.img`
 
 type Props = {
   supperGroup: SupperGroup | undefined
-  restaurantName?: string | undefined
-  supperGroupId?: number | undefined
   ownerId?: string
   ownerName?: string
   supperGroupName?: string
-  closingTime?: number | undefined
   additionalCost?: number
-  splitAdditionalCost?: SplitACMethod | undefined
-  costLimit?: number | undefined
   currentFoodCost?: number
   numOrders?: number
   cancelReason?: string | undefined
   collectionTime?: string
   statusOnly?: boolean | undefined
-  userIdList?: string[] | undefined
 }
 
 export const SupperGroupCard = (props: Props) => {
@@ -150,15 +144,15 @@ export const SupperGroupCard = (props: Props) => {
     paddingRight: '2px',
   } // For time, car and user
 
-  const restaurantLogo = getRestaurantLogo((props.restaurantName ?? props.supperGroup?.restaurantName) as Restaurants)
-  const rawSupperGroupId = props.supperGroupId ?? props.supperGroup?.supperGroupId
+  const restaurantLogo = getRestaurantLogo(props.supperGroup?.restaurantName as Restaurants)
+  const rawSupperGroupId = props.supperGroup?.supperGroupId
   const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
   const isOwner = (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
   const ownerName = `(${isOwner ? 'You' : props.ownerName ?? props.supperGroup?.ownerName ?? '-'})`
   const topIcon = (
     <MoreDropDown
       ownerId={props.ownerId ?? props.supperGroup?.ownerId}
-      userIdList={props.userIdList ?? props.supperGroup?.userIdList}
+      userIdList={props.supperGroup?.userIdList}
       supperGroupId={rawSupperGroupId}
       shareModalSetter={setIsShareModalOpen}
       deleteModalSetter={setIsDeleteModalOpen}
@@ -168,10 +162,10 @@ export const SupperGroupCard = (props: Props) => {
 
   const idText = `${supperGroupId} ${ownerName}`
   const supperGroupName = props.supperGroupName ?? props.supperGroup?.supperGroupName
-  const closingTime = unixTo12HourTime(props.closingTime ?? props.supperGroup?.closingTime)
+  const closingTime = unixTo12HourTime(props.supperGroup?.closingTime)
   const numberOfUsers = props.numOrders ?? props.supperGroup?.numOrders ?? 1 // To include owner
   const deliveryCost = `$${(props.additionalCost ?? props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
-  const splitMethod = props.splitAdditionalCost ?? props.supperGroup?.splitAdditionalCost
+  const splitMethod = props.supperGroup?.splitAdditionalCost
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -179,7 +173,7 @@ export const SupperGroupCard = (props: Props) => {
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
     splitMethodIcon = <Icon src={PercentCircle} alt="Proprotional" />
   }
-  const costLimit = props.costLimit ?? props.supperGroup?.costLimit
+  const costLimit = props.supperGroup?.costLimit
   const currentAmount = props.currentFoodCost ?? props.supperGroup?.currentFoodCost ?? 0
 
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
