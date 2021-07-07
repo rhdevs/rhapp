@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import styled from 'styled-components'
 import { openUserTelegram } from '../../../common/telegramMethods'
@@ -9,7 +9,6 @@ import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { MainCard } from '../MainCard'
 import { SGStatusBubble } from '../SGStatusBubble'
 import { UnderlinedButton } from '../UnderlinedButton'
-import { Skeleton } from '../../Skeleton'
 
 const TopSection = styled.div`
   display: flex;
@@ -46,7 +45,7 @@ const OrderIdContainer = styled.text`
 
 const StatusContainer = styled.div<{ statusOnly?: boolean }>`
   margin: ${(props) => (props.statusOnly ? '0px' : '8px 20px 0 15px')};
-  padding: ${(props) => (props.statusOnly ? '1px 0px' : '10px 0 5px 0')};
+  padding: ${(props) => (props.statusOnly ? '1px 0px' : '10px 0 12px')};
   display: flex;
   flex-direction: row;
   justify-content: ${(props) => (props.statusOnly ? 'flex-start' : 'space-evenly')};
@@ -109,7 +108,7 @@ type Props = {
   title: string | undefined
   orderId: string
   username: string
-  buttonTeleHandle?: string | undefined
+  buttonTeleHandle: string | undefined
   location?: string | undefined
   collectionTime?: string
   paymentMethod?: PaymentInfo[] | undefined

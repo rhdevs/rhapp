@@ -280,15 +280,18 @@ export const SupperGroupCard = (props: Props) => {
     </MainCard>
   ) : (
     <SGStatusCard
+      isOwner={isOwner}
       supperGroupStatus={props.supperGroup?.status}
       restaurantLogo={restaurantLogo}
-      username={idText}
       title={supperGroupName}
       orderId={supperGroupId}
-      isOwner={isOwner}
-      statusOnly={showStatusOnly}
+      username={idText}
+      buttonTeleHandle={props.supperGroup?.ownerTele}
+      location={props.supperGroup?.location}
       collectionTime={props.collectionTime}
       paymentMethod={props.supperGroup?.paymentInfo}
+      cancelReason={props.cancelReason}
+      statusOnly={showStatusOnly}
     />
   )
 }

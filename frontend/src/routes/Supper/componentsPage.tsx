@@ -131,21 +131,26 @@ export default function Supper() {
         supperGroupStatus={SupperGroupStatus.CANCELLED}
         restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
+        buttonTeleHandle="ZBB"
         title="f> SUPPER FRIENDS long long long name just checking how it looks like"
         orderId="RHSO#1002"
         cancelReason="Lazy to order"
+        isOwner
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.ORDERED}
         restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
+        buttonTeleHandle="ZBB"
         title="f> SUPPER FRIENDS"
         orderId="RHSO#1002"
+        isOwner
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.ARRIVED}
         restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
+        buttonTeleHandle="ZBB"
         location="Basketball Court"
         collectionTime="12:30AM"
         title="f> SUPPER FRIENDS long long long name just checking how it looks like"
@@ -156,6 +161,7 @@ export default function Supper() {
           { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
           { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
         ]}
+        isOwner
       />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
