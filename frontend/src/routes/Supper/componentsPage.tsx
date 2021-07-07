@@ -132,7 +132,7 @@ export default function Supper() {
         restaurantLogo={restaurantLogo}
         username="Zhou BaoBao"
         buttonTeleHandle="ZBB"
-        title="f> SUPPER FRIENDS long long long name just checking how it looks like"
+        title="f> SUPPER FRIENDS"
         orderId="RHSO#1002"
         cancelReason="Lazy to order"
         isOwner
@@ -153,7 +153,7 @@ export default function Supper() {
         buttonTeleHandle="ZBB"
         location="Basketball Court"
         collectionTime="12:30AM"
-        title="f> SUPPER FRIENDS long long long name just checking how it looks like"
+        title="f> SUPPER FRIENDS"
         orderId="RHSO#1002"
         paymentMethod={[
           { paymentMethod: PaymentMethod.CASH },

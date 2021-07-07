@@ -103,7 +103,7 @@ const OwnerButtonContainer = styled.div`
 
 type Props = {
   isOwner?: boolean
-  supperGroupStatus?: SupperGroupStatus | undefined
+  supperGroupStatus: SupperGroupStatus | undefined
   restaurantLogo: string | undefined // change to compulsory
   title: string | undefined
   orderId: string
