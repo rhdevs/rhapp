@@ -10,6 +10,7 @@ import {
   PaymentMethod,
   SupperGroupStatus,
   PaymentUpdateInfo,
+  SupperNotification,
 } from '../supper/types'
 import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
@@ -51,6 +52,7 @@ const initialState = {
   paymentUpdateArray: [],
   foodMenuId: '',
   createOrderPage: 1,
+  supperNotifications: [],
 }
 
 type State = {
@@ -90,6 +92,7 @@ type State = {
   paymentUpdateArray: PaymentUpdateInfo[]
   foodMenuId: string
   createOrderPage: number
+  supperNotifications: SupperNotification[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -216,6 +219,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.RESET_FOOD_STATE: {
       return { ...state, food: action.food }
+    }
+    case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {
+      return { ...state, supperNotifications: action.supperNotifications }
     }
     default:
       return state

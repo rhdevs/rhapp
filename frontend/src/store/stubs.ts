@@ -12,6 +12,8 @@ import {
   CollatedOrder,
   CancelAction,
   Food,
+  SupperNotification,
+  UserDetails,
 } from './supper/types'
 
 /**
@@ -320,6 +322,12 @@ export const orderList: Order[] = [
   },
 ]
 
+export const userDetailsStub: UserDetails[] = [
+  { userId: '1', name: 'Gougou', telegramHandle: 'gg' },
+  { userId: '2', name: 'Moumou has a really really long name...', telegramHandle: 'mm' },
+  { userId: '3', name: 'Poupou', telegramHandle: 'pp' },
+]
+
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
 
 export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
@@ -523,3 +531,5 @@ export const dummyCollatedOrderList: CollatedOrder = {
   ownerId: 'A1234567B',
   collatedOrderList: foodList,
 }
+
+export const supperNotifStub: SupperNotification[] = [{ supperGroupId: 1, supperGroupName: 'feed me!' }]
