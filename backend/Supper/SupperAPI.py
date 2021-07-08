@@ -900,6 +900,58 @@ def user_supper_group_history(userID):
         print(e)
         return make_response({"status": "failed", "err": str(e)}, 400)
 
+@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET', 'POST', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_notification(userID):
+    try:
+        if request.method == "GET":
+            pipeline = [
+                {'$match': {'userID': userID}},
+                {
+                    '$lookup': {
+                        'from': 'SupperGroup',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'supperGroup'
+                    }
+                },
+                {
+                    '$unwind': {'path': '$supperGroup'}
+                },
+                {'$project': {'supperGroupId': 1, 'supperGroup.supperGroupName': 1, 'notification': 1, '_id': 0}}
+            ]
+
+            result = db.Order.aggregate(pipeline)
+            data = []
+            for item in result:
+                item['supperGroupName'] = item.pop('supperGroup')['supperGroupName']
+                if 'notification' in item and item['notification']:
+                    item.pop('notification')
+                    data.append(item)
+
+            response = {"status": "success", "data": data}
+        elif request.method == 'POST':
+            data = request.get_json()
+
+            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': True}})
+
+            response = {"status": "success", "data": data}
+
+        elif request.method == 'DELETE':
+            data = request.get_json()
+
+            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': False}})
+
+            response = {"status": "success", "data": data}
+
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
 
 @supper_api.route('/supperGroup/<int:supperGroupId>/collated', methods=['GET'])
 @cross_origin(supports_credentials=True)
