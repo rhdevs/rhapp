@@ -47,7 +47,7 @@ def profiles():
                 data["profilePictureUrl"] = data.pop("profilePictureURI")
 
             result = db.Profiles.update_one(
-                {"userID": userID}, {'$set': data}, upsert=True)
+                {"userID": data["userID"]}, {'$set': data}, upsert=True)
 
             if int(result.matched_count) > 0:
                 response = {
