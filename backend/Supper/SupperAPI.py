@@ -3,7 +3,7 @@ from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 from flask import Blueprint
 from bson.json_util import dumps
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Thread
 from bson.objectid import ObjectId
 import pymongo
@@ -177,7 +177,7 @@ def create_supper_group():
 
         # Add scheduler to close supper group order
         closingTime = datetime.fromtimestamp(supperGroupData['closingTime'])
-        deleteDate = datetime.fromtimestamp(supperGroupData['createdAt']) + datetime.timedelta(days=5)
+        deleteDate = datetime.fromtimestamp(supperGroupData['createdAt']) + timedelta(days=5)
         sched.add_job(closeSupperGroup, 'date', run_date=closingTime, args=[newsupperGroupID])
         sched.add_job(deleteSupperGroup, 'date', run_date=deleteDate, args=[newsupperGroupID])
         if not sched.running:
