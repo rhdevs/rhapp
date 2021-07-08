@@ -23,7 +23,7 @@ def load_mail():
     current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
     current_app.config['MAIL_PORT'] = 587
     # to test input your own NUS acc email
-    current_app.config['MAIL_USERNAME'] = "raffleshalldevs@outlook"
+    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
     # to test input your own NUS acc password
     current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
     current_app.config['MAIL_USE_TLS'] = True
