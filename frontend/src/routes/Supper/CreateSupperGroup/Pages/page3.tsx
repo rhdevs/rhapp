@@ -1,42 +1,42 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { ErrorText, InputText } from '..'
+import { ErrorText, initSupperGroup } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { PaymentMethodBubbles } from '../../../../components/Supper/PaymentMethodBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { paymentMethods } from '../../../../store/stubs'
-import { createSupperGroup, setCreateOrderPage, setSupperGroup } from '../../../../store/supper/action'
-import { PaymentInfo, PaymentMethod } from '../../../../store/supper/types'
+import { createSupperGroup, setCounter, setIsLoading, setSupperGroup } from '../../../../store/supper/action'
+import { PaymentInfo, PaymentMethod, SupperGroup } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
+import { errorStyling, Input } from '../../EditSupperGroup'
 
-const VertSectionContainer = styled.div`
-  margin: 25px 35px;
-`
-
-const VertInputContainer = styled.div`
-  padding 5px 0 0 0;
+const FormContainer = styled.div`
+  width: 80vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `
 
 type FormValues = {
   paymentMethod: PaymentInfo[]
   phoneNumber: number
 }
-//payment method
-//phone number
+
 export const CreateOrderPageThree = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, errors, setError, clearErrors } = useForm<FormValues>()
-  const { newSupperGroupId, supperGroup, selectedPaymentMethod, createOrderPage } = useSelector(
+  const { newSupperGroupId, supperGroup, selectedPaymentMethod, counter } = useSelector(
     (state: RootState) => state.supper,
   )
+  const [invalidInfoPageNum, setInvalidInfoPageNum] = useState<number>(1)
 
   useEffect(() => {
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
@@ -52,21 +52,36 @@ export const CreateOrderPageThree = () => {
 
   useEffect(() => {
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
-      dispatch(setCreateOrderPage(1))
       history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
-  }, [newSupperGroupId, supperGroup])
+  }, [newSupperGroupId, supperGroup?.restaurantId])
 
   const onLeftClick = () => {
-    dispatch(setCreateOrderPage(createOrderPage - 1))
-    history.goBack()
+    history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
   }
 
-  let updatedSPInfo
   let pmError = 0
 
-  const onClick = () => {
-    updatedSPInfo = { ...supperGroup }
+  const isSupperGroupValid = (supperGroup: SupperGroup) => {
+    if (
+      supperGroup.supperGroupName === '' ||
+      supperGroup.restaurantName === '' ||
+      supperGroup.closingTime === undefined
+    ) {
+      setInvalidInfoPageNum(1)
+      return false
+    }
+    if (supperGroup.additionalCost === undefined || supperGroup.splitAdditionalCost === undefined) {
+      setInvalidInfoPageNum(2)
+      return false
+    }
+    return true
+  }
+
+  const onSubmit = () => {
+    dispatch(setCounter(counter + 1)) //To start throwing error for payment method
+
+    let updatedSPInfo: SupperGroup = { ...(supperGroup ?? initSupperGroup) }
     handleSubmit((data: FormValues) => {
       updatedSPInfo = {
         ...updatedSPInfo,
@@ -113,30 +128,40 @@ export const CreateOrderPageThree = () => {
         updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
         console.log('paymentInfo', updatedPI)
       }
-      console.log('thirdSubmit', updatedSPInfo)
 
+      console.log('thirdSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
-      dispatch(createSupperGroup(updatedSPInfo))
+
+      // Check validity of all information
+      if (isSupperGroupValid(updatedSPInfo)) {
+        dispatch(setIsLoading(true))
+        dispatch(createSupperGroup(updatedSPInfo))
+        if (supperGroup?.restaurantId !== undefined && newSupperGroupId !== undefined) {
+          history.push(`${PATHS.PLACE_ORDER}/${supperGroup?.supperGroupId}/${supperGroup?.restaurantId}/order`)
+        }
+      } else {
+        history.push(`${PATHS.CREATE_SUPPER_GROUP}/${invalidInfoPageNum}`)
+      }
     })()
   }
 
   return (
     <>
       <TopNavBar
-        title="Create Order"
-        rightComponent={<UnderlinedButton onClick={onClick} text="Finish" fontWeight={700} />}
+        title="Create Group"
+        rightComponent={<UnderlinedButton onClick={onSubmit} text="Finish" fontWeight={700} />}
         onLeftClick={onLeftClick}
       />
       <LineProgress currentStep={3} numberOfSteps={3} />
-      <VertSectionContainer>
-        <FormHeader headerName={'Payment Method'} isCompulsory />
+      <FormContainer>
+        <FormHeader topMargin headerName="Payment Method" isCompulsory />
         <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
           .map((pm) => {
             return (
               selectedPaymentMethod.includes(pm) && (
-                <InputText
+                <Input
                   flex
                   type="text"
                   name={pm}
@@ -149,6 +174,11 @@ export const CreateOrderPageThree = () => {
                     background: errors[`${pm}`] && '#ffd1d1',
                   }}
                   placeholder={pm + ' Link'}
+                  defaultValue={
+                    supperGroup?.paymentInfo.find((pi) => {
+                      return pi.paymentMethod === pm
+                    })?.link ?? ''
+                  }
                 />
               )
             )
@@ -158,25 +188,23 @@ export const CreateOrderPageThree = () => {
             return pmError++
           }
         })}
-        {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required.</ErrorText>}
+        {errors.paymentMethod && pmError === 0 && counter > 0 && <ErrorText>Payment method required!</ErrorText>}
         {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
-      </VertSectionContainer>
-      <VertSectionContainer>
-        <FormHeader headerName={'Phone Number'} isCompulsory />
-        <VertInputContainer>
-          <InputText
-            flex
-            type="number"
-            placeholder="Phone Number"
-            name="phoneNumber"
-            ref={register({
-              required: true,
-              valueAsNumber: true,
-            })}
-          />
-          {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number is required.</ErrorText>}
-        </VertInputContainer>
-      </VertSectionContainer>
+
+        <FormHeader topMargin headerName="Phone Number" isCompulsory />
+        <Input
+          type="number"
+          defaultValue={supperGroup?.phoneNumber ?? ''}
+          placeholder="Phone Number"
+          name="phoneNumber"
+          ref={register({
+            required: true,
+            valueAsNumber: true,
+          })}
+          style={errors.phoneNumber ? errorStyling : {}}
+        />
+        {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
+      </FormContainer>
     </>
   )
 }

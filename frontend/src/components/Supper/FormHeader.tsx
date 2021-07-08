@@ -5,7 +5,6 @@ const Header = styled.text<{ topMargin?: boolean }>`
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
-  line-height: 14px;
   ${(props) => props.topMargin && 'margin-top: 1rem;'}
   margin-bottom: 5px;
 `
@@ -15,8 +14,7 @@ const RedText = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
+  font-size: 16px;
 `
 
 type Props = {

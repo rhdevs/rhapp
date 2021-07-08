@@ -39,15 +39,6 @@ const Background = styled.form`
   padding-bottom: 3rem;
 `
 
-const StyledText = styled.text<{ topMargin?: boolean }>`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  ${(props) => props.topMargin && 'margin-top: 1rem;'}
-  width: 100%;
-`
-
 export const Input = styled.input<{ flex?: boolean }>`
   width: 80%;
   border-radius: 30px;
@@ -85,10 +76,6 @@ const StyledTimePicker = styled(TimePicker)`
   margin: 5px auto 0 auto;
 `
 
-const RedText = styled.text`
-  color: red;
-`
-
 const ErrorText = styled.p`
   margin: 5px 0 -10px 0;
   color: #ff837a;
@@ -118,7 +105,7 @@ export const StyledRadioGroup = styled(Radio.Group)`
 
 export const Wrapper = styled.div<{ topMargin?: boolean; baseline?: boolean }>`
   display: grid;
-  grid-template-columns: 50% 47%;
+  grid-template-columns: 53% 44%;
   grid-gap: 3%;
   ${(props) => props.baseline && 'align-items: baseline;'}
   ${(props) => props.topMargin && 'margin-top: 1rem'}
