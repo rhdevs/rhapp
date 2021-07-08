@@ -120,7 +120,7 @@ def register():
         userID = formData["userID"]
         passwordHash = formData["passwordHash"]
         email = formData["email"]
-        position = formData["position"]
+        # position = formData["position"]
         displayName = formData["displayName"]
         bio = formData["bio"]
         block = formData["block"]
@@ -132,7 +132,7 @@ def register():
         db.User.insert_one({"userID": userID,
                             "passwordHash": passwordHash,
                             "email": email,
-                            "position": position
+                            # "position": position
                             })
         db.Profiles.insert_one({"userID": userID,
                                 "displayName": displayName,
