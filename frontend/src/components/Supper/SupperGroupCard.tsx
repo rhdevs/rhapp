@@ -100,35 +100,19 @@ const Icon = styled.img`
 
 type Props = {
   supperGroup: SupperGroup | undefined
-  ownerId?: string
-  ownerName?: string
-  supperGroupName?: string
-  additionalCost?: number
-  currentFoodCost?: number
-  numOrders?: number
-  cancelReason?: string | undefined
-  collectionTime?: string
   statusOnly?: boolean | undefined
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const SupperGroupCard = (props: Props) => {
-  const isLoading =
-    props.supperGroup ??
-    (props.ownerId &&
-      props.ownerName &&
-      props.supperGroupName &&
-      props.additionalCost &&
-      props.currentFoodCost &&
-      props.numOrders)
-      ? false
-      : true
+  const isLoading = props.supperGroup ? false : true
   const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const history = useHistory()
   const dispatch = useDispatch()
-  const IsOpenOrPending =
+  const isOpenOrPending =
     props.supperGroup?.status === SupperGroupStatus.OPEN || props.supperGroup?.status === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
 
@@ -147,12 +131,14 @@ export const SupperGroupCard = (props: Props) => {
   const restaurantLogo = getRestaurantLogo(props.supperGroup?.restaurantName as Restaurants)
   const rawSupperGroupId = props.supperGroup?.supperGroupId
   const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
-  const isOwner = (props.ownerId ?? props.supperGroup?.ownerId) === localStorage.userID
-  const ownerName = `(${isOwner ? 'You' : props.ownerName ?? props.supperGroup?.ownerName ?? '-'})`
+  const isOwner = props.supperGroup?.ownerId === localStorage.userID
+  const ownerName = `(${isOwner ? 'You' : props.supperGroup?.ownerName ?? '-'})`
+  const ownerId = props.supperGroup?.ownerId
+  const userIdList = props.supperGroup?.userIdList
   const topIcon = (
     <MoreDropDown
-      ownerId={props.ownerId ?? props.supperGroup?.ownerId}
-      userIdList={props.supperGroup?.userIdList}
+      ownerId={ownerId}
+      userIdList={userIdList}
       supperGroupId={rawSupperGroupId}
       shareModalSetter={setIsShareModalOpen}
       deleteModalSetter={setIsDeleteModalOpen}
@@ -161,11 +147,17 @@ export const SupperGroupCard = (props: Props) => {
   )
 
   const idText = `${supperGroupId} ${ownerName}`
-  const supperGroupName = props.supperGroupName ?? props.supperGroup?.supperGroupName
+  const supperGroupName = props.supperGroup?.supperGroupName
   const closingTime = unixTo12HourTime(props.supperGroup?.closingTime)
-  const numberOfUsers = props.numOrders ?? props.supperGroup?.numOrders ?? 1 // To include owner
-  const deliveryCost = `$${(props.additionalCost ?? props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
+  const collectionTime = unixTo12HourTime(props.supperGroup?.estArrivalTime)
+  const numberOfUsers = props.supperGroup?.numOrders ?? 1 // To include owner
+  const deliveryCost = `$${(props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
   const splitMethod = props.supperGroup?.splitAdditionalCost
+  const supperGroupStatus = props.supperGroup?.status
+  const ownerTele = props.supperGroup?.ownerTele
+  const location = props.supperGroup?.location
+  const paymentInfo = props.supperGroup?.paymentInfo
+  const cancelReason = props.supperGroup?.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -174,7 +166,7 @@ export const SupperGroupCard = (props: Props) => {
     splitMethodIcon = <Icon src={PercentCircle} alt="Proprotional" />
   }
   const costLimit = props.supperGroup?.costLimit
-  const currentAmount = props.currentFoodCost ?? props.supperGroup?.currentFoodCost ?? 0
+  const currentAmount = props.supperGroup?.currentFoodCost ?? 0
 
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
   const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
@@ -213,8 +205,8 @@ export const SupperGroupCard = (props: Props) => {
     />
   )
 
-  return IsOpenOrPending ? (
-    <MainCard flexDirection="row" minHeight="fit-content">
+  return isOpenOrPending ? (
+    <MainCard onClick={props.onClick} flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
         {isDeleteModalOpen && deleteModal}
@@ -281,16 +273,16 @@ export const SupperGroupCard = (props: Props) => {
   ) : (
     <SGStatusCard
       isOwner={isOwner}
-      supperGroupStatus={props.supperGroup?.status}
+      supperGroupStatus={supperGroupStatus}
       restaurantLogo={restaurantLogo}
-      title={supperGroupName}
-      orderId={supperGroupId}
-      username={idText}
-      buttonTeleHandle={props.supperGroup?.ownerTele}
-      location={props.supperGroup?.location}
-      collectionTime={props.collectionTime}
-      paymentMethod={props.supperGroup?.paymentInfo}
-      cancelReason={props.cancelReason}
+      supperGroupName={supperGroupName}
+      supperGroupId={supperGroupId}
+      idHeader={idText}
+      buttonTeleHandle={ownerTele}
+      location={location}
+      collectionTime={collectionTime}
+      paymentMethod={paymentInfo}
+      cancelReason={cancelReason}
       statusOnly={showStatusOnly}
     />
   )

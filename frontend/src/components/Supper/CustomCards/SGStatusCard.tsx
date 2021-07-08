@@ -9,6 +9,8 @@ import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { MainCard } from '../MainCard'
 import { SGStatusBubble } from '../SGStatusBubble'
 import { UnderlinedButton } from '../UnderlinedButton'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../../../routes/Routes'
 
 const TopSection = styled.div`
   display: flex;
@@ -44,8 +46,8 @@ const OrderIdContainer = styled.text`
 `
 
 const StatusContainer = styled.div<{ statusOnly?: boolean }>`
-  margin: ${(props) => (props.statusOnly ? '0px' : '8px 20px 0 15px')};
-  padding: ${(props) => (props.statusOnly ? '1px 0px' : '10px 0 12px')};
+  margin: ${(props) => (props.statusOnly ? '0px' : '0px 20px 0 15px')};
+  padding: ${(props) => (props.statusOnly ? '1px 0px' : '10px 0 12px ')};
   display: flex;
   flex-direction: row;
   justify-content: ${(props) => (props.statusOnly ? 'flex-start' : 'space-evenly')};
@@ -104,55 +106,38 @@ const OwnerButtonContainer = styled.div`
 type Props = {
   isOwner?: boolean
   supperGroupStatus: SupperGroupStatus | undefined
-  restaurantLogo: string | undefined // change to compulsory
-  title: string | undefined
-  orderId: string
-  username: string
+  restaurantLogo: string | undefined
+  supperGroupName: string | undefined
+  supperGroupId: string | undefined
+  idHeader: string | undefined
   buttonTeleHandle: string | undefined
   location?: string | undefined
   collectionTime?: string
   paymentMethod?: PaymentInfo[] | undefined
   cancelReason?: string | undefined
-  statusOnly?: boolean | undefined
+  statusOnly: boolean | undefined
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const SGStatusCard = (props: Props) => {
-  const IsCancelled = props.supperGroupStatus === SupperGroupStatus.CANCELLED
-  const IsArrived = props.supperGroupStatus === SupperGroupStatus.ARRIVED
-  const IsOrdered = props.supperGroupStatus === SupperGroupStatus.ORDERED
-  const IsNotOpen = IsCancelled || IsArrived || IsOrdered
-  const showStatusOnly = props.statusOnly ?? false
-
+  const isCancelled = props.supperGroupStatus === SupperGroupStatus.CANCELLED
+  const isArrived =
+    props.supperGroupStatus === SupperGroupStatus.ARRIVED ||
+    props.supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT ||
+    props.supperGroupStatus === SupperGroupStatus.ALL_PAID
+  const history = useHistory()
   const onClick = () => {
-    {
-      props.buttonTeleHandle && openUserTelegram(props.buttonTeleHandle)
+    if (props.buttonTeleHandle) {
+      openUserTelegram(props.buttonTeleHandle)
     }
-    return undefined
   }
 
-  return (
-    <MainCard flexDirection="column">
-      <TopSection>
-        <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
-        <TextSubContainer>
-          <OrderIdContainer>
-            {props.orderId} ({props.isOwner ? 'You' : props.username})
-          </OrderIdContainer>
-          <TitleContainer>{props.title}</TitleContainer>
-          {showStatusOnly ? (
-            <StatusContainer statusOnly={showStatusOnly}>
-              <SGStatusBubble roundversion margin="5px 0" borderRadius="30px" text={props.supperGroupStatus ?? '-'} />
-            </StatusContainer>
-          ) : (
-            <></>
-          )}
-        </TextSubContainer>
-      </TopSection>
-      {!showStatusOnly && IsNotOpen ? (
+  const showContentBody = () => {
+    if (isArrived) {
+      return (
         <>
           <StatusContainer>
-            <SGStatusBubble text={props.supperGroupStatus ?? '-'} />
+            <SGStatusBubble text={SupperGroupStatus.ARRIVED} />
             {!props.isOwner && (
               <Button
                 stopPropagation={true}
@@ -162,50 +147,99 @@ export const SGStatusCard = (props: Props) => {
               />
             )}
           </StatusContainer>
-          {IsCancelled ? (
-            <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
-          ) : IsArrived ? (
-            <OtherInfoContainer>
-              <OtherInfoSubContainer>
-                <IconImage src={locationIcon} alt="Location Icon" />
-                <LocationText>
-                  {props.location} @ {props.collectionTime}
-                </LocationText>
-              </OtherInfoSubContainer>
-              <OtherInfoSubContainer>
-                <IconImage src={moneyIcon} alt="Money Icon" />
-                <PaymentTextContainer>
-                  {props.paymentMethod?.map((pm, index) => {
-                    if (pm.paymentMethod === PaymentMethod.CASH) {
-                      return <CashText key={index}>{pm.paymentMethod}</CashText>
-                    } else {
-                      let link = pm.link
-                      if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
-                        link = 'https://' + pm.link
-                      }
-                      return (
-                        <UnderlinedButton
-                          fontSize="12px"
-                          margin="0 3px"
-                          key={index}
-                          onClick={() => window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')}
-                          text={pm.paymentMethod}
-                          color="rgba(0, 38, 66, 0.7)"
-                        />
-                      )
+          <OtherInfoContainer>
+            <OtherInfoSubContainer>
+              <IconImage src={locationIcon} alt="Location Icon" />
+              <LocationText>
+                {props.location} @ {props.collectionTime}
+              </LocationText>
+            </OtherInfoSubContainer>
+            <OtherInfoSubContainer>
+              <IconImage src={moneyIcon} alt="Money Icon" />
+              <PaymentTextContainer>
+                {props.paymentMethod?.map((pm, index) => {
+                  if (pm.paymentMethod === PaymentMethod.CASH) {
+                    return <CashText key={index}>{pm.paymentMethod}</CashText>
+                  } else {
+                    let link = pm.link
+                    if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
+                      link = 'https://' + pm.link
                     }
-                  })}
-                </PaymentTextContainer>
-              </OtherInfoSubContainer>
-            </OtherInfoContainer>
+                    return (
+                      <UnderlinedButton
+                        fontSize="12px"
+                        margin="0 3px"
+                        key={index}
+                        onClick={() => window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')}
+                        text={pm.paymentMethod}
+                        color="rgba(0, 38, 66, 0.7)"
+                      />
+                    )
+                  }
+                })}
+              </PaymentTextContainer>
+            </OtherInfoSubContainer>
+          </OtherInfoContainer>
+        </>
+      )
+    } else if (isCancelled) {
+      return (
+        <>
+          <StatusContainer>
+            <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
+            {!props.isOwner && (
+              <Button
+                stopPropagation={true}
+                defaultButtonDescription="Message Owner"
+                onButtonClick={props.buttonTeleHandle ? onClick : undefined}
+                isFlipButton={false}
+              />
+            )}
+          </StatusContainer>
+          <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
+        </>
+      )
+    } else {
+      return (
+        <StatusContainer>
+          <SGStatusBubble text={SupperGroupStatus.ORDERED} />
+          {!props.isOwner && (
+            <Button
+              stopPropagation={true}
+              defaultButtonDescription="Message Owner"
+              onButtonClick={props.buttonTeleHandle ? onClick : undefined}
+              isFlipButton={false}
+            />
+          )}
+        </StatusContainer>
+      )
+    }
+  }
+
+  return (
+    <MainCard onClick={props.onClick} flexDirection="column">
+      <TopSection>
+        <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
+        <TextSubContainer>
+          <OrderIdContainer>{props.idHeader}</OrderIdContainer>
+          <TitleContainer>{props.supperGroupName}</TitleContainer>
+          {props.statusOnly ? (
+            <StatusContainer statusOnly={props.statusOnly}>
+              <SGStatusBubble roundVersion text={props.supperGroupStatus ?? '-'} />
+            </StatusContainer>
           ) : (
             <></>
           )}
-          {!IsCancelled && props.isOwner ? (
+        </TextSubContainer>
+      </TopSection>
+      {!props.statusOnly ? (
+        <>
+          {showContentBody()}
+          {!isCancelled && props.isOwner ? (
             <OwnerButtonContainer>
               <UnderlinedButton
-                onClick={(e) => props.onClick && props.onClick(e)}
-                text="Update Order Details"
+                onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.supperGroupId}/details`)}
+                text="Update Delivery Details"
                 color="red"
                 fontSize="14px"
               />

@@ -130,37 +130,38 @@ export default function Supper() {
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.CANCELLED}
         restaurantLogo={restaurantLogo}
-        username="Zhou BaoBao"
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
         buttonTeleHandle="ZBB"
-        title="f> SUPPER FRIENDS"
-        orderId="RHSO#1002"
+        supperGroupName="f> SUPPER FRIENDS"
         cancelReason="Lazy to order"
-        isOwner
+        statusOnly={false}
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.ORDERED}
         restaurantLogo={restaurantLogo}
-        username="Zhou BaoBao"
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
         buttonTeleHandle="ZBB"
-        title="f> SUPPER FRIENDS"
-        orderId="RHSO#1002"
-        isOwner
+        supperGroupName="f> SUPPER FRIENDS this is a long name let try me out :>"
+        statusOnly={false}
       />
       <SGStatusCard
-        supperGroupStatus={SupperGroupStatus.ARRIVED}
+        supperGroupStatus={SupperGroupStatus.AWAITING_PAYMENT}
         restaurantLogo={restaurantLogo}
-        username="Zhou BaoBao"
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
         buttonTeleHandle="ZBB"
         location="Basketball Court"
         collectionTime="12:30AM"
-        title="f> SUPPER FRIENDS"
-        orderId="RHSO#1002"
+        supperGroupName="f> SUPPER FRIENDS"
         paymentMethod={[
           { paymentMethod: PaymentMethod.CASH },
           { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
           { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
           { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
         ]}
+        statusOnly={false}
         isOwner
       />
       <LineProgress currentStep={1} numberOfSteps={3} />
