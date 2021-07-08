@@ -618,7 +618,7 @@ def food_order(orderId, foodId):
 
 @supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
 @cross_origin(supports_credentials=True)
-def owner_edit_order(foodId):
+def owner_edit_order(orderId, foodId):
     try:
         if request.method == 'GET':
             data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
@@ -634,11 +634,14 @@ def owner_edit_order(foodId):
             data = request.get_json()
 
             if data['updates']['updateAction'] == 'Update':
-                if not data['updates']['reason'] & data['updates']['change'] & data['updates']['updatedPrice']:
-                    raise Exception('Update incomplete')
+                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
+                        or not data['updates']['reason'] \
+                        or not data['updates']['change'] \
+                        or not data['updates']['updatedPrice']:
+                    raise Exception('Update information incomplete')
             elif data['updates']['updateAction'] == 'Remove':
-                if not data['updates']['reason']:
-                    raise Exception('Update incomplete')
+                if 'reason' not in data['updates'] or not data['updates']['reason']:
+                    raise Exception('Update information incomplete')
 
             result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
                                                            {"$set": data})
