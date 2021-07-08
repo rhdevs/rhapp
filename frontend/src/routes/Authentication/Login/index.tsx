@@ -6,25 +6,24 @@ import 'antd/dist/antd.css'
 import sha256 from 'crypto-js/sha256'
 
 import { PATHS } from '../../Routes'
-import logo from '../../../assets/white_logo.png'
+import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
-  background-color: #ffffff;
   margin: 0px 23px;
-  padding-top: 100px;
+  padding-top: 50px;
   text-align: center;
 `
 
 const InputTextLabel = styled.text`
   float: left;
-  font-size: 15px;
+  font-size: 17px;
   padding: 0px 0px 4px 0px;
   font-family: Inter;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 200;
 `
 
 const Logo = styled.img`
@@ -35,14 +34,16 @@ const Logo = styled.img`
 
 const PostButton = styled.div`
   text-align: center;
+  .ant-btn {
+    font-size: 17px;
+    letter-spacing: 0em;
+    text-align: center;
+    font-weight: 200;
+  }
   .ant-btn-primary {
     background-color: #de5f4c;
     border-color: #de5f4c;
-    font-size: 14px;
-    letter-spacing: 0em;
-    text-align: center;
     width: 100%;
-    border-radius: 8px;
     margin-top: 10px;
   }
   .ant-btn-primary:focus {
@@ -57,9 +58,29 @@ const PostButton = styled.div`
     background: #de5f4c;
     border-color: #de5f4c;
   }
+  .ant-btn-default: {
+    float: left;
+    width: 50% !important;
+  }
 `
 const AlertGroup = styled.div`
-  margin: 23px;
+  margin: 0px;
+`
+const StyledUsernameInput = styled.div`
+  .ant-input {
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: 200;
+  }
+`
+const StyledPasswordInput = styled.div`
+  .ant-input-password {
+    border-radius: 20px;
+    font-size: 20px;
+  }
+  .ant-input {
+    border-radius: 15px;
+  }
 `
 
 export default function Login() {
@@ -116,54 +137,70 @@ export default function Login() {
   }
 
   return (
-    <div style={{ backgroundColor: '#ffffff' }}>
+    <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <LoginContainer>
           <Logo src={logo} />
           <br />
           <InputTextLabel>Username: </InputTextLabel>
-          <Input
-            type="text"
-            placeholder="Matric Number"
-            value={username}
-            onChange={(e) => {
-              const newUsername = e.target.value
-              setUsername(newUsername.toUpperCase())
-            }}
-          />
-          <br />
+          <StyledUsernameInput>
+            <Input
+              type="text"
+              placeholder="Matric Number"
+              value={username}
+              onChange={(e) => {
+                const newUsername = e.target.value
+                setUsername(newUsername.toUpperCase())
+              }}
+            />
+          </StyledUsernameInput>
           <br />
           <InputTextLabel>Password: </InputTextLabel>
-          <Input.Password
-            type="password"
-            placeholder="Enter Password"
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-            onPressEnter={loginHandler}
-          />
-          <br /> <br />
+          <StyledPasswordInput>
+            <Input.Password
+              type="password"
+              placeholder="Enter Password"
+              onChange={(e) => {
+                setPassword(e.target.value)
+              }}
+              onPressEnter={loginHandler}
+            />
+          </StyledPasswordInput>
+          <br />
           {error.message !== '' && (
             <AlertGroup>
               <Alert message={error.message} type="error" closable showIcon />
             </AlertGroup>
           )}
           <PostButton>
-            <Button type="primary" block onClick={loginHandler}>
+            <Button type="primary" shape="round" size="large" block onClick={loginHandler}>
               Login
             </Button>
           </PostButton>
           <br />
           <PostButton>
             <Button
-              type="dashed"
+              type="default"
+              shape="round"
+              size="large"
               block
               onClick={() => {
                 history.push(PATHS.SIGNUP_PAGE)
               }}
             >
               Register
+            </Button>
+            <Button
+              type="default"
+              shape="round"
+              size="large"
+              block
+              onClick={() => {
+                history.push(PATHS.FORGET_PASSWORD_PAGE)
+              }}
+            >
+              Forget Password
             </Button>
           </PostButton>
         </LoginContainer>

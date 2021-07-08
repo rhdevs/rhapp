@@ -1,3 +1,4 @@
+from AuthFunction import authenticate
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
 from AuthFunction import authenticate
@@ -166,9 +167,9 @@ def check_bookings(facilityID):
             {'$match':
                 {'$and': [
                     {'facilityID': int(facilityID)},
-                    {'startTime': {'$gte': int(
-                        request.args.get('startTime'))}},
-                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                    {'startTime': {'$lte': int(
+                        request.args.get('endTime'))}},
+                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
                 ]}
              },
             {'$lookup': {

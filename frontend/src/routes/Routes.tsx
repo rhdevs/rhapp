@@ -12,6 +12,8 @@ export enum PATHS {
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
+  FORGET_PASSWORD_PAGE = '/auth/forget',
+  RESET_PASSWORD_PAGE = '/auth/reset/:resetToken',
   CHANGE_PASSWORD_PAGE = '/auth/changePassword',
   PROFILE_PAGE = '/social/profile/',
   VIEW_PROFILE_PAGE = '/social/profile/:userId',
@@ -53,6 +55,9 @@ const FallBack = React.lazy(() => import(/* webpackChunckName: "FallBack" */ './
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
+const ForgetPassword = React.lazy(() => import(/* webpackChunckName: "ForgetPassword" */ './Authentication/Forget'))
+const ResetPassword = React.lazy(() => import(/* webpackChunckName: "ResetPassword" */ './Authentication/Reset'))
+
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
 const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" */ './Profile/EditProfile'))
@@ -99,6 +104,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
+            <PublicRoute exact path={PATHS.FORGET_PASSWORD_PAGE} component={ForgetPassword} />
+            <PublicRoute exact path={PATHS.RESET_PASSWORD_PAGE} component={ResetPassword} />
 
             <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
             <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
