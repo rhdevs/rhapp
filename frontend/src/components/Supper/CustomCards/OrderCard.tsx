@@ -14,6 +14,7 @@ import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
+import { ContactModal } from '../ContactModal'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -75,6 +76,8 @@ const HorizontalLine = styled.hr`
   background: black;
   border: none;
 `
+
+const MealCard = styled.div``
 
 const PriceMainContainer = styled.div`
   display: grid;
@@ -175,6 +178,7 @@ export const OrderCard = (props: Props) => {
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const [isEditedModalOpen, setIsEditedModalOpen] = useState<boolean>(false)
   const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
@@ -339,19 +343,30 @@ export const OrderCard = (props: Props) => {
               }),
             )
             return (
-              <FoodLine
+              <MealCard
                 key={index}
-                margin="5px 0"
-                isEditable={isEditable}
-                onEditClick={() => onEditClick(food.foodId)}
-                wasEdited={wasEdited}
-                wasEditedModalSetter={setIsEditedModalOpen}
-                isCancelActionClickable={isOwner}
-                cancelActionModalSetter={setIsCancelActionModalOpen}
-                food={food}
-                supperGroupId={supperGroupId}
-                orderId={orderId}
-              />
+                onClick={() => {
+                  if (isOwner) {
+                    setIsContactModalOpen(true)
+                  }
+                }}
+              >
+                {isContactModalOpen && (
+                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsContactModalOpen} />
+                )}
+                <FoodLine
+                  margin="5px 0"
+                  isEditable={isEditable}
+                  onEditClick={() => onEditClick(food.foodId)}
+                  wasEdited={wasEdited}
+                  wasEditedModalSetter={setIsEditedModalOpen}
+                  isCancelActionClickable={isOwner}
+                  cancelActionModalSetter={setIsCancelActionModalOpen}
+                  food={food}
+                  supperGroupId={supperGroupId}
+                  orderId={orderId}
+                />
+              </MealCard>
             )
           })}
           <PriceSection update={isEditable} />
