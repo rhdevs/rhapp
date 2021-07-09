@@ -74,7 +74,7 @@ export default function Supper() {
         // foodList={foodList}
         supperGroup={supperGroupStub}
       />
-      <SupperGroupCard supperGroup={supperGroupStub} />
+      <SupperGroupCard supperGroup={supperGroupStub} isHome={false} />
       <RadioButton
         margin="0 0 3px 2px"
         value="option.name"

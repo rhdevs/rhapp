@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
-import { Restaurants, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../store/supper/types'
+import {
+  HomeSupperGroup,
+  PaymentInfo,
+  Restaurants,
+  SplitACMethod,
+  SupperGroup,
+  SupperGroupStatus,
+} from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
 import { deleteSupperGroup, getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
@@ -99,7 +106,13 @@ const Icon = styled.img`
 `
 
 type Props = {
-  supperGroup: SupperGroup | undefined
+  supperGroup?: SupperGroup
+  homeSupperGroup?: HomeSupperGroup
+  isHome: boolean
+  comments?: string | undefined
+  paymentInfo?: PaymentInfo[]
+  location?: string
+  estArrivalTime?: number
   statusOnly?: boolean | undefined
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
@@ -149,15 +162,15 @@ export const SupperGroupCard = (props: Props) => {
   const idText = `${supperGroupId} ${ownerName}`
   const supperGroupName = props.supperGroup?.supperGroupName
   const closingTime = unixTo12HourTime(props.supperGroup?.closingTime)
-  const collectionTime = unixTo12HourTime(props.supperGroup?.estArrivalTime)
+  const collectionTime = unixTo12HourTime(props.isHome ? props.estArrivalTime : props.supperGroup?.estArrivalTime)
   const numberOfUsers = props.supperGroup?.numOrders ?? 1 // To include owner
   const deliveryCost = `$${(props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
   const splitMethod = props.supperGroup?.splitAdditionalCost
   const supperGroupStatus = props.supperGroup?.status
   const ownerTele = props.supperGroup?.ownerTele
-  const location = props.supperGroup?.location
-  const paymentInfo = props.supperGroup?.paymentInfo
-  const cancelReason = props.supperGroup?.comments
+  const location = props.isHome ? props.location : props.supperGroup?.location
+  const paymentInfo = props.isHome ? props.paymentInfo : props.supperGroup?.paymentInfo
+  const cancelReason = props.isHome ? props.comments : props.supperGroup?.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
