@@ -1,26 +1,26 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { updateOrderDetails } from '../../../store/supper/action'
+import { deleteSupperGroup } from '../../../store/supper/action'
 
 import { SupperModal } from './SupperModal'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  orderId: string | undefined
+  suppergroupId: number | string
 }
 
-export const DiscardCartModal = (props: Props) => {
+export const EndSupperGroupModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(updateOrderDetails(props.orderId, { foodList: [] }))
+    dispatch(deleteSupperGroup(props.suppergroupId))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (
     <SupperModal
-      title="Discard Cart?"
-      description="You have added items to your cart. Exiting this page will remove all items from your cart."
-      leftButtonText="Confirm"
+      title="End Supper Group?"
+      description="All order and payment information will be deleted."
+      leftButtonText="End"
       modalSetter={props.modalSetter}
       onLeftButtonClick={onLeftClick}
     />

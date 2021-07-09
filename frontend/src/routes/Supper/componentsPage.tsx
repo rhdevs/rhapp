@@ -43,7 +43,7 @@ import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
-import { DiscartCartModal } from '../../components/Supper/Modals/DiscardCartModal'
+import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -57,9 +57,12 @@ const OptionText = styled.text`
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
   return (
     <>
-      <DiscartCartModal />
+      <div onClick={() => setIsModalOpen(true)}>open modal</div>
+      {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>

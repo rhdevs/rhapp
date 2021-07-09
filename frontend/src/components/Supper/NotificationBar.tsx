@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { /*closeSupperNotification,*/ getSupperNotification } from '../../store/supper/action'
+import { closeSupperNotification, getSupperNotification } from '../../store/supper/action'
 
 const Container = styled.div`
   position: fixed;
@@ -72,15 +72,17 @@ export const NotificationBar = () => {
 
   const { supperNotifications } = useSelector((state: RootState) => state.supper)
   const onNotifClick = () => {
+    const supperGroupId = supperNotifications[0].supperGroupId
     setIsVisible(false)
+    dispatch(closeSupperNotification(supperGroupId))
     //TODO: Currently it will only open the first notification, should have an interface for when there is more than 1
-    history.push(`${PATHS.VIEW_ORDER}/${supperNotifications[0].supperGroupId}`)
+    history.push(`${PATHS.VIEW_ORDER}/${supperGroupId}`)
   }
 
   const onCloseClick = () => {
     //Close notification
     setIsVisible(false)
-    // dispatch(closeSupperNotification(supperNotifications[0]))
+    dispatch(closeSupperNotification(supperNotifications[0].supperGroupId))
   }
 
   useEffect(() => {

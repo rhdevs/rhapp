@@ -56,6 +56,11 @@ const StyledButton = styled(Button)<{ defaultRightButtonColor: string; defaultRi
   color: ${(props) => props.defaultRightButtonTextColor};
   border-radius: 5px;
   margin-left: 10px;
+  &.ant-btn:hover,
+  &.ant-btn:focus {
+    color: black;
+    border-color: #d9d9d9;
+  }
 `
 
 function ConfirmationModal({

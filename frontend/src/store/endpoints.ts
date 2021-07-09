@@ -79,7 +79,8 @@ export enum ENDPOINTS {
   SEARCH = '/search',
 
   // SUPPER
-  GET_SUPPER_NOTIFICATIONS = '/notifications',
+  GET_SUPPER_NOTIFICATIONS = '/user',
+  CLOSE_SUPPER_NOTIFICATIONS = '/user',
   ALL_RESTAURANTS = '/restaurants',
   GET_RESTAURANT = '/restaurant',
   GET_RESTAURANT_MENU = '/restaurant',
@@ -103,6 +104,9 @@ export enum ENDPOINTS {
   GET_SUPPER_GROUP_HISTORY = '/user',
   GET_JOINED_SUPPER_GROUP_HISTORY = '/user',
   UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supperGroup',
+  LEAVE_SUPPER_GROUP = '/supperGroup',
+  UPDATE_OWNER_EDITS = '/order',
+  GET_OWNER_EDITS = '/order',
 }
 
 export enum DOMAINS {
