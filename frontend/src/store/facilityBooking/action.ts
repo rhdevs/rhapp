@@ -314,11 +314,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       } else if (body.err == 'Conflict Booking') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
       } else {
-        dispatch(
-          SetCreateBookingError(
-            'Check your fields again! All fields should be filled up, and event should be <4 hours!',
-          ),
-        )
+        dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
       }
     } else {
       dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
