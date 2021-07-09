@@ -15,6 +15,7 @@ import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { DeliveryFeeInput, errorStyling, StyledRadioGroup, Wrapper } from '../../EditSupperGroup'
 import { RadioButton } from '../../../../components/RadioButton'
+import LoadingSpin from '../../../../components/LoadingSpin'
 
 const FormSection = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ export const CreateOrderPageTwo = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, clearErrors, reset, errors } = useForm<FormValues>()
-  const { supperGroup, createOrderPage } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, createOrderPage, isLoading } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     if (supperGroup?.splitAdditionalCost) {
@@ -73,44 +74,50 @@ export const CreateOrderPageTwo = () => {
         rightComponent={<UnderlinedButton onClick={onSubmit} text="Next" fontWeight={700} />}
         onLeftClick={onLeftClick}
       />
-      <LineProgress margin="0 0 1.5rem 0" currentStep={2} numberOfSteps={3} />
-      <FormSection>
-        <Wrapper baseline>
-          <FormHeader isCompulsory headerName="Est. Delivery Fees" />
-          <DeliveryFeeInput
-            type="number"
-            placeholder="$$$"
-            name="estDeliveryFee"
-            defaultValue={supperGroup?.additionalCost ?? ''}
-            ref={register({
-              required: true,
-              validate: (input) => input.trim().length !== 0,
-              valueAsNumber: true,
-              min: 0,
-            })}
-            style={errors.estDeliveryFee ? errorStyling : {}}
-          />
-        </Wrapper>
-        {errors.estDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
-        {(errors.estDeliveryFee?.type === 'min' || errors.estDeliveryFee?.type === 'validate') && (
-          <ErrorText>Invalid delivery fee!</ErrorText>
-        )}
-        <Wrapper topMargin>
-          <FormHeader isCompulsory headerName="Split Delivery Fees" />
-          <StyledRadioGroup
-            {...register('splitDeliveryFee', { required: true })}
-            onChange={(e) => {
-              clearErrors('splitDeliveryFee')
-              setValue('splitDeliveryFee', e.target.value)
-            }}
-            defaultValue={supperGroup?.splitAdditionalCost}
-          >
-            <RadioButton value={SplitACMethod.EQUAL} label={SplitACMethod.EQUAL} />
-            <RadioButton value={SplitACMethod.PROPORTIONAL} label={SplitACMethod.PROPORTIONAL} />
-          </StyledRadioGroup>
-        </Wrapper>
-        {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
-      </FormSection>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <LineProgress margin="0 0 1.5rem 0" currentStep={2} numberOfSteps={3} />
+          <FormSection>
+            <Wrapper baseline>
+              <FormHeader isCompulsory headerName="Est. Delivery Fees" />
+              <DeliveryFeeInput
+                type="number"
+                placeholder="$$$"
+                name="estDeliveryFee"
+                defaultValue={supperGroup?.additionalCost ?? ''}
+                ref={register({
+                  required: true,
+                  validate: (input) => input.trim().length !== 0,
+                  valueAsNumber: true,
+                  min: 0,
+                })}
+                style={errors.estDeliveryFee ? errorStyling : {}}
+              />
+            </Wrapper>
+            {errors.estDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
+            {(errors.estDeliveryFee?.type === 'min' || errors.estDeliveryFee?.type === 'validate') && (
+              <ErrorText>Invalid delivery fee!</ErrorText>
+            )}
+            <Wrapper topMargin>
+              <FormHeader isCompulsory headerName="Split Delivery Fees" />
+              <StyledRadioGroup
+                {...register('splitDeliveryFee', { required: true })}
+                onChange={(e) => {
+                  clearErrors('splitDeliveryFee')
+                  setValue('splitDeliveryFee', e.target.value)
+                }}
+                defaultValue={supperGroup?.splitAdditionalCost}
+              >
+                <RadioButton value={SplitACMethod.EQUAL} label={SplitACMethod.EQUAL} />
+                <RadioButton value={SplitACMethod.PROPORTIONAL} label={SplitACMethod.PROPORTIONAL} />
+              </StyledRadioGroup>
+            </Wrapper>
+            {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
+          </FormSection>
+        </>
+      )}
     </>
   )
 }

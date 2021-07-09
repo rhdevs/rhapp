@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ErrorText, initSupperGroup } from '..'
+import LoadingSpin from '../../../../components/LoadingSpin'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
@@ -33,7 +34,7 @@ export const CreateOrderPageThree = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, errors, setError, clearErrors } = useForm<FormValues>()
-  const { newSupperGroupId, supperGroup, selectedPaymentMethod, counter } = useSelector(
+  const { newSupperGroupId, supperGroup, selectedPaymentMethod, counter, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
   const [invalidInfoPageNum, setInvalidInfoPageNum] = useState<number>(1)
@@ -129,59 +130,65 @@ export const CreateOrderPageThree = () => {
         rightComponent={<UnderlinedButton onClick={onSubmit} text="Finish" fontWeight={700} />}
         onLeftClick={onLeftClick}
       />
-      <LineProgress currentStep={3} numberOfSteps={3} />
-      <FormContainer>
-        <FormHeader topMargin headerName="Payment Method" isCompulsory />
-        <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
-        {paymentMethods
-          .filter((pm) => pm !== PaymentMethod.CASH)
-          .map((pm) => {
-            return (
-              selectedPaymentMethod.includes(pm) && (
-                <Input
-                  flex
-                  type="text"
-                  name={pm}
-                  ref={register({
-                    required: true,
-                    validate: (input) => input.trim().length !== 0,
-                  })}
-                  style={{
-                    borderColor: errors[`${pm}`] && 'red',
-                    background: errors[`${pm}`] && '#ffd1d1',
-                  }}
-                  placeholder={pm + ' Link'}
-                  defaultValue={
-                    supperGroup?.paymentInfo.find((pi) => {
-                      return pi.paymentMethod === pm
-                    })?.link ?? ''
-                  }
-                />
-              )
-            )
-          })}
-        {selectedPaymentMethod.filter((pm) => {
-          if (errors[`${pm}`]) {
-            return pmError++
-          }
-        })}
-        {errors.paymentMethod && pmError === 0 && counter > 0 && <ErrorText>Payment method required!</ErrorText>}
-        {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <LineProgress currentStep={3} numberOfSteps={3} />
+          <FormContainer>
+            <FormHeader topMargin headerName="Payment Method" isCompulsory />
+            <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
+            {paymentMethods
+              .filter((pm) => pm !== PaymentMethod.CASH)
+              .map((pm) => {
+                return (
+                  selectedPaymentMethod.includes(pm) && (
+                    <Input
+                      flex
+                      type="text"
+                      name={pm}
+                      ref={register({
+                        required: true,
+                        validate: (input) => input.trim().length !== 0,
+                      })}
+                      style={{
+                        borderColor: errors[`${pm}`] && 'red',
+                        background: errors[`${pm}`] && '#ffd1d1',
+                      }}
+                      placeholder={pm + ' Link'}
+                      defaultValue={
+                        supperGroup?.paymentInfo.find((pi) => {
+                          return pi.paymentMethod === pm
+                        })?.link ?? ''
+                      }
+                    />
+                  )
+                )
+              })}
+            {selectedPaymentMethod.filter((pm) => {
+              if (errors[`${pm}`]) {
+                return pmError++
+              }
+            })}
+            {errors.paymentMethod && pmError === 0 && counter > 0 && <ErrorText>Payment method required!</ErrorText>}
+            {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
 
-        <FormHeader topMargin headerName="Phone Number" isCompulsory />
-        <Input
-          type="number"
-          defaultValue={supperGroup?.phoneNumber ?? ''}
-          placeholder="Phone Number"
-          name="phoneNumber"
-          ref={register({
-            required: true,
-            valueAsNumber: true,
-          })}
-          style={errors.phoneNumber ? errorStyling : {}}
-        />
-        {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
-      </FormContainer>
+            <FormHeader topMargin headerName="Phone Number" isCompulsory />
+            <Input
+              type="number"
+              defaultValue={supperGroup?.phoneNumber ?? ''}
+              placeholder="Phone Number"
+              name="phoneNumber"
+              ref={register({
+                required: true,
+                valueAsNumber: true,
+              })}
+              style={errors.phoneNumber ? errorStyling : {}}
+            />
+            {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
+          </FormContainer>
+        </>
+      )}
     </>
   )
 }
