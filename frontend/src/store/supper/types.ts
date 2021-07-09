@@ -84,7 +84,7 @@ export type SupperGroup = {
   additionalCost?: number //ie GST, delivery fee
   comments?: string // for cancel reason
   costLimit: number | undefined // can have no limit
-  createdAt: number
+  createdAt: number | undefined
   currentFoodCost: number //non inclusive of additionalCost
   location: string //collection point
   numOrders: number

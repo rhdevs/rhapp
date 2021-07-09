@@ -57,7 +57,6 @@ type FormValues = {
   supperGroupName: string
   restaurant: Restaurants
   closingTime: number | undefined
-  maxPrice: number | undefined
 }
 
 export const CreateOrderPageOne = () => {
@@ -74,7 +73,6 @@ export const CreateOrderPageOne = () => {
         supperGroupName: supperGroup.supperGroupName,
         restaurant: supperGroup.restaurantName as Restaurants,
         closingTime: supperGroup.closingTime,
-        maxPrice: supperGroup.costLimit,
       })
       if (supperGroup.restaurantName) clearErrors('restaurant')
       if (supperGroup.closingTime) clearErrors('closingTime')
@@ -126,9 +124,6 @@ export const CreateOrderPageOne = () => {
   const onSubmit = () => {
     let updatedSPInfo: SupperGroup = { ...(supperGroup ?? initSupperGroup) }
     setValue('restaurant', selectedRestaurant)
-    if (priceLimit > 0 && hasMaxPrice) {
-      setValue('maxPrice', priceLimit)
-    }
     if (updatedSPInfo.closingTime) {
       clearErrors('closingTime')
     }
@@ -139,9 +134,7 @@ export const CreateOrderPageOne = () => {
         supperGroupName: data.supperGroupName,
         restaurantName: data.restaurant,
         closingTime: data.closingTime,
-      }
-      if (hasMaxPrice) {
-        updatedSPInfo = { ...updatedSPInfo, costLimit: data.maxPrice }
+        costLimit: hasMaxPrice ? priceLimit : undefined,
       }
       console.log('firstSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
@@ -181,11 +174,13 @@ export const CreateOrderPageOne = () => {
               ref={register({
                 required: true,
                 validate: (input) => input.trim().length !== 0,
+                maxLength: 50,
               })}
               style={errors.supperGroupName ? errorStyling : {}}
             />
             {errors.supperGroupName?.type === 'required' && <ErrorText>Order Name required!</ErrorText>}
             {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
+            {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
             <FormHeader topMargin headerName="Restaurant" isCompulsory />
             <Controller
               name="restaurant"

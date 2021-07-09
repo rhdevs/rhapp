@@ -192,11 +192,13 @@ const EditSupperGroup = () => {
           ref={register({
             required: true,
             validate: (input) => input.trim().length !== 0,
+            maxLength: 50,
           })}
           style={errors.supperGroupName ? errorStyling : {}}
         />
         {errors.supperGroupName?.type === 'required' && <ErrorText>Order Name required!</ErrorText>}
         {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
+        {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
         <FormHeader topMargin headerName="Restaurant" />
         <RestaurantBubbles isDisabled defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
         <FormHeader topMargin headerName="Closing Time" isCompulsory />

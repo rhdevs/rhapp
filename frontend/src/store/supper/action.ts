@@ -313,7 +313,13 @@ export const getAllUserJoinedSupperGroup = (userId: string) => (dispatch: Dispat
 export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  const requestBody = newSupperGroup
+  let requestBody
+  if (newSupperGroup.costLimit === undefined) {
+    requestBody = { ...newSupperGroup, costLimit: null }
+  } else {
+    requestBody = newSupperGroup
+  }
+  console.log(requestBody)
   post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
     .then((resp) => {
       if (resp.status === 'failed') {

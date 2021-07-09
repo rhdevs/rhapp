@@ -40,7 +40,7 @@ export const InputText = styled.input<{ flex?: boolean; error?: FieldError | und
 
 export const initSupperGroup: SupperGroup = {
   costLimit: undefined,
-  createdAt: Math.round(Date.now() / 1000),
+  createdAt: undefined,
   currentFoodCost: 0,
   location: '',
   numOrders: 0,
