@@ -199,6 +199,51 @@ def create_supper_group():
         db.Order.insert_one(orderData)
         orderData['orderId'] = str(orderData.pop('_id'))
 
+        # Retrieve relevant information from database
+        pipeline = [
+            {'$match': {'supperGroupId': newsupperGroupID}},
+            {
+                '$lookup': {
+                    'from': 'Restaurants',
+                    'localField': 'restaurantName',
+                    'foreignField': 'name',
+                    'as': 'restaurant'
+                }
+            },
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$addFields': {
+                    'restaurantLogo': '$restaurant.restaurantLogo',
+                    'restaurantId': '$restaurant._id',
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'Profiles',
+                    'localField': 'ownerId',
+                    'foreignField': 'userID',
+                    'as': 'ownerList'
+                }
+            },
+            {'$project': {'_id': 0, 'restaurant': 0
+                          }
+             }
+        ]
+
+        result = db.SupperGroup.aggregate(pipeline)
+
+        data = None
+        for suppergroup in result:
+            data = suppergroup
+            suppergroup['restaurantId'] = str(suppergroup.pop('restaurantId'))
+            for user in data['ownerList']:
+                user['_id'] = str(user['_id'])
+                supperGroupData['ownerName'] = user['displayName']
+                supperGroupData['ownerTele'] = user['telegramHandle']
+            supperGroupData['restaurantId'] = suppergroup['restaurantId']
+
         data = {'supperGroup': supperGroupData,
                 'orderId': orderData['orderId']}
 
