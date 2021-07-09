@@ -731,3 +731,10 @@ export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Disp
     newSupperGroupId: newSupperGroupId,
   })
 }
+
+export const setModalIsOpen = (modalIsOpen: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_MODAL_IS_OPEN,
+    modalIsOpen: modalIsOpen,
+  })
+}

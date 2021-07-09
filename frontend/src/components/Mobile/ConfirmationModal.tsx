@@ -51,6 +51,13 @@ const ButtonContainer = styled.div`
   margin-top: 10px;
 `
 
+const StyledButton = styled(Button)<{ defaultRightButtonColor: string; defaultRightButtonTextColor: string }>`
+  background: ${(props) => props.defaultRightButtonColor};
+  color: ${(props) => props.defaultRightButtonTextColor};
+  border-radius: 5px;
+  margin-left: 10px;
+`
+
 function ConfirmationModal({
   title,
   description,
@@ -111,17 +118,13 @@ function ConfirmationModal({
               {leftButtonText}
             </Button>
           )}
-          <Button
-            style={{
-              background: defaultRightButtonColor,
-              color: defaultRightButtonTextColor,
-              borderRadius: '5px',
-              marginLeft: '10px',
-            }}
+          <StyledButton
+            defaultRightButtonColor={defaultRightButtonColor}
+            defaultRightButtonTextColor={defaultRightButtonTextColor}
             onClick={onRightButtonClick}
           >
             {rightButtonText}
-          </Button>
+          </StyledButton>
         </ButtonContainer>
       </MainContainer>
     </>

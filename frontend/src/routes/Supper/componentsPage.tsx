@@ -43,6 +43,7 @@ import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
+import { DiscartCartModal } from '../../components/Supper/Modals/DiscardCartModal'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -58,6 +59,7 @@ export default function Supper() {
   const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   return (
     <>
+      <DiscartCartModal />
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
