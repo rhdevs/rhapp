@@ -61,6 +61,7 @@ export default function Supper() {
 
   return (
     <>
+      <InformationCard updateSummary />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
       {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>
