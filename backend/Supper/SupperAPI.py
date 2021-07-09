@@ -116,7 +116,6 @@ def all_supper_group():
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo',
                     'restaurantId': '$restaurant._id'
                 }
             },
