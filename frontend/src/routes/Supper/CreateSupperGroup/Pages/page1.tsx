@@ -54,6 +54,7 @@ const StyledSwitch = styled(Switch)`
 `
 
 type FormValues = {
+  onLeftTopButtonClick: (() => void) | undefined
   supperGroupName: string
   restaurant: Restaurants
   closingTime: number | undefined

@@ -51,6 +51,7 @@ export const CreateOrderPageThree = () => {
   }, [selectedPaymentMethod])
 
   useEffect(() => {
+    console.log(newSupperGroupId, supperGroup?.restaurantId)
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
       history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
@@ -89,39 +90,15 @@ export const CreateOrderPageThree = () => {
         phoneNumber: data.phoneNumber,
         ownerId: localStorage.userID,
       }
-      const initialPI = supperGroup?.paymentInfo
-      const initialPM = supperGroup?.paymentInfo?.map((pi) => {
-        return pi.paymentMethod
-      })
       let newPI: PaymentInfo[] = []
       const allPaymentMethods = Object.values(PaymentMethod)
 
       allPaymentMethods
         ?.filter((pm) => pm !== PaymentMethod.CASH)
-        .map((pm) => {
-          const initialLink = initialPI?.find((pi) => pi.paymentMethod === pm)?.link
-          if (
-            data[`${pm}`] !== initialLink ||
-            !data[`${pm}`] ||
-            (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm))
-          ) {
-            if (initialPM?.includes(pm) && !selectedPaymentMethod?.includes(pm)) {
-              newPI = newPI.concat({ paymentMethod: pm, link: null })
-              return
-            }
-            if (!data[`${pm}`] && !initialPM?.includes(pm)) {
-              return
-            }
-            newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })
-          }
-        })
-      if (initialPM?.includes(PaymentMethod.CASH) && !selectedPaymentMethod.includes(PaymentMethod.CASH)) {
-        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH, link: null })
-      }
-      if (!initialPM?.includes(PaymentMethod.CASH) && selectedPaymentMethod.includes(PaymentMethod.CASH)) {
-        newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
-      }
+        .map((pm) => (newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })))
+
       if (newPI.length) {
+        console.log(newPI)
         const updatedPI = selectedPaymentMethod.map((pm) => {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
