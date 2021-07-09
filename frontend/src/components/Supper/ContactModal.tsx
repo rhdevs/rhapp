@@ -6,7 +6,6 @@ import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import { Food, Order, UserDetails } from '../../store/supper/types'
 import { TelegramShareButton } from '../TelegramShareButton'
-import { userDetailsStub } from '../../store/stubs'
 
 const OverlayBackground = styled.div`
   position: fixed;

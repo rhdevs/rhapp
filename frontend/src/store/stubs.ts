@@ -324,8 +324,8 @@ export const orderList: Order[] = [
 
 export const userDetailsStub: UserDetails[] = [
   { userId: '1', name: 'Gougou', telegramHandle: 'gg' },
-  { userId: '2', name: 'Moumou has a really really long name...', telegramHandle: 'mm' },
-  { userId: '3', name: 'Poupou', telegramHandle: 'pp' },
+  // { userId: '2', name: 'Moumou has a really really long name...', telegramHandle: 'mm' },
+  // { userId: '3', name: 'Poupou', telegramHandle: 'pp' },
 ]
 
 export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]

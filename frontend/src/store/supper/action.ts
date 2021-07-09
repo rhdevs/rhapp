@@ -731,3 +731,10 @@ export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Disp
     newSupperGroupId: newSupperGroupId,
   })
 }
+
+export const SetContactModal = (contactModal: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_CONTACT_MODAL,
+    contactModal: contactModal,
+  })
+}

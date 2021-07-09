@@ -77,8 +77,6 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
-const MealCard = styled.div``
-
 const PriceMainContainer = styled.div`
   display: grid;
   grid-template-columns: 75% 25%;
@@ -178,7 +176,6 @@ export const OrderCard = (props: Props) => {
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const [isEditedModalOpen, setIsEditedModalOpen] = useState<boolean>(false)
   const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
-  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
@@ -343,18 +340,9 @@ export const OrderCard = (props: Props) => {
               }),
             )
             return (
-              <MealCard
-                key={index}
-                onClick={() => {
-                  if (isOwner) {
-                    setIsContactModalOpen(true)
-                  }
-                }}
-              >
-                {isContactModalOpen && (
-                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsContactModalOpen} />
-                )}
+              <>
                 <FoodLine
+                  key={index}
                   margin="5px 0"
                   isEditable={isEditable}
                   onEditClick={() => onEditClick(food.foodId)}
@@ -362,11 +350,17 @@ export const OrderCard = (props: Props) => {
                   wasEditedModalSetter={setIsEditedModalOpen}
                   isCancelActionClickable={isOwner}
                   cancelActionModalSetter={setIsCancelActionModalOpen}
+                  cancelActionOnClick={() => {
+                    setIsCancelActionModalOpen(true)
+                  }}
                   food={food}
                   supperGroupId={supperGroupId}
                   orderId={orderId}
                 />
-              </MealCard>
+                {isCancelActionModalOpen && (
+                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsCancelActionModalOpen} />
+                )}
+              </>
             )
           })}
           <PriceSection update={isEditable} />
