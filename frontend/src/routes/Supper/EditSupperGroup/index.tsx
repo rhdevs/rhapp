@@ -449,11 +449,12 @@ const EditSupperGroup = () => {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
       console.log('Form was submitted!')
-      history.goBack()
       console.log(data)
       console.log('updatedOrderInfo', updatedOrderInfo)
       //TODO: TEST updated order details to backend
       dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
+      //TODO: decide where to go!
+      // history.goBack()
     })()
   }
 

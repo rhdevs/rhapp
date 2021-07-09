@@ -91,53 +91,51 @@ export default function Supper() {
   return (
     <Background>
       <TopNavBar title="Supper Order" rightComponent={rightIcon} />
+      <SearchBar placeholder="Search for restaurants!" value={searchValue} onChange={onChange} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <>
-          <SearchBar placeholder="Search for restaurants!" value={searchValue} onChange={onChange} />
-          <SupperGroupContainer>
-            {supperGroups ? (
-              supperGroups.map((supperGroup, index) => {
-                const onClick = () => {
-                  if (
-                    !(
-                      supperGroup.ownerId === localStorage.userID ||
-                      (supperGroup.userIdList ?? []).includes(localStorage.userID)
-                    )
-                  ) {
-                    console.log(supperGroup.ownerId === localStorage.userID)
-                    console.log((supperGroup.userIdList ?? []).includes(localStorage.userID))
-                    //user is owner or already has an ongoing order
-                    history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
-                  } else {
-                    //new SG to user
-                    history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
-                  }
+        <SupperGroupContainer>
+          {supperGroups ? (
+            supperGroups.map((supperGroup, index) => {
+              const onClick = () => {
+                if (
+                  !(
+                    supperGroup.ownerId === localStorage.userID ||
+                    (supperGroup.userIdList ?? []).includes(localStorage.userID)
+                  )
+                ) {
+                  console.log(supperGroup.ownerId === localStorage.userID)
+                  console.log((supperGroup.userIdList ?? []).includes(localStorage.userID))
+                  //user is owner or already has an ongoing order
+                  history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
+                } else {
+                  //new SG to user
+                  history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
                 }
-                return (
-                  <MainSGCard
-                    key={index}
-                    title={supperGroup.supperGroupName}
-                    time={unixTo12HourTime(supperGroup.closingTime)}
-                    users={supperGroup.numOrders}
-                    orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
-                    onClick={onClick}
-                  />
-                )
-              })
-            ) : searchValue ? (
-              <NoSupperGroupText>No supper groups found.</NoSupperGroupText>
-            ) : (
-              <NoSupperGroupText>Hungry? Start a supper group!</NoSupperGroupText>
-            )}
-          </SupperGroupContainer>
-          <PlusButtonDiv>
-            <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
-          </PlusButtonDiv>
-          <BottomNavBar />
-        </>
+              }
+              return (
+                <MainSGCard
+                  key={index}
+                  title={supperGroup.supperGroupName}
+                  time={unixTo12HourTime(supperGroup.closingTime)}
+                  users={supperGroup.numOrders}
+                  orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
+                  onClick={onClick}
+                />
+              )
+            })
+          ) : searchValue ? (
+            <NoSupperGroupText>No supper groups found.</NoSupperGroupText>
+          ) : (
+            <NoSupperGroupText>Hungry? Start a supper group!</NoSupperGroupText>
+          )}
+        </SupperGroupContainer>
       )}
+      <PlusButtonDiv>
+        <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
+      </PlusButtonDiv>
+      <BottomNavBar />
     </Background>
   )
 }

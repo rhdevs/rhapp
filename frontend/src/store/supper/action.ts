@@ -41,9 +41,9 @@ export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dis
     })
 }
 
-export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
+  await get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err

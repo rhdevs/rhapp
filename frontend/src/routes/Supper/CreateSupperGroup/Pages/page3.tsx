@@ -127,7 +127,7 @@ export const CreateOrderPageThree = () => {
     <>
       <TopNavBar
         title="Create Group"
-        rightComponent={<UnderlinedButton onClick={onSubmit} text="Finish" fontWeight={700} />}
+        rightComponent={isLoading ? undefined : <UnderlinedButton onClick={onSubmit} text="Finish" fontWeight={700} />}
         onLeftClick={onLeftClick}
       />
       {isLoading ? (

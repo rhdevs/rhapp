@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { FieldError } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { setSupperGroup } from '../../../store/supper/action'
 import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
-import { RootState } from '../../../store/types'
 import { CreateOrderPageOne } from './Pages/page1'
 import { CreateOrderPageTwo } from './Pages/page2'
 import { CreateOrderPageThree } from './Pages/page3'
@@ -59,11 +58,10 @@ export const initSupperGroup: SupperGroup = {
 
 export default function CreateSupperGroup() {
   const params = useParams<{ page: string }>()
-  const { supperGroup } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!supperGroup) dispatch(setSupperGroup(initSupperGroup))
+    dispatch(setSupperGroup(initSupperGroup))
   }, [])
 
   console.log(params.page)
