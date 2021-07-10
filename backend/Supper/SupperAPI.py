@@ -110,16 +110,29 @@ def all_supper_group():
                 }
             },
             {
+                '$lookup': {
+                    'from': 'Profiles',
+                    'localField': 'ownerId',
+                    'foreignField': 'userID',
+                    'as': 'ownerList'
+                }
+            },
+            {
                 '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$unwind': {'path': '$ownerList'}
             },
             {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantId': '$restaurant._id'
+                    'restaurantId': '$restaurant._id',
+                    'ownerName': '$ownerList.displayName',
+                    'ownerTele': '$ownerList.telegramHandle'
                 }
             },
-            {'$project': {'_id': 0, 'restaurant': 0}}
+            {'$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -146,7 +159,7 @@ def all_supper_group():
             db.SupperGroup.update_one(query, changes)
 
             # Filters only open supper groups
-            if supperGroup['status'] == 'Open': 
+            if supperGroup['status'] == 'Open':
                 data.append(supperGroup)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
