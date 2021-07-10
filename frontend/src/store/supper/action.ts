@@ -275,13 +275,18 @@ export const getUserOrder = (supperGroupId: string | number, userId: string) => 
   dispatch(setIsLoading(false))
 }
 
-export const getSearchedSupperGroups = (query: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const getSearchedSupperGroups = (rawQuery: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
   dispatch(getAllSupperGroups())
   const { allSupperGroups } = getState().supper
-  const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) =>
-    supperGroup.restaurantName.toLowerCase().includes(query.toLowerCase()),
-  )
+  const query = rawQuery.toLowerCase()
+  const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) => {
+    return Object.keys(supperGroup).some(
+      (key) =>
+        (typeof supperGroup[key] === 'string' && query[key]?.includes(query)) ||
+        (typeof supperGroup[key] === 'number' && query[key] === Number(query)),
+    )
+  })
   dispatch({
     type: SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS,
     searchedSupperGroups: filteredSearchSupperGroups,
