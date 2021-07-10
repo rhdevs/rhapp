@@ -9,7 +9,7 @@ import { QuantityTracker } from '../../components/Supper/QuantityTracker'
 import { LineProgress } from '../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
-import { PaymentMethod, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
+import { PaymentMethod, Restaurants, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSGCard'
 // import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
@@ -41,9 +41,11 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-import { ContactModal } from '../../components/Supper/ContactModal'
+// import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
+import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
+import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -56,9 +58,10 @@ const OptionText = styled.text`
 
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
-  const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
+  // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
       <InformationCard updateSummary />
@@ -77,7 +80,7 @@ export default function Supper() {
         // foodList={foodList}
         supperGroup={supperGroupStub}
       />
-      <SupperGroupCard supperGroup={supperGroupStub} />
+      <SupperGroupCard supperGroup={supperGroupStub} isHome={false} />
       <RadioButton
         margin="0 0 3px 2px"
         value="option.name"
@@ -130,6 +133,43 @@ export default function Supper() {
           { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
         ]}
       />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.CANCELLED}
+        restaurantLogo={restaurantLogo}
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
+        buttonTeleHandle="ZBB"
+        supperGroupName="f> SUPPER FRIENDS"
+        cancelReason="Lazy to order"
+        statusOnly={false}
+      />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.ORDERED}
+        restaurantLogo={restaurantLogo}
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
+        buttonTeleHandle="ZBB"
+        supperGroupName="f> SUPPER FRIENDS this is a long name let try me out :>"
+        statusOnly={false}
+      />
+      <SGStatusCard
+        supperGroupStatus={SupperGroupStatus.AWAITING_PAYMENT}
+        restaurantLogo={restaurantLogo}
+        idHeader="RHSO#1002 Zhou BaoBao"
+        supperGroupId={'abc'}
+        buttonTeleHandle="ZBB"
+        location="Basketball Court"
+        collectionTime="12:30AM"
+        supperGroupName="f> SUPPER FRIENDS"
+        paymentMethod={[
+          { paymentMethod: PaymentMethod.CASH },
+          { paymentMethod: PaymentMethod.PAYLAH, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'https://www.google.com' },
+          { paymentMethod: PaymentMethod.PAYNOW, link: 'https://www.google.com' },
+        ]}
+        statusOnly={false}
+        isOwner
+      />
       <LineProgress currentStep={1} numberOfSteps={3} />
       <UnderlinedButton text="Add Item" color="red" />
       <JoinOrderSGCard
@@ -159,9 +199,9 @@ export default function Supper() {
       <AddUpdateCartButton update currentTotal="7.90" />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
-      {isContactModalOpen && (
+      {/* {isContactModalOpen && (
         <ContactModal orderList={orderList} food={foodList[0]} contactModalSetter={setIsContactModalOpen} />
-      )}
+      )} */}
       {/* {isFoodMenuModalOpen && (
         <ViewMenuFoodModal
           foodList={foodList}

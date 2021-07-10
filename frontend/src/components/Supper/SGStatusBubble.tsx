@@ -6,15 +6,16 @@ import { SupperGroupStatus } from '../../store/supper/types'
 
 const MainContainer = styled.div<{
   backgroundColor?: string
+  roundVersion?: boolean
   borderColor: string
 }>`
   border: ${(props) => `3px solid ${props.borderColor}`};
-  border-radius: 10px;
+  border-radius: ${(props) => (props.roundVersion ? '30px' : '10px')};
   width: fit-content;
   padding: 2px 5px;
   height: fit-content;
   min-width: 3rem;
-  margin: 5px;
+  margin: ${(props) => (props.roundVersion ? '5px 0' : '5px')};
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -22,25 +23,26 @@ const MainContainer = styled.div<{
   background-color: ${(props) => props.backgroundColor ?? ''};
 `
 
-const TextContainer = styled.text`
+const TextContainer = styled.text<{ roundVersion?: boolean }>`
   margin: 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Inter';
+  font-size: ${(props) => (props.roundVersion ? '12px' : '14px')};
+  font-weight: bold;
+  ${(props) => !props.roundVersion && `font-family: 'Inter';`}
   text-transform: uppercase;
 `
 
 type Props = {
   text: SupperGroupStatus | string
   backgroundColor?: string
+  roundVersion?: boolean
 }
 
 export const SGStatusBubble = (props: Props) => {
   const BACKGROUND_COLOR = props.backgroundColor ?? 'rgba(222, 95, 76, 0.35);'
-
+  const showRoundVersion = props.roundVersion ?? false
   return (
-    <MainContainer borderColor={V1_RED} backgroundColor={BACKGROUND_COLOR}>
-      <TextContainer>{props.text}</TextContainer>
+    <MainContainer borderColor={V1_RED} backgroundColor={BACKGROUND_COLOR} roundVersion={showRoundVersion}>
+      <TextContainer roundVersion={showRoundVersion}>{props.text}</TextContainer>
     </MainContainer>
   )
 }
