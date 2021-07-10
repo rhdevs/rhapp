@@ -280,9 +280,11 @@ export const getSearchedSupperGroups = (rawQuery: string) => (dispatch: Dispatch
   const { allSupperGroups } = getState().supper
   const query = rawQuery.toLowerCase()
   const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) => {
-    if (supperGroup.ownerName.includes(query)) return supperGroup
-    if (String(supperGroup.supperGroupId)?.includes(query)) return supperGroup
-    if (supperGroup.supperGroupName.includes(query)) return supperGroup
+    if (supperGroup.ownerName.toLowerCase().includes(query)) return supperGroup
+    if (String(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+    if (getReadableSupperGroupId(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+    if (('rhso#' + supperGroup.supperGroupId).includes(query)) return supperGroup
+    if (supperGroup.supperGroupName.toLowerCase().includes(query)) return supperGroup
   })
   dispatch({
     type: SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS,

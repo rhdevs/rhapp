@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
-import SupperGroupHistory from '../../assets/supper/SupperGroupHistory.svg'
+import SupperGroupHistoryIcon from '../../assets/supper/SupperGroupHistoryIcon.svg'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { PlusButton } from '../../components/Supper/PlusButton'
@@ -15,25 +15,43 @@ import { V1_BACKGROUND } from '../../common/colours'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
 import { HomeSupperGroup } from '../../store/supper/types'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { Tooltip } from 'antd'
+import PullToRefresh from 'pull-to-refresh-react'
+import { onRefresh } from '../../common/reloadPage'
 
 const Background = styled.div`
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas: '.' '.' '.';
   height: 100vh;
   width: 100vw;
   background: ${V1_BACKGROUND};
   position: relative;
 `
 
+const StickyContainer = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  padding-bottom: 10px;
+  background-color: ${V1_BACKGROUND};
+`
+
 const PlusButtonDiv = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 60px;
-  z-index: 1000;
+  z-index: 3;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 50%;
 `
 
 const SupperGroupContainer = styled.div`
-  height: 80vh;
   overflow: scroll;
+  margin-top: -20px;
 `
 
 const NoSupperGroupText = styled.text`
@@ -46,7 +64,19 @@ const NoSupperGroupText = styled.text`
 
 const SupperGroupHistoryImg = styled.img`
   width: 2.5rem;
-  margin: 0 0 auto auto;
+  margin: 0 -15px auto auto;
+`
+
+const SearchContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 13px 0 23px;
+`
+
+const InfoIcon = styled(InfoCircleOutlined)`
+  font-size: 21px;
+  padding: 0 10px 0 15px;
 `
 
 export default function Supper() {
@@ -58,7 +88,7 @@ export default function Supper() {
 
   const rightIcon = (
     <SupperGroupHistoryImg
-      src={SupperGroupHistory}
+      src={SupperGroupHistoryIcon}
       alt={'My Supper Groups'}
       onClick={() => history.push(`${PATHS.SUPPER_GROUP_OVERVIEW}/created`)}
     />
@@ -80,46 +110,41 @@ export default function Supper() {
   }
   return (
     <Background>
-      <TopNavBar title="Supper Order" rightComponent={rightIcon} />
-      <SupperSearchBar />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          <SupperGroupContainer>
-            {supperGroups.length ? (
-              supperGroups.map((supperGroup, index) => {
-                // const onClick = () => {
-                //   if (
-                //     !(
-                //       supperGroup.ownerId === localStorage.userID ||
-                //       (supperGroup.userIdList ?? []).includes(localStorage.userID)
-                //     )
-                //   ) {
-                //     console.log(supperGroup.ownerId === localStorage.userID)
-                //     console.log((supperGroup.userIdList ?? []).includes(localStorage.userID))
-                //     //user is owner or already has an ongoing order
-                //     history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
-                //   } else {
-                //     //new SG to user
-                //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
-                //   }
-                // }
-                return <SupperGroupCard isHome key={index} homeSupperGroup={supperGroup} />
-              })
-            ) : (
-              <NoSupperGroupText>{errorText}</NoSupperGroupText>
-            )}
-          </SupperGroupContainer>
-          <PlusButtonDiv>
-            <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
-          </PlusButtonDiv>
-          <BottomNavBar />
-        </>
-      )}
-      <PlusButtonDiv>
-        <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
-      </PlusButtonDiv>
+      <StickyContainer>
+        <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
+        <SearchContainer>
+          <SupperSearchBar />
+          <Tooltip
+            zIndex={3}
+            style={{ position: 'relative' }}
+            overlayInnerStyle={{ borderRadius: '5px' }}
+            placement="bottomRight"
+            title="You may search for a supper group directly by typing the owner’s name, supper group name, or the supper group ID"
+          >
+            <InfoIcon />
+          </Tooltip>
+        </SearchContainer>
+      </StickyContainer>
+      <PullToRefresh onRefresh={onRefresh}>
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            <SupperGroupContainer>
+              {supperGroups.length ? (
+                supperGroups.map((supperGroup, index) => (
+                  <SupperGroupCard isHome key={index} homeSupperGroup={supperGroup} />
+                ))
+              ) : (
+                <NoSupperGroupText>{errorText}</NoSupperGroupText>
+              )}
+            </SupperGroupContainer>
+          </>
+        )}
+        <PlusButtonDiv>
+          <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
+        </PlusButtonDiv>
+      </PullToRefresh>
       <BottomNavBar />
     </Background>
   )

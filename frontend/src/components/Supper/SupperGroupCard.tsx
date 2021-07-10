@@ -105,6 +105,11 @@ const Icon = styled.img`
   height: 14px;
 `
 
+const ClickableContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 type Props = {
   supperGroup?: SupperGroup
   homeSupperGroup?: HomeSupperGroup
@@ -169,9 +174,9 @@ export const SupperGroupCard = (props: Props) => {
   const deliveryCost = `$${(supperGroup?.additionalCost ?? 0).toFixed(2)}`
   const splitMethod = supperGroup?.splitAdditionalCost
   const ownerTele = supperGroup?.ownerTele
-  const location = props.isHome ? props.location : props.supperGroup?.location
-  const paymentInfo = props.isHome ? props.paymentInfo : props.supperGroup?.paymentInfo
-  const cancelReason = props.isHome ? props.comments : props.supperGroup?.comments
+  const location = props.supperGroup?.location
+  const paymentInfo = props.supperGroup?.paymentInfo
+  const cancelReason = props.supperGroup?.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -179,13 +184,13 @@ export const SupperGroupCard = (props: Props) => {
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
     splitMethodIcon = <Icon src={PercentCircle} alt="Proprotional" />
   }
-  const costLimit = props.supperGroup?.costLimit
-  const currentAmount = props.supperGroup?.currentFoodCost ?? 0
+  const costLimit = supperGroup?.costLimit
+  const currentAmount = supperGroup?.currentFoodCost ?? 0
 
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
   const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
 
-  const shareModal = <SupperShareModal supperGroupId={supperGroupId} teleShareModalSetter={setIsShareModalOpen} />
+  const shareModal = <SupperShareModal rawSupperGroupId={rawSupperGroupId} teleShareModalSetter={setIsShareModalOpen} />
 
   const deleteModal = (
     <ConfirmationModal
@@ -219,8 +224,23 @@ export const SupperGroupCard = (props: Props) => {
     />
   )
 
+  const onSupperCardClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (props.onClick) return props.onClick(e)
+    else {
+      if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+        console.log(supperGroup?.ownerId === localStorage.userID)
+        console.log((supperGroup?.userIdList ?? []).includes(localStorage.userID))
+        //user is owner or already has an ongoing order
+        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+      } else {
+        //new SG to user
+        history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+      }
+    }
+  }
+
   return isOpenOrPending ? (
-    <MainCard onClick={props.onClick} flexDirection="row" minHeight="fit-content">
+    <MainCard flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
         {isDeleteModalOpen && deleteModal}
@@ -240,47 +260,49 @@ export const SupperGroupCard = (props: Props) => {
         </>
       ) : (
         <>
-          <LeftContainer>
-            {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
-          </LeftContainer>
-          <RightContainer>
-            {!isLoading && topIcon}
-            <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
-            <StyledGroupNameText>
-              {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
-            </StyledGroupNameText>
-            {isLoading ? (
-              <Skeleton width="150px" />
-            ) : (
-              <GroupInfoContainer>
-                <InfoSubContainer>
-                  <FieldTimeOutlined style={iconStyle} />
-                  {closingTime}
-                </InfoSubContainer>
-                <InfoSubContainer color={V1_RED}>
-                  <UserOutlined style={iconStyle} />
-                  {numberOfUsers}
-                </InfoSubContainer>
-                <InfoSubContainer>
-                  <CarOutlined style={iconStyle} />
-                  {deliveryCost} {splitMethodIcon}
-                </InfoSubContainer>
-              </GroupInfoContainer>
-            )}
-            {isLoading ? (
-              <Skeleton width="180px" />
-            ) : (
-              <GroupCostInfoContainer>
-                <StyledProgessBar
-                  strokeColor={V1_RED}
-                  strokeWidth={12}
-                  percent={percentageInProgressBar}
-                  showInfo={false}
-                />
-                {amountLeft}
-              </GroupCostInfoContainer>
-            )}
-          </RightContainer>
+          {!isLoading && topIcon}
+          <ClickableContainer onClick={onSupperCardClick}>
+            <LeftContainer>
+              {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
+            </LeftContainer>
+            <RightContainer>
+              <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
+              <StyledGroupNameText>
+                {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
+              </StyledGroupNameText>
+              {isLoading ? (
+                <Skeleton width="150px" />
+              ) : (
+                <GroupInfoContainer>
+                  <InfoSubContainer>
+                    <FieldTimeOutlined style={iconStyle} />
+                    {closingTime}
+                  </InfoSubContainer>
+                  <InfoSubContainer color={V1_RED}>
+                    <UserOutlined style={iconStyle} />
+                    {numberOfUsers}
+                  </InfoSubContainer>
+                  <InfoSubContainer>
+                    <CarOutlined style={iconStyle} />
+                    {deliveryCost} {splitMethodIcon}
+                  </InfoSubContainer>
+                </GroupInfoContainer>
+              )}
+              {isLoading ? (
+                <Skeleton width="180px" />
+              ) : (
+                <GroupCostInfoContainer>
+                  <StyledProgessBar
+                    strokeColor={V1_RED}
+                    strokeWidth={12}
+                    percent={percentageInProgressBar}
+                    showInfo={false}
+                  />
+                  {amountLeft}
+                </GroupCostInfoContainer>
+              )}
+            </RightContainer>
+          </ClickableContainer>
         </>
       )}
     </MainCard>

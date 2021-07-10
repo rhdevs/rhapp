@@ -8,6 +8,7 @@ import { PATHS } from '../../routes/Routes'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import telegram_black from '../../assets/telegram_black.svg'
 import { teleShareWithText } from '../../common/telegramMethods'
+import useSnackbar from '../../hooks/useSnackbar'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -63,16 +64,19 @@ const LinkContainer = styled.div`
   align-items: center;
   overflow: hidden;
   width: 90%;
+  display: flex;
 `
 
-const LinkText = styled.text``
+const LinkText = styled.text`
+  white-space: pre;
+`
 
 const CopyButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px 5px;
-  border: 1px solid #d9d9d9;
+  outline: 1px solid #d9d9d9;
   box-sizing: border-box;
 `
 
@@ -86,12 +90,12 @@ const Button = styled.img`
 `
 
 type Props = {
-  supperGroupId: string
+  rawSupperGroupId: number | undefined
   teleShareModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const SupperShareModal = (props: Props) => {
-  const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.supperGroupId}`
+  const link = `rhapp.lol${PATHS.JOIN_ORDER}/${props.rawSupperGroupId}`
 
   const onCloseClick = () => {
     props.teleShareModalSetter(false)
@@ -100,6 +104,8 @@ export const SupperShareModal = (props: Props) => {
   const onShareClick = () => {
     return teleShareWithText(link, 'Click the link to join the supper group!')
   }
+
+  const copyText = `Join my supper group! ${link}`
 
   return (
     <OverlayBackground>
@@ -112,10 +118,15 @@ export const SupperShareModal = (props: Props) => {
           <RhAppQrCode link={link} />
           <QRLinkContainer>
             <LinkContainer>
-              <LinkText>{link}</LinkText>
+              <LinkText>{copyText}</LinkText>
             </LinkContainer>
-            <CopyToClipboard text={link}>
-              <CopyButtonContainer>
+            <CopyToClipboard text={copyText}>
+              <CopyButtonContainer
+                onClick={() => {
+                  const [success] = useSnackbar('success')
+                  success('Supper Group link copied!')
+                }}
+              >
                 <CopyFilled />
               </CopyButtonContainer>
             </CopyToClipboard>

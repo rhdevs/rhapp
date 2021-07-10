@@ -103,11 +103,11 @@ export const MoreDropDown = (props: Props) => {
   }
 
   return (
-    <Dropdown visible={isVisible} overlay={content} trigger={['click']}>
+    <Dropdown visible={isVisible} overlay={content()} trigger={['click']}>
       <MoreOutlined
         onClick={(e) => {
           e.preventDefault()
-          setIsVisible(true)
+          setIsVisible(!isVisible)
         }}
         style={{ position: 'absolute', transform: 'rotate(90deg)', right: '18px', fontSize: '18px' }}
       />

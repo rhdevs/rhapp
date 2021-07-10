@@ -7,7 +7,7 @@ import { getSearchedSupperGroups, setSearchValue } from '../../store/supper/acti
 import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
-  width: 80vw;
+  width: 100%;
   justify-content: center;
   margin: 10px auto;
   align-items: center;
