@@ -102,37 +102,12 @@ def all_supper_group():
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$lookup': {
-                    'from': 'Profiles',
-                    'localField': 'ownerId',
-                    'foreignField': 'userID',
-                    'as': 'ownerList'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
-                '$unwind': {'path': '$ownerList'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantId': '$restaurant._id',
-                    'ownerName': '$ownerList.displayName',
-                    'ownerTele': '$ownerList.telegramHandle'
                 }
             },
-            {'$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0}}
+            {'$project': {'_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -151,8 +126,6 @@ def all_supper_group():
             for order in supperGroup['orderList']:
                 supperGroup['userIdList'].append(order['userID'])
             supperGroup.pop('orderList')
-
-            supperGroup['restaurantId'] = str(supperGroup.pop('restaurantId'))
 
             query = {'supperGroupId': supperGroup.get('supperGroupId')}
             changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost']}}
@@ -223,15 +196,6 @@ def create_supper_group():
                 }
             },
             {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
-                '$addFields': {
-                    'restaurantLogo': '$restaurant.restaurantLogo',
-                    'restaurantId': '$restaurant._id',
-                }
-            },
-            {
                 '$lookup': {
                     'from': 'Profiles',
                     'localField': 'ownerId',
@@ -239,22 +203,39 @@ def create_supper_group():
                     'as': 'ownerList'
                 }
             },
-            {'$project': {'_id': 0, 'restaurant': 0
-                          }
-             }
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$unwind': {'path': '$ownerList'}
+            },
+            {
+                '$addFields': {
+                    # 'restaurantLogo': '$restaurant.restaurantLogo',
+                    'restaurantId': '$restaurant._id',
+                    'ownerName': '$ownerList.displayName',
+                    'ownerTele': '$ownerList.telegramHandle'
+                }
+            },
+            {
+                '$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0}
+            }
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
 
+        # Add restaurantId, ownerName and ownerTele to SupperGroup
         data = None
         for suppergroup in result:
-            data = suppergroup
-            suppergroup['restaurantId'] = str(suppergroup.pop('restaurantId'))
-            for user in data['ownerList']:
-                user['_id'] = str(user['_id'])
-                supperGroupData['ownerName'] = user['displayName']
-                supperGroupData['ownerTele'] = user['telegramHandle']
-            supperGroupData['restaurantId'] = suppergroup['restaurantId']
+            supperGroupData['restaurantId'] = str(suppergroup.pop('restaurantId'))
+            supperGroupData['ownerName'] = suppergroup['ownerName']
+            supperGroupData['ownerTele'] = suppergroup['ownerTele']
+        
+        query = {'supperGroupId': newsupperGroupID}
+        changes = {'$set': {'restaurantId': supperGroupData['restaurantId'],
+                            'ownerName': supperGroupData['ownerName'],
+                            'ownerTele': supperGroupData['ownerTele']}}
+        db.SupperGroup.update_one(query, changes)
 
         data = {'supperGroup': supperGroupData,
                 'orderId': orderData['orderId']}
@@ -285,17 +266,6 @@ def supper_group(supperGroupId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Restaurants',
-                        'localField': 'restaurantName',
-                        'foreignField': 'name',
-                        'as': 'restaurant'
-                    }
-                },
-                {
-                    '$unwind': {'path': '$restaurant'}
-                },
-                {
-                    '$lookup': {
                         'from': 'FoodOrder',
                         'localField': 'orderList.foodIds',
                         'foreignField': '_id',
@@ -306,8 +276,6 @@ def supper_group(supperGroupId):
                     '$addFields': {
                         'currentFoodCost': {'$sum': '$orderList.totalCost'},
                         'numOrders': {'$size': '$orderList'},
-                        'restaurantLogo': '$restaurant.restaurantLogo',
-                        'restaurantId': '$restaurant._id',
                         'orderList.foodList': [],
                         'userIdList': {'$concatArrays': '$orderList.userID'}
                     }
@@ -320,8 +288,7 @@ def supper_group(supperGroupId):
                         'as': 'userList'
                     }
                 },
-                {'$project': {'_id': 0, 'restaurant': 0,
-                              'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
+                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
                               }
                  }
             ]
@@ -331,8 +298,6 @@ def supper_group(supperGroupId):
             data = None
             for suppergroup in result:
                 data = suppergroup
-                suppergroup['restaurantId'] = str(
-                    suppergroup.pop('restaurantId'))
 
                 for order in data['orderList']:
                     order['orderId'] = str(order.pop('_id'))
