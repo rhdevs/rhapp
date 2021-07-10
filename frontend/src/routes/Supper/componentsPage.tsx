@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -43,6 +43,7 @@ import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
+import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
@@ -57,10 +58,15 @@ const OptionText = styled.text`
 
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
   // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
+      <InformationCard updateSummary />
+      <div onClick={() => setIsModalOpen(true)}>open modal</div>
+      {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>

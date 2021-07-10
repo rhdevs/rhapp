@@ -1,36 +1,36 @@
-import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus, SupperNotification } from '../supper/types'
+import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus, Updates } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
-import { supperNotifStub } from '../stubs'
 
 const [error] = useSnackbar('error')
 
 //------------------------ GET --------------------------
 export const getSupperNotification = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS,
-    supperNotifications: supperNotifStub,
-  })
-  // get(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, `/${localStorage.userID}`)
-  //   .then((resp) => {
-  //     if (resp.status === 'failed') {
-  //       throw resp.err
-  //     }
-  //     dispatch({
-  //       type: SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS,
-  //       supperNotifications: resp.data,
-  //     })
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
+  get(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupNotification`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS,
+        supperNotifications: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
-export const closeSupperNotification = (notification: SupperNotification) => (dispatch: Dispatch<ActionTypes>) => {
-  const requestBody = notification
-  put(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, requestBody)
+export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  const requestBody = { supperGroupId: supperGroupId }
+  del(
+    ENDPOINTS.CLOSE_SUPPER_NOTIFICATIONS,
+    DOMAINS.SUPPER,
+    requestBody,
+    `/${localStorage.userID}/supperGroupNotification`,
+  )
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -730,4 +730,57 @@ export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Disp
     type: SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID,
     newSupperGroupId: newSupperGroupId,
   })
+}
+
+export const leaveSupperGroup = (supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}}`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getAllSupperGroups())
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to leave supper group, please try again.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const updateOwnerEdits = (orderId: string, foodId: string, updates: Updates) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch(setIsLoading(true))
+  const requestBody = updates
+
+  put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}/owner`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getAllSupperGroups())
+    })
+    .catch((err) => {
+      console.log(err)
+      error("Failed to update selected user's food, please try again.")
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getOwnerEdits = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+
+  get(ENDPOINTS.GET_OWNER_EDITS, DOMAINS.SUPPER, `/${orderId}/food/${foodId}/owner`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getAllSupperGroups())
+    })
+    .catch((err) => {
+      console.log(err)
+      error("Failed to get selected user's food, please try again.")
+    })
+  dispatch(setIsLoading(false))
 }
