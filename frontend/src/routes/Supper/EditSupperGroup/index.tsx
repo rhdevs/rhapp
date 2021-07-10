@@ -29,6 +29,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { V1_BACKGROUND, V1_BLUE } from '../../../common/colours'
+import { FormHeader } from '../../../components/Supper/FormHeader'
 
 const Background = styled.form`
   width: 100vw;
@@ -38,16 +39,7 @@ const Background = styled.form`
   padding-bottom: 3rem;
 `
 
-const StyledText = styled.text<{ topMargin?: boolean }>`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  ${(props) => props.topMargin && 'margin-top: 1rem;'}
-  width: 100%;
-`
-
-const Input = styled.input<{ flex?: boolean }>`
+export const Input = styled.input<{ flex?: boolean }>`
   width: 80%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
@@ -84,10 +76,6 @@ const StyledTimePicker = styled(TimePicker)`
   margin: 5px auto 0 auto;
 `
 
-const RedText = styled.text`
-  color: red;
-`
-
 const ErrorText = styled.p`
   margin: 5px 0 -10px 0;
   color: #ff837a;
@@ -111,19 +99,19 @@ const PriceContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const StyledRadioGroup = styled(Radio.Group)`
+export const StyledRadioGroup = styled(Radio.Group)`
   width: 100%;
 `
 
-const Wrapper = styled.div<{ topMargin?: boolean; baseline?: boolean }>`
+export const Wrapper = styled.div<{ topMargin?: boolean; baseline?: boolean }>`
   display: grid;
-  grid-template-columns: 50% 47%;
+  grid-template-columns: 53% 44%;
   grid-gap: 3%;
   ${(props) => props.baseline && 'align-items: baseline;'}
   ${(props) => props.topMargin && 'margin-top: 1rem'}
 `
 
-const DeliveryFeeInput = styled.input`
+export const DeliveryFeeInput = styled.input`
   width: 100%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
@@ -131,6 +119,11 @@ const DeliveryFeeInput = styled.input`
   margin: 5px auto 0 auto;
   height: 35px;
 `
+
+export const errorStyling = {
+  borderColor: 'red',
+  background: '#ffd1d1',
+}
 
 type FormData = {
   supperGroupName: string
@@ -167,10 +160,6 @@ const EditSupperGroup = () => {
     mode: 'all',
     shouldUnregister: false,
   })
-  const errorStyling = {
-    borderColor: 'red',
-    background: '#ffd1d1',
-  }
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -191,28 +180,28 @@ const EditSupperGroup = () => {
     }
   }, [supperGroup, reset])
 
-  const RedAsterisk = <RedText>*</RedText>
-
   const orderInformationSection = () => {
     return (
       <OISection>
-        <StyledText>Order Name{RedAsterisk}</StyledText>
+        <FormHeader headerName="Group Name" isCompulsory />
         <Input
           type="text"
           defaultValue={supperGroup?.supperGroupName ?? ''}
-          placeholder="Order name"
+          placeholder="Group name"
           name="supperGroupName"
           ref={register({
             required: true,
             validate: (input) => input.trim().length !== 0,
+            maxLength: 50,
           })}
           style={errors.supperGroupName ? errorStyling : {}}
         />
         {errors.supperGroupName?.type === 'required' && <ErrorText>Order Name required!</ErrorText>}
         {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
-        <StyledText topMargin>Restaurant</StyledText>
+        {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
+        <FormHeader topMargin headerName="Restaurant" />
         <RestaurantBubbles isDisabled defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
-        <StyledText topMargin>Closing Time{RedAsterisk}</StyledText>
+        <FormHeader topMargin headerName="Closing Time" isCompulsory />
         <Controller
           name="closingTime"
           control={control}
@@ -229,7 +218,7 @@ const EditSupperGroup = () => {
           )}
         />
         {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
-        <StyledText topMargin>Max Price</StyledText>
+        <FormHeader topMargin headerName="Max Price" />
         <PriceContainer>
           Set maximum total price
           <StyledSwitch
@@ -248,10 +237,10 @@ const EditSupperGroup = () => {
     return (
       <DISection>
         <Wrapper baseline>
-          <StyledText>Est. Delivery Fees{RedAsterisk}</StyledText>
+          <FormHeader headerName="Est. Delivery Fees" isCompulsory />
           <DeliveryFeeInput
             type="number"
-            placeholder="e.g: 3"
+            placeholder="$$$"
             name="estDeliveryFee"
             defaultValue={supperGroup?.additionalCost ?? ''}
             ref={register({
@@ -268,7 +257,7 @@ const EditSupperGroup = () => {
           <ErrorText>Invalid delivery fee!</ErrorText>
         )}
         <Wrapper topMargin>
-          <StyledText>Split Delivery Fees{RedAsterisk}</StyledText>
+          <FormHeader headerName="Split Delivery Fees" isCompulsory />
           <StyledRadioGroup
             {...register('splitDeliveryFee', { required: true })}
             onChange={(e) => {
@@ -291,7 +280,7 @@ const EditSupperGroup = () => {
   const paymentInformationSection = () => {
     return (
       <PICSection>
-        <StyledText>Payment Method{RedAsterisk}</StyledText>
+        <FormHeader topMargin headerName="Payment Method" isCompulsory />
         <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
@@ -329,7 +318,7 @@ const EditSupperGroup = () => {
         })}
         {errors.paymentMethod && pmError === 0 && <ErrorText>Payment method required!</ErrorText>}
         {pmError !== 0 && <ErrorText>Payment link{pmError > 1 && 's'} required!</ErrorText>}
-        <StyledText topMargin>Phone Number{RedAsterisk}</StyledText>
+        <FormHeader topMargin headerName="Phone Number" isCompulsory />
         <Input
           type="number"
           defaultValue={supperGroup?.phoneNumber ?? ''}
@@ -460,11 +449,12 @@ const EditSupperGroup = () => {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
       console.log('Form was submitted!')
-      history.goBack()
       console.log(data)
       console.log('updatedOrderInfo', updatedOrderInfo)
       //TODO: TEST updated order details to backend
       dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
+      //TODO: decide where to go!
+      // history.goBack()
     })()
   }
 
@@ -479,7 +469,7 @@ const EditSupperGroup = () => {
   return (
     <Background onSubmit={onSubmit}>
       <TopNavBar
-        title="Edit Order"
+        title="Edit Group"
         onLeftClick={() => {
           Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
         }}
@@ -490,11 +480,11 @@ const EditSupperGroup = () => {
         <>
           {modalIsOpen && (
             <ConfirmationModal
-              title={'Discard Changes?'}
-              hasLeftButton={true}
-              leftButtonText={'Delete'}
+              title="Discard Changes?"
+              hasLeftButton
+              leftButtonText="Delete"
               onLeftButtonClick={onConfirmDiscardClick}
-              rightButtonText={'Cancel'}
+              rightButtonText="Cancel"
               onRightButtonClick={onCancelClick}
             />
           )}

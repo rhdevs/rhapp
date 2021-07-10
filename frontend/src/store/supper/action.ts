@@ -42,9 +42,9 @@ export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dis
     })
 }
 
-export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
+  await get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -312,11 +312,17 @@ export const getAllUserJoinedSupperGroup = (userId: string) => (dispatch: Dispat
 
 //------------------------ POST / PUT -------------------------
 
-export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const createSupperGroup = (newSupperGroup: SupperGroup) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  const requestBody = newSupperGroup
-  post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
+  let requestBody
+  if (newSupperGroup.costLimit === undefined) {
+    requestBody = { ...newSupperGroup, costLimit: null }
+  } else {
+    requestBody = newSupperGroup
+  }
+  console.log(requestBody)
+  await post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -324,12 +330,13 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       console.log(resp.data)
       dispatch(setSupperGroup(resp.data.supperGroup))
       dispatch(setNewSupperGroupId(resp.data.supperGroup.supperGroupId))
+      dispatch(setIsLoading(false))
     })
     .catch((err) => {
       console.log(err)
       error('Failed to get all supper groups, please try again later.')
+      dispatch(setIsLoading(false))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dispatch: Dispatch<ActionTypes>) => {

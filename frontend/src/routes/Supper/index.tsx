@@ -81,11 +81,11 @@ export default function Supper() {
   return (
     <Background>
       <TopNavBar title="Supper Order" rightComponent={rightIcon} />
+      <SupperSearchBar />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
-          <SupperSearchBar />
           <SupperGroupContainer>
             {supperGroups.length ? (
               supperGroups.map((supperGroup, index) => {
@@ -117,6 +117,10 @@ export default function Supper() {
           <BottomNavBar />
         </>
       )}
+      <PlusButtonDiv>
+        <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
+      </PlusButtonDiv>
+      <BottomNavBar />
     </Background>
   )
 }

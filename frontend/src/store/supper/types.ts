@@ -84,7 +84,7 @@ export type SupperGroup = {
   additionalCost?: number //ie GST, delivery fee
   comments?: string // for cancel reason
   costLimit: number | undefined // can have no limit
-  createdAt: number
+  createdAt: number | undefined
   currentFoodCost: number //non inclusive of additionalCost
   location: string //collection point
   numOrders: number
@@ -104,12 +104,11 @@ export type SupperGroup = {
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number | undefined
-  phoneNumber: number
+  phoneNumber?: number
 }
 
 export type HomeSupperGroup = {
   additionalCost?: number //ie GST, delivery fee
-  closingTime: number | undefined
   costLimit: number | undefined // can have no limit
   createdAt: number | undefined
   currentFoodCost: number //non inclusive of additionalCost
@@ -117,13 +116,14 @@ export type HomeSupperGroup = {
   ownerId: string
   ownerName: string
   ownerTele: string
-  restaurantId?: string
   restaurantName: string
+  restaurantId?: string
   splitAdditionalCost: SplitACMethod | undefined
   status: SupperGroupStatus
   supperGroupId: number | undefined
   supperGroupName: string
   userIdList?: string[]
+  closingTime: number | undefined
 }
 
 export type CollatedOrder = {
