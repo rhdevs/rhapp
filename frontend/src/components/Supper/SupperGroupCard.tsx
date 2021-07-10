@@ -145,7 +145,7 @@ export const SupperGroupCard = (props: Props) => {
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',
-    paddingRight: '2px',
+    paddingRight: '4px',
   } // For time, car and user
 
   const restaurantLogo = getRestaurantLogo(supperGroup?.restaurantName as Restaurants)

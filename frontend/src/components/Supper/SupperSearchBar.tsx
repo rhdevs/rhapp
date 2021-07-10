@@ -8,9 +8,6 @@ import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   width: 100%;
-  justify-content: center;
-  margin: 10px auto;
-  align-items: center;
 `
 
 export const SupperSearchBar = () => {

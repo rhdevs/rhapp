@@ -270,7 +270,7 @@ const EditSupperGroup = () => {
           </StyledRadioGroup>
         </Wrapper>
         {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
-        <InformationCard margin="10px 0 0 0" splitACMethod />
+        <InformationCard margin="4px 0 0 0" splitACMethod />
       </DISection>
     )
   }
