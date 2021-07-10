@@ -55,6 +55,7 @@ type Props = {
   closeSupperGroup?: boolean
   cancelledSupperGroup?: boolean
   splitACMethod?: boolean
+  disclaimer?: boolean
 }
 
 export const InformationCard = (props: Props) => {
@@ -86,6 +87,10 @@ export const InformationCard = (props: Props) => {
         <text>Jane’s delivery fee: $10/12 x $3 = $2.50</text>
       </SplitCostContent>
     )
+  }
+
+  if (props.disclaimer) {
+    content = 'Owner may contact you for alternatives if the item you have selected is unavailable'
   }
   return (
     <MainCard
