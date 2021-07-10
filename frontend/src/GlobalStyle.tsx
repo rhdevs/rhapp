@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     color: #fafaf4
     font-family: Inter;
-    background-color: #fafaf4;
+    background-color: #fafaf4 !important;
   }
 
   html {
