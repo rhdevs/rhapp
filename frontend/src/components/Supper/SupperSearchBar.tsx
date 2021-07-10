@@ -13,13 +13,7 @@ const MainContainer = styled.div`
   align-items: center;
 `
 
-type Props = {
-  placeholder?: string
-  value?: string
-  onChange?: (input: string) => void
-}
-
-export const SupperSearchBar = (props: Props) => {
+export const SupperSearchBar = () => {
   const dispatch = useDispatch()
   const { searchValue } = useSelector((state: RootState) => state.supper)
 

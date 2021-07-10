@@ -118,15 +118,17 @@ type Props = {
 }
 
 export const SupperGroupCard = (props: Props) => {
-  const isLoading = props.supperGroup ? false : true
+  const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
+  const isLoading = supperGroup ? false : true
   const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const history = useHistory()
   const dispatch = useDispatch()
+  const supperGroupStatus = supperGroup?.status
   const isOpenOrPending =
-    props.supperGroup?.status === SupperGroupStatus.OPEN || props.supperGroup?.status === SupperGroupStatus.PENDING
+    supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
 
   setTimeout(() => {
@@ -141,13 +143,13 @@ export const SupperGroupCard = (props: Props) => {
     paddingRight: '2px',
   } // For time, car and user
 
-  const restaurantLogo = getRestaurantLogo(props.supperGroup?.restaurantName as Restaurants)
-  const rawSupperGroupId = props.supperGroup?.supperGroupId
+  const restaurantLogo = getRestaurantLogo(supperGroup?.restaurantName as Restaurants)
+  const rawSupperGroupId = supperGroup?.supperGroupId
   const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
-  const isOwner = props.supperGroup?.ownerId === localStorage.userID
-  const ownerName = `(${isOwner ? 'You' : props.supperGroup?.ownerName ?? '-'})`
-  const ownerId = props.supperGroup?.ownerId
-  const userIdList = props.supperGroup?.userIdList
+  const isOwner = supperGroup?.ownerId === localStorage.userID
+  const ownerName = `(${isOwner ? 'You' : supperGroup?.ownerName ?? '-'})`
+  const ownerId = supperGroup?.ownerId
+  const userIdList = supperGroup?.userIdList
   const topIcon = (
     <MoreDropDown
       ownerId={ownerId}
@@ -160,14 +162,13 @@ export const SupperGroupCard = (props: Props) => {
   )
 
   const idText = `${supperGroupId} ${ownerName}`
-  const supperGroupName = props.supperGroup?.supperGroupName
-  const closingTime = unixTo12HourTime(props.supperGroup?.closingTime)
+  const supperGroupName = supperGroup?.supperGroupName
+  const closingTime = unixTo12HourTime(supperGroup?.closingTime)
   const collectionTime = unixTo12HourTime(props.isHome ? props.estArrivalTime : props.supperGroup?.estArrivalTime)
-  const numberOfUsers = props.supperGroup?.numOrders ?? 1 // To include owner
-  const deliveryCost = `$${(props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
-  const splitMethod = props.supperGroup?.splitAdditionalCost
-  const supperGroupStatus = props.supperGroup?.status
-  const ownerTele = props.supperGroup?.ownerTele
+  const numberOfUsers = supperGroup?.numOrders ?? 1 // To include owner
+  const deliveryCost = `$${(supperGroup?.additionalCost ?? 0).toFixed(2)}`
+  const splitMethod = supperGroup?.splitAdditionalCost
+  const ownerTele = supperGroup?.ownerTele
   const location = props.isHome ? props.location : props.supperGroup?.location
   const paymentInfo = props.isHome ? props.paymentInfo : props.supperGroup?.paymentInfo
   const cancelReason = props.isHome ? props.comments : props.supperGroup?.comments

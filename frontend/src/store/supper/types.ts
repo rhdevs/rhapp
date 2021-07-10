@@ -109,6 +109,7 @@ export type SupperGroup = {
 
 export type HomeSupperGroup = {
   additionalCost?: number //ie GST, delivery fee
+  closingTime: number | undefined
   costLimit: number | undefined // can have no limit
   createdAt: number | undefined
   currentFoodCost: number //non inclusive of additionalCost
@@ -116,14 +117,13 @@ export type HomeSupperGroup = {
   ownerId: string
   ownerName: string
   ownerTele: string
-  restaurantName: string
   restaurantId?: string
+  restaurantName: string
   splitAdditionalCost: SplitACMethod | undefined
   status: SupperGroupStatus
   supperGroupId: number | undefined
   supperGroupName: string
   userIdList?: string[]
-  closingTime: number | undefined
 }
 
 export type CollatedOrder = {
@@ -299,7 +299,7 @@ type GetSupperGroupById = {
 
 type GetAllSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS
-  allSupperGroups: SupperGroup[]
+  allSupperGroups: HomeSupperGroup[]
 }
 
 type GetRestaurantMenu = {
@@ -364,7 +364,7 @@ type SetSelectedSupperGroupStatus = {
 
 type GetSearchedSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
-  searchedSupperGroups: SupperGroup[]
+  searchedSupperGroups: HomeSupperGroup[]
 }
 
 type SetSearchSupperGroupValue = {

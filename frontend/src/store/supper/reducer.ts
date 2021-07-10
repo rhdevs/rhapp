@@ -11,6 +11,7 @@ import {
   SupperGroupStatus,
   PaymentUpdateInfo,
   SupperNotification,
+  HomeSupperGroup,
 } from '../supper/types'
 import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
@@ -63,7 +64,7 @@ type State = {
   allRestaurants: Restaurant[]
   food: Food | null
   supperGroup: SupperGroup | null
-  allSupperGroups: SupperGroup[]
+  allSupperGroups: HomeSupperGroup[]
   menu: FoodMenu[]
   foodMenu: FoodMenu | null
   orderHistory: Order[]
@@ -76,7 +77,7 @@ type State = {
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
   selectedSupperGroupStatus: SupperGroupStatus | null
-  searchedSupperGroups: SupperGroup[]
+  searchedSupperGroups: HomeSupperGroup[]
   searchValue: string
   tabsKey: string
   editFoodItem: Food | null

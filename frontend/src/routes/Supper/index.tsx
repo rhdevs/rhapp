@@ -5,21 +5,16 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import SupperGroupHistory from '../../assets/supper/SupperGroupHistory.svg'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
-import SearchBar from '../../components/Mobile/SearchBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
-import { MainSGCard } from '../../components/Supper/CustomCards/MainSGCard'
 import { PlusButton } from '../../components/Supper/PlusButton'
-import {
-  getAllSupperGroups,
-  getSearchedSupperGroups,
-  getReadableSupperGroupId,
-  setSearchValue,
-  unixTo12HourTime,
-} from '../../store/supper/action'
+import { getAllSupperGroups } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import { V1_BACKGROUND } from '../../common/colours'
+import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
+import { HomeSupperGroup } from '../../store/supper/types'
+import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 
 const Background = styled.div`
   height: 100vh;
@@ -69,25 +64,20 @@ export default function Supper() {
     />
   )
 
-  const onChange = (input: string) => {
-    console.log(input)
-    dispatch(setSearchValue(input))
-    dispatch(getSearchedSupperGroups(input))
-  }
-
   useEffect(() => {
     dispatch(getAllSupperGroups())
   }, [dispatch])
 
   console.log(searchedSupperGroups)
-  const supperGroups = searchValue
-    ? searchedSupperGroups.length
-      ? searchedSupperGroups
-      : null
-    : allSupperGroups.length
-    ? allSupperGroups
-    : null
+  let supperGroups: HomeSupperGroup[] | null = allSupperGroups
+  let errorText = 'Hungry? Start a supper group!'
+  if (searchValue) {
+    supperGroups = searchedSupperGroups
+  }
 
+  if (supperGroups.length === 0 && searchValue) {
+    errorText = 'No supper groups found.'
+  }
   return (
     <Background>
       <TopNavBar title="Supper Order" rightComponent={rightIcon} />
@@ -95,41 +85,30 @@ export default function Supper() {
         <LoadingSpin />
       ) : (
         <>
-          <SearchBar placeholder="Search for restaurants!" value={searchValue} onChange={onChange} />
+          <SupperSearchBar />
           <SupperGroupContainer>
-            {supperGroups ? (
+            {supperGroups.length ? (
               supperGroups.map((supperGroup, index) => {
-                const onClick = () => {
-                  if (
-                    !(
-                      supperGroup.ownerId === localStorage.userID ||
-                      (supperGroup.userIdList ?? []).includes(localStorage.userID)
-                    )
-                  ) {
-                    console.log(supperGroup.ownerId === localStorage.userID)
-                    console.log((supperGroup.userIdList ?? []).includes(localStorage.userID))
-                    //user is owner or already has an ongoing order
-                    history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
-                  } else {
-                    //new SG to user
-                    history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
-                  }
-                }
-                return (
-                  <MainSGCard
-                    key={index}
-                    title={supperGroup.supperGroupName}
-                    time={unixTo12HourTime(supperGroup.closingTime)}
-                    users={supperGroup.numOrders}
-                    orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
-                    onClick={onClick}
-                  />
-                )
+                // const onClick = () => {
+                //   if (
+                //     !(
+                //       supperGroup.ownerId === localStorage.userID ||
+                //       (supperGroup.userIdList ?? []).includes(localStorage.userID)
+                //     )
+                //   ) {
+                //     console.log(supperGroup.ownerId === localStorage.userID)
+                //     console.log((supperGroup.userIdList ?? []).includes(localStorage.userID))
+                //     //user is owner or already has an ongoing order
+                //     history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)
+                //   } else {
+                //     //new SG to user
+                //     history.push(`${PATHS.JOIN_ORDER}/${supperGroup.supperGroupId}`)
+                //   }
+                // }
+                return <SupperGroupCard isHome key={index} homeSupperGroup={supperGroup} />
               })
-            ) : searchValue ? (
-              <NoSupperGroupText>No supper groups found.</NoSupperGroupText>
             ) : (
-              <NoSupperGroupText>Hungry? Start a supper group!</NoSupperGroupText>
+              <NoSupperGroupText>{errorText}</NoSupperGroupText>
             )}
           </SupperGroupContainer>
           <PlusButtonDiv>
