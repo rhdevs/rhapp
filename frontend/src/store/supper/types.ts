@@ -107,6 +107,25 @@ export type SupperGroup = {
   phoneNumber: number
 }
 
+export type HomeSupperGroup = {
+  additionalCost?: number //ie GST, delivery fee
+  costLimit: number | undefined // can have no limit
+  createdAt: number | undefined
+  currentFoodCost: number //non inclusive of additionalCost
+  numOrders: number
+  ownerId: string
+  ownerName: string
+  ownerTele: string
+  restaurantName: string
+  restaurantId?: string
+  splitAdditionalCost: SplitACMethod | undefined
+  status: SupperGroupStatus
+  supperGroupId: number | undefined
+  supperGroupName: string
+  userIdList?: string[]
+  closingTime: number | undefined
+}
+
 export type CollatedOrder = {
   supperGroupId: number | undefined
   ownerId: string

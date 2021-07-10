@@ -85,7 +85,7 @@ const EmptyContact = styled.text`
 const ButtonContainer = styled.div``
 
 type Prop = {
-  orderList: Order[]
+  orderList: Order[] | undefined
   food: Food
   contactModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -97,7 +97,7 @@ export const ContactModal = (props: Prop) => {
   contacts?.map((userId) => {
     let detail: UserDetails
     props.orderList
-      .filter((order) => order.user.userID === userId)
+      ?.filter((order) => order.user.userID === userId)
       .map((order) => {
         detail.userId = userId
         detail.name = order.user.displayName
