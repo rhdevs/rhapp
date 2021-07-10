@@ -53,7 +53,6 @@ const initialState = {
   foodMenuId: '',
   createOrderPage: 1,
   supperNotifications: [],
-  contactModal: false,
 }
 
 type State = {
@@ -94,7 +93,6 @@ type State = {
   foodMenuId: string
   createOrderPage: number
   supperNotifications: SupperNotification[]
-  contactModal: boolean
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -224,9 +222,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {
       return { ...state, supperNotifications: action.supperNotifications }
-    }
-    case SUPPER_ACTIONS.SET_CONTACT_MODAL: {
-      return { ...state, contactModal: action.contactModal }
     }
     default:
       return state

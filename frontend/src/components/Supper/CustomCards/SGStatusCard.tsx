@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
 import { openUserTelegram } from '../../../common/telegramMethods'
@@ -11,6 +11,9 @@ import { SGStatusBubble } from '../SGStatusBubble'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../../routes/Routes'
+import { getUserOrder } from '../../../store/supper/action'
+import { RootState } from '../../../store/types'
+import { useDispatch, useSelector } from 'react-redux'
 
 const TopSection = styled.div`
   display: flex;
@@ -108,8 +111,8 @@ type Props = {
   supperGroupStatus: SupperGroupStatus | undefined
   restaurantLogo: string | undefined
   supperGroupName: string | undefined
-  supperGroupId: string | undefined
-  idHeader: string | undefined
+  supperGroupId: string
+  idHeader: string
   buttonTeleHandle: string | undefined
   location?: string | undefined
   collectionTime?: string
@@ -126,9 +129,33 @@ export const SGStatusCard = (props: Props) => {
     props.supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT ||
     props.supperGroupStatus === SupperGroupStatus.ALL_PAID
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getUserOrder(props.supperGroupId, localStorage.userID))
+  }, [dispatch])
+
   const onClick = () => {
     if (props.buttonTeleHandle) {
       openUserTelegram(props.buttonTeleHandle)
+    }
+  }
+
+  const { order } = useSelector((state: RootState) => state.supper)
+
+  const showPayingStatus = () => {
+    if (props.supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT) {
+      if (props.isOwner) {
+        return <SGStatusBubble roundVersion text={props.supperGroupStatus ?? '-'} />
+      } else {
+        if (order?.hasPaid) {
+          return <SGStatusBubble roundVersion text={'PAID'} />
+        } else {
+          return <SGStatusBubble roundVersion text={'NOT PAID'} />
+        }
+      }
+    } else {
+      return <SGStatusBubble roundVersion text={props.supperGroupStatus ?? '-'} />
     }
   }
 
@@ -224,9 +251,7 @@ export const SGStatusCard = (props: Props) => {
           <OrderIdContainer>{props.idHeader}</OrderIdContainer>
           <TitleContainer>{props.supperGroupName}</TitleContainer>
           {props.statusOnly ? (
-            <StatusContainer statusOnly={props.statusOnly}>
-              <SGStatusBubble roundVersion text={props.supperGroupStatus ?? '-'} />
-            </StatusContainer>
+            <StatusContainer statusOnly={props.statusOnly}>{showPayingStatus()}</StatusContainer>
           ) : (
             <></>
           )}
