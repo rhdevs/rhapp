@@ -11,16 +11,16 @@ type Props = {
   supperGroupId: string | number
 }
 
-export const DiscardCartModal = (props: Props) => {
+export const CancelGroupModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CLOSED }))
+    dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CANCELLED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (
     <SupperModal
-      title="Close Order Early?"
-      description="Close supper group if you are ready to order! No new changes can be made after supper group is closed."
+      title="Cancel Supper Group? "
+      description="Supper groups marked as cancelled cannot be edited anymore."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}
       onLeftButtonClick={onLeftClick}
