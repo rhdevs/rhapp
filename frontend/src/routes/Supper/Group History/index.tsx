@@ -84,7 +84,7 @@ export default function SGOverview() {
 
   return (
     <Background>
-      <TopNavBar title="Supper Order" />
+      <TopNavBar title="History" />
       <ToggleCreatedJoined
         createdTabUrl={onCreatedClick}
         joinedTabUrl={onJoinedClick}
