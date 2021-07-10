@@ -16,6 +16,7 @@ import { PATHS } from '../../../Routes'
 import { DeliveryFeeInput, errorStyling, StyledRadioGroup, Wrapper } from '../../EditSupperGroup'
 import { RadioButton } from '../../../../components/RadioButton'
 import LoadingSpin from '../../../../components/LoadingSpin'
+import { InformationCard } from '../../../../components/Supper/InformationCard'
 
 const FormSection = styled.div`
   display: flex;
@@ -115,6 +116,7 @@ export const CreateOrderPageTwo = () => {
               </StyledRadioGroup>
             </Wrapper>
             {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
+            <InformationCard margin="10px 0 0 0" splitACMethod />
           </FormSection>
         </>
       )}

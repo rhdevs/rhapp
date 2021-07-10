@@ -13,10 +13,10 @@ const CheckIcon = styled.img`
   margin-top: -4px;
 `
 
-const ScrollableContainer = styled.div`
+const ScrollableContainer = styled.div<{ margin?: string }>`
   overflow: scroll;
   width: 75vw;
-  margin: auto;
+  margin: ${(props) => props.margin ?? 'auto'};
 `
 
 const MainContainer = styled.div`
@@ -30,6 +30,7 @@ const MainContainer = styled.div`
 
 type Props = {
   paymentMethods: PaymentMethod[]
+  margin?: string
 }
 
 export const PaymentMethodBubbles = (props: Props) => {
@@ -39,7 +40,7 @@ export const PaymentMethodBubbles = (props: Props) => {
   const dispatch = useDispatch()
 
   return (
-    <ScrollableContainer>
+    <ScrollableContainer margin={props.margin}>
       <MainContainer>
         {props.paymentMethods.map((paymentMethod, index) => {
           if (selectedPaymentMethod.includes(paymentMethod)) {

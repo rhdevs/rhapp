@@ -28,15 +28,18 @@ const InformationText = styled.text`
   font-weight: normal;
   font-size: 12px;
   line-height: 15px;
+  white-space: pre;
 `
 
 type Props = {
   content?: string
   marginTop?: string | undefined
   marginBottom?: string | undefined
+  margin?: string
   updateSummary?: boolean
   closeSupperGroup?: boolean
   cancelledSupperGroup?: boolean
+  splitACMethod?: boolean
 }
 
 export const InformationCard = (props: Props) => {
@@ -52,10 +55,14 @@ export const InformationCard = (props: Props) => {
     content =
       'Looks like your supper group was cancelled! Fret not, you can always go back to the main page to join another supper group or start your own!'
   }
+  if (props.splitACMethod) {
+    content =
+      'Example of fee splitting:\nJane’s subtotal: $10\nJohn’s subtotal: $2\nTotal delivery fee: $3\n\na) Equally (splitting by pax)\nJane’s delivery fee: 1/2 x $3 = $1.50\n\nb) Proportionally (splitting by subtotal)\nJane’s delivery fee: $10/12 x $3 = $2.50'
+  }
   return (
     <MainCard
       minHeight=""
-      margin={`${props.marginTop ?? '20px'} 20px ${props.marginBottom ?? '20px'} 20px`}
+      margin={props.margin ?? `${props.marginTop ?? '20px'} 20px ${props.marginBottom ?? '20px'} 20px`}
       borderRadius="10px"
       padding="15px 20px;"
     >

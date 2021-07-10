@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Controller, FieldError, useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 
 import styled from 'styled-components'
-import { TimePicker, Switch } from 'antd'
+import { Switch } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
@@ -22,20 +22,13 @@ import { ErrorText, initSupperGroup } from '..'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import { V1_BLUE } from '../../../../common/colours'
 import { Restaurants, SupperGroup } from '../../../../store/supper/types'
-import { errorStyling, Input } from '../../EditSupperGroup'
+import { errorStyling, Input, StyledTimePicker } from '../../EditSupperGroup'
 
 const FormContainer = styled.div`
   width: 80vw;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-`
-
-const StyledTimePicker = styled(TimePicker)<{ error?: FieldError | undefined }>`
-  width: 70%;
-  margin: 5px auto 0 auto;
-  display: flex;
-  ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
 
 const PriceContainer = styled.div`

@@ -13,10 +13,10 @@ const CheckIcon = styled.img`
   margin-top: -4px;
 `
 
-const ScrollableContainer = styled.div`
+const ScrollableContainer = styled.div<{ margin?: string }>`
   overflow: scroll;
   width: 75vw;
-  margin: auto;
+  margin: ${(props) => props.margin ?? 'auto'};
 `
 
 const MainContainer = styled.div`
@@ -32,6 +32,7 @@ type Props = {
   restaurantList: string[]
   defaultRestaurant?: Restaurants | string | undefined
   isDisabled?: boolean
+  margin?: string
 }
 
 export const RestaurantBubbles = (props: Props) => {
@@ -46,7 +47,7 @@ export const RestaurantBubbles = (props: Props) => {
   }, [dispatch, props.defaultRestaurant])
 
   return (
-    <ScrollableContainer>
+    <ScrollableContainer margin={props.margin}>
       <MainContainer>
         {props.restaurantList.map((restaurant, index) => {
           if (selectedRestaurant === restaurant) {

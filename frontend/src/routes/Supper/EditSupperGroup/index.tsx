@@ -30,6 +30,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { V1_BACKGROUND, V1_BLUE } from '../../../common/colours'
 import { FormHeader } from '../../../components/Supper/FormHeader'
+import { InformationCard } from '../../../components/Supper/InformationCard'
 
 const Background = styled.form`
   width: 100vw;
@@ -40,7 +41,7 @@ const Background = styled.form`
 `
 
 export const Input = styled.input<{ flex?: boolean }>`
-  width: 80%;
+  width: 100%;
   border-radius: 30px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
@@ -71,8 +72,8 @@ const PICSection = styled.div`
   margin-bottom: 2.5rem;
 `
 
-const StyledTimePicker = styled(TimePicker)`
-  width: 70%;
+export const StyledTimePicker = styled(TimePicker)`
+  width: 100%;
   margin: 5px auto 0 auto;
 `
 
@@ -105,8 +106,6 @@ export const StyledRadioGroup = styled(Radio.Group)`
 
 export const Wrapper = styled.div<{ topMargin?: boolean; baseline?: boolean }>`
   display: grid;
-  grid-template-columns: 53% 44%;
-  grid-gap: 3%;
   ${(props) => props.baseline && 'align-items: baseline;'}
   ${(props) => props.topMargin && 'margin-top: 1rem'}
 `
@@ -271,6 +270,7 @@ const EditSupperGroup = () => {
           </StyledRadioGroup>
         </Wrapper>
         {errors.splitDeliveryFee?.type === 'required' && <ErrorText>Split delivery fee method required!</ErrorText>}
+        <InformationCard margin="10px 0 0 0" splitACMethod />
       </DISection>
     )
   }
@@ -281,7 +281,11 @@ const EditSupperGroup = () => {
     return (
       <PICSection>
         <FormHeader topMargin headerName="Payment Method" isCompulsory />
-        <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
+        <PaymentMethodBubbles
+          margin="0 auto 10px auto"
+          {...register('paymentMethod', { required: true })}
+          paymentMethods={paymentMethods}
+        />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
           .map((pm) => {

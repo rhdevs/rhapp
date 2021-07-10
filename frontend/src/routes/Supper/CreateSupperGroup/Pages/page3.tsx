@@ -137,7 +137,11 @@ export const CreateOrderPageThree = () => {
           <LineProgress currentStep={3} numberOfSteps={3} />
           <FormContainer>
             <FormHeader topMargin headerName="Payment Method" isCompulsory />
-            <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
+            <PaymentMethodBubbles
+              margin="0 auto 10px auto"
+              {...register('paymentMethod', { required: true })}
+              paymentMethods={paymentMethods}
+            />
             {paymentMethods
               .filter((pm) => pm !== PaymentMethod.CASH)
               .map((pm) => {
