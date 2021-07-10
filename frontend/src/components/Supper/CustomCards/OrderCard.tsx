@@ -14,6 +14,7 @@ import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
+import { ContactModal } from '../ContactModal'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -339,19 +340,27 @@ export const OrderCard = (props: Props) => {
               }),
             )
             return (
-              <FoodLine
-                key={index}
-                margin="5px 0"
-                isEditable={isEditable}
-                onEditClick={() => onEditClick(food.foodId)}
-                wasEdited={wasEdited}
-                wasEditedModalSetter={setIsEditedModalOpen}
-                isCancelActionClickable={isOwner}
-                cancelActionModalSetter={setIsCancelActionModalOpen}
-                food={food}
-                supperGroupId={supperGroupId}
-                orderId={orderId}
-              />
+              <>
+                <FoodLine
+                  key={index}
+                  margin="5px 0"
+                  isEditable={isEditable}
+                  onEditClick={() => onEditClick(food.foodId)}
+                  wasEdited={wasEdited}
+                  wasEditedModalSetter={setIsEditedModalOpen}
+                  isCancelActionClickable={isOwner}
+                  cancelActionModalSetter={setIsCancelActionModalOpen}
+                  cancelActionOnClick={() => {
+                    setIsCancelActionModalOpen(true)
+                  }}
+                  food={food}
+                  supperGroupId={supperGroupId}
+                  orderId={orderId}
+                />
+                {isCancelActionModalOpen && (
+                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsCancelActionModalOpen} />
+                )}
+              </>
             )
           })}
           <PriceSection update={isEditable} />
