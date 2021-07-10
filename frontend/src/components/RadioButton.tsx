@@ -5,9 +5,11 @@ import { Radio } from 'antd'
 import { V1_BLUE } from '../common/colours'
 
 const StyledRadioButton = styled(Radio)<{ color: string | undefined; margin?: string | undefined }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 1fr 0;
+  gap: 4px;
+  grid-template-areas: '. .';
   min-height: 25px;
   ${(props) => `.ant-radio-checked, .ant-radio-inner {
     border-color: ${props.color} !important ;
@@ -27,6 +29,7 @@ const StyledRadioButton = styled(Radio)<{ color: string | undefined; margin?: st
 const LabelDiv = styled.div`
   width: 100%;
   white-space: pre-wrap;
+  padding-left: 3px;
 `
 
 type Props = {

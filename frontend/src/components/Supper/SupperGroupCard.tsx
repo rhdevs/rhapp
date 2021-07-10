@@ -105,6 +105,11 @@ const Icon = styled.img`
   height: 14px;
 `
 
+const ClickableContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 type Props = {
   supperGroup?: SupperGroup
   homeSupperGroup?: HomeSupperGroup
@@ -118,15 +123,17 @@ type Props = {
 }
 
 export const SupperGroupCard = (props: Props) => {
-  const isLoading = props.supperGroup ? false : true
+  const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
+  const isLoading = supperGroup ? false : true
   const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const history = useHistory()
   const dispatch = useDispatch()
+  const supperGroupStatus = supperGroup?.status
   const isOpenOrPending =
-    props.supperGroup?.status === SupperGroupStatus.OPEN || props.supperGroup?.status === SupperGroupStatus.PENDING
+    supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
 
   setTimeout(() => {
@@ -138,16 +145,16 @@ export const SupperGroupCard = (props: Props) => {
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',
-    paddingRight: '2px',
+    paddingRight: '4px',
   } // For time, car and user
 
-  const restaurantLogo = getRestaurantLogo(props.supperGroup?.restaurantName as Restaurants)
-  const rawSupperGroupId = props.supperGroup?.supperGroupId
+  const restaurantLogo = getRestaurantLogo(supperGroup?.restaurantName as Restaurants)
+  const rawSupperGroupId = supperGroup?.supperGroupId
   const supperGroupId = getReadableSupperGroupId(rawSupperGroupId)
-  const isOwner = props.supperGroup?.ownerId === localStorage.userID
-  const ownerName = `(${isOwner ? 'You' : props.supperGroup?.ownerName ?? '-'})`
-  const ownerId = props.supperGroup?.ownerId
-  const userIdList = props.supperGroup?.userIdList
+  const isOwner = supperGroup?.ownerId === localStorage.userID
+  const ownerName = `(${isOwner ? 'You' : supperGroup?.ownerName ?? '-'})`
+  const ownerId = supperGroup?.ownerId
+  const userIdList = supperGroup?.userIdList
   const topIcon = (
     <MoreDropDown
       ownerId={ownerId}
@@ -160,17 +167,16 @@ export const SupperGroupCard = (props: Props) => {
   )
 
   const idText = `${supperGroupId} ${ownerName}`
-  const supperGroupName = props.supperGroup?.supperGroupName
-  const closingTime = unixTo12HourTime(props.supperGroup?.closingTime)
+  const supperGroupName = supperGroup?.supperGroupName
+  const closingTime = unixTo12HourTime(supperGroup?.closingTime)
   const collectionTime = unixTo12HourTime(props.isHome ? props.estArrivalTime : props.supperGroup?.estArrivalTime)
-  const numberOfUsers = props.supperGroup?.numOrders ?? 1 // To include owner
-  const deliveryCost = `$${(props.supperGroup?.additionalCost ?? 0).toFixed(2)}`
-  const splitMethod = props.supperGroup?.splitAdditionalCost
-  const supperGroupStatus = props.supperGroup?.status
-  const ownerTele = props.supperGroup?.ownerTele
-  const location = props.isHome ? props.location : props.supperGroup?.location
-  const paymentInfo = props.isHome ? props.paymentInfo : props.supperGroup?.paymentInfo
-  const cancelReason = props.isHome ? props.comments : props.supperGroup?.comments
+  const numberOfUsers = supperGroup?.numOrders ?? 1 // To include owner
+  const deliveryCost = `$${(supperGroup?.additionalCost ?? 0).toFixed(2)}`
+  const splitMethod = supperGroup?.splitAdditionalCost
+  const ownerTele = supperGroup?.ownerTele
+  const location = props.supperGroup?.location
+  const paymentInfo = props.supperGroup?.paymentInfo
+  const cancelReason = props.supperGroup?.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -178,13 +184,13 @@ export const SupperGroupCard = (props: Props) => {
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
     splitMethodIcon = <Icon src={PercentCircle} alt="Proprotional" />
   }
-  const costLimit = props.supperGroup?.costLimit
-  const currentAmount = props.supperGroup?.currentFoodCost ?? 0
+  const costLimit = supperGroup?.costLimit
+  const currentAmount = supperGroup?.currentFoodCost ?? 0
 
   const percentageInProgressBar = costLimit ? (currentAmount / costLimit) * 100 : 0
   const amountLeft = costLimit ? `$${(costLimit - currentAmount).toFixed(2)} left` : 'No Limit'
 
-  const shareModal = <SupperShareModal supperGroupId={supperGroupId} teleShareModalSetter={setIsShareModalOpen} />
+  const shareModal = <SupperShareModal rawSupperGroupId={rawSupperGroupId} teleShareModalSetter={setIsShareModalOpen} />
 
   const deleteModal = (
     <ConfirmationModal
@@ -218,8 +224,23 @@ export const SupperGroupCard = (props: Props) => {
     />
   )
 
+  const onSupperCardClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (props.onClick) return props.onClick(e)
+    else {
+      if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+        console.log(supperGroup?.ownerId === localStorage.userID)
+        console.log((supperGroup?.userIdList ?? []).includes(localStorage.userID))
+        //user is owner or already has an ongoing order
+        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+      } else {
+        //new SG to user
+        history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+      }
+    }
+  }
+
   return isOpenOrPending ? (
-    <MainCard onClick={props.onClick} flexDirection="row" minHeight="fit-content">
+    <MainCard flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
         {isDeleteModalOpen && deleteModal}
@@ -239,47 +260,49 @@ export const SupperGroupCard = (props: Props) => {
         </>
       ) : (
         <>
-          <LeftContainer>
-            {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
-          </LeftContainer>
-          <RightContainer>
-            {!isLoading && topIcon}
-            <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
-            <StyledGroupNameText>
-              {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
-            </StyledGroupNameText>
-            {isLoading ? (
-              <Skeleton width="150px" />
-            ) : (
-              <GroupInfoContainer>
-                <InfoSubContainer>
-                  <FieldTimeOutlined style={iconStyle} />
-                  {closingTime}
-                </InfoSubContainer>
-                <InfoSubContainer color={V1_RED}>
-                  <UserOutlined style={iconStyle} />
-                  {numberOfUsers}
-                </InfoSubContainer>
-                <InfoSubContainer>
-                  <CarOutlined style={iconStyle} />
-                  {deliveryCost} {splitMethodIcon}
-                </InfoSubContainer>
-              </GroupInfoContainer>
-            )}
-            {isLoading ? (
-              <Skeleton width="180px" />
-            ) : (
-              <GroupCostInfoContainer>
-                <StyledProgessBar
-                  strokeColor={V1_RED}
-                  strokeWidth={12}
-                  percent={percentageInProgressBar}
-                  showInfo={false}
-                />
-                {amountLeft}
-              </GroupCostInfoContainer>
-            )}
-          </RightContainer>
+          {!isLoading && topIcon}
+          <ClickableContainer onClick={onSupperCardClick}>
+            <LeftContainer>
+              {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
+            </LeftContainer>
+            <RightContainer>
+              <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
+              <StyledGroupNameText>
+                {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
+              </StyledGroupNameText>
+              {isLoading ? (
+                <Skeleton width="150px" />
+              ) : (
+                <GroupInfoContainer>
+                  <InfoSubContainer>
+                    <FieldTimeOutlined style={iconStyle} />
+                    {closingTime}
+                  </InfoSubContainer>
+                  <InfoSubContainer color={V1_RED}>
+                    <UserOutlined style={iconStyle} />
+                    {numberOfUsers}
+                  </InfoSubContainer>
+                  <InfoSubContainer>
+                    <CarOutlined style={iconStyle} />
+                    {deliveryCost} {splitMethodIcon}
+                  </InfoSubContainer>
+                </GroupInfoContainer>
+              )}
+              {isLoading ? (
+                <Skeleton width="180px" />
+              ) : (
+                <GroupCostInfoContainer>
+                  <StyledProgessBar
+                    strokeColor={V1_RED}
+                    strokeWidth={12}
+                    percent={percentageInProgressBar}
+                    showInfo={false}
+                  />
+                  {amountLeft}
+                </GroupCostInfoContainer>
+              )}
+            </RightContainer>
+          </ClickableContainer>
         </>
       )}
     </MainCard>

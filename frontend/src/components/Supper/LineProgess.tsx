@@ -3,8 +3,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { V1_BLUE } from '../../common/colours'
 
-const MainContainer = styled.div`
-  margin: 2px;
+const MainContainer = styled.div<{ margin?: string }>`
+  margin: ${(props) => props.margin ?? '2px'};
 `
 
 const TextContainer = styled.text`
@@ -31,11 +31,12 @@ const ProgressSection = styled.div`
 type Props = {
   currentStep: number
   numberOfSteps: number
+  margin?: string
 }
 
 export const LineProgress = (props: Props) => {
   return (
-    <MainContainer>
+    <MainContainer margin={props.margin}>
       <TextContainer>
         Step {props.currentStep} of {props.numberOfSteps}
       </TextContainer>

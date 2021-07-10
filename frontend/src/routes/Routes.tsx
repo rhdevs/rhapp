@@ -118,7 +118,7 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 //SUPPER
 const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
-const SGOverview = React.lazy(() => import(/* webpackChunckName: "SGOverview" */ './Supper/SGOverview'))
+const SGOverview = React.lazy(() => import(/* webpackChunckName: "SGOverview" */ './Supper/Group History'))
 const CreateSupperGroup = React.lazy(
   () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
 )

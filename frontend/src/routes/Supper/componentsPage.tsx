@@ -43,6 +43,7 @@ import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
+import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
 import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -64,7 +65,8 @@ export default function Supper() {
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
-      <InformationCard updateSummary />
+      <SupperSearchBar />
+      <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
       {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>

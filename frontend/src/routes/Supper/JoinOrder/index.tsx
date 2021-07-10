@@ -60,7 +60,7 @@ export default function JoinOrder() {
         orderId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
         username={supperGroup?.ownerId === localStorage.userID ? 'You' : supperGroup?.ownerName ?? ''}
         currentAmount={supperGroup?.currentFoodCost ?? 0}
-        priceLimit={supperGroup?.costLimit ?? 50}
+        priceLimit={supperGroup?.costLimit}
         closingTime={unixTo12HourTime(supperGroup?.closingTime)}
         numberOfUsers={supperGroup?.userIdList?.length ?? 0}
         splitACType={supperGroup?.splitAdditionalCost}

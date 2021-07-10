@@ -84,7 +84,7 @@ export type SupperGroup = {
   additionalCost?: number //ie GST, delivery fee
   comments?: string // for cancel reason
   costLimit: number | undefined // can have no limit
-  createdAt: number
+  createdAt: number | undefined
   currentFoodCost: number //non inclusive of additionalCost
   location: string //collection point
   numOrders: number
@@ -104,7 +104,7 @@ export type SupperGroup = {
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number | undefined
-  phoneNumber: number
+  phoneNumber?: number
 }
 
 export type HomeSupperGroup = {
@@ -239,6 +239,7 @@ export enum SUPPER_ACTIONS {
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
   RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
+  GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
 }
 
 type SetIsLoading = {
@@ -298,7 +299,7 @@ type GetSupperGroupById = {
 
 type GetAllSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_ALL_SUPPER_GROUPS
-  allSupperGroups: SupperGroup[]
+  allSupperGroups: HomeSupperGroup[]
 }
 
 type GetRestaurantMenu = {
@@ -363,7 +364,7 @@ type SetSelectedSupperGroupStatus = {
 
 type GetSearchedSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
-  searchedSupperGroups: SupperGroup[]
+  searchedSupperGroups: HomeSupperGroup[]
 }
 
 type SetSearchSupperGroupValue = {

@@ -54,7 +54,7 @@ type Props = {
   restaurant?: Restaurants
   orderId: string
   username: string
-  priceLimit: number
+  priceLimit: number | undefined
   currentAmount: number
   closingTime: string
   numberOfUsers: number
@@ -71,6 +71,7 @@ export const JoinOrderSGCard = (props: Props) => {
   useEffect(() => {
     image = getRestaurantLogo(props.restaurant)
   }, [props.restaurant])
+
   return (
     <MainCard
       margin={props.cardMargin}

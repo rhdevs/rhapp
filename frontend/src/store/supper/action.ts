@@ -42,9 +42,9 @@ export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dis
     })
 }
 
-export const getAllSupperGroups = () => (dispatch: Dispatch<ActionTypes>) => {
+export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
+  await get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -275,13 +275,17 @@ export const getUserOrder = (supperGroupId: string | number, userId: string) => 
   dispatch(setIsLoading(false))
 }
 
-export const getSearchedSupperGroups = (query: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const getSearchedSupperGroups = (rawQuery: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
-  dispatch(getAllSupperGroups())
   const { allSupperGroups } = getState().supper
-  const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) =>
-    supperGroup.restaurantName.toLowerCase().includes(query.toLowerCase()),
-  )
+  const query = rawQuery.toLowerCase()
+  const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) => {
+    if (supperGroup.ownerName.toLowerCase().includes(query)) return supperGroup
+    if (String(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+    if (getReadableSupperGroupId(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+    if (('rhso#' + supperGroup.supperGroupId).includes(query)) return supperGroup
+    if (supperGroup.supperGroupName.toLowerCase().includes(query)) return supperGroup
+  })
   dispatch({
     type: SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS,
     searchedSupperGroups: filteredSearchSupperGroups,
@@ -310,11 +314,17 @@ export const getAllUserJoinedSupperGroup = (userId: string) => (dispatch: Dispat
 
 //------------------------ POST / PUT -------------------------
 
-export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const createSupperGroup = (newSupperGroup: SupperGroup) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
 
-  const requestBody = newSupperGroup
-  post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
+  let requestBody
+  if (newSupperGroup.costLimit === undefined) {
+    requestBody = { ...newSupperGroup, costLimit: null }
+  } else {
+    requestBody = newSupperGroup
+  }
+  console.log(requestBody)
+  await post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -322,12 +332,13 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => (dispatch: Dis
       console.log(resp.data)
       dispatch(setSupperGroup(resp.data.supperGroup))
       dispatch(setNewSupperGroupId(resp.data.supperGroup.supperGroupId))
+      dispatch(setIsLoading(false))
     })
     .catch((err) => {
       console.log(err)
       error('Failed to get all supper groups, please try again later.')
+      dispatch(setIsLoading(false))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dispatch: Dispatch<ActionTypes>) => {
