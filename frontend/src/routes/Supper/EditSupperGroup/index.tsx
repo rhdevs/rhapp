@@ -15,7 +15,6 @@ import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import {
   getSupperGroupById,
-  setCounter,
   setEditOrderNumber,
   setSelectedPaymentMethod,
   unixTo12HourTime,
@@ -139,7 +138,7 @@ type PaymentInfoData = Record<string, string>
 const EditSupperGroup = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading, counter } = useSelector(
+  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading } = useSelector(
     (state: RootState) => state.supper,
   )
   const params = useParams<{ supperGroupId: string }>()
@@ -306,11 +305,9 @@ const EditSupperGroup = () => {
                   }}
                   placeholder={pm + ' Link'}
                   defaultValue={
-                    counter <= 1
-                      ? supperGroup?.paymentInfo.find((pi) => {
-                          return pi.paymentMethod === pm
-                        })?.link ?? ''
-                      : ''
+                    supperGroup?.paymentInfo.find((pi) => {
+                      return pi.paymentMethod === pm
+                    })?.link ?? ''
                   }
                 />
               )
@@ -341,7 +338,6 @@ const EditSupperGroup = () => {
   }
 
   useEffect(() => {
-    dispatch(setCounter(counter + 1))
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
       setValue('paymentMethod', undefined)
       setError('paymentMethod', { type: 'required' })
@@ -450,7 +446,7 @@ const EditSupperGroup = () => {
         newPI = newPI.concat({ paymentMethod: PaymentMethod.CASH })
       }
       if (newPI.length) {
-        //changes were made
+        // Changes were made to supper group
         const updatedPI = selectedPaymentMethod.map((pm) => {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
@@ -459,13 +455,11 @@ const EditSupperGroup = () => {
       if (data.phoneNumber !== supperGroup?.phoneNumber) {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
-      console.log('Form was submitted!')
-      console.log(data)
-      console.log('updatedOrderInfo', updatedOrderInfo)
-      //TODO: TEST updated order details to backend
-      dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
-      //TODO: decide where to go!
-      // history.goBack()
+      if (updatedOrderInfo) {
+        console.log(updatedOrderInfo)
+        dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
+      }
+      history.goBack()
     })()
   }
 
@@ -533,9 +527,8 @@ const EditSupperGroup = () => {
               htmlType="submit"
               stopPropagation
               defaultButtonDescription="Save Changes"
-              buttonHeight="2.5rem"
+              buttonHeight="fit-content"
               descriptionStyle={{
-                fontFamily: 'Inter',
                 fontWeight: 200,
                 fontSize: '17px',
               }}
