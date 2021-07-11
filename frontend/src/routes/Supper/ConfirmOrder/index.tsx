@@ -28,7 +28,7 @@ const NumberContainer = styled.div`
   display: grid;
   columns: 2;
   grid-template-columns: 2fr 3fr;
-  grid-gap: 10px; // if u need spacing between the sections
+  grid-gap: 10px;
 `
 
 const InputText = styled.input`
