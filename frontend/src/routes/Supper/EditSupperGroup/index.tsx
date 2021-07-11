@@ -17,7 +17,6 @@ import {
   getSupperGroupById,
   setEditOrderNumber,
   setSelectedPaymentMethod,
-  unixTo12HourTime,
   unixToFormattedTime,
   updateSupperGroup,
 } from '../../../store/supper/action'
@@ -227,7 +226,7 @@ const EditSupperGroup = () => {
             defaultChecked={hasMaxPrice}
           />
         </PriceContainer>
-        {hasMaxPrice && <MaxPriceFixer defaultValue={supperGroup?.costLimit} center />}
+        {hasMaxPrice && <MaxPriceFixer min={10} defaultValue={supperGroup?.costLimit} center />}
       </OISection>
     )
   }
@@ -354,16 +353,13 @@ const EditSupperGroup = () => {
       setError('closingTime', { type: 'required' })
       return
     }
-    console.log(time._d)
-    console.log(timeString)
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
     }
-    console.log(epochClosingTime)
-    console.log(unixTo12HourTime(epochClosingTime))
+
     setValue('closingTime', epochClosingTime)
     clearErrors('closingTime')
   }
@@ -372,7 +368,6 @@ const EditSupperGroup = () => {
     e.preventDefault()
     setErrorSectionArr(errorSectionArr.splice(0, errorSectionArr.length))
     setValue('paymentMethod', selectedPaymentMethod.length)
-    console.log(errors)
     if (errors.paymentMethod || errors.phoneNumber) {
       dispatch(setEditOrderNumber(3))
       errorSectionArr.push(3)
@@ -456,7 +451,6 @@ const EditSupperGroup = () => {
         updatedOrderInfo = { ...updatedOrderInfo, phoneNumber: data.phoneNumber }
       }
       if (updatedOrderInfo) {
-        console.log(updatedOrderInfo)
         dispatch(updateSupperGroup(params.supperGroupId, updatedOrderInfo))
       }
       history.goBack()
@@ -470,8 +464,6 @@ const EditSupperGroup = () => {
   const onConfirmDiscardClick = () => {
     history.goBack()
   }
-
-  console.log(errorSectionArr)
 
   return (
     <Background onSubmit={onSubmit}>
