@@ -143,6 +143,17 @@ function JCRCBlockOutModal({
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
   const InitialData: Facility[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
+  const selectedFacilities: number[] = []
+
+  const addToList = (facilitiesID: number) => {
+    const result = selectedFacilities.findIndex((e) => e === facilitiesID)
+    if (result >= 0) {
+      selectedFacilities.splice(result, 1)
+    } else {
+      selectedFacilities.push(facilitiesID)
+    }
+    console.log(selectedFacilities)
+  }
 
   console.log(facilities)
   console.log(facilityList)
@@ -170,7 +181,11 @@ function JCRCBlockOutModal({
                 return (
                   <VenueOptions>
                     {facility.facilityName}
-                    <Venueinput type="checkbox"></Venueinput>
+                    <Venueinput
+                      id={String(facility.facilityID)}
+                      type="checkbox"
+                      onClick={() => addToList(facility.facilityID)}
+                    ></Venueinput>
                   </VenueOptions>
                 )
             })}
