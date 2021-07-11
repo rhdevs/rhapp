@@ -128,7 +128,8 @@ def all_supper_group():
             supperGroup.pop('orderList')
 
             query = {'supperGroupId': supperGroup.get('supperGroupId')}
-            changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost']}}
+            changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost'],
+                                'userIdList': supperGroup['userIdList']}}
             db.SupperGroup.update_one(query, changes)
 
             # Filters only open supper groups
@@ -829,7 +830,8 @@ def user_join_group_history(userID):
                           for supperGroup in supperGroups]
 
         pipeline = [
-            {"$match": {'supperGroupId': {"$in": supperGroupIds}}},
+            {"$match": {'supperGroupId': {"$in": supperGroupIds},
+                        'ownerId': {'$nin': [userID]}}},
             {
                 '$lookup': {
                     'from': 'Order',
@@ -839,24 +841,12 @@ def user_join_group_history(userID):
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -890,24 +880,12 @@ def user_supper_group_history(userID):
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
