@@ -368,7 +368,8 @@ const EditSupperGroup = () => {
     e.preventDefault()
     setErrorSectionArr(errorSectionArr.splice(0, errorSectionArr.length))
     setValue('paymentMethod', selectedPaymentMethod.length)
-    if (errors.paymentMethod || errors.phoneNumber) {
+    if (selectedPaymentMethod.length === 0 || pmError !== 0 || errors.phoneNumber) {
+      console.log('jdshfks')
       dispatch(setEditOrderNumber(3))
       errorSectionArr.push(3)
     }
