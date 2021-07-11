@@ -13,6 +13,7 @@ import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../s
 import { RootState } from '../../../store/types'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
+import { SupperButton } from '../../../components/Supper/SupperButton'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -115,9 +116,8 @@ export default function ConfirmOrder() {
             supperTotalCost={supperGroup?.totalPrice}
           />
           <ButtonContainer>
-            <Button
+            <SupperButton
               descriptionStyle={{ width: '100%' }}
-              stopPropagation={true}
               defaultButtonDescription="Confirm Order"
               buttonWidth="160px"
               onButtonClick={onClick}
