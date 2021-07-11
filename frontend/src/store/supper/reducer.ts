@@ -68,7 +68,7 @@ type State = {
   menu: FoodMenu[]
   foodMenu: FoodMenu | null
   orderHistory: Order[]
-  supperGroupHistory: SupperGroup[]
+  supperGroupHistory: HomeSupperGroup[]
   joinedSupperGroupHistory: HomeSupperGroup[]
   count: number
   priceLimit: number

@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { Tabs } from '../../../components/Tabs'
+import { Separator, TabContainer } from '../../../components/Tabs'
 import { getAllUserJoinedSupperGroup, getSupperHistory } from '../../../store/supper/action'
+import { HomeSupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
 const Background = styled.div`
@@ -22,94 +22,115 @@ const Background = styled.div`
   grid-template-areas: '.' '.' '.';
 `
 
-const TabsContentContainer = styled.div`
-  height: 75vh;
-  overflow: scroll;
+const SubHeader = styled.div`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  color: #666666;
+  position: sticky;
+  top: 6.5rem;
+  left: 0;
+  height: 28px;
+  padding-left: 23px;
+  z-index: 3;
+  background: ${V1_BACKGROUND};
 `
 
-const MainContainer = styled.div``
+const MainTabsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  width: 90vw;
+  margin: 0 auto;
+  position: sticky;
+  left: 0;
+  top: 4rem;
+  padding: 10px 0;
+  background: #fafaf4;
+  z-index: 3;
+`
+
+const SupperGroupCardsContainer = styled.div`
+  margin-top: -23px;
+`
+
+const EmptyText = styled.text`
+  margin: auto;
+`
 
 export default function SGOverview() {
-  // const params = useParams<{ section: string }>()
   const dispatch = useDispatch()
-  const history = useHistory()
   const { joinedSupperGroupHistory, supperGroupHistory } = useSelector((state: RootState) => state.supper)
-
-  // let section = params.section
-  // if (!(params.section === 'created' || params.section === 'joined')) {
-  //   section = 'created'
-  //   history.replace(`${PATHS.SUPPER_GROUP_OVERVIEW}/created`)
-  // }
-
-  // const clickedHistorySection =
-  //   section === 'created'
-  //     ? supperGroupHistory.length
-  //       ? supperGroupHistory
-  //       : null
-  //     : section === 'joined'
-  //     ? joinedSupperGroupHistory.length
-  //       ? joinedSupperGroupHistory
-  //       : null
-  //     : null
-
-  // const sectionSupperGroups = (
-  //   <TabsContentContainer>
-  //     {clickedHistorySection
-  //       ? clickedHistorySection.map((supperGroup, index) => {
-  //           return (
-  //             <MainSGCard
-  //               onClick={() => history.push(`${PATHS.VIEW_ORDER}/${supperGroup.supperGroupId}`)}
-  //               key={index}
-  //               title={supperGroup.supperGroupName}
-  //               time={unixTo12HourTime(supperGroup.closingTime)}
-  //               users={supperGroup.numOrders}
-  //               orderId={getReadableSupperGroupId(supperGroup.supperGroupId)}
-  //             />
-  //           )
-  //         })
-  //       : 'No supper groups'}
-  //   </TabsContentContainer>
-  // )
-
-  // const onCreatedClick = `${PATHS.SUPPER_GROUP_OVERVIEW}/created`
-  // const onJoinedClick = `${PATHS.SUPPER_GROUP_OVERVIEW}/joined`
-
-  // const key = section === 'created' ? '1' : '2'
-
-  const joinedSupperGroups = () => {
-    return joinedSupperGroupHistory
-      .concat(joinedSupperGroupHistory)
-      .concat(joinedSupperGroupHistory)
-      .concat(joinedSupperGroupHistory)
-      .map((joinedSupperGroup, index) => {
-        return <SupperGroupCard key={index} isHome homeSupperGroup={joinedSupperGroup} />
-      })
-  }
+  const [currentTab, setCurrentTab] = useState<number>(1)
+  const sections = ['Created', 'Joined']
 
   useEffect(() => {
     dispatch(getSupperHistory(localStorage.userID))
     dispatch(getAllUserJoinedSupperGroup(localStorage.userID))
   }, [dispatch])
 
+  const content = () => {
+    let supperGroupArr: HomeSupperGroup[] = supperGroupHistory
+    if (currentTab === 2) {
+      supperGroupArr = joinedSupperGroupHistory
+    }
+
+    const openOrPendingSupperGroups = supperGroupArr.filter(
+      (supperGroup: HomeSupperGroup) =>
+        supperGroup.status === SupperGroupStatus.OPEN || supperGroup.status === SupperGroupStatus.PENDING,
+    )
+
+    const nonActiveSupperGroups = supperGroupArr.filter(
+      (supperGroup: HomeSupperGroup) =>
+        supperGroup.status !== SupperGroupStatus.OPEN && supperGroup.status !== SupperGroupStatus.PENDING,
+    )
+
+    return (
+      <>
+        <SubHeader>Active</SubHeader>
+        {openOrPendingSupperGroups.length ? (
+          <SupperGroupCardsContainer>
+            {openOrPendingSupperGroups.map((supperGroup, index) => (
+              <SupperGroupCard key={index} homeSupperGroup={supperGroup} isHome />
+            ))}
+          </SupperGroupCardsContainer>
+        ) : (
+          <EmptyText>No supper groups</EmptyText>
+        )}
+        <SubHeader>Closed</SubHeader>
+        {nonActiveSupperGroups.length ? (
+          <SupperGroupCardsContainer>
+            {nonActiveSupperGroups.map((supperGroup, index) => (
+              <SupperGroupCard key={index} homeSupperGroup={supperGroup} statusOnly isHome />
+            ))}
+          </SupperGroupCardsContainer>
+        ) : (
+          <EmptyText>No supper groups</EmptyText>
+        )}
+      </>
+    )
+  }
+
   return (
     <Background>
       <TopNavBar title="History" />
-      <MainContainer>
-        {/* <ToggleCreatedJoined
-        createdTabUrl={onCreatedClick}
-        joinedTabUrl={onJoinedClick}
-        createdTab={<>{sectionSupperGroups}</>}
-        joinedTab={<>{sectionSupperGroups}</>}
-        tabKey={key}
-      /> */}
-        <Tabs
-          isSticky
-          width="90vw"
-          margin="auto"
-          valueNamesArr={['Created', 'Joined']}
-          childrenArr={[joinedSupperGroups(), joinedSupperGroups()]}
-        />
-      </MainContainer>
+      <div>
+        <MainTabsContainer>
+          {sections.map((section, index) => {
+            const isSelected = sections.indexOf(section) === currentTab - 1
+            return (
+              <>
+                <TabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
+                  {section}
+                </TabContainer>
+                {index !== sections.length - 1 && <Separator />}
+              </>
+            )
+          })}
+        </MainTabsContainer>
+        {content()}
+      </div>
       <BottomNavBar />
     </Background>
   )
