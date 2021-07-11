@@ -111,8 +111,8 @@ const ClickableContainer = styled.div`
 `
 
 type Props = {
-  supperGroup?: SupperGroup
-  homeSupperGroup?: HomeSupperGroup
+  supperGroup?: SupperGroup | undefined
+  homeSupperGroup?: HomeSupperGroup | undefined
   isHome: boolean
   comments?: string | undefined
   paymentInfo?: PaymentInfo[]

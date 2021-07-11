@@ -19,6 +19,7 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { Restaurants } from '../../../store/supper/types'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 
 const Background = styled.div`
   height: 100vh;
@@ -35,7 +36,6 @@ const ButtonContainer = styled.div`
 `
 
 export default function JoinOrder() {
-  const rightIcon = <ShareAltOutlined />
   const { supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
@@ -52,20 +52,8 @@ export default function JoinOrder() {
 
   return (
     <Background>
-      <TopNavBar title="Join Order" rightComponent={rightIcon} />
-      <JoinOrderSGCard
-        isOwner={supperGroup?.ownerId === localStorage.userID}
-        title={supperGroup?.supperGroupName ?? ''}
-        restaurant={supperGroup?.restaurantName as Restaurants}
-        orderId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
-        username={supperGroup?.ownerId === localStorage.userID ? 'You' : supperGroup?.ownerName ?? ''}
-        currentAmount={supperGroup?.currentFoodCost ?? 0}
-        priceLimit={supperGroup?.costLimit}
-        closingTime={unixTo12HourTime(supperGroup?.closingTime)}
-        numberOfUsers={supperGroup?.userIdList?.length ?? 0}
-        splitACType={supperGroup?.splitAdditionalCost}
-        deliveryFee={String((supperGroup?.additionalCost ?? 0).toFixed(2))}
-      />
+      <TopNavBar title="Join Order" />
+      {supperGroup && <SupperGroupCard supperGroup={supperGroup} isHome={false} />}
       <ButtonContainer>
         <Button onButtonClick={onClick} defaultButtonDescription="Join Order" stopPropagation={true} />
       </ButtonContainer>
