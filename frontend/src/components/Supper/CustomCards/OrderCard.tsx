@@ -155,8 +155,8 @@ const UpdateTextButton = styled.text`
 
 type Props = {
   supperGroup?: SupperGroup
-  ownerId: string | undefined
-  supperGroupStatus: SupperGroupStatus | undefined
+  ownerId?: string | undefined
+  supperGroupStatus?: SupperGroupStatus | undefined
   isEditable?: boolean
   wasEdited?: boolean
   collatedOrder?: CollatedOrder

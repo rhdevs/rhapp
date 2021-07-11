@@ -4,20 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { ShareAltOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
-import {
-  createOrder,
-  getSupperGroupById,
-  getReadableSupperGroupId,
-  unixTo12HourTime,
-} from '../../../store/supper/action'
+import { createOrder, getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import { Restaurants } from '../../../store/supper/types'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 
@@ -27,6 +19,7 @@ const Background = styled.div`
   background: ${V1_BACKGROUND};
   position: relative;
 `
+
 const ButtonContainer = styled.div`
   margin-top: 40px;
   position: absolute;
