@@ -56,7 +56,9 @@ const SupperGroupCardsContainer = styled.div`
 `
 
 const EmptyText = styled.text`
-  margin: auto;
+  margin: 0.5rem 0 1rem 0;
+  display: flex;
+  justify-content: center;
 `
 
 export default function SGOverview() {
