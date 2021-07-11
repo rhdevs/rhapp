@@ -226,7 +226,7 @@ const EditSupperGroup = () => {
             defaultChecked={hasMaxPrice}
           />
         </PriceContainer>
-        {hasMaxPrice && <MaxPriceFixer min={10} defaultValue={supperGroup?.costLimit} center />}
+        {hasMaxPrice && <MaxPriceFixer min={5} defaultValue={supperGroup?.costLimit} center />}
       </OISection>
     )
   }
