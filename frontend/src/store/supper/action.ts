@@ -61,7 +61,10 @@ export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) 
   dispatch(setIsLoading(false))
 }
 
-export const getSupperGroupById = (supperGroupId: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string | number | undefined) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  if (supperGroupId === undefined) return
   dispatch(setIsLoading(true))
 
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
