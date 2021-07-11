@@ -97,16 +97,15 @@ function Button(props: Props) {
       <AntdButton
         htmlType={props.htmlType ?? 'button'}
         danger
-        style={
-          props.style ?? {
-            background: buttonColour,
-            color: textColour,
-            borderRadius: '5px',
-            border: props.border ? props.border : props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
-            width: props.buttonWidth ? props.buttonWidth : '',
-            height: props.buttonHeight ? props.buttonHeight : '',
-          }
-        }
+        style={{
+          ...props.style,
+          background: buttonColour,
+          color: textColour,
+          borderRadius: '5px',
+          border: props.border ? props.border : props.isFlipButton ?? false ? '1px solid #ff7875' : 'none',
+          width: props.buttonWidth ? props.buttonWidth : '',
+          height: props.buttonHeight ? props.buttonHeight : '',
+        }}
         onClick={(e) => {
           {
             props.stopPropagation && e.stopPropagation()
