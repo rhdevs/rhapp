@@ -18,6 +18,7 @@ const TopContainer = styled.div`
   grid-template-rows: min-content;
   grid-template-columns: min-content 1fr min-content;
   grid-gap: 10px;
+  margin-bottom: 5px;
 `
 
 const NumberContainer = styled.div<{ isClicked?: boolean }>`
