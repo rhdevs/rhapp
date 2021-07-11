@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,13 +8,11 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
-import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { FormHeader } from '../../../components/Supper/FormHeader'
 import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
-import Supper from '../componentsPage'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -42,47 +39,6 @@ const InputText = styled.input`
   height: 35px;
 `
 
-const OrderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 80vw;
-  margin: 15px auto 0 auto;
-  align-items: baseline;
-`
-
-const Header = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  padding-right: 5px;
-`
-
-const BottomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  margin: 1rem auto;
-  align-items: flex-end;
-`
-
-const BottomMoneyContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 60%;
-  justify-content: space-between;
-  margin: 10px 0;
-`
-
-const StyledText = styled.text`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
 const ButtonContainer = styled.div`
   display: flex;
   margin: 23px 15px;
@@ -96,16 +52,6 @@ const ErrorText = styled.p`
   text-align: center;
   font-size: 14px;
   font-family: 'Inter';
-`
-
-const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
 `
 
 type FormValues = {
@@ -123,8 +69,6 @@ export default function ConfirmOrder() {
     background: '#ffd1d1',
   }
 
-  // const what: any = order
-
   useEffect(() => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -133,7 +77,6 @@ export default function ConfirmOrder() {
   const onClick = () => {
     handleSubmit((data) => {
       const updatedOrder = { ...order, userContact: data.number }
-      console.log(updatedOrder)
       //TODO: Test update order
       dispatch(updateOrderDetails(order?.orderId, updatedOrder))
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
@@ -148,7 +91,7 @@ export default function ConfirmOrder() {
       ) : (
         <>
           <NumberContainer>
-            <FormHeader headerName="Phone Number" isCompulsory={true} />
+            <FormHeader headerName="Phone Number" isCompulsory />
             <InputText
               type="number"
               placeholder="Phone Number"

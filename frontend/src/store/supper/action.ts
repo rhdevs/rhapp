@@ -3,8 +3,6 @@ import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
-import { supper } from './reducer'
-import { displayPartsToString } from 'typescript'
 
 const [error] = useSnackbar('error')
 
@@ -74,7 +72,6 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log('SupperGroup', resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
         supperGroup: resp.data,

@@ -197,7 +197,6 @@ export const OrderCard = (props: Props) => {
   let total
   if (props.supperGroup && isOwner) {
     subTotal = props.supperGroup?.currentFoodCost ?? 0
-    console.log('suppergroup in card', props.supperGroup.additionalCost)
     deliveryFee = props.supperGroup?.additionalCost ?? 0
     total = props.supperGroup?.totalPrice ?? 0
   } else {
@@ -208,7 +207,7 @@ export const OrderCard = (props: Props) => {
     deliveryFee =
       (isEqualMethod
         ? (props.supperGroup?.additionalCost ?? 0) / numberOfUsers
-        : totalSupper === 0 //to prevent infinity
+        : totalSupper > 0 //to prevent infinity
         ? (subTotal / totalSupper) * (props.supperGroup?.additionalCost ?? 0)
         : 0) ?? 0
     total = subTotal + deliveryFee
