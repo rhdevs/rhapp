@@ -215,7 +215,7 @@ export const CreateOrderPageOne = () => {
                 defaultChecked={hasMaxPrice}
               />
             </PriceContainer>
-            {hasMaxPrice && <MaxPriceFixer defaultValue={supperGroup?.costLimit} center />}
+            {hasMaxPrice && <MaxPriceFixer min={5} defaultValue={supperGroup?.costLimit} center />}
           </FormContainer>
         </>
       )}
