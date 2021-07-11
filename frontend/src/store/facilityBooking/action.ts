@@ -297,18 +297,24 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     return
   }
   if (!isEdit) {
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
+    const TokenId =
+      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJBMTIzNDU2N0IiLCJwYXNzd29yZEhhc2giOiIxZDQ2YjFlZGQzYzU0ZmY2YTQ5MTNlMjg0ZWFiODcyNThjNzIwMTZlOTU5Yzc1NDhmYjM3M2U2MmVmZWMzMWU2In0.aWUOWhMyAnfDi7CtNlZisrLhuRxRsl0-8nawTriZOq0'
+    const response = await fetch(
+      DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + TokenId + '&userID=' + localStorage.getItem('userID'),
+      {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       },
-      body: JSON.stringify(requestBody),
-    })
+    )
 
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+      console.log(body.err)
       if (body.err == 'End time eariler than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
       } else if (body.err == 'Conflict Booking') {
