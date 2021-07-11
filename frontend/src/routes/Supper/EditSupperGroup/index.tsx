@@ -6,7 +6,6 @@ import styled from 'styled-components'
 
 import { Radio, Switch, TimePicker } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import Button from '../../../components/Mobile/Button'
 import { RadioButton } from '../../../components/RadioButton'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { BubbleSection } from '../../../components/Supper/BubbleSection'
@@ -29,6 +28,7 @@ import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { V1_BACKGROUND, V1_BLUE } from '../../../common/colours'
 import { FormHeader } from '../../../components/Supper/FormHeader'
 import { InformationCard } from '../../../components/Supper/InformationCard'
+import { SupperButton } from '../../../components/Supper/SupperButton'
 
 const Background = styled.form`
   width: 100vw;
@@ -516,17 +516,7 @@ const EditSupperGroup = () => {
             {paymentInformationSection()}
           </BubbleSection>
           <ButtonContainer>
-            <Button
-              htmlType="submit"
-              stopPropagation
-              defaultButtonDescription="Save Changes"
-              buttonHeight="fit-content"
-              descriptionStyle={{
-                fontWeight: 200,
-                fontSize: '17px',
-              }}
-              isFlipButton={false}
-            />
+            <SupperButton htmlType="submit" defaultButtonDescription="Save Changes" />
           </ButtonContainer>
         </>
       )}
