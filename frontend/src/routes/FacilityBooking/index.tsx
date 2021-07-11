@@ -242,6 +242,7 @@ export default function FacilityBooking() {
                   onLeftButtonClick={onConfirmDeleteClick}
                   rightButtonText={'Cancel'}
                   onRightButtonClick={onDeleteClick}
+                  facilities={facilityList}
                 />
               )}
               {facilityList.map((facility) => {

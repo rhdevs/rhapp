@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Button } from 'antd'
 
 import 'antd/dist/antd.css'
+import { Facility } from '../../store/facilityBooking/types'
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -117,6 +118,7 @@ function JCRCBlockOutModal({
   bottom,
   right,
   left,
+  facilities,
 }: {
   title: string
   hasLeftButton?: boolean
@@ -133,11 +135,21 @@ function JCRCBlockOutModal({
   bottom?: number
   right?: number
   left?: number
+  facilities: Facility[]
 }) {
   const defaultLeftButtonColor = leftButtonColor ?? '#DE5F4C'
   const defaultLeftButtonTextColor = leftButtonTextColor ?? '#FFFFFF'
   const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
+  const InitialData: Facility[] = []
+  const [facilityList, setFacilityList] = useState(InitialData)
+
+  console.log(facilities)
+  console.log(facilityList)
+
+  useEffect(() => {
+    setFacilityList(facilities)
+  }, facilities)
 
   return (
     <>
@@ -153,27 +165,15 @@ function JCRCBlockOutModal({
               Select all
               <Venueinput type="checkbox"></Venueinput>
             </VenueOptions>
-
-            <VenueOptions>
-              Band Room
-              <Venueinput type="checkbox"></Venueinput>
-            </VenueOptions>
-
-            <VenueOptions>
-              Conference Room
-              <Venueinput type="checkbox"></Venueinput>
-            </VenueOptions>
-
-            <VenueOptions>
-              Lounge
-              <Venueinput type="checkbox"></Venueinput>
-            </VenueOptions>
-
-            <VenueOptions>
-              Hardcourt
-              <Venueinput type="checkbox"></Venueinput>
-            </VenueOptions>
-
+            {facilityList.map((facility) => {
+              if (facility.facilityLocation)
+                return (
+                  <VenueOptions>
+                    {facility.facilityName}
+                    <Venueinput type="checkbox"></Venueinput>
+                  </VenueOptions>
+                )
+            })}
             <VenueOptions>
               Main Area
               <Venueinput type="checkbox"></Venueinput>
