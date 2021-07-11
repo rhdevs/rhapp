@@ -3,6 +3,8 @@ import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
+import { supper } from './reducer'
+import { displayPartsToString } from 'typescript'
 
 const [error] = useSnackbar('error')
 
@@ -61,7 +63,10 @@ export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) 
   dispatch(setIsLoading(false))
 }
 
-export const getSupperGroupById = (supperGroupId: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const getSupperGroupById = (supperGroupId: string | number | undefined) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  if (supperGroupId === undefined) return
   dispatch(setIsLoading(true))
 
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
@@ -69,6 +74,7 @@ export const getSupperGroupById = (supperGroupId: string | number) => async (dis
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log('SupperGroup', resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
         supperGroup: resp.data,

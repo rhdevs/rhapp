@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,10 +8,14 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getUserOrder, updateOrderDetails } from '../../../store/supper/action'
+import { FormHeader } from '../../../components/Supper/FormHeader'
+import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
+import Supper from '../componentsPage'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -26,12 +31,6 @@ const NumberContainer = styled.div`
   flex-direction: row;
   align-items: baseline;
   justify-content: space-between;
-`
-const FieldHeader = styled.text`
-  font-weight: 500;
-  font-size: 15px;
-  width: 75%;
-  padding-right: 5px;
 `
 
 const InputText = styled.input`
@@ -115,18 +114,20 @@ type FormValues = {
 
 export default function ConfirmOrder() {
   const { register, handleSubmit, errors } = useForm<FormValues>()
-  const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { order, isLoading } = useSelector((state: RootState) => state.supper)
+  const { order, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
   const errorStyling = {
     borderColor: 'red',
     background: '#ffd1d1',
   }
 
+  // const what: any = order
+
   useEffect(() => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
@@ -147,7 +148,7 @@ export default function ConfirmOrder() {
       ) : (
         <>
           <NumberContainer>
-            <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
+            <FormHeader headerName="Phone Number" isCompulsory={true} />
             <InputText
               type="number"
               placeholder="Phone Number"
@@ -160,18 +161,15 @@ export default function ConfirmOrder() {
             />
           </NumberContainer>
           {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-          <OrderContainer>
-            <Header>My Order</Header>
-          </OrderContainer>
-          <OrderSummaryCard margin="5px 23px" foodList={order?.foodList} />
-          <BottomContainer>
-            <BottomMoneyContainer>
-              <StyledText>
-                <b>Subtotal</b>
-              </StyledText>
-              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-          </BottomContainer>
+          <OrderCard
+            ownerId={supperGroup?.ownerId}
+            supperGroupStatus={SupperGroupStatus.OPEN}
+            isEditable={false}
+            order={order}
+            splitCostMethod={supperGroup?.splitAdditionalCost}
+            supperGroup={supperGroup}
+            supperTotalCost={supperGroup?.totalPrice}
+          />
           <ButtonContainer>
             <Button
               descriptionStyle={{ width: '100%' }}
