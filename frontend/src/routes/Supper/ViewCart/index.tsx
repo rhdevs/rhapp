@@ -49,7 +49,11 @@ const ButtonContainer = styled.div`
 const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+`
+
+const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+  width: 50%;
+  text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
 const LowerRowButton = styled.div`
@@ -118,21 +122,25 @@ const ViewCart = () => {
             {isOwner ? (
               <ButtonContainer>
                 <UpperRowButtons>
-                  <SupperButton
-                    defaultButtonColor={V1_BACKGROUND}
-                    defaultTextColor={V1_RED}
-                    border={`2px solid ${V1_RED}`}
-                    buttonWidth="140px"
-                    defaultButtonDescription="Delete Order"
-                    onButtonClick={() => console.log('tired')}
-                    isFlipButton={true}
-                  />
-                  <SupperButton
-                    buttonWidth="140px"
-                    defaultButtonDescription="Close Group"
-                    onButtonClick={() => console.log('tired')}
-                    isFlipButton={false}
-                  />
+                  <UpperRowButtonContainer left>
+                    <SupperButton
+                      defaultButtonColor={V1_BACKGROUND}
+                      defaultTextColor={V1_RED}
+                      border={`2px solid ${V1_RED}`}
+                      buttonWidth="90%"
+                      defaultButtonDescription="Delete Order"
+                      onButtonClick={() => console.log('tired')}
+                      isFlipButton={true}
+                    />
+                  </UpperRowButtonContainer>
+                  <UpperRowButtonContainer>
+                    <SupperButton
+                      buttonWidth="90%"
+                      defaultButtonDescription="Close Group"
+                      onButtonClick={() => console.log('tired')}
+                      isFlipButton={false}
+                    />
+                  </UpperRowButtonContainer>
                 </UpperRowButtons>
                 <LowerRowButton>
                   <SupperButton
