@@ -23,11 +23,12 @@ const MainContainer = styled.div`
 `
 
 const NumberContainer = styled.div`
-  margin: 5px 35px 10px 35px;
-  display: flex;
-  flex-direction: row;
+  margin: 5px 0px 10px 35px;
   align-items: baseline;
-  justify-content: space-between;
+  display: grid;
+  columns: 2;
+  grid-template-columns: 2fr 3fr;
+  grid-gap: 10px; // if u need spacing between the sections
 `
 
 const InputText = styled.input`
