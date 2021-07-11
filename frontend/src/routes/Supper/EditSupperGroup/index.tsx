@@ -145,6 +145,7 @@ const EditSupperGroup = () => {
   const params = useParams<{ supperGroupId: string }>()
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [errorSectionArr, setErrorSectionArr] = useState<number[]>([])
   const {
     register,
     handleSubmit,
@@ -373,18 +374,24 @@ const EditSupperGroup = () => {
 
   const onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-
+    setErrorSectionArr(errorSectionArr.splice(0, errorSectionArr.length))
     setValue('paymentMethod', selectedPaymentMethod.length)
-    if (errors.supperGroupName || errors.closingTime) {
-      dispatch(setEditOrderNumber(1))
-      return
+    console.log(errors)
+    if (errors.paymentMethod || errors.phoneNumber) {
+      dispatch(setEditOrderNumber(3))
+      errorSectionArr.push(3)
     }
     if (errors.estDeliveryFee || errors.splitDeliveryFee) {
       dispatch(setEditOrderNumber(2))
-      return
+      errorSectionArr.push(2)
     }
-    if (errors.paymentMethod || errors.phoneNumber) {
-      dispatch(setEditOrderNumber(3))
+    if (errors.supperGroupName || errors.closingTime) {
+      dispatch(setEditOrderNumber(1))
+      errorSectionArr.push(1)
+    }
+
+    if (errorSectionArr.length) {
+      setErrorSectionArr(errorSectionArr)
       return
     }
 
@@ -470,6 +477,8 @@ const EditSupperGroup = () => {
     history.goBack()
   }
 
+  console.log(errorSectionArr)
+
   return (
     <Background onSubmit={onSubmit}>
       <TopNavBar
@@ -492,13 +501,31 @@ const EditSupperGroup = () => {
               onRightButtonClick={onCancelClick}
             />
           )}
-          <BubbleSection canHide isOpen={editOrderNumber === 1} title="Order Information" number={1}>
+          <BubbleSection
+            error={errorSectionArr.includes(1)}
+            canHide
+            isOpen={editOrderNumber === 1}
+            title="Order Information"
+            number={1}
+          >
             {orderInformationSection()}
           </BubbleSection>
-          <BubbleSection canHide isOpen={editOrderNumber === 2} title="Delivery Information" number={2}>
+          <BubbleSection
+            error={errorSectionArr.includes(2)}
+            canHide
+            isOpen={editOrderNumber === 2}
+            title="Delivery Information"
+            number={2}
+          >
             {deliveryInformationSection()}
           </BubbleSection>
-          <BubbleSection canHide isOpen={editOrderNumber === 3} title="Payment Information" number={3}>
+          <BubbleSection
+            error={errorSectionArr.includes(3)}
+            canHide
+            isOpen={editOrderNumber === 3}
+            title="Payment Information"
+            number={3}
+          >
             {paymentInformationSection()}
           </BubbleSection>
           <ButtonContainer>
