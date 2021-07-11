@@ -6,6 +6,8 @@ export enum ENDPOINTS {
   LOGIN = '/login',
   IS_LOGGEDIN = '/protected',
   REGISTER = '/register',
+  FORGET_PASSWORD = '/forgot',
+  RESET_PASSWORD = '/reset',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend

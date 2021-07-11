@@ -1,19 +1,17 @@
+from apscheduler.schedulers.background import BackgroundScheduler
+from pymongo import database
 from db import *
 from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 from flask import Blueprint
 from bson.json_util import dumps
-from datetime import datetime
+from datetime import datetime, timedelta
 from threading import Thread
 from bson.objectid import ObjectId
 import pymongo
 import copy
 import sys
 sys.path.append("../db")
-
-from pymongo import database
-from apscheduler.schedulers.background import BackgroundScheduler
-
 
 
 def removeObjectID(xs):
@@ -52,20 +50,11 @@ def make_hash(o):
     return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
-# for leewah
-# import ssl
-# myclient = client = pymongo.MongoClient(
-#     "mongodb+srv://rhdevs-db-admin:rhdevs-admin@cluster0.0urzo.mongodb.net/RHApp?retryWrites=true&w=majority",
-#     ssl_cert_reqs=ssl.CERT_NONE)
-
-
-
 # session format : {userID: {
 #                           sessionID: VALUE
 #                           startTime : VALUE
 #                           expiry : VALUE
 #                  }}
-
 supper_api = Blueprint("supper", __name__)
 
 
@@ -81,6 +70,7 @@ def root_route():
 
 sched = BackgroundScheduler(daemon=True)
 
+
 def closeSupperGroup(supperGroupId):
     result = db.SupperGroup.find({'supperGroupId': supperGroupId})
     data = None
@@ -88,8 +78,12 @@ def closeSupperGroup(supperGroupId):
         data = supperGroup
     data['status'] = 'Closed'
     db.SupperGroup.update_one({"supperGroupId": supperGroupId},
-                                      {"$set": data})
+                              {"$set": data})
     # print("Supper Group Closed")
+
+
+def deleteSupperGroup(supperGroupId):
+    db.SupperGroup.delete_one({'supperGroupId': supperGroupId})
 
 
 @supper_api.route('/supperGroup', methods=['GET'])
@@ -106,25 +100,12 @@ def all_supper_group():
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo',
-                    'restaurantId': '$restaurant._id'
                 }
             },
-            {'$project': {'_id': 0, 'restaurant': 0}}
+            {'$project': {'_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -144,14 +125,13 @@ def all_supper_group():
                 supperGroup['userIdList'].append(order['userID'])
             supperGroup.pop('orderList')
 
-            supperGroup['restaurantId'] = str(supperGroup.pop('restaurantId'))
-
             query = {'supperGroupId': supperGroup.get('supperGroupId')}
-            changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost']}}
+            changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost'],
+                                'userIdList': supperGroup['userIdList']}}
             db.SupperGroup.update_one(query, changes)
 
             # Filters only open supper groups
-            if supperGroup['status'] == 'Open': 
+            if supperGroup['status'] == 'Open':
                 data.append(supperGroup)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
@@ -181,25 +161,84 @@ def create_supper_group():
 
         # Add scheduler to close supper group order
         closingTime = datetime.fromtimestamp(supperGroupData['closingTime'])
-        sched.add_job(closeSupperGroup, 'date', run_date=closingTime, args=[newsupperGroupID])
+        deleteDate = datetime.fromtimestamp(
+            supperGroupData['createdAt']) + timedelta(days=5)
+        sched.add_job(closeSupperGroup, 'date',
+                      run_date=closingTime, args=[newsupperGroupID])
+        sched.add_job(deleteSupperGroup, 'date',
+                      run_date=deleteDate, args=[newsupperGroupID])
         if not sched.running:
             sched.start()
 
         # Automatically creates order for supperGroup owner
         orderData = {
-                    "supperGroupId": supperGroupData['supperGroupId'],
-                    "userContact": supperGroupData['phoneNumber'],
-                    "foodIds": [],
-                    "userID": supperGroupData['ownerId'],
-                    "createdAt": supperGroupData["createdAt"],
-                    "paymentMethod": supperGroupData['paymentInfo'][0]['paymentMethod'],
-                    "totalCost": 0,
-                    "hasPaid": False,
-                    "hasReceived": False
-                    }
+            "supperGroupId": supperGroupData['supperGroupId'],
+            "userContact": supperGroupData['phoneNumber'],
+            "foodIds": [],
+            "userID": supperGroupData['ownerId'],
+            "createdAt": supperGroupData["createdAt"],
+            "paymentMethod": supperGroupData['paymentInfo'][0]['paymentMethod'],
+            "totalCost": 0,
+            "hasPaid": False,
+            "hasReceived": False
+        }
 
         db.Order.insert_one(orderData)
         orderData['orderId'] = str(orderData.pop('_id'))
+
+        # Retrieve relevant information from database
+        pipeline = [
+            {'$match': {'supperGroupId': newsupperGroupID}},
+            {
+                '$lookup': {
+                    'from': 'Restaurants',
+                    'localField': 'restaurantName',
+                    'foreignField': 'name',
+                    'as': 'restaurant'
+                }
+            },
+            {
+                '$lookup': {
+                    'from': 'Profiles',
+                    'localField': 'ownerId',
+                    'foreignField': 'userID',
+                    'as': 'ownerList'
+                }
+            },
+            {
+                '$unwind': {'path': '$restaurant'}
+            },
+            {
+                '$unwind': {'path': '$ownerList'}
+            },
+            {
+                '$addFields': {
+                    # 'restaurantLogo': '$restaurant.restaurantLogo',
+                    'restaurantId': '$restaurant._id',
+                    'ownerName': '$ownerList.displayName',
+                    'ownerTele': '$ownerList.telegramHandle'
+                }
+            },
+            {
+                '$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0}
+            }
+        ]
+
+        result = db.SupperGroup.aggregate(pipeline)
+
+        # Add restaurantId, ownerName and ownerTele to SupperGroup
+        data = None
+        for suppergroup in result:
+            supperGroupData['restaurantId'] = str(
+                suppergroup.pop('restaurantId'))
+            supperGroupData['ownerName'] = suppergroup['ownerName']
+            supperGroupData['ownerTele'] = suppergroup['ownerTele']
+
+        query = {'supperGroupId': newsupperGroupID}
+        changes = {'$set': {'restaurantId': supperGroupData['restaurantId'],
+                            'ownerName': supperGroupData['ownerName'],
+                            'ownerTele': supperGroupData['ownerTele']}}
+        db.SupperGroup.update_one(query, changes)
 
         data = {'supperGroup': supperGroupData,
                 'orderId': orderData['orderId']}
@@ -230,17 +269,6 @@ def supper_group(supperGroupId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Restaurants',
-                        'localField': 'restaurantName',
-                        'foreignField': 'name',
-                        'as': 'restaurant'
-                    }
-                },
-                {
-                    '$unwind': {'path': '$restaurant'}
-                },
-                {
-                    '$lookup': {
                         'from': 'FoodOrder',
                         'localField': 'orderList.foodIds',
                         'foreignField': '_id',
@@ -251,8 +279,6 @@ def supper_group(supperGroupId):
                     '$addFields': {
                         'currentFoodCost': {'$sum': '$orderList.totalCost'},
                         'numOrders': {'$size': '$orderList'},
-                        'restaurantLogo': '$restaurant.restaurantLogo',
-                        'restaurantId': '$restaurant._id',
                         'orderList.foodList': [],
                         'userIdList': {'$concatArrays': '$orderList.userID'}
                     }
@@ -265,8 +291,7 @@ def supper_group(supperGroupId):
                         'as': 'userList'
                     }
                 },
-                {'$project': {'_id': 0, 'restaurant': 0,
-                              'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
+                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
                               }
                  }
             ]
@@ -276,8 +301,6 @@ def supper_group(supperGroupId):
             data = None
             for suppergroup in result:
                 data = suppergroup
-                suppergroup['restaurantId'] = str(
-                    suppergroup.pop('restaurantId'))
 
                 for order in data['orderList']:
                     order['orderId'] = str(order.pop('_id'))
@@ -317,7 +340,8 @@ def supper_group(supperGroupId):
             response = {"status": "success", "data": data}
 
         elif request.method == "PUT":  # Edit supper group details
-            supper_group = db.SupperGroup.find({'supperGroupId': supperGroupId})
+            supper_group = db.SupperGroup.find(
+                {'supperGroupId': supperGroupId})
             for sg in supper_group:
                 supperGroup = sg
 
@@ -325,11 +349,11 @@ def supper_group(supperGroupId):
 
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
-                                      
+
             # Add scheduler to close supper group order
             closingTime = datetime.fromtimestamp(supperGroup['closingTime'])
             sched.add_job(closeSupperGroup, 'date',
-                        run_date=closingTime, args=[supperGroupId])
+                          run_date=closingTime, args=[supperGroupId])
             if not sched.running:
                 sched.start()
 
@@ -426,34 +450,29 @@ def get_order(orderId):
 
             response = {"status": "success", "data": data}
         elif request.method == 'PUT':
-            selectedOrder = db.Order.find({"_id": ObjectId(orderId)})
-            order = {}
-            for ord in selectedOrder:
-                order = ord
+            order = db.Order.find_one({"_id": ObjectId(orderId)})
 
-            selectedSuppergroup = db.SupperGroup.find({'supperGroupId': order['supperGroupId']})
-            supperGroup = {}
-            for sg in selectedSuppergroup:
-                supperGroup = sg
+            supperGroup = db.SupperGroup.find_one(
+                {'supperGroupId': order['supperGroupId']})
 
             costLimit = supperGroup['costLimit']
             currentPrice = supperGroup['currentFoodCost']
 
-
             data = request.get_json()
             # If totalPrice for order is updated
             if 'totalCost' in data:
-                if ((data['totalCost'] + currentPrice) > costLimit):
+                if costLimit is not None and ((data['totalCost'] + currentPrice) > costLimit):
                     raise Exception('Total price exceeded cost limit')
-                
+
                 # Update supperGroup totalPrice when order is added
-                else: 
+                else:
                     query = {'supperGroupId': order['supperGroupId']}
-                    changes = {'$set': {'totalPrice': currentPrice + data['totalCost']}}
+                    changes = {
+                        '$set': {'totalPrice': currentPrice + data['totalCost']}}
                     db.SupperGroup.update_one(query, changes)
 
                 # Change supper group status when totalPrice >= 90% of cost limit
-                if (data['totalCost'] + currentPrice) > (costLimit * 0.9):
+                if costLimit is not None and (data['totalCost'] + currentPrice) > (costLimit * 0.9):
                     query = {'supperGroupId': order['supperGroupId']}
                     changes = {'$set': {'status': 'Pending'}}
                     db.SupperGroup.update_one(query, changes)
@@ -619,6 +638,48 @@ def food_order(orderId, foodId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
+@supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
+@cross_origin(supports_credentials=True)
+def owner_edit_order(orderId, foodId):
+    try:
+        if request.method == 'GET':
+            data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
+
+            data['orderId'] = str(data.pop('_id'))
+            data['restaurantId'] = str(data['restaurantId'])
+            data['foodMenuId'] = str(data['foodMenuId'])
+
+            response = {"status": "success",
+                        "data": data}
+
+        elif request.method == 'PUT':
+            data = request.get_json()
+
+            if data['updates']['updateAction'] == 'Update':
+                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
+                        or not data['updates']['reason'] \
+                        or not data['updates']['change'] \
+                        or not data['updates']['updatedPrice']:
+                    raise Exception('Update information incomplete')
+            elif data['updates']['updateAction'] == 'Remove':
+                if 'reason' not in data['updates'] or not data['updates']['reason']:
+                    raise Exception('Update information incomplete')
+
+            result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
+                                                      {"$set": data})
+            if result is None:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully updated food!",
+                        "data": data}
+
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
 @supper_api.route('/restaurant', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def all_restaurants():
@@ -768,7 +829,8 @@ def user_join_group_history(userID):
                           for supperGroup in supperGroups]
 
         pipeline = [
-            {"$match": {'supperGroupId': {"$in": supperGroupIds}}},
+            {"$match": {'supperGroupId': {"$in": supperGroupIds},
+                        'ownerId': {'$nin': [userID]}}},
             {
                 '$lookup': {
                     'from': 'Order',
@@ -778,24 +840,12 @@ def user_join_group_history(userID):
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -829,24 +879,12 @@ def user_supper_group_history(userID):
                 }
             },
             {
-                '$lookup': {
-                    'from': 'Restaurants',
-                    'localField': 'restaurantName',
-                    'foreignField': 'name',
-                    'as': 'restaurant'
-                }
-            },
-            {
-                '$unwind': {'path': '$restaurant'}
-            },
-            {
                 '$addFields': {
                     'currentFoodCost': {'$sum': '$orderList.totalCost'},
                     'numOrders': {'$size': '$orderList'},
-                    'restaurantLogo': '$restaurant.restaurantLogo'
                 }
             },
-            {'$project': {'orderList': 0, '_id': 0, 'restaurant': 0}}
+            {'$project': {'orderList': 0, '_id': 0}}
         ]
 
         result = db.SupperGroup.aggregate(pipeline)
@@ -858,6 +896,61 @@ def user_supper_group_history(userID):
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)
 
         response = {"status": "success", "data": data}
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET', 'POST', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_notification(userID):
+    try:
+        if request.method == "GET":
+            pipeline = [
+                {'$match': {'userID': userID}},
+                {
+                    '$lookup': {
+                        'from': 'SupperGroup',
+                        'localField': 'supperGroupId',
+                        'foreignField': 'supperGroupId',
+                        'as': 'supperGroup'
+                    }
+                },
+                {
+                    '$unwind': {'path': '$supperGroup'}
+                },
+                {'$project': {'supperGroupId': 1,
+                              'supperGroup.supperGroupName': 1, 'notification': 1, '_id': 0}}
+            ]
+
+            result = db.Order.aggregate(pipeline)
+            data = []
+            for item in result:
+                item['supperGroupName'] = item.pop(
+                    'supperGroup')['supperGroupName']
+                if 'notification' in item and item['notification']:
+                    item.pop('notification')
+                    data.append(item)
+
+            response = {"status": "success", "data": data}
+        elif request.method == 'POST':
+            data = request.get_json()
+
+            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': True}})
+
+            response = {"status": "success", "data": data}
+
+        elif request.method == 'DELETE':
+            data = request.get_json()
+
+            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': False}})
+
+            response = {"status": "success", "data": data}
+
         return make_response(response, 200)
 
     except Exception as e:
@@ -961,10 +1054,10 @@ def order_payments(supperGroupId):
                     not_received_orders.append(ObjectId(order['orderId']))
 
             db.Order.update_many({"_id": {"$in": received_orders}},
-                                {"$set": {"hasReceived": True}})
+                                 {"$set": {"hasReceived": True}})
 
             db.Order.update_many({"_id": {"$in": not_received_orders}},
-                                {"$set": {"hasReceived": False}})
+                                 {"$set": {"hasReceived": False}})
 
             response = {"status": "success", "data": data}
             return make_response(response, 200)
@@ -973,50 +1066,68 @@ def order_payments(supperGroupId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/supperGroup/<int:supperGroupId>/user/<userID>', methods=['GET'])
+@supper_api.route('/supperGroup/<int:supperGroupId>/user/<userID>', methods=['GET', 'DELETE'])
 @cross_origin(supports_credentials=True)
 def user_order(supperGroupId, userID):
     try:
-        pipeline = [
-            {'$match': {'userID': userID, 'supperGroupId': supperGroupId}},
-            {
-                '$lookup': {
-                    'from': 'FoodOrder',
-                    'localField': 'foodIds',
-                    'foreignField': '_id',
-                    'as': 'foodList'
-                }
-            },
-            {
-                '$lookup': {
-                    'from': 'Profiles',
-                    'localField': userID,
-                    'foreignField': 'userID',
-                    'as': 'user'
-                }
-            },
-            {'$project': {'foodIds': 0}}
-        ]
+        if request.method == 'GET':
+            pipeline = [
+                {'$match': {'userID': userID, 'supperGroupId': supperGroupId}},
+                {
+                    '$lookup': {
+                        'from': 'FoodOrder',
+                        'localField': 'foodIds',
+                        'foreignField': '_id',
+                        'as': 'foodList'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'Profiles',
+                        'localField': userID,
+                        'foreignField': 'userID',
+                        'as': 'user'
+                    }
+                },
+                {'$project': {'foodIds': 0}}
+            ]
 
-        temp = db.Order.aggregate(pipeline)
-        data = None
+            temp = db.Order.aggregate(pipeline)
+            data = None
 
-        # Only 1 item in temp, can only access it like this otherwise its a mongo array object
-        for item in temp:
-            data = item
+            # Only 1 item in temp, can only access it like this otherwise its a mongo array object
+            for item in temp:
+                data = item
 
-        if data is None:
-            raise Exception("User " + str(userID) + " was not found in supper group " + str(supperGroupId))
+            if data is None:
+                raise Exception(
+                    "User " + str(userID) + " was not found in supper group " + str(supperGroupId))
 
-        data['orderId'] = str(data.pop('_id'))
+            data['orderId'] = str(data.pop('_id'))
 
-        for food in data["foodList"]:
-            # rename _id field to foodId and unbox mongo object
-            food["foodId"] = str(food.pop('_id'))
-            food["restaurantId"] = str(food.pop('restaurantId'))
-            food["foodMenuId"] = str(food.pop('foodMenuId'))
+            for food in data["foodList"]:
+                # rename _id field to foodId and unbox mongo object
+                food["foodId"] = str(food.pop('_id'))
+                food["restaurantId"] = str(food.pop('restaurantId'))
+                food["foodMenuId"] = str(food.pop('foodMenuId'))
 
-        response = {"status": "success", "data": data}
+            response = {"status": "success", "data": data}
+        elif request.method == 'DELETE':
+            order_info = list(db.Order.find(
+                {'userID': userID}, {'foodIds': 1, '_id': 1}))
+            if order_info:
+                order_info = order_info[0]
+            foods = order_info['foodIds']
+
+            result = db.Order.delete_one({"_id": order_info['_id']})
+            if result.deleted_count == 0:
+                raise Exception("Order not found")
+
+            db.FoodOrder.delete_many({'_id': {'$in': foods}})
+
+            response = {"status": "success",
+                        "message": "Successfully deleted order!"}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
@@ -1025,7 +1136,7 @@ def user_order(supperGroupId, userID):
 
 def delete_supper_group(supperGroupId):
     foodIdList = list(db.Order.find(
-                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+        {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
     foods = [food.get('foodIds') for food in foodIdList]
 
     remove = db.SupperGroup.delete_one(
@@ -1035,4 +1146,3 @@ def delete_supper_group(supperGroupId):
     db.Order.delete_many({'supperGroupId': supperGroupId})
     db.FoodOrder.delete_many({'_id': {'$in': foods}})
     print("Supper Group deleted!")
-

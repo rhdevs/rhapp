@@ -103,6 +103,12 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), userID)):
+            raise Exception("Auth Failure")
+
         pipeline = [
             {'$match':
                 {'$and': [
@@ -161,9 +167,9 @@ def check_bookings(facilityID):
             {'$match':
                 {'$and': [
                     {'facilityID': int(facilityID)},
-                    {'startTime': {'$gte': int(
-                        request.args.get('startTime'))}},
-                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                    {'startTime': {'$lte': int(
+                        request.args.get('endTime'))}},
+                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
                 ]}
              },
             {'$lookup': {
@@ -216,6 +222,12 @@ def add_booking():
     try:
         formData = request.get_json()
 
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), formData["userID"])):
+            raise Exception("Authentication Failure")
+
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
 
@@ -264,6 +276,7 @@ def add_booking():
 def edit_booking(bookingID):
     try:
         formData = request.get_json()
+
         if not formData.get("ccaID"):
             formData["ccaID"] = int(0)
         else:
@@ -273,6 +286,12 @@ def edit_booking(bookingID):
 
         if (len(data) == 0):
             raise Exception("Booking not found")
+
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), data[0].userID)):
+            raise Exception("Auth Failure")
 
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
             "$set": request.get_json()})
@@ -297,6 +316,12 @@ def delete_booking(bookingID):
     try:
 
         data = list(db.Bookings.find({"bookingID": int(bookingID)}))
+
+        if (not request.args.get("token")):
+            raise Exception("No token")
+
+        if (not authenticate(request.args.get("token"), data[0].userID)):
+            raise Exception("Auth Failure")
 
         if (len(data) == 0):
             raise Exception("Booking not found")

@@ -2,6 +2,7 @@ import jwt
 from flask import Blueprint
 from flask import current_app
 import datetime
+from db import *
 
 
 def authenticate(token, username):
@@ -17,7 +18,6 @@ def authenticate(token, username):
         print(data)
         currentUser = db.User.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-        print(currentUser)
         currentUsername = currentUser['userID']
 
         # If username supplied,
