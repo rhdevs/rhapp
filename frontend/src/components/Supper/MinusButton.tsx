@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MinusCircleFilled } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
@@ -15,36 +15,40 @@ type Props = {
 
 export const MinusButton = (props: Props) => {
   const SHADED_RED = 'rgba(235, 87, 87, 0.5)'
-  const SHADED_DARK_BLUE = 'rgba(0,38,66, 0.5)'
+  const SHADED_DARK_BLUE = 'rgb(0, 38, 66, 0.5)'
   const dispatch = useDispatch()
   const { count } = useSelector((state: RootState) => state.supper)
-
+  const [buttonColor, setButtonColor] = useState<string>(props.color === 'DARK_BLUE' ? V1_BLUE : V1_RED)
   useEffect(() => {
-    dispatch(setCount(props.defaultValue))
+    dispatch(setCount(props.defaultValue ?? props.min ?? 0))
   }, [dispatch])
 
-  let BUTTON_COLOR = V1_RED
-  if (props.color === 'DARK_BLUE') {
-    BUTTON_COLOR = V1_BLUE
-  }
-
-  if (count === (props.min ?? 0)) {
-    if (BUTTON_COLOR === V1_RED) {
-      BUTTON_COLOR = SHADED_RED
+  useEffect(() => {
+    if (count === (props.min ?? 0)) {
+      if (buttonColor === V1_RED) {
+        setButtonColor(SHADED_RED)
+      }
+      if (buttonColor === V1_BLUE) {
+        setButtonColor(SHADED_DARK_BLUE)
+      }
+    } else {
+      if (buttonColor === SHADED_RED) {
+        setButtonColor(V1_RED)
+      }
+      if (buttonColor === SHADED_DARK_BLUE) {
+        setButtonColor(V1_BLUE)
+      }
     }
-    if (BUTTON_COLOR === V1_BLUE) {
-      BUTTON_COLOR = SHADED_DARK_BLUE
-    }
-  }
+  }, [count])
 
   return (
     <>
       <MinusCircleFilled
         style={{
-          color: BUTTON_COLOR,
+          color: buttonColor,
           fontSize: '25px',
         }}
-        onClick={props.onClick}
+        onClick={buttonColor === SHADED_RED || buttonColor === SHADED_DARK_BLUE ? undefined : props.onClick}
       />
     </>
   )

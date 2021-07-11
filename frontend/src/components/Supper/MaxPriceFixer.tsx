@@ -19,6 +19,7 @@ const ValueContainer = styled.text`
 type Props = {
   defaultValue?: number | undefined
   center?: boolean | undefined
+  min?: number
 }
 
 export const MaxPriceFixer = (props: Props) => {
@@ -26,11 +27,11 @@ export const MaxPriceFixer = (props: Props) => {
   const { priceLimit } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
-    dispatch(setPriceLimit(props.defaultValue ?? 0))
+    dispatch(setPriceLimit(props.defaultValue ?? props.min ?? 0))
   }, [])
 
   const subFromPriceLimit = () => {
-    if (priceLimit > 0) {
+    if (priceLimit > (props.min ?? 0)) {
       dispatch(setPriceLimit(priceLimit - 5))
       dispatch(setCount(priceLimit - 5))
     }
@@ -43,7 +44,7 @@ export const MaxPriceFixer = (props: Props) => {
 
   return (
     <CounterContainer center={props.center ?? false}>
-      <MinusButton defaultValue={props.defaultValue} color="DARK_BLUE" onClick={subFromPriceLimit} />
+      <MinusButton min={props.min} defaultValue={props.defaultValue} color="DARK_BLUE" onClick={subFromPriceLimit} />
       <ValueContainer>${priceLimit}</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />
     </CounterContainer>

@@ -13,42 +13,55 @@ const MainContainer = styled.div`
   margin: 0.5rem 1rem;
 `
 
-const SubContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin: 0;
+const TopContainer = styled.div`
+  display: grid;
+  grid-template-rows: min-content;
+  grid-template-columns: min-content 1fr min-content;
+  grid-gap: 10px;
+  margin-bottom: 5px;
 `
 
 const NumberContainer = styled.div<{ isClicked?: boolean }>`
   border-radius: 50%;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2rem;
+  height: 2rem;
   border: 1px black solid;
   overflow: hidden;
   display: flex;
   justify-content: center;
-  margin: 1rem;
+  margin: 5px 0 5px 1rem;
   background-color: ${(props) => (props.isClicked ? V1_BLUE : 'white')};
 `
 
 const NumberText = styled.text<{ isClicked?: boolean }>`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
   margin: auto;
-  font-size: 21px;
-  font-family: 'Inter';
   color: ${(props) => (props.isClicked ? 'white' : V1_BLUE)};
 `
 
 const TitleText = styled.text<{ isClicked?: boolean }>`
   text-decoration: ${(props) => (props.isClicked ? 'underline' : 'none')};
-  margin: auto 0;
+  font-family: Inter;
+  font-style: normal;
   font-weight: 500;
-  font-size: 21px;
-  font-family: 'Inter';
+  font-size: 18px;
   color: ${V1_BLUE};
 `
 
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 5px;
+  align-items: center;
+  margin: auto 0;
+`
+
 const ArrowContainer = styled.div`
-  margin: auto 0.5rem;
+  margin: auto;
   font-size: 18px;
 `
 
@@ -66,12 +79,22 @@ height: fit-content;
 padding: 0 0.5rem;`}
 `
 
+const RedText = styled.text`
+  color: #ff4d4f;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  white-space: nowrap;
+`
+
 type Props = {
   isOpen?: boolean
   canHide?: boolean //component can be hidden, not removed
   number: number
   title: string
   children?: ReactChild | ReactChild[] | ReactChildren | ReactChildren[]
+  error?: boolean
 }
 
 export const BubbleSection = (props: Props) => {
@@ -88,9 +111,14 @@ export const BubbleSection = (props: Props) => {
   }, [props.isOpen])
 
   const arrowIcon = isClicked ? <CaretUpOutlined /> : <CaretDownOutlined />
+
+  const error = () => {
+    return <RedText> • Error</RedText>
+  }
+
   return (
     <MainContainer>
-      <SubContainer>
+      <TopContainer>
         <NumberContainer
           onClick={() => {
             setIsClicked(true)
@@ -99,14 +127,17 @@ export const BubbleSection = (props: Props) => {
         >
           <NumberText isClicked={isClicked}>{props.number}</NumberText>
         </NumberContainer>
-        <TitleText
-          onClick={() => {
-            setIsClicked(true)
-          }}
-          isClicked={isClicked}
-        >
-          {props.title}
-        </TitleText>
+        <TextContainer>
+          <TitleText
+            onClick={() => {
+              setIsClicked(true)
+            }}
+            isClicked={isClicked}
+          >
+            {props.title}
+          </TitleText>
+          {props.error && error()}
+        </TextContainer>
         <ArrowContainer
           onClick={() => {
             setIsClicked(true)
@@ -114,7 +145,7 @@ export const BubbleSection = (props: Props) => {
         >
           {arrowIcon}
         </ArrowContainer>
-      </SubContainer>
+      </TopContainer>
       <ChildContainer canHide={props.canHide ?? false} isClicked={isClicked}>
         {props.canHide ? props.children : isClicked && props.children}
       </ChildContainer>
