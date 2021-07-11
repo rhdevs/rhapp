@@ -25,7 +25,6 @@ export const MinusButton = (props: Props) => {
 
   useEffect(() => {
     if (count === (props.min ?? 0)) {
-      console.log(count)
       if (buttonColor === V1_RED) {
         setButtonColor(SHADED_RED)
       }
@@ -33,7 +32,6 @@ export const MinusButton = (props: Props) => {
         setButtonColor(SHADED_DARK_BLUE)
       }
     } else {
-      console.log(count)
       if (buttonColor === SHADED_RED) {
         setButtonColor(V1_RED)
       }
