@@ -61,7 +61,7 @@ const EmptyText = styled.text`
   justify-content: center;
 `
 
-export default function SGOverview() {
+export default function GroupHistory() {
   const dispatch = useDispatch()
   const { joinedSupperGroupHistory, supperGroupHistory } = useSelector((state: RootState) => state.supper)
   const [currentTab, setCurrentTab] = useState<number>(1)
