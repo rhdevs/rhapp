@@ -33,7 +33,7 @@ def authenticate(token, username):
     oldTime = originalToken['createdAt']
     # print(datetime.datetime.now())
     # print(oldTime)
-    if datetime.datetime.now() > oldTime + datetime.timedelta(minutes=2):
+    if datetime.datetime.now() > oldTime + datetime.timedelta(weeks=2):
         return False
 
     # recreate session (with createdAt updated to now)
