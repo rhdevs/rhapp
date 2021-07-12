@@ -90,7 +90,7 @@ export default function Supper() {
     <SupperGroupHistoryImg
       src={SupperGroupHistoryIcon}
       alt={'My Supper Groups'}
-      onClick={() => history.push(`${PATHS.SUPPER_GROUP_OVERVIEW}/created`)}
+      onClick={() => history.push(PATHS.SUPPER_HISTORY)}
     />
   )
 

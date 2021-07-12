@@ -258,7 +258,10 @@ export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<A
   dispatch(setIsLoading(false))
 }
 
-export const getUserOrder = (supperGroupId: string | number, userId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getUserOrder = (supperGroupId: string | number | undefined, userId: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  if (!supperGroupId) return
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
     .then((resp) => {
