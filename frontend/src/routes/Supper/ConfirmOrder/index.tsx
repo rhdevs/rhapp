@@ -116,13 +116,7 @@ export default function ConfirmOrder() {
             supperTotalCost={supperGroup?.totalPrice}
           />
           <ButtonContainer>
-            <SupperButton
-              descriptionStyle={{ width: '100%' }}
-              defaultButtonDescription="Confirm Order"
-              buttonWidth="160px"
-              onButtonClick={onClick}
-              isFlipButton={false}
-            />
+            <SupperButton defaultButtonDescription="Confirm Order" onButtonClick={onClick} />
           </ButtonContainer>
         </>
       )}
