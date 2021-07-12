@@ -174,7 +174,6 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
-  const [isEditedModalOpen, setIsEditedModalOpen] = useState<boolean>(false)
   const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
@@ -262,8 +261,6 @@ export const OrderCard = (props: Props) => {
     )
   }
 
-  //TODO: Add was edited modal
-  const wasEditedModal = <></>
   //TODO: Add cancel action modal
   const cancelActionModal = <></>
 
@@ -310,7 +307,6 @@ export const OrderCard = (props: Props) => {
                 isEditable={isEditable}
                 onEditClick={() => onEditClick(food.foodId)}
                 wasEdited={wasEdited}
-                wasEditedModalSetter={setIsEditedModalOpen}
                 isCancelActionClickable={isOwner}
                 cancelActionModalSetter={setIsCancelActionModalOpen}
                 food={food}
@@ -348,7 +344,6 @@ export const OrderCard = (props: Props) => {
                   isEditable={isEditable}
                   onEditClick={() => onEditClick(food.foodId)}
                   wasEdited={wasEdited}
-                  wasEditedModalSetter={setIsEditedModalOpen}
                   isCancelActionClickable={isOwner}
                   cancelActionModalSetter={setIsCancelActionModalOpen}
                   cancelActionOnClick={() => {
@@ -439,7 +434,6 @@ export const OrderCard = (props: Props) => {
                       isEditable={isOrderEditable}
                       onEditClick={() => onEditClick(food.foodId)}
                       wasEdited={wasEdited}
-                      wasEditedModalSetter={setIsEditedModalOpen}
                       isCancelActionClickable={isOwner}
                       cancelActionOnClick={cancelActionOnClick}
                       food={food}
@@ -465,7 +459,6 @@ export const OrderCard = (props: Props) => {
   return (
     <MainCard padding="20px" flexDirection="column">
       <>
-        {isEditedModalOpen && wasEditedModal}
         {isCancelActionModalOpen && cancelActionModal}
         {isUpdateDeliveryModalOpen && updateDeliveryModal}
       </>

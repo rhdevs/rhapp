@@ -155,7 +155,6 @@ type Props = {
   isEditable?: boolean
   onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   wasEdited?: boolean
-  wasEditedModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const FoodLine = (props: Props) => {
   const dispatch = useDispatch()
@@ -212,10 +211,6 @@ export const FoodLine = (props: Props) => {
         props.cancelActionModalSetter(true)
       }
     }
-  }
-
-  const onOwnerEditClick = () => {
-    if (props.wasEditedModalSetter) props.wasEditedModalSetter(true)
   }
 
   const content = () => {
@@ -286,7 +281,7 @@ export const FoodLine = (props: Props) => {
               {props.isEditable ? (
                 <Icon onClick={onEditClick} src={editIcon} alt="Edit Icon" />
               ) : (
-                <StyledEditedText onClick={onOwnerEditClick}>
+                <StyledEditedText>
                   {updates?.updateAction === UpdateAction.UPDATE
                     ? `(edited)`
                     : updates?.updateAction === UpdateAction.REMOVE
