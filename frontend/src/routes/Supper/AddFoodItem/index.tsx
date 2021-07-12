@@ -191,7 +191,7 @@ const AddFoodItem = () => {
             add
             currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
-          <InformationCard disclaimer />
+          <InformationCard disclaimer margin={'0'} />
         </MainContainer>
       )}
     </Background>
