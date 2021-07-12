@@ -297,8 +297,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     return
   }
   if (!isEdit) {
-    const TokenId =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJBMTIzNDU2N0IiLCJwYXNzd29yZEhhc2giOiIxZDQ2YjFlZGQzYzU0ZmY2YTQ5MTNlMjg0ZWFiODcyNThjNzIwMTZlOTU5Yzc1NDhmYjM3M2U2MmVmZWMzMWU2In0.aWUOWhMyAnfDi7CtNlZisrLhuRxRsl0-8nawTriZOq0'
+    const TokenId = localStorage.getItem('token')
     const response = await fetch(
       DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + TokenId + '&userID=' + localStorage.getItem('userID'),
       {
