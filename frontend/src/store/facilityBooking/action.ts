@@ -310,7 +310,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
         body: JSON.stringify(requestBody),
       },
     )
-
+    console.log(JSON.stringify(requestBody))
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })

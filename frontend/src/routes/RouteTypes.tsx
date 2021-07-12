@@ -4,47 +4,36 @@ import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 
 const getIsLoggedIn = async () => {
   const token = localStorage.token
-  if (process.env.REACT_APP_MODE == 'development') {
-    localStorage.setItem('token', 'fuck')
-    localStorage.setItem('userID', 'A1234567B')
-    return true
+  if (token) {
+    await fetch(DOMAIN_URL.AUTH + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
+      method: 'GET',
+      mode: 'cors',
+    }).then((resp) => {
+      if (resp.ok) {
+        return true
+      } else {
+        localStorage.removeItem('token')
+        localStorage.removeItem('userID')
+        return false
+      }
+    })
   } else {
-    if (token) {
-      await fetch(DOMAIN_URL.AUTH + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
-        method: 'GET',
-        mode: 'cors',
-      }).then((resp) => {
-        if (resp.ok) {
-          return true
-        } else {
-          localStorage.removeItem('token')
-          localStorage.removeItem('userID')
-          return false
-        }
-      })
-    } else {
-      return false
-    }
+    return false
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PrivateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
-  if (process.env.REACT_APP_MODE == 'development') {
-    localStorage.setItem('token', 'fuck')
-    localStorage.setItem('userID', 'A1234567B')
-    return <Route {...rest} render={(props) => <Component {...props} />} />
+
+  if (localStorage.token) {
+    return getIsLoggedIn() ? (
+      <Route {...rest} render={(props) => <Component {...props} />} />
+    ) : (
+      <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+    )
   } else {
-    if (localStorage.token) {
-      return getIsLoggedIn() ? (
-        <Route {...rest} render={(props) => <Component {...props} />} />
-      ) : (
-        <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
-      )
-    } else {
-      return <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
-    }
+    return <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
   }
 }
 
