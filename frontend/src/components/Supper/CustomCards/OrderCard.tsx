@@ -15,6 +15,7 @@ import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../ContactModal'
+import { SGPaymentStatus } from './SGPaymentStatus'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -143,14 +144,14 @@ const SubtotalPrice = styled.text`
   line-height: 14px;
 `
 
-const UpdateTextButton = styled.text`
+const UpdateTextButton = styled.text<{ underlined?: boolean }>`
   padding: 0 7px;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 12px;
-  text-decoration-line: underline;
   color: ${V1_RED};
+  ${(props) => props.underlined && 'text-decoration-line: underline;'}
 `
 
 type Props = {
@@ -187,15 +188,18 @@ export const OrderCard = (props: Props) => {
   const supperGroupStatus = props.supperGroup?.status ?? props.supperGroupStatus
   const supperGroupIsOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
+  const showTrackPaymentCard =
+    isOwner && supperGroupStatus === (SupperGroupStatus.ARRIVED || SupperGroupStatus.AWAITING_PAYMENT)
   const canEditUserFood = isOwner && !supperGroupIsOpenOrPending
   const isEditable = props.isEditable ?? (!isOwner && supperGroupIsOpenOrPending)
   const restaurantId = props.supperGroup?.restaurantId ?? props.restaurantId
+  const supperGroupDeliveryFee = props.supperGroup?.additionalCost ?? 0
   let subTotal
   let deliveryFee
   let total
   if (props.supperGroup && isOwner) {
     subTotal = props.supperGroup?.currentFoodCost ?? 0
-    deliveryFee = props.supperGroup?.additionalCost ?? 0
+    deliveryFee = supperGroupDeliveryFee
     total = props.supperGroup?.totalPrice ?? 0
   } else {
     const numberOfUsers = props.numberOfUsers ?? 1
@@ -211,24 +215,43 @@ export const OrderCard = (props: Props) => {
     total = subTotal + deliveryFee
   }
 
-  subTotal = `$${subTotal.toFixed(2)}`
-  deliveryFee = `$${deliveryFee.toFixed(2)}`
-  total = `$${total.toFixed(2)}`
-
-  const PriceSection = ({ update }: { update?: boolean }) => {
+  const PriceSection = ({
+    update,
+    order,
+    wasDeliveryUpdated,
+  }: {
+    update?: boolean
+    order?: Order
+    wasDeliveryUpdated?: boolean
+  }) => {
+    let priceSectionSubTotal = subTotal
+    let priceSectionDeliveryFee = supperGroupDeliveryFee
+    let priceSectionTotal = total
+    if (order) {
+      priceSectionSubTotal = order.totalCost
+      priceSectionDeliveryFee = deliveryFee
+    }
+    priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
     return (
       <PriceMainContainer>
         <PriceTitleText>Subtotal</PriceTitleText>
-        <PriceText>{subTotal}</PriceText>
+        <PriceText>${priceSectionSubTotal.toFixed(2)}</PriceText>
 
         <PriceTitleText>
           Delivery Fee {/* TODO: Push to new page with update delivery price card */}
-          {update && <UpdateTextButton onClick={() => console.log('GO TO NEW PAGE')}>update</UpdateTextButton>}
+          {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+            <UpdateTextButton underlined onClick={() => console.log('GO TO NEW PAGE')}>
+              update
+            </UpdateTextButton>
+          )}
+          {wasDeliveryUpdated && !(supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+            <UpdateTextButton>(edited)</UpdateTextButton>
+          )}
         </PriceTitleText>
-        <PriceText>{deliveryFee}</PriceText>
+        <PriceText>${priceSectionDeliveryFee.toFixed(2)}</PriceText>
 
         <TotalTitleText>Total</TotalTitleText>
-        <TotalPriceText>{total}</TotalPriceText>
+        <TotalPriceText>${priceSectionTotal.toFixed(2)}</TotalPriceText>
       </PriceMainContainer>
     )
   }
@@ -387,7 +410,7 @@ export const OrderCard = (props: Props) => {
             </CardHeaderContainer>
           )
           const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
-          const orderSubtotal = `$${order.totalCost.toFixed(2)}`
+          const orderSubtotal = `$${(order.totalCost + deliveryFee).toFixed(2)}`
           const EmptyCartContainer = () => {
             if (isOwnerFood) {
               return <OwnerEmptyCartSection />
@@ -422,7 +445,7 @@ export const OrderCard = (props: Props) => {
                       isEditable={isOrderEditable}
                       onEditClick={() => onEditClick(food.foodId)}
                       wasEdited={wasEdited}
-                      isCancelActionClickable={isOwner}
+                      isCancelActionClickable={isOwner && !isOwnerFood}
                       cancelActionOnClick={cancelActionOnClick}
                       food={food}
                       supperGroupId={supperGroupId}
@@ -444,10 +467,61 @@ export const OrderCard = (props: Props) => {
     )
   }
 
+  const ownerFoodContent = () => {
+    const ownerOrder = (orderList ?? []).find((order) => order.user.userID === localStorage.userID)
+
+    return (
+      <>
+        {ownerOrder ? (
+          <>
+            {ownerOrder.foodList?.map((food, foodIndex) => {
+              const customisations: string[] = []
+              food.custom?.map((custom) =>
+                custom.options.map((option) => {
+                  if (option.isSelected) customisations.push(option.name)
+                }),
+              )
+              return (
+                <FoodLine
+                  key={foodIndex}
+                  margin="5px 0"
+                  wasEdited={wasEdited}
+                  food={food}
+                  supperGroupId={supperGroupId}
+                  orderId={orderId}
+                />
+              )
+            })}
+            <PriceSection order={ownerOrder} wasDeliveryUpdated />
+          </>
+        ) : (
+          EmptyCart()
+        )}
+      </>
+    )
+  }
+
+  const trackPaymentContent = () => {
+    return (
+      <>
+        <SGPaymentStatus supperGroup={props.supperGroup} />
+        <HorizontalLine />
+        <PriceSection />
+      </>
+    )
+  }
+
   return (
     <MainCard padding="20px" flexDirection="column">
       {isOwner ? (
-        <Tabs valueNamesArr={['User', 'Food']} childrenArr={[ownerViewFoodContent(), collatedFoodContent()]} />
+        showTrackPaymentCard ? (
+          <Tabs
+            valueNamesArr={['My Order', 'Track Payment']}
+            childrenArr={[ownerFoodContent(), trackPaymentContent()]}
+          />
+        ) : (
+          <Tabs valueNamesArr={['User', 'Food']} childrenArr={[ownerViewFoodContent(), collatedFoodContent()]} />
+        )
       ) : (
         <>
           <CardHeaderContainer>

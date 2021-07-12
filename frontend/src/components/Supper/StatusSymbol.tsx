@@ -13,13 +13,15 @@ const MainContainer = styled.div<{
   shadow?: string | undefined
   minWidth?: string | undefined
   isDisabled?: boolean | undefined
+  minHeight?: string | undefined
+  padding?: string
 }>`
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
-  padding: 2px 7px;
+  padding: ${(props) => props.padding ?? '2px 7px'};
   height: fit-content;
-  min-height: 33px;
+  min-height: ${(props) => props.minHeight ?? '33px'};
   min-width: ${(props) => `${props.minWidth}` ?? '3rem'};
   margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
@@ -67,7 +69,9 @@ type Props = {
   fontWeight?: number
   fontSize?: string
   minWidth?: string
+  minHeight?: string
   isDisabled?: boolean
+  padding?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -112,6 +116,8 @@ export const StatusSymbol = (props: Props) => {
       onClick={props.onClick as React.MouseEventHandler<HTMLDivElement>}
       minWidth={props.minWidth}
       isDisabled={props.isDisabled}
+      minHeight={props.minHeight}
+      padding={props.padding}
     >
       {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
       {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}

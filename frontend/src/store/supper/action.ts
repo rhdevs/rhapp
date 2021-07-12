@@ -403,7 +403,7 @@ export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispa
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderById(orderId))
+      // dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)

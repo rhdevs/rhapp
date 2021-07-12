@@ -3,18 +3,22 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
 import { Food, PaymentMethod } from '../../store/supper/types'
-import { FoodLineInCard } from './FoodLineInCard'
 import { StatusSymbol } from './StatusSymbol'
 import { TelegramShareButton } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setExpandAll, setPaymentExpandedCount, setPaymentUpdateArray } from '../../store/supper/action'
+import {
+  setExpandAll,
+  setPaymentExpandedCount,
+  // setPaymentUpdateArray,
+  updateOrderDetails,
+} from '../../store/supper/action'
+import { FoodLine } from './FoodLine'
 
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
   margin: auto;
 `
 
@@ -102,6 +106,7 @@ type Props = {
   additionalCost: number
   paymentMethod?: PaymentMethod | undefined
   numOrders?: number
+  supperGroupId?: number
 }
 
 export const UserPaymentStatus = (props: Props) => {
@@ -150,9 +155,10 @@ export const UserPaymentStatus = (props: Props) => {
   )
 
   const onClick = () => {
-    dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
-    // const newOrderDetails = { hasReceived: !cancelName }
-    // dispatch(updateOrderDetails(props.orderId, newOrderDetails))
+    //TODO: Test to see if updating individual checking of name works, if not can use array method
+    // dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
+    const newOrderDetails = { hasReceived: !cancelName }
+    dispatch(updateOrderDetails(props.orderId, newOrderDetails))
     setCancelName(!cancelName)
   }
 
@@ -168,7 +174,7 @@ export const UserPaymentStatus = (props: Props) => {
           </NameText>
         </LeftContainer>
         <StatusSymbolContainer>
-          <StatusSymbol text={props.hasPaid ? 'Paid' : 'Unpaid'} />
+          <StatusSymbol minHeight="" padding="0 5px" text={props.hasPaid ? 'Paid' : 'Unpaid'} />
         </StatusSymbolContainer>
         <TopMoneyText>${props.totalCost.toFixed(2)}</TopMoneyText>
         {arrowIcon}
@@ -189,16 +195,7 @@ export const UserPaymentStatus = (props: Props) => {
               )
               return (
                 <>
-                  <FoodLineInCard
-                    padding="5px 15px 10px 15px"
-                    fontPercentage={0.85}
-                    key={index}
-                    foodName={food.foodName}
-                    qty={food.quantity}
-                    price={food.foodPrice}
-                    customisations={customisations}
-                    comments={food.comments}
-                  />
+                  <FoodLine margin="10px 0" supperGroupId={props.supperGroupId} food={food} />
                   {index + 1 === props.foodList.length && (
                     <DeliveryFeeText>
                       Delivery Fee <MoneyText>${props.additionalCost.toFixed(2) ?? '0.00'}</MoneyText>

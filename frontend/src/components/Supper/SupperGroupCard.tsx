@@ -243,12 +243,10 @@ export const SupperGroupCard = (props: Props) => {
     if (props.onClick) return props.onClick(e)
     else {
       if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-        console.log(supperGroup?.ownerId === localStorage.userID)
-        console.log((supperGroup?.userIdList ?? []).includes(localStorage.userID))
-        //user is owner or already has an ongoing order
+        // User is the owner or already has an ongoing order
         history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
       } else {
-        //new SG to user
+        // New SG to user
         history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
       }
     }
@@ -323,6 +321,7 @@ export const SupperGroupCard = (props: Props) => {
     </MainCard>
   ) : (
     <SGStatusCard
+      onClick={onSupperCardClick}
       isOwner={isOwner}
       supperGroupStatus={supperGroupStatus}
       restaurantLogo={restaurantLogo}
