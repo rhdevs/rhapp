@@ -5,7 +5,7 @@ import StyledCarousel from './StyledCarousel'
 
 import banner1 from '../../assets/banners/banner1.jpeg'
 import banner2 from '../../assets/banners/banner2.jpeg'
-// import banner3 from '../../assets/banners/banner3.jpeg'
+import banner3 from '../../assets/banners/banner3.jpeg'
 import banner4 from '../../assets/banners/banner4.jpeg'
 // import banner5 from '../../assets/banners/banner5.jpeg'
 
@@ -38,11 +38,11 @@ const CarouselCard2 = styled(CarouselCard)`
     background-image: url(${banner2});
   }
 `
-// const CarouselCard3 = styled(CarouselCard)`
-//   &:before {
-//     background-image: url(${banner3});
-//   }
-// `
+const CarouselCard3 = styled(CarouselCard)`
+  &:before {
+    background-image: url(${banner3});
+  }
+`
 const CarouselCard4 = styled(CarouselCard)`
   &:before {
     background-image: url(${banner4});
@@ -59,7 +59,7 @@ export default function AnnouncementCarousel() {
     <StyledCarousel autoplay>
       <CarouselCard1 />
       <CarouselCard2 />
-      {/* <CarouselCard3 /> */}
+      <CarouselCard3 />
       <CarouselCard4 />
       {/* <CarouselCard5 /> */}
     </StyledCarousel>

@@ -56,6 +56,7 @@ export function register(config?: Config) {
     })
 
     window.addEventListener('activate', function (event) {
+      console.log('Service worker activated!')
       event.waitUntil(
         caches.keys().then(function (cacheNames) {
           return Promise.all(
