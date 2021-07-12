@@ -6,9 +6,12 @@ import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
+import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
+import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
+import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import useSnackbar from '../../../hooks/useSnackbar'
@@ -65,10 +68,14 @@ const ViewCart = () => {
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
+  const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
+  const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
   const [error] = useSnackbar('error')
   const { supperGroup, order, isLoading, foodId, collatedOrder } = useSelector((state: RootState) => state.supper)
   const isOwner = localStorage.userID === supperGroup?.ownerId
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
+  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -129,17 +136,31 @@ const ViewCart = () => {
                       border={`2px solid ${V1_RED}`}
                       buttonWidth="90%"
                       defaultButtonDescription="Delete Order"
-                      onButtonClick={() => console.log('tired')}
+                      onButtonClick={() => setDeleteOrderModalIsOpen(true)}
                       isFlipButton={true}
                     />
+                    {deleteOrderModalIsOpen && (
+                      <DeleteOrderModal
+                        isOwner
+                        supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                        orderId={ownerOrderId}
+                        modalSetter={setDeleteOrderModalIsOpen}
+                      />
+                    )}
                   </UpperRowButtonContainer>
                   <UpperRowButtonContainer>
                     <SupperButton
                       buttonWidth="90%"
                       defaultButtonDescription="Close Group"
-                      onButtonClick={() => console.log('tired')}
+                      onButtonClick={() => setCloseGroupModalIsOpen(true)}
                       isFlipButton={false}
                     />
+                    {closeGroupModalIsOpen && (
+                      <CloseGroupEarlyModal
+                        supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                        modalSetter={setCloseGroupModalIsOpen}
+                      />
+                    )}
                   </UpperRowButtonContainer>
                 </UpperRowButtons>
                 <LowerRowButton>
@@ -150,9 +171,15 @@ const ViewCart = () => {
                     border={`2px solid ${V1_RED}`}
                     buttonWidth="100%"
                     defaultButtonDescription="Delete Group"
-                    onButtonClick={() => console.log('tired')}
+                    onButtonClick={() => setDeleteGroupModalIsOpen(true)}
                     isFlipButton={true}
                   />
+                  {deleteGroupModalIsOpen && (
+                    <DeleteGroupModal
+                      suppergroupId={supperGroup?.supperGroupId ?? '-'}
+                      modalSetter={setDeleteGroupModalIsOpen}
+                    />
+                  )}
                 </LowerRowButton>
               </ButtonContainer>
             ) : (

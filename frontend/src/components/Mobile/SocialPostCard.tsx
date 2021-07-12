@@ -3,13 +3,13 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { Menu } from 'antd'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
-import ConfirmationModal from './ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { DeletePost } from '../../store/social/action'
 import Avatar from '../../components/Mobile/Avatar'
 import { getInitials } from '../../common/getInitials'
 import { Image } from 'antd'
+import { ConfirmationModal } from './ConfirmationModal'
 
 const CardContainer = styled.div`
   display: flex;

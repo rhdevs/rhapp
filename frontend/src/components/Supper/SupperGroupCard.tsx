@@ -21,11 +21,11 @@ import { useHistory } from 'react-router-dom'
 import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
 import { MoreDropDown } from './MoreDropDown'
-import ConfirmationModal from '../Mobile/ConfirmationModal'
 import { useDispatch } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
+import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 
 const LeftContainer = styled.div`
   flex: 30%;

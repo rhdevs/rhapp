@@ -21,7 +21,7 @@ import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
 import { V1_BACKGROUND } from '../../../common/colours'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const Background = styled.div`
   width: 100vw;

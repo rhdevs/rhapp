@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { FileZipTwoTone } from '@ant-design/icons'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { JoinOrderSGCard } from '../../../components/Supper/CustomCards/JoinOrderSGCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
@@ -18,6 +17,7 @@ import {
 import { CollatedOrder, Restaurants, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import Button from '../../../components/Mobile/Button'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const SummaryContainer = styled.div`
   display: flex;

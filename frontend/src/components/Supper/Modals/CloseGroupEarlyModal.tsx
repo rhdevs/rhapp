@@ -11,7 +11,7 @@ type Props = {
   supperGroupId: string | number
 }
 
-export const DiscardCartModal = (props: Props) => {
+export const CloseGroupEarlyModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CLOSED }))
@@ -20,6 +20,7 @@ export const DiscardCartModal = (props: Props) => {
   return (
     <SupperModal
       title="Close Group Early?"
+      flex
       description="Close supper group if you are ready to order! No new changes can be made after supper group is closed."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}

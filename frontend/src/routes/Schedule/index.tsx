@@ -26,8 +26,8 @@ import {
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
-import ConfirmationModal from '../../components/Mobile/ConfirmationModal'
 import NusModsWeeks from '../../components/Scheduling/NusModsWeeks'
+import { ConfirmationModal } from '../../components/Mobile/ConfirmationModal'
 
 const TimetableMainContainer = styled.div`
   box-sizing: border-box;
