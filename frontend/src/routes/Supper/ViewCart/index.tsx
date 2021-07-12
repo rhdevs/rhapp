@@ -191,7 +191,13 @@ const ViewCart = () => {
             {supperGroup && collatedOrder && (
               <>
                 <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-                <OrderCard supperGroup={supperGroup} collatedOrder={collatedOrder} isEditable={isEditable} />
+                <OrderCard
+                  supperGroup={supperGroup}
+                  collatedOrder={collatedOrder}
+                  ownerId={supperGroup.ownerId}
+                  supperGroupStatus={supperGroup.status}
+                  isEditable={isEditable}
+                />
               </>
             )}
             {showButtons()}

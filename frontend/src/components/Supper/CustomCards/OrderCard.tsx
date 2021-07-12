@@ -154,13 +154,13 @@ const UpdateTextButton = styled.text`
 `
 
 type Props = {
-  supperGroup?: SupperGroup
-  ownerId?: string | undefined
-  supperGroupStatus?: SupperGroupStatus | undefined
+  supperGroup?: SupperGroup | null
+  ownerId: string | undefined
+  supperGroupStatus: SupperGroupStatus | undefined
   isEditable?: boolean
   wasEdited?: boolean
   collatedOrder?: CollatedOrder
-  order?: Order
+  order?: Order | null
   foodList?: Food[]
   deliveryCost?: number
   numberOfUsers?: number
@@ -203,13 +203,14 @@ export const OrderCard = (props: Props) => {
     const numberOfUsers = props.numberOfUsers ?? 1
     const isEqualMethod = props.splitCostMethod === SplitACMethod.EQUAL
     subTotal = props.order?.totalCost ?? 0
-    total = props.supperTotalCost ?? 0
+    const totalSupper = props.supperTotalCost ?? 0
     deliveryFee =
       (isEqualMethod
         ? (props.supperGroup?.additionalCost ?? 0) / numberOfUsers
-        : total //to prevent infinity
-        ? (subTotal / total) * (props.supperGroup?.additionalCost ?? 0)
+        : totalSupper > 0 //to prevent infinity
+        ? (subTotal / totalSupper) * (props.supperGroup?.additionalCost ?? 0)
         : 0) ?? 0
+    total = subTotal + deliveryFee
   }
 
   subTotal = `$${subTotal.toFixed(2)}`

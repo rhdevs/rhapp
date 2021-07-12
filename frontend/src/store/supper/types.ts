@@ -319,7 +319,7 @@ type GetOrderHistory = {
 
 type GetSupperGroupHistory = {
   type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY
-  supperGroupHistory: SupperGroup[]
+  supperGroupHistory: HomeSupperGroup[]
 }
 
 type GetJoinedSupperGroupHistory = {

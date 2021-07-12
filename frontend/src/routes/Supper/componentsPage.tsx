@@ -139,7 +139,7 @@ export default function Supper() {
         supperGroupStatus={SupperGroupStatus.CANCELLED}
         restaurantLogo={restaurantLogo}
         idHeader="RHSO#1002 Zhou BaoBao"
-        supperGroupId={'abc'}
+        rawSupperGroupId={1}
         buttonTeleHandle="ZBB"
         supperGroupName="f> SUPPER FRIENDS"
         cancelReason="Lazy to order"
@@ -149,7 +149,7 @@ export default function Supper() {
         supperGroupStatus={SupperGroupStatus.ORDERED}
         restaurantLogo={restaurantLogo}
         idHeader="RHSO#1002 Zhou BaoBao"
-        supperGroupId={'abc'}
+        rawSupperGroupId={1}
         buttonTeleHandle="ZBB"
         supperGroupName="f> SUPPER FRIENDS this is a long name let try me out :>"
         statusOnly={false}
@@ -158,7 +158,7 @@ export default function Supper() {
         supperGroupStatus={SupperGroupStatus.AWAITING_PAYMENT}
         restaurantLogo={restaurantLogo}
         idHeader="RHSO#1002 Zhou BaoBao"
-        supperGroupId={'abc'}
+        rawSupperGroupId={1}
         buttonTeleHandle="ZBB"
         location="Basketball Court"
         collectionTime="12:30AM"

@@ -12,6 +12,7 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const Background = styled.div`
   height: 100vh;
@@ -21,7 +22,7 @@ const Background = styled.div`
 `
 
 const ButtonContainer = styled.div`
-  margin-top: 40px;
+  margin-top: 30px;
   position: absolute;
   left: 50%;
   margin-right: -50%;
@@ -29,7 +30,7 @@ const ButtonContainer = styled.div`
 `
 
 export default function JoinOrder() {
-  const { supperGroup } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
   const dispatch = useDispatch()
@@ -46,11 +47,17 @@ export default function JoinOrder() {
   return (
     <Background>
       <TopNavBar title="Join Order" />
-      {supperGroup && <SupperGroupCard supperGroup={supperGroup} isHome={false} />}
-      <ButtonContainer>
-        <Button onButtonClick={onClick} defaultButtonDescription="Join Order" stopPropagation={true} />
-      </ButtonContainer>
-      <BottomNavBar />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          {supperGroup && <SupperGroupCard supperGroup={supperGroup} isHome={false} />}
+          <ButtonContainer>
+            <Button onButtonClick={onClick} defaultButtonDescription="Join Order" stopPropagation={true} />
+          </ButtonContainer>
+          <BottomNavBar />
+        </>
+      )}
     </Background>
   )
 }

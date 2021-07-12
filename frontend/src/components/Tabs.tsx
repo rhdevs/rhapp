@@ -3,14 +3,19 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { V1_BLUE } from '../common/colours'
 
-const MainTabsContainer = styled.div`
+const MainContainer = styled.div`
+  position: relative;
+`
+
+const MainTabsContainer = styled.div<{ width?: string; margin?: string }>`
   display: flex;
   flex-direction: row;
   height: fit-content;
-  margin-bottom: 10px;
+  margin: ${(props) => props.margin ?? '0 0 10px 0'};
+  ${(props) => props.width && `width: ${props.width};`}
 `
 
-const TabContainer = styled.div<{ isSelected?: boolean }>`
+export const TabContainer = styled.div<{ isSelected?: boolean }>`
   flex: 50%;
   display: flex;
   justify-content: center;
@@ -23,14 +28,19 @@ const TabContainer = styled.div<{ isSelected?: boolean }>`
   line-height: 17px;
 `
 
-const Separator = styled.div`
+export const Separator = styled.div`
   width: 1px;
   background-color: rgba(0, 0, 0, 0.5);
   height: 17px;
 `
+
+const ChildContainer = styled.div``
+
 //NOTE: Values and children is assumed to correspond according to their indexes!
 type Props = {
   defaultValue?: number
+  width?: string
+  margin?: string
   valueNamesArr
   childrenArr
 }
@@ -44,8 +54,8 @@ export const Tabs = (props: Props) => {
   }
 
   return (
-    <>
-      <MainTabsContainer>
+    <MainContainer>
+      <MainTabsContainer width={props.width} margin={props.margin}>
         {props.valueNamesArr.map((valueName, index) => {
           const isSelected = props.valueNamesArr.indexOf(valueName) === currentTab - 1
           return (
@@ -58,7 +68,7 @@ export const Tabs = (props: Props) => {
           )
         })}
       </MainTabsContainer>
-      {selectedChild()}
-    </>
+      <ChildContainer>{selectedChild()}</ChildContainer>
+    </MainContainer>
   )
 }

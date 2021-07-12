@@ -7,10 +7,13 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getUserOrder, updateOrderDetails } from '../../../store/supper/action'
+import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
+import { FormHeader } from '../../../components/Supper/FormHeader'
+import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
+import { SupperButton } from '../../../components/Supper/SupperButton'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -21,17 +24,12 @@ const MainContainer = styled.div`
 `
 
 const NumberContainer = styled.div`
-  margin: 5px 35px 10px 35px;
-  display: flex;
-  flex-direction: row;
+  margin: 5px 0px 10px 35px;
   align-items: baseline;
-  justify-content: space-between;
-`
-const FieldHeader = styled.text`
-  font-weight: 500;
-  font-size: 15px;
-  width: 75%;
-  padding-right: 5px;
+  display: grid;
+  columns: 2;
+  grid-template-columns: 2fr 3fr;
+  grid-gap: 10px;
 `
 
 const InputText = styled.input`
@@ -41,47 +39,6 @@ const InputText = styled.input`
   width: 90%;
   margin: 0px 0px 0px 0px;
   height: 35px;
-`
-
-const OrderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 80vw;
-  margin: 15px auto 0 auto;
-  align-items: baseline;
-`
-
-const Header = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  padding-right: 5px;
-`
-
-const BottomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  margin: 1rem auto;
-  align-items: flex-end;
-`
-
-const BottomMoneyContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 60%;
-  justify-content: space-between;
-  margin: 10px 0;
-`
-
-const StyledText = styled.text`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
 `
 
 const ButtonContainer = styled.div`
@@ -99,27 +56,16 @@ const ErrorText = styled.p`
   font-family: 'Inter';
 `
 
-const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
 type FormValues = {
   number: string
 }
 
 export default function ConfirmOrder() {
   const { register, handleSubmit, errors } = useForm<FormValues>()
-  const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { order, isLoading } = useSelector((state: RootState) => state.supper)
+  const { order, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
   const errorStyling = {
     borderColor: 'red',
     background: '#ffd1d1',
@@ -127,12 +73,12 @@ export default function ConfirmOrder() {
 
   useEffect(() => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
     handleSubmit((data) => {
       const updatedOrder = { ...order, userContact: data.number }
-      console.log(updatedOrder)
       //TODO: Test update order
       dispatch(updateOrderDetails(order?.orderId, updatedOrder))
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
@@ -147,7 +93,7 @@ export default function ConfirmOrder() {
       ) : (
         <>
           <NumberContainer>
-            <FieldHeader>Phone Number {RedAsterisk}</FieldHeader>
+            <FormHeader headerName="Phone Number" isCompulsory />
             <InputText
               type="number"
               placeholder="Phone Number"
@@ -160,27 +106,17 @@ export default function ConfirmOrder() {
             />
           </NumberContainer>
           {errors.number?.type === 'required' && <ErrorText>This is required!</ErrorText>}
-          <OrderContainer>
-            <Header>My Order</Header>
-          </OrderContainer>
-          <OrderSummaryCard margin="5px 23px" foodList={order?.foodList} />
-          <BottomContainer>
-            <BottomMoneyContainer>
-              <StyledText>
-                <b>Subtotal</b>
-              </StyledText>
-              <StyledText>${(order?.totalCost ?? 0).toFixed(2)}</StyledText>
-            </BottomMoneyContainer>
-          </BottomContainer>
+          <OrderCard
+            ownerId={supperGroup?.ownerId}
+            supperGroupStatus={SupperGroupStatus.OPEN}
+            isEditable={false}
+            order={order}
+            splitCostMethod={supperGroup?.splitAdditionalCost}
+            supperGroup={supperGroup}
+            supperTotalCost={supperGroup?.totalPrice}
+          />
           <ButtonContainer>
-            <Button
-              descriptionStyle={{ width: '100%' }}
-              stopPropagation={true}
-              defaultButtonDescription="Confirm Order"
-              buttonWidth="160px"
-              onButtonClick={onClick}
-              isFlipButton={false}
-            />
+            <SupperButton defaultButtonDescription="Confirm Order" onButtonClick={onClick} />
           </ButtonContainer>
         </>
       )}
