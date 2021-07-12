@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -12,7 +12,13 @@ import {
 } from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
-import { deleteSupperGroup, getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
+import {
+  deleteSupperGroup,
+  getReadableSupperGroupId,
+  leaveSupperGroup,
+  setIsLoading,
+  unixTo12HourTime,
+} from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
@@ -22,10 +28,11 @@ import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
 import { MoreDropDown } from './MoreDropDown'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
+import { RootState } from '../../store/types'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -123,14 +130,22 @@ type Props = {
 }
 
 export const SupperGroupCard = (props: Props) => {
+  const history = useHistory()
+  const dispatch = useDispatch()
   const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
-  const isLoading = supperGroup ? false : true
+  useEffect(() => {
+    if (props.isHome ? props.homeSupperGroup : props.supperGroup) {
+      dispatch(setIsLoading(false))
+    } else {
+      dispatch(setIsLoading(true))
+    }
+  }, [props.homeSupperGroup, props.supperGroup])
+  const { isLoading } = useSelector((state: RootState) => state.supper)
+
   const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
-  const history = useHistory()
-  const dispatch = useDispatch()
   const supperGroupStatus = supperGroup?.status
   const isOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
@@ -215,7 +230,7 @@ export const SupperGroupCard = (props: Props) => {
       hasLeftButton={true}
       leftButtonText={'Confirm'}
       onLeftButtonClick={() => {
-        // dispatch(leaveSupperGroup(rawSupperGroupId))
+        dispatch(leaveSupperGroup(rawSupperGroupId))
         //TODO: Check if this should be the action after leave
         history.push(`${PATHS.SUPPER_HOME}`)
       }}

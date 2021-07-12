@@ -749,7 +749,8 @@ export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Disp
   })
 }
 
-export const leaveSupperGroup = (supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+export const leaveSupperGroup = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!supperGroupId) return
   dispatch(setIsLoading(true))
   del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}}`)
     .then((resp) => {
