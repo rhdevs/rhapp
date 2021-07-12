@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { openUserTelegram } from '../../../common/telegramMethods'
@@ -9,11 +11,9 @@ import moneyIcon from '../../../assets/MoneyIcon.svg'
 import { MainCard } from '../MainCard'
 import { SGStatusBubble } from '../SGStatusBubble'
 import { UnderlinedButton } from '../UnderlinedButton'
-import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../../routes/Routes'
 import { getUserOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
-import { useDispatch, useSelector } from 'react-redux'
 
 const TopSection = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const TextSubContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 8px 20px 0 15px;
+  margin: 0 20px 0 15px;
   width: 60%;
 `
 
@@ -119,6 +119,7 @@ type Props = {
   paymentMethod?: PaymentInfo[] | undefined
   cancelReason?: string | undefined
   statusOnly: boolean | undefined
+  margin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -229,7 +230,7 @@ export const SGStatusCard = (props: Props) => {
     } else {
       return (
         <StatusContainer>
-          <SGStatusBubble text={SupperGroupStatus.ORDERED} />
+          <SGStatusBubble text={props.supperGroupStatus ?? ''} />
           {!props.isOwner && (
             <Button
               stopPropagation={true}
@@ -244,7 +245,7 @@ export const SGStatusCard = (props: Props) => {
   }
 
   return (
-    <MainCard onClick={props.onClick} flexDirection="column">
+    <MainCard margin={props.margin} onClick={props.onClick} flexDirection="column">
       <TopSection>
         <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
         <TextSubContainer>
@@ -263,7 +264,10 @@ export const SGStatusCard = (props: Props) => {
           {!isCancelled && props.isOwner ? (
             <OwnerButtonContainer>
               <UnderlinedButton
-                onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
+                onClick={() => {
+                  //TODO: TEST?? idk why its not pushing
+                  history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
+                }}
                 text="Update Delivery Details"
                 color="red"
                 fontSize="14px"

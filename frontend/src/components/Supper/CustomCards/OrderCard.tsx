@@ -160,7 +160,7 @@ type Props = {
   supperGroupStatus: SupperGroupStatus | undefined
   isEditable?: boolean
   wasEdited?: boolean
-  collatedOrder?: CollatedOrder
+  collatedOrder?: CollatedOrder | null
   order?: Order | null
   foodList?: Food[]
   deliveryCost?: number
@@ -170,6 +170,7 @@ type Props = {
   supperGroupId?: number | undefined
   orderId?: string | undefined
   restaurantId?: string | undefined
+  margin?: string
 }
 
 export const OrderCard = (props: Props) => {
@@ -512,7 +513,7 @@ export const OrderCard = (props: Props) => {
   }
 
   return (
-    <MainCard padding="20px" flexDirection="column">
+    <MainCard margin={props.margin} padding="20px" flexDirection="column">
       {isOwner ? (
         showTrackPaymentCard ? (
           <Tabs

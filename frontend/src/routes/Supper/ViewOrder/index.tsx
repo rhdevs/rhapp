@@ -19,6 +19,9 @@ import UserView from './UserView'
 import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
 
 const MainContainer = styled.div`
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-areas: '.' '.' '.';
   width: 100vw;
   height: fit-content;
   min-height: 100vh;
@@ -36,6 +39,9 @@ const ViewOrder = () => {
   let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
   let supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
   let supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
+  let showTrackPayment =
+    selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+    selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -51,6 +57,9 @@ const ViewOrder = () => {
     supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
     supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
     supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
+    showTrackPayment =
+      selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+      selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
   }, [supperGroup?.status])
 
   const deliveryFee =
@@ -68,24 +77,27 @@ const ViewOrder = () => {
           supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: V1_RED }} /> : undefined
         }
       />
-      {supperGroup?.ownerId === localStorage.userID ? (
-        <OwnerView
-          supperGroupIsOpen={supperGroupIsOpen}
-          supperGroup={supperGroup}
-          collatedOrder={collatedOrder}
-          supperGroupIsCompleted={supperGroupIsCompleted}
-          supperGroupIsCancelled={supperGroupIsCancelled}
-        />
-      ) : (
-        <UserView
-          supperGroupIsOpen={supperGroupIsOpen}
-          supperGroup={supperGroup}
-          supperGroupIsCancelled={supperGroupIsCancelled}
-          order={order}
-          deliveryFee={deliveryFee}
-          totalFee={totalFee}
-        />
-      )}
+      <div>
+        {supperGroup?.ownerId === localStorage.userID ? (
+          <OwnerView
+            supperGroupIsOpen={supperGroupIsOpen}
+            supperGroup={supperGroup}
+            collatedOrder={collatedOrder}
+            supperGroupIsCompleted={supperGroupIsCompleted}
+            supperGroupIsCancelled={supperGroupIsCancelled}
+            showTrackPayment={showTrackPayment}
+          />
+        ) : (
+          <UserView
+            supperGroupIsOpen={supperGroupIsOpen}
+            supperGroup={supperGroup}
+            supperGroupIsCancelled={supperGroupIsCancelled}
+            order={order}
+            deliveryFee={deliveryFee}
+            totalFee={totalFee}
+          />
+        )}
+      </div>
       <BottomNavBar />
     </MainContainer>
   )

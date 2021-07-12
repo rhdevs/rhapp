@@ -268,7 +268,7 @@ export const FoodLine = (props: Props) => {
                   <BoldText>If unavailable: </BoldText>
                   <StyledText
                     onClick={(e) => onCancelActionClick(e, cancelAction)}
-                    color={props.isCancelActionClickable ? V1_RED : 'black'}
+                    color={props.isCancelActionClickable && cancelAction === CancelAction.CONTACT ? V1_RED : 'black'}
                   >
                     {cancelAction}
                   </StyledText>

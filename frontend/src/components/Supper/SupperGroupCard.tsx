@@ -118,7 +118,7 @@ const ClickableContainer = styled.div`
 `
 
 type Props = {
-  supperGroup?: SupperGroup
+  supperGroup?: SupperGroup | null
   homeSupperGroup?: HomeSupperGroup
   isHome: boolean
   comments?: string | undefined
@@ -126,6 +126,7 @@ type Props = {
   location?: string
   estArrivalTime?: number
   statusOnly?: boolean | undefined
+  margin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
@@ -189,9 +190,9 @@ export const SupperGroupCard = (props: Props) => {
   const deliveryCost = `$${(supperGroup?.additionalCost ?? 0).toFixed(2)}`
   const splitMethod = supperGroup?.splitAdditionalCost
   const ownerTele = supperGroup?.ownerTele
-  const location = props.supperGroup?.location
-  const paymentInfo = props.supperGroup?.paymentInfo
-  const cancelReason = props.supperGroup?.comments
+  const location = props.supperGroup?.location ?? props.location
+  const paymentInfo = props.supperGroup?.paymentInfo ?? props.paymentInfo
+  const cancelReason = props.supperGroup?.comments ?? props.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -321,6 +322,7 @@ export const SupperGroupCard = (props: Props) => {
     </MainCard>
   ) : (
     <SGStatusCard
+      margin={props.margin}
       onClick={onSupperCardClick}
       isOwner={isOwner}
       supperGroupStatus={supperGroupStatus}

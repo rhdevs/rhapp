@@ -56,10 +56,12 @@ const DetailsContainer = styled.div`
 `
 
 const DeliveryFeeText = styled.text`
-  padding-left: 2.2rem;
   display: flex;
   justify-content: space-between;
-  padding-right: 0.6rem;
+  align-items: center;
+  width: 92%;
+  margin: 0 0 0 auto;
+  padding-right: 5px;
 `
 
 const MoneyText = styled.text`
