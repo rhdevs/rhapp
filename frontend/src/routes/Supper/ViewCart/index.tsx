@@ -15,13 +15,7 @@ import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderM
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import useSnackbar from '../../../hooks/useSnackbar'
-import {
-  deleteFoodInOrder,
-  getCollatedOrder,
-  getSupperGroupById,
-  getUserOrder,
-  setIsLoading,
-} from '../../../store/supper/action'
+import { deleteFoodInOrder, getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -73,7 +67,7 @@ const ViewCart = () => {
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
   const [error] = useSnackbar('error')
   const { supperGroup, order, isLoading, foodId, collatedOrder } = useSelector((state: RootState) => state.supper)
-  const isOwner = localStorage.userID === supperGroup?.ownerId
+  const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
   const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
 
@@ -82,13 +76,6 @@ const ViewCart = () => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
-
-  useEffect(() => {
-    setIsLoading(true)
-    if (supperGroup && collatedOrder && isOwner) {
-      setIsLoading(false)
-    }
-  })
 
   const onCancelClick = () => {
     setModalIsOpen(false)
@@ -100,6 +87,87 @@ const ViewCart = () => {
       error('Failed to delete item, please try again.')
     }
     setModalIsOpen(false)
+  }
+
+  const showButtons = () => {
+    if (isOwner === undefined) {
+      return <LoadingSpin />
+    } else if (isOwner) {
+      return (
+        <ButtonContainer>
+          <UpperRowButtons>
+            <UpperRowButtonContainer left>
+              <SupperButton
+                defaultButtonColor={V1_BACKGROUND}
+                defaultTextColor={V1_RED}
+                border={`2px solid ${V1_RED}`}
+                buttonWidth="90%"
+                defaultButtonDescription="Delete Order"
+                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                isFlipButton={true}
+              />
+              {deleteOrderModalIsOpen && (
+                <DeleteOrderModal
+                  isOwner
+                  supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                  orderId={ownerOrderId}
+                  modalSetter={setDeleteOrderModalIsOpen}
+                />
+              )}
+            </UpperRowButtonContainer>
+            <UpperRowButtonContainer>
+              <SupperButton
+                buttonWidth="90%"
+                defaultButtonDescription="Close Group"
+                onButtonClick={() => setCloseGroupModalIsOpen(true)}
+                isFlipButton={false}
+              />
+              {closeGroupModalIsOpen && (
+                <CloseGroupEarlyModal
+                  supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                  modalSetter={setCloseGroupModalIsOpen}
+                />
+              )}
+            </UpperRowButtonContainer>
+          </UpperRowButtons>
+          <LowerRowButton>
+            <SupperButton
+              center
+              defaultButtonColor={V1_BACKGROUND}
+              defaultTextColor={V1_RED}
+              border={`2px solid ${V1_RED}`}
+              buttonWidth="100%"
+              defaultButtonDescription="Delete Group"
+              onButtonClick={() => setDeleteGroupModalIsOpen(true)}
+              isFlipButton={true}
+            />
+            {deleteGroupModalIsOpen && (
+              <DeleteGroupModal
+                suppergroupId={supperGroup?.supperGroupId ?? '-'}
+                modalSetter={setDeleteGroupModalIsOpen}
+              />
+            )}
+          </LowerRowButton>
+        </ButtonContainer>
+      )
+    } else {
+      return (
+        <ButtonContainer>
+          <SupperButton
+            center
+            defaultButtonDescription="Submit Order"
+            onButtonClick={() => {
+              if (supperGroup?.phoneNumber) {
+                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+              } else {
+                history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
+              }
+            }}
+            isFlipButton={false}
+          />
+        </ButtonContainer>
+      )
+    }
   }
 
   return (
@@ -126,78 +194,7 @@ const ViewCart = () => {
                 <OrderCard supperGroup={supperGroup} collatedOrder={collatedOrder} isEditable={isEditable} />
               </>
             )}
-            {isOwner ? (
-              <ButtonContainer>
-                <UpperRowButtons>
-                  <UpperRowButtonContainer left>
-                    <SupperButton
-                      defaultButtonColor={V1_BACKGROUND}
-                      defaultTextColor={V1_RED}
-                      border={`2px solid ${V1_RED}`}
-                      buttonWidth="90%"
-                      defaultButtonDescription="Delete Order"
-                      onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-                      isFlipButton={true}
-                    />
-                    {deleteOrderModalIsOpen && (
-                      <DeleteOrderModal
-                        isOwner
-                        supperGroupId={supperGroup?.supperGroupId ?? '-'}
-                        orderId={ownerOrderId}
-                        modalSetter={setDeleteOrderModalIsOpen}
-                      />
-                    )}
-                  </UpperRowButtonContainer>
-                  <UpperRowButtonContainer>
-                    <SupperButton
-                      buttonWidth="90%"
-                      defaultButtonDescription="Close Group"
-                      onButtonClick={() => setCloseGroupModalIsOpen(true)}
-                      isFlipButton={false}
-                    />
-                    {closeGroupModalIsOpen && (
-                      <CloseGroupEarlyModal
-                        supperGroupId={supperGroup?.supperGroupId ?? '-'}
-                        modalSetter={setCloseGroupModalIsOpen}
-                      />
-                    )}
-                  </UpperRowButtonContainer>
-                </UpperRowButtons>
-                <LowerRowButton>
-                  <SupperButton
-                    center
-                    defaultButtonColor={V1_BACKGROUND}
-                    defaultTextColor={V1_RED}
-                    border={`2px solid ${V1_RED}`}
-                    buttonWidth="100%"
-                    defaultButtonDescription="Delete Group"
-                    onButtonClick={() => setDeleteGroupModalIsOpen(true)}
-                    isFlipButton={true}
-                  />
-                  {deleteGroupModalIsOpen && (
-                    <DeleteGroupModal
-                      suppergroupId={supperGroup?.supperGroupId ?? '-'}
-                      modalSetter={setDeleteGroupModalIsOpen}
-                    />
-                  )}
-                </LowerRowButton>
-              </ButtonContainer>
-            ) : (
-              <ButtonContainer>
-                <SupperButton
-                  center
-                  defaultButtonDescription="Submit Order"
-                  onButtonClick={() => {
-                    if (supperGroup?.phoneNumber) {
-                      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                    } else {
-                      history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
-                    }
-                  }}
-                  isFlipButton={false}
-                />
-              </ButtonContainer>
-            )}
+            {showButtons()}
           </>
         )}
       </MainContainer>
