@@ -111,7 +111,7 @@ type Props = {
   supperGroupStatus: SupperGroupStatus | undefined
   restaurantLogo: string | undefined
   supperGroupName: string | undefined
-  supperGroupId: string
+  rawSupperGroupId: number | undefined
   idHeader: string
   buttonTeleHandle: string | undefined
   location?: string | undefined
@@ -132,7 +132,7 @@ export const SGStatusCard = (props: Props) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getUserOrder(props.supperGroupId, localStorage.userID))
+    dispatch(getUserOrder(props.rawSupperGroupId, localStorage.userID))
   }, [dispatch])
 
   const onClick = () => {
@@ -263,7 +263,7 @@ export const SGStatusCard = (props: Props) => {
           {!isCancelled && props.isOwner ? (
             <OwnerButtonContainer>
               <UnderlinedButton
-                onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.supperGroupId}/details`)}
+                onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
                 text="Update Delivery Details"
                 color="red"
                 fontSize="14px"

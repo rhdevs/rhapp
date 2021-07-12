@@ -48,8 +48,7 @@ export enum PATHS {
   //SUPPER
   SUPPER_HOME = '/supper',
   SUPPER_COMPONENTS_PAGE = '/supper/components',
-  SUPPER_GROUP_OVERVIEW = '/supper/overview',
-  SUPPER_GROUP_OVERVIEW_BY_SECTION = '/supper/overview/:section',
+  SUPPER_HISTORY = '/supper/history',
   CREATE_SUPPER_GROUP = '/supper/create',
   CREATE_SUPPER_GROUP_BY_PAGE = '/supper/create/:page',
   JOIN_ORDER = '/supper/join/order',
@@ -118,7 +117,7 @@ const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEdit
 //SUPPER
 const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
 const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
-const SGOverview = React.lazy(() => import(/* webpackChunckName: "SGOverview" */ './Supper/Group History'))
+const GroupHistory = React.lazy(() => import(/* webpackChunckName: "GroupHistory" */ './Supper/GroupHistory'))
 const CreateSupperGroup = React.lazy(
   () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
 )
@@ -178,7 +177,7 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
-            <PrivateRoute exact path={PATHS.SUPPER_GROUP_OVERVIEW_BY_SECTION} component={SGOverview} />
+            <PrivateRoute exact path={PATHS.SUPPER_HISTORY} component={GroupHistory} />
             <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_BY_PAGE} component={CreateSupperGroup} />
             <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />

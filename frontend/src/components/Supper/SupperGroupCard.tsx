@@ -312,7 +312,7 @@ export const SupperGroupCard = (props: Props) => {
       supperGroupStatus={supperGroupStatus}
       restaurantLogo={restaurantLogo}
       supperGroupName={supperGroupName}
-      supperGroupId={supperGroupId}
+      rawSupperGroupId={rawSupperGroupId}
       idHeader={idText}
       buttonTeleHandle={ownerTele}
       location={location}
