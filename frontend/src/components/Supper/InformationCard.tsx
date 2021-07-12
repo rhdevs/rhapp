@@ -30,6 +30,7 @@ const InformationText = styled.text`
   line-height: 15px;
   white-space: pre;
   color: #000000d9;
+  white-space: pre-wrap;
 `
 
 const GreyItalicizedText = styled.i`
