@@ -174,7 +174,6 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
-  const [isUpdateDeliveryModalOpen, setIsUpdateDeliveryModalOpen] = useState<boolean>(false)
 
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
@@ -216,8 +215,6 @@ export const OrderCard = (props: Props) => {
   deliveryFee = `$${deliveryFee.toFixed(2)}`
   total = `$${total.toFixed(2)}`
 
-  //TODO: Add update delivery modal
-  const updateDeliveryModal = <></>
   const PriceSection = ({ update }: { update?: boolean }) => {
     return (
       <PriceMainContainer>
@@ -225,8 +222,8 @@ export const OrderCard = (props: Props) => {
         <PriceText>{subTotal}</PriceText>
 
         <PriceTitleText>
-          Delivery Fee{' '}
-          {update && <UpdateTextButton onClick={() => setIsUpdateDeliveryModalOpen(true)}>update</UpdateTextButton>}
+          Delivery Fee {/* TODO: Push to new page with update delivery price card */}
+          {update && <UpdateTextButton onClick={() => console.log('GO TO NEW PAGE')}>update</UpdateTextButton>}
         </PriceTitleText>
         <PriceText>{deliveryFee}</PriceText>
 
@@ -261,9 +258,6 @@ export const OrderCard = (props: Props) => {
     )
   }
 
-  //TODO: Add cancel action modal
-  const cancelActionModal = <></>
-
   const RedPlusButton = () => {
     return (
       <PlusCircleFilled
@@ -280,9 +274,8 @@ export const OrderCard = (props: Props) => {
       return
     }
     if (canEditUserFood) {
-      //TODO: Add owner edit user's order modal
+      //TODO: Add owner edit user's order modal (is now a card so push to new page)
     } else {
-      console.log(supperGroupId, orderId, foodId)
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
   }
@@ -324,9 +317,7 @@ export const OrderCard = (props: Props) => {
   const collatedFoodContent = () => (
     <>
       {isCollatedFoodListEmpty ? (
-        <>
-          <EmptyCart />
-        </>
+        <EmptyCart />
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
@@ -369,17 +360,14 @@ export const OrderCard = (props: Props) => {
     const ownerFoodIsEditable =
       isOwner && (supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING)
     let formattedFoodList = orderList
-    console.log(formattedFoodList)
 
     if (orderList) {
       const ownerOrder = orderList.find((order) => order.user.userID === localStorage.userID)
       if (ownerOrder) {
         formattedFoodList = orderList.filter((order) => {
-          console.log(order.user.userID !== localStorage.userID)
           return order.user.userID !== localStorage.userID
         })
         formattedFoodList.unshift(ownerOrder)
-        console.log(formattedFoodList)
       }
     }
 
@@ -410,10 +398,10 @@ export const OrderCard = (props: Props) => {
 
           const cancelActionOnClick = () => {
             if (!isOwnerFood) {
-              console.log('jdahshfs')
               return openUserTelegram(telegramHandle)
             }
           }
+
           return (
             <>
               {topSection}
@@ -458,10 +446,6 @@ export const OrderCard = (props: Props) => {
 
   return (
     <MainCard padding="20px" flexDirection="column">
-      <>
-        {isCancelActionModalOpen && cancelActionModal}
-        {isUpdateDeliveryModalOpen && updateDeliveryModal}
-      </>
       {isOwner ? (
         <Tabs valueNamesArr={['User', 'Food']} childrenArr={[ownerViewFoodContent(), collatedFoodContent()]} />
       ) : (
