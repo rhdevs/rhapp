@@ -374,17 +374,14 @@ export const OrderCard = (props: Props) => {
     const ownerFoodIsEditable =
       isOwner && (supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING)
     let formattedFoodList = orderList
-    console.log(formattedFoodList)
 
     if (orderList) {
       const ownerOrder = orderList.find((order) => order.user.userID === localStorage.userID)
       if (ownerOrder) {
         formattedFoodList = orderList.filter((order) => {
-          console.log(order.user.userID !== localStorage.userID)
           return order.user.userID !== localStorage.userID
         })
         formattedFoodList.unshift(ownerOrder)
-        console.log(formattedFoodList)
       }
     }
 
@@ -403,7 +400,7 @@ export const OrderCard = (props: Props) => {
               {ownerFoodIsEditable && isOwnerFood && <RedPlusButton />}
             </CardHeaderContainer>
           )
-          const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
+          const isOrderEditable = (supperGroupIsOpenOrPending && isOwnerFood) || isEditable
           const orderSubtotal = `$${order.totalCost.toFixed(2)}`
           const EmptyCartContainer = () => {
             if (isOwnerFood) {
