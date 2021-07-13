@@ -15,7 +15,7 @@ def authenticate(token, username):
         print(token, username)
         data = jwt.decode(
             token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
-        print(data)
+        print(data, "HAHA")
         currentUser = db.User.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
         currentUsername = currentUser['userID']
@@ -33,7 +33,7 @@ def authenticate(token, username):
     oldTime = originalToken['createdAt']
     # print(datetime.datetime.now())
     # print(oldTime)
-    if datetime.datetime.now() > oldTime + datetime.timedelta(minutes=2):
+    if datetime.datetime.now() > oldTime + datetime.timedelta(weeks=2):
         return False
 
     # recreate session (with createdAt updated to now)
