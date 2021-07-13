@@ -266,7 +266,7 @@ export const SGStatusCard = (props: Props) => {
               <UnderlinedButton
                 onClick={() => {
                   //TODO: TEST?? idk why its not pushing
-                  history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
+                  return history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
                 }}
                 text="Update Delivery Details"
                 color="red"

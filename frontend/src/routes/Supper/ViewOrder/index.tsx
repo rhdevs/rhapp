@@ -17,6 +17,7 @@ import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
 import UserView from './UserView'
 import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 const MainContainer = styled.div`
   display: grid;
@@ -45,22 +46,29 @@ const ViewOrder = () => {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    if (supperGroup?.ownerId === localStorage.userID) {
-      dispatch(getCollatedOrder(params.supperGroupId))
-    } else {
-      dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
-    }
-  }, [dispatch, supperGroup?.ownerId])
+  }, [dispatch])
 
   useEffect(() => {
-    dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
-    supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
-    supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
-    supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
-    showTrackPayment =
-      selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
-      selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
-  }, [supperGroup?.status])
+    if (supperGroup) {
+      dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
+      if (supperGroup?.ownerId === localStorage.userID) {
+        dispatch(getCollatedOrder(params.supperGroupId))
+      } else {
+        dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+      }
+    }
+  }, [supperGroup])
+
+  useEffect(() => {
+    if (selectedSupperGroupStatus) {
+      supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
+      supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
+      supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
+      showTrackPayment =
+        selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+        selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
+    }
+  }, [selectedSupperGroupStatus])
 
   const deliveryFee =
     supperGroup?.splitAdditionalCost === 'Equal'
@@ -77,28 +85,34 @@ const ViewOrder = () => {
           supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: V1_RED }} /> : undefined
         }
       />
-      <div>
-        {supperGroup?.ownerId === localStorage.userID ? (
-          <OwnerView
-            supperGroupIsOpen={supperGroupIsOpen}
-            supperGroup={supperGroup}
-            collatedOrder={collatedOrder}
-            supperGroupIsCompleted={supperGroupIsCompleted}
-            supperGroupIsCancelled={supperGroupIsCancelled}
-            showTrackPayment={showTrackPayment}
-          />
-        ) : (
-          <UserView
-            supperGroupIsOpen={supperGroupIsOpen}
-            supperGroup={supperGroup}
-            supperGroupIsCancelled={supperGroupIsCancelled}
-            order={order}
-            deliveryFee={deliveryFee}
-            totalFee={totalFee}
-          />
-        )}
-      </div>
-      <BottomNavBar />
+      {!selectedSupperGroupStatus ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <div>
+            {supperGroup?.ownerId === localStorage.userID ? (
+              <OwnerView
+                supperGroupIsOpen={supperGroupIsOpen}
+                supperGroup={supperGroup}
+                collatedOrder={collatedOrder}
+                supperGroupIsCompleted={supperGroupIsCompleted}
+                supperGroupIsCancelled={supperGroupIsCancelled}
+                showTrackPayment={showTrackPayment}
+              />
+            ) : (
+              <UserView
+                supperGroupIsOpen={supperGroupIsOpen}
+                supperGroup={supperGroup}
+                supperGroupIsCancelled={supperGroupIsCancelled}
+                order={order}
+                deliveryFee={deliveryFee}
+                totalFee={totalFee}
+              />
+            )}
+          </div>
+          <BottomNavBar />{' '}
+        </>
+      )}
     </MainContainer>
   )
 }
