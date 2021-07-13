@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { createOrder, getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
@@ -13,6 +12,7 @@ import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { SupperButton } from '../../../components/Supper/SupperButton'
 
 const Background = styled.div`
   height: 100vh;
@@ -22,11 +22,9 @@ const Background = styled.div`
 `
 
 const ButtonContainer = styled.div`
-  margin-top: 30px;
-  position: absolute;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, 0);
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
 `
 
 export default function JoinOrder() {
@@ -51,9 +49,9 @@ export default function JoinOrder() {
         <LoadingSpin />
       ) : (
         <>
-          {supperGroup && <SupperGroupCard supperGroup={supperGroup} isHome={false} />}
+          <SupperGroupCard supperGroup={supperGroup} isHome={false} />
           <ButtonContainer>
-            <Button onButtonClick={onClick} defaultButtonDescription="Join Order" stopPropagation={true} />
+            <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />
           </ButtonContainer>
           <BottomNavBar />
         </>

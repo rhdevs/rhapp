@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import { V1_BACKGROUND } from '../../../common/colours'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
@@ -14,8 +13,7 @@ import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupM
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import useSnackbar from '../../../hooks/useSnackbar'
-import { deleteFoodInOrder, getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
+import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -61,12 +59,10 @@ const ViewCart = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
-  const [error] = useSnackbar('error')
-  const { supperGroup, order, isLoading, foodId, collatedOrder } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
   const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
@@ -77,18 +73,6 @@ const ViewCart = () => {
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 
-  const onCancelClick = () => {
-    setModalIsOpen(false)
-  }
-
-  const onConfirmDiscardClick = () => {
-    if (order && foodId) dispatch(deleteFoodInOrder(order.orderId, foodId))
-    else {
-      error('Failed to delete item, please try again.')
-    }
-    setModalIsOpen(false)
-  }
-
   const showButtons = () => {
     if (isOwner === undefined) {
       return <LoadingSpin />
@@ -98,18 +82,15 @@ const ViewCart = () => {
           <UpperRowButtons>
             <UpperRowButtonContainer left>
               <SupperButton
-                defaultButtonColor={V1_BACKGROUND}
-                defaultTextColor={V1_RED}
-                border={`2px solid ${V1_RED}`}
+                ghost
                 buttonWidth="90%"
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-                isFlipButton={true}
               />
-              {deleteOrderModalIsOpen && (
+              {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
                 <DeleteOrderModal
                   isOwner
-                  supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                  supperGroupId={supperGroup.supperGroupId}
                   orderId={ownerOrderId}
                   modalSetter={setDeleteOrderModalIsOpen}
                 />
@@ -120,11 +101,10 @@ const ViewCart = () => {
                 buttonWidth="90%"
                 defaultButtonDescription="Close Group"
                 onButtonClick={() => setCloseGroupModalIsOpen(true)}
-                isFlipButton={false}
               />
-              {closeGroupModalIsOpen && (
+              {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
                 <CloseGroupEarlyModal
-                  supperGroupId={supperGroup?.supperGroupId ?? '-'}
+                  supperGroupId={supperGroup.supperGroupId}
                   modalSetter={setCloseGroupModalIsOpen}
                 />
               )}
@@ -133,19 +113,13 @@ const ViewCart = () => {
           <LowerRowButton>
             <SupperButton
               center
-              defaultButtonColor={V1_BACKGROUND}
-              defaultTextColor={V1_RED}
-              border={`2px solid ${V1_RED}`}
+              ghost
               buttonWidth="100%"
               defaultButtonDescription="Delete Group"
               onButtonClick={() => setDeleteGroupModalIsOpen(true)}
-              isFlipButton={true}
             />
-            {deleteGroupModalIsOpen && (
-              <DeleteGroupModal
-                suppergroupId={supperGroup?.supperGroupId ?? '-'}
-                modalSetter={setDeleteGroupModalIsOpen}
-              />
+            {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
+              <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
             )}
           </LowerRowButton>
         </ButtonContainer>
@@ -163,7 +137,6 @@ const ViewCart = () => {
                 history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
               }
             }}
-            isFlipButton={false}
           />
         </ButtonContainer>
       )
@@ -178,16 +151,6 @@ const ViewCart = () => {
           <LoadingSpin />
         ) : (
           <>
-            {modalIsOpen && (
-              <ConfirmationModal
-                title={'Delete Item?'}
-                hasLeftButton={true}
-                leftButtonText={'Confirm'}
-                onLeftButtonClick={onConfirmDiscardClick}
-                rightButtonText={'Cancel'}
-                onRightButtonClick={onCancelClick}
-              />
-            )}
             {supperGroup && collatedOrder && (
               <>
                 <SupperGroupCard supperGroup={supperGroup} isHome={false} />
@@ -197,6 +160,8 @@ const ViewCart = () => {
                   ownerId={supperGroup.ownerId}
                   supperGroupStatus={supperGroup.status}
                   isEditable={isEditable}
+                  orderId={orderId}
+                  order={order}
                 />
               </>
             )}

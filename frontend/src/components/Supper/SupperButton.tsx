@@ -1,4 +1,5 @@
 import React from 'react'
+import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 
 import Button from '../Mobile/Button'
 
@@ -21,6 +22,7 @@ type Props = {
   isFlipButton?: boolean
   border?: string
   htmlType?: 'button' | 'submit' | 'reset' | undefined
+  ghost?: boolean
 }
 
 export const SupperButton = (props: Props) => {
@@ -33,9 +35,9 @@ export const SupperButton = (props: Props) => {
       stopPropagation
       defaultButtonDescription={props.defaultButtonDescription}
       updatedButtonDescription={props.updatedButtonDescription}
-      defaultButtonColor={props.defaultButtonColor}
+      defaultButtonColor={props.ghost ? V1_BACKGROUND : props.defaultButtonColor}
       updatedButtonColor={props.updatedButtonColor}
-      defaultTextColor={props.defaultTextColor}
+      defaultTextColor={props.ghost ? V1_RED : props.defaultTextColor}
       updatedTextColor={props.updatedTextColor}
       buttonWidth={props.buttonWidth}
       buttonHeight={props.buttonHeight}
@@ -47,7 +49,7 @@ export const SupperButton = (props: Props) => {
       }}
       onButtonClick={props.onButtonClick}
       isFlipButton={props.isFlipButton ?? false}
-      border={props.border}
+      border={props.ghost ? `2px solid ${V1_RED}` : props.border}
       htmlType={props.htmlType}
     />
   )

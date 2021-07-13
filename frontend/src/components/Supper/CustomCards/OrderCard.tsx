@@ -159,7 +159,7 @@ type Props = {
   supperGroupStatus: SupperGroupStatus | undefined
   isEditable?: boolean
   wasEdited?: boolean
-  collatedOrder?: CollatedOrder
+  collatedOrder?: CollatedOrder | null
   order?: Order | null
   foodList?: Food[]
   deliveryCost?: number
