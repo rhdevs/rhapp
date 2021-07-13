@@ -15,7 +15,6 @@ def authenticate(token, username):
         print(token, username)
         data = jwt.decode(
             token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
-        print(data, "HAHA")
         currentUser = db.User.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
         currentUsername = currentUser['userID']
