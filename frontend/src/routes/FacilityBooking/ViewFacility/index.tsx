@@ -133,6 +133,24 @@ const EventRightDisplay = styled.div`
   justify-content: center;
 `
 
+const BookingSubHeaderCCAName = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 0px;
+
+  color: rgba(0, 0, 0, 0.65);
+`
+
+const BookingSubHeaderEventName = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 0px;
+
+  color: rgba(0, 0, 0, 0.65);
+`
+
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -291,8 +309,12 @@ export default function ViewFacility() {
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
-                        <b> {event?.ccaName ? event.ccaName : 'Bug!'} </b>
-                        {event.eventName}
+                        <BookingSubHeaderCCAName>
+                          <b>{event.ccaName}:</b>
+                        </BookingSubHeaderCCAName>
+                        <BookingSubHeaderEventName>
+                          {event.eventName.length > 25 ? event.eventName.slice(0, 20) + '...' : event.eventName}
+                        </BookingSubHeaderEventName>
                       </EventNormalLabel>
                     </EventLabels>
                     <EventRightDisplay>
