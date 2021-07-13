@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -327,14 +327,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     }
   } else {
     const { newBooking } = getState().facilityBooking
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + newBooking?.bookingID, {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
+    const response = await put(ENDPOINTS.BOOKING, DOMAINS.FACILITY, requestBody, {}, '/' + newBooking?.bookingID)
 
     if (response.status >= 400) {
       const body = await response.json()
