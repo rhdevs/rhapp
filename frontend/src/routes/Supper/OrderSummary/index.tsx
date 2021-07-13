@@ -38,69 +38,14 @@ const OrderIdText = styled.text`
   margin: 0 auto;
 `
 
-const TotalPriceText = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  width: 80vw;
-  margin: 10px auto;
-  display: flex;
-  justify-content: center;
-`
-
-const DeliveryFeeContainer = styled.div`
+const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 83vw;
-  margin: 10px auto;
-  align-items: baseline;
 `
-
-const FinalDeliveryFeeText = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  width: 130%;
-`
-
-const ButtonContainer = styled.div`
-  margin: 20px auto;
-  width: 100vw;
-  display: grid;
-  justify-content: center;
-  grid-template-columns: 1fr 1fr;
-`
-
-const Input = styled.input`
-  width: 100%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 0px 0px 0px 0px;
-  height: 35px;
-`
-
-const ErrorText = styled.p`
-  margin: 0;
-  color: #ff837a;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  font-family: 'Inter';
-`
-
-const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
+const ButtonContainer = styled.div<{ left?: boolean | undefined }>`
+  width: 50%;
+  text-align: ${(props) => (props.left ? 'left' : 'right')};
+  margin: 20px;
 `
 
 const OrderSummary = () => {
@@ -142,16 +87,20 @@ const OrderSummary = () => {
             isEditable={isEditable}
           />
 
-          <ButtonContainer>
-            <SupperButton
-              defaultButtonDescription={isEditable ? 'Save Changes' : 'Update Summary'}
-              onButtonClick={handleUpdateSummary}
-              defaultButtonColor={V1_BACKGROUND}
-              defaultTextColor={V1_RED}
-              border={`1px solid ${V1_RED}`}
-            />
-            <SupperButton defaultButtonDescription="Order Placed" onButtonClick={onClick} />
-          </ButtonContainer>
+          <ButtonsContainer>
+            <ButtonContainer left>
+              <SupperButton
+                defaultButtonDescription={isEditable ? 'Save Changes' : 'Update Summary'}
+                onButtonClick={handleUpdateSummary}
+                defaultButtonColor={V1_BACKGROUND}
+                defaultTextColor={V1_RED}
+                border={`1px solid ${V1_RED}`}
+              />
+            </ButtonContainer>
+            <ButtonContainer>
+              <SupperButton defaultButtonDescription="Order Placed" onButtonClick={onClick} />
+            </ButtonContainer>
+          </ButtonsContainer>
           <InformationCard updateSummary />
         </>
       )}
