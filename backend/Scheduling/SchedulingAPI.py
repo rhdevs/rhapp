@@ -1,3 +1,4 @@
+from pymongo.operations import UpdateOne
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
 import os
@@ -178,7 +179,7 @@ def getUserCCAs(userID):
     try:
         CCAofUserID = db.UserCCA.find({"userID": userID})
         entries = [w["ccaID"] for w in CCAofUserID]
-        data = list(db.CCA.find({"ccaID": {"$in": entries}}))
+        data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
@@ -245,6 +246,28 @@ def getCCAMembers(ccaID):
     except Exception as e:
         return {"err": str(e), "status": "failed"}, 400
     return make_response(response, 200)
+
+
+@scheduling_api.route("/user_CCA", methods=['POST', 'DELETE'])
+@cross_origin()
+def editUserCCA():
+    try:
+        data = request.get_json()
+        ccaID = data.get('ccaID')
+        userID = data.get('userID')
+
+        if request.method == "POST":
+            documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
+            upserts = [pymongo.UpdateOne(
+                doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
+            db.UserCCA.bulk_write(upserts)
+
+        elif request.method == "DELETE":
+            db.UserCCA.delete_many(body)
+
+    except Exception as e:
+        return {"err": str(e), "status": "failed"}, 400
+    return {"status": "success"}, 200
 
 
 @scheduling_api.route("/user_CCA/", methods=["GET"])

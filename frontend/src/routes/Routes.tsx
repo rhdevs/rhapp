@@ -12,6 +12,8 @@ export enum PATHS {
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
+  FORGET_PASSWORD_PAGE = '/auth/forget',
+  RESET_PASSWORD_PAGE = '/auth/reset/:resetToken',
   CHANGE_PASSWORD_PAGE = '/auth/changePassword',
   PROFILE_PAGE = '/social/profile/',
   VIEW_PROFILE_PAGE = '/social/profile/:userId',
@@ -50,9 +52,13 @@ export enum PATHS {
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
 const FallBack = React.lazy(() => import(/* webpackChunckName: "FallBack" */ './ErrorPages/NotFound'))
+const ComingSoon = React.lazy(() => import(/* webpackChunckName: "ComingSoon" */ './ErrorPages/ComingSoon'))
 // AUTHENTICATION
 const Login = React.lazy(() => import(/* webpackChunckName: "Login" */ './Authentication/Login'))
 const Signup = React.lazy(() => import(/* webpackChunckName: "Signup" */ './Authentication/Signup'))
+const ForgetPassword = React.lazy(() => import(/* webpackChunckName: "ForgetPassword" */ './Authentication/Forget'))
+const ResetPassword = React.lazy(() => import(/* webpackChunckName: "ResetPassword" */ './Authentication/Reset'))
+
 // PROFILE
 const Profile = React.lazy(() => import(/* webpackChunckName: "Profile" */ './Profile/'))
 const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" */ './Profile/EditProfile'))
@@ -99,13 +105,15 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SEARCH_PAGE} component={Search} />
             <AuthenticateRoute exact path={PATHS.LOGIN_PAGE} component={Login} />
             <PublicRoute exact path={PATHS.SIGNUP_PAGE} component={Signup} />
+            <PublicRoute exact path={PATHS.FORGET_PASSWORD_PAGE} component={ForgetPassword} />
+            <PublicRoute exact path={PATHS.RESET_PASSWORD_PAGE} component={ResetPassword} />
 
             <PrivateRoute exact path={PATHS.VIEW_PROFILE_PAGE} component={Profile} />
             <PrivateRoute exact path={PATHS.EDIT_PROFILE_PAGE} component={EditProfile} />
             <PrivateRoute exact path={PATHS.CHANGE_PASSWORD_PAGE} component={ChangePassword} />
             <PrivateRoute exact path={PATHS.VIEW_FRIEND_LIST_PAGE} component={FriendList} />
 
-            <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={Schedule} />
+            <PrivateRoute exact path={PATHS.SCHEDULE_PAGE} component={ComingSoon} />
             <PrivateRoute exact path={PATHS.SHARE_TIMETABLE_PAGE} component={ShareTimetable} />
             <PrivateRoute exact path={PATHS.EVENT_LIST_PAGE_WITH_PAGE_INDEX} component={EventList} />
             <PrivateRoute exact path={PATHS.CREATE_EVENT} component={CreateEvent} key={PATHS.CREATE_EVENT} />
@@ -118,8 +126,8 @@ export default class Routes extends React.Component {
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
 
-            <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={LaundryMain} />
-            <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ViewWashingMachine} />
+            <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />
+            <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ComingSoon} />
 
             <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
