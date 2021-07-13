@@ -144,15 +144,27 @@ function JCRCBlockOutModal({
   const InitialData: Facility[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
   const selectedFacilities: number[] = []
+  const [startDateTime, setStartDateTime] = useState()
+  const [endDateTime, setEndDateTime] = useState()
 
-  const addToList = (facilitiesID: number) => {
+  const addToList = async (facilitiesID: number) => {
+    // setStateChange(!stateChange)
+    console.log(facilitiesID)
     const result = selectedFacilities.findIndex((e) => e === facilitiesID)
-    if (result >= 0) {
+    console.log(result)
+    if (result > -1) {
       selectedFacilities.splice(result, 1)
+      console.log('Facilities Found')
     } else {
       selectedFacilities.push(facilitiesID)
+      console.log('Facilites not found.')
     }
     console.log(selectedFacilities)
+  }
+
+  const convertLocalTime = (date: Date) => {
+    const newDate = new Date(date.getTime() + 28800000)
+    return newDate.toISOString().slice(0, -8)
   }
 
   console.log(facilities)
@@ -160,7 +172,8 @@ function JCRCBlockOutModal({
 
   useEffect(() => {
     setFacilityList(facilities)
-  }, facilities)
+    // setAllUncheckedOrChecked(false)
+  }, [facilities, facilityList])
 
   return (
     <>
@@ -174,7 +187,7 @@ function JCRCBlockOutModal({
           <VenueSelection>
             <VenueOptions>
               Select all
-              <Venueinput type="checkbox"></Venueinput>
+              <Venueinput id="0" type="checkbox" onClick={() => addToList(0)}></Venueinput>
             </VenueOptions>
             {facilityList.map((facility) => {
               if (facility.facilityLocation)
@@ -189,23 +202,19 @@ function JCRCBlockOutModal({
                   </VenueOptions>
                 )
             })}
-            <VenueOptions>
-              Main Area
-              <Venueinput type="checkbox"></Venueinput>
-            </VenueOptions>
           </VenueSelection>
         </VenueSelectionContainer>
         <TimeSelectionContainer>
           <TimeSelectionToFrom>
             <h3>From</h3>
           </TimeSelectionToFrom>
-          <TimeSelectionInput type="datetime-local" value="2018-06-12T19:30" />
+          <TimeSelectionInput id="startTime" type="datetime-local" onChange={(e) => console.log(e.target.value)} />
         </TimeSelectionContainer>
         <TimeSelectionContainer>
           <TimeSelectionToFrom>
             <h3>To</h3>
           </TimeSelectionToFrom>
-          <TimeSelectionInput type="datetime-local" value="2018-06-12T19:30" />
+          <TimeSelectionInput id="endTime" type="datetime-local" onChange={(e) => console.log(e.target.value)} />
         </TimeSelectionContainer>
         <ButtonContainer>
           {hasLeftButton && (
