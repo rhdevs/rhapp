@@ -245,8 +245,8 @@ export const SGStatusCard = (props: Props) => {
   }
 
   return (
-    <MainCard margin={props.margin} onClick={props.onClick} flexDirection="column">
-      <TopSection>
+    <MainCard margin={props.margin} flexDirection="column">
+      <TopSection onClick={props.onClick}>
         <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
         <TextSubContainer>
           <OrderIdContainer>{props.idHeader}</OrderIdContainer>
@@ -266,7 +266,7 @@ export const SGStatusCard = (props: Props) => {
               <UnderlinedButton
                 onClick={() => {
                   //TODO: TEST?? idk why its not pushing
-                  return history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
+                  history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
                 }}
                 text="Update Delivery Details"
                 color="red"
