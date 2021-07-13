@@ -218,7 +218,6 @@ export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<A
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
-    console.log(resp)
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
   })
 
@@ -308,11 +307,9 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
         body: JSON.stringify(requestBody),
       },
     )
-    console.log(JSON.stringify(requestBody))
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      console.log(body.err)
       if (body.err == 'End time eariler than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
       } else if (body.err == 'Conflict Booking') {
