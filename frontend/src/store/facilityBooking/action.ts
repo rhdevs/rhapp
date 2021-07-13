@@ -75,11 +75,9 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
-  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`)
-    .then((resp) => resp)
-    .then((bookingList) => {
-      newList = bookingList.data
-    })
+  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`).then((bookingList) => {
+    newList = bookingList.data
+  })
   dispatch({
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
@@ -93,16 +91,14 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
 
 export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
-  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`)
-    .then((resp) => resp.json())
-    .then(() => {
-      const { myBookings } = getState().facilityBooking
-      dispatch({
-        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
-      })
-      setIsDeleteMyBooking(-1)
+  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
+    const { myBookings } = getState().facilityBooking
+    dispatch({
+      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
     })
+    dispatch(setIsDeleteMyBooking(-1))
+  })
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
