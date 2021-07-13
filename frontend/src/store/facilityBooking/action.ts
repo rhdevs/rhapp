@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -74,7 +74,8 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
-  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
+  const TokenId = localStorage.getItem('token')
+  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`)
     .then((resp) => resp)
     .then((bookingList) => {
       newList = bookingList.data
@@ -91,10 +92,8 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
 }
 
 export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId.toString(), {
-    method: 'DELETE',
-    mode: 'cors',
-  })
+  const TokenId = localStorage.getItem('token')
+  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`)
     .then((resp) => resp.json())
     .then(() => {
       const { myBookings } = getState().facilityBooking
