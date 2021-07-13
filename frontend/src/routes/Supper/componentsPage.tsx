@@ -74,7 +74,6 @@ export default function Supper() {
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
       <SupperButton center ghost defaultButtonDescription="Ghost Button" />
-      <SupperButton center defaultButtonDescription="Normal Button" />
       <OrderCard
         collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}
