@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { onRefresh } from '../../../common/reloadPage'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -55,6 +56,14 @@ const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
 
+const ErrorContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+`
+
+const ErrorText = styled.text``
+
 const ViewCart = () => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -62,6 +71,7 @@ const ViewCart = () => {
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
+  const [hasError, setHasError] = useState<boolean>(false)
   const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
@@ -72,6 +82,13 @@ const ViewCart = () => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
+
+  setTimeout(() => {
+    // if details still dont show after 10s, show error
+    if (isOwner) {
+      setHasError(true)
+    }
+  }, 10000)
 
   const showButtons = () => {
     if (isOwner === undefined) {
@@ -147,7 +164,15 @@ const ViewCart = () => {
     <Background>
       <MainContainer>
         <TopNavBar title="View Cart" />
-        {isLoading ? (
+        {hasError && (
+          <ErrorContainer>
+            <ErrorText>
+              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or
+              <u onClick={() => history.goBack()}> go back</u>
+            </ErrorText>
+          </ErrorContainer>
+        )}
+        {!hasError && isLoading ? (
           <LoadingSpin />
         ) : (
           <>
