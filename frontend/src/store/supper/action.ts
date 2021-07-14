@@ -1,4 +1,13 @@
-import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus, Updates } from '../supper/types'
+import {
+  ActionTypes,
+  Filter,
+  Food,
+  PaymentMethod,
+  Restaurants,
+  SupperGroup,
+  SupperGroupStatus,
+  Updates,
+} from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -800,4 +809,25 @@ export const getOwnerEdits = (orderId: string, foodId: string) => (dispatch: Dis
       error("Failed to get selected user's food, please try again.")
     })
   dispatch(setIsLoading(false))
+}
+
+export const getClosingTimeFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER,
+    closingTimeFilter: chosenFilter,
+  })
+}
+
+export const getAmountLeftFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER,
+    amountLeftFilter: chosenFilter,
+  })
+}
+
+export const getRestaurantFilter = (chosenFilter: Restaurants[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_RESTAURANT_FILTER,
+    restaurantFilter: chosenFilter,
+  })
 }
