@@ -22,16 +22,17 @@ import { PATHS } from '../../Routes'
 const Background = styled.div`
   min-height: 100vh;
   width: 100vw;
+  height: 100%;
   background: ${V1_BACKGROUND};
   position: relative;
 `
 
-const MainContainer = styled.div`
-  min-height: 100vh;
-  height: 100%;
-  width: 100vw;
-  background: ${V1_BACKGROUND};
-`
+// const MainContainer = styled.div`
+//   min-height: 100vh;
+//   height: 100%;
+//   width: 100vw;
+//   background: ${V1_BACKGROUND};
+// `
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -59,7 +60,7 @@ const LowerRowButton = styled.div`
 const ErrorContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 20px;
 `
 
 const ErrorText = styled.text``
@@ -71,7 +72,6 @@ const ViewCart = () => {
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
-  const [hasError, setHasError] = useState<boolean>(false)
   const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
@@ -82,13 +82,6 @@ const ViewCart = () => {
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
-
-  setTimeout(() => {
-    // if details still dont show after 10s, show error
-    if (isOwner) {
-      setHasError(true)
-    }
-  }, 10000)
 
   const showButtons = () => {
     if (isOwner === undefined) {
@@ -162,38 +155,28 @@ const ViewCart = () => {
 
   return (
     <Background>
-      <MainContainer>
-        <TopNavBar title="View Cart" />
-        {hasError && (
-          <ErrorContainer>
-            <ErrorText>
-              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or
-              <u onClick={() => history.goBack()}> go back</u>
-            </ErrorText>
-          </ErrorContainer>
-        )}
-        {!hasError && isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <>
-            {supperGroup && collatedOrder && (
-              <>
-                <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-                <OrderCard
-                  supperGroup={supperGroup}
-                  collatedOrder={collatedOrder}
-                  ownerId={supperGroup.ownerId}
-                  supperGroupStatus={supperGroup.status}
-                  isEditable={isEditable}
-                  orderId={orderId}
-                  order={order}
-                />
-              </>
-            )}
-            {showButtons()}
-          </>
-        )}
-      </MainContainer>
+      <TopNavBar title="View Cart" />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          {supperGroup && collatedOrder && (
+            <>
+              <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+              <OrderCard
+                supperGroup={supperGroup}
+                collatedOrder={collatedOrder}
+                ownerId={supperGroup.ownerId}
+                supperGroupStatus={supperGroup.status}
+                isEditable={isEditable}
+                orderId={orderId}
+                order={order}
+              />
+            </>
+          )}
+          {showButtons()}
+        </>
+      )}
       <BottomNavBar />
     </Background>
   )
