@@ -1,17 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm } from 'react-hook-form'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import Button from '../../../components/Mobile/Button'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { getCollatedOrder, getReadableSupperGroupId } from '../../../store/supper/action'
+import {
+  getCollatedOrder,
+  getReadableSupperGroupId,
+  getSupperGroupById,
+  updateSupperGroup,
+} from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import { V1_BACKGROUND } from '../../../common/colours'
+import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import { InformationCard } from '../../../components/Supper/InformationCard'
+import { SupperButton } from '../../../components/Supper/SupperButton'
+import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
+import { SupperGroupStatus } from '../../../store/supper/types'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -32,146 +38,70 @@ const OrderIdText = styled.text`
   margin: 0 auto;
 `
 
-const TotalPriceText = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  width: 80vw;
-  margin: 10px auto;
-  display: flex;
-  justify-content: center;
-`
-
-const DeliveryFeeContainer = styled.div`
+const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 83vw;
-  margin: 10px auto;
-  align-items: baseline;
 `
-
-const FinalDeliveryFeeText = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  width: 130%;
+const ButtonContainer = styled.div<{ left?: boolean | undefined }>`
+  width: 50%;
+  text-align: ${(props) => (props.left ? 'left' : 'right')};
+  margin: 20px;
 `
-
-const ButtonContainer = styled.div`
-  margin: 20px auto;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-`
-
-const Input = styled.input`
-  width: 100%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-  padding: 5px 10px;
-  margin: 0px 0px 0px 0px;
-  height: 35px;
-`
-
-const ErrorText = styled.p`
-  margin: 0;
-  color: #ff837a;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  font-family: 'Inter';
-`
-
-const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
-type FormValues = {
-  deliveryFee: number
-}
 
 const OrderSummary = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { collatedOrder, isLoading } = useSelector((state: RootState) => state.supper)
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>()
-  const RedAsterisk = <RedText>*</RedText>
-  const errorStyling = {
-    borderColor: 'red',
-    background: '#ffd1d1',
-  }
+  const { collatedOrder, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
+  const [isEditable, setIsEditable] = useState(false)
 
   useEffect(() => {
     dispatch(getCollatedOrder(params.supperGroupId))
+    dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
-    handleSubmit((data) => {
-      console.log('Order Placed!')
-      //TODO: Update status and final delivery fee
-      console.log(data)
-      console.log(errors)
-      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-    })()
+    dispatch(updateSupperGroup(params.supperGroupId, { status: SupperGroupStatus.ORDERED }))
+    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+  }
+
+  const handleUpdateSummary = () => {
+    setIsEditable(!isEditable)
   }
 
   return (
     <MainContainer>
-      <TopNavBar title="Order Summary" />
+      <TopNavBar title={isEditable ? 'Update Summary' : 'Order Summary'} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
           <OrderIdText>{getReadableSupperGroupId(collatedOrder?.supperGroupId)}</OrderIdText>
-          <OrderSummaryCard collatedOrder={collatedOrder} />
-          <TotalPriceText>
-            Total Price
-            <span style={{ width: '1.5rem' }} /> ${collatedOrder?.price?.toFixed(2) ?? '0.00'}
-          </TotalPriceText>
-          <DeliveryFeeContainer>
-            <FinalDeliveryFeeText>Final Delivery Fee{RedAsterisk}</FinalDeliveryFeeText>
-            <Input
-              type="number"
-              placeholder="Enter Price"
-              name="deliveryFee"
-              ref={register({
-                valueAsNumber: true,
-                required: true,
-                min: 0,
-                validate: (input) => input.trim().length !== 0,
-              })}
-              style={errors.deliveryFee ? errorStyling : {}}
-            />
-          </DeliveryFeeContainer>
-          {errors.deliveryFee?.type === ('required' || 'validate') && <ErrorText>Delivery Fee required!</ErrorText>}
-          {errors.deliveryFee?.type === 'min' && <ErrorText>Invalid value!</ErrorText>}
+          <OrderCard
+            collatedOrder={collatedOrder}
+            ownerId={supperGroup?.ownerId}
+            supperGroupStatus={supperGroup?.status}
+            splitCostMethod={supperGroup?.splitAdditionalCost}
+            supperGroup={supperGroup}
+            supperTotalCost={supperGroup?.totalPrice}
+            isEditable={isEditable}
+          />
 
-          <ButtonContainer>
-            <Button
-              stopPropagation
-              defaultButtonDescription="Order Placed"
-              buttonWidth="fit-content"
-              buttonHeight="fit-content"
-              onButtonClick={onClick}
-              isFlipButton={false}
-              descriptionStyle={{ fontSize: '17px', fontFamily: 'Inter' }}
-            />
-          </ButtonContainer>
+          <ButtonsContainer>
+            <ButtonContainer left>
+              <SupperButton
+                defaultButtonDescription={isEditable ? 'Save Changes' : 'Update Summary'}
+                onButtonClick={handleUpdateSummary}
+                defaultButtonColor={V1_BACKGROUND}
+                defaultTextColor={V1_RED}
+                border={`1px solid ${V1_RED}`}
+              />
+            </ButtonContainer>
+            <ButtonContainer>
+              <SupperButton defaultButtonDescription="Order Placed" onButtonClick={onClick} />
+            </ButtonContainer>
+          </ButtonsContainer>
+          <InformationCard updateSummary />
         </>
       )}
     </MainContainer>

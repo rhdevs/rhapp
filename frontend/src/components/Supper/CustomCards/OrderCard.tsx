@@ -410,8 +410,8 @@ export const OrderCard = (props: Props) => {
               {ownerFoodIsEditable && isOwnerFood && <RedPlusButton />}
             </CardHeaderContainer>
           )
-          const isOrderEditable = supperGroupIsOpenOrPending && isOwnerFood
-          const orderSubtotal = `$${(order.totalCost + deliveryFee).toFixed(2)}`
+          const isOrderEditable = (supperGroupIsOpenOrPending && isOwnerFood) || isEditable
+          const orderSubtotal = `$${order.totalCost.toFixed(2)}`
           const EmptyCartContainer = () => {
             if (isOwnerFood) {
               return <OwnerEmptyCartSection />

@@ -17,6 +17,7 @@ import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { InformationCard } from '../../../components/Supper/InformationCard'
 
 const Background = styled.form`
   width: 100vw;
@@ -190,6 +191,7 @@ const AddFoodItem = () => {
             add
             currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
+          <InformationCard disclaimer margin={'0'} />
         </MainContainer>
       )}
     </Background>
