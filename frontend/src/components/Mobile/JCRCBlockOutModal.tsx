@@ -4,6 +4,8 @@ import { Button } from 'antd'
 
 import 'antd/dist/antd.css'
 import { Facility } from '../../store/facilityBooking/types'
+import { SetBlockOutIsOpen } from '../../store/facilityBooking/action'
+import { useDispatch, useSelector } from 'react-redux'
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -112,8 +114,6 @@ function JCRCBlockOutModal({
   rightButtonText,
   rightButtonTextColor,
   rightButtonColor,
-  onRightButtonClick,
-  onLeftButtonClick,
   onOverlayClick,
   top,
   bottom,
@@ -129,8 +129,6 @@ function JCRCBlockOutModal({
   rightButtonText: string
   rightButtonTextColor?: string
   rightButtonColor?: string
-  onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   top?: number
   bottom?: number
@@ -147,7 +145,7 @@ function JCRCBlockOutModal({
   const selectedFacilities: number[] = []
   const [startDateTime, setStartDateTime] = useState(new Date())
   const [endDateTime, setEndDateTime] = useState(new Date())
-
+  const dispatch = useDispatch()
   const addToList = async (facilitiesID: number) => {
     // setStateChange(!stateChange)
     console.log(facilitiesID)
@@ -181,6 +179,16 @@ function JCRCBlockOutModal({
     console.log(newEndDate)
     setEndDateTime(new Date(newEndDate))
     console.log(endDateTime)
+  }
+
+  const submitBlockOut = () => {
+    console.log('Submitting block out')
+    dispatch(SetBlockOutIsOpen(false))
+  }
+
+  const onCancelClick = () => {
+    console.log('Submitting block out')
+    dispatch(SetBlockOutIsOpen(false))
   }
 
   useEffect(() => {
@@ -247,7 +255,7 @@ function JCRCBlockOutModal({
                 border: defaultLeftButtonColor,
                 width: '80px',
               }}
-              onClick={onLeftButtonClick}
+              onClick={submitBlockOut}
             >
               {leftButtonText}
             </Button>
@@ -260,7 +268,7 @@ function JCRCBlockOutModal({
               marginLeft: '10px',
               width: '80px',
             }}
-            onClick={onRightButtonClick}
+            onClick={onCancelClick}
           >
             {rightButtonText}
           </Button>
