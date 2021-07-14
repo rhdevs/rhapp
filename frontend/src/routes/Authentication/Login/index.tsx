@@ -80,6 +80,8 @@ const StyledPasswordInput = styled.div`
   }
   .ant-input {
     border-radius: 15px;
+    font-size: 20px;
+    font-weight: 200;
   }
 `
 

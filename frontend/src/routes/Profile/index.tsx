@@ -156,7 +156,7 @@ export default function Profile() {
       <TabPane tab="Details" key="2">
         <>
           <CCAItem />
-          <ModulesItem />
+          {/* <ModulesItem /> */}
         </>
       </TabPane>
     </CustomTabs>

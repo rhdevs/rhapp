@@ -73,7 +73,15 @@ const BookingHeader = styled.p`
   color: rgba(0, 0, 0, 0.65);
 `
 
-const BookingSubHeader = styled.p`
+const BookingSubHeaderCCAName = styled.p`
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 0px;
+
+  color: rgba(0, 0, 0, 0.65);
+`
+const BookingSubHeaderEventName = styled.p`
   font-style: normal;
   font-weight: normal;
   font-size: 10px;
@@ -179,9 +187,12 @@ export default function ViewMyBookings() {
                         }}
                       >
                         <BookingHeader>{booking.facilityName}</BookingHeader>
-                        <BookingSubHeader>
-                          {booking.ccaName}: {booking.eventName}
-                        </BookingSubHeader>
+                        <BookingSubHeaderCCAName>
+                          <b>{booking.ccaName ? booking.ccaName : 'Personal'}:</b>
+                        </BookingSubHeaderCCAName>
+                        <BookingSubHeaderEventName>
+                          {booking.eventName.length > 25 ? booking.eventName.slice(0, 20) + '...' : booking.eventName}
+                        </BookingSubHeaderEventName>
                         <BookingTime>
                           <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
                           {new Date(booking.startTime * 1000).toLocaleTimeString([], {

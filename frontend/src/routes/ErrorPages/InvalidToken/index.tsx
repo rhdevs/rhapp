@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
-import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import NotFoundCatImg from '../../../assets/notFound.svg'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../Routes'
