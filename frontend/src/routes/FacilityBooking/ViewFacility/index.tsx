@@ -310,7 +310,7 @@ export default function ViewFacility() {
                       </EventBoldLabel>
                       <EventNormalLabel>
                         <BookingSubHeaderCCAName>
-                          <b>{event.ccaName}:</b>
+                          <b>{event.ccaName ? event.ccaName : 'Personal'}:</b>
                         </BookingSubHeaderCCAName>
                         <BookingSubHeaderEventName>
                           {event.eventName.length > 25 ? event.eventName.slice(0, 20) + '...' : event.eventName}

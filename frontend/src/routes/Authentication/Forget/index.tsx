@@ -68,7 +68,7 @@ export default function ForgetPassword() {
         })
         .catch((err) => {
           console.log(err)
-          setError({ message: 'Something went wrong' })
+          setError({ message: 'Something went wrong, please try again.' })
         })
     }
   }
@@ -97,7 +97,11 @@ export default function ForgetPassword() {
         )}
         {success && (
           <AlertGroup>
-            <Alert message={'Please check your email for the reset link.'} type="success" showIcon />
+            <Alert
+              message={'Please check your email for the reset link. It might be in your spam folder!'}
+              type="success"
+              showIcon
+            />
           </AlertGroup>
         )}
         <ButtonDiv>
