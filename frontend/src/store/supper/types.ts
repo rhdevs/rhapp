@@ -371,9 +371,9 @@ type SetSelectedSupperGroupStatus = {
   selectedSupperGroupStatus: SupperGroupStatus | null
 }
 
-type GetSearchedSupperGroups = {
+type GetFilteredSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
-  searchedSupperGroups: HomeSupperGroup[]
+  filteredSupperGroups: HomeSupperGroup[]
 }
 
 type SetSearchSupperGroupValue = {
@@ -502,7 +502,7 @@ export type ActionTypes =
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
   | SetSelectedSupperGroupStatus
-  | GetSearchedSupperGroups
+  | GetFilteredSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
   | SetMenuTabKey

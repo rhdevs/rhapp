@@ -1,25 +1,30 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons/lib/icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
 import { V1_RED } from '../../common/colours'
-import { getAmountLeftFilter, getClosingTimeFilter } from '../../store/supper/action'
+import {
+  getAmountLeftFilter,
+  getClosingTimeFilter,
+  getFilteredSupperGroups,
+  getRestaurantFilter,
+} from '../../store/supper/action'
 import { Filter, Restaurants } from '../../store/supper/types'
 import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
-  margin: 10px;
+  margin: 20px auto 5px auto;
   overflow: scroll;
+  width: 90%;
 `
 
 const BubblesContainer = styled.div`
   width: fit-content;
   padding: 0 5px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
-  grid-template-areas: '. . .';
   grid-column-gap: 10px;
 `
 
@@ -45,25 +50,6 @@ const InitialIconContainer = styled.div`
   padding-left: 5px;
 `
 
-const DropdownBackground = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas: '.' '.' '.';
-  border: 1px solid black;
-  justify-items: center;
-  grid-row-gap: 5px;
-`
-
-const RestaurantBubblesContainer = styled.div``
-
-const DropdownOption = styled.div<{ topOutline?: boolean }>`
-  width: 100%;
-  ${(props) => props.topOutline && 'border-top: 1px #ccc solid'}
-`
-
 export const FilterBubbles = () => {
   const iconStyling = { paddingLeft: '5px', fontSize: '11px' }
   const defaultFilterIcon = (
@@ -75,26 +61,23 @@ export const FilterBubbles = () => {
   const ascendingFilterIcon = <CaretUpOutlined style={iconStyling} />
   const descendingFilterIcon = <CaretDownOutlined style={iconStyling} />
   const dispatch = useDispatch()
-  // export const getClosingTimeFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
-  //     closingTimeFilter: chosenFilter,
-
-  // export const getAmountLeftFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
-  //     amountLeftFilter: chosenFilter,
-
-  // export const getRestaurantFilter = (chosenFilter: Restaurants[]) => (dispatch: Dispatch<ActionTypes>) => {
-  //     restaurantFilter: chosenFilter,
 
   const { closingTimeFilter, amountLeftFilter, restaurantFilter } = useSelector((state: RootState) => state.supper)
 
   const [closingTimeIcon, setClosingTimeIcon] = useState<JSX.Element>(defaultFilterIcon)
   const [amountLeftIcon, setAmountLeftIcon] = useState<JSX.Element>(defaultFilterIcon)
-  const [isDropwdownOpen, setIsDropdownOpen] = useState<boolean>(false)
+
+  useEffect(() => {
+    dispatch(getFilteredSupperGroups())
+  }, [closingTimeFilter, amountLeftFilter, restaurantFilter])
 
   const onClosingTimeFilterClick = () => {
     if (closingTimeFilter === Filter.DEFAULT) {
+      if (amountLeftFilter !== Filter.DEFAULT) dispatch(getAmountLeftFilter(Filter.DEFAULT))
       dispatch(getClosingTimeFilter(Filter.ASCENDING))
       setClosingTimeIcon(ascendingFilterIcon)
     } else if (closingTimeFilter === Filter.ASCENDING) {
+      if (amountLeftFilter !== Filter.DEFAULT) dispatch(getAmountLeftFilter(Filter.DEFAULT))
       dispatch(getClosingTimeFilter(Filter.DESCENDING))
       setClosingTimeIcon(descendingFilterIcon)
     } else {
@@ -105,9 +88,11 @@ export const FilterBubbles = () => {
 
   const onAmountLefftFilterClick = () => {
     if (amountLeftFilter === Filter.DEFAULT) {
+      if (closingTimeFilter !== Filter.DEFAULT) dispatch(getClosingTimeFilter(Filter.DEFAULT))
       dispatch(getAmountLeftFilter(Filter.ASCENDING))
       setAmountLeftIcon(ascendingFilterIcon)
     } else if (amountLeftFilter === Filter.ASCENDING) {
+      if (closingTimeFilter !== Filter.DEFAULT) dispatch(getClosingTimeFilter(Filter.DEFAULT))
       dispatch(getAmountLeftFilter(Filter.DESCENDING))
       setAmountLeftIcon(descendingFilterIcon)
     } else {
@@ -116,19 +101,12 @@ export const FilterBubbles = () => {
     }
   }
 
-  const onRestaurantFilterClick = () => {
-    console.log('Restaurants was clicked')
-    setIsDropdownOpen(!isDropwdownOpen)
-  }
-
-  const dropdown = () => {
-    return (
-      <DropdownBackground>
-        <DropdownOption>{Restaurants.ALAMAANS}</DropdownOption>
-        <DropdownOption topOutline>{Restaurants.KIMLYDIMSUM}</DropdownOption>
-        <DropdownOption topOutline>{Restaurants.MCDONALDS}</DropdownOption>
-      </DropdownBackground>
-    )
+  const onRestaurantFilterClick = (restaurant: Restaurants) => {
+    if (restaurantFilter.includes(restaurant))
+      dispatch(getRestaurantFilter(restaurantFilter.filter((r) => r !== restaurant)))
+    else {
+      dispatch(getRestaurantFilter(restaurantFilter.concat(restaurant)))
+    }
   }
 
   return (
@@ -142,16 +120,14 @@ export const FilterBubbles = () => {
           Amount Left
           {amountLeftIcon}
         </Bubble>
-        <RestaurantBubblesContainer>
-          <Bubble onClick={onRestaurantFilterClick}>
-            {restaurantFilter.length === 0
-              ? 'Restaurants'
-              : restaurantFilter.length === 1
-              ? restaurantFilter[0]
-              : `${restaurantFilter.length} Restaurants`}
-          </Bubble>
-          {isDropwdownOpen && dropdown()}
-        </RestaurantBubblesContainer>
+        {Object.values(Restaurants).map((restaurant, index) => {
+          const isActive = restaurantFilter.includes(restaurant)
+          return (
+            <Bubble key={index} onClick={() => onRestaurantFilterClick(restaurant)} isActive={isActive}>
+              {restaurant}
+            </Bubble>
+          )
+        })}
       </BubblesContainer>
     </MainContainer>
   )

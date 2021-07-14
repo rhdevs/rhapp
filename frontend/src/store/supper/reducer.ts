@@ -39,7 +39,7 @@ const initialState = {
   selectedPaymentMethod: [],
   selectedRestaurant: null,
   selectedSupperGroupStatus: null,
-  searchedSupperGroups: [],
+  filteredSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
   editFoodItem: null,
@@ -82,7 +82,7 @@ type State = {
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
   selectedSupperGroupStatus: SupperGroupStatus | null
-  searchedSupperGroups: HomeSupperGroup[]
+  filteredSupperGroups: HomeSupperGroup[]
   searchValue: string
   tabsKey: string
   editFoodItem: Food | null
@@ -179,7 +179,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
       return { ...state, selectedSupperGroupStatus: action.selectedSupperGroupStatus }
     }
     case SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS: {
-      return { ...state, searchedSupperGroups: action.searchedSupperGroups }
+      return { ...state, filteredSupperGroups: action.filteredSupperGroups }
     }
     case SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE: {
       return { ...state, searchValue: action.searchValue }
