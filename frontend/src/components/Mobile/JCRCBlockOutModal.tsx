@@ -142,21 +142,27 @@ function JCRCBlockOutModal({
   const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
   const InitialData: Facility[] = []
+  const InitiatlSelectedFacilities: number[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
-  const selectedFacilities: number[] = []
+  const [selectedFacilities, setSelectedFacilities] = useState(InitiatlSelectedFacilities)
   const [startDateTime, setStartDateTime] = useState(new Date())
   const [endDateTime, setEndDateTime] = useState(new Date())
   const dispatch = useDispatch()
+
   const addToList = async (facilitiesID: number) => {
     // setStateChange(!stateChange)
     console.log(facilitiesID)
     const result = selectedFacilities.findIndex((e) => e === facilitiesID)
     console.log(result)
     if (result > -1) {
-      selectedFacilities.splice(result, 1)
+      const tempArray = selectedFacilities
+      tempArray.splice(result, 1)
+      setSelectedFacilities(tempArray)
       console.log('Facilities Found')
     } else {
-      selectedFacilities.push(facilitiesID)
+      const tempArray = selectedFacilities
+      tempArray.push(facilitiesID)
+      setSelectedFacilities(tempArray)
       console.log('Facilites not found.')
     }
     console.log(selectedFacilities)
@@ -217,6 +223,7 @@ function JCRCBlockOutModal({
         },
       )
 
+      console.log(requestBody)
       if (response.status >= 400) {
         const body = await response.json()
         console.log(body.err)
@@ -235,7 +242,7 @@ function JCRCBlockOutModal({
   useEffect(() => {
     setFacilityList(facilities)
     // setAllUncheckedOrChecked(false)
-  }, [facilities, facilityList])
+  }, [])
 
   return (
     <>
