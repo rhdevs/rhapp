@@ -1,8 +1,8 @@
 import React from 'react'
-
-import ConfirmationModal from '../../Mobile/ConfirmationModal'
+import { ConfirmationModal } from '../../Mobile/ConfirmationModal'
 
 type Props = {
+  flex?: boolean
   title: string
   description?: string
   leftButtonText: string
@@ -28,6 +28,7 @@ export const SupperModal = (props: Props) => {
       onLeftButtonClick={onLeftClick}
       rightButtonText="Cancel"
       onRightButtonClick={onCancelClick}
+      flex={props.flex}
     />
   )
 }

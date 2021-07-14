@@ -11,8 +11,8 @@ import nusmodsImportImage from '../../../assets/nusmodsImportImage.svg'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import Button from '../../../components/Mobile/Button'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { RootState } from '../../../store/types'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const Background = styled.div`
   background-color: #fafaf4;

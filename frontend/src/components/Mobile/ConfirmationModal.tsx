@@ -31,6 +31,10 @@ const MainContainer = styled.div`
   flex-direction: column;
 `
 
+const TitleContainer = styled.div<{ flex?: boolean }>`
+  ${(props) => props.flex && 'display: flex;'}
+`
+
 const TitleText = styled.text`
   font-family: Inter;
   font-size: 16px;
@@ -63,24 +67,7 @@ const StyledButton = styled(Button)<{ defaultRightButtonColor: string; defaultRi
   }
 `
 
-function ConfirmationModal({
-  title,
-  description,
-  hasLeftButton,
-  leftButtonText,
-  leftButtonTextColor,
-  leftButtonColor,
-  onLeftButtonClick,
-  rightButtonText,
-  rightButtonTextColor,
-  rightButtonColor,
-  onRightButtonClick,
-  onOverlayClick,
-  top,
-  bottom,
-  right,
-  left,
-}: {
+type Props = {
   title: string
   description?: string
   hasLeftButton?: boolean
@@ -97,20 +84,27 @@ function ConfirmationModal({
   bottom?: number
   right?: number
   left?: number
-}) {
-  const defaultLeftButtonColor = leftButtonColor ?? '#DE5F4C'
-  const defaultLeftButtonTextColor = leftButtonTextColor ?? '#FFFFFF'
-  const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
-  const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
+  flex?: boolean
+}
+
+export const ConfirmationModal = (props: Props) => {
+  const defaultLeftButtonColor = props.leftButtonColor ?? '#DE5F4C'
+  const defaultLeftButtonTextColor = props.leftButtonTextColor ?? '#FFFFFF'
+  const defaultRightButtonColor = props.rightButtonColor ?? '#FAFAF4'
+  const defaultRightButtonTextColor = props.rightButtonTextColor ?? '#000000'
 
   return (
     <>
-      <OverlayContainer onClick={onOverlayClick} />
-      <MainContainer style={{ bottom: bottom ?? '50%', right: right ?? 0, left: left ?? 0, top: top }}>
-        <TitleText>{title}</TitleText>
-        <DescriptionText>{description}</DescriptionText>
+      <OverlayContainer onClick={props.onOverlayClick} />
+      <MainContainer
+        style={{ bottom: props.bottom ?? '50%', right: props.right ?? 0, left: props.left ?? 0, top: props.top }}
+      >
+        <TitleContainer flex={props.flex}>
+          <TitleText>{props.title}</TitleText>
+        </TitleContainer>
+        <DescriptionText>{props.description}</DescriptionText>
         <ButtonContainer>
-          {hasLeftButton && (
+          {props.hasLeftButton && (
             <Button
               style={{
                 background: defaultLeftButtonColor,
@@ -118,22 +112,20 @@ function ConfirmationModal({
                 borderRadius: '5px',
                 border: defaultLeftButtonColor,
               }}
-              onClick={onLeftButtonClick}
+              onClick={props.onLeftButtonClick}
             >
-              {leftButtonText}
+              {props.leftButtonText}
             </Button>
           )}
           <StyledButton
             defaultRightButtonColor={defaultRightButtonColor}
             defaultRightButtonTextColor={defaultRightButtonTextColor}
-            onClick={onRightButtonClick}
+            onClick={props.onRightButtonClick}
           >
-            {rightButtonText}
+            {props.rightButtonText}
           </StyledButton>
         </ButtonContainer>
       </MainContainer>
     </>
   )
 }
-
-export default ConfirmationModal
