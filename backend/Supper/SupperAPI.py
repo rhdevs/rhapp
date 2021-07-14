@@ -124,10 +124,12 @@ def all_supper_group():
             for order in supperGroup['orderList']:
                 supperGroup['userIdList'].append(order['userID'])
             supperGroup.pop('orderList')
-
+        
+            supperGroup['totalPrice'] = supperGroup['currentFoodCost'] + supperGroup['additionalCost']
             query = {'supperGroupId': supperGroup.get('supperGroupId')}
             changes = {'$set': {'currentFoodCost': supperGroup['currentFoodCost'],
-                                'userIdList': supperGroup['userIdList']}}
+                                'userIdList': supperGroup['userIdList'],
+                                'totalPrice': supperGroup['totalPrice']}}
             db.SupperGroup.update_one(query, changes)
 
             # Filters only open supper groups
