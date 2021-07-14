@@ -6,6 +6,7 @@ import 'antd/dist/antd.css'
 import { Facility } from '../../store/facilityBooking/types'
 import { SetBlockOutIsOpen } from '../../store/facilityBooking/action'
 import { useDispatch, useSelector } from 'react-redux'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -196,12 +197,38 @@ function JCRCBlockOutModal({
     } else if (startDateTime.getTime() > endDateTime.getTime()) {
       console.log('Start time is later than end time.')
     } else {
-      dispatch(SetBlockOutIsOpen(false))
+      const response = await fetch(
+        DOMAIN_URL.FACILITY +
+          ENDPOINTS.JCRC_BLOCKOUT +
+          '?token=' +
+          // localStorage.getItem('token') +
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJBMTIzNDU2N0IiLCJwYXNzd29yZEhhc2giOiIxZDQ2YjFlZGQzYzU0ZmY2YTQ5MTNlMjg0ZWFiODcyNThjNzIwMTZlOTU5Yzc1NDhmYjM3M2U2MmVmZWMzMWU2In0.aWUOWhMyAnfDi7CtNlZisrLhuRxRsl0-8nawTriZOq0' +
+          '&userID=' +
+          // localStorage.getItem('userID'),
+          // hardcode to send JCRC userID
+          'RH_JCRC',
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+
+      if (response.status >= 400) {
+        const body = await response.json()
+        console.log(body.err)
+      } else {
+        console.log('Successful blockout.')
+        dispatch(SetBlockOutIsOpen(false))
+      }
     }
   }
 
   const onCancelClick = () => {
-    console.log('Submitting block out')
+    console.log('Closing Modal')
     dispatch(SetBlockOutIsOpen(false))
   }
 
