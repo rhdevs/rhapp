@@ -7,7 +7,7 @@ import { SupperModal } from './SupperModal'
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  suppergroupId: number | string
+  suppergroupId: number | string | undefined
 }
 
 export const EndSupperGroupModal = (props: Props) => {

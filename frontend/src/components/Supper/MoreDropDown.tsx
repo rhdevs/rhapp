@@ -96,7 +96,9 @@ export const MoreDropDown = (props: Props) => {
       default:
         return (
           <Menu>
-            <Menu.Item key="0">{shareIcon} Share Group</Menu.Item>
+            <Menu.Item key="0" onClick={onShareClick}>
+              {shareIcon} Share Group
+            </Menu.Item>
           </Menu>
         )
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { V1_RED } from '../../common/colours'
@@ -9,6 +9,9 @@ import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
 import { onRefresh } from '../../common/reloadPage'
+import { useDispatch, useSelector } from 'react-redux'
+import { setIsLoading } from '../../store/supper/action'
+import { RootState } from '../../store/types'
 
 const Background = styled.div<{
   backgroundColor?: string
@@ -152,16 +155,27 @@ type Props = {
   isEditable?: boolean
   onEditClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   wasEdited?: boolean
-  wasEditedModalSetter?: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const FoodLine = (props: Props) => {
-  const isLoading = props.food || (props.foodPrice && props.cancelAction) ? false : true
+  const dispatch = useDispatch()
+  const { isLoading } = useSelector((state: RootState) => state.supper)
+
+  useEffect(() => {
+    if (props.food || (props.foodPrice && props.cancelAction)) {
+      dispatch(setIsLoading(false))
+    } else {
+      dispatch(setIsLoading(true))
+    }
+  }, [props.food, props.foodPrice, props.cancelAction])
+
   const [hasError, setHasError] = useState<boolean>(false)
+
   setTimeout(() => {
     if (isLoading) {
       setHasError(true)
     }
   }, 10000)
+
   const history = useHistory()
   const foodId = props.food?.foodId ?? props.foodId
   const quantity = props.food?.quantity ?? props.quantity
@@ -197,10 +211,6 @@ export const FoodLine = (props: Props) => {
         props.cancelActionModalSetter(true)
       }
     }
-  }
-
-  const onOwnerEditClick = () => {
-    if (props.wasEditedModalSetter) props.wasEditedModalSetter(true)
   }
 
   const content = () => {
@@ -258,7 +268,7 @@ export const FoodLine = (props: Props) => {
                   <BoldText>If unavailable: </BoldText>
                   <StyledText
                     onClick={(e) => onCancelActionClick(e, cancelAction)}
-                    color={props.isCancelActionClickable ? V1_RED : 'black'}
+                    color={props.isCancelActionClickable && cancelAction === CancelAction.CONTACT ? V1_RED : 'black'}
                   >
                     {cancelAction}
                   </StyledText>
@@ -271,7 +281,7 @@ export const FoodLine = (props: Props) => {
               {props.isEditable ? (
                 <Icon onClick={onEditClick} src={editIcon} alt="Edit Icon" />
               ) : (
-                <StyledEditedText onClick={onOwnerEditClick}>
+                <StyledEditedText>
                   {updates?.updateAction === UpdateAction.UPDATE
                     ? `(edited)`
                     : updates?.updateAction === UpdateAction.REMOVE

@@ -11,7 +11,7 @@ type Props = {
   supperGroupId: string | number
 }
 
-export const DiscardCartModal = (props: Props) => {
+export const CloseGroupEarlyModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CLOSED }))

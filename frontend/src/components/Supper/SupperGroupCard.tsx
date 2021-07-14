@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -12,7 +12,13 @@ import {
 } from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
-import { deleteSupperGroup, getReadableSupperGroupId, unixTo12HourTime } from '../../store/supper/action'
+import {
+  deleteSupperGroup,
+  getReadableSupperGroupId,
+  leaveSupperGroup,
+  setIsLoading,
+  unixTo12HourTime,
+} from '../../store/supper/action'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
@@ -22,10 +28,11 @@ import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
 import { MoreDropDown } from './MoreDropDown'
 import ConfirmationModal from '../Mobile/ConfirmationModal'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
+import { RootState } from '../../store/types'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -111,30 +118,40 @@ const ClickableContainer = styled.div`
 `
 
 type Props = {
-  supperGroup?: SupperGroup
+  supperGroup?: SupperGroup | null
   homeSupperGroup?: HomeSupperGroup
-  isHome: boolean
+  isHome: boolean // makes card clickable
   comments?: string | undefined
   paymentInfo?: PaymentInfo[]
   location?: string
   estArrivalTime?: number
-  statusOnly?: boolean | undefined
+  statusOnly?: boolean | undefined // makes card clickable
+  margin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const SupperGroupCard = (props: Props) => {
+  const history = useHistory()
+  const dispatch = useDispatch()
   const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
-  const isLoading = supperGroup ? false : true
+  useEffect(() => {
+    if (props.isHome ? props.homeSupperGroup : props.supperGroup) {
+      dispatch(setIsLoading(false))
+    } else {
+      dispatch(setIsLoading(true))
+    }
+  }, [props.homeSupperGroup, props.supperGroup])
+  const { isLoading } = useSelector((state: RootState) => state.supper)
+
   const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
-  const history = useHistory()
-  const dispatch = useDispatch()
   const supperGroupStatus = supperGroup?.status
   const isOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
+  const isClickableCard = props.isHome || props.statusOnly
 
   setTimeout(() => {
     // if details still dont show after 10s, show error
@@ -174,9 +191,9 @@ export const SupperGroupCard = (props: Props) => {
   const deliveryCost = `$${(supperGroup?.additionalCost ?? 0).toFixed(2)}`
   const splitMethod = supperGroup?.splitAdditionalCost
   const ownerTele = supperGroup?.ownerTele
-  const location = props.supperGroup?.location
-  const paymentInfo = props.supperGroup?.paymentInfo
-  const cancelReason = props.supperGroup?.comments
+  const location = props.supperGroup?.location ?? props.location
+  const paymentInfo = props.supperGroup?.paymentInfo ?? props.paymentInfo
+  const cancelReason = props.supperGroup?.comments ?? props.comments
   let splitMethodIcon
 
   if (splitMethod === SplitACMethod.EQUAL) {
@@ -215,7 +232,7 @@ export const SupperGroupCard = (props: Props) => {
       hasLeftButton={true}
       leftButtonText={'Confirm'}
       onLeftButtonClick={() => {
-        // dispatch(leaveSupperGroup(rawSupperGroupId))
+        dispatch(leaveSupperGroup(rawSupperGroupId))
         //TODO: Check if this should be the action after leave
         history.push(`${PATHS.SUPPER_HOME}`)
       }}
@@ -225,22 +242,22 @@ export const SupperGroupCard = (props: Props) => {
   )
 
   const onSupperCardClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.onClick) return props.onClick(e)
-    else {
-      if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-        console.log(supperGroup?.ownerId === localStorage.userID)
-        console.log((supperGroup?.userIdList ?? []).includes(localStorage.userID))
-        //user is owner or already has an ongoing order
-        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
-      } else {
-        //new SG to user
-        history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+    if (isClickableCard) {
+      if (props.onClick) return props.onClick(e)
+      else {
+        if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+          // User is the owner or already has an ongoing order
+          history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+        } else {
+          // New SG to user
+          history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+        }
       }
     }
   }
 
   return isOpenOrPending ? (
-    <MainCard flexDirection="row" minHeight="fit-content">
+    <MainCard margin={props.margin} flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
         {isDeleteModalOpen && deleteModal}
@@ -308,6 +325,8 @@ export const SupperGroupCard = (props: Props) => {
     </MainCard>
   ) : (
     <SGStatusCard
+      margin={props.margin}
+      onCardClick={onSupperCardClick}
       isOwner={isOwner}
       supperGroupStatus={supperGroupStatus}
       restaurantLogo={restaurantLogo}
