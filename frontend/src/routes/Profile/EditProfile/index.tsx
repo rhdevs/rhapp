@@ -19,9 +19,9 @@ import {
 import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import tickIcon from '../../../assets/tick.svg'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PlusCircleFilled } from '@ant-design/icons'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   height: 100vh;

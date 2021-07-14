@@ -14,7 +14,6 @@ import {
   SetIsLoading,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { onRefresh } from '../../../common/reloadPage'
@@ -36,6 +35,7 @@ import PoolAreaLL from '../../../assets/facilitiesLogos/PoolAreaLL.svg'
 import Stage from '../../../assets/facilitiesLogos/Stage.svg'
 import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
 import DummyAvatar from '../../../assets/dummyAvatar.svg'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;

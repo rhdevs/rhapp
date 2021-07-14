@@ -7,7 +7,6 @@ import moment from 'moment'
 import styled from 'styled-components'
 import { Switch } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
@@ -23,6 +22,7 @@ import LoadingSpin from '../../../../components/LoadingSpin'
 import { V1_BLUE } from '../../../../common/colours'
 import { Restaurants, SupperGroup } from '../../../../store/supper/types'
 import { errorStyling, Input, StyledTimePicker } from '../../EditSupperGroup'
+import { ConfirmationModal } from '../../../../components/Mobile/ConfirmationModal'
 
 const FormContainer = styled.div`
   width: 80vw;

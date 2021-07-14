@@ -24,11 +24,11 @@ import { RootState } from '../../../store/types'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
 import { useHistory, useParams } from 'react-router-dom'
 import LoadingSpin from '../../../components/LoadingSpin'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import { V1_BACKGROUND, V1_BLUE } from '../../../common/colours'
 import { FormHeader } from '../../../components/Supper/FormHeader'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const Background = styled.form`
   width: 100vw;

@@ -3,162 +3,182 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { onRefresh } from '../../../common/reloadPage'
 
 import LoadingSpin from '../../../components/LoadingSpin'
-import Button from '../../../components/Mobile/Button'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
-import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
-import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
-import useSnackbar from '../../../hooks/useSnackbar'
-import {
-  deleteFoodInOrder,
-  getSupperGroupById,
-  getUserOrder,
-  getReadableSupperGroupId,
-  unixTo12HourTime,
-} from '../../../store/supper/action'
-import { Food } from '../../../store/supper/types'
+import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
+import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
+import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
+import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { SupperButton } from '../../../components/Supper/SupperButton'
+import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
+import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
-const MainContainer = styled.div`
+const Background = styled.div`
   min-height: 100vh;
-  height: 100%;
   width: 100vw;
+  height: 100%;
   background: ${V1_BACKGROUND};
+  position: relative;
 `
+
+// const MainContainer = styled.div`
+//   min-height: 100vh;
+//   height: 100%;
+//   width: 100vw;
+//   background: ${V1_BACKGROUND};
+// `
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   width: 80vw;
   justify-content: center;
-  margin: 20px auto 5px auto;
+  margin: 40px auto 40px auto;
+  padding: 0 10px;
 `
 
-const MyOrderContainer = styled.div`
+const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: baseline;
-  margin: auto;
-  justify-content: space-between;
-  width: 80vw;
 `
 
-const MyOrderText = styled.h2`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  line-height: 14px;
+const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+  width: 50%;
+  text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
-const SubtotalText = styled.h3`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-  justify-content: flex-end;
+const LowerRowButton = styled.div`
+  margin: 25px 0 0;
+`
+
+const ErrorContainer = styled.div`
   display: flex;
-  width: 80vw;
-  margin: 0 auto;
+  justify-content: center;
+  margin: 20px;
 `
+
+const ErrorText = styled.text``
 
 const ViewCart = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-  const [error] = useSnackbar('error')
-  const { supperGroup, order, isLoading, foodId } = useSelector((state: RootState) => state.supper)
+  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
+  const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
+  const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
+  const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
+  const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
+  const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
+  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 
-  const onCancelClick = () => {
-    setModalIsOpen(false)
-  }
-
-  const onConfirmDiscardClick = () => {
-    if (order && foodId) dispatch(deleteFoodInOrder(order.orderId, foodId))
-    else {
-      error('Failed to delete item, please try again.')
+  const showButtons = () => {
+    if (isOwner === undefined) {
+      return <LoadingSpin />
+    } else if (isOwner) {
+      return (
+        <ButtonContainer>
+          <UpperRowButtons>
+            <UpperRowButtonContainer left>
+              <SupperButton
+                ghost
+                buttonWidth="90%"
+                defaultButtonDescription="Delete Order"
+                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+              />
+              {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
+                <DeleteOrderModal
+                  isOwner
+                  supperGroupId={supperGroup.supperGroupId}
+                  orderId={ownerOrderId}
+                  modalSetter={setDeleteOrderModalIsOpen}
+                />
+              )}
+            </UpperRowButtonContainer>
+            <UpperRowButtonContainer>
+              <SupperButton
+                buttonWidth="90%"
+                defaultButtonDescription="Close Group"
+                onButtonClick={() => setCloseGroupModalIsOpen(true)}
+              />
+              {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
+                <CloseGroupEarlyModal
+                  supperGroupId={supperGroup.supperGroupId}
+                  modalSetter={setCloseGroupModalIsOpen}
+                />
+              )}
+            </UpperRowButtonContainer>
+          </UpperRowButtons>
+          <LowerRowButton>
+            <SupperButton
+              center
+              ghost
+              buttonWidth="100%"
+              defaultButtonDescription="Delete Group"
+              onButtonClick={() => setDeleteGroupModalIsOpen(true)}
+            />
+            {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
+              <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
+            )}
+          </LowerRowButton>
+        </ButtonContainer>
+      )
+    } else {
+      return (
+        <ButtonContainer>
+          <SupperButton
+            center
+            defaultButtonDescription="Submit Order"
+            onButtonClick={() => {
+              if (supperGroup?.phoneNumber) {
+                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+              } else {
+                history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
+              }
+            }}
+          />
+        </ButtonContainer>
+      )
     }
-    setModalIsOpen(false)
   }
 
   return (
-    <MainContainer>
+    <Background>
       <TopNavBar title="View Cart" />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
-          {modalIsOpen && (
-            <ConfirmationModal
-              title={'Delete Item?'}
-              hasLeftButton={true}
-              leftButtonText={'Confirm'}
-              onLeftButtonClick={onConfirmDiscardClick}
-              rightButtonText={'Cancel'}
-              onRightButtonClick={onCancelClick}
-            />
+          {supperGroup && collatedOrder && (
+            <>
+              <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+              <OrderCard
+                supperGroup={supperGroup}
+                collatedOrder={collatedOrder}
+                ownerId={supperGroup.ownerId}
+                supperGroupStatus={supperGroup.status}
+                isEditable={isEditable}
+                orderId={orderId}
+                order={order}
+              />
+            </>
           )}
-          <ExpandableSGCard
-            editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
-            isOwner={supperGroup?.ownerId === localStorage.userID}
-            supperGroupName={supperGroup?.supperGroupName ?? ''}
-            supperGroupId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
-            ownerName={supperGroup?.ownerName ?? ''}
-            priceLimit={supperGroup?.costLimit ?? 50}
-            currentAmount={supperGroup?.currentFoodCost ?? 10}
-            closingTime={unixTo12HourTime(supperGroup?.closingTime)}
-            numberOfUsers={supperGroup?.userIdList?.length ?? 0}
-            deliveryFee={String(supperGroup?.additionalCost ?? '-')}
-          />
-          <>
-            <MyOrderContainer>
-              <MyOrderText>My Order</MyOrderText>
-              <UnderlinedButton
-                text="Add Item"
-                onClick={() =>
-                  history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
-                }
-                color="red"
-                fontWeight={200}
-              />
-            </MyOrderContainer>
-            <OrderSummaryCard
-              isEditable
-              ownerId={supperGroup?.ownerId}
-              foodList={order?.foodList}
-              orderList={supperGroup?.orderList}
-              onDeleteClick={() => setModalIsOpen(true)}
-              onEditClick={(e, food?: Food) => {
-                console.log(params.supperGroupId, order?.orderId, food?.foodMenuId, '60633d8ee60eb942b8b27f1e')
-                if (params.supperGroupId && order?.orderId && food?.foodMenuId)
-                  history.push(
-                    `${PATHS.EDIT_FOOD_ITEM}/${params.supperGroupId}/order/${order?.orderId}/food/${food.foodId}`,
-                  )
-              }}
-            />
-            <SubtotalText>Subtotal: ${(order?.totalCost ?? 0).toFixed(2)}</SubtotalText>
-            <ButtonContainer>
-              <Button
-                stopPropagation
-                defaultButtonDescription="Submit Order"
-                onButtonClick={() => history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)}
-                isFlipButton={false}
-              />
-            </ButtonContainer>
-          </>
+          {showButtons()}
         </>
       )}
-    </MainContainer>
+      <BottomNavBar />
+    </Background>
   )
 }
 

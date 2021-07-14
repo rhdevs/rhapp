@@ -7,7 +7,7 @@ import { V1_BACKGROUND } from '../../../common/colours'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import Button from '../../../components/Mobile/Button'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SGPaymentStatus } from '../../../components/Supper/CustomCards/SGPaymentStatus'
 import { deleteSupperGroup, getSupperGroupById, updateSupperGroupPaymentStatus } from '../../../store/supper/action'

@@ -48,6 +48,7 @@ import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModa
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
+import { SupperButton } from '../../components/Supper/SupperButton'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -74,6 +75,7 @@ export default function Supper() {
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
+      <SupperButton center ghost defaultButtonDescription="Ghost Button" />
       <OrderCard
         collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}

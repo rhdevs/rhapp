@@ -20,6 +20,7 @@ export const CloseGroupEarlyModal = (props: Props) => {
   return (
     <SupperModal
       title="Close Group Early?"
+      flex
       description="Close supper group if you are ready to order! No new changes can be made after supper group is closed."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}
