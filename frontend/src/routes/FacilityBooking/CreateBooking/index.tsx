@@ -143,6 +143,7 @@ export default function CreateBooking() {
   }
 
   const handleFromDateChange = (newDate: string) => {
+    console.log(newDate)
     dispatch(editBookingFromDate(new Date(newDate)))
   }
 

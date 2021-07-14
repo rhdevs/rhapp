@@ -15,6 +15,7 @@ const OverlayContainer = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 999;
+  display: block;
 `
 
 const MainContainer = styled.div`
@@ -108,11 +109,11 @@ function JCRCBlockOutModal({
   leftButtonText,
   leftButtonTextColor,
   leftButtonColor,
-  onLeftButtonClick,
   rightButtonText,
   rightButtonTextColor,
   rightButtonColor,
   onRightButtonClick,
+  onLeftButtonClick,
   onOverlayClick,
   top,
   bottom,
@@ -125,11 +126,11 @@ function JCRCBlockOutModal({
   leftButtonText: string
   leftButtonTextColor?: string
   leftButtonColor?: string
-  onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   rightButtonText: string
   rightButtonTextColor?: string
   rightButtonColor?: string
   onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   top?: number
   bottom?: number
@@ -144,8 +145,8 @@ function JCRCBlockOutModal({
   const InitialData: Facility[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
   const selectedFacilities: number[] = []
-  const [startDateTime, setStartDateTime] = useState()
-  const [endDateTime, setEndDateTime] = useState()
+  const [startDateTime, setStartDateTime] = useState(new Date())
+  const [endDateTime, setEndDateTime] = useState(new Date())
 
   const addToList = async (facilitiesID: number) => {
     // setStateChange(!stateChange)
@@ -169,6 +170,18 @@ function JCRCBlockOutModal({
 
   console.log(facilities)
   console.log(facilityList)
+
+  const handleStartDateChange = (newStartDate: string) => {
+    console.log(newStartDate)
+    setStartDateTime(new Date(newStartDate))
+    console.log(startDateTime)
+  }
+
+  const handleEndDateChange = (newEndDate: string) => {
+    console.log(newEndDate)
+    setEndDateTime(new Date(newEndDate))
+    console.log(endDateTime)
+  }
 
   useEffect(() => {
     setFacilityList(facilities)
@@ -208,13 +221,21 @@ function JCRCBlockOutModal({
           <TimeSelectionToFrom>
             <h3>From</h3>
           </TimeSelectionToFrom>
-          <TimeSelectionInput id="startTime" type="datetime-local" onChange={(e) => console.log(e.target.value)} />
+          <TimeSelectionInput
+            id="startTime"
+            type="datetime-local"
+            onChange={(e) => handleStartDateChange(e.target.value)}
+          />
         </TimeSelectionContainer>
         <TimeSelectionContainer>
           <TimeSelectionToFrom>
             <h3>To</h3>
           </TimeSelectionToFrom>
-          <TimeSelectionInput id="endTime" type="datetime-local" onChange={(e) => console.log(e.target.value)} />
+          <TimeSelectionInput
+            id="endTime"
+            type="datetime-local"
+            onChange={(e) => handleEndDateChange(e.target.value)}
+          />
         </TimeSelectionContainer>
         <ButtonContainer>
           {hasLeftButton && (

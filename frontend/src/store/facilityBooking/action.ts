@@ -273,6 +273,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
+  console.log(requestBody)
   if (selectedFacilityId === 0) {
     //validate if selected facility id is zero
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)

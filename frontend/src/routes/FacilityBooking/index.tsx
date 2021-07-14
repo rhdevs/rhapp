@@ -131,6 +131,10 @@ const StyledBodyDiv = styled.div`
   overflow: scroll;
 `
 
+const JCRCBlockOutModalConatainer = styled.div`
+  display: none;
+`
+
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -239,9 +243,9 @@ export default function FacilityBooking() {
                   title={'Facilities Blocking'}
                   hasLeftButton={true}
                   leftButtonText={'Done'}
-                  onLeftButtonClick={onConfirmDeleteClick}
                   rightButtonText={'Cancel'}
                   onRightButtonClick={onDeleteClick}
+                  onLeftButtonClick={onConfirmDeleteClick}
                   facilities={facilityList}
                 />
               )}
