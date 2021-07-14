@@ -160,6 +160,7 @@ export default function FacilityBooking() {
 
   const JCRCBlockOutButton = (
     <img
+      style={{ paddingLeft: '17vw' }}
       src={JCRCBlockOutIcon}
       onClick={() => {
         // setJCRCBlockOutPopUp(true)

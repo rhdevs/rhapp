@@ -25,6 +25,9 @@ const StyledNavBar = styled(NavBar)`
   position: sticky;
   top:0;
   z-index:200;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
 `
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
