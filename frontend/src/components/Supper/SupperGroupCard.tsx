@@ -120,12 +120,12 @@ const ClickableContainer = styled.div`
 type Props = {
   supperGroup?: SupperGroup | null
   homeSupperGroup?: HomeSupperGroup
-  isHome: boolean
+  isHome: boolean // makes card clickable
   comments?: string | undefined
   paymentInfo?: PaymentInfo[]
   location?: string
   estArrivalTime?: number
-  statusOnly?: boolean | undefined
+  statusOnly?: boolean | undefined // makes card clickable
   margin?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
@@ -151,6 +151,7 @@ export const SupperGroupCard = (props: Props) => {
   const isOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
+  const isClickableCard = props.isHome || props.statusOnly
 
   setTimeout(() => {
     // if details still dont show after 10s, show error
@@ -241,20 +242,22 @@ export const SupperGroupCard = (props: Props) => {
   )
 
   const onSupperCardClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.onClick) return props.onClick(e)
-    else {
-      if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-        // User is the owner or already has an ongoing order
-        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
-      } else {
-        // New SG to user
-        history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+    if (isClickableCard) {
+      if (props.onClick) return props.onClick(e)
+      else {
+        if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+          // User is the owner or already has an ongoing order
+          history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+        } else {
+          // New SG to user
+          history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+        }
       }
     }
   }
 
   return isOpenOrPending ? (
-    <MainCard flexDirection="row" minHeight="fit-content">
+    <MainCard margin={props.margin} flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
         {isDeleteModalOpen && deleteModal}
@@ -323,7 +326,7 @@ export const SupperGroupCard = (props: Props) => {
   ) : (
     <SGStatusCard
       margin={props.margin}
-      onClick={onSupperCardClick}
+      onCardClick={onSupperCardClick}
       isOwner={isOwner}
       supperGroupStatus={supperGroupStatus}
       restaurantLogo={restaurantLogo}

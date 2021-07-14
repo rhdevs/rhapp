@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { ShareAltOutlined } from '@ant-design/icons'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import {
@@ -16,8 +15,9 @@ import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
 import UserView from './UserView'
-import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 
 const MainContainer = styled.div`
   display: grid;
@@ -36,6 +36,7 @@ const ViewOrder = () => {
   const { supperGroup, collatedOrder, selectedSupperGroupStatus, order } = useSelector(
     (state: RootState) => state.supper,
   )
+  const [supperGroupNotFound, setSupperGroupNotFound] = useState<boolean>(false)
 
   let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
   let supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
@@ -77,16 +78,20 @@ const ViewOrder = () => {
 
   const totalFee = (order?.totalCost ?? 0) + deliveryFee
 
+  setTimeout(() => {
+    //throw error after 5s if suppergroup not found
+    if (!selectedSupperGroupStatus) setSupperGroupNotFound(true)
+  }, 5000)
+
   return (
     <MainContainer>
-      <TopNavBar
-        title="View Order"
-        rightComponent={
-          supperGroupIsOpen ? <ShareAltOutlined style={{ fontSize: '1.6rem', color: V1_RED }} /> : undefined
-        }
-      />
+      <TopNavBar title="View Order" />
       {!selectedSupperGroupStatus ? (
-        <LoadingSpin />
+        supperGroupNotFound ? (
+          <SupperErrorContent />
+        ) : (
+          <LoadingSpin />
+        )
       ) : (
         <>
           <div>
@@ -110,9 +115,9 @@ const ViewOrder = () => {
               />
             )}
           </div>
-          <BottomNavBar />{' '}
         </>
       )}
+      <BottomNavBar />
     </MainContainer>
   )
 }

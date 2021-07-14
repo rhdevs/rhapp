@@ -120,7 +120,7 @@ type Props = {
   cancelReason?: string | undefined
   statusOnly: boolean | undefined
   margin?: string
-  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  onCardClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 
 export const SGStatusCard = (props: Props) => {
@@ -245,41 +245,32 @@ export const SGStatusCard = (props: Props) => {
   }
 
   return (
-    <MainCard margin={props.margin} flexDirection="column">
-      <TopSection onClick={props.onClick}>
+    <MainCard onClick={props.onCardClick} margin={props.margin} flexDirection="column">
+      <TopSection>
         <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
         <TextSubContainer>
           <OrderIdContainer>{props.idHeader}</OrderIdContainer>
           <TitleContainer>{props.supperGroupName}</TitleContainer>
-          {props.statusOnly ? (
-            <StatusContainer statusOnly={props.statusOnly}>{showPayingStatus()}</StatusContainer>
-          ) : (
-            <></>
-          )}
+          {props.statusOnly && <StatusContainer statusOnly={props.statusOnly}>{showPayingStatus()}</StatusContainer>}
         </TextSubContainer>
       </TopSection>
-      {!props.statusOnly ? (
-        <>
-          {showContentBody()}
-          {!isCancelled && props.isOwner ? (
-            <OwnerButtonContainer>
-              <UnderlinedButton
-                onClick={() => {
-                  //TODO: TEST?? idk why its not pushing
-                  history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)
-                }}
-                text="Update Delivery Details"
-                color="red"
-                fontSize="14px"
-              />
-            </OwnerButtonContainer>
-          ) : (
-            <></>
-          )}
-        </>
-      ) : (
-        <></>
-      )}
+      <>
+        {!props.statusOnly && (
+          <>
+            {showContentBody()}
+            {!isCancelled && props.isOwner && (
+              <OwnerButtonContainer>
+                <UnderlinedButton
+                  onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
+                  text="Update Delivery Details"
+                  color="red"
+                  fontSize="14px"
+                />
+              </OwnerButtonContainer>
+            )}
+          </>
+        )}
+      </>
     </MainCard>
   )
 }
