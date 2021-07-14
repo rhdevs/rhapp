@@ -188,7 +188,7 @@ export default function ViewMyBookings() {
                       >
                         <BookingHeader>{booking.facilityName}</BookingHeader>
                         <BookingSubHeaderCCAName>
-                          <b>{booking.ccaName}:</b>
+                          <b>{booking.ccaName ? booking.ccaName : 'Personal'}:</b>
                         </BookingSubHeaderCCAName>
                         <BookingSubHeaderEventName>
                           {booking.eventName.length > 25 ? booking.eventName.slice(0, 20) + '...' : booking.eventName}

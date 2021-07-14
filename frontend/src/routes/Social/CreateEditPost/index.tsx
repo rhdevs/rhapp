@@ -285,7 +285,8 @@ export default function CreateEditPost() {
               />
             </Content>
             {isUploading && <LoadingSpin />}
-            {!isUploading && newPostImages.length < 3 && (
+            {/* Deprecate Uploading photos */}
+            {/* {!isUploading && newPostImages.length < 3 && (
               <Footer>
                 <InputFile
                   type="file"
@@ -300,7 +301,7 @@ export default function CreateEditPost() {
                   <FileImageFilled style={{ fontSize: '20px' }} />
                 </InputLabel>
               </Footer>
-            )}
+            )} */}
           </Card>
           {/* TODO: check if user has a role*/}
           {true && (
