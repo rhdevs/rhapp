@@ -181,9 +181,23 @@ function JCRCBlockOutModal({
     console.log(endDateTime)
   }
 
-  const submitBlockOut = () => {
+  const submitBlockOut = async () => {
     console.log('Submitting block out')
-    dispatch(SetBlockOutIsOpen(false))
+    const requestBody = {
+      startTime: parseInt((startDateTime.getTime() / 1000).toFixed(0)),
+      endTime: parseInt((endDateTime.getTime() / 1000).toFixed(0)),
+      facilities: selectedFacilities,
+    }
+    console.log(requestBody)
+    if (selectedFacilities === []) {
+      console.log('You have not chosen any facilities.')
+    } else if (new Date().getTime() > startDateTime.getTime()) {
+      console.log('You cannot create a booking on a date that is in the past.')
+    } else if (startDateTime.getTime() > endDateTime.getTime()) {
+      console.log('Start time is later than end time.')
+    } else {
+      dispatch(SetBlockOutIsOpen(false))
+    }
   }
 
   const onCancelClick = () => {
