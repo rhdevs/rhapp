@@ -148,13 +148,14 @@ export default function Supper() {
         statusOnly={false}
       />
       <SGStatusCard
-        supperGroupStatus={SupperGroupStatus.ORDERED}
+        supperGroupStatus={SupperGroupStatus.CLOSED}
         restaurantLogo={restaurantLogo}
         idHeader="RHSO#1002 Zhou BaoBao"
-        rawSupperGroupId={1}
+        rawSupperGroupId={3}
         buttonTeleHandle="ZBB"
         supperGroupName="f> SUPPER FRIENDS this is a long name let try me out :>"
         statusOnly={false}
+        isOwner
       />
       <SGStatusCard
         supperGroupStatus={SupperGroupStatus.AWAITING_PAYMENT}
