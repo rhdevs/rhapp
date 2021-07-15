@@ -36,8 +36,7 @@ export default function UpdateOrder() {
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
-  const { supperGroup, collatedOrder, order } = useSelector((state: RootState) => state.supper)
-  const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
+  const { supperGroup, collatedOrder, order, isLoading } = useSelector((state: RootState) => state.supper)
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
   const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
 
@@ -47,92 +46,73 @@ export default function UpdateOrder() {
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 
-  const showButtons = () => {
-    if (isOwner === undefined) {
-      return <LoadingSpin />
-    } else if (isOwner) {
-      return (
-        <ButtonContainer>
-          <UpperRowButtons>
-            <UpperRowButtonContainer left>
-              <SupperButton
-                ghost
-                buttonWidth="90%"
-                defaultButtonDescription="Delete Order"
-                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-              />
-              {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
-                <DeleteOrderModal
-                  isOwner
-                  supperGroupId={supperGroup.supperGroupId}
-                  orderId={supperGroup.ownerId}
-                  modalSetter={setDeleteOrderModalIsOpen}
-                />
-              )}
-            </UpperRowButtonContainer>
-            <UpperRowButtonContainer>
-              <SupperButton
-                buttonWidth="90%"
-                defaultButtonDescription="Close Group"
-                onButtonClick={() => setCloseGroupModalIsOpen(true)}
-              />
-              {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
-                <CloseGroupEarlyModal
-                  supperGroupId={supperGroup.supperGroupId}
-                  modalSetter={setCloseGroupModalIsOpen}
-                />
-              )}
-            </UpperRowButtonContainer>
-          </UpperRowButtons>
-          <LowerRowButton>
-            <SupperButton
-              center
-              ghost
-              buttonWidth="100%"
-              defaultButtonDescription="Delete Group"
-              onButtonClick={() => setDeleteGroupModalIsOpen(true)}
-            />
-            {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
-              <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
-            )}
-          </LowerRowButton>
-        </ButtonContainer>
-      )
-    } else {
-      return (
-        <ButtonContainer>
-          <SupperButton
-            center
-            defaultButtonDescription="Submit Order"
-            onButtonClick={() => {
-              if (supperGroup?.phoneNumber) {
-                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-              } else {
-                history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
-              }
-            }}
-          />
-        </ButtonContainer>
-      )
-    }
-  }
   return (
     <Background>
       <TopNavBar title="Update Order" />
-      <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-      {supperGroup && order && (
-        <OrderCard
-          supperGroup={supperGroup}
-          collatedOrder={collatedOrder}
-          ownerId={ownerOrderId}
-          supperGroupStatus={supperGroup.status}
-          isEditable={isEditable}
-          orderId={order.orderId}
-          order={order}
-        />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+          {supperGroup && order && (
+            <OrderCard
+              supperGroup={supperGroup}
+              collatedOrder={collatedOrder}
+              ownerId={ownerOrderId}
+              supperGroupStatus={supperGroup.status}
+              isEditable={isEditable}
+              orderId={order.orderId}
+              order={order}
+            />
+          )}
+          <ButtonContainer>
+            <UpperRowButtons>
+              <UpperRowButtonContainer left>
+                <SupperButton
+                  ghost
+                  buttonWidth="90%"
+                  defaultButtonDescription="Delete Order"
+                  onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                />
+                {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
+                  <DeleteOrderModal
+                    isOwner
+                    supperGroupId={supperGroup.supperGroupId}
+                    orderId={supperGroup.ownerId}
+                    modalSetter={setDeleteOrderModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+              <UpperRowButtonContainer>
+                <SupperButton
+                  buttonWidth="90%"
+                  defaultButtonDescription="Close Group"
+                  onButtonClick={() => setCloseGroupModalIsOpen(true)}
+                />
+                {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
+                  <CloseGroupEarlyModal
+                    supperGroupId={supperGroup.supperGroupId}
+                    modalSetter={setCloseGroupModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+            </UpperRowButtons>
+            <LowerRowButton>
+              <SupperButton
+                center
+                ghost
+                buttonWidth="100%"
+                defaultButtonDescription="Delete Group"
+                onButtonClick={() => setDeleteGroupModalIsOpen(true)}
+              />
+              {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
+                <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
+              )}
+            </LowerRowButton>
+          </ButtonContainer>
+          <InformationCard content="Close supper group if you are ready to order" />
+        </>
       )}
-      {showButtons()}
-      <InformationCard content="Close supper group if you are ready to order" />
       <BottomNavBar />
     </Background>
   )

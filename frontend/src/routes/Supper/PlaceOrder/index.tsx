@@ -81,7 +81,7 @@ export default function PlaceOrder() {
 
   return (
     <Background>
-      <TopNavBar title="Place Order" />
+      <TopNavBar title="Order" />
       {isLoading ? (
         <LoadingSpin />
       ) : (
