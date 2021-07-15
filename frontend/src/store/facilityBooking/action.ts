@@ -267,6 +267,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
+  console.log(requestBody)
   if (selectedFacilityId === 0) {
     //validate if selected facility id is zero
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
@@ -355,6 +356,14 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
+}
+
+export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
+}
+
+export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {

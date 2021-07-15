@@ -257,10 +257,12 @@ def editUserCCA():
         userID = data.get('userID')
 
         if request.method == "POST":
-            documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
-            upserts = [pymongo.UpdateOne(
-                doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
-            db.UserCCA.bulk_write(upserts)
+            db.UserCCA.delete_many({"userID": userID})
+            if len(ccaID) > 0:
+                documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
+                upserts = [pymongo.UpdateOne(
+                    doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
+                db.UserCCA.bulk_write(upserts)
 
         elif request.method == "DELETE":
             db.UserCCA.delete_many(body)

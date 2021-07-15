@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
@@ -9,6 +10,7 @@ import { PATHS } from '../../Routes'
 import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { SetIsJcrc } from '../../../store/facilityBooking/action'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
@@ -80,11 +82,14 @@ const StyledPasswordInput = styled.div`
   }
   .ant-input {
     border-radius: 15px;
+    font-size: 20px;
+    font-weight: 200;
   }
 `
 
 export default function Login() {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -125,6 +130,9 @@ export default function Login() {
         .then((data) => {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          if (username === 'RH_JCRC') {
+            dispatch(SetIsJcrc(true))
+          }
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
