@@ -4,6 +4,9 @@ import { Button } from 'antd'
 
 import 'antd/dist/antd.css'
 import { Facility } from '../../store/facilityBooking/types'
+import { SetBlockOutIsOpen } from '../../store/facilityBooking/action'
+import { useDispatch, useSelector } from 'react-redux'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -112,8 +115,6 @@ function JCRCBlockOutModal({
   rightButtonText,
   rightButtonTextColor,
   rightButtonColor,
-  onRightButtonClick,
-  onLeftButtonClick,
   onOverlayClick,
   top,
   bottom,
@@ -129,8 +130,6 @@ function JCRCBlockOutModal({
   rightButtonText: string
   rightButtonTextColor?: string
   rightButtonColor?: string
-  onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   top?: number
   bottom?: number
@@ -143,11 +142,13 @@ function JCRCBlockOutModal({
   const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
   const InitialData: Facility[] = []
+  const InitiatlSelectedFacilities: number[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
   const [selectedFacilities, setSelectedFacilities] = useState<number[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const [startDateTime, setStartDateTime] = useState(new Date())
   const [endDateTime, setEndDateTime] = useState(new Date())
+  const dispatch = useDispatch()
 
   const handleSelectOne = async (facilityID: number) => {
     if (selectedFacilities.includes(facilityID)) {
@@ -168,6 +169,24 @@ function JCRCBlockOutModal({
     }
   }
 
+  const addToList = async (facilitiesID: number) => {
+    // setStateChange(!stateChange)
+    console.log(facilitiesID)
+    const result = selectedFacilities.findIndex((e) => e === facilitiesID)
+    console.log(result)
+    if (result > -1) {
+      const tempArray = selectedFacilities
+      tempArray.splice(result, 1)
+      setSelectedFacilities(tempArray)
+      console.log('Facilities Found')
+    } else {
+      const tempArray = selectedFacilities
+      tempArray.push(facilitiesID)
+      setSelectedFacilities(tempArray)
+      console.log('Facilites not found.')
+    }
+  }
+
   const convertLocalTime = (date: Date) => {
     const newDate = new Date(date.getTime() + 28800000)
     return newDate.toISOString().slice(0, -8)
@@ -185,10 +204,61 @@ function JCRCBlockOutModal({
     console.log(endDateTime)
   }
 
+  const submitBlockOut = async () => {
+    console.log('Submitting block out')
+    const requestBody = {
+      startTime: parseInt((startDateTime.getTime() / 1000).toFixed(0)),
+      endTime: parseInt((endDateTime.getTime() / 1000).toFixed(0)),
+      facilities: selectedFacilities,
+    }
+    console.log(requestBody)
+    if (selectedFacilities === []) {
+      console.log('You have not chosen any facilities.')
+    } else if (new Date().getTime() > startDateTime.getTime()) {
+      console.log('You cannot create a booking on a date that is in the past.')
+    } else if (startDateTime.getTime() > endDateTime.getTime()) {
+      console.log('Start time is later than end time.')
+    } else {
+      const response = await fetch(
+        DOMAIN_URL.FACILITY +
+          ENDPOINTS.JCRC_BLOCKOUT +
+          '?token=' +
+          // localStorage.getItem('token') +
+          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJBMTIzNDU2N0IiLCJwYXNzd29yZEhhc2giOiIxZDQ2YjFlZGQzYzU0ZmY2YTQ5MTNlMjg0ZWFiODcyNThjNzIwMTZlOTU5Yzc1NDhmYjM3M2U2MmVmZWMzMWU2In0.aWUOWhMyAnfDi7CtNlZisrLhuRxRsl0-8nawTriZOq0' +
+          '&userID=' +
+          // localStorage.getItem('userID'),
+          // hardcode to send JCRC userID
+          'RH_JCRC',
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        },
+      )
+
+      console.log(requestBody)
+      if (response.status >= 400) {
+        const body = await response.json()
+        console.log(body.err)
+      } else {
+        console.log('Successful blockout.')
+        dispatch(SetBlockOutIsOpen(false))
+      }
+    }
+  }
+
+  const onCancelClick = () => {
+    console.log('Closing Modal')
+    dispatch(SetBlockOutIsOpen(false))
+  }
+
   useEffect(() => {
     setFacilityList(facilities)
     // setAllUncheckedOrChecked(false)
-  }, [facilities, facilityList])
+  }, [])
 
   return (
     <>
@@ -250,7 +320,7 @@ function JCRCBlockOutModal({
                 border: defaultLeftButtonColor,
                 width: '80px',
               }}
-              onClick={onLeftButtonClick}
+              onClick={submitBlockOut}
             >
               {leftButtonText}
             </Button>
@@ -263,7 +333,7 @@ function JCRCBlockOutModal({
               marginLeft: '10px',
               width: '80px',
             }}
-            onClick={onRightButtonClick}
+            onClick={onCancelClick}
           >
             {rightButtonText}
           </Button>

@@ -10,7 +10,13 @@ import { useHistory } from 'react-router-dom'
 import { RootState } from '../../store/types'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
-import { changeTab, getFacilityList, SetIsLoading, setSelectedFacility } from '../../store/facilityBooking/action'
+import {
+  changeTab,
+  getFacilityList,
+  SetIsLoading,
+  setSelectedFacility,
+  SetBlockOutIsOpen,
+} from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
 import AlumniRoom from '../../assets/facilitiesLogos/AlumniRoom.svg'
 import BandRoom from '../../assets/facilitiesLogos/BandRoom.svg'
@@ -131,17 +137,12 @@ const StyledBodyDiv = styled.div`
   overflow: scroll;
 `
 
-const JCRCBlockOutModalConatainer = styled.div`
-  display: none;
-`
-
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, selectedTab, isLoading } = useSelector(
+  const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
-  const [JCRCBlockOutPopUp, setJCRCBlockOutPopUp] = useState(false)
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
@@ -159,9 +160,12 @@ export default function FacilityBooking() {
 
   const JCRCBlockOutButton = (
     <img
+      style={{ paddingLeft: '17vw' }}
       src={JCRCBlockOutIcon}
       onClick={() => {
-        setJCRCBlockOutPopUp(true)
+        // setJCRCBlockOutPopUp(true)
+        console.log('Open Modal')
+        dispatch(SetBlockOutIsOpen(true))
       }}
     />
   )
@@ -208,12 +212,14 @@ export default function FacilityBooking() {
   }
 
   const onConfirmDeleteClick = () => {
-    setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+    // setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+    dispatch(SetBlockOutIsOpen(false))
     // dispatch(DeletePost(postId))
   }
 
   const onDeleteClick = () => {
-    setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+    // setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
+    dispatch(SetBlockOutIsOpen(false))
   }
 
   return (
@@ -238,14 +244,12 @@ export default function FacilityBooking() {
               </StyledRadioGroup>
             </StyledRadioGroupDiv>
             <StyledBodyDiv>
-              {JCRCBlockOutPopUp && (
+              {blockOutIsOpen && (
                 <JCRCBlockOutModal
                   title={'Facilities Blocking'}
                   hasLeftButton={true}
                   leftButtonText={'Done'}
                   rightButtonText={'Cancel'}
-                  onRightButtonClick={onDeleteClick}
-                  onLeftButtonClick={onConfirmDeleteClick}
                   facilities={facilityList}
                 />
               )}

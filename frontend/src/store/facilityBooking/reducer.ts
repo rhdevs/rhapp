@@ -5,6 +5,7 @@ import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './typ
 const initialState = {
   // MAIN PAGE
   isLoading: false,
+  blockOutIsOpen: false,
   facilityList: [],
   locationList: [],
   selectedTab: '',
@@ -36,6 +37,7 @@ const initialState = {
 
 type State = {
   isLoading: boolean
+  blockOutIsOpen: boolean
   facilityList: Facility[]
   locationList: string[]
   selectedTab: string
@@ -214,6 +216,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         isLoading: action.isLoading,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN: {
+      return {
+        ...state,
+        blockOutIsOpen: action.blockOutIsOpen,
       }
     }
 

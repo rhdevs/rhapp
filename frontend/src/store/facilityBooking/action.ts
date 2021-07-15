@@ -369,6 +369,10 @@ export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
+export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
+}
+
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
 }
