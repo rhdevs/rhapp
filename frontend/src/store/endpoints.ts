@@ -25,6 +25,7 @@ export enum ENDPOINTS {
   BOOKING = '/bookings',
   VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
+  JCRC_BLOCKOUT = '/bookings/blockout',
 
   // LAUNDRY
   MACHINE_LIST = '/location',
