@@ -140,13 +140,14 @@ const StyledBodyDiv = styled.div`
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen } = useSelector(
+  const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen, isJcrc } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(getFacilityList())
+    console.log(isJcrc)
   }, [dispatch])
 
   const MyBookingIcon = (
@@ -224,12 +225,16 @@ export default function FacilityBooking() {
 
   return (
     <>
-      <TopNavBar
-        title={'Facilities'}
-        leftIcon={true}
-        centerComponent={JCRCBlockOutButton}
-        rightComponent={MyBookingIcon}
-      />
+      {isJcrc ? (
+        <TopNavBar
+          title={'Facilities'}
+          leftIcon={true}
+          centerComponent={JCRCBlockOutButton}
+          rightComponent={MyBookingIcon}
+        />
+      ) : (
+        <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
+      )}
       <MainContainer>
         {isLoading && <LoadingSpin />}
         {!isLoading && (
