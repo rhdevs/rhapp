@@ -27,7 +27,7 @@ const Background = styled.div`
   position: relative;
 `
 
-export const ButtonContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 80vw;
@@ -36,12 +36,12 @@ export const ButtonContainer = styled.div`
   padding: 0 10px;
 `
 
-export const UpperRowButtons = styled.div`
+const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
