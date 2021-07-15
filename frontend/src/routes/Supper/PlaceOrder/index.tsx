@@ -7,7 +7,8 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
+import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
+import { ViewMenuFoodModal } from '../../../components/Supper/ViewMenuFoodModal'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
 import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
@@ -22,6 +23,7 @@ import {
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   width: 100vw;
@@ -86,18 +88,7 @@ export default function PlaceOrder() {
         <LoadingSpin />
       ) : (
         <>
-          <ExpandableSGCard
-            editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
-            isOwner={supperGroup?.ownerId === localStorage.userID}
-            supperGroupName={supperGroup?.supperGroupName ?? ''}
-            supperGroupId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
-            ownerName={supperGroup?.ownerName ?? ''}
-            priceLimit={supperGroup?.costLimit}
-            currentAmount={supperGroup?.currentFoodCost ?? 10}
-            closingTime={unixTo12HourTime(supperGroup?.closingTime)}
-            numberOfUsers={supperGroup?.userIdList?.length ?? 0}
-            deliveryFee={String(supperGroup?.additionalCost ?? '-')}
-          />
+          <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>
               <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
