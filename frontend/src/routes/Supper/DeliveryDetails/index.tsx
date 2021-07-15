@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
-import Button from '../../../components/Mobile/Button'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
@@ -16,12 +15,17 @@ import {
   setEstimatedArrivalTime,
   updateSupperGroup,
   unixTo12HourTime,
+  setIsLoading,
 } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
 import { V1_BACKGROUND } from '../../../common/colours'
-import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
+import { FormHeader } from '../../../components/Supper/FormHeader'
+import { SupperButton } from '../../../components/Supper/SupperButton'
+import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   width: 100vw;
@@ -46,33 +50,23 @@ const StyledSGIdText = styled.text`
   color: #00000099;
 `
 
-const StyledText = styled.text`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-`
-
 const DeliveryTimeContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 20px 0;
+  margin: 30px 0 15px 0;
   align-items: center;
   justify-content: space-between;
   width: 13rem;
+  align-items: baseline;
 `
 
 const StyledTimeText = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
-  font-size: 19px;
+  font-size: 18px;
   line-height: 22px;
   color: #000000a6;
-`
-
-const ButtonContainer = styled.div`
-  margin: 20px auto 10px auto;
 `
 
 const InputText = styled.input`
@@ -108,27 +102,16 @@ const ErrorText = styled.p<{ padding?: string }>`
   ${(props) => props.padding && `padding: ${props.padding};`}
 `
 
-const RedText = styled.text`
-  color: red;
-  padding-right: 5px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
-
 type FormValues = {
   location: string
   cancelReason: string
 }
 
 const DeliveryDetails = () => {
-  const { register, handleSubmit, reset, watch, errors, control } = useForm<FormValues>({
+  const { register, handleSubmit, reset, watch, setValue, errors } = useForm<FormValues>({
     shouldUnregister: false,
   })
   const history = useHistory()
-  const RedAsterisk = <RedText>*</RedText>
   const dispatch = useDispatch()
   const params = useParams<{ supperGroupId: string }>()
   const { supperGroup, deliveryTime, estArrivalTime, selectedSupperGroupStatus, isLoading } = useSelector(
@@ -136,6 +119,7 @@ const DeliveryDetails = () => {
   )
   const [orderStatusHasError, setOrderStatusHasError] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false)
   const currentUNIXDate = Math.round(Date.now() / 1000)
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
   const errorStyling = {
@@ -170,6 +154,7 @@ const DeliveryDetails = () => {
       selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
     ) {
       setOrderStatusHasError(false)
+      setValue('cancelReason', undefined)
     }
   }, [selectedSupperGroupStatus])
 
@@ -183,7 +168,18 @@ const DeliveryDetails = () => {
       setOrderStatusHasError(true)
       return
     }
+    if (
+      selectedSupperGroupStatus === SupperGroupStatus.ORDERED ||
+      selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
+    ) {
+      setValue('cancelReason', 'ignore')
+    } else if (selectedSupperGroupStatus === SupperGroupStatus.CANCELLED) {
+      setValue('location', 'ignore')
+    }
+    console.log(errors, watch())
     handleSubmit((data) => {
+      dispatch(setIsLoading(true))
+
       const initialGroup = supperGroup
       if (
         initialGroup?.status === selectedSupperGroupStatus &&
@@ -194,20 +190,23 @@ const DeliveryDetails = () => {
         // No changes were made - ignore submission
         return
       }
-      console.log(Math.round(Date.now() / 1000) + 60 * deliveryTime)
       if (selectedSupperGroupStatus === SupperGroupStatus.CANCELLED) {
-        const updatedInfo = {
-          status: selectedSupperGroupStatus,
-          comments: data.cancelReason,
+        if (data.cancelReason) {
+          setIsCancelModalOpen(true)
         }
-        dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
-      } else {
+      } else if (
+        selectedSupperGroupStatus === SupperGroupStatus.ORDERED ||
+        selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
+      ) {
         const updatedInfo = {
           status: selectedSupperGroupStatus,
           estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime,
           location: data.location,
         }
+        console.log(updatedInfo)
         dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+        dispatch(setIsLoading(false))
+        history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
       }
     })()
   }
@@ -245,6 +244,14 @@ const DeliveryDetails = () => {
     }
   }
 
+  const onCancelModalConfirmClick = () => {
+    const updatedInfo = {
+      status: selectedSupperGroupStatus,
+      comments: watch('cancelReason'),
+    }
+    dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+  }
+
   return (
     <Background>
       <TopNavBar title="Delivery Details" onLeftClick={onLeftClick} />
@@ -254,53 +261,45 @@ const DeliveryDetails = () => {
         ) : (
           <>
             {hasChangedModal && (
-              <ConfirmationModal
-                title="Discard Changes?"
-                hasLeftButton
-                leftButtonText="Delete"
-                onLeftButtonClick={() => history.goBack()}
-                rightButtonText="Cancel"
-                onRightButtonClick={() => setHasChangedModal(false)}
+              <DiscardChangesModal modalSetter={setHasChangedModal} onLeftButtonClick={() => history.goBack()} />
+            )}
+            {isCancelModalOpen && (
+              <CancelGroupModal
+                modalSetter={setIsCancelModalOpen}
+                onLeftButtonClick={onCancelModalConfirmClick}
+                supperGroupId={params.supperGroupId}
               />
             )}
             <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
-            <StyledText>Order Status {RedAsterisk}</StyledText>
+            <FormHeader isCompulsory headerName="Order Status" />
             <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
             {orderStatusHasError && <ErrorText padding="5px 0 0 0">Status required!</ErrorText>}
             {supperGroupIsCancelled ? (
               <CancellationBox>
-                <StyledText>Reason for Cancellation {RedAsterisk}</StyledText>
+                <FormHeader headerName="Reason for Cancellation" isCompulsory />
                 <CancellationInputBox>
-                  <Controller
-                    name="cancelReason"
-                    render={({ onChange, value }) => (
-                      <InputRow
-                        placeholder="e.g. Driver cancelled, Restaurant cancelled.."
-                        textarea
-                        value={value}
-                        onChange={onChange}
-                        {...register('cancelReason', {
-                          required: true,
-                          validate: (input) => input.trim().length !== 0,
-                        })}
-                        haserror={errors.cancelReason ? true : false}
-                      />
-                    )}
-                    control={control}
-                    defaultValue={null}
+                  <InputRow
+                    textarea
+                    placeholder="e.g. Driver cancelled, Restaurant cancelled.."
+                    {...register('cancelReason', {
+                      required: true,
+                      validate: (input) => input.trim().length !== 0,
+                    })}
+                    haserror={errors.cancelReason ? true : false}
                   />
-                  {errors.cancelReason?.type && <ErrorText>Reason for cancellation required!</ErrorText>}
+                  {errors.cancelReason?.type === 'required' && <ErrorText>Reason for cancellation required!</ErrorText>}
+                  {errors.cancelReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
                 </CancellationInputBox>
               </CancellationBox>
             ) : (
               <>
                 <DeliveryTimeContainer>
-                  <StyledText>Delivery Time</StyledText>
+                  <FormHeader margin="0" headerName="Delivery Time" />
                   <StyledTimeText>{estArrivalTime}</StyledTimeText>
                 </DeliveryTimeContainer>
                 <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
                 <br />
-                <StyledText>Collection Point {RedAsterisk}</StyledText>
+                <FormHeader headerName="Collection Point" isCompulsory />
                 <>
                   <InputText
                     type="text"
@@ -311,29 +310,14 @@ const DeliveryDetails = () => {
                       validate: (input) => input.trim().length !== 0,
                     })}
                     style={errors.location ? errorStyling : {}}
+                    defaultValue={supperGroup?.location ?? ''}
                   />
                   {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
                   {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
                 </>
               </>
             )}
-            <ButtonContainer>
-              <Button
-                stopPropagation
-                defaultButtonDescription="Save Changes"
-                buttonWidth="fit-content"
-                buttonHeight="2.3rem"
-                descriptionStyle={{
-                  fontFamily: 'Inter',
-                  fontStyle: 'normal',
-                  fontWeight: 200,
-                  fontSize: '17px',
-                  lineHeight: '22px',
-                }}
-                onButtonClick={onSubmit}
-                isFlipButton={false}
-              />
-            </ButtonContainer>
+            <br /> <SupperButton center defaultButtonDescription="Save Changes" onButtonClick={onSubmit} />
           </>
         )}
       </MainContainer>

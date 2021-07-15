@@ -184,6 +184,7 @@ export const FoodLine = (props: Props) => {
   const foodName = props.food?.foodName ?? props.foodName
   const hasFoodName = foodName ? true : false
   const price = `$${(props.food?.foodPrice ?? props.foodPrice ?? 0).toFixed(2)}`
+
   const customisations = props.customisations ?? []
   props.food?.custom?.map((custom) =>
     custom.options.map((option) => {
@@ -193,7 +194,7 @@ export const FoodLine = (props: Props) => {
   const comments = props.food?.comments ?? props.comments
   const cancelAction = props.food?.cancelAction ?? props.cancelAction
   const updates = props.food?.updates ?? props.updates
-  const wasEdited = props.wasEdited ?? updates ? true : false
+  // const wasEdited = props.wasEdited ?? updates ? true : false
 
   const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (props.onEditClick) {
@@ -202,18 +203,20 @@ export const FoodLine = (props: Props) => {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${foodId}`)
     }
   }
+
   const onCancelActionClick = (e, cancelAction?: CancelAction) => {
     e.preventDefault()
     if (cancelAction === CancelAction.CONTACT) {
-      if (props.cancelActionOnClick) {
-        props.cancelActionOnClick(e)
-      } else if (props.cancelActionModalSetter) {
+      if (props.cancelActionModalSetter) {
         props.cancelActionModalSetter(true)
+      } else if (props.cancelActionOnClick) {
+        props.cancelActionOnClick(e)
       }
     }
   }
 
   const content = () => {
+    const wasEdited = props.wasEdited ?? updates ? true : false
     if (hasError) {
       if (props.showError) {
         return (
@@ -229,9 +232,12 @@ export const FoodLine = (props: Props) => {
       }
     } else {
       let priceValue = price
+      console.log(updates, wasEdited)
       if (updates?.updateAction === UpdateAction.REMOVE) {
         priceValue = '$0.00'
-      } else if (updates?.updateAction === UpdateAction.UPDATE) {
+      }
+      if (updates?.updateAction === UpdateAction.UPDATE) {
+        console.log(priceValue)
         priceValue = `$${(updates.updatedPrice ?? 0).toFixed(2)}`
       }
       return (
