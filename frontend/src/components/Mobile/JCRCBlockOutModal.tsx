@@ -198,12 +198,9 @@ function JCRCBlockOutModal({
         DOMAIN_URL.FACILITY +
           ENDPOINTS.JCRC_BLOCKOUT +
           '?token=' +
-          // localStorage.getItem('token') +
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJBMTIzNDU2N0IiLCJwYXNzd29yZEhhc2giOiIxZDQ2YjFlZGQzYzU0ZmY2YTQ5MTNlMjg0ZWFiODcyNThjNzIwMTZlOTU5Yzc1NDhmYjM3M2U2MmVmZWMzMWU2In0.aWUOWhMyAnfDi7CtNlZisrLhuRxRsl0-8nawTriZOq0' +
+          localStorage.getItem('token') +
           '&userID=' +
-          // localStorage.getItem('userID'),
-          // hardcode to send JCRC userID
-          'RH_JCRC',
+          localStorage.getItem('userID'),
         {
           method: 'POST',
           mode: 'cors',

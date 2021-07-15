@@ -212,17 +212,6 @@ export default function FacilityBooking() {
     }
   }
 
-  const onConfirmDeleteClick = () => {
-    // setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
-    dispatch(SetBlockOutIsOpen(false))
-    // dispatch(DeletePost(postId))
-  }
-
-  const onDeleteClick = () => {
-    // setJCRCBlockOutPopUp(!JCRCBlockOutPopUp)
-    dispatch(SetBlockOutIsOpen(false))
-  }
-
   return (
     <>
       {isJcrc ? (
