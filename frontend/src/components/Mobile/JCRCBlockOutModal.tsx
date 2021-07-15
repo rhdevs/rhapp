@@ -144,10 +144,30 @@ function JCRCBlockOutModal({
   const InitialData: Facility[] = []
   const InitiatlSelectedFacilities: number[] = []
   const [facilityList, setFacilityList] = useState(InitialData)
-  const [selectedFacilities, setSelectedFacilities] = useState(InitiatlSelectedFacilities)
+  const [selectedFacilities, setSelectedFacilities] = useState<number[]>([])
+  const [selectAll, setSelectAll] = useState(false)
   const [startDateTime, setStartDateTime] = useState(new Date())
   const [endDateTime, setEndDateTime] = useState(new Date())
   const dispatch = useDispatch()
+
+  const handleSelectOne = async (facilityID: number) => {
+    if (selectedFacilities.includes(facilityID)) {
+      setSelectedFacilities(selectedFacilities.filter((id) => id !== facilityID))
+      setSelectAll(false)
+    } else {
+      setSelectedFacilities(selectedFacilities.concat(facilityID))
+    }
+  }
+
+  const handleSelectAll = async () => {
+    if (selectAll) {
+      setSelectedFacilities([])
+      setSelectAll(false)
+    } else {
+      setSelectedFacilities(facilityList.map((facility) => facility.facilityID))
+      setSelectAll(true)
+    }
+  }
 
   const addToList = async (facilitiesID: number) => {
     // setStateChange(!stateChange)
@@ -165,16 +185,12 @@ function JCRCBlockOutModal({
       setSelectedFacilities(tempArray)
       console.log('Facilites not found.')
     }
-    console.log(selectedFacilities)
   }
 
   const convertLocalTime = (date: Date) => {
     const newDate = new Date(date.getTime() + 28800000)
     return newDate.toISOString().slice(0, -8)
   }
-
-  console.log(facilities)
-  console.log(facilityList)
 
   const handleStartDateChange = (newStartDate: string) => {
     console.log(newStartDate)
@@ -256,7 +272,7 @@ function JCRCBlockOutModal({
           <VenueSelection>
             <VenueOptions>
               Select all
-              <Venueinput id="0" type="checkbox" onClick={() => addToList(0)}></Venueinput>
+              <Venueinput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll}></Venueinput>
             </VenueOptions>
             {facilityList.map((facility) => {
               if (facility.facilityLocation)
@@ -266,7 +282,8 @@ function JCRCBlockOutModal({
                     <Venueinput
                       id={String(facility.facilityID)}
                       type="checkbox"
-                      onClick={() => addToList(facility.facilityID)}
+                      checked={selectedFacilities.includes(facility.facilityID)}
+                      onClick={() => handleSelectOne(facility.facilityID)}
                     ></Venueinput>
                   </VenueOptions>
                 )
