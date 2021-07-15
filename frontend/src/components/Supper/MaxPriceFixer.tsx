@@ -31,7 +31,11 @@ export const MaxPriceFixer = (props: Props) => {
   }, [])
 
   const subFromPriceLimit = () => {
-    if (priceLimit > (props.min ?? 0)) {
+    const diffVal = priceLimit - (props.min ?? 0)
+    if (diffVal < 5) {
+      dispatch(setPriceLimit(priceLimit - diffVal))
+      dispatch(setCount(priceLimit - diffVal))
+    } else if (priceLimit > (props.min ?? 0)) {
       dispatch(setPriceLimit(priceLimit - 5))
       dispatch(setCount(priceLimit - 5))
     }
@@ -44,7 +48,13 @@ export const MaxPriceFixer = (props: Props) => {
 
   return (
     <CounterContainer center={props.center ?? false}>
-      <MinusButton min={props.min} defaultValue={props.defaultValue} color="DARK_BLUE" onClick={subFromPriceLimit} />
+      <MinusButton
+        increment={5}
+        min={props.min}
+        defaultValue={props.defaultValue}
+        color="DARK_BLUE"
+        onClick={subFromPriceLimit}
+      />
       <ValueContainer>${priceLimit}</ValueContainer>
       <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />
     </CounterContainer>

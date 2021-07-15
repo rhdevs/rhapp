@@ -20,7 +20,7 @@ const StyledButton = styled.img`
 `
 
 const BottomNav = styled.div`
-  z-index: 1000;
+  z-index: 800;
   overflow: hidden;
   position: fixed;
   bottom: 0;

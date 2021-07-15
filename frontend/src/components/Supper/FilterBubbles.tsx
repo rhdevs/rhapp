@@ -73,11 +73,17 @@ export const FilterBubbles = () => {
 
   const onClosingTimeFilterClick = () => {
     if (closingTimeFilter === Filter.DEFAULT) {
-      if (amountLeftFilter !== Filter.DEFAULT) dispatch(getAmountLeftFilter(Filter.DEFAULT))
+      if (amountLeftFilter !== Filter.DEFAULT) {
+        dispatch(getAmountLeftFilter(Filter.DEFAULT))
+        setAmountLeftIcon(defaultFilterIcon)
+      }
       dispatch(getClosingTimeFilter(Filter.ASCENDING))
       setClosingTimeIcon(ascendingFilterIcon)
     } else if (closingTimeFilter === Filter.ASCENDING) {
-      if (amountLeftFilter !== Filter.DEFAULT) dispatch(getAmountLeftFilter(Filter.DEFAULT))
+      if (amountLeftFilter !== Filter.DEFAULT) {
+        dispatch(getAmountLeftFilter(Filter.DEFAULT))
+        setAmountLeftIcon(defaultFilterIcon)
+      }
       dispatch(getClosingTimeFilter(Filter.DESCENDING))
       setClosingTimeIcon(descendingFilterIcon)
     } else {
@@ -88,11 +94,17 @@ export const FilterBubbles = () => {
 
   const onAmountLefftFilterClick = () => {
     if (amountLeftFilter === Filter.DEFAULT) {
-      if (closingTimeFilter !== Filter.DEFAULT) dispatch(getClosingTimeFilter(Filter.DEFAULT))
+      if (closingTimeFilter !== Filter.DEFAULT) {
+        dispatch(getClosingTimeFilter(Filter.DEFAULT))
+        setClosingTimeIcon(defaultFilterIcon)
+      }
       dispatch(getAmountLeftFilter(Filter.ASCENDING))
       setAmountLeftIcon(ascendingFilterIcon)
     } else if (amountLeftFilter === Filter.ASCENDING) {
-      if (closingTimeFilter !== Filter.DEFAULT) dispatch(getClosingTimeFilter(Filter.DEFAULT))
+      if (closingTimeFilter !== Filter.DEFAULT) {
+        dispatch(getClosingTimeFilter(Filter.DEFAULT))
+        setClosingTimeIcon(defaultFilterIcon)
+      }
       dispatch(getAmountLeftFilter(Filter.DESCENDING))
       setAmountLeftIcon(descendingFilterIcon)
     } else {

@@ -203,13 +203,14 @@ export const FoodLine = (props: Props) => {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${foodId}`)
     }
   }
+
   const onCancelActionClick = (e, cancelAction?: CancelAction) => {
     e.preventDefault()
     if (cancelAction === CancelAction.CONTACT) {
-      if (props.cancelActionOnClick) {
-        props.cancelActionOnClick(e)
-      } else if (props.cancelActionModalSetter) {
+      if (props.cancelActionModalSetter) {
         props.cancelActionModalSetter(true)
+      } else if (props.cancelActionOnClick) {
+        props.cancelActionOnClick(e)
       }
     }
   }
