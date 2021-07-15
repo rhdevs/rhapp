@@ -141,9 +141,7 @@ function JCRCBlockOutModal({
   const defaultLeftButtonTextColor = leftButtonTextColor ?? '#FFFFFF'
   const defaultRightButtonColor = rightButtonColor ?? '#FAFAF4'
   const defaultRightButtonTextColor = rightButtonTextColor ?? '#000000'
-  const InitialData: Facility[] = []
-  const InitiatlSelectedFacilities: number[] = []
-  const [facilityList, setFacilityList] = useState(InitialData)
+  const [facilityList, setFacilityList] = useState<Facility[]>([])
   const [selectedFacilities, setSelectedFacilities] = useState<number[]>([])
   const [selectAll, setSelectAll] = useState(false)
   const [startDateTime, setStartDateTime] = useState(new Date())
@@ -167,29 +165,6 @@ function JCRCBlockOutModal({
       setSelectedFacilities(facilityList.map((facility) => facility.facilityID))
       setSelectAll(true)
     }
-  }
-
-  const addToList = async (facilitiesID: number) => {
-    // setStateChange(!stateChange)
-    console.log(facilitiesID)
-    const result = selectedFacilities.findIndex((e) => e === facilitiesID)
-    console.log(result)
-    if (result > -1) {
-      const tempArray = selectedFacilities
-      tempArray.splice(result, 1)
-      setSelectedFacilities(tempArray)
-      console.log('Facilities Found')
-    } else {
-      const tempArray = selectedFacilities
-      tempArray.push(facilitiesID)
-      setSelectedFacilities(tempArray)
-      console.log('Facilites not found.')
-    }
-  }
-
-  const convertLocalTime = (date: Date) => {
-    const newDate = new Date(date.getTime() + 28800000)
-    return newDate.toISOString().slice(0, -8)
   }
 
   const handleStartDateChange = (newStartDate: string) => {
@@ -257,7 +232,6 @@ function JCRCBlockOutModal({
 
   useEffect(() => {
     setFacilityList(facilities)
-    // setAllUncheckedOrChecked(false)
   }, [])
 
   return (
