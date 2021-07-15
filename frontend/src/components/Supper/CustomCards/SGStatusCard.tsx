@@ -45,7 +45,9 @@ const TitleContainer = styled.text`
 
 const OrderIdContainer = styled.text`
   font-size: 14px;
+  line-height: 15px;
   font-weight: 200;
+  padding-bottom: 4px;
 `
 
 const StatusContainer = styled.div<{ statusOnly?: boolean }>`

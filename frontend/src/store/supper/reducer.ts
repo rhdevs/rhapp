@@ -12,6 +12,8 @@ import {
   PaymentUpdateInfo,
   SupperNotification,
   HomeSupperGroup,
+  Filter,
+  Restaurants,
 } from '../supper/types'
 import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
@@ -37,7 +39,7 @@ const initialState = {
   selectedPaymentMethod: [],
   selectedRestaurant: null,
   selectedSupperGroupStatus: null,
-  searchedSupperGroups: [],
+  filteredSupperGroups: [],
   searchValue: '',
   tabsKey: '1',
   editFoodItem: null,
@@ -54,6 +56,9 @@ const initialState = {
   foodMenuId: '',
   createOrderPage: 1,
   supperNotifications: [],
+  closingTimeFilter: Filter.DEFAULT,
+  amountLeftFilter: Filter.DEFAULT,
+  restaurantFilter: [],
 }
 
 type State = {
@@ -77,7 +82,7 @@ type State = {
   selectedPaymentMethod: PaymentMethod[]
   selectedRestaurant: string | null
   selectedSupperGroupStatus: SupperGroupStatus | null
-  searchedSupperGroups: HomeSupperGroup[]
+  filteredSupperGroups: HomeSupperGroup[]
   searchValue: string
   tabsKey: string
   editFoodItem: Food | null
@@ -94,6 +99,9 @@ type State = {
   foodMenuId: string
   createOrderPage: number
   supperNotifications: SupperNotification[]
+  closingTimeFilter: Filter
+  amountLeftFilter: Filter
+  restaurantFilter: Restaurants[]
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -171,7 +179,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
       return { ...state, selectedSupperGroupStatus: action.selectedSupperGroupStatus }
     }
     case SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS: {
-      return { ...state, searchedSupperGroups: action.searchedSupperGroups }
+      return { ...state, filteredSupperGroups: action.filteredSupperGroups }
     }
     case SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE: {
       return { ...state, searchValue: action.searchValue }
@@ -223,6 +231,15 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {
       return { ...state, supperNotifications: action.supperNotifications }
+    }
+    case SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER: {
+      return { ...state, closingTimeFilter: action.closingTimeFilter }
+    }
+    case SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER: {
+      return { ...state, amountLeftFilter: action.amountLeftFilter }
+    }
+    case SUPPER_ACTIONS.GET_RESTAURANT_FILTER: {
+      return { ...state, restaurantFilter: action.restaurantFilter }
     }
     default:
       return state

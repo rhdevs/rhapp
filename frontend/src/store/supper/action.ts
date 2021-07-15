@@ -1,4 +1,13 @@
-import { ActionTypes, Food, PaymentMethod, SupperGroup, SupperGroupStatus, Updates } from '../supper/types'
+import {
+  ActionTypes,
+  Filter,
+  Food,
+  PaymentMethod,
+  Restaurants,
+  SupperGroup,
+  SupperGroupStatus,
+  Updates,
+} from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
 import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
@@ -281,20 +290,45 @@ export const getUserOrder = (supperGroupId: string | number | undefined, userId:
   dispatch(setIsLoading(false))
 }
 
-export const getSearchedSupperGroups = (rawQuery: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const getFilteredSupperGroups = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
-  const { allSupperGroups } = getState().supper
-  const query = rawQuery.toLowerCase()
-  const filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) => {
-    if (supperGroup.ownerName.toLowerCase().includes(query)) return supperGroup
-    if (String(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
-    if (getReadableSupperGroupId(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
-    if (('rhso#' + supperGroup.supperGroupId).includes(query)) return supperGroup
-    if (supperGroup.supperGroupName.toLowerCase().includes(query)) return supperGroup
-  })
+  const { allSupperGroups, searchValue, closingTimeFilter, amountLeftFilter, restaurantFilter } = getState().supper
+  let filteredSearchSupperGroups = allSupperGroups
+  if (searchValue) {
+    const query = searchValue.toLowerCase()
+    filteredSearchSupperGroups = allSupperGroups.filter((supperGroup) => {
+      if (supperGroup.ownerName.toLowerCase().includes(query)) return supperGroup
+      if (String(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+      if (getReadableSupperGroupId(supperGroup.supperGroupId)?.toLowerCase().includes(query)) return supperGroup
+      if (('rhso#' + supperGroup.supperGroupId).includes(query)) return supperGroup
+      if (supperGroup.supperGroupName.toLowerCase().includes(query)) return supperGroup
+    })
+  }
+  if (closingTimeFilter == Filter.ASCENDING) {
+    filteredSearchSupperGroups.sort((x, y) => (x.closingTime ?? 0) - (y.closingTime ?? 0))
+  } else if (closingTimeFilter == Filter.DESCENDING) {
+    filteredSearchSupperGroups.sort((x, y) => (y.closingTime ?? 0) - (x.closingTime ?? 0))
+  }
+  console.log('before sort ', filteredSearchSupperGroups)
+  if (amountLeftFilter == Filter.ASCENDING) {
+    filteredSearchSupperGroups.sort(
+      (x, y) => (x.costLimit ?? Infinity - x.currentFoodCost) - (y.costLimit ?? Infinity - y.currentFoodCost),
+    )
+    console.log('after sort ', filteredSearchSupperGroups)
+  } else if (amountLeftFilter == Filter.DESCENDING) {
+    filteredSearchSupperGroups.sort(
+      (x, y) => (y.costLimit ?? Infinity - y.currentFoodCost) - (x.costLimit ?? Infinity - x.currentFoodCost),
+    )
+  }
+  if (restaurantFilter.length) {
+    filteredSearchSupperGroups = filteredSearchSupperGroups.filter((sg) =>
+      restaurantFilter.includes(sg.restaurantName as Restaurants),
+    )
+  }
+
   dispatch({
     type: SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS,
-    searchedSupperGroups: filteredSearchSupperGroups,
+    filteredSupperGroups: filteredSearchSupperGroups,
   })
   dispatch(setIsLoading(false))
 }
@@ -801,4 +835,25 @@ export const getOwnerEdits = (orderId: string, foodId: string) => (dispatch: Dis
       error("Failed to get selected user's food, please try again.")
     })
   dispatch(setIsLoading(false))
+}
+
+export const getClosingTimeFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER,
+    closingTimeFilter: chosenFilter,
+  })
+}
+
+export const getAmountLeftFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER,
+    amountLeftFilter: chosenFilter,
+  })
+}
+
+export const getRestaurantFilter = (chosenFilter: Restaurants[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.GET_RESTAURANT_FILTER,
+    restaurantFilter: chosenFilter,
+  })
 }

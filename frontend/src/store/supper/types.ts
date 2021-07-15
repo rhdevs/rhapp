@@ -73,7 +73,7 @@ export type Order = {
   supperGroupId: number | undefined
   userContact?: number
   foodList: Food[]
-  totalCost: number
+  totalCost: number // not inclusive of delivery fee
   hasPaid: boolean //1 if user paid owner (user POV)
   paymentMethod?: PaymentMethod
   hasReceived: boolean //1 if owner received payment (owner POV)
@@ -99,12 +99,13 @@ export type SupperGroup = {
   status: SupperGroupStatus
   supperGroupId: number | undefined
   supperGroupName: string
-  totalPrice: number
+  totalPrice: number // additionalcost + currentfoodcost
   userIdList?: string[]
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number | undefined
   phoneNumber?: number
+  wasDeliveryUpdated?: boolean
 }
 
 export type HomeSupperGroup = {
@@ -196,6 +197,12 @@ export type SupperNotification = {
   supperGroupName: string
 }
 
+export enum Filter {
+  DEFAULT = 'Default',
+  ASCENDING = 'Ascending',
+  DESCENDING = 'Descending',
+}
+
 export enum SUPPER_ACTIONS {
   SET_IS_LOADING = 'SUPPER_ACTIONS.SET_IS_LOADING',
   GET_COLLATED_ORDER = 'SUPPER_ACTION.GET_COLLATED_ORDER',
@@ -240,6 +247,9 @@ export enum SUPPER_ACTIONS {
   RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
   GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
+  GET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER',
+  GET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER',
+  GET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.GET_RESTAURANT_FILTER',
 }
 
 type SetIsLoading = {
@@ -362,9 +372,9 @@ type SetSelectedSupperGroupStatus = {
   selectedSupperGroupStatus: SupperGroupStatus | null
 }
 
-type GetSearchedSupperGroups = {
+type GetFilteredSupperGroups = {
   type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
-  searchedSupperGroups: HomeSupperGroup[]
+  filteredSupperGroups: HomeSupperGroup[]
 }
 
 type SetSearchSupperGroupValue = {
@@ -452,6 +462,21 @@ type GetSupperNotifications = {
   supperNotifications: SupperNotification[]
 }
 
+type GetClosingTimeFilter = {
+  type: typeof SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER
+  closingTimeFilter: Filter
+}
+
+type GetAmountLeftFilter = {
+  type: typeof SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER
+  amountLeftFilter: Filter
+}
+
+type GetRestaurantFilter = {
+  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_FILTER
+  restaurantFilter: Restaurants[]
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -478,7 +503,7 @@ export type ActionTypes =
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
   | SetSelectedSupperGroupStatus
-  | GetSearchedSupperGroups
+  | GetFilteredSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
   | SetMenuTabKey
@@ -495,3 +520,6 @@ export type ActionTypes =
   | SetNewSupperGroupId
   | ResetFoodState
   | GetSupperNotifications
+  | GetClosingTimeFilter
+  | GetAmountLeftFilter
+  | GetRestaurantFilter
