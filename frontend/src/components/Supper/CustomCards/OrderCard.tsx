@@ -182,7 +182,7 @@ export const OrderCard = (props: Props) => {
   const collatedFoodList = props.collatedOrder?.collatedOrderList
   const isFoodListEmpty = ((foodList?.length ?? 0) <= 0) as boolean
   const isCollatedFoodListEmpty = ((collatedFoodList?.length ?? 0) <= 0) as boolean
-  let wasEdited = props.wasEdited ?? false
+  const wasEdited = props.wasEdited ?? false
   const supperGroupId = props.supperGroup?.supperGroupId ?? props.order?.supperGroupId ?? props.supperGroupId
   const orderId = props.order?.orderId ?? props.orderId
   const isOwner = localStorage.userID === (props.supperGroup?.ownerId ?? props.ownerId)
@@ -317,7 +317,6 @@ export const OrderCard = (props: Props) => {
                 if (option.isSelected) customisations.push(option.name)
               }),
             )
-            wasEdited = food.updates as boolean
             return (
               <FoodLine
                 key={index}
@@ -352,7 +351,6 @@ export const OrderCard = (props: Props) => {
                 if (option.isSelected) customisations.push(option.name)
               }),
             )
-            wasEdited = food.updates as boolean
             return (
               <>
                 <FoodLine
@@ -441,7 +439,6 @@ export const OrderCard = (props: Props) => {
                       if (option.isSelected) customisations.push(option.name)
                     }),
                   )
-                  wasEdited = food.updates as boolean
                   return (
                     <FoodLine
                       key={foodIndex}
@@ -485,7 +482,6 @@ export const OrderCard = (props: Props) => {
                   if (option.isSelected) customisations.push(option.name)
                 }),
               )
-              wasEdited = food.updates as boolean
               return (
                 <FoodLine
                   key={foodIndex}

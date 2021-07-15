@@ -11,7 +11,6 @@ type Props = {
   color?: string
   defaultValue?: number | undefined
   onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  increment: number
 }
 
 export const MinusButton = (props: Props) => {
@@ -25,7 +24,7 @@ export const MinusButton = (props: Props) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (count <= (props.min ?? 0)) {
+    if (count === (props.min ?? 0)) {
       if (buttonColor === V1_RED) {
         setButtonColor(SHADED_RED)
       }

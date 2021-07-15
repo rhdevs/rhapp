@@ -47,7 +47,6 @@ import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
 import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
-import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
@@ -67,7 +66,6 @@ export default function Supper() {
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
-      <FilterBubbles />
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>

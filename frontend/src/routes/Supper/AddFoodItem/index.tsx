@@ -24,7 +24,6 @@ const Background = styled.form`
   height: 100%;
   min-height: 100vh;
   background-color: ${V1_BACKGROUND};
-  padding-bottom: 1rem;
 `
 
 const MainContainer = styled.div`
@@ -192,7 +191,7 @@ const AddFoodItem = () => {
             add
             currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
           />
-          <InformationCard disclaimer margin="0" />
+          <InformationCard disclaimer margin={'0'} />
         </MainContainer>
       )}
     </Background>

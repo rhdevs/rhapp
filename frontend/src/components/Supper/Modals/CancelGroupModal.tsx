@@ -9,21 +9,17 @@ type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   supperGroupId: string | number
-  withDispatch?: boolean
 }
 
 export const CancelGroupModal = (props: Props) => {
   const dispatch = useDispatch()
-
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.withDispatch)
-      dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CANCELLED }))
+    dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CANCELLED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
-
   return (
     <SupperModal
-      title="Cancel Supper Group?"
+      title="Cancel Supper Group? "
       description="Supper groups marked as cancelled cannot be edited anymore."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}

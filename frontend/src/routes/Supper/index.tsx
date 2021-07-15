@@ -13,13 +13,12 @@ import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
 import { V1_BACKGROUND } from '../../common/colours'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-import { Filter, HomeSupperGroup } from '../../store/supper/types'
+import { HomeSupperGroup } from '../../store/supper/types'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
-import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 
 const Background = styled.div`
   display: grid;
@@ -38,7 +37,6 @@ const StickyContainer = styled.div`
   z-index: 3;
   padding-bottom: 10px;
   background-color: ${V1_BACKGROUND};
-  width: inherit;
 `
 
 const PlusButtonDiv = styled.div`
@@ -84,15 +82,9 @@ const InfoIcon = styled(InfoCircleOutlined)`
 export default function Supper() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const {
-    searchValue,
-    filteredSupperGroups,
-    allSupperGroups,
-    isLoading,
-    closingTimeFilter,
-    amountLeftFilter,
-    restaurantFilter,
-  } = useSelector((state: RootState) => state.supper)
+  const { searchValue, searchedSupperGroups, allSupperGroups, isLoading } = useSelector(
+    (state: RootState) => state.supper,
+  )
 
   const rightIcon = (
     <SupperGroupHistoryImg
@@ -106,19 +98,14 @@ export default function Supper() {
     dispatch(getAllSupperGroups())
   }, [dispatch])
 
-  console.log(filteredSupperGroups)
+  console.log(searchedSupperGroups)
   let supperGroups: HomeSupperGroup[] | null = allSupperGroups
   let errorText = 'Hungry? Start a supper group!'
-  if (
-    searchValue ||
-    closingTimeFilter !== Filter.DEFAULT ||
-    amountLeftFilter !== Filter.DEFAULT ||
-    restaurantFilter.length
-  ) {
-    supperGroups = filteredSupperGroups
+  if (searchValue) {
+    supperGroups = searchedSupperGroups
   }
 
-  if (supperGroups.length === 0) {
+  if (supperGroups.length === 0 && searchValue) {
     errorText = 'No supper groups found.'
   }
   return (
@@ -137,7 +124,6 @@ export default function Supper() {
             <InfoIcon />
           </Tooltip>
         </SearchContainer>
-        <FilterBubbles />
       </StickyContainer>
       <PullToRefresh onRefresh={onRefresh}>
         {isLoading ? (

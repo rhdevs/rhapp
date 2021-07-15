@@ -33,6 +33,7 @@ export const SGStatusOptions = (props: Props) => {
   const { selectedSupperGroupStatus } = useSelector((state: RootState) => state.supper)
   const dispatch = useDispatch()
 
+  //TODO: Change dummy status to currentSG Status
   useEffect(() => {
     dispatch(setSelectedSupperGroupStatus(props.default ?? SupperGroupStatus.ORDERED))
   }, [])

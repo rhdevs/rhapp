@@ -95,10 +95,14 @@ export const ContactModal = (props: Prop) => {
   let userDetails: UserDetails[] | undefined
 
   contacts?.map((userId) => {
+    let detail: UserDetails
     props.orderList
       ?.filter((order) => order.user.userID === userId)
       .map((order) => {
-        userDetails?.push({ userId: userId, name: order.user.displayName, telegramHandle: order.user.telegramHandle })
+        detail.userId = userId
+        detail.name = order.user.displayName
+        detail.telegramHandle = order.user.telegramHandle
+        userDetails?.push(detail)
       })
   })
 
