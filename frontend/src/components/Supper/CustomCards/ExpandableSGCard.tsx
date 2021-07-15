@@ -62,7 +62,7 @@ type Props = {
   supperGroupName: string
   supperGroupId: string | number
   ownerName: string
-  priceLimit: number
+  priceLimit: number | undefined
   currentAmount: number
   closingTime: string
   numberOfUsers: number

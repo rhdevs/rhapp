@@ -92,7 +92,7 @@ export default function PlaceOrder() {
             supperGroupName={supperGroup?.supperGroupName ?? ''}
             supperGroupId={getReadableSupperGroupId(supperGroup?.supperGroupId)}
             ownerName={supperGroup?.ownerName ?? ''}
-            priceLimit={supperGroup?.costLimit ?? 50}
+            priceLimit={supperGroup?.costLimit}
             currentAmount={supperGroup?.currentFoodCost ?? 10}
             closingTime={unixTo12HourTime(supperGroup?.closingTime)}
             numberOfUsers={supperGroup?.userIdList?.length ?? 0}
