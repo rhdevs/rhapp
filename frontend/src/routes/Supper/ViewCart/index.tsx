@@ -27,14 +27,7 @@ const Background = styled.div`
   position: relative;
 `
 
-// const MainContainer = styled.div`
-//   min-height: 100vh;
-//   height: 100%;
-//   width: 100vw;
-//   background: ${V1_BACKGROUND};
-// `
-
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 80vw;
@@ -43,27 +36,19 @@ const ButtonContainer = styled.div`
   padding: 0 10px;
 `
 
-const UpperRowButtons = styled.div`
+export const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
-const LowerRowButton = styled.div`
+export const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
-
-const ErrorContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 20px;
-`
-
-const ErrorText = styled.text``
 
 const ViewCart = () => {
   const dispatch = useDispatch()

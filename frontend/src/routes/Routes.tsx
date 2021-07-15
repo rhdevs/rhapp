@@ -55,6 +55,8 @@ export enum PATHS {
   JOIN_ORDER_BY_ID = '/supper/join/order/:supperGroupId',
   PLACE_ORDER = '/supper',
   PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
+  UPDATE_ORDER = '/supper/update/order',
+  UPDATE_ORDER_BY_ID = '/supper/update/order/:supperGroupId', //'/supper/update/order/:supperGroupId/:orderId',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
@@ -123,6 +125,7 @@ const CreateSupperGroup = React.lazy(
 )
 const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ './Supper/JoinOrder'))
 const PlaceOrder = React.lazy(() => import(/* webpackChunckName: "PlaceOrder" */ './Supper/PlaceOrder'))
+const UpdateOrder = React.lazy(() => import(/* webpackChunckName: "UpdateOrder" */ './Supper/UpdateOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const UserViewOrder = React.lazy(() => import(/* webpackChunckName: "UserViewOrder" */ './Supper/UserViewOrder'))
@@ -181,6 +184,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_BY_PAGE} component={CreateSupperGroup} />
             <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
+            <PrivateRoute exact path={PATHS.UPDATE_ORDER_BY_ID} component={UpdateOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />

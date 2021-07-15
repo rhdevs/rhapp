@@ -31,6 +31,7 @@ const Background = styled.div`
   height: 100%;
   padding-bottom: 1rem;
 `
+
 const SearchBarContainer = styled.div`
   margin: 0 20px 8px 20px;
 `
