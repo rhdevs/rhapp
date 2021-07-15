@@ -6,6 +6,7 @@ const initialState = {
   // MAIN PAGE
   isLoading: false,
   blockOutIsOpen: false,
+  isJcrc: false,
   facilityList: [],
   locationList: [],
   selectedTab: '',
@@ -38,6 +39,7 @@ const initialState = {
 type State = {
   isLoading: boolean
   blockOutIsOpen: boolean
+  isJcrc: boolean
   facilityList: Facility[]
   locationList: string[]
   selectedTab: string
@@ -223,6 +225,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         blockOutIsOpen: action.blockOutIsOpen,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_IS_JCRC: {
+      return {
+        ...state,
+        isJcrc: action.isJcrc,
       }
     }
 

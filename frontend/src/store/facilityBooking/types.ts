@@ -39,6 +39,7 @@ export type Event = {
 export enum FACILITY_ACTIONS {
   SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
+  SET_IS_JCRC = 'FACILITY_ACTIONS.SET_IS_JCRC',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
   CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
@@ -188,6 +189,11 @@ type SetBlockOutIsOpen = {
   blockOutIsOpen: boolean
 }
 
+type SetIsJcrc = {
+  type: typeof FACILITY_ACTIONS.SET_IS_JCRC
+  isJcrc: boolean
+}
+
 type SetSelectedFacility = {
   type: typeof FACILITY_ACTIONS.SET_SELECTED_FACILITY
   selectedFacilityId: number
@@ -244,3 +250,4 @@ export type ActionTypes =
   | SetViewFacilityName
   | SetCreateBookingError
   | SetBookingFacilityId
+  | SetIsJcrc
