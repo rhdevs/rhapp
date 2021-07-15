@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Button } from 'antd'
+import { Button, Alert } from 'antd'
 
 import 'antd/dist/antd.css'
 import { Facility } from '../../store/facilityBooking/types'
 import { SetBlockOutIsOpen } from '../../store/facilityBooking/action'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
+
+const AlertGroup = styled.div`
+  padding: 3px 23px 3px 23px;
+`
+
+const LoadingText = styled.div`
+  font-size: 40px;
+  text-align: center;
+  color: red;
+`
 
 const OverlayContainer = styled.div`
   position: fixed;
@@ -146,7 +156,19 @@ function JCRCBlockOutModal({
   const [selectAll, setSelectAll] = useState(false)
   const [startDateTime, setStartDateTime] = useState(new Date())
   const [endDateTime, setEndDateTime] = useState(new Date())
+  const [blockoutSuccess, setBlockoutSuccess] = useState(false)
+  const [blockoutFailure, setBlockoutFailure] = useState(false)
+  const [blockoutLoading, setBlockoutLoading] = useState(false)
+  const [alertMsg, setAlertMsg] = useState('')
   const dispatch = useDispatch()
+
+  const AlertSection = (
+    <AlertGroup>
+      {blockoutSuccess && !blockoutFailure && <Alert message={alertMsg} type="success" showIcon />}
+      {blockoutFailure && !blockoutSuccess && <Alert message={alertMsg} type="error" showIcon />}
+      {blockoutLoading && <LoadingText>Loading...</LoadingText>}
+    </AlertGroup>
+  )
 
   const handleSelectOne = async (facilityID: number) => {
     if (selectedFacilities.includes(facilityID)) {
@@ -168,32 +190,35 @@ function JCRCBlockOutModal({
   }
 
   const handleStartDateChange = (newStartDate: string) => {
-    console.log(newStartDate)
     setStartDateTime(new Date(newStartDate))
-    console.log(startDateTime)
   }
 
   const handleEndDateChange = (newEndDate: string) => {
-    console.log(newEndDate)
     setEndDateTime(new Date(newEndDate))
-    console.log(endDateTime)
   }
 
   const submitBlockOut = async () => {
-    console.log('Submitting block out')
     const requestBody = {
       startTime: parseInt((startDateTime.getTime() / 1000).toFixed(0)),
       endTime: parseInt((endDateTime.getTime() / 1000).toFixed(0)),
       facilities: selectedFacilities,
     }
-    console.log(requestBody)
     if (selectedFacilities === []) {
-      console.log('You have not chosen any facilities.')
+      setBlockoutFailure(true)
+      setBlockoutSuccess(false)
+      setAlertMsg('You have not chosen any facilities.')
     } else if (new Date().getTime() > startDateTime.getTime()) {
-      console.log('You cannot create a booking on a date that is in the past.')
+      setBlockoutFailure(true)
+      setBlockoutSuccess(false)
+      setAlertMsg('You cannot create a booking on a date that is in the past.')
     } else if (startDateTime.getTime() > endDateTime.getTime()) {
-      console.log('Start time is later than end time.')
+      setBlockoutFailure(true)
+      setBlockoutSuccess(false)
+      setAlertMsg('Start time is later than end time.')
     } else {
+      setBlockoutLoading(true)
+      setBlockoutFailure(false)
+      setBlockoutSuccess(false)
       const response = await fetch(
         DOMAIN_URL.FACILITY +
           ENDPOINTS.JCRC_BLOCKOUT +
@@ -211,19 +236,21 @@ function JCRCBlockOutModal({
         },
       )
 
-      console.log(requestBody)
+      setBlockoutLoading(false)
       if (response.status >= 400) {
         const body = await response.json()
-        console.log(body.err)
+        setBlockoutFailure(true)
+        setBlockoutSuccess(false)
+        setAlertMsg('Something went wrong, please try again.')
       } else {
-        console.log('Successful blockout.')
-        dispatch(SetBlockOutIsOpen(false))
+        setBlockoutSuccess(true)
+        setBlockoutFailure(false)
+        setAlertMsg('Successful')
       }
     }
   }
 
   const onCancelClick = () => {
-    console.log('Closing Modal')
     dispatch(SetBlockOutIsOpen(false))
   }
 
@@ -235,6 +262,7 @@ function JCRCBlockOutModal({
     <>
       <OverlayContainer onClick={onOverlayClick} />
       <MainContainer style={{ bottom: bottom ?? '50%', right: right ?? 0, left: left ?? 0, top: top }}>
+        {AlertSection}
         <TitleTextContainer>
           <TitleText>{title}</TitleText>
         </TitleTextContainer>

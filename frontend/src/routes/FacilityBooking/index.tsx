@@ -242,8 +242,8 @@ export default function FacilityBooking() {
                 <JCRCBlockOutModal
                   title={'Facilities Blocking'}
                   hasLeftButton={true}
-                  leftButtonText={'Done'}
-                  rightButtonText={'Cancel'}
+                  leftButtonText={'Confirm'}
+                  rightButtonText={'Close'}
                   facilities={facilityList}
                 />
               )}
