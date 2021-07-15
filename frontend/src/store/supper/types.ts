@@ -73,7 +73,7 @@ export type Order = {
   supperGroupId: number | undefined
   userContact?: number
   foodList: Food[]
-  totalCost: number
+  totalCost: number // not inclusive of delivery fee
   hasPaid: boolean //1 if user paid owner (user POV)
   paymentMethod?: PaymentMethod
   hasReceived: boolean //1 if owner received payment (owner POV)
@@ -99,12 +99,13 @@ export type SupperGroup = {
   status: SupperGroupStatus
   supperGroupId: number | undefined
   supperGroupName: string
-  totalPrice: number
+  totalPrice: number // additionalcost + currentfoodcost
   userIdList?: string[]
   orderList?: Order[]
   estArrivalTime?: number
   closingTime: number | undefined
   phoneNumber?: number
+  wasDeliveryUpdated?: boolean
 }
 
 export type HomeSupperGroup = {

@@ -92,7 +92,7 @@ export const FilterBubbles = () => {
     }
   }
 
-  const onAmountLefftFilterClick = () => {
+  const onAmountLeftFilterClick = () => {
     if (amountLeftFilter === Filter.DEFAULT) {
       if (closingTimeFilter !== Filter.DEFAULT) {
         dispatch(getClosingTimeFilter(Filter.DEFAULT))
@@ -128,7 +128,7 @@ export const FilterBubbles = () => {
           Closing Time
           {closingTimeIcon}
         </Bubble>
-        <Bubble onClick={onAmountLefftFilterClick} isActive={amountLeftFilter !== Filter.DEFAULT}>
+        <Bubble onClick={onAmountLeftFilterClick} isActive={amountLeftFilter !== Filter.DEFAULT}>
           Amount Left
           {amountLeftIcon}
         </Bubble>
