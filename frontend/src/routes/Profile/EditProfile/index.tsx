@@ -261,7 +261,7 @@ export default function EditProfile() {
     return (
       <>
         <EditDetailsItem title="CCAs" />
-        <EditDetailsItem title="Modules" />
+        {/* <EditDetailsItem title="Modules" /> */}
       </>
     )
   }
