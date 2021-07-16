@@ -20,10 +20,11 @@ import {
   setOrderId,
   setSearchValue,
   unixTo12HourTime,
+  setIsFoodMenuModalOpen,
+  setFoodModalInfo,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   width: 100vw;
@@ -63,6 +64,7 @@ export default function PlaceOrder() {
     order,
     foodModalId,
     isFoodMenuModalOpen,
+    modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
@@ -96,9 +98,12 @@ export default function PlaceOrder() {
         <>
           {isFoodMenuModalOpen && (
             <ViewMenuFoodModal
+              orderId={orderId}
               supperGroupId={Number(params.supperGroupId)}
               foodList={order?.foodList}
               foodId={foodModalId}
+              menuFoodName={modalMenuFoodName}
+              viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />

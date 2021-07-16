@@ -241,6 +241,7 @@ export enum SUPPER_ACTIONS {
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
   GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
   SET_IS_FOOD_MODAL_OPEN = 'SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN',
+  SET_FOOD_MODAL_INFO = 'SUPPER_ACTIONS.SET_FOOD_MODAL_INFO',
 }
 
 type SetIsLoading = {
@@ -453,6 +454,17 @@ type GetSupperNotifications = {
   supperNotifications: SupperNotification[]
 }
 
+type SetIsFoodModalOpen = {
+  type: typeof SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN
+  isFoodMenuModalOpen: boolean
+}
+
+type SetFoodModalInfo = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_MODAL_INFO
+  foodModalId: string
+  modalMenuFoodName: string
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -496,3 +508,5 @@ export type ActionTypes =
   | SetNewSupperGroupId
   | ResetFoodState
   | GetSupperNotifications
+  | SetIsFoodModalOpen
+  | SetFoodModalInfo

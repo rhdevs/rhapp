@@ -10,6 +10,7 @@ import { V1_BACKGROUND } from '../../common/colours'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { MainCard } from './MainCard'
+import { useDispatch } from 'react-redux'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -90,22 +91,20 @@ type Props = {
   menuFoodName: string | undefined
   supperGroupId: number | undefined
   orderId: string | undefined
-  viewMenuFoodModalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  viewMenuFoodModalSetter: React.Dispatch<boolean>
 }
 
 export const ViewMenuFoodModal = (props: Props) => {
-  const foodName = foodList.find((food) => food.foodId === props.foodId)?.foodName
-  const filteredFoodList = props.foodList?.filter((food) => food.foodId === props.foodId) ?? []
+  console.log(foodList)
+  console.log(props.foodId)
+  const foodName = foodList.find((food) => food.foodMenuId === props.foodId)?.foodName
+  console.log(foodName)
+  const filteredFoodList = props.foodList?.filter((food) => food.foodMenuId === props.foodId) ?? []
   const history = useHistory()
-
-  useEffect(() => {
-    if (filteredFoodList.length === 1) {
-      history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${props.foodId}`)
-    }
-  }, [filteredFoodList])
+  const dispatch = useDispatch()
 
   const onBackClick = () => {
-    props.viewMenuFoodModalSetter(false)
+    dispatch(props.viewMenuFoodModalSetter(false))
   }
 
   const BackButton = () => {
