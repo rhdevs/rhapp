@@ -54,9 +54,16 @@ export default function PlaceOrder() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
-  const { supperGroup, restaurant, isLoading, searchValue, orderId, order } = useSelector(
-    (state: RootState) => state.supper,
-  )
+  const {
+    supperGroup,
+    restaurant,
+    isLoading,
+    searchValue,
+    orderId,
+    order,
+    foodModalId,
+    isFoodMenuModalOpen,
+  } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -87,6 +94,13 @@ export default function PlaceOrder() {
         <LoadingSpin />
       ) : (
         <>
+          {isFoodMenuModalOpen && (
+            <ViewMenuFoodModal
+              supperGroupId={Number(params.supperGroupId)}
+              foodList={order?.foodList}
+              foodId={foodModalId}
+            />
+          )}
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>

@@ -85,7 +85,7 @@ const NoResultsText = styled.text`
 `
 
 type Props = {
-  foodList: Food[]
+  foodList: Food[] | undefined
   foodId: string | undefined
   menuFoodName: string | undefined
   supperGroupId: number | undefined
@@ -95,7 +95,7 @@ type Props = {
 
 export const ViewMenuFoodModal = (props: Props) => {
   const foodName = foodList.find((food) => food.foodId === props.foodId)?.foodName
-  const filteredFoodList = props.foodList.filter((food) => food.foodId === props.foodId)
+  const filteredFoodList = props.foodList?.filter((food) => food.foodId === props.foodId) ?? []
   const history = useHistory()
 
   useEffect(() => {
