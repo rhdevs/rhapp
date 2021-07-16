@@ -137,7 +137,7 @@ type Props = {
   supperGroupId?: number
   orderId?: string
   // Food details parameters
-  food?: Food
+  food?: Food | null
   hasNoQuantity?: boolean
   foodId?: string
   quantity?: number

@@ -75,6 +75,10 @@ export enum PATHS {
   EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:foodId',
   ADD_FOOD_ITEM = '/supper',
   ADD_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
+  UPDATE_FOOD_ITEM = '/supper',
+  UPDATE_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/order/:orderId/food/:foodId',
+  UPDATE_DELIVERY = '/supper',
+  UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
 }
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
@@ -133,6 +137,10 @@ const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryD
 const EditSupperGroup = React.lazy(() => import(/* webpackChunckName: "EditSupperGroup" */ './Supper/EditSupperGroup'))
 const AddFoodItem = React.lazy(() => import(/* webpackChunckName: "AddFoodItem" */ './Supper/AddFoodItem'))
 const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "EditFoodItem" */ './Supper/EditFoodItem'))
+const UpdateItem = React.lazy(() => import(/* webpackChunckName: "UpdateItem" */ './Supper/OrderSummary/UpdateItem'))
+const UpdateDelivery = React.lazy(
+  () => import(/* webpackChunckName: "UpdateDelivery" */ './Supper/OrderSummary/UpdateDelivery'),
+)
 
 export default class Routes extends React.Component {
   render() {
@@ -192,6 +200,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.EDIT_SUPPER_GROUP_BY_ID} component={EditSupperGroup} />
             <PrivateRoute exact path={PATHS.EDIT_FOOD_ITEM_BY_ID} component={EditFoodItem} />
             <PrivateRoute exact path={PATHS.ADD_FOOD_ITEM_BY_ID} component={AddFoodItem} />
+            <PrivateRoute exact path={PATHS.UPDATE_FOOD_ITEM_BY_ID} component={UpdateItem} />
+            <PrivateRoute exact path={PATHS.UPDATE_DELIVERY_BY_ID} component={UpdateDelivery} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>

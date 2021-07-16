@@ -241,7 +241,10 @@ export const OrderCard = (props: Props) => {
         <PriceTitleText>
           Delivery Fee {/* TODO: Push to new page with update delivery price card */}
           {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
-            <UpdateTextButton underlined onClick={() => console.log('GO TO NEW PAGE')}>
+            <UpdateTextButton
+              underlined
+              onClick={() => history.push(`${PATHS.UPDATE_DELIVERY}/${supperGroupId}/update/delivery`)}
+            >
               update
             </UpdateTextButton>
           )}
@@ -298,6 +301,7 @@ export const OrderCard = (props: Props) => {
       return
     }
     if (canEditUserFood) {
+      history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
       //TODO: Add owner edit user's order modal (is now a card so push to new page)
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)

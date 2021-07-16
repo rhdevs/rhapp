@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
-import { Food, SupperGroup } from '../../../store/supper/types'
+import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
+import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
 import { SupperButton } from '../SupperButton'
@@ -35,8 +37,9 @@ const TextArea = styled.textarea<{ error?: FieldError | undefined }>`
 type Props = {
   foodItem?: boolean
   deliveryFee?: boolean
-  food?: Food
-  supperGroup?: SupperGroup
+  food?: Food | null
+  orderId?: string
+  supperGroup?: SupperGroup | null
   hasTouchedSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -57,8 +60,10 @@ export const OwnerUpdateItemCard = (props: Props) => {
     errors,
     formState: { touched },
   } = useForm<FormData>({
+    mode: 'all',
     shouldUnregister: false,
   })
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (props.foodItem) {
@@ -70,14 +75,15 @@ export const OwnerUpdateItemCard = (props: Props) => {
     }
     if (props.deliveryFee) {
       reset({
-        newDeliveryFee: props.supperGroup?.additionalCost,
+        newDeliveryFee: props.supperGroup?.wasDeliveryUpdated ? props.supperGroup?.additionalCost : undefined,
       })
     }
   }, [reset, props.food, props.supperGroup])
 
   useEffect(() => {
+    console.log(Object.values(touched).length, touched)
     props.hasTouchedSetter(Object.values(touched).length ? true : false)
-  }, [touched])
+  }, [touched, watch()])
 
   const onUpdateItemClick = () => {
     if (!watch('newPrice')) {
@@ -86,6 +92,13 @@ export const OwnerUpdateItemCard = (props: Props) => {
     console.log(errors, watch())
     handleSubmit((data) => {
       console.log('onUpdateItemClick', data)
+      const update: Updates = {
+        updateAction: UpdateAction.UPDATE,
+        reason: data.editReason,
+        change: data.changes,
+        updatedPrice: data.newPrice,
+      }
+      dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
       return
     })()
   }
@@ -94,6 +107,12 @@ export const OwnerUpdateItemCard = (props: Props) => {
     setValue('newPrice', 0)
     handleSubmit((data) => {
       console.log('onDeleteItemClick', data)
+      const update: Updates = {
+        updateAction: UpdateAction.REMOVE,
+        reason: data.editReason,
+        updatedPrice: data.newPrice,
+      }
+      dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
       return
     })()
   }
@@ -101,12 +120,17 @@ export const OwnerUpdateItemCard = (props: Props) => {
   const onUpdateDeliveryClick = () => {
     handleSubmit((data) => {
       console.log('onUpdateDeliveryClick', data)
+      const updatedInfo = {
+        additionalCost: data.newDeliveryFee,
+        wasDeliveryUpdated: true,
+      }
+      dispatch(updateSupperGroup(props.supperGroup?.supperGroupId, updatedInfo))
       return
     })()
   }
 
   return (
-    <MainCard flexDirection="column" padding="1.5rem 2rem !important" minHeight="fit-content">
+    <MainCard margin="0 23px" flexDirection="column" padding="1.5rem 2rem !important" minHeight="fit-content">
       <>
         {props.foodItem && (
           <>
