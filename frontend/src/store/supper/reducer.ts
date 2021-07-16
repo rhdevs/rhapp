@@ -229,9 +229,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {
       return { ...state, supperNotifications: action.supperNotifications }
     }
-    case SUPPER_ACTIONS.SET_FOOD_MODAL_OPEN: {
-      return { ...state, isFoodMenuModalOpen: action.isFoodMenuModalOpen }
-    }
     default:
       return state
   }
