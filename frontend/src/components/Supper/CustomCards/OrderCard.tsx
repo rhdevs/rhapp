@@ -176,7 +176,7 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
-
+  const [contactModalFoodMenuId, setContactModalFoodMenuId] = useState<string>('')
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
@@ -353,6 +353,8 @@ export const OrderCard = (props: Props) => {
               }),
             )
             wasEdited = food.updates as boolean
+            console.log(food)
+
             return (
               <>
                 <FoodLine
@@ -365,13 +367,21 @@ export const OrderCard = (props: Props) => {
                   cancelActionModalSetter={setIsCancelActionModalOpen}
                   cancelActionOnClick={() => {
                     setIsCancelActionModalOpen(true)
+                    setContactModalFoodMenuId(food.foodMenuId)
+                    console.log
                   }}
                   food={food}
                   supperGroupId={supperGroupId}
                   orderId={orderId}
                 />
-                {isCancelActionModalOpen && (
-                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsCancelActionModalOpen} />
+                {isCancelActionModalOpen && food.foodMenuId == contactModalFoodMenuId && (
+                  <ContactModal
+                    orderList={orderList}
+                    food={food}
+                    supperGroupId={supperGroupId}
+                    orderId={orderId}
+                    contactModalSetter={setIsCancelActionModalOpen}
+                  />
                 )}
               </>
             )

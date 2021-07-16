@@ -87,6 +87,8 @@ const ButtonContainer = styled.div``
 type Prop = {
   orderList: Order[] | undefined
   food: Food
+  supperGroupId: number | undefined
+  orderId: string | undefined
   contactModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -116,6 +118,8 @@ export const ContactModal = (props: Prop) => {
         <FoodLine
           backgroundColor="#EEEEEE"
           food={props.food}
+          supperGroupId={props.supperGroupId}
+          orderId={props.orderId}
           borderRadius="10px"
           padding="10px"
           margin="10px 0"

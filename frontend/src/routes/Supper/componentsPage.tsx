@@ -61,17 +61,17 @@ const OptionText = styled.text`
 
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  //const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
-  // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  //const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
       <FilterBubbles />
       <SupperSearchBar />
       <InformationCard splitACMethod />
-      <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
+      {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
+      {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>
