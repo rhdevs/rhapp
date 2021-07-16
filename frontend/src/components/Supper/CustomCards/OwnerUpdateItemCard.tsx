@@ -91,7 +91,6 @@ export const OwnerUpdateItemCard = (props: Props) => {
       setValue('newPrice', props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0)
     }
     handleSubmit((data) => {
-      console.log('onUpdateItemClick', data)
       const update: Updates = {
         updateAction: UpdateAction.UPDATE,
         reason: data.editReason,
@@ -106,7 +105,6 @@ export const OwnerUpdateItemCard = (props: Props) => {
   const onDeleteItemClick = () => {
     setValue('newPrice', 0)
     handleSubmit((data) => {
-      console.log('onDeleteItemClick', data)
       const update: Updates = {
         updateAction: UpdateAction.REMOVE,
         reason: data.editReason,
@@ -119,7 +117,6 @@ export const OwnerUpdateItemCard = (props: Props) => {
 
   const onUpdateDeliveryClick = () => {
     handleSubmit((data) => {
-      console.log('onUpdateDeliveryClick', data)
       const updatedInfo = {
         additionalCost: data.newDeliveryFee,
         wasDeliveryUpdated: true,
