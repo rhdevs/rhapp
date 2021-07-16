@@ -1,5 +1,5 @@
 import React from 'react'
-import { V1_BACKGROUND, V1_RED } from '../../common/colours'
+import { V1_RED } from '../../common/colours'
 
 import Button from '../Mobile/Button'
 
@@ -35,13 +35,13 @@ export const SupperButton = (props: Props) => {
       stopPropagation
       defaultButtonDescription={props.defaultButtonDescription}
       updatedButtonDescription={props.updatedButtonDescription}
-      defaultButtonColor={props.ghost ? V1_BACKGROUND : props.defaultButtonColor}
+      defaultButtonColor={props.ghost ? 'transparent' : props.defaultButtonColor}
       updatedButtonColor={props.updatedButtonColor}
       defaultTextColor={props.ghost ? V1_RED : props.defaultTextColor}
       updatedTextColor={props.updatedTextColor}
       buttonWidth={props.buttonWidth}
       buttonHeight={props.buttonHeight}
-      style={{ width: 'fit-content', padding: 0 }}
+      style={{ ...props.style, width: 'fit-content', padding: 0 }}
       descriptionStyle={{
         fontWeight: 200,
         fontSize: '15px',

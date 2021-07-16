@@ -49,6 +49,7 @@ import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
+import { OwnerUpdateItemCard } from '../../components/Supper/CustomCards/OwnerUpdateItemCard'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -62,11 +63,13 @@ const OptionText = styled.text`
 export default function Supper() {
   // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [hasTouched, setHasTouched] = useState<boolean>(false)
 
   // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
+      <OwnerUpdateItemCard foodItem hasTouchedSetter={setHasTouched} />
       <FilterBubbles />
       <SupperSearchBar />
       <InformationCard splitACMethod />
