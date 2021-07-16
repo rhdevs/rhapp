@@ -111,9 +111,10 @@ export const ViewMenuFoodModal = (props: Props) => {
     return (
       <ButtonContainer>
         <Button
-          onButtonClick={() =>
+          onButtonClick={() => {
+            dispatch(props.viewMenuFoodModalSetter(false))
             history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${props.foodMenuId}`)
-          }
+          }}
           defaultButtonDescription={isFirstFood ? 'Add Food' : 'Add Another'}
           stopPropagation={true}
           isFlipButton={false}
