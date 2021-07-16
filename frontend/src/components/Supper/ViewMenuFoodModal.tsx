@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
-import { foodList } from '../../store/stubs'
 import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { FoodLineInCard } from './FoodLineInCard'
@@ -87,7 +86,7 @@ const NoResultsText = styled.text`
 
 type Props = {
   foodList: Food[] | undefined
-  foodId: string | undefined
+  foodMenuId: string | undefined
   menuFoodName: string | undefined
   supperGroupId: number | undefined
   orderId: string | undefined
@@ -95,11 +94,8 @@ type Props = {
 }
 
 export const ViewMenuFoodModal = (props: Props) => {
-  console.log(foodList)
-  console.log(props.foodId)
-  const foodName = foodList.find((food) => food.foodMenuId === props.foodId)?.foodName
-  console.log(foodName)
-  const filteredFoodList = props.foodList?.filter((food) => food.foodMenuId === props.foodId) ?? []
+  const foodName = props.foodList?.find((food) => food.foodMenuId === props.foodMenuId)?.foodName
+  const filteredFoodList = props.foodList?.filter((food) => food.foodMenuId === props.foodMenuId) ?? []
   const history = useHistory()
   const dispatch = useDispatch()
 
@@ -116,7 +112,7 @@ export const ViewMenuFoodModal = (props: Props) => {
       <ButtonContainer>
         <Button
           onButtonClick={() =>
-            history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${props.foodId}`)
+            history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${props.foodMenuId}`)
           }
           defaultButtonDescription={isFirstFood ? 'Add Food' : 'Add Another'}
           stopPropagation={true}
@@ -129,7 +125,7 @@ export const ViewMenuFoodModal = (props: Props) => {
   return (
     <OverlayBackground>
       <ModalCard>
-        {foodName && filteredFoodList.length > 1 ? (
+        {foodName && filteredFoodList.length >= 1 ? (
           <>
             <Header>
               <BackButton />
@@ -180,12 +176,12 @@ export const ViewMenuFoodModal = (props: Props) => {
                   Click back to close
                   {props.supperGroupId &&
                     props.orderId &&
-                    props.foodId &&
+                    props.foodMenuId &&
                     ' or the button below to add food into cart!'}
                 </NoResultsText>
               </NoResultsContainer>
             </MainCard>
-            {props.supperGroupId && props.orderId && props.foodId && addButton(true)}
+            {props.supperGroupId && props.orderId && props.foodMenuId && addButton(true)}
           </>
         )}
       </ModalCard>

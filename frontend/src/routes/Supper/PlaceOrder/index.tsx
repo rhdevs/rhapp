@@ -62,7 +62,7 @@ export default function PlaceOrder() {
     searchValue,
     orderId,
     order,
-    foodModalId,
+    foodMenuModalId,
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
@@ -72,7 +72,6 @@ export default function PlaceOrder() {
     dispatch(getRestaurant(params.restaurantId))
     dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
     if (order) {
-      console.log(order)
       dispatch(setOrderId(order.orderId))
     }
   }, [dispatch])
@@ -98,10 +97,10 @@ export default function PlaceOrder() {
         <>
           {isFoodMenuModalOpen && (
             <ViewMenuFoodModal
-              orderId={orderId}
+              orderId={orderId ?? order?.orderId}
               supperGroupId={Number(params.supperGroupId)}
               foodList={order?.foodList}
-              foodId={foodModalId}
+              foodMenuId={foodMenuModalId}
               menuFoodName={modalMenuFoodName}
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />

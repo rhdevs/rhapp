@@ -756,12 +756,12 @@ export const setIsFoodMenuModalOpen = (isFoodMenuModalOpen: boolean) => (dispatc
   })
 }
 
-export const setFoodModalInfo = (foodModalId: string, modalMenuFoodName: string) => (
+export const setFoodModalInfo = (foodMenuModalId: string, modalMenuFoodName: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_FOOD_MODAL_INFO,
-    foodModalId: foodModalId,
+    foodMenuModalId: foodMenuModalId,
     modalMenuFoodName: modalMenuFoodName,
   })
 }

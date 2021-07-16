@@ -461,7 +461,7 @@ type SetIsFoodModalOpen = {
 
 type SetFoodModalInfo = {
   type: typeof SUPPER_ACTIONS.SET_FOOD_MODAL_INFO
-  foodModalId: string
+  foodMenuModalId: string
   modalMenuFoodName: string
 }
 

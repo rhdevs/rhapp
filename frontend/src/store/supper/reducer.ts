@@ -55,7 +55,7 @@ const initialState = {
   createOrderPage: 1,
   supperNotifications: [],
   // For ViewMenuFoodModal
-  foodModalId: '',
+  foodMenuModalId: '',
   modalMenuFoodName: '',
   isFoodMenuModalOpen: false,
 }
@@ -99,7 +99,7 @@ type State = {
   createOrderPage: number
   supperNotifications: SupperNotification[]
   // For ViewMenuFoodModal
-  foodModalId: string
+  foodMenuModalId: string
   modalMenuFoodName: string
   isFoodMenuModalOpen: boolean
 }
@@ -241,7 +241,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_FOOD_MODAL_INFO: {
       return {
         ...state,
-        foodModalId: action.foodModalId,
+        foodMenuModalId: action.foodMenuModalId,
         modalMenuFoodName: action.modalMenuFoodName,
       }
     }
