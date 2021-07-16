@@ -222,8 +222,8 @@ export const FoodLine = (props: Props) => {
         return (
           <>
             <ErrorText>
-              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or
-              <u onClick={() => history.goBack()}> go back</u>.
+              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or{' '}
+              <u onClick={() => history.goBack()}>go back</u>.
             </ErrorText>
           </>
         )
