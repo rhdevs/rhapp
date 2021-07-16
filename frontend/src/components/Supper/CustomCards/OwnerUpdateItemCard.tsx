@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { PATHS } from '../../../routes/Routes'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
 import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
@@ -60,10 +62,10 @@ export const OwnerUpdateItemCard = (props: Props) => {
     errors,
     formState: { touched },
   } = useForm<FormData>({
-    mode: 'all',
     shouldUnregister: false,
   })
   const dispatch = useDispatch()
+  const history = useHistory()
 
   useEffect(() => {
     if (props.foodItem) {
@@ -81,7 +83,6 @@ export const OwnerUpdateItemCard = (props: Props) => {
   }, [reset, props.food, props.supperGroup])
 
   useEffect(() => {
-    console.log(Object.values(touched).length, touched)
     props.hasTouchedSetter(Object.values(touched).length ? true : false)
   }, [touched, watch()])
 
@@ -89,7 +90,6 @@ export const OwnerUpdateItemCard = (props: Props) => {
     if (!watch('newPrice')) {
       setValue('newPrice', props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0)
     }
-    console.log(errors, watch())
     handleSubmit((data) => {
       console.log('onUpdateItemClick', data)
       const update: Updates = {
@@ -99,7 +99,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         updatedPrice: data.newPrice,
       }
       dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
-      return
+      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }
 
@@ -113,7 +113,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         updatedPrice: data.newPrice,
       }
       dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
-      return
+      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }
 
@@ -125,7 +125,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         wasDeliveryUpdated: true,
       }
       dispatch(updateSupperGroup(props.supperGroup?.supperGroupId, updatedInfo))
-      return
+      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }
 

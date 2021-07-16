@@ -239,7 +239,7 @@ export const OrderCard = (props: Props) => {
         <PriceText>${priceSectionSubTotal.toFixed(2)}</PriceText>
 
         <PriceTitleText>
-          Delivery Fee {/* TODO: Push to new page with update delivery price card */}
+          Delivery Fee
           {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
             <UpdateTextButton
               underlined
@@ -302,7 +302,6 @@ export const OrderCard = (props: Props) => {
     }
     if (canEditUserFood) {
       history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
-      //TODO: Add owner edit user's order modal (is now a card so push to new page)
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
