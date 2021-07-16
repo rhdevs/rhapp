@@ -16,6 +16,8 @@ import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -176,7 +178,8 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
-  const [contactModalFoodMenuId, setContactModalFoodMenuId] = useState<string>('')
+  const [contactModalFood, setContactModalFood] = useState<Food>()
+  const { food } = useSelector((state: RootState) => state.supper)
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
@@ -353,8 +356,6 @@ export const OrderCard = (props: Props) => {
               }),
             )
             wasEdited = food.updates as boolean
-            console.log(food)
-
             return (
               <>
                 <FoodLine
@@ -364,29 +365,27 @@ export const OrderCard = (props: Props) => {
                   onEditClick={() => onEditClick(food.foodId)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
-                  cancelActionModalSetter={setIsCancelActionModalOpen}
                   cancelActionOnClick={() => {
                     setIsCancelActionModalOpen(true)
-                    setContactModalFoodMenuId(food.foodMenuId)
-                    console.log
+                    setContactModalFood(food)
                   }}
                   food={food}
                   supperGroupId={supperGroupId}
                   orderId={orderId}
                 />
-                {isCancelActionModalOpen && food.foodMenuId == contactModalFoodMenuId && (
-                  <ContactModal
-                    orderList={orderList}
-                    food={food}
-                    supperGroupId={supperGroupId}
-                    orderId={orderId}
-                    contactModalSetter={setIsCancelActionModalOpen}
-                  />
-                )}
               </>
             )
           })}
           <PriceSection update={isEditable} />
+          {isCancelActionModalOpen && (
+            <ContactModal
+              orderList={orderList}
+              food={contactModalFood}
+              supperGroupId={supperGroupId}
+              orderId={orderId}
+              contactModalSetter={setIsCancelActionModalOpen}
+            />
+          )}
         </>
       )}
     </>
