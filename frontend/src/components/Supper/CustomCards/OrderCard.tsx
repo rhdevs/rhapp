@@ -16,6 +16,8 @@ import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -176,7 +178,7 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
-
+  const [contactModalFood, setContactModalFood] = useState<Food>()
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
@@ -362,21 +364,27 @@ export const OrderCard = (props: Props) => {
                   onEditClick={() => onEditClick(food.foodId)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
-                  cancelActionModalSetter={setIsCancelActionModalOpen}
                   cancelActionOnClick={() => {
                     setIsCancelActionModalOpen(true)
+                    setContactModalFood(food)
                   }}
                   food={food}
                   supperGroupId={supperGroupId}
                   orderId={orderId}
                 />
-                {isCancelActionModalOpen && (
-                  <ContactModal orderList={orderList} food={food} contactModalSetter={setIsCancelActionModalOpen} />
-                )}
               </>
             )
           })}
           <PriceSection update={isEditable} />
+          {isCancelActionModalOpen && (
+            <ContactModal
+              orderList={orderList}
+              food={contactModalFood}
+              supperGroupId={supperGroupId}
+              orderId={orderId}
+              contactModalSetter={setIsCancelActionModalOpen}
+            />
+          )}
         </>
       )}
     </>

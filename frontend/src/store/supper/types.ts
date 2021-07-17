@@ -10,9 +10,9 @@ export type User = {
 }
 
 export type Food = {
-  foodId?: string
+  foodId?: string // specific to food, different for different foodmenu
   restaurantId: string
-  foodMenuId: string
+  foodMenuId: string // same id for food throughout each menu
   foodName: string
   comments?: string
   quantity: number
