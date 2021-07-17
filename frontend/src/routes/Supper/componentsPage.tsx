@@ -49,6 +49,7 @@ import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
+import { V1_GREY_BACKGROUND } from '../../common/colours'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -73,7 +74,7 @@ export default function Supper() {
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
       {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>
-        <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
+        <FoodLine backgroundColor={V1_GREY_BACKGROUND} food={foodList[0]} hasNoQuantity />
       </div>
       <SupperButton center ghost defaultButtonDescription="Ghost Button" />
       <OrderCard

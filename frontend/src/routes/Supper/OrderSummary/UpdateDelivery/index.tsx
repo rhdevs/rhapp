@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { V1_GREY_BACKGROUND } from '../../../../common/colours'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
@@ -15,7 +16,7 @@ export const OldInfoContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin: 1rem 23px;
-  background-color: #eeeeee;
+  background-color: ${V1_GREY_BACKGROUND};
   padding: 10px;
   border-radius: 5px;
 `

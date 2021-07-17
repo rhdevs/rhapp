@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { V1_RED } from '../../../../common/colours'
+import { V1_GREY_BACKGROUND, V1_RED } from '../../../../common/colours'
 import { onRefresh } from '../../../../common/reloadPage'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
@@ -60,7 +60,13 @@ const UpdateAllItems = () => {
             />
           )}
           {food ? (
-            <FoodLine backgroundColor="#eeeeee" borderRadius="5px" margin="1rem 23px" padding="10px" food={food} />
+            <FoodLine
+              backgroundColor={V1_GREY_BACKGROUND}
+              borderRadius="5px"
+              margin="1rem 23px"
+              padding="10px"
+              food={food}
+            />
           ) : (
             <OldInfoContainer>
               <ErrorText>
