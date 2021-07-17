@@ -179,7 +179,6 @@ export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const [contactModalFood, setContactModalFood] = useState<Food>()
-  const { food } = useSelector((state: RootState) => state.supper)
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
   const collatedFoodList = props.collatedOrder?.collatedOrderList
