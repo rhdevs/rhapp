@@ -10,7 +10,7 @@ type Props = {
   orderId: string | undefined
 }
 
-export const DiscardCartModal = (props: Props) => {
+export const EmptyCartModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     dispatch(updateOrderDetails(props.orderId, { foodList: [] }))
@@ -18,7 +18,7 @@ export const DiscardCartModal = (props: Props) => {
   }
   return (
     <SupperModal
-      title="Discard Cart?"
+      title="Empty Cart?"
       description="You have added items to your cart. Exiting this page will remove all items from your cart."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}

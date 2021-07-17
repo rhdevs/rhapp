@@ -137,7 +137,7 @@ type Props = {
   supperGroupId?: number
   orderId?: string
   // Food details parameters
-  food?: Food
+  food?: Food | null
   hasNoQuantity?: boolean
   foodId?: string
   quantity?: number
@@ -159,22 +159,20 @@ type Props = {
 export const FoodLine = (props: Props) => {
   const dispatch = useDispatch()
   const { isLoading } = useSelector((state: RootState) => state.supper)
+  const [hasError, setHasError] = useState<boolean>(false)
 
   useEffect(() => {
     if (props.food || (props.foodPrice && props.cancelAction)) {
       dispatch(setIsLoading(false))
     } else {
       dispatch(setIsLoading(true))
+      setTimeout(() => {
+        if (isLoading) {
+          setHasError(true)
+        }
+      }, 10000)
     }
   }, [props.food, props.foodPrice, props.cancelAction])
-
-  const [hasError, setHasError] = useState<boolean>(false)
-
-  setTimeout(() => {
-    if (isLoading) {
-      setHasError(true)
-    }
-  }, 10000)
 
   const history = useHistory()
   const foodId = props.food?.foodId ?? props.foodId
@@ -194,7 +192,6 @@ export const FoodLine = (props: Props) => {
   const comments = props.food?.comments ?? props.comments
   const cancelAction = props.food?.cancelAction ?? props.cancelAction
   const updates = props.food?.updates ?? props.updates
-  // const wasEdited = props.wasEdited ?? updates ? true : false
 
   const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (props.onEditClick) {
@@ -222,8 +219,8 @@ export const FoodLine = (props: Props) => {
         return (
           <>
             <ErrorText>
-              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or
-              <u onClick={() => history.goBack()}> go back</u>.
+              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or{' '}
+              <u onClick={() => history.goBack()}>go back</u>.
             </ErrorText>
           </>
         )
@@ -232,12 +229,11 @@ export const FoodLine = (props: Props) => {
       }
     } else {
       let priceValue = price
-      console.log(updates, wasEdited)
+      //console.log(updates, wasEdited)
       if (updates?.updateAction === UpdateAction.REMOVE) {
         priceValue = '$0.00'
       }
       if (updates?.updateAction === UpdateAction.UPDATE) {
-        console.log(priceValue)
         priceValue = `$${(updates.updatedPrice ?? 0).toFixed(2)}`
       }
       return (

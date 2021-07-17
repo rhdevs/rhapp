@@ -389,7 +389,9 @@ export const updateEditFoodItem = (newFoodItem: Food, oldFoodId: string) => (dis
   console.log(`new Food details: ${newFoodItem}`)
 }
 
-export const updateSupperGroup = (supperGroupId: string | number, updatedInfo) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateSupperGroup = (supperGroupId: string | number | undefined, updatedInfo) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   if (!(supperGroupId && updatedInfo)) return
   dispatch(setIsLoading(true))
   const requestBody = updatedInfo
@@ -804,11 +806,12 @@ export const leaveSupperGroup = (supperGroupId: string | number | undefined) => 
   dispatch(setIsLoading(false))
 }
 
-export const updateOwnerEdits = (orderId: string, foodId: string, updates: Updates) => (
+export const updateOwnerEdits = (orderId: string | undefined, foodId: string | undefined, updates: Updates) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
+  if (!(orderId || foodId)) return
   dispatch(setIsLoading(true))
-  const requestBody = updates
+  const requestBody = { updates: updates }
 
   put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}/owner`)
     .then((resp) => {

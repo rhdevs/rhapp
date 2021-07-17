@@ -26,13 +26,6 @@ const Background = styled.div`
   position: relative;
 `
 
-// const MainContainer = styled.div`
-//   min-height: 100vh;
-//   height: 100%;
-//   width: 100vw;
-//   background: ${V1_BACKGROUND};
-// `
-
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -52,7 +45,7 @@ const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
-const LowerRowButton = styled.div`
+export const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
 
