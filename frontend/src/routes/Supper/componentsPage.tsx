@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
@@ -44,7 +44,7 @@ import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-// import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
+import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
@@ -62,7 +62,7 @@ const OptionText = styled.text`
 
 export default function Supper() {
   //const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
-  //const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   //const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
@@ -71,6 +71,8 @@ export default function Supper() {
       <FilterBubbles />
       <SupperSearchBar />
       <InformationCard splitACMethod />
+      <div onClick={() => setIsModalOpen(true)}>open modal</div>
+      {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
       {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
       {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
       <div style={{ width: '80vw' }}>
