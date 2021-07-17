@@ -235,8 +235,8 @@ export default function ViewFacility() {
 
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
+      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <PullToRefresh onRefresh={onRefresh}>
-        <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
         <MainContainer>
           <>
             {AlertSection}
