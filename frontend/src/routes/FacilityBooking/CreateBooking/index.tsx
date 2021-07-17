@@ -50,6 +50,19 @@ const StyledInput = styled(Input)`
     color: #d9d9d9;
   }
 `
+
+const StyledDateInput = styled(Input)`
+  &.ant-input {
+    width: 70vw;
+    border-radius: 30px;
+    border: 1px solid #d9d9d9;
+    padding: 5px 10px;
+    margin: 0px 0px 20px 0px;
+  }
+  &.ant-input::placeholder {
+    color: #d9d9d9;
+  }
+`
 const StyledTitle = styled.text`
   font-family: Inter;
   color: black;
@@ -223,7 +236,7 @@ export default function CreateBooking() {
           <div style={{ width: '100%' }}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
-              <input
+              <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingFromDate)}
                 onChange={(event) => handleFromDateChange(event.target.value)}
@@ -231,7 +244,7 @@ export default function CreateBooking() {
             </DatePickerRow>
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
-              <input
+              <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingToDate)}
                 onChange={(event) => handleToDateChange(event.target.value)}
@@ -246,7 +259,7 @@ export default function CreateBooking() {
           <div style={{ width: '100%', margin: '10px 0px' }}>
             <StyledTitle>CCA</StyledTitle>
             <AutoComplete
-              style={{ width: '100%' }}
+              style={{ width: '100%', borderRadius: '30px', border: '1px solid #d9d9d9' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
@@ -256,6 +269,8 @@ export default function CreateBooking() {
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
+              notFoundContent="No Matching CCAs"
+              allowClear
             />
           </div>
           <InputRow

@@ -168,7 +168,7 @@ export default function ViewBooking() {
     const endDate = new Date(eventEndTime * 1000)
     const timeDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600)
 
-    return Math.floor(timeDiff)
+    return Math.round(timeDiff * 2) / 2
   }
 
   return (
