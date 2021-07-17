@@ -192,7 +192,6 @@ export const FoodLine = (props: Props) => {
   const comments = props.food?.comments ?? props.comments
   const cancelAction = props.food?.cancelAction ?? props.cancelAction
   const updates = props.food?.updates ?? props.updates
-  // const wasEdited = props.wasEdited ?? updates ? true : false
 
   const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (props.onEditClick) {
@@ -230,12 +229,11 @@ export const FoodLine = (props: Props) => {
       }
     } else {
       let priceValue = price
-      console.log(updates, wasEdited)
+      //console.log(updates, wasEdited)
       if (updates?.updateAction === UpdateAction.REMOVE) {
         priceValue = '$0.00'
       }
       if (updates?.updateAction === UpdateAction.UPDATE) {
-        console.log(priceValue)
         priceValue = `$${(updates.updatedPrice ?? 0).toFixed(2)}`
       }
       return (
