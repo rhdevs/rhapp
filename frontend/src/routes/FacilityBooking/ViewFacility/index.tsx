@@ -165,6 +165,9 @@ export default function ViewFacility() {
     if (selectedFacilityId == 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
     }
+    return () => {
+      dispatch(setViewDates(new Date(), parseInt(params.facilityID)))
+    }
   }, [])
 
   const fetchTelegram = async (booking) => {
