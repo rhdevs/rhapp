@@ -292,6 +292,7 @@ export const OrderCard = (props: Props) => {
   }
 
   const onEditClick = (foodId: string | undefined) => {
+    console.log(foodId)
     if (!foodId) {
       const [error] = useSnackbar('error')
       error('meowmeow is in a bad mood.. try again later!')
@@ -442,6 +443,7 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
+                  console.log(food)
                   return (
                     <FoodLine
                       key={foodIndex}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -9,7 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getFoodInOrder, resetFoodState, updateFoodInOrder } from '../../../store/supper/action'
+import { deleteFoodInOrder, getFoodInOrder, resetFoodState, updateFoodInOrder } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
@@ -18,6 +18,7 @@ import CancelActionField from '../../../components/Supper/CancelActionField'
 import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -40,6 +41,7 @@ type CustomData = Record<string, string | string[] | CancelAction>
 const EditFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const [removeItemModalIsOpen, setRemoveItemModalIsOpen] = useState<boolean>(false)
 
   const { isLoading, food, count, supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
@@ -117,67 +119,71 @@ const EditFoodItem = () => {
   }
 
   const onSubmit = () => {
-    if (isOverSupperGroupLimit()) {
-      const [error] = useSnackbar('error')
-      error('Supper group price limit exceeded, unable to add item.')
-      return
-    }
-
-    handleSubmit((data: Food) => {
-      const initialFoodInfo = food
-      let updatedFoodInfo
-      if (initialFoodInfo?.comments !== data.comments) {
-        updatedFoodInfo = { ...updatedFoodInfo, comments: data.comments as string }
-      }
-      if (initialFoodInfo?.quantity !== count) {
-        updatedFoodInfo = { ...updatedFoodInfo, quantity: count }
-      }
-      const newFoodPrice = ((food?.price ?? 0) + calculateAdditionalCost()) * count
-      if (initialFoodInfo?.foodPrice !== newFoodPrice) {
-        updatedFoodInfo = { ...updatedFoodInfo, foodPrice: newFoodPrice }
-      }
-      if (initialFoodInfo?.cancelAction !== (data.cancelAction as CancelAction)) {
-        updatedFoodInfo = { ...updatedFoodInfo, cancelAction: data.cancelAction as CancelAction }
-      }
-
-      //convert data from watch to [ [[option title], [option's details]] , ...]
-      let formData = Object.entries(watch())
-      formData = formData.filter((entry) => entry[0] !== 'cancelAction' && entry[0] !== 'comments') //remove cancelAction and comments details
-
-      if (hasCustomUpdate(formData, initialFoodInfo?.custom)) {
-        // Changes were made to custom
-        const custom: Custom[] = (initialFoodInfo?.custom ?? []).map((customFood) => {
-          const options: Option[] = formData
-            .flatMap((entry) => {
-              const fieldName = entry[0]
-              /* Convert data array with indiv option names
-               * eg: "Contact" => ["Contact"]
-               * eg: ["Remove Shredded Lettuce", "Remove McSpicy Patty"] => ["Remove Shredded Lettuce", "Remove McSpicy Patty"]
-               */
-              const fieldDetails = [entry[1]].flat()
-              if (customFood.title === fieldName) {
-                return customFood.options.map((option) => {
-                  const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
-                  return { ...option, isSelected: isSelected }
-                })
-              } else {
-                return {} as Option
-              }
-            })
-            .filter((k) => k.name !== undefined) //to remove empty Option objects
-
-          return { ...customFood, options: options }
-        })
-        updatedFoodInfo = { ...updatedFoodInfo, custom: custom }
-      }
-
-      if (updatedFoodInfo) {
-        dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
-        history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+    if (count === 0) {
+      setRemoveItemModalIsOpen(true)
+    } else {
+      if (isOverSupperGroupLimit()) {
+        const [error] = useSnackbar('error')
+        error('Supper group price limit exceeded, unable to add item.')
         return
       }
-      history.goBack()
-    })()
+
+      handleSubmit((data: Food) => {
+        const initialFoodInfo = food
+        let updatedFoodInfo
+        if (initialFoodInfo?.comments !== data.comments) {
+          updatedFoodInfo = { ...updatedFoodInfo, comments: data.comments as string }
+        }
+        if (initialFoodInfo?.quantity !== count) {
+          updatedFoodInfo = { ...updatedFoodInfo, quantity: count }
+        }
+        const newFoodPrice = ((food?.price ?? 0) + calculateAdditionalCost()) * count
+        if (initialFoodInfo?.foodPrice !== newFoodPrice) {
+          updatedFoodInfo = { ...updatedFoodInfo, foodPrice: newFoodPrice }
+        }
+        if (initialFoodInfo?.cancelAction !== (data.cancelAction as CancelAction)) {
+          updatedFoodInfo = { ...updatedFoodInfo, cancelAction: data.cancelAction as CancelAction }
+        }
+
+        //convert data from watch to [ [[option title], [option's details]] , ...]
+        let formData = Object.entries(watch())
+        formData = formData.filter((entry) => entry[0] !== 'cancelAction' && entry[0] !== 'comments') //remove cancelAction and comments details
+
+        if (hasCustomUpdate(formData, initialFoodInfo?.custom)) {
+          // Changes were made to custom
+          const custom: Custom[] = (initialFoodInfo?.custom ?? []).map((customFood) => {
+            const options: Option[] = formData
+              .flatMap((entry) => {
+                const fieldName = entry[0]
+                /* Convert data array with indiv option names
+                 * eg: "Contact" => ["Contact"]
+                 * eg: ["Remove Shredded Lettuce", "Remove McSpicy Patty"] => ["Remove Shredded Lettuce", "Remove McSpicy Patty"]
+                 */
+                const fieldDetails = [entry[1]].flat()
+                if (customFood.title === fieldName) {
+                  return customFood.options.map((option) => {
+                    const isSelected = fieldDetails.find((fieldDetail) => fieldDetail === option.name) !== undefined
+                    return { ...option, isSelected: isSelected }
+                  })
+                } else {
+                  return {} as Option
+                }
+              })
+              .filter((k) => k.name !== undefined) //to remove empty Option objects
+
+            return { ...customFood, options: options }
+          })
+          updatedFoodInfo = { ...updatedFoodInfo, custom: custom }
+        }
+
+        if (updatedFoodInfo) {
+          dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
+          history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+          return
+        }
+        history.goBack()
+      })()
+    }
   }
 
   useEffect(() => {
@@ -208,52 +214,62 @@ const EditFoodItem = () => {
       {isLoading || !food ? (
         <LoadingSpin />
       ) : (
-        <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
-          <FoodItemHeader>{food?.foodName}</FoodItemHeader>
-          <>
-            {food?.custom?.map((custom, index) => (
-              <SelectField
-                custom={custom}
-                index={index}
-                key={index}
-                register={register}
-                clearErrors={clearErrors}
-                setValue={setValue}
-                errors={errors}
-                watch={watch}
-              />
-            ))}
-          </>
+        <>
+          {removeItemModalIsOpen && (
+            <RemoveItemModal
+              modalSetter={setRemoveItemModalIsOpen}
+              onLeftButtonClick={() => history.goBack()}
+              orderId={params.orderId}
+              foodId={params.foodId}
+            />
+          )}
+          <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
+            <FoodItemHeader>{food?.foodName}</FoodItemHeader>
+            <>
+              {food?.custom?.map((custom, index) => (
+                <SelectField
+                  custom={custom}
+                  index={index}
+                  key={index}
+                  register={register}
+                  clearErrors={clearErrors}
+                  setValue={setValue}
+                  errors={errors}
+                  watch={watch}
+                />
+              ))}
+            </>
 
-          <CancelActionField
-            cancelActionError={errors.cancelAction}
-            register={register}
-            clearErrors={clearErrors}
-            setValue={setValue}
-            defaultValue={food?.cancelAction as CancelAction}
-          />
-          <Controller
-            name="comments"
-            render={({ onChange, value }) => (
-              <InputRow
-                placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
-                textarea
-                value={value}
-                onChange={onChange}
-                {...register('comments')}
-              />
-            )}
-            control={control}
-            defaultValue={food?.comments ?? null}
-          />
-          <QuantityTracker margin="0.7rem 0" default={food?.quantity ?? 1} center min={1} />
-          <AddUpdateCartButton
-            isGrey={!isFormFieldsValid()}
-            htmlType="submit"
-            update
-            currentTotal={String((((food?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
-          />
-        </MainCard>
+            <CancelActionField
+              cancelActionError={errors.cancelAction}
+              register={register}
+              clearErrors={clearErrors}
+              setValue={setValue}
+              defaultValue={food?.cancelAction as CancelAction}
+            />
+            <Controller
+              name="comments"
+              render={({ onChange, value }) => (
+                <InputRow
+                  placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
+                  textarea
+                  value={value}
+                  onChange={onChange}
+                  {...register('comments')}
+                />
+              )}
+              control={control}
+              defaultValue={food?.comments ?? null}
+            />
+            <QuantityTracker margin="0.7rem 0" default={food?.quantity ?? 1} center min={0} />
+            <AddUpdateCartButton
+              isGrey={count === 0 ? false : !isFormFieldsValid()}
+              htmlType="submit"
+              {...(count === 0 ? { remove: true } : { update: true })}
+              currentTotal={String((((food?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
+            />
+          </MainCard>
+        </>
       )}
     </MainContainer>
   )
