@@ -59,7 +59,7 @@ const Icon = styled.img`
 const ActionButtonGroup = styled.div`
   justify-content: space-between;
   display: flex;
-  padding: 0px 23px 0px 23px;
+  padding: 16px 23px 0px 23px;
   float: right;
 `
 
@@ -93,7 +93,7 @@ const EventBoldLabel = styled.p`
 `
 
 const EventNormalLabel = styled.p`
-  margin-bottom: 0em;
+  margin-left: 17px;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
@@ -136,8 +136,9 @@ const EventRightDisplay = styled.div`
 const BookingSubHeaderCCAName = styled.p`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
+  font-size: 13px;
   line-height: 0px;
+  margin-top: 5px;
 
   color: rgba(0, 0, 0, 0.65);
 `
@@ -328,7 +329,6 @@ export default function ViewFacility() {
                           src={messageIcon}
                         />
                       )}
-                      <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
                     </EventRightDisplay>
                   </EventCard>
                 ))}

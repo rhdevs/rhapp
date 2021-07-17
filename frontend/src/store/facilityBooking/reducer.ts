@@ -28,7 +28,7 @@ const initialState = {
   createBookingError: '',
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
-  ViewEndDate: dayjs(new Date()).add(3, 'day').toDate(),
+  ViewEndDate: new Date(),
   ViewFacilityMode: 'Bookings',
   selectedFacilityId: 0,
   ccaList: [],
