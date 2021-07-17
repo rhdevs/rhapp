@@ -30,7 +30,7 @@ const MainContainer = styled.div`
 const EventCard = styled.div`
   background: linear-gradient(to top, #ffffff 75%, #ef9688 25%);
   cursor: pointer;
-  margin: 23px;
+  margin: 23px 23px 23px 23px;
   padding: 15px;
   min-height: 500px;
   max-height: 600px;
@@ -103,8 +103,8 @@ const CardTimeLabel = styled.p`
 
 const TimeDetails = styled.div`
   display: grid;
-  grid-template-columns: 35% 65%;
-  margin: 0px;
+  grid-template-columns: 15% 85%;
+  margin: 15px 0px;
 `
 
 const DateTimeDetails = styled.div`
@@ -116,6 +116,12 @@ const DateTimeDetails = styled.div`
 const EventOwnerDetails = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
+  margin: 7px 0px;
+`
+const EventFacilityName = styled.div`
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: 7px 0px;
 `
 
 export default function ViewBooking() {
@@ -181,7 +187,9 @@ export default function ViewBooking() {
               <DetailsGroup>
                 <TimeDetails>
                   <CardDurationLabel>
-                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hr
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime) > 1
+                      ? timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hrs'
+                      : timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hr'}
                   </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
@@ -198,6 +206,10 @@ export default function ViewBooking() {
                     )}
                   </DateTimeDetails>
                 </TimeDetails>
+                <EventFacilityName>
+                  <CardSubtitle>Facility</CardSubtitle>
+                  <p style={{ textAlign: 'right' }}>{selectedBooking?.facilityName}</p>
+                </EventFacilityName>
                 <EventOwnerDetails>
                   <CardSubtitle>Created by</CardSubtitle>
                   <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
