@@ -166,13 +166,8 @@ export default function ViewMyBookings() {
   const userIdFromPath = location.pathname.split('/').slice(-1)[0]
 
   useEffect(() => {
-    dispatch(SetIsLoading(false))
-    if (myBookings.length === 0) {
-      dispatch(SetIsLoading(true))
-      dispatch(getMyBookings(userIdFromPath))
-      //temp solution
-      setTimeout(() => dispatch(SetIsLoading(false)), 3000)
-    }
+    dispatch(SetIsLoading(true))
+    dispatch(getMyBookings(userIdFromPath))
   }, [dispatch])
 
   return (
