@@ -10,7 +10,7 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
 import { FoodLine } from '../../../../components/Supper/FoodLine'
 import { DiscardChangesModal } from '../../../../components/Supper/Modals/DiscardChangesModal'
-import { getFoodInOrder } from '../../../../store/supper/action'
+import { getFoodInOrder, getSupperGroupById } from '../../../../store/supper/action'
 import { RootState } from '../../../../store/types'
 import { OldInfoContainer } from '../UpdateDelivery'
 
@@ -28,11 +28,12 @@ const UpdateItem = () => {
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { food, isLoading } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, food, isLoading } = useSelector((state: RootState) => state.supper)
   const [hasTouched, setHasTouched] = useState<boolean>(false)
   const [discardChangesModalIsOpen, setDiscardChangesModalIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getFoodInOrder(params.orderId, params.foodId))
   }, [dispatch])
 
@@ -68,7 +69,14 @@ const UpdateItem = () => {
               </ErrorText>
             </OldInfoContainer>
           )}
-          <OwnerUpdateItemCard foodItem hasTouchedSetter={setHasTouched} food={food} orderId={params.orderId} />
+          <OwnerUpdateItemCard
+            foodItem
+            hasTouchedSetter={setHasTouched}
+            food={food}
+            orderId={params.orderId}
+            supperGroup={supperGroup}
+            foodId={food?.foodId ?? params.foodId}
+          />
         </>
       )}
     </>

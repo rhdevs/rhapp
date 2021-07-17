@@ -159,22 +159,20 @@ type Props = {
 export const FoodLine = (props: Props) => {
   const dispatch = useDispatch()
   const { isLoading } = useSelector((state: RootState) => state.supper)
+  const [hasError, setHasError] = useState<boolean>(false)
 
   useEffect(() => {
     if (props.food || (props.foodPrice && props.cancelAction)) {
       dispatch(setIsLoading(false))
     } else {
       dispatch(setIsLoading(true))
+      setTimeout(() => {
+        if (isLoading) {
+          setHasError(true)
+        }
+      }, 10000)
     }
   }, [props.food, props.foodPrice, props.cancelAction])
-
-  const [hasError, setHasError] = useState<boolean>(false)
-
-  setTimeout(() => {
-    if (isLoading) {
-      setHasError(true)
-    }
-  }, 10000)
 
   const history = useHistory()
   const foodId = props.food?.foodId ?? props.foodId

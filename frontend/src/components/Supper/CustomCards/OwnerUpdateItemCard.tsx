@@ -40,6 +40,7 @@ type Props = {
   foodItem?: boolean
   deliveryFee?: boolean
   food?: Food | null
+  foodId?: string
   orderId?: string
   supperGroup?: SupperGroup | null
   hasTouchedSetter: React.Dispatch<React.SetStateAction<boolean>>
@@ -97,7 +98,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         change: data.changes,
         updatedPrice: data.newPrice,
       }
-      dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
+      dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
       history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }

@@ -807,7 +807,7 @@ export const updateOwnerEdits = (orderId: string | undefined, foodId: string | u
 ) => {
   if (!(orderId || foodId)) return
   dispatch(setIsLoading(true))
-  const requestBody = updates
+  const requestBody = { updates: updates }
 
   put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}/owner`)
     .then((resp) => {
