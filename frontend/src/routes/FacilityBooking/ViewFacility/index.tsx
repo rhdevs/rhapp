@@ -100,15 +100,6 @@ const EventNormalLabel = styled.p`
   line-height: 14px;
 `
 
-const EventDateLabel = styled.p`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  text-align: right;
-
-  color: #c4c4c4;
-`
-
 const DateSelectorGroup = styled.div`
   padding: 23px;
   font-family: inter;
@@ -311,7 +302,7 @@ export default function ViewFacility() {
                       </EventBoldLabel>
                       <EventNormalLabel>
                         <BookingSubHeaderCCAName>
-                          <b>{event.ccaName ? event.ccaName : 'Personal'}:</b>
+                          <b>{event.ccaName ? event.ccaName : 'Personal'}</b>
                         </BookingSubHeaderCCAName>
                         <BookingSubHeaderEventName>
                           {event.eventName.length > 25 ? event.eventName.slice(0, 20) + '...' : event.eventName}

@@ -75,6 +75,7 @@ const FacilitySubHeader = styled.p`
 
 const FacilityLabels = styled.div`
   align-self: center;
+  margin-top: 14px;
 `
 
 const StyledRadioGroup = styled(Radio.Group)`
