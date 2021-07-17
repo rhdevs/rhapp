@@ -169,7 +169,7 @@ export default function CreateBooking() {
   }
 
   const handleToDateChange = (newDate: string) => {
-    dispatch(editBookingToDate(new Date(newDate)))
+    if (!isNaN(Date.parse(newDate))) dispatch(editBookingToDate(new Date(newDate)))
   }
 
   const convertLocalTime = (date: Date) => {
