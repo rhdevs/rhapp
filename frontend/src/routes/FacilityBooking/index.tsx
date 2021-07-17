@@ -166,7 +166,6 @@ export default function FacilityBooking() {
       src={JCRCBlockOutIcon}
       onClick={() => {
         // setJCRCBlockOutPopUp(true)
-        console.log('Open Modal')
         dispatch(SetBlockOutIsOpen(true))
       }}
     />

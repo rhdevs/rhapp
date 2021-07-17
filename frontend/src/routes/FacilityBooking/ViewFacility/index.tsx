@@ -34,7 +34,7 @@ import './calendar.css'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   background-color: #fafaf4;
 `
 
