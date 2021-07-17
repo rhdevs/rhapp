@@ -15,7 +15,7 @@ export const OldInfoContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin: 1rem 23px;
-  background-color: #ededed;
+  background-color: #eeeeee;
   padding: 10px;
   border-radius: 5px;
 `

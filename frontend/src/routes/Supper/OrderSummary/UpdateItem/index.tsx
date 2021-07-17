@@ -59,7 +59,7 @@ const UpdateItem = () => {
             />
           )}
           {food ? (
-            <FoodLine backgroundColor="#ededed" borderRadius="5px" margin="1rem 23px" padding="10px" food={food} />
+            <FoodLine backgroundColor="#eeeeee" borderRadius="5px" margin="1rem 23px" padding="10px" food={food} />
           ) : (
             <OldInfoContainer>
               <ErrorText>
