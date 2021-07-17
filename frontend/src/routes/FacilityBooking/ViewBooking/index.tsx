@@ -30,7 +30,7 @@ const MainContainer = styled.div`
 const EventCard = styled.div`
   background: linear-gradient(to top, #ffffff 75%, #ef9688 25%);
   cursor: pointer;
-  margin: 23px 23px 23px 23px;
+  margin: 0px 23px 23px 23px;
   padding: 15px;
   min-height: 500px;
   max-height: 600px;
