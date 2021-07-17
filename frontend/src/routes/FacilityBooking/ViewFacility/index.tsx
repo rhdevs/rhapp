@@ -44,7 +44,7 @@ const StyledButton = styled(Button)`
   }
 `
 
-const DateDisplayText = styled.p`
+const DateDisplayText = styled.div`
   font-style: normal;
   font-weight: 500;
   font-size: 26px;
@@ -85,14 +85,14 @@ const EventLabels = styled.div`
   align-self: center;
 `
 
-const EventBoldLabel = styled.p`
+const EventBoldLabel = styled.div`
   margin-bottom: 0em;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
 `
 
-const EventNormalLabel = styled.p`
+const EventNormalLabel = styled.div`
   margin-left: 17px;
   font-style: normal;
   font-weight: normal;
@@ -124,21 +124,20 @@ const EventRightDisplay = styled.div`
   justify-content: center;
 `
 
-const BookingSubHeaderCCAName = styled.p`
+const BookingSubHeaderCCAName = styled.div`
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
-  line-height: 0px;
-  margin-top: 5px;
+  line-height: 14px;
 
   color: rgba(0, 0, 0, 0.65);
 `
 
-const BookingSubHeaderEventName = styled.p`
+const BookingSubHeaderEventName = styled.div`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
-  line-height: 0px;
+  font-size: 13px;
+  line-height: 14px;
 
   color: rgba(0, 0, 0, 0.65);
 `

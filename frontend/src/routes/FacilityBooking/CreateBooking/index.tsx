@@ -81,6 +81,14 @@ const DatePickerRow = styled.div`
   color: #666666;
 `
 
+const CCAPickerRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0px;
+  color: #666666;
+`
+
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -227,6 +235,8 @@ export default function CreateBooking() {
             placeholder="Location"
             onChange={(newFacilityName) => setFacility(newFacilityName)}
             filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            notFoundContent="No Matching Facility"
+            allowClear
           />
           <StyledInput
             placeholder="Event Name"
@@ -256,15 +266,15 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
-          <div style={{ width: '100%', margin: '10px 0px' }}>
+          <CCAPickerRow>
             <StyledTitle>CCA</StyledTitle>
             <AutoComplete
-              style={{ width: '100%', borderRadius: '30px', border: '1px solid #d9d9d9' }}
+              style={{ width: '70vw', borderRadius: '30px !important' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
               value={newBookingCCA}
-              placeholder="Select your CCA, else select Personal"
+              placeholder="Select 'Personal' if NA"
               onChange={(value) => setCca(value)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -272,7 +282,7 @@ export default function CreateBooking() {
               notFoundContent="No Matching CCAs"
               allowClear
             />
-          </div>
+          </CCAPickerRow>
           <InputRow
             title="Description"
             placeholder="Tell us what your booking is for!"

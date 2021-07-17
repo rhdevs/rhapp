@@ -1,10 +1,18 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../assets/Inter/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+  font-weight: 125 950;
+  font-stretch: 100%;
+  font-style: normal;
+}
+
 .react-calendar {
   width: 350px;
   max-width: 100%;
   background: #fafaf4;
   /* border: 1px solid #a0a096;
   border-radius: 0.5em; */
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter';
   line-height: 1.125em;
 }
 .react-calendar--doubleView {

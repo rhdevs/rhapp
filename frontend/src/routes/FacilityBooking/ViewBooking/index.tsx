@@ -28,7 +28,7 @@ const MainContainer = styled.div`
 `
 
 const EventCard = styled.div`
-  background: linear-gradient(to top, #ffffff 75%, #ef9688 25%);
+  background: linear-gradient(to top, #ffffff 78%, #ef9688 22%);
   cursor: pointer;
   margin: 23px;
   padding: 15px;
@@ -38,7 +38,7 @@ const EventCard = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   height: 100%;
   display: grid;
-  grid-template-rows: 25% 50% 25%;
+  grid-template-rows: 22% 63% 15%;
 `
 
 const HeaderGroup = styled.div`
@@ -66,8 +66,8 @@ const DetailsGroup = styled.div`
 `
 
 const Icon = styled.img`
-  height: 28px;
-  width: 28px;
+  height: 40px;
+  width: 40px;
 `
 
 const ActionButtonGroup = styled.div`
@@ -115,13 +115,15 @@ const DateTimeDetails = styled.div`
 `
 const EventOwnerDetails = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 35% 65%;
   margin: 7px 0px;
+  align-items: baseline;
 `
 const EventFacilityName = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 35% 65%;
   margin: 7px 0px;
+  align-items: baseline;
 `
 
 export default function ViewBooking() {

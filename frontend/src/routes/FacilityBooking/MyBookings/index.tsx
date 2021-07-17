@@ -60,39 +60,39 @@ const BookingCard = styled.div`
 
 const BookingAvatar = styled.img`
   padding: 10px;
-  width: 30%;
+  width: 20%;
   max-height 70px;
 `
 
-const BookingHeader = styled.p`
+const BookingHeader = styled.div`
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
-  line-height: 0px;
+  line-height: 16px;
 
   color: rgba(0, 0, 0, 0.65);
 `
 
-const BookingSubHeaderCCAName = styled.p`
+const BookingSubHeaderCCAName = styled.div`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
-  line-height: 0px;
+  font-size: 12px;
+  line-height: 12px;
 
   color: rgba(0, 0, 0, 0.65);
 `
-const BookingSubHeaderEventName = styled.p`
+const BookingSubHeaderEventName = styled.div`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
-  line-height: 0px;
+  font-size: 12px;
+  line-height: 12px;
 
   color: rgba(0, 0, 0, 0.65);
 `
 // TODO: fix styling when backend is up
 const BookingTime = styled.p`
   font-style: normal;
-  font-weight: bold;
+  font-weight: thin;
   font-size: 12px;
   line-height: 12px;
   color: #de5f4c;
@@ -100,7 +100,7 @@ const BookingTime = styled.p`
 
 const BookingLabels = styled.div`
   align-self: center;
-  margin-top: 20px;
+  margin-top: 10px;
 `
 
 const RightActionGroups = styled.div`
@@ -112,6 +112,13 @@ const RightActionGroups = styled.div`
 
 const ActionButton = styled.img`
   padding: 15px;
+`
+
+const NoBookingsFound = styled.div`
+  text-align: center;
+  font-size: 20px;
+  align-self: center;
+  margin-top: 40px;
 `
 
 function FacilityLogo(props: { facilityID: number }) {
@@ -176,6 +183,7 @@ export default function ViewMyBookings() {
           {isLoading && <LoadingSpin />}
           {!isLoading && (
             <>
+              {myBookings.length === 0 && <NoBookingsFound>You have not made any bookings.</NoBookingsFound>}
               {myBookings?.map((booking) => {
                 if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
@@ -188,13 +196,13 @@ export default function ViewMyBookings() {
                       >
                         <BookingHeader>{booking.facilityName}</BookingHeader>
                         <BookingSubHeaderCCAName>
-                          <b>{booking.ccaName ? booking.ccaName : 'Personal'}:</b>
+                          {booking.ccaName ? booking.ccaName : 'Personal'}:
                         </BookingSubHeaderCCAName>
                         <BookingSubHeaderEventName>
-                          {booking.eventName.length > 25 ? booking.eventName.slice(0, 20) + '...' : booking.eventName}
+                          {booking.eventName.length > 25 ? booking.eventName.slice(0, 25) + '...' : booking.eventName}
                         </BookingSubHeaderEventName>
                         <BookingTime>
-                          <b>{new Date(booking.startTime * 1000).toDateString()}</b> <br />
+                          {new Date(booking.startTime * 1000).toDateString().slice(0, -4)}{' '}
                           {new Date(booking.startTime * 1000).toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',
