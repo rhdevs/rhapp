@@ -44,7 +44,7 @@ import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
+import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
@@ -71,7 +71,7 @@ export default function Supper() {
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
+      {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
       </div>

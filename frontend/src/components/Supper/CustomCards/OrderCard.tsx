@@ -305,14 +305,16 @@ export const OrderCard = (props: Props) => {
     )
   }
 
-  const onEditClick = (foodId: string | undefined) => {
+  const onEditClick = (foodId: string | undefined, collate?: boolean) => {
     if (!foodId) {
       const [error] = useSnackbar('error')
       error('meowmeow is in a bad mood.. try again later!')
       return
     }
     if (canEditUserFood) {
-      history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
+      if (collate) {
+        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID}`) //TODO: Update - waiting for backend
+      } else history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
@@ -373,7 +375,7 @@ export const OrderCard = (props: Props) => {
                   key={index}
                   margin="5px 0"
                   isEditable={isEditable}
-                  onEditClick={() => onEditClick(food.foodId)}
+                  onEditClick={() => onEditClick(food.foodId, true)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
                   cancelActionModalSetter={setIsCancelActionModalOpen}

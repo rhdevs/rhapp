@@ -44,6 +44,7 @@ type Props = {
   orderId?: string
   supperGroup?: SupperGroup | null
   hasTouchedSetter: React.Dispatch<React.SetStateAction<boolean>>
+  all?: boolean
 }
 
 type FormData = {
@@ -98,7 +99,11 @@ export const OwnerUpdateItemCard = (props: Props) => {
         change: data.changes,
         updatedPrice: data.newPrice,
       }
-      dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
+      if (props.all) {
+        //dispatch(updateOwnerEditsAllFood()) - check w backend
+      } else {
+        dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
+      }
       history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }
@@ -111,7 +116,11 @@ export const OwnerUpdateItemCard = (props: Props) => {
         reason: data.editReason,
         updatedPrice: data.newPrice,
       }
-      dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
+      if (props.all) {
+        //dispatch(updateOwnerEditsAllFood()) - check w backend
+      } else {
+        dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
+      }
       history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
     })()
   }
@@ -171,7 +180,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onDeleteItemClick}
-              defaultButtonDescription="Delete Item"
+              defaultButtonDescription={props.all ? 'Delete Item for All' : 'Delete Item'}
               ghost
               buttonWidth="100%"
               style={{ margin: '2rem 0 0.5rem 0' }}
@@ -179,7 +188,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onUpdateItemClick}
-              defaultButtonDescription="Update Item"
+              defaultButtonDescription={props.all ? 'Update Item for All' : 'Update Item'}
               buttonWidth="100%"
               style={{ margin: '1rem 0 0 0' }}
             />
