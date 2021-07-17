@@ -101,7 +101,7 @@ const EventNormalLabel = styled.div`
 `
 
 const DateSelectorGroup = styled.div`
-  padding: 23px;
+  padding: 23px 23px 10px 23px;
   font-family: inter;
   display: flex;
   place-content: center;
@@ -140,6 +140,13 @@ const BookingSubHeaderEventName = styled.div`
   line-height: 14px;
 
   color: rgba(0, 0, 0, 0.65);
+`
+
+const InstructionText = styled.div`
+  font-size: 17px;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 15px;
 `
 
 export default function ViewFacility() {
@@ -250,6 +257,7 @@ export default function ViewFacility() {
                 next2Label={null}
               />
             </DateSelectorGroup>
+            <InstructionText>Select a date to view the day’s events.</InstructionText>
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
@@ -325,7 +333,7 @@ export default function ViewFacility() {
                     </EventRightDisplay>
                   </EventCard>
                 ))}
-                {facilityBookings.length === 0 && <p style={{ margin: '23px' }}>There are no bookings on this day!</p>}
+                {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
               </EventsGroup>
             )}
             {isLoading && <LoadingSpin />}
