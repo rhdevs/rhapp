@@ -6,7 +6,6 @@ type Props = {
   htmlType?: 'button' | 'submit' | 'reset' | undefined
   update?: boolean
   add?: boolean
-  remove?: boolean
   width?: string
   leftText?: string
   currentTotal: string
@@ -15,13 +14,7 @@ type Props = {
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
 }
 export const AddUpdateCartButton = (props: Props) => {
-  const LEFT_TEXT = props.update
-    ? 'Update Cart'
-    : props.add
-    ? 'Add to Cart'
-    : props.remove
-    ? 'Remove Item'
-    : props.leftText
+  const LEFT_TEXT = props.update ? 'Update Cart' : props.add ? 'Add to Cart' : props.leftText
   const RIGHT_TEXT = `$${props.currentTotal}`
 
   return (

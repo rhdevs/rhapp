@@ -112,8 +112,7 @@ export const getSupperHistory = (userId: string) => (dispatch: Dispatch<ActionTy
   dispatch(setIsLoading(false))
 }
 
-export const getOrderById = (orderId: string | undefined) => (dispatch: Dispatch<ActionTypes>) => {
-  if (!orderId) return
+export const getOrderById = (orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_ORDER_BY_ID, DOMAINS.SUPPER, `/${orderId}`)
     .then((resp) => {
@@ -516,10 +515,7 @@ export const deleteOrder = (supperGroupId: string | number, orderId?: string) =>
   dispatch(setIsLoading(false))
 }
 
-export const deleteFoodInOrder = (orderId: string | undefined, foodId: string | undefined) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (!(orderId || foodId)) return
+export const deleteFoodInOrder = (orderId: string, foodId: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${orderId}/food/${foodId}`)
     .then((resp) => {
