@@ -6,6 +6,7 @@ import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import { Food, Order, UserDetails } from '../../store/supper/types'
 import { TelegramShareButton } from '../TelegramShareButton'
+import { V1_GREY_BACKGROUND } from '../../common/colours'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -116,7 +117,7 @@ export const ContactModal = (props: Prop) => {
           <CloseButton onClick={onCloseClick} />
         </HeaderContainer>
         <FoodLine
-          backgroundColor="#EEEEEE"
+          backgroundColor={V1_GREY_BACKGROUND}
           food={props.food}
           supperGroupId={props.supperGroupId}
           orderId={props.orderId}

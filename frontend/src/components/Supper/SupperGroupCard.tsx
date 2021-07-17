@@ -270,8 +270,8 @@ export const SupperGroupCard = (props: Props) => {
           </LeftContainer>
           <RightContainer>
             <ErrorText>
-              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or
-              <u onClick={() => history.goBack()}> go back</u>
+              meowmeow ate the supper group.. <u onClick={onRefresh}>reload</u> or{' '}
+              <u onClick={() => history.goBack()}>go back</u>
             </ErrorText>
           </RightContainer>
         </>

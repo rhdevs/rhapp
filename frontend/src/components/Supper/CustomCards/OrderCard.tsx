@@ -16,6 +16,7 @@ import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
+import { Skeleton } from '../../Skeleton'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 
@@ -115,12 +116,13 @@ const PriceTitleText = styled.text`
   align-items: center;
 `
 
-const PriceText = styled.text`
+const PriceText = styled.text<{ updated?: boolean }>`
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 14px;
   justify-self: end;
+  ${(props) => props.updated && `color: ${V1_RED};`}
 `
 
 const SubtotalContainer = styled.div`
@@ -178,6 +180,7 @@ type Props = {
 export const OrderCard = (props: Props) => {
   const history = useHistory()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
+  const { isLoading } = useSelector((state: RootState) => state.supper)
   const [contactModalFood, setContactModalFood] = useState<Food>()
   const orderList = props.supperGroup?.orderList
   const foodList = props.order?.foodList ?? props.foodList
@@ -218,15 +221,7 @@ export const OrderCard = (props: Props) => {
     total = subTotal + deliveryFee
   }
 
-  const PriceSection = ({
-    update,
-    order,
-    wasDeliveryUpdated,
-  }: {
-    update?: boolean
-    order?: Order
-    wasDeliveryUpdated?: boolean
-  }) => {
+  const PriceSection = ({ update, order }: { update?: boolean; order?: Order }) => {
     let priceSectionSubTotal = subTotal
     let priceSectionDeliveryFee = supperGroupDeliveryFee
     let priceSectionTotal = total
@@ -235,26 +230,43 @@ export const OrderCard = (props: Props) => {
       priceSectionDeliveryFee = deliveryFee
     }
     priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
+    const wasDeliveryUpdated = props.supperGroup?.wasDeliveryUpdated
     return (
       <PriceMainContainer>
-        <PriceTitleText>Subtotal</PriceTitleText>
-        <PriceText>${priceSectionSubTotal.toFixed(2)}</PriceText>
+        <PriceTitleText>{isLoading ? <Skeleton margin="0" width="90px" /> : 'Subtotal'}</PriceTitleText>
+        <PriceText>
+          {isLoading ? <Skeleton margin="0" width="60px" /> : `$${priceSectionSubTotal.toFixed(2)}`}
+        </PriceText>
 
         <PriceTitleText>
-          Delivery Fee {/* TODO: Push to new page with update delivery price card */}
-          {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
-            <UpdateTextButton underlined onClick={() => console.log('GO TO NEW PAGE')}>
-              update
-            </UpdateTextButton>
-          )}
-          {wasDeliveryUpdated && !(supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
-            <UpdateTextButton>(edited)</UpdateTextButton>
+          {isLoading ? (
+            <Skeleton width="130px" />
+          ) : (
+            <>
+              Delivery Fee
+              {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+                <UpdateTextButton
+                  underlined
+                  onClick={() => history.push(`${PATHS.UPDATE_DELIVERY}/${supperGroupId}/update/delivery`)}
+                >
+                  update
+                </UpdateTextButton>
+              )}
+              {wasDeliveryUpdated &&
+                !(supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+                  <UpdateTextButton>(edited)</UpdateTextButton>
+                )}
+            </>
           )}
         </PriceTitleText>
-        <PriceText>${priceSectionDeliveryFee.toFixed(2)}</PriceText>
+        <PriceText updated={wasDeliveryUpdated}>
+          {isLoading ? <Skeleton margin="0" width="50px" /> : `$${priceSectionDeliveryFee.toFixed(2)}`}
+        </PriceText>
 
-        <TotalTitleText>Total</TotalTitleText>
-        <TotalPriceText>${priceSectionTotal.toFixed(2)}</TotalPriceText>
+        <TotalTitleText>{isLoading ? <Skeleton margin="0" width="90px" /> : 'Total'}</TotalTitleText>
+        <TotalPriceText>
+          {isLoading ? <Skeleton margin="0" width="70px" /> : `$${priceSectionTotal.toFixed(2)}`}
+        </TotalPriceText>
       </PriceMainContainer>
     )
   }
@@ -293,14 +305,16 @@ export const OrderCard = (props: Props) => {
     )
   }
 
-  const onEditClick = (foodId: string | undefined) => {
+  const onEditClick = (foodId: string | undefined, collate?: boolean) => {
     if (!foodId) {
       const [error] = useSnackbar('error')
       error('meowmeow is in a bad mood.. try again later!')
       return
     }
     if (canEditUserFood) {
-      //TODO: Add owner edit user's order modal (is now a card so push to new page)
+      if (collate) {
+        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID}`) //TODO: Update - waiting for backend
+      } else history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
@@ -361,7 +375,7 @@ export const OrderCard = (props: Props) => {
                   key={index}
                   margin="5px 0"
                   isEditable={isEditable}
-                  onEditClick={() => onEditClick(food.foodId)}
+                  onEditClick={() => onEditClick(food.foodId, true)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
                   cancelActionOnClick={() => {
@@ -414,8 +428,20 @@ export const OrderCard = (props: Props) => {
           const topSection = (
             <CardHeaderContainer>
               <NameContainer>
-                {!isOwnerFood && <TelegramShareButton margin="0 5px 0 0" telegramHandle={telegramHandle} />}
-                <NameText isOwner={isOwnerFood}>{isOwnerFood ? 'You' : order.user.displayName}</NameText>
+                {isLoading ? (
+                  <Skeleton width="30px" height="30px" borderRadius="50px" />
+                ) : (
+                  !isOwnerFood && <TelegramShareButton margin="0 5px 0 0" telegramHandle={telegramHandle} />
+                )}
+                <NameText isOwner={isOwnerFood}>
+                  {isLoading ? (
+                    <Skeleton margin="5px 10px" height="17px" />
+                  ) : isOwnerFood ? (
+                    'You'
+                  ) : (
+                    order.user.displayName
+                  )}
+                </NameText>
               </NameContainer>
               {ownerFoodIsEditable && isOwnerFood && <RedPlusButton />}
             </CardHeaderContainer>
@@ -436,6 +462,7 @@ export const OrderCard = (props: Props) => {
             }
           }
 
+          console.log(order.foodList, 'this is order.foodList')
           return (
             <>
               {topSection}
@@ -467,8 +494,8 @@ export const OrderCard = (props: Props) => {
                 })
               )}
               <SubtotalContainer>
-                <SubtotalText>Subtotal</SubtotalText>
-                <SubtotalPrice>{orderSubtotal}</SubtotalPrice>
+                <SubtotalText>{isLoading ? <Skeleton margin="0" width="90px" /> : 'Subtotal'}</SubtotalText>
+                <SubtotalPrice>{isLoading ? <Skeleton margin="0" width="50px" /> : orderSubtotal}</SubtotalPrice>
               </SubtotalContainer>
               <HorizontalLine />
             </>
@@ -505,7 +532,7 @@ export const OrderCard = (props: Props) => {
                 />
               )
             })}
-            <PriceSection order={ownerOrder} wasDeliveryUpdated />
+            <PriceSection order={ownerOrder} />
           </>
         ) : (
           EmptyCart()

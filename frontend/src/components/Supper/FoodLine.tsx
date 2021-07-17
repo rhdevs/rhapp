@@ -137,7 +137,7 @@ type Props = {
   supperGroupId?: number
   orderId?: string
   // Food details parameters
-  food?: Food
+  food?: Food | null
   hasNoQuantity?: boolean
   foodId?: string
   quantity?: number
@@ -159,22 +159,20 @@ type Props = {
 export const FoodLine = (props: Props) => {
   const dispatch = useDispatch()
   const { isLoading } = useSelector((state: RootState) => state.supper)
+  const [hasError, setHasError] = useState<boolean>(false)
 
   useEffect(() => {
     if (props.food || (props.foodPrice && props.cancelAction)) {
       dispatch(setIsLoading(false))
     } else {
       dispatch(setIsLoading(true))
+      setTimeout(() => {
+        if (isLoading) {
+          setHasError(true)
+        }
+      }, 10000)
     }
   }, [props.food, props.foodPrice, props.cancelAction])
-
-  const [hasError, setHasError] = useState<boolean>(false)
-
-  setTimeout(() => {
-    if (isLoading) {
-      setHasError(true)
-    }
-  }, 10000)
 
   const history = useHistory()
   const foodId = props.food?.foodId ?? props.foodId
@@ -221,8 +219,8 @@ export const FoodLine = (props: Props) => {
         return (
           <>
             <ErrorText>
-              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or
-              <u onClick={() => history.goBack()}> go back</u>.
+              Food not found.. We think meowmeow ate it! Try <u onClick={onRefresh}>reloading</u> or{' '}
+              <u onClick={() => history.goBack()}>go back</u>.
             </ErrorText>
           </>
         )
