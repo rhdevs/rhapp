@@ -26,6 +26,7 @@ export const AddUpdateCartButton = (props: Props) => {
 
   return (
     <RedButton
+      {...((props.add || props.remove) && { zIndex: 0 })}
       isGrey={props.isGrey ?? props.isDisabled}
       htmlType={props.htmlType}
       width={props.width ?? '100%'}

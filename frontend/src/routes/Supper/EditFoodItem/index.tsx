@@ -118,7 +118,8 @@ const EditFoodItem = () => {
     return false
   }
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault()
     if (count === 0) {
       setRemoveItemModalIsOpen(true)
     } else {
