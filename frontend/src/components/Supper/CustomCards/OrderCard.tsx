@@ -418,7 +418,7 @@ export const OrderCard = (props: Props) => {
         formattedFoodList.unshift(ownerOrder)
       }
     } else {
-      return OwnerEmptyCartSection()
+      return <OwnerEmptyCartSection />
     }
 
     return (
