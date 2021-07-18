@@ -10,7 +10,7 @@ const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: strin
   width: ${(props) => props.width ?? '100vw'};
   position: ${(props) => (props.isSticky ? 'fixed' : '')};
   bottom: 0;
-  z-index: ${(props) => props.zIndex ?? 1000};
+  z-index: ${(props) => props.zIndex ?? 3};
   background: ${(props) => (props.isSticky ? V1_BACKGROUND : 'transparent')};
   height: ${(props) =>
     props.isSticky
