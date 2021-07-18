@@ -34,7 +34,7 @@ import './calendar.css'
 
 const MainContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   background-color: #fafaf4;
 `
 
@@ -44,7 +44,7 @@ const StyledButton = styled(Button)`
   }
 `
 
-const DateDisplayText = styled.p`
+const DateDisplayText = styled.div`
   font-style: normal;
   font-weight: 500;
   font-size: 26px;
@@ -59,7 +59,7 @@ const Icon = styled.img`
 const ActionButtonGroup = styled.div`
   justify-content: space-between;
   display: flex;
-  padding: 0px 23px 0px 23px;
+  padding: 16px 23px 0px 23px;
   float: right;
 `
 
@@ -85,32 +85,23 @@ const EventLabels = styled.div`
   align-self: center;
 `
 
-const EventBoldLabel = styled.p`
+const EventBoldLabel = styled.div`
   margin-bottom: 0em;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
 `
 
-const EventNormalLabel = styled.p`
-  margin-bottom: 0em;
+const EventNormalLabel = styled.div`
+  margin-left: 17px;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
   line-height: 14px;
 `
 
-const EventDateLabel = styled.p`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  text-align: right;
-
-  color: #c4c4c4;
-`
-
 const DateSelectorGroup = styled.div`
-  padding: 23px;
+  padding: 23px 23px 10px 23px;
   font-family: inter;
   display: flex;
   place-content: center;
@@ -133,22 +124,29 @@ const EventRightDisplay = styled.div`
   justify-content: center;
 `
 
-const BookingSubHeaderCCAName = styled.p`
+const BookingSubHeaderCCAName = styled.div`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
-  line-height: 0px;
+  font-size: 13px;
+  line-height: 14px;
 
   color: rgba(0, 0, 0, 0.65);
 `
 
-const BookingSubHeaderEventName = styled.p`
+const BookingSubHeaderEventName = styled.div`
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
-  line-height: 0px;
+  font-size: 13px;
+  line-height: 14px;
 
   color: rgba(0, 0, 0, 0.65);
+`
+
+const InstructionText = styled.div`
+  font-size: 17px;
+  font-weight: 200;
+  text-align: center;
+  margin-bottom: 15px;
 `
 
 export default function ViewFacility() {
@@ -172,6 +170,9 @@ export default function ViewFacility() {
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
     if (selectedFacilityId == 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
+    }
+    return () => {
+      dispatch(setViewDates(new Date(), parseInt(params.facilityID)))
     }
   }, [])
 
@@ -241,8 +242,8 @@ export default function ViewFacility() {
 
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
+      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <PullToRefresh onRefresh={onRefresh}>
-        <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
         <MainContainer>
           <>
             {AlertSection}
@@ -256,6 +257,7 @@ export default function ViewFacility() {
                 next2Label={null}
               />
             </DateSelectorGroup>
+            <InstructionText>Select a date to view the day’s events.</InstructionText>
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
@@ -310,7 +312,7 @@ export default function ViewFacility() {
                       </EventBoldLabel>
                       <EventNormalLabel>
                         <BookingSubHeaderCCAName>
-                          <b>{event.ccaName ? event.ccaName : 'Personal'}:</b>
+                          <b>{event.ccaName ? event.ccaName : 'Personal'}</b>
                         </BookingSubHeaderCCAName>
                         <BookingSubHeaderEventName>
                           {event.eventName.length > 25 ? event.eventName.slice(0, 20) + '...' : event.eventName}
@@ -328,11 +330,10 @@ export default function ViewFacility() {
                           src={messageIcon}
                         />
                       )}
-                      <EventDateLabel>{getHumanReadableDate(event.startTime)}</EventDateLabel>
                     </EventRightDisplay>
                   </EventCard>
                 ))}
-                {facilityBookings.length === 0 && <p style={{ margin: '23px' }}>There are no bookings on this day!</p>}
+                {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
               </EventsGroup>
             )}
             {isLoading && <LoadingSpin />}

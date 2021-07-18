@@ -75,6 +75,7 @@ const FacilitySubHeader = styled.p`
 
 const FacilityLabels = styled.div`
   align-self: center;
+  margin-top: 14px;
 `
 
 const StyledRadioGroup = styled(Radio.Group)`
@@ -133,7 +134,7 @@ const StyledRadioGroupDiv = styled.div`
 
 const StyledBodyDiv = styled.div`
   background-color: #fafaf4;
-  height: 75vh;
+  height: 90vh;
   overflow: scroll;
 `
 
@@ -165,7 +166,6 @@ export default function FacilityBooking() {
       src={JCRCBlockOutIcon}
       onClick={() => {
         // setJCRCBlockOutPopUp(true)
-        console.log('Open Modal')
         dispatch(SetBlockOutIsOpen(true))
       }}
     />

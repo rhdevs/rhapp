@@ -1,10 +1,18 @@
 import { createGlobalStyle } from 'styled-components'
+import Inter from './assets/Inter/Inter-VariableFont_slnt,wght.ttf'
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'Inter';
+    src: url(${Inter}) format('truetype');
+    font-weight: 125 950;
+    font-stretch: 100%;
+    font-style: normal;
+  }
+
   body {
-    color: #fafaf4
     font-family: Inter;
-    background-color: #fafaf4;
+    background-color: #fafaf4 !important;
   }
 
   html {

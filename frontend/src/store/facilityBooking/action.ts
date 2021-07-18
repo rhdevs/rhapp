@@ -82,6 +82,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
   })
+  dispatch(SetIsLoading(false))
 }
 
 // -1 stands for closed, any others means open for that specific ID.
@@ -267,7 +268,6 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
   }
-  console.log(requestBody)
   if (selectedFacilityId === 0) {
     //validate if selected facility id is zero
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
