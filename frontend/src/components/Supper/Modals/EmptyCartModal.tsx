@@ -1,30 +1,25 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { updateOrderDetails } from '../../../store/supper/action'
 
 import { SupperModal } from './SupperModal'
-import { SupperGroupStatus } from '../../../store/supper/types'
-import { updateSupperGroup } from '../../../store/supper/action'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  supperGroupId: string | number
-  withDispatch?: boolean
+  orderId: string | undefined
 }
 
-export const CancelGroupModal = (props: Props) => {
+export const EmptyCartModal = (props: Props) => {
   const dispatch = useDispatch()
-
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.withDispatch)
-      dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CANCELLED }))
+    dispatch(updateOrderDetails(props.orderId, { foodList: [] }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
-
   return (
     <SupperModal
-      title="Cancel Supper Group?"
-      description="Supper groups marked as cancelled cannot be edited anymore."
+      title="Empty Cart?"
+      description="You have added items to your cart. Exiting this page will remove all items from your cart."
       leftButtonText="Confirm"
       modalSetter={props.modalSetter}
       onLeftButtonClick={onLeftClick}

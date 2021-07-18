@@ -25,6 +25,7 @@ import {
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   width: 100vw;
@@ -34,6 +35,7 @@ const Background = styled.div`
   height: 100%;
   padding-bottom: 1rem;
 `
+
 const SearchBarContainer = styled.div`
   margin: 0 20px 8px 20px;
 `
@@ -90,11 +92,12 @@ export default function PlaceOrder() {
 
   return (
     <Background>
-      <TopNavBar title="Place Order" />
+      <TopNavBar title="Order" />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
+<<<<<<< HEAD
           {isFoodMenuModalOpen && (
             <ViewMenuFoodModal
               orderId={orderId ?? order?.orderId}
@@ -105,6 +108,8 @@ export default function PlaceOrder() {
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
+=======
+>>>>>>> minimain
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>

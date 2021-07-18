@@ -4,13 +4,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 
-const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: string | undefined }>`
+const MainContainer = styled.div<{ isSticky?: boolean | undefined; width?: string | undefined; zIndex?: number }>`
   margin: auto;
   padding: 6px 15px;
   width: ${(props) => props.width ?? '100vw'};
   position: ${(props) => (props.isSticky ? 'fixed' : '')};
   bottom: 0;
-  z-index: 1000;
+  z-index: ${(props) => props.zIndex ?? 3};
   background: ${(props) => (props.isSticky ? V1_BACKGROUND : 'transparent')};
   height: ${(props) =>
     props.isSticky
@@ -73,13 +73,14 @@ type Props = {
   middleText?: string
   rightText?: string
   width?: string
+  zIndex?: number
   isGrey?: boolean | undefined
   onClick?: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined
 }
 
 export const RedButton = (props: Props) => {
   return (
-    <MainContainer isSticky={props.isSticky} width={props.width}>
+    <MainContainer isSticky={props.isSticky} width={props.width} zIndex={props.zIndex}>
       {props.isGrey ? (
         <StyledGreyButton
           type="primary"

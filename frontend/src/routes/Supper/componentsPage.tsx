@@ -44,10 +44,12 @@ import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-import { DiscardCartModal } from '../../components/Supper/Modals/DiscardCartModal'
+import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
+import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
+import { V1_GREY_BACKGROUND } from '../../common/colours'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -59,19 +61,22 @@ const OptionText = styled.text`
 `
 
 export default function Supper() {
-  // const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
+  //const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
-  // const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
+  //const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
+      <FilterBubbles />
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />}
+      {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
+      {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
+      {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
       <div style={{ width: '80vw' }}>
-        <FoodLine backgroundColor="#EEEEEE" food={foodList[0]} hasNoQuantity />
+        <FoodLine backgroundColor={V1_GREY_BACKGROUND} food={foodList[0]} hasNoQuantity />
       </div>
       <SupperButton center ghost defaultButtonDescription="Ghost Button" />
       <OrderCard

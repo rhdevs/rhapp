@@ -6,6 +6,7 @@ import { MainCard } from './MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
 import { Food, Order, UserDetails } from '../../store/supper/types'
 import { TelegramShareButton } from '../TelegramShareButton'
+import { V1_GREY_BACKGROUND } from '../../common/colours'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -86,23 +87,21 @@ const ButtonContainer = styled.div``
 
 type Prop = {
   orderList: Order[] | undefined
-  food: Food
+  food: Food | undefined
+  supperGroupId: number | undefined
+  orderId: string | undefined
   contactModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ContactModal = (props: Prop) => {
-  const contacts = props.food.userIdList
+  const contacts = props.food?.userIdList
   let userDetails: UserDetails[] | undefined
 
   contacts?.map((userId) => {
-    let detail: UserDetails
     props.orderList
       ?.filter((order) => order.user.userID === userId)
       .map((order) => {
-        detail.userId = userId
-        detail.name = order.user.displayName
-        detail.telegramHandle = order.user.telegramHandle
-        userDetails?.push(detail)
+        userDetails?.push({ userId: userId, name: order.user.displayName, telegramHandle: order.user.telegramHandle })
       })
   })
 
@@ -118,8 +117,10 @@ export const ContactModal = (props: Prop) => {
           <CloseButton onClick={onCloseClick} />
         </HeaderContainer>
         <FoodLine
-          backgroundColor="#EEEEEE"
+          backgroundColor={V1_GREY_BACKGROUND}
           food={props.food}
+          supperGroupId={props.supperGroupId}
+          orderId={props.orderId}
           borderRadius="10px"
           padding="10px"
           margin="10px 0"
