@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,9 +14,11 @@ import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupper
 import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { error } from 'console'
+import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
+import { onRefresh } from '../../../common/reloadPage'
 
 const OrderContainer = styled.div`
   margin: 40px 0px 0px 0;
@@ -48,38 +50,46 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  // const { order } = useSelector((state: RootState) => state.supper)
+  const dispatch = useDispatch()
+  const { order } = useSelector((state: RootState) => state.supper)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
   const orderList = props.supperGroup?.orderList
-  const ownerOrderId = orderList?.find((order) => order.user.userID === props.supperGroup?.ownerId)?.orderId
+  const ownerOrder = orderList?.find((order) => order.user.userID === props.supperGroup?.ownerId)
+  const ownerOrderId = ownerOrder?.orderId
+
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getCollatedOrder(params.supperGroupId))
+  }, [order])
 
   const showBottomSection = () => {
     if (props.supperGroupIsOpen) {
       return (
         <>
           <ButtonContainer>
-            {orderList != undefined && orderList.length > 0 && (
-              <UpperRowButtons>
-                <UpperRowButtonContainer left>
-                  <SupperButton
-                    ghost
-                    buttonWidth="90%"
-                    defaultButtonDescription="Delete Order"
-                    onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-                  />
-                </UpperRowButtonContainer>
-                <UpperRowButtonContainer>
-                  <SupperButton
-                    buttonWidth="90%"
-                    defaultButtonDescription="Close Group"
-                    onButtonClick={() => setCloseModalIsOpen(true)}
-                  />
-                </UpperRowButtonContainer>
-              </UpperRowButtons>
-            )}
+            {orderList != undefined &&
+              (orderList.length > 0 || (orderList?.length == 1 && orderList[0].foodList.length > 1)) && (
+                <UpperRowButtons>
+                  <UpperRowButtonContainer left>
+                    <SupperButton
+                      ghost
+                      buttonWidth="90%"
+                      defaultButtonDescription="Delete Order"
+                      onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                    />
+                  </UpperRowButtonContainer>
+                  <UpperRowButtonContainer>
+                    <SupperButton
+                      buttonWidth="90%"
+                      defaultButtonDescription="Close Group"
+                      onButtonClick={() => setCloseModalIsOpen(true)}
+                    />
+                  </UpperRowButtonContainer>
+                </UpperRowButtons>
+              )}
             <LowerRowButton>
               <SupperButton
                 center
@@ -98,12 +108,13 @@ const OwnerView = (props: Props) => {
 
   return (
     <>
-      {deleteOrderModalIsOpen && (
+      {deleteOrderModalIsOpen && ownerOrder && (
         <DeleteOrderModal
           isOwner
           supperGroupId={params.supperGroupId}
           orderId={ownerOrderId}
-          onLeftButtonClick={() => history.goBack()}
+          order={ownerOrder}
+          onLeftButtonClick={() => onRefresh}
           modalSetter={setDeleteOrderModalIsOpen}
         />
       )}

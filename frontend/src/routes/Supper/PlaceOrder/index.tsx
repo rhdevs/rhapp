@@ -76,7 +76,7 @@ export default function PlaceOrder() {
     if (order) {
       dispatch(setOrderId(order.orderId))
     }
-  }, [dispatch])
+  }, [dispatch, order])
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))
@@ -97,6 +97,16 @@ export default function PlaceOrder() {
         <LoadingSpin />
       ) : (
         <>
+          {isFoodMenuModalOpen && (
+            <ViewMenuFoodModal
+              orderId={orderId ?? order?.orderId}
+              supperGroupId={Number(params.supperGroupId)}
+              foodList={order?.foodList}
+              foodMenuId={foodMenuModalId}
+              menuFoodName={modalMenuFoodName}
+              viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
+            />
+          )}
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>

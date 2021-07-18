@@ -70,7 +70,7 @@ const ViewCart = () => {
   const showButtons = () => {
     if (isOwner === undefined) {
       return <LoadingSpin />
-    } else if (isOwner && order == null) {
+    } else if (isOwner) {
       return (
         <ButtonContainer>
           <UpperRowButtons>
@@ -84,6 +84,7 @@ const ViewCart = () => {
               {deleteOrderModalIsOpen && (
                 <DeleteOrderModal
                   isOwner
+                  order={order}
                   supperGroupId={params.supperGroupId}
                   orderId={ownerOrderId}
                   onLeftButtonClick={() => history.goBack()}
@@ -146,7 +147,7 @@ const ViewCart = () => {
   return (
     <Background>
       <TopNavBar title="View Cart" />
-      {isLoading ? (
+      {isLoading || supperGroup == undefined ? (
         <LoadingSpin />
       ) : (
         <>

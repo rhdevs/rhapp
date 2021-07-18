@@ -2,7 +2,8 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { SupperModal } from './SupperModal'
-import { deleteOrder } from '../../../store/supper/action'
+import { deleteOrder, emptyOrderFoodList, updateOrderDetails } from '../../../store/supper/action'
+import { Order } from '../../../store/supper/types'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,6 +11,7 @@ type Props = {
   isOwner: boolean
   supperGroupId: string | number
   orderId: string | undefined
+  order: Order | null
 }
 
 export const DeleteOrderModal = (props: Props) => {
@@ -19,7 +21,8 @@ export const DeleteOrderModal = (props: Props) => {
     : 'Deleting order will remove all items from your cart.'
 
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(deleteOrder(props.supperGroupId, props.orderId))
+    //dispatch(deleteOrder(props.supperGroupId, props.orderId))
+    dispatch(emptyOrderFoodList(props.orderId, props.order))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (

@@ -58,7 +58,7 @@ const ViewOrder = () => {
         dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
       }
     }
-  }, [supperGroup])
+  }, [supperGroup, order])
 
   useEffect(() => {
     if (selectedSupperGroupStatus) {

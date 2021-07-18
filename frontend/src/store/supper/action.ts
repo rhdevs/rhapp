@@ -9,9 +9,10 @@ import {
   Updates,
 } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
-import { Dispatch, GetState } from '../types'
+import { Dispatch, GetState, RootState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
+import { useSelector } from 'react-redux'
 
 const [error] = useSnackbar('error')
 
@@ -426,6 +427,28 @@ export const createOrder = (userId: string, supperGroupId: string | number) => (
     .catch((err) => {
       console.log(err)
       error('Failed to create order, please try again.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const emptyOrderFoodList = (orderId?: string, originalOrder?) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(orderId)
+  if (!orderId) return
+  dispatch(setIsLoading(true))
+  console.log(originalOrder)
+  const newOrder = { ...originalOrder, foodList: [], totalCost: 0 }
+  const requestBody = newOrder
+  console.log(requestBody)
+  put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getOrderById(orderId))
+    })
+    .catch((err) => {
+      console.log(err)
+      error('Failed to update order, please try again.')
     })
   dispatch(setIsLoading(false))
 }
