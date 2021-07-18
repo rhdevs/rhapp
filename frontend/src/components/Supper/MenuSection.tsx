@@ -1,9 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { PATHS } from '../../routes/Routes'
 import { FoodMenu, Order } from '../../store/supper/types'
+import { setIsFoodMenuModalOpen, setFoodModalInfo } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
@@ -80,6 +81,7 @@ type Props = {
 export const MenuSection = (props: Props) => {
   const { menuTabKey, searchValue } = useSelector((state: RootState) => state.supper)
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const menuItems = () => {
     if (props.menu) {
@@ -101,12 +103,17 @@ export const MenuSection = (props: Props) => {
             <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
               <FoodAndQuantityContainer
                 onClick={() => {
-                  if (props.supperGroupId && props.orderId && foodMenu.foodMenuId)
+                  if (!props.supperGroupId || !props.orderId || !foodMenu.foodMenuId) return
+                  if (QUANTITY && QUANTITY > 0) {
+                    dispatch(setFoodModalInfo(foodMenu.foodMenuId, foodMenu.foodMenuName))
+                    dispatch(setIsFoodMenuModalOpen(true))
+                  } else {
                     history.push(
                       `${PATHS.ADD_FOOD_ITEM}/${String(props.supperGroupId)}/order/${props.orderId}/add/${
                         foodMenu.foodMenuId
                       }`,
                     )
+                  }
                 }}
               >
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>

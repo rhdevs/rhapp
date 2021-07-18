@@ -6,6 +6,8 @@ import editIcon from '../../assets/RedSupperEditIcon.svg'
 import { V1_RED } from '../../common/colours'
 import { PATHS } from '../../routes/Routes'
 import { CancelAction } from '../../store/supper/types'
+import { useDispatch } from 'react-redux'
+import { setIsFoodMenuModalOpen } from '../../store/supper/action'
 
 const MainContainer = styled.div<{ padding?: string | undefined }>`
   height: fit-content;
@@ -112,6 +114,7 @@ type Props = {
 
 export const FoodLineInCard = (props: Props) => {
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const onEditClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (props.onEditClick) {
@@ -119,6 +122,7 @@ export const FoodLineInCard = (props: Props) => {
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${props.foodId}`)
     }
+    dispatch(setIsFoodMenuModalOpen(false))
   }
 
   return (

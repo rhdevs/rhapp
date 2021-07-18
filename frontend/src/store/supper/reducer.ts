@@ -56,6 +56,10 @@ const initialState = {
   foodMenuId: '',
   createOrderPage: 1,
   supperNotifications: [],
+  // For ViewMenuFoodModal
+  foodMenuModalId: '',
+  modalMenuFoodName: '',
+  isFoodMenuModalOpen: false,
   closingTimeFilter: Filter.DEFAULT,
   amountLeftFilter: Filter.DEFAULT,
   restaurantFilter: [],
@@ -99,6 +103,10 @@ type State = {
   foodMenuId: string
   createOrderPage: number
   supperNotifications: SupperNotification[]
+  // For ViewMenuFoodModal
+  foodMenuModalId: string
+  modalMenuFoodName: string
+  isFoodMenuModalOpen: boolean
   closingTimeFilter: Filter
   amountLeftFilter: Filter
   restaurantFilter: Restaurants[]
@@ -231,6 +239,19 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {
       return { ...state, supperNotifications: action.supperNotifications }
+    }
+    case SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN: {
+      return {
+        ...state,
+        isFoodMenuModalOpen: action.isFoodMenuModalOpen,
+      }
+    }
+    case SUPPER_ACTIONS.SET_FOOD_MODAL_INFO: {
+      return {
+        ...state,
+        foodMenuModalId: action.foodMenuModalId,
+        modalMenuFoodName: action.modalMenuFoodName,
+      }
     }
     case SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER: {
       return { ...state, closingTimeFilter: action.closingTimeFilter }

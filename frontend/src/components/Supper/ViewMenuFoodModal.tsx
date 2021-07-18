@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 
 import styled from 'styled-components'
-import { foodList } from '../../store/stubs'
 import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
 import { FoodLineInCard } from './FoodLineInCard'
@@ -10,6 +9,7 @@ import { V1_BACKGROUND } from '../../common/colours'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { MainCard } from './MainCard'
+import { useDispatch } from 'react-redux'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -85,27 +85,22 @@ const NoResultsText = styled.text`
 `
 
 type Props = {
-  foodList: Food[]
-  foodId: string | undefined
+  foodList: Food[] | undefined
+  foodMenuId: string | undefined
   menuFoodName: string | undefined
   supperGroupId: number | undefined
   orderId: string | undefined
-  viewMenuFoodModalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  viewMenuFoodModalSetter: React.Dispatch<boolean>
 }
 
 export const ViewMenuFoodModal = (props: Props) => {
-  const foodName = foodList.find((food) => food.foodId === props.foodId)?.foodName
-  const filteredFoodList = props.foodList.filter((food) => food.foodId === props.foodId)
+  const foodName = props.foodList?.find((food) => food.foodMenuId === props.foodMenuId)?.foodName
+  const filteredFoodList = props.foodList?.filter((food) => food.foodMenuId === props.foodMenuId) ?? []
   const history = useHistory()
-
-  useEffect(() => {
-    if (filteredFoodList.length === 1) {
-      history.push(`${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${props.foodId}`)
-    }
-  }, [filteredFoodList])
+  const dispatch = useDispatch()
 
   const onBackClick = () => {
-    props.viewMenuFoodModalSetter(false)
+    dispatch(props.viewMenuFoodModalSetter(false))
   }
 
   const BackButton = () => {
@@ -116,9 +111,10 @@ export const ViewMenuFoodModal = (props: Props) => {
     return (
       <ButtonContainer>
         <Button
-          onButtonClick={() =>
-            history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${props.foodId}`)
-          }
+          onButtonClick={() => {
+            dispatch(props.viewMenuFoodModalSetter(false))
+            history.push(`${PATHS.ADD_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/add/${props.foodMenuId}`)
+          }}
           defaultButtonDescription={isFirstFood ? 'Add Food' : 'Add Another'}
           stopPropagation={true}
           isFlipButton={false}
@@ -130,7 +126,7 @@ export const ViewMenuFoodModal = (props: Props) => {
   return (
     <OverlayBackground>
       <ModalCard>
-        {foodName && filteredFoodList.length > 1 ? (
+        {foodName && filteredFoodList.length >= 1 ? (
           <>
             <Header>
               <BackButton />
@@ -181,12 +177,12 @@ export const ViewMenuFoodModal = (props: Props) => {
                   Click back to close
                   {props.supperGroupId &&
                     props.orderId &&
-                    props.foodId &&
+                    props.foodMenuId &&
                     ' or the button below to add food into cart!'}
                 </NoResultsText>
               </NoResultsContainer>
             </MainCard>
-            {props.supperGroupId && props.orderId && props.foodId && addButton(true)}
+            {props.supperGroupId && props.orderId && props.foodMenuId && addButton(true)}
           </>
         )}
       </ModalCard>

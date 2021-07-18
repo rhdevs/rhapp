@@ -247,6 +247,8 @@ export enum SUPPER_ACTIONS {
   RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
   GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
+  SET_IS_FOOD_MODAL_OPEN = 'SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN',
+  SET_FOOD_MODAL_INFO = 'SUPPER_ACTIONS.SET_FOOD_MODAL_INFO',
   GET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER',
   GET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER',
   GET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.GET_RESTAURANT_FILTER',
@@ -462,6 +464,17 @@ type GetSupperNotifications = {
   supperNotifications: SupperNotification[]
 }
 
+type SetIsFoodModalOpen = {
+  type: typeof SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN
+  isFoodMenuModalOpen: boolean
+}
+
+type SetFoodModalInfo = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_MODAL_INFO
+  foodMenuModalId: string
+  modalMenuFoodName: string
+}
+
 type GetClosingTimeFilter = {
   type: typeof SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER
   closingTimeFilter: Filter
@@ -520,6 +533,8 @@ export type ActionTypes =
   | SetNewSupperGroupId
   | ResetFoodState
   | GetSupperNotifications
+  | SetIsFoodModalOpen
+  | SetFoodModalInfo
   | GetClosingTimeFilter
   | GetAmountLeftFilter
   | GetRestaurantFilter

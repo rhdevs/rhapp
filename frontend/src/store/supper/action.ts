@@ -789,6 +789,23 @@ export const setNewSupperGroupId = (newSupperGroupId: number) => (dispatch: Disp
   })
 }
 
+export const setIsFoodMenuModalOpen = (isFoodMenuModalOpen: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN,
+    isFoodMenuModalOpen: isFoodMenuModalOpen,
+  })
+}
+
+export const setFoodModalInfo = (foodMenuModalId: string, modalMenuFoodName: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_FOOD_MODAL_INFO,
+    foodMenuModalId: foodMenuModalId,
+    modalMenuFoodName: modalMenuFoodName,
+  })
+}
+
 export const leaveSupperGroup = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
   dispatch(setIsLoading(true))
