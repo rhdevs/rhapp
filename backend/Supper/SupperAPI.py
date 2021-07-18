@@ -310,11 +310,11 @@ def supper_group(supperGroupId):
                         map(lambda x: str(x), order['foodIds']))
 
                 for food in data['foodList']:
-                    food['_id'] = str(food['_id'])
+                    food['foodId'] = str(food.pop('_id'))
                     for order in data['orderList']:
-                        if food['_id'] in order['foodIds']:
+                        if food['foodId'] in order['foodIds']:
                             order['foodList'].append(food)
-                            order['foodIds'].remove(food['_id'])
+                            order['foodIds'].remove(food['foodId'])
 
                 for user in data['userList']:
                     user['_id'] = str(user['_id'])
