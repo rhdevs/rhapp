@@ -35,12 +35,12 @@ const ButtonContainer = styled.div`
   padding: 0 10px;
 `
 
-const UpperRowButtons = styled.div`
+export const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
@@ -59,7 +59,7 @@ const ViewCart = () => {
   const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
-  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
+  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === supperGroup.ownerId)?.orderId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -70,7 +70,7 @@ const ViewCart = () => {
   const showButtons = () => {
     if (isOwner === undefined) {
       return <LoadingSpin />
-    } else if (isOwner) {
+    } else if (isOwner && order == null) {
       return (
         <ButtonContainer>
           <UpperRowButtons>
@@ -81,11 +81,12 @@ const ViewCart = () => {
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
               />
-              {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
+              {deleteOrderModalIsOpen && (
                 <DeleteOrderModal
                   isOwner
-                  supperGroupId={supperGroup.supperGroupId}
+                  supperGroupId={params.supperGroupId}
                   orderId={ownerOrderId}
+                  onLeftButtonClick={() => history.goBack()}
                   modalSetter={setDeleteOrderModalIsOpen}
                 />
               )}
@@ -96,9 +97,10 @@ const ViewCart = () => {
                 defaultButtonDescription="Close Group"
                 onButtonClick={() => setCloseGroupModalIsOpen(true)}
               />
-              {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
+              {closeGroupModalIsOpen && (
                 <CloseGroupEarlyModal
-                  supperGroupId={supperGroup.supperGroupId}
+                  supperGroupId={params.supperGroupId}
+                  onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
                   modalSetter={setCloseGroupModalIsOpen}
                 />
               )}
@@ -112,8 +114,12 @@ const ViewCart = () => {
               defaultButtonDescription="Delete Group"
               onButtonClick={() => setDeleteGroupModalIsOpen(true)}
             />
-            {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
-              <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
+            {deleteGroupModalIsOpen && (
+              <DeleteGroupModal
+                suppergroupId={params.supperGroupId}
+                onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+                modalSetter={setDeleteGroupModalIsOpen}
+              />
             )}
           </LowerRowButton>
         </ButtonContainer>
@@ -144,19 +150,17 @@ const ViewCart = () => {
         <LoadingSpin />
       ) : (
         <>
-          {supperGroup && collatedOrder && (
-            <>
-              <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-              <OrderCard
-                supperGroup={supperGroup}
-                collatedOrder={collatedOrder}
-                ownerId={supperGroup.ownerId}
-                supperGroupStatus={supperGroup.status}
-                isEditable={isEditable}
-                orderId={orderId}
-                order={order}
-              />
-            </>
+          <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+          {supperGroup && (
+            <OrderCard
+              supperGroup={supperGroup}
+              collatedOrder={collatedOrder}
+              ownerId={supperGroup.ownerId}
+              supperGroupStatus={supperGroup.status}
+              isEditable={isEditable}
+              orderId={orderId}
+              order={order}
+            />
           )}
           {showButtons()}
         </>

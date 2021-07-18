@@ -4,17 +4,36 @@ import styled from 'styled-components'
 
 import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
-import Button from '../../../components/Mobile/Button'
+// import Button from '../../../components/Mobile/Button'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupperGroupModal'
+import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
+import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { InformationCard } from '../../../components/Supper/InformationCard'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../store/types'
+import { error } from 'console'
+
+const OrderContainer = styled.div`
+  margin: 40px 0px 0px 0;
+`
 
 const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  justify-content: center;
+  margin: 0 auto 40px auto;
+  padding: 0 10px;
 `
 
 type Props = {
@@ -29,13 +48,65 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-
+  // const { order } = useSelector((state: RootState) => state.supper)
+  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
+  const orderList = props.supperGroup?.orderList
+  const ownerOrderId = orderList?.find((order) => order.user.userID === props.supperGroup?.ownerId)?.orderId
+
+  const showBottomSection = () => {
+    if (props.supperGroupIsOpen) {
+      return (
+        <>
+          <ButtonContainer>
+            {orderList != undefined && orderList.length > 0 && (
+              <UpperRowButtons>
+                <UpperRowButtonContainer left>
+                  <SupperButton
+                    ghost
+                    buttonWidth="90%"
+                    defaultButtonDescription="Delete Order"
+                    onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                  />
+                </UpperRowButtonContainer>
+                <UpperRowButtonContainer>
+                  <SupperButton
+                    buttonWidth="90%"
+                    defaultButtonDescription="Close Group"
+                    onButtonClick={() => setCloseModalIsOpen(true)}
+                  />
+                </UpperRowButtonContainer>
+              </UpperRowButtons>
+            )}
+            <LowerRowButton>
+              <SupperButton
+                center
+                ghost
+                buttonWidth="100%"
+                defaultButtonDescription="Delete Group"
+                onButtonClick={() => setDeleteModalIsOpen(true)}
+              />
+            </LowerRowButton>
+          </ButtonContainer>
+          {orderList != undefined && orderList.length > 0 && <InformationCard closeSupperGroup />}
+        </>
+      )
+    }
+  }
 
   return (
     <>
+      {deleteOrderModalIsOpen && (
+        <DeleteOrderModal
+          isOwner
+          supperGroupId={params.supperGroupId}
+          orderId={ownerOrderId}
+          onLeftButtonClick={() => history.goBack()}
+          modalSetter={setDeleteOrderModalIsOpen}
+        />
+      )}
       {closeModalIsOpen && (
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
@@ -94,7 +165,7 @@ const OwnerView = (props: Props) => {
           paymentMethod={props.supperGroup?.paymentInfo}
         />
       )} */}
-      {props.supperGroupIsCompleted ? (
+      {/* {props.supperGroupIsCompleted ? (
         <Button
           center
           containerPadding="1rem 15px"
@@ -108,36 +179,39 @@ const OwnerView = (props: Props) => {
           isFlipButton={false}
         />
       ) : (
-        <>
-          <OrderCard
-            // margin="0 23px"
-            supperGroup={props.supperGroup}
-            ownerId={localStorage.userID}
-            supperGroupStatus={props.supperGroup?.status}
-            collatedOrder={props.collatedOrder}
-            // wasEdited?: boolean
-            // collatedOrder?: CollatedOrder
-            // order?: Order | null
-            // foodList?: Food[]
-            // deliveryCost?: number
-            // numberOfUsers?: number
-            // splitCostMethod?: SplitACMethod
-            // supperTotalCost?: number
-            // supperGroupId?: number | undefined
-            // orderId?: string | undefined
-            // restaurantId?:
+        <> */}
+      <OrderContainer>
+        <OrderCard
+          //margin="0px 23px"
+          supperGroup={props.supperGroup}
+          ownerId={localStorage.userID}
+          supperGroupStatus={props.supperGroup?.status}
+          collatedOrder={props.collatedOrder}
+          // wasEdited?: boolean
+          // collatedOrder?: CollatedOrder
+          // order?: Order | null
+          // foodList?: Food[]
+          // deliveryCost?: number
+          // numberOfUsers?: number
+          // splitCostMethod?: SplitACMethod
+          // supperTotalCost?: number
+          // supperGroupId?: number | undefined
+          // orderId?: string | undefined
+          // restaurantId?:
+        />
+      </OrderContainer>
+      {showBottomSection()}
+      {props.showTrackPayment && (
+        <SupperButtonContainer>
+          <SupperButton
+            onButtonClick={() => setEndGroupModalIsOpen(true)}
+            defaultButtonDescription="End Supper Group"
           />
-          {props.showTrackPayment && (
-            <SupperButtonContainer>
-              <SupperButton
-                onButtonClick={() => setEndGroupModalIsOpen(true)}
-                defaultButtonDescription="End Supper Group"
-              />
-            </SupperButtonContainer>
-          )}
-        </>
+        </SupperButtonContainer>
       )}
     </>
+    //)}
+    //</>
   )
 }
 

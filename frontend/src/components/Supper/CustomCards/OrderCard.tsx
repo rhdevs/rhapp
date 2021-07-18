@@ -409,7 +409,7 @@ export const OrderCard = (props: Props) => {
       isOwner && (supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING)
     let formattedFoodList = orderList
 
-    if (orderList) {
+    if (orderList && orderList?.length > 0) {
       const ownerOrder = orderList.find((order) => order.user.userID === localStorage.userID)
       if (ownerOrder) {
         formattedFoodList = orderList.filter((order) => {
@@ -417,6 +417,8 @@ export const OrderCard = (props: Props) => {
         })
         formattedFoodList.unshift(ownerOrder)
       }
+    } else {
+      return OwnerEmptyCartSection()
     }
 
     return (
@@ -509,7 +511,6 @@ export const OrderCard = (props: Props) => {
 
   const ownerFoodContent = () => {
     const ownerOrder = (orderList ?? []).find((order) => order.user.userID === localStorage.userID)
-
     return (
       <>
         {ownerOrder ? (

@@ -5,8 +5,10 @@ import styled from 'styled-components'
 
 import Button from '../../../components/Mobile/Button'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
+import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
+import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { getReadableSupperGroupId, unixTo12HourTime, updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
@@ -68,14 +70,23 @@ type Props = {
   totalFee: number
 }
 
+// http://localhost:3000/supper/view/order/4
 const UserView = (props: Props) => {
-  const dispatch = useDispatch()
-  const history = useHistory()
-  const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
+  // const dispatch = useDispatch()
+  // const history = useHistory()
+  // const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
 
   return (
     <>
-      {props.supperGroupIsOpen ? (
+      <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
+      <OrderCard
+        supperGroup={props.supperGroup}
+        ownerId={props.supperGroup?.ownerId}
+        supperGroupStatus={props.supperGroup?.status}
+        isEditable={props.supperGroupIsOpen}
+        foodList={props.order?.foodList}
+      />
+      {/* {props.supperGroupIsOpen ? (
         <ExpandableSGCard
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
           supperGroupName={props.supperGroup?.supperGroupName ?? ''}
@@ -167,7 +178,7 @@ const UserView = (props: Props) => {
             </>
           )}
         </>
-      )}
+      )} */}
     </>
   )
 }
