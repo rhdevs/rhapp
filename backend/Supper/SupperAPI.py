@@ -667,8 +667,42 @@ def owner_edit_order(orderId, foodId):
                 if 'reason' not in data['updates'] or not data['updates']['reason']:
                     raise Exception('Update information incomplete')
 
-            result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
-                                                      {"$set": data})
+            if 'global' in data['updates'] and data['updates']['global']:
+                data['updates'].pop('global')
+                food = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
+                order = db.Order.find_one({"_id": ObjectId(orderId)})
+                pipeline = [
+                    {'$match': {'supperGroupId': order['supperGroupId']}},
+                    {
+                        '$lookup': {
+                            'from': 'Order',
+                            'localField': 'supperGroupId',
+                            'foreignField': 'supperGroupId',
+                            'as': 'orderList'
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'FoodOrder',
+                            'localField': 'orderList.foodIds',
+                            'foreignField': '_id',
+                            'as': 'foods'
+                        }
+                    },
+                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1}},
+                ]
+
+                foods = db.Order.aggregate(pipeline)
+                for item in foods:
+                    foods = item['foods']
+                foods = list(filter(lambda x: x['foodMenuId'] == food['foodMenuId'], foods))
+                foods = list(map(lambda x: x['_id'], foods))
+
+                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
+                                                  {"$set": data})
+            else:
+                result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
+                                                          {"$set": data})
             if result is None:
                 raise Exception('Food not found')
 
