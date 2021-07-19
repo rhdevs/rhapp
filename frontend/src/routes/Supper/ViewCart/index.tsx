@@ -29,9 +29,9 @@ const Background = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80vw;
+  width: 90vw;
   justify-content: center;
-  margin: 40px auto 40px auto;
+  margin: 30px auto 40px auto;
   padding: 0 10px;
 `
 

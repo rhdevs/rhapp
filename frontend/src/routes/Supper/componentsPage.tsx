@@ -44,13 +44,14 @@ import { FoodLine } from '../../components/Supper/FoodLine'
 // import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
+// import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
 import { V1_GREY_BACKGROUND } from '../../common/colours'
-import { TwoStepCancelGroupModal } from '../../components/Supper/Modals/TwoStepCancelGroupModal'
+// import { TwoStepCancelGroupModal } from '../../components/Supper/Modals/TwoStepCancelGroupModal'
+import { ConfirmStatusUpdateModal } from '../../components/Supper/Modals/ConfirmStatusUpdateModal'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -74,7 +75,8 @@ export default function Supper() {
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
       {/* {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
-      {isModalOpen && <TwoStepCancelGroupModal modalSetter={setIsModalOpen} supperGroupId={1} />}
+      {/* {isModalOpen && <TwoStepCancelGroupModal modalSetter={setIsModalOpen} supperGroupId={1} />} */}
+      {isModalOpen && <ConfirmStatusUpdateModal modalSetter={setIsModalOpen} supperGroupId={1} />}
       {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
       {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
       <div style={{ width: '80vw' }}>
