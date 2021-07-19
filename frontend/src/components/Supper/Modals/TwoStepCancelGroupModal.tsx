@@ -37,9 +37,7 @@ const ErrorText = styled.p`
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
-  onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   supperGroupId: string | number
-  withDispatch?: boolean
 }
 
 type FormData = {
