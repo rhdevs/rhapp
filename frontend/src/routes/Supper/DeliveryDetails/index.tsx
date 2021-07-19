@@ -199,10 +199,16 @@ const DeliveryDetails = () => {
         selectedSupperGroupStatus === SupperGroupStatus.ORDERED ||
         selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
       ) {
-        const updatedInfo = {
+        let updatedInfo: {
+          status: SupperGroupStatus.ORDERED | SupperGroupStatus.ARRIVED
+          location: string
+          estArrivalTime?: number
+        } = {
           status: selectedSupperGroupStatus,
-          estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime,
           location: data.location,
+        }
+        if (selectedSupperGroupStatus === SupperGroupStatus.ORDERED) {
+          updatedInfo = { ...updatedInfo, estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime }
         }
         console.log(updatedInfo)
         dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
