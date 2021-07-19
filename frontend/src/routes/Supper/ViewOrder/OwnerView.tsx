@@ -103,7 +103,8 @@ const OwnerView = (props: Props) => {
           defaultButtonDescription="Track Payment Progress"
           buttonWidth="fit-content"
           onButtonClick={() => {
-            history.push(`${PATHS.VIEW_PAYMENT_SCREEN}/${params.supperGroupId}`)
+            console.log('DONT NEED TO PUSH??')
+            // history.push(`${PATHS.VIEW_PAYMENT_SCREEN}/${params.supperGroupId}`)
           }}
           isFlipButton={false}
         />
