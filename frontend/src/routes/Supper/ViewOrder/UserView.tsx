@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import Button from '../../../components/Mobile/Button'
 import { ExpandableSGCard } from '../../../components/Supper/CustomCards/ExpandableSGCard'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSummaryCard'
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
+import { InformationCard } from '../../../components/Supper/InformationCard'
+import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { NotificationBar } from '../../../components/Supper/NotificationBar'
+import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { UnderlinedButton } from '../../../components/Supper/UnderlinedButton'
 import { getReadableSupperGroupId, unixTo12HourTime, updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
+import { UpperRowButtons, UpperRowButtonContainer, LowerRowButton } from '../ViewCart'
+import { OrderContainer } from './OwnerView'
 
 const SummaryContainer = styled.div`
   display: flex;
@@ -57,7 +62,7 @@ const StyledText = styled.text`
 
 const ButtonContainer = styled.div`
   display: flex;
-  margin: 23px 15px;
+  margin: 40px 15px;
   justify-content: space-around;
 `
 
@@ -72,20 +77,89 @@ type Props = {
 
 // http://localhost:3000/supper/view/order/4
 const UserView = (props: Props) => {
-  // const dispatch = useDispatch()
-  // const history = useHistory()
-  // const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
+  const params = useParams<{ supperGroupId: string }>()
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
+  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
 
+  const showBottomSection = () => {
+    if (props.supperGroupIsOpen) {
+      return (
+        <UpperRowButtons>
+          <UpperRowButtonContainer left>
+            <SupperButton
+              ghost
+              buttonWidth="90%"
+              defaultButtonDescription="Delete Order"
+              onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+            />
+          </UpperRowButtonContainer>
+          <UpperRowButtonContainer>
+            <SupperButton
+              buttonWidth="90%"
+              defaultButtonDescription="Save Changes"
+              onButtonClick={() => {
+                'save changes'
+              }}
+            />
+          </UpperRowButtonContainer>
+        </UpperRowButtons>
+      )
+    } else if (props.supperGroupIsCancelled) {
+      return (
+        <>
+          <InformationCard />
+          <SupperButton
+            descriptionStyle={{ width: '100%' }}
+            defaultButtonDescription="Main Page"
+            buttonWidth="200px"
+            onButtonClick={() => {
+              setHasPaid(!hasPaid)
+              dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
+            }}
+          />
+        </>
+      )
+    } else {
+      return (
+        <SupperButton
+          descriptionStyle={{ width: '100%' }}
+          defaultButtonDescription="Mark Payment Complete"
+          updatedButtonDescription="Payment Completed"
+          buttonWidth="200px"
+          onButtonClick={() => {
+            setHasPaid(!hasPaid)
+            dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
+          }}
+          isFlipButton
+        />
+      )
+    }
+  }
   return (
     <>
+      {deleteOrderModalIsOpen && (
+        <DeleteOrderModal
+          isOwner={false}
+          supperGroupId={params.supperGroupId}
+          orderId={props.order?.orderId}
+          order={props.order}
+          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          modalSetter={setDeleteOrderModalIsOpen}
+        />
+      )}
       <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
-      <OrderCard
-        supperGroup={props.supperGroup}
-        ownerId={props.supperGroup?.ownerId}
-        supperGroupStatus={props.supperGroup?.status}
-        isEditable={props.supperGroupIsOpen}
-        foodList={props.order?.foodList}
-      />
+      <OrderContainer>
+        <OrderCard
+          supperGroup={props.supperGroup}
+          ownerId={props.supperGroup?.ownerId}
+          supperGroupStatus={props.supperGroup?.status}
+          isEditable={props.supperGroupIsOpen}
+          foodList={props.order?.foodList}
+        />
+      </OrderContainer>
+      <ButtonContainer>{showBottomSection()}</ButtonContainer>
       {/* {props.supperGroupIsOpen ? (
         <ExpandableSGCard
           isOwner={props.supperGroup?.ownerId === localStorage.userID}
@@ -184,3 +258,6 @@ const UserView = (props: Props) => {
 }
 
 export default UserView
+// function setDeleteOrderModalIsOpen(arg0: boolean): void {
+//   throw new Error('Function not implemented.')
+// }

@@ -14,19 +14,19 @@ import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../Vie
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 
-const OrderContainer = styled.div`
+export const OrderContainer = styled.div`
   margin: 40px 0px 0px 0;
 `
 
-const SupperButtonContainer = styled.div`
+export const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
 `
 
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80vw;
+  // width: 80vw;
   justify-content: center;
   margin: 0 auto 40px auto;
   padding: 0 10px;
