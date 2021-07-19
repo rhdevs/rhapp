@@ -97,7 +97,6 @@ export default function PlaceOrder() {
         <LoadingSpin />
       ) : (
         <>
-<<<<<<< HEAD
           {isFoodMenuModalOpen && (
             <ViewMenuFoodModal
               orderId={orderId ?? order?.orderId}
@@ -108,8 +107,6 @@ export default function PlaceOrder() {
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
-=======
->>>>>>> minimain
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>
