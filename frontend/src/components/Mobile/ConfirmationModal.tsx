@@ -62,14 +62,15 @@ const StyledButton = styled(Button)<{ defaultRightButtonColor: string; defaultRi
   margin-left: 10px;
   &.ant-btn:hover,
   &.ant-btn:focus {
-    color: black;
+    color: ${(props) => (props.defaultRightButtonTextColor ? props.defaultRightButtonTextColor : 'black')};
     border-color: #d9d9d9;
+    ${(props) => props.defaultRightButtonColor && `background: ${props.defaultRightButtonColor};`}
   }
 `
 
 type Props = {
   title: string
-  description?: string
+  description?: string | JSX.Element
   hasLeftButton?: boolean
   leftButtonText: string
   leftButtonTextColor?: string
@@ -80,11 +81,13 @@ type Props = {
   rightButtonColor?: string
   onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  top?: number
-  bottom?: number
+  top?: number | string
+  bottom?: number | string
   right?: number
   left?: number
   flex?: boolean
+  style?: React.CSSProperties
+  rightButtonHtmlType?: 'button' | 'submit' | 'reset' | undefined
 }
 
 export const ConfirmationModal = (props: Props) => {
@@ -97,7 +100,13 @@ export const ConfirmationModal = (props: Props) => {
     <>
       <OverlayContainer onClick={props.onOverlayClick} />
       <MainContainer
-        style={{ bottom: props.bottom ?? '50%', right: props.right ?? 0, left: props.left ?? 0, top: props.top }}
+        style={{
+          ...props.style,
+          bottom: props.bottom ?? '50%',
+          right: props.right ?? 0,
+          left: props.left ?? 0,
+          top: props.top,
+        }}
       >
         <TitleContainer flex={props.flex}>
           <TitleText>{props.title}</TitleText>
@@ -121,6 +130,7 @@ export const ConfirmationModal = (props: Props) => {
             defaultRightButtonColor={defaultRightButtonColor}
             defaultRightButtonTextColor={defaultRightButtonTextColor}
             onClick={props.onRightButtonClick}
+            htmlType={props.rightButtonHtmlType}
           >
             {props.rightButtonText}
           </StyledButton>

@@ -50,6 +50,7 @@ import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
 import { V1_GREY_BACKGROUND } from '../../common/colours'
+import { TwoStepCancelGroupModal } from '../../components/Supper/Modals/TwoStepCancelGroupModal'
 // import { NotificationBar } from '../../components/Supper/NotificationBar'
 // import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
 
@@ -72,7 +73,8 @@ export default function Supper() {
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
+      {/* {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
+      {isModalOpen && <TwoStepCancelGroupModal modalSetter={setIsModalOpen} supperGroupId={1} />}
       {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
       {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
       <div style={{ width: '80vw' }}>
