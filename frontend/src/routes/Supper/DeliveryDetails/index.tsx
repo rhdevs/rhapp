@@ -122,6 +122,7 @@ const DeliveryDetails = () => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false)
   const currentUNIXDate = Math.round(Date.now() / 1000)
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
+  const supperGroupIsArrived = selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
   const errorStyling = {
     borderColor: 'red',
     background: '#ffd1d1',
@@ -293,11 +294,15 @@ const DeliveryDetails = () => {
               </CancellationBox>
             ) : (
               <>
-                <DeliveryTimeContainer>
-                  <FormHeader margin="0" headerName="Delivery Time" />
-                  <StyledTimeText>{estArrivalTime}</StyledTimeText>
-                </DeliveryTimeContainer>
-                <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
+                {!supperGroupIsArrived && (
+                  <>
+                    <DeliveryTimeContainer>
+                      <FormHeader margin="0" headerName="Delivery Time" />
+                      <StyledTimeText>{estArrivalTime}</StyledTimeText>
+                    </DeliveryTimeContainer>
+                    <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
+                  </>
+                )}
                 <br />
                 <FormHeader headerName="Collection Point" isCompulsory />
                 <>
