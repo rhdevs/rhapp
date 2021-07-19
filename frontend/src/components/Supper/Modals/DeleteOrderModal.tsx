@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { SupperModal } from './SupperModal'
-import { deleteOrder, emptyOrderFoodList, updateOrderDetails } from '../../../store/supper/action'
+import { emptyOrderFoodList } from '../../../store/supper/action'
 import { Order } from '../../../store/supper/types'
 
 type Props = {
@@ -16,13 +16,14 @@ type Props = {
 
 export const DeleteOrderModal = (props: Props) => {
   const dispatch = useDispatch()
+  const newOrder = props.order != null ? { ...props.order, foodList: [], totalCost: 0 } : null
   const descriptionText = props.isOwner
     ? 'Deleting order will remove items from your cart but leave everyone else’s carts unchanged. Supper group will not be deleted. '
     : 'Deleting order will remove all items from your cart.'
 
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    //dispatch(deleteOrder(props.supperGroupId, props.orderId))
-    dispatch(emptyOrderFoodList(props.orderId, props.order))
+    console.log(newOrder)
+    dispatch(emptyOrderFoodList(props.orderId, newOrder))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (

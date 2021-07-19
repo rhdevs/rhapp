@@ -17,8 +17,9 @@ import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { createOrder } from '../../../store/supper/action'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -179,6 +180,7 @@ type Props = {
 
 export const OrderCard = (props: Props) => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [contactModalFood, setContactModalFood] = useState<Food>()
@@ -286,7 +288,10 @@ export const OrderCard = (props: Props) => {
         <EmptyTextContainer>
           Cart is empty.{' '}
           <UnderlinedButton
-            onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+            onClick={() => {
+              supperGroupId && dispatch(createOrder(localStorage.userID, supperGroupId))
+              history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
+            }}
             text="Add item"
             fontSize="12px"
             color="red"
@@ -479,7 +484,7 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
-                  console.log(food)
+                  // console.log(food)
                   return (
                     <FoodLine
                       key={foodIndex}

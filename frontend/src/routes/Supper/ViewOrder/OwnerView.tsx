@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
-// import Button from '../../../components/Mobile/Button'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -14,11 +13,6 @@ import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupper
 import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../store/types'
-import { error } from 'console'
-import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
-import { onRefresh } from '../../../common/reloadPage'
 
 const OrderContainer = styled.div`
   margin: 40px 0px 0px 0;
@@ -42,7 +36,7 @@ type Props = {
   supperGroupIsOpen: boolean
   supperGroup: SupperGroup | null
   collatedOrder: CollatedOrder | null
-  supperGroupIsCompleted: boolean
+  supperGroupIsOrdered: boolean
   supperGroupIsCancelled: boolean
   showTrackPayment: boolean
 }
@@ -50,8 +44,6 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  const dispatch = useDispatch()
-  const { order } = useSelector((state: RootState) => state.supper)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
@@ -60,16 +52,15 @@ const OwnerView = (props: Props) => {
   const ownerOrder = orderList?.find((order) => order.user.userID === props.supperGroup?.ownerId)
   const ownerOrderId = ownerOrder?.orderId
 
-  useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getCollatedOrder(params.supperGroupId))
-  }, [order])
+  console.log(props.supperGroup)
+  console.log(props.collatedOrder)
 
   const showBottomSection = () => {
     if (props.supperGroupIsOpen) {
       return (
         <>
           <ButtonContainer>
+            {console.log(orderList)}
             {orderList != undefined &&
               (orderList.length > 0 || (orderList?.length == 1 && orderList[0].foodList.length > 1)) && (
                 <UpperRowButtons>
@@ -114,7 +105,7 @@ const OwnerView = (props: Props) => {
           supperGroupId={params.supperGroupId}
           orderId={ownerOrderId}
           order={ownerOrder}
-          onLeftButtonClick={() => onRefresh}
+          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           modalSetter={setDeleteOrderModalIsOpen}
         />
       )}
@@ -140,6 +131,7 @@ const OwnerView = (props: Props) => {
         />
       )}
       <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+      {/* {props.supperGroupIsOrdered && <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />} */}
       {/* {props.supperGroupIsOpen ? (
         <JoinOrderSGCard
           editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}

@@ -432,8 +432,8 @@ export const createOrder = (userId: string, supperGroupId: string | number) => (
 }
 
 export const emptyOrderFoodList = (orderId?: string, originalOrder?) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(orderId)
-  if (!orderId) return
+  console.log(orderId, originalOrder)
+  if (!originalOrder || !orderId) return
   dispatch(setIsLoading(true))
   console.log(originalOrder)
   const newOrder = { ...originalOrder, foodList: [], totalCost: 0 }

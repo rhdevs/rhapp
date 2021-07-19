@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
+import PullToRefresh from 'pull-to-refresh-react'
 import {
   getCollatedOrder,
   getSupperGroupById,
@@ -18,6 +19,7 @@ import UserView from './UserView'
 import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
+import { onRefresh } from '../../../common/reloadPage'
 
 const MainContainer = styled.div`
   display: grid;
@@ -40,14 +42,14 @@ const ViewOrder = () => {
 
   let supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
   let supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
-  let supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
+  let supperGroupIsOrdered = selectedSupperGroupStatus === SupperGroupStatus.ORDERED
   let showTrackPayment =
     selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
     selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-  }, [dispatch])
+  }, [dispatch, order])
 
   useEffect(() => {
     if (supperGroup) {
@@ -60,11 +62,19 @@ const ViewOrder = () => {
     }
   }, [supperGroup, order])
 
+  // useEffect(() => {
+  //   dispatch(getSupperGroupById(params.supperGroupId))
+  //   dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
+  //   if (supperGroup?.ownerId === localStorage.userID) {
+  //     dispatch(getCollatedOrder(params.supperGroupId))
+  //   }
+  // }, [order])
+
   useEffect(() => {
     if (selectedSupperGroupStatus) {
       supperGroupIsOpen = selectedSupperGroupStatus === SupperGroupStatus.OPEN
       supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
-      supperGroupIsCompleted = selectedSupperGroupStatus === SupperGroupStatus.COMPLETED
+      supperGroupIsOrdered = selectedSupperGroupStatus === SupperGroupStatus.ORDERED
       showTrackPayment =
         selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
         selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
@@ -86,37 +96,39 @@ const ViewOrder = () => {
   return (
     <MainContainer>
       <TopNavBar title="View Order" />
-      {!selectedSupperGroupStatus ? (
-        supperGroupNotFound ? (
-          <SupperErrorContent />
+      <PullToRefresh onRefresh={onRefresh}>
+        {!selectedSupperGroupStatus ? (
+          supperGroupNotFound ? (
+            <SupperErrorContent />
+          ) : (
+            <LoadingSpin />
+          )
         ) : (
-          <LoadingSpin />
-        )
-      ) : (
-        <>
-          <div>
-            {supperGroup?.ownerId === localStorage.userID ? (
-              <OwnerView
-                supperGroupIsOpen={supperGroupIsOpen}
-                supperGroup={supperGroup}
-                collatedOrder={collatedOrder}
-                supperGroupIsCompleted={supperGroupIsCompleted}
-                supperGroupIsCancelled={supperGroupIsCancelled}
-                showTrackPayment={showTrackPayment}
-              />
-            ) : (
-              <UserView
-                supperGroupIsOpen={supperGroupIsOpen}
-                supperGroup={supperGroup}
-                supperGroupIsCancelled={supperGroupIsCancelled}
-                order={order}
-                deliveryFee={deliveryFee}
-                totalFee={totalFee}
-              />
-            )}
-          </div>
-        </>
-      )}
+          <>
+            <div>
+              {supperGroup?.ownerId === localStorage.userID ? (
+                <OwnerView
+                  supperGroupIsOpen={supperGroupIsOpen}
+                  supperGroup={supperGroup}
+                  collatedOrder={collatedOrder}
+                  supperGroupIsOrdered={supperGroupIsOrdered}
+                  supperGroupIsCancelled={supperGroupIsCancelled}
+                  showTrackPayment={showTrackPayment}
+                />
+              ) : (
+                <UserView
+                  supperGroupIsOpen={supperGroupIsOpen}
+                  supperGroup={supperGroup}
+                  supperGroupIsCancelled={supperGroupIsCancelled}
+                  order={order}
+                  deliveryFee={deliveryFee}
+                  totalFee={totalFee}
+                />
+              )}
+            </div>
+          </>
+        )}
+      </PullToRefresh>
       <BottomNavBar />
     </MainContainer>
   )
