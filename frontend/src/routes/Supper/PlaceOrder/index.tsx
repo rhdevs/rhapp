@@ -16,16 +16,12 @@ import {
   getRestaurant,
   getSupperGroupById,
   getUserOrder,
-  getReadableSupperGroupId,
   setOrderId,
   setSearchValue,
-  unixTo12HourTime,
   setIsFoodMenuModalOpen,
-  setFoodModalInfo,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   width: 100vw;
@@ -97,7 +93,6 @@ export default function PlaceOrder() {
         <LoadingSpin />
       ) : (
         <>
-<<<<<<< HEAD
           {isFoodMenuModalOpen && (
             <ViewMenuFoodModal
               orderId={orderId ?? order?.orderId}
@@ -108,8 +103,6 @@ export default function PlaceOrder() {
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
-=======
->>>>>>> minimain
           <SupperGroupCard isHome={false} supperGroup={supperGroup} />
           <SearchBarContainer>
             <StickyContainer>
