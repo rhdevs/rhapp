@@ -689,14 +689,21 @@ def owner_edit_order(orderId, foodId):
                             'as': 'foods'
                         }
                     },
-                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1}},
+                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
+                                  'foods.custom': 1, 'foods.comments': 1}},
                 ]
 
                 foods = db.Order.aggregate(pipeline)
                 for item in foods:
                     foods = item['foods']
-                foods = list(filter(lambda x: x['foodMenuId'] == food['foodMenuId'], foods))
+                foods = list(filter(lambda x: x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'] and
+                                    x['comments'] == food['comments']
+                                    if 'comments' in x else
+                                    x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'], foods))
                 foods = list(map(lambda x: x['_id'], foods))
+                print(foods)
 
                 result = db.FoodOrder.update_many({"_id": {'$in': foods}},
                                                   {"$set": data})
@@ -1037,7 +1044,10 @@ def collated_orders(supperGroupId):
 
         for food in data['foods']:
             food.pop('_id')
-            food['customHash'] = make_hash(food['custom'])
+            if 'comments' in food:
+                food['customHash'] = make_hash({'custom': food['custom'], 'comments': food['comments']})
+            else:
+                food['customHash'] = make_hash(food['custom'])
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
@@ -1047,12 +1057,11 @@ def collated_orders(supperGroupId):
                 data['collatedOrderList'].append(food)
                 data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
                 data['collatedOrderList'][-1].pop('userID')
-            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and food['customHash'] == \
-                    data['collatedOrderList'][-1]['customHash']:
+            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and \
+                    food['customHash'] == data['collatedOrderList'][-1]['customHash']:
                 data['collatedOrderList'][-1]['quantity'] += food['quantity']
                 data['collatedOrderList'][-1]['foodPrice'] += food['foodPrice']
-                data['collatedOrderList'][-1]['userIdList'].append(
-                    food['userID'])
+                data['collatedOrderList'][-1]['userIdList'].append(food['userID'])
             else:
                 data['collatedOrderList'].append(food)
                 data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
