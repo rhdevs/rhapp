@@ -12,6 +12,7 @@ import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
@@ -61,6 +62,7 @@ const ViewCart = () => {
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
+  const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
@@ -90,7 +92,6 @@ const ViewCart = () => {
                 {deleteOrderModalIsOpen && (
                   <DeleteOrderModal
                     isOwner
-                    order={order}
                     supperGroupId={params.supperGroupId}
                     orderId={ownerOrderId}
                     onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
@@ -134,19 +135,41 @@ const ViewCart = () => {
       )
     } else {
       return (
-        <ButtonContainer>
-          <SupperButton
-            center
-            defaultButtonDescription="Submit Order"
-            onButtonClick={() => {
-              if (supperGroup?.phoneNumber) {
-                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-              } else {
-                history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
-              }
-            }}
-          />
-        </ButtonContainer>
+        order?.foodList &&
+        order.foodList.length > 0 && (
+          <ButtonContainer>
+            <UpperRowButtons>
+              <UpperRowButtonContainer left>
+                <SupperButton
+                  ghost
+                  buttonWidth="90%"
+                  defaultButtonDescription="Empty Cart"
+                  onButtonClick={() => setEmptyCartModalIsOpen(true)}
+                />
+                {emptyCartModalIsOpen && (
+                  <EmptyCartModal
+                    orderId={ownerOrderId}
+                    onLeftButtonClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+                    modalSetter={setEmptyCartModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+              <UpperRowButtonContainer>
+                <SupperButton
+                  center
+                  defaultButtonDescription="Submit Order"
+                  onButtonClick={() => {
+                    if (supperGroup?.phoneNumber) {
+                      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                    } else {
+                      history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
+                    }
+                  }}
+                />
+              </UpperRowButtonContainer>
+            </UpperRowButtons>
+          </ButtonContainer>
+        )
       )
     }
   }

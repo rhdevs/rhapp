@@ -13,6 +13,7 @@ import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupper
 import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
+import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 
 export const OrderContainer = styled.div`
   margin: 40px 0px 0px 0;
@@ -44,7 +45,7 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
+  const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
@@ -68,8 +69,8 @@ const OwnerView = (props: Props) => {
                     <SupperButton
                       ghost
                       buttonWidth="90%"
-                      defaultButtonDescription="Delete Order"
-                      onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                      defaultButtonDescription="Empty cart"
+                      onButtonClick={() => setEmptyCartModalIsOpen(true)}
                     />
                   </UpperRowButtonContainer>
                   <UpperRowButtonContainer>
@@ -99,14 +100,11 @@ const OwnerView = (props: Props) => {
 
   return (
     <>
-      {deleteOrderModalIsOpen && ownerOrder && (
-        <DeleteOrderModal
-          isOwner
-          supperGroupId={params.supperGroupId}
+      {emptyCartModalIsOpen && ownerOrder && (
+        <EmptyCartModal
           orderId={ownerOrderId}
-          order={ownerOrder}
           onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
-          modalSetter={setDeleteOrderModalIsOpen}
+          modalSetter={setEmptyCartModalIsOpen}
         />
       )}
       {closeModalIsOpen && (

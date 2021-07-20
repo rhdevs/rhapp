@@ -87,18 +87,20 @@ const UserView = (props: Props) => {
     if (props.supperGroupIsOpen) {
       return (
         <UpperRowButtons>
-          <UpperRowButtonContainer left>
-            <SupperButton
-              ghost
-              buttonWidth="90%"
-              defaultButtonDescription="Delete Order"
-              onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-            />
-          </UpperRowButtonContainer>
+          {props.order?.foodList && props.order.foodList.length > 0 && (
+            <UpperRowButtonContainer left>
+              <SupperButton
+                ghost
+                buttonWidth="90%"
+                defaultButtonDescription="Delete Order"
+                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+              />
+            </UpperRowButtonContainer>
+          )}
           <UpperRowButtonContainer>
             <SupperButton
               buttonWidth="90%"
-              defaultButtonDescription="Save Changes"
+              defaultButtonDescription="Leave Group"
               onButtonClick={() => {
                 'save changes'
               }}
@@ -144,7 +146,7 @@ const UserView = (props: Props) => {
           isOwner={false}
           supperGroupId={params.supperGroupId}
           orderId={props.order?.orderId}
-          order={props.order}
+          // order={props.order}
           onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           modalSetter={setDeleteOrderModalIsOpen}
         />
