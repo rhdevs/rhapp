@@ -14,7 +14,7 @@ import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
-import { ContactModal } from '../ContactModal'
+import { ContactModal } from '../Modals/ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
 import { useSelector } from 'react-redux'
@@ -74,11 +74,12 @@ const NameContainer = styled.div`
   align-items: center;
 `
 
-const HorizontalLine = styled.hr`
+const HorizontalLine = styled.hr<{ margin?: string }>`
   width: 100%;
   height: 1px;
   background: black;
   border: none;
+  ${(props) => props.margin && `margin: ${props.margin};`}
 `
 
 const PriceMainContainer = styled.div`
@@ -244,7 +245,7 @@ export const OrderCard = (props: Props) => {
           ) : (
             <>
               Delivery Fee
-              {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+              {update && supperGroupStatus === SupperGroupStatus.CLOSED && (
                 <UpdateTextButton
                   underlined
                   onClick={() => history.push(`${PATHS.UPDATE_DELIVERY}/${supperGroupId}/update/delivery`)}
@@ -374,7 +375,7 @@ export const OrderCard = (props: Props) => {
                 <FoodLine
                   key={index}
                   margin="5px 0"
-                  isEditable={isEditable}
+                  isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
                   onEditClick={() => onEditClick(food.foodId, true)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
@@ -389,6 +390,7 @@ export const OrderCard = (props: Props) => {
               </>
             )
           })}
+          <HorizontalLine margin="1em 0 0.5em 0" />
           <PriceSection update={isEditable} />
           {isCancelActionModalOpen && (
             <ContactModal
@@ -461,8 +463,6 @@ export const OrderCard = (props: Props) => {
               return openUserTelegram(telegramHandle)
             }
           }
-
-          console.log(order.foodList, 'this is order.foodList')
           return (
             <>
               {topSection}
@@ -477,7 +477,6 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
-                  console.log(food)
                   return (
                     <FoodLine
                       key={foodIndex}
@@ -566,7 +565,7 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           <CardHeaderContainer>
-            <MyOrderText>My Order</MyOrderText>
+            <MyOrderText>{isLoading ? <Skeleton height="15px" width="90" /> : 'My Order'}</MyOrderText>
             {isEditable && <RedPlusButton />}
           </CardHeaderContainer>
           {userViewFoodContent()}

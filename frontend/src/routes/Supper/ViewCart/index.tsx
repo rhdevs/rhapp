@@ -29,9 +29,9 @@ const Background = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80vw;
+  width: 90vw;
   justify-content: center;
-  margin: 40px auto 40px auto;
+  margin: 30px auto 40px auto;
   padding: 0 10px;
 `
 
@@ -140,13 +140,13 @@ const ViewCart = () => {
   return (
     <Background>
       <TopNavBar title="View Cart" />
-      {isLoading ? (
+      {isLoading || !(supperGroup && collatedOrder) ? (
         <LoadingSpin />
       ) : (
         <>
-          {supperGroup && collatedOrder && (
+          {
             <>
-              <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+              <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
               <OrderCard
                 supperGroup={supperGroup}
                 collatedOrder={collatedOrder}
@@ -157,7 +157,7 @@ const ViewCart = () => {
                 order={order}
               />
             </>
-          )}
+          }
           {showButtons()}
         </>
       )}

@@ -14,6 +14,7 @@ import { UnderlinedButton } from '../UnderlinedButton'
 import { PATHS } from '../../../routes/Routes'
 import { getUserOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
+import { Skeleton } from '../../Skeleton'
 
 const TopSection = styled.div`
   display: flex;
@@ -144,17 +145,20 @@ export const SGStatusCard = (props: Props) => {
     }
   }
 
-  const { order } = useSelector((state: RootState) => state.supper)
+  const { order, isLoading } = useSelector((state: RootState) => state.supper)
 
   const showPayingStatus = () => {
+    if (isLoading) {
+      return <Skeleton width="85px" height="26px" />
+    }
     if (props.supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT) {
       if (props.isOwner) {
         return <SGStatusBubble roundVersion text={props.supperGroupStatus ?? '-'} />
       } else {
         if (order?.hasPaid) {
-          return <SGStatusBubble roundVersion text={'PAID'} />
+          return <SGStatusBubble roundVersion text={SupperGroupStatus.PAID} />
         } else {
-          return <SGStatusBubble roundVersion text={'NOT PAID'} />
+          return <SGStatusBubble roundVersion text={SupperGroupStatus.NOT_PAID} />
         }
       }
     } else {
@@ -167,7 +171,7 @@ export const SGStatusCard = (props: Props) => {
       return (
         <>
           <StatusContainer>
-            <SGStatusBubble text={SupperGroupStatus.ARRIVED} />
+            {isLoading ? <Skeleton width="90px" height="32px" /> : <SGStatusBubble text={SupperGroupStatus.ARRIVED} />}
             {!props.isOwner && (
               <Button
                 stopPropagation={true}
@@ -181,32 +185,46 @@ export const SGStatusCard = (props: Props) => {
             <OtherInfoSubContainer>
               <IconImage src={locationIcon} alt="Location Icon" />
               <LocationText>
-                {props.location} @ {props.collectionTime}
+                {isLoading ? (
+                  <Skeleton width="150px" height="14px" />
+                ) : (
+                  <>
+                    {props.location} @ {props.collectionTime}
+                  </>
+                )}
               </LocationText>
             </OtherInfoSubContainer>
             <OtherInfoSubContainer>
               <IconImage src={moneyIcon} alt="Money Icon" />
               <PaymentTextContainer>
-                {props.paymentMethod?.map((pm, index) => {
-                  if (pm.paymentMethod === PaymentMethod.CASH) {
-                    return <CashText key={index}>{pm.paymentMethod}</CashText>
-                  } else {
-                    let link = pm.link
-                    if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
-                      link = 'https://' + pm.link
-                    }
-                    return (
-                      <UnderlinedButton
-                        fontSize="12px"
-                        margin="0 3px"
-                        key={index}
-                        onClick={() => window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')}
-                        text={pm.paymentMethod}
-                        color="rgba(0, 38, 66, 0.7)"
-                      />
-                    )
-                  }
-                })}
+                {isLoading ? (
+                  <Skeleton width="200px" height="12px" />
+                ) : (
+                  <>
+                    {props.paymentMethod?.map((pm, index) => {
+                      if (pm.paymentMethod === PaymentMethod.CASH) {
+                        return <CashText key={index}>{pm.paymentMethod}</CashText>
+                      } else {
+                        let link = pm.link
+                        if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
+                          link = 'https://' + pm.link
+                        }
+                        return (
+                          <UnderlinedButton
+                            fontSize="12px"
+                            margin="0 3px"
+                            key={index}
+                            onClick={() =>
+                              window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')
+                            }
+                            text={pm.paymentMethod}
+                            color="rgba(0, 38, 66, 0.7)"
+                          />
+                        )
+                      }
+                    })}
+                  </>
+                )}
               </PaymentTextContainer>
             </OtherInfoSubContainer>
           </OtherInfoContainer>
@@ -216,7 +234,11 @@ export const SGStatusCard = (props: Props) => {
       return (
         <>
           <StatusContainer>
-            <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
+            {isLoading ? (
+              <Skeleton width="90px" height="32px" />
+            ) : (
+              <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
+            )}
             {!props.isOwner && (
               <Button
                 stopPropagation={true}
@@ -226,13 +248,19 @@ export const SGStatusCard = (props: Props) => {
               />
             )}
           </StatusContainer>
-          <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
+          <ReasonText>
+            Reason: {isLoading ? <Skeleton width="150px" height="14px" /> : <>{props.cancelReason ?? '-'}</>}
+          </ReasonText>
         </>
       )
     } else {
       return (
         <StatusContainer>
-          <SGStatusBubble text={props.supperGroupStatus ?? ''} />
+          {isLoading ? (
+            <Skeleton width="90px" height="32px" />
+          ) : (
+            <SGStatusBubble text={props.supperGroupStatus ?? ''} />
+          )}
           {!props.isOwner && (
             <Button
               stopPropagation={true}
@@ -249,10 +277,14 @@ export const SGStatusCard = (props: Props) => {
   return (
     <MainCard onClick={props.onCardClick} margin={props.margin} flexDirection="column">
       <TopSection>
-        <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />
+        {isLoading ? <Skeleton image /> : <RestaurantLogo src={props.restaurantLogo} alt="Restaurant Logo" />}
         <TextSubContainer>
-          <OrderIdContainer>{props.idHeader}</OrderIdContainer>
-          <TitleContainer>{props.supperGroupName}</TitleContainer>
+          <OrderIdContainer>
+            {isLoading ? <Skeleton height="14px" margin="5px 0 3px 0" /> : props.idHeader}
+          </OrderIdContainer>
+          <TitleContainer>
+            {isLoading ? <Skeleton height="16px" width="140px" margin="0 0 5px 0" /> : props.supperGroupName}
+          </TitleContainer>
           {props.statusOnly && <StatusContainer statusOnly={props.statusOnly}>{showPayingStatus()}</StatusContainer>}
         </TextSubContainer>
       </TopSection>
@@ -262,12 +294,16 @@ export const SGStatusCard = (props: Props) => {
             {showContentBody()}
             {!isCancelled && props.isOwner && (
               <OwnerButtonContainer>
-                <UnderlinedButton
-                  onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
-                  text="Update Delivery Details"
-                  color="red"
-                  fontSize="14px"
-                />
+                {isLoading ? (
+                  <Skeleton width="150px" height="14px" />
+                ) : (
+                  <UnderlinedButton
+                    onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
+                    text="Update Delivery Details"
+                    color="red"
+                    fontSize="14px"
+                  />
+                )}
               </OwnerButtonContainer>
             )}
           </>

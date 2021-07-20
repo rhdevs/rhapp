@@ -15,7 +15,9 @@ const MainContainer = styled.div<{
   isDisabled?: boolean | undefined
   minHeight?: string | undefined
   padding?: string
+  isFaded?: boolean
 }>`
+  cursor: ${(props) => (props.isDisabled || props.isFaded ? 'not-allowed' : 'pointer')};
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
@@ -30,7 +32,7 @@ const MainContainer = styled.div<{
   align-items: center;
   background-color: ${(props) => props.backgroundColor ?? ''};
   box-shadow: ${(props) => props.shadow ?? ''};
-  ${(props) => props.isDisabled && 'cursor: not-allowed;'}
+  ${(props) => props.isFaded && 'opacity: 0.4;'}
 `
 
 const IconContainer = styled.div<{ color: string }>`
@@ -73,6 +75,7 @@ type Props = {
   isDisabled?: boolean
   padding?: string
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  isFaded?: boolean
 }
 
 export const StatusSymbol = (props: Props) => {
@@ -113,11 +116,14 @@ export const StatusSymbol = (props: Props) => {
       borderColor={BORDER_COLOR}
       backgroundColor={BACKGROUND_COLOR}
       shadow={props.shadow}
-      onClick={props.onClick as React.MouseEventHandler<HTMLDivElement>}
+      onClick={
+        props.isDisabled || props.isFaded ? undefined : (props.onClick as React.MouseEventHandler<HTMLDivElement>)
+      }
       minWidth={props.minWidth}
       isDisabled={props.isDisabled}
       minHeight={props.minHeight}
       padding={props.padding}
+      isFaded={props.isFaded}
     >
       {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
       {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}

@@ -26,6 +26,7 @@ import { FormHeader } from '../../../components/Supper/FormHeader'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
 import { PATHS } from '../../Routes'
+import { ConfirmStatusUpdateModal } from '../../../components/Supper/Modals/ConfirmStatusUpdateModal'
 
 const Background = styled.div`
   width: 100vw;
@@ -120,6 +121,8 @@ const DeliveryDetails = () => {
   const [orderStatusHasError, setOrderStatusHasError] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
   const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false)
+  const [confirmStatusUpdateModal, setConfirmStatusUpdateModal] = useState<boolean>(false)
+
   const currentUNIXDate = Math.round(Date.now() / 1000)
   const supperGroupIsCancelled = selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
   const supperGroupIsArrived = selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
@@ -179,6 +182,13 @@ const DeliveryDetails = () => {
     }
     console.log(errors, watch())
     handleSubmit((data) => {
+      if (
+        selectedSupperGroupStatus === SupperGroupStatus.ARRIVED &&
+        supperGroup?.status !== SupperGroupStatus.ARRIVED
+      ) {
+        setConfirmStatusUpdateModal(true)
+        return
+      }
       dispatch(setIsLoading(true))
 
       const initialGroup = supperGroup
@@ -277,9 +287,19 @@ const DeliveryDetails = () => {
                 supperGroupId={params.supperGroupId}
               />
             )}
+            {confirmStatusUpdateModal && (
+              <ConfirmStatusUpdateModal
+                supperGroupId={params.supperGroupId}
+                modalSetter={setConfirmStatusUpdateModal}
+              />
+            )}
             <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
-            <FormHeader isCompulsory headerName="Order Status" />
-            <SGStatusOptions default={supperGroup?.status} supperGroupStatusList={supperGroupStatusList} />
+            <FormHeader isCompulsory headerName="Order Status" topMargin />
+            <SGStatusOptions
+              onlyArrivedOption={supperGroup?.status === SupperGroupStatus.ARRIVED}
+              default={supperGroup?.status}
+              supperGroupStatusList={supperGroupStatusList}
+            />
             {orderStatusHasError && <ErrorText padding="5px 0 0 0">Status required!</ErrorText>}
             {supperGroupIsCancelled ? (
               <CancellationBox>

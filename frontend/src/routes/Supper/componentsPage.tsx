@@ -11,7 +11,6 @@ import { UnderlinedButton } from '../../components/Supper/UnderlinedButton'
 import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSGCard'
 import { PaymentMethod, Restaurants, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSGCard'
-// import { ViewCartButton } from '../../components/Supper/ViewCartButton'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
 import { OrderSummaryCard } from '../../components/Supper/CustomCards/OrderSummaryCard'
 import {
@@ -41,17 +40,14 @@ import { RadioButton } from '../../components/RadioButton'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../components/Supper/CustomCards/OrderCard'
 import { FoodLine } from '../../components/Supper/FoodLine'
-// import { ContactModal } from '../../components/Supper/ContactModal'
 import { InformationCard } from '../../components/Supper/InformationCard'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
-import { EmptyCartModal } from '../../components/Supper/Modals/EmptyCartModal'
 import { SGStatusCard } from '../../components/Supper/CustomCards/SGStatusCard'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
 import { V1_GREY_BACKGROUND } from '../../common/colours'
-// import { NotificationBar } from '../../components/Supper/NotificationBar'
-// import { ViewMenuFoodModal } from '../../components/Supper/ViewMenuFoodModal'
+import { ConfirmStatusUpdateModal } from '../../components/Supper/Modals/ConfirmStatusUpdateModal'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -61,10 +57,7 @@ const OptionText = styled.text`
 `
 
 export default function Supper() {
-  //const [isFoodMenuModalOpen, setIsFoodMenuModalOpen] = useState<boolean>(true)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-
-  //const [isContactModalOpen, setIsContactModalOpen] = useState<boolean>(true)
   const restaurantLogo = getRestaurantLogo(supperGroupStub.restaurantName as Restaurants)
   return (
     <>
@@ -72,9 +65,7 @@ export default function Supper() {
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <EmptyCartModal orderId="1" modalSetter={setIsModalOpen} />}
-      {/* <div onClick={() => setIsModalOpen(true)}>open modal</div> */}
-      {/* {isModalOpen && <DiscardCartModal orderId="1" modalSetter={setIsModalOpen} />} */}
+      {isModalOpen && <ConfirmStatusUpdateModal modalSetter={setIsModalOpen} supperGroupId={1} />}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor={V1_GREY_BACKGROUND} food={foodList[0]} hasNoQuantity />
       </div>
@@ -83,10 +74,7 @@ export default function Supper() {
         collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}
         ownerId={'A1234567B'}
-        // isEditable
         supperGroupStatus={supperGroupStub.status}
-        // ownerId={localStorage.userID}
-        // foodList={foodList}
         supperGroup={supperGroupStub}
       />
       <SupperGroupCard supperGroup={supperGroupStub} isHome={false} />
@@ -205,23 +193,9 @@ export default function Supper() {
         deliveryFee="10.70"
         isOwner
       />
-      {/* <ViewCartButton numberOfItems={5} currentTotal="7.90" /> */}
       <AddUpdateCartButton update currentTotal="7.90" />
       <InformationCard content="This is important, have a  great day!" />
       <MenuSection menu={foodMenuStub} />
-      {/* {isContactModalOpen && (
-        <ContactModal orderList={orderList} food={foodList[0]} contactModalSetter={setIsContactModalOpen} />
-      )} */}
-      {/* {isFoodMenuModalOpen && (
-        <ViewMenuFoodModal
-          foodList={foodList}
-          foodId={'12345364832764134'}
-          menuFoodName={'McGriddles with Egg Meal'}
-          supperGroupId={1}
-          orderId="1"
-          viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
-        />
-      )} */}
     </>
   )
 }

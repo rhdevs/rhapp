@@ -25,6 +25,7 @@ const MainContainer = styled.div`
 type Props = {
   supperGroupStatusList: SupperGroupStatus[]
   default?: SupperGroupStatus | undefined
+  onlyArrivedOption?: boolean
 }
 
 export const SGStatusOptions = (props: Props) => {
@@ -69,6 +70,7 @@ export const SGStatusOptions = (props: Props) => {
               text={supperGroupStatus}
               fontWeight={500}
               fontSize="14px"
+              isFaded={props.onlyArrivedOption}
             />
           )
         }
