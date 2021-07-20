@@ -137,8 +137,10 @@ export const SupperGroupCard = (props: Props) => {
   useEffect(() => {
     if (props.isHome ? props.homeSupperGroup : props.supperGroup) {
       dispatch(setIsLoading(false))
+      console.log(isLoading, 'should be false')
     } else {
       dispatch(setIsLoading(true))
+      console.log(isLoading, 'should be true')
     }
   }, [props.homeSupperGroup, props.supperGroup])
   const { isLoading } = useSelector((state: RootState) => state.supper)
@@ -277,7 +279,7 @@ export const SupperGroupCard = (props: Props) => {
         </>
       ) : (
         <>
-          {isLoading && topIcon}
+          {!isLoading && topIcon}
           <ClickableContainer onClick={onSupperCardClick}>
             <LeftContainer>
               {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}

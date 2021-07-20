@@ -137,7 +137,7 @@ type PaymentInfoData = Record<string, string>
 const EditSupperGroup = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading } = useSelector(
+  const { supperGroup, editOrderNumber, selectedPaymentMethod, isLoading, priceLimit } = useSelector(
     (state: RootState) => state.supper,
   )
   const params = useParams<{ supperGroupId: string }>()
@@ -375,7 +375,6 @@ const EditSupperGroup = () => {
     setErrorSectionArr(errorSectionArr.splice(0, errorSectionArr.length))
     setValue('paymentMethod', selectedPaymentMethod.length)
     if (selectedPaymentMethod.length === 0 || pmError !== 0 || errors.phoneNumber) {
-      console.log('jdshfks')
       dispatch(setEditOrderNumber(3))
       errorSectionArr.push(3)
     }
@@ -402,12 +401,12 @@ const EditSupperGroup = () => {
         updatedOrderInfo = { ...updatedOrderInfo, closingTime: data.closingTime }
       }
       if (hasMaxPrice) {
-        if (data.maxPrice !== supperGroup?.costLimit) {
-          updatedOrderInfo = { ...updatedOrderInfo, costLimit: data.maxPrice }
+        if (priceLimit !== supperGroup?.costLimit) {
+          updatedOrderInfo = { ...updatedOrderInfo, costLimit: priceLimit }
         }
       }
       if (!hasMaxPrice && supperGroup?.costLimit) {
-        updatedOrderInfo = { ...updatedOrderInfo, costLimit: undefined }
+        updatedOrderInfo = { ...updatedOrderInfo, costLimit: null }
       }
       if (data.estDeliveryFee !== supperGroup?.additionalCost) {
         updatedOrderInfo = { ...updatedOrderInfo, additionalCost: data.estDeliveryFee }

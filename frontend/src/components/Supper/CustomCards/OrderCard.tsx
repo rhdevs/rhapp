@@ -74,11 +74,12 @@ const NameContainer = styled.div`
   align-items: center;
 `
 
-const HorizontalLine = styled.hr`
+const HorizontalLine = styled.hr<{ margin?: string }>`
   width: 100%;
   height: 1px;
   background: black;
   border: none;
+  ${(props) => props.margin && `margin: ${props.margin};`}
 `
 
 const PriceMainContainer = styled.div`
@@ -389,6 +390,7 @@ export const OrderCard = (props: Props) => {
               </>
             )
           })}
+          <HorizontalLine margin="1em 0 0.5em 0" />
           <PriceSection update={isEditable} />
           {isCancelActionModalOpen && (
             <ContactModal
@@ -461,8 +463,6 @@ export const OrderCard = (props: Props) => {
               return openUserTelegram(telegramHandle)
             }
           }
-
-          console.log(order.foodList, 'this is order.foodList')
           return (
             <>
               {topSection}
@@ -477,7 +477,6 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
-                  console.log(food)
                   return (
                     <FoodLine
                       key={foodIndex}

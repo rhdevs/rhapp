@@ -140,11 +140,11 @@ const ViewCart = () => {
   return (
     <Background>
       <TopNavBar title="View Cart" />
-      {isLoading ? (
+      {isLoading || !(supperGroup && collatedOrder) ? (
         <LoadingSpin />
       ) : (
         <>
-          {supperGroup && collatedOrder && (
+          {
             <>
               <SupperGroupCard supperGroup={supperGroup} isHome={false} />
               <OrderCard
@@ -157,7 +157,7 @@ const ViewCart = () => {
                 order={order}
               />
             </>
-          )}
+          }
           {showButtons()}
         </>
       )}

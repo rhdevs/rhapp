@@ -64,7 +64,7 @@ const EmptyContainer = styled.div`
   justify-content: space-around;
 `
 
-const EmptyCOntainerText = styled.text`
+const EmptyContainerText = styled.text`
   margin: 5px 2px 5px 5px;
   font-size: 15px;
   font-weight: 500;
@@ -89,7 +89,7 @@ export const MenuSection = (props: Props) => {
         return (
           <EmptyContainer>
             {/* escape character for ' */}
-            <EmptyCOntainerText>No results for &#39;{searchValue}&#39;.</EmptyCOntainerText>
+            <EmptyContainerText>No results for &#39;{searchValue}&#39;.</EmptyContainerText>
           </EmptyContainer>
         )
       }
@@ -100,7 +100,7 @@ export const MenuSection = (props: Props) => {
         selectedMenuItems.map((foodMenu, index) => {
           const QUANTITY = props.order?.foodList?.find((food) => food.foodMenuId === foodMenu.foodMenuId)?.quantity
           return (
-            <FoodMainContainer key={index} noBottomBorder={index + 1 === props.menu?.length}>
+            <FoodMainContainer key={index} noBottomBorder={index + 1 === selectedMenuItems?.length}>
               <FoodAndQuantityContainer
                 onClick={() => {
                   if (!props.supperGroupId || !props.orderId || !foodMenu.foodMenuId) return
@@ -125,13 +125,13 @@ export const MenuSection = (props: Props) => {
         })
       ) : (
         <EmptyContainer>
-          <EmptyCOntainerText>Oops! There are no items in this section.</EmptyCOntainerText>
+          <EmptyContainerText>Oops! There are no items in this section.</EmptyContainerText>
         </EmptyContainer>
       )
     } else {
       return (
         <EmptyContainer>
-          <EmptyCOntainerText>Menu is currently empty.</EmptyCOntainerText>
+          <EmptyContainerText>Menu is currently empty.</EmptyContainerText>
         </EmptyContainer>
       )
     }
