@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperGroupStatus } from '../../../store/supper/types'
+import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoStepCancelGroupModal'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -23,11 +24,19 @@ const MainContainer = styled.div`
   flex-direction: column;
 `
 
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 90vw;
+  margin: 2rem auto 0.5rem auto;
+`
+
 const OrderSummary = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
   const { collatedOrder, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
+  const [twoStepModalIsOpen, setTwoStepModalIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
     dispatch(getCollatedOrder(params.supperGroupId))
@@ -46,6 +55,9 @@ const OrderSummary = () => {
         <LoadingSpin />
       ) : (
         <>
+          {twoStepModalIsOpen && (
+            <TwoStepCancelGroupModal modalSetter={setTwoStepModalIsOpen} supperGroupId={params.supperGroupId} />
+          )}
           <OrderCard
             margin="0 23px"
             collatedOrder={collatedOrder}
@@ -56,12 +68,15 @@ const OrderSummary = () => {
             supperTotalCost={supperGroup?.totalPrice}
             isEditable
           />
-          <SupperButton
-            style={{ margin: '2rem auto 0 auto' }}
-            center
-            defaultButtonDescription="Order Placed"
-            onButtonClick={onClick}
-          />
+          <ButtonContainer>
+            <SupperButton
+              ghost
+              center
+              defaultButtonDescription="Order Cancelled"
+              onButtonClick={() => setTwoStepModalIsOpen(true)}
+            />
+            <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} />
+          </ButtonContainer>
           <InformationCard updateSummary />
         </>
       )}

@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { PATHS } from '../../../routes/Routes'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
 import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
@@ -104,7 +103,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
       } else {
         dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
       }
-      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
+      history.goBack()
     })()
   }
 
@@ -121,7 +120,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
       } else {
         dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
       }
-      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
+      history.goBack()
     })()
   }
 
@@ -132,7 +131,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         wasDeliveryUpdated: true,
       }
       dispatch(updateSupperGroup(props.supperGroup?.supperGroupId, updatedInfo))
-      history.push(`${PATHS.ORDER_SUMMARY}/${props.supperGroup?.supperGroupId}`)
+      history.goBack()
     })()
   }
 

@@ -4,19 +4,30 @@ import { ConfirmationModal } from '../../Mobile/ConfirmationModal'
 type Props = {
   flex?: boolean
   title: string
-  description?: string
+  description?: string | JSX.Element
   leftButtonText: string
+  leftButtonTextColor?: string
+  leftButtonColor?: string
+  rightButtonText?: string
+  rightButtonTextColor?: string
+  rightButtonColor?: string
+  onRightButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  modalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  modalSetter?: React.Dispatch<React.SetStateAction<boolean>>
+  rightButtonHtmlType?: 'button' | 'submit' | 'reset' | undefined
 }
 
 export const SupperModal = (props: Props) => {
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    props.modalSetter(false)
+    if (props.modalSetter) {
+      props.modalSetter(false)
+    }
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   const onCancelClick = () => {
-    props.modalSetter(false)
+    if (props.modalSetter) {
+      props.modalSetter(false)
+    }
   }
 
   return (
@@ -25,10 +36,17 @@ export const SupperModal = (props: Props) => {
       description={props.description}
       hasLeftButton
       leftButtonText={props.leftButtonText}
+      leftButtonTextColor={props.leftButtonTextColor}
+      leftButtonColor={props.leftButtonColor}
       onLeftButtonClick={onLeftClick}
-      rightButtonText="Cancel"
-      onRightButtonClick={onCancelClick}
+      rightButtonText={props.rightButtonText ?? 'Cancel'}
+      rightButtonTextColor={props.rightButtonTextColor}
+      rightButtonColor={props.rightButtonColor}
+      onRightButtonClick={props.onRightButtonClick ?? onCancelClick}
       flex={props.flex}
+      bottom="auto"
+      top="25%"
+      rightButtonHtmlType={props.rightButtonHtmlType}
     />
   )
 }

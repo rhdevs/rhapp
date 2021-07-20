@@ -20,6 +20,15 @@ const ButtonContainer = styled.div`
   justify-content: space-around;
 `
 
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const InformationContainer = styled.div`
+  margin: 0 0 25px 0;
+`
+
 type Props = {
   supperGroupIsOpen: boolean
   supperGroup: SupperGroup | null
@@ -46,7 +55,7 @@ const UserView = (props: Props) => {
               <SupperButton
                 ghost
                 descriptionStyle={{ width: '100%' }}
-                buttonWidth="200px"
+                buttonWidth="160px"
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
               />
@@ -55,7 +64,7 @@ const UserView = (props: Props) => {
           <>
             <SupperButton
               descriptionStyle={{ width: '100%' }}
-              buttonWidth="200px"
+              buttonWidth="160px"
               defaultButtonDescription="Leave Group"
               onButtonClick={() => setLeaveGroupModalIsOpen(true)}
             />
@@ -65,13 +74,18 @@ const UserView = (props: Props) => {
     } else if (props.supperGroupIsCancelled) {
       return (
         <>
-          <InformationCard />
-          <SupperButton
-            descriptionStyle={{ width: '100%' }}
-            defaultButtonDescription="Main Page"
-            buttonWidth="200px"
-            onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-          />
+          <BottomContainer>
+            <InformationContainer>
+              <InformationCard margin="0 15px 10px" cancelledSupperGroup />
+            </InformationContainer>
+            <SupperButton
+              center
+              descriptionStyle={{ width: '100%' }}
+              defaultButtonDescription="Main Page"
+              buttonWidth="200px"
+              onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+            />
+          </BottomContainer>
         </>
       )
     } else {

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
-import { onRefresh } from '../../../common/reloadPage'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -35,9 +34,9 @@ const OrderContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80vw;
+  width: 90vw;
   justify-content: center;
-  margin: 40px auto 40px auto;
+  margin: 30px auto 40px auto;
   padding: 0 10px;
 `
 
@@ -159,10 +158,11 @@ const ViewCart = () => {
                   center
                   defaultButtonDescription="Submit Order"
                   onButtonClick={() => {
-                    if (supperGroup?.phoneNumber) {
-                      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                    } else {
+                    console.log(order.userContact)
+                    if (order.userContact == 0) {
                       history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
+                    } else {
+                      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
                     }
                   }}
                 />
@@ -177,24 +177,22 @@ const ViewCart = () => {
   return (
     <Background>
       <TopNavBar title="View Cart" />
-      {isLoading || supperGroup == undefined ? (
+      {isLoading || !(supperGroup && collatedOrder) ? (
         <LoadingSpin />
       ) : (
         <>
-          <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+          <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
           <OrderContainer>
-            {supperGroup && (
-              <OrderCard
-                supperGroup={supperGroup}
-                supperGroupId={supperGroup.supperGroupId}
-                collatedOrder={collatedOrder}
-                ownerId={supperGroup.ownerId}
-                supperGroupStatus={supperGroup.status}
-                isEditable={isEditable}
-                orderId={orderId}
-                order={order}
-              />
-            )}
+            <OrderCard
+              supperGroup={supperGroup}
+              supperGroupId={supperGroup.supperGroupId}
+              collatedOrder={collatedOrder}
+              ownerId={supperGroup.ownerId}
+              supperGroupStatus={supperGroup.status}
+              isEditable={isEditable}
+              orderId={orderId}
+              order={order}
+            />
           </OrderContainer>
           {showButtons()}
         </>
