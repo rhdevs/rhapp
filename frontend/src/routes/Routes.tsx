@@ -59,14 +59,10 @@ export enum PATHS {
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
   VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
-  USER_VIEW_ORDER = '/supper/view/user/order', //TODO: Remove after testing
-  USER_VIEW_ORDER_BY_ID = '/supper/view/user/order/:supperGroupId', //TODO: Remove after testing
   VIEW_CART = '/supper/view/cart',
   VIEW_CART_BY_ID = '/supper/view/cart/:supperGroupId',
   CONFIRM_ORDER = '/supper',
   CONFIRM_ORDER_BY_ID = '/supper/:supperGroupId/confirm',
-  VIEW_PAYMENT_SCREEN = '/supper/view/payment',
-  VIEW_PAYMENT_SCREEN_BY_ID = '/supper/view/payment/:supperGroupId',
   DELIVERY_DETAILS = '/supper/order',
   DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
   EDIT_SUPPER_GROUP = '/supper/edit/order',
@@ -131,10 +127,8 @@ const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ '
 const PlaceOrder = React.lazy(() => import(/* webpackChunckName: "PlaceOrder" */ './Supper/PlaceOrder'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
-const UserViewOrder = React.lazy(() => import(/* webpackChunckName: "UserViewOrder" */ './Supper/UserViewOrder'))
 const ViewCart = React.lazy(() => import(/* webpackChunckName: "ViewCart" */ './Supper/ViewCart'))
 const ConfirmOrder = React.lazy(() => import(/* webpackChunckName: "ConfirmOrder" */ './Supper/ConfirmOrder'))
-const PaymentScreen = React.lazy(() => import(/* webpackChunckName: "PaymentScreen" */ './Supper/PaymentScreen'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
 const EditSupperGroup = React.lazy(() => import(/* webpackChunckName: "EditSupperGroup" */ './Supper/EditSupperGroup'))
 const AddFoodItem = React.lazy(() => import(/* webpackChunckName: "AddFoodItem" */ './Supper/AddFoodItem'))
@@ -196,10 +190,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
-            <PrivateRoute exact path={PATHS.USER_VIEW_ORDER_BY_ID} component={UserViewOrder} />
             <PrivateRoute exact path={PATHS.VIEW_CART_BY_ID} component={ViewCart} />
             <PrivateRoute exact path={PATHS.CONFIRM_ORDER_BY_ID} component={ConfirmOrder} />
-            <PrivateRoute exact path={PATHS.VIEW_PAYMENT_SCREEN_BY_ID} component={PaymentScreen} />
             <PrivateRoute exact path={PATHS.VIEW_CART} component={ViewCart} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
             <PrivateRoute exact path={PATHS.EDIT_SUPPER_GROUP_BY_ID} component={EditSupperGroup} />

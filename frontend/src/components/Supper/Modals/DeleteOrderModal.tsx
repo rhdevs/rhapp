@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 
 import { SupperModal } from './SupperModal'
 import { deleteOrder } from '../../../store/supper/action'
-// import { Order } from '../../../store/supper/types'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
@@ -11,7 +10,6 @@ type Props = {
   isOwner: boolean
   supperGroupId: string | number
   orderId: string | undefined
-  // order: Order | null
 }
 
 export const DeleteOrderModal = (props: Props) => {

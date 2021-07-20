@@ -11,7 +11,6 @@ import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupperGroupModal'
 import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
-// import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { onRefresh } from '../../../common/reloadPage'
@@ -78,7 +77,7 @@ const OwnerView = (props: Props) => {
                     <SupperButton
                       ghost
                       buttonWidth="90%"
-                      defaultButtonDescription="Empty cart"
+                      defaultButtonDescription="Empty Cart"
                       onButtonClick={() => setEmptyCartModalIsOpen(true)}
                     />
                   </UpperRowButtonContainer>
@@ -151,17 +150,6 @@ const OwnerView = (props: Props) => {
           ownerId={localStorage.userID}
           supperGroupStatus={props.supperGroup?.status}
           collatedOrder={props.collatedOrder}
-          // wasEdited?: boolean
-          // collatedOrder?: CollatedOrder
-          // order?: Order | null
-          // foodList?: Food[]
-          // deliveryCost?: number
-          // numberOfUsers?: number
-          // splitCostMethod?: SplitACMethod
-          // supperTotalCost?: number
-          // supperGroupId?: number | undefined
-          // orderId?: string | undefined
-          // restaurantId?:
         />
       </OrderContainer>
       {showBottomSection()}

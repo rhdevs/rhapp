@@ -1,14 +1,14 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { RhAppQrCode } from '../RhAppQrCode'
-import { MainCard } from './MainCard'
+import { RhAppQrCode } from '../../RhAppQrCode'
+import { MainCard } from '../MainCard'
 import { CloseOutlined, CopyFilled } from '@ant-design/icons'
-import { PATHS } from '../../routes/Routes'
+import { PATHS } from '../../../routes/Routes'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import telegram_black from '../../assets/telegram_black.svg'
-import { teleShareWithText } from '../../common/telegramMethods'
-import useSnackbar from '../../hooks/useSnackbar'
+import telegram_black from '../../../assets/telegram_black.svg'
+import { teleShareWithText } from '../../../common/telegramMethods'
+import useSnackbar from '../../../hooks/useSnackbar'
 
 const OverlayBackground = styled.div`
   position: fixed;

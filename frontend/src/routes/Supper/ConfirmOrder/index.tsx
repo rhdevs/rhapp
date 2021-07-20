@@ -77,9 +77,8 @@ export default function ConfirmOrder() {
 
   const onClick = () => {
     handleSubmit((data) => {
-      const updatedOrder = { ...order, userContact: data.number }
       //TODO: Test update order
-      order?.orderId && dispatch(updateOrderDetails(order.orderId, updatedOrder))
+      order?.orderId && dispatch(updateOrderDetails(order.orderId, { userContact: data.number }))
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }

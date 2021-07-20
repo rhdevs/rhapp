@@ -98,7 +98,6 @@ const UserView = (props: Props) => {
           isOwner={false}
           supperGroupId={params.supperGroupId}
           orderId={props.order?.orderId}
-          // order={props.order}
           onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           modalSetter={setDeleteOrderModalIsOpen}
         />

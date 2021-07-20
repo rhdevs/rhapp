@@ -16,17 +16,12 @@ import {
   getRestaurant,
   getSupperGroupById,
   getUserOrder,
-  getReadableSupperGroupId,
   setOrderId,
   setSearchValue,
-  unixTo12HourTime,
   setIsFoodMenuModalOpen,
-  setFoodModalInfo,
-  updateOrderDetails,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import { supper } from '../../../store/supper/reducer'
 
 const Background = styled.div`
   width: 100vw;
@@ -78,7 +73,7 @@ export default function PlaceOrder() {
     if (order) {
       dispatch(setOrderId(order.orderId))
     }
-  }, [dispatch, order])
+  }, [dispatch])
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))
