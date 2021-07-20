@@ -20,7 +20,7 @@ export const ConfirmStatusUpdateModal = (props: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const onLeftClick = () => {
-    dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.ARRIVED }))
+    dispatch(updateSupperGroup(props.supperGroupId, { status: SupperGroupStatus.ARRIVED }))
     history.goBack()
   }
 
