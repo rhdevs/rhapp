@@ -11,7 +11,7 @@ import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupperGroupModal'
 import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
-import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+// import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { onRefresh } from '../../../common/reloadPage'
@@ -61,8 +61,6 @@ const OwnerView = (props: Props) => {
   const ownerOrder = orderList?.find((order) => order.user.userID === localStorage.userID)
   const ownerOrderId = ownerOrder?.orderId
 
-  // console.log(localStorage.userID)
-  // console.log(orderList && orderList[0].user.userID)
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
@@ -147,61 +145,8 @@ const OwnerView = (props: Props) => {
         />
       )}
       <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-      {/* {props.supperGroupIsOrdered && <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />} */}
-      {/* {props.supperGroupIsOpen ? (
-        <JoinOrderSGCard
-          editOnClick={() => history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)}
-          restaurantLogo={props.supperGroup?.restaurantLogo}
-          restaurant={props.supperGroup?.restaurantName as Restaurants}
-          cardMargin="0 23px"
-          isOwner={props.supperGroup?.ownerId === localStorage.userID}
-          title={props.supperGroup?.supperGroupName ?? ''}
-          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
-          username={props.supperGroup?.ownerName ?? ''}
-          currentAmount={props.supperGroup?.currentFoodCost ?? 0}
-          priceLimit={props.supperGroup?.costLimit ?? 50}
-          closingTime={unixTo12HourTime(props.supperGroup?.closingTime)}
-          numberOfUsers={props.supperGroup?.userIdList?.length ?? 0}
-          splitACType={props.supperGroup?.splitAdditionalCost}
-          deliveryFee={'$' + String((props.supperGroup?.additionalCost ?? 0).toFixed(2))}
-        />
-      ) : (
-        <SGCardWithStatus
-          onClick={() => {
-            history.push(`${PATHS.EDIT_SUPPER_GROUP}/${params.supperGroupId}`)
-          }}
-          restaurant={props.supperGroup?.restaurantName as Restaurants}
-          restaurantLogo={props.supperGroup?.restaurantLogo}
-          isOwner={props.supperGroup?.ownerId === localStorage.userID}
-          isEditable={!(props.supperGroupIsCompleted || props.supperGroupIsCancelled)}
-          supperGroupStatus={props.supperGroup?.status}
-          location={props.supperGroup?.location}
-          collectionTime={unixTo12HourTime(props.supperGroup?.estArrivalTime)}
-          username={props.supperGroup?.ownerName ?? '-'}
-          title={props.supperGroup?.supperGroupName ?? '-'}
-          orderId={getReadableSupperGroupId(props.supperGroup?.supperGroupId)}
-          buttonTeleHandle={props.supperGroup?.ownerTele}
-          paymentMethod={props.supperGroup?.paymentInfo}
-        />
-      )} */}
-      {/* {props.supperGroupIsCompleted ? (
-        <Button
-          center
-          containerPadding="1rem 15px"
-          descriptionStyle={{ width: '100%' }}
-          stopPropagation={true}
-          defaultButtonDescription="Track Payment Progress"
-          buttonWidth="fit-content"
-          onButtonClick={() => {
-            history.push(`${PATHS.VIEW_PAYMENT_SCREEN}/${params.supperGroupId}`)
-          }}
-          isFlipButton={false}
-        />
-      ) : (
-        <> */}
       <OrderContainer>
         <OrderCard
-          //margin="0px 23px"
           supperGroup={props.supperGroup}
           ownerId={localStorage.userID}
           supperGroupStatus={props.supperGroup?.status}
@@ -229,8 +174,6 @@ const OwnerView = (props: Props) => {
         </SupperButtonContainer>
       )}
     </>
-    //)}
-    //</>
   )
 }
 
