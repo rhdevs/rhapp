@@ -22,6 +22,7 @@ import {
   unixTo12HourTime,
   setIsFoodMenuModalOpen,
   setFoodModalInfo,
+  updateOrderDetails,
 } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -68,6 +69,7 @@ export default function PlaceOrder() {
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
+  const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -131,11 +133,21 @@ export default function PlaceOrder() {
             <>
               <br />
               <br />
-              <ViewCartButton
-                numberOfItems={numberOfItems()}
-                currentTotal={order?.totalCost}
-                onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
-              />
+              {isOwner ? (
+                <ViewCartButton
+                  numberOfItems={numberOfItems()}
+                  currentTotal={order?.totalCost}
+                  onClick={() => {
+                    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                  }}
+                />
+              ) : (
+                <ViewCartButton
+                  numberOfItems={numberOfItems()}
+                  currentTotal={order?.totalCost}
+                  onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+                />
+              )}
             </>
           ) : (
             <></>

@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { SupperModal } from './SupperModal'
-import { deleteOrder, emptyOrderFoodList } from '../../../store/supper/action'
+import { deleteOrder } from '../../../store/supper/action'
 import { Order } from '../../../store/supper/types'
 
 type Props = {

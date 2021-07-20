@@ -146,7 +146,7 @@ const ViewCart = () => {
                   defaultButtonDescription="Empty Cart"
                   onButtonClick={() => setEmptyCartModalIsOpen(true)}
                 />
-                {emptyCartModalIsOpen && (
+                {emptyCartModalIsOpen && ownerOrderId && (
                   <EmptyCartModal
                     orderId={ownerOrderId}
                     onLeftButtonClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}

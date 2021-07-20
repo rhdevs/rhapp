@@ -7,7 +7,7 @@ import { SupperModal } from './SupperModal'
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  orderId: string | undefined
+  orderId: string
 }
 
 export const EmptyCartModal = (props: Props) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,6 +14,11 @@ import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../Vie
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
+import { onRefresh } from '../../../common/reloadPage'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSupperGroupById } from '../../../store/supper/action'
+import { RootState } from '../../../store/types'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 export const OrderContainer = styled.div`
   margin: 40px 0px 0px 0;
@@ -29,7 +34,7 @@ export const ButtonContainer = styled.div`
   flex-direction: column;
   // width: 80vw;
   justify-content: center;
-  margin: 0 auto 40px auto;
+  margin: 40px 20px;
   padding: 0 10px;
 `
 
@@ -45,16 +50,22 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
+  const dispatch = useDispatch()
+  const { isLoading } = useSelector((state: RootState) => state.supper)
+
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
   const orderList = props.supperGroup?.orderList
-  const ownerOrder = orderList?.find((order) => order.user.userID === props.supperGroup?.ownerId)
+  const ownerOrder = orderList?.find((order) => order.user.userID === localStorage.userID)
   const ownerOrderId = ownerOrder?.orderId
 
-  console.log(props.supperGroup)
-  console.log(props.collatedOrder)
+  // console.log(localStorage.userID)
+  // console.log(orderList && orderList[0].user.userID)
+  useEffect(() => {
+    dispatch(getSupperGroupById(params.supperGroupId))
+  }, [dispatch])
 
   const showBottomSection = () => {
     if (props.supperGroupIsOpen) {
@@ -100,17 +111,24 @@ const OwnerView = (props: Props) => {
 
   return (
     <>
-      {emptyCartModalIsOpen && ownerOrder && (
+      {emptyCartModalIsOpen && ownerOrderId && (
         <EmptyCartModal
           orderId={ownerOrderId}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => {
+            dispatch(getSupperGroupById(params.supperGroupId))
+            onRefresh
+            isLoading && <LoadingSpin />
+            history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+          }}
           modalSetter={setEmptyCartModalIsOpen}
         />
       )}
       {closeModalIsOpen && (
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => {
+            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+          }}
           supperGroupId={params.supperGroupId}
         />
       )}

@@ -431,29 +431,29 @@ export const createOrder = (userId: string, supperGroupId: string | number) => (
   dispatch(setIsLoading(false))
 }
 
-export const emptyOrderFoodList = (orderId?: string, originalOrder?) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(orderId, originalOrder)
-  if (!originalOrder || !orderId) return
-  dispatch(setIsLoading(true))
-  console.log(originalOrder)
-  const newOrder = { ...originalOrder, foodList: [], totalCost: 0 }
-  const requestBody = newOrder
-  console.log(requestBody)
-  put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
-    .then((resp) => {
-      if (resp.status === 'failed') {
-        throw resp.err
-      }
-      dispatch(getOrderById(orderId))
-    })
-    .catch((err) => {
-      console.log(err)
-      error('Failed to update order, please try again.')
-    })
-  dispatch(setIsLoading(false))
-}
+// export const emptyOrderFoodList = (orderId?: string, originalOrder?) => (dispatch: Dispatch<ActionTypes>) => {
+//   console.log(orderId, originalOrder)
+//   if (!originalOrder || !orderId) return
+//   dispatch(setIsLoading(true))
+//   console.log(originalOrder)
+//   const newOrder = { ...originalOrder, foodList: [], totalCost: 0 }
+//   const requestBody = newOrder
+//   console.log(requestBody)
+//   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
+//     .then((resp) => {
+//       if (resp.status === 'failed') {
+//         throw resp.err
+//       }
+//       dispatch(getOrderById(orderId))
+//     })
+//     .catch((err) => {
+//       console.log(err)
+//       error('Failed to update order, please try again.')
+//     })
+//   dispatch(setIsLoading(false))
+// }
 
-export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispatch: Dispatch<ActionTypes>) => {
+export const updateOrderDetails = (orderId: string, newOrderDetails) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(orderId, newOrderDetails)
   if (!newOrderDetails || !orderId) return
   dispatch(setIsLoading(true))
@@ -463,7 +463,7 @@ export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispa
       if (resp.status === 'failed') {
         throw resp.err
       }
-      // dispatch(getOrderById(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)

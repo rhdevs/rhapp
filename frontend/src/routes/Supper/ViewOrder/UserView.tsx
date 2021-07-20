@@ -9,6 +9,7 @@ import { OrderSummaryCard } from '../../../components/Supper/CustomCards/OrderSu
 import { SGCardWithStatus } from '../../../components/Supper/CustomCards/SGCardWithStatus'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { NotificationBar } from '../../../components/Supper/NotificationBar'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -19,46 +20,46 @@ import { PATHS } from '../../Routes'
 import { UpperRowButtons, UpperRowButtonContainer, LowerRowButton } from '../ViewCart'
 import { OrderContainer } from './OwnerView'
 
-const SummaryContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 80vw;
-  margin: 15px auto 0 auto;
-  align-items: baseline;
-`
+// const SummaryContainer = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   width: 80vw;
+//   margin: 15px auto 0 auto;
+//   align-items: baseline;
+// `
 
-const BottomMoneyContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 60%;
-  justify-content: space-between;
-  margin: 10px 0;
-`
+// const BottomMoneyContainer = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   width: 60%;
+//   justify-content: space-between;
+//   margin: 10px 0;
+// `
 
-const SummaryText = styled.h3`
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
-  padding-right: 5px;
-`
+// const SummaryText = styled.h3`
+//   font-family: Inter;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 24px;
+//   padding-right: 5px;
+// `
 
-const BottomContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  margin: 1rem auto;
-  align-items: flex-end;
-`
+// const BottomContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 80vw;
+//   margin: 1rem auto;
+//   align-items: flex-end;
+// `
 
-const StyledText = styled.text`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 14px;
-`
+// const StyledText = styled.text`
+//   font-family: 'Inter';
+//   font-style: normal;
+//   font-weight: 500;
+//   font-size: 18px;
+//   line-height: 14px;
+// `
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -82,31 +83,32 @@ const UserView = (props: Props) => {
   const history = useHistory()
   const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
+  const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
 
   const showBottomSection = () => {
     if (props.supperGroupIsOpen) {
       return (
-        <UpperRowButtons>
+        <>
           {props.order?.foodList && props.order.foodList.length > 0 && (
-            <UpperRowButtonContainer left>
+            <>
               <SupperButton
                 ghost
-                buttonWidth="90%"
+                descriptionStyle={{ width: '100%' }}
+                buttonWidth="200px"
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
               />
-            </UpperRowButtonContainer>
+            </>
           )}
-          <UpperRowButtonContainer>
+          <>
             <SupperButton
-              buttonWidth="90%"
+              descriptionStyle={{ width: '100%' }}
+              buttonWidth="200px"
               defaultButtonDescription="Leave Group"
-              onButtonClick={() => {
-                'save changes'
-              }}
+              onButtonClick={() => setLeaveGroupModalIsOpen(true)}
             />
-          </UpperRowButtonContainer>
-        </UpperRowButtons>
+          </>
+        </>
       )
     } else if (props.supperGroupIsCancelled) {
       return (
@@ -116,10 +118,7 @@ const UserView = (props: Props) => {
             descriptionStyle={{ width: '100%' }}
             defaultButtonDescription="Main Page"
             buttonWidth="200px"
-            onButtonClick={() => {
-              setHasPaid(!hasPaid)
-              dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
-            }}
+            onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
           />
         </>
       )
@@ -132,7 +131,7 @@ const UserView = (props: Props) => {
           buttonWidth="200px"
           onButtonClick={() => {
             setHasPaid(!hasPaid)
-            dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
+            props.order?.orderId && dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
           }}
           isFlipButton
         />
@@ -149,6 +148,13 @@ const UserView = (props: Props) => {
           // order={props.order}
           onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           modalSetter={setDeleteOrderModalIsOpen}
+        />
+      )}
+      {leaveGroupModalIsOpen && (
+        <LeaveGroupModal
+          suppergroupId={params.supperGroupId}
+          onLeftButtonClick={() => `${PATHS.JOIN_ORDER}/${params.supperGroupId}`}
+          modalSetter={setLeaveGroupModalIsOpen}
         />
       )}
       <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />

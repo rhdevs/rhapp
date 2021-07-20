@@ -49,7 +49,7 @@ const ViewOrder = () => {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-  }, [dispatch, order])
+  }, [dispatch])
 
   useEffect(() => {
     if (supperGroup) {
@@ -60,15 +60,7 @@ const ViewOrder = () => {
         dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
       }
     }
-  }, [supperGroup, order])
-
-  // useEffect(() => {
-  //   dispatch(getSupperGroupById(params.supperGroupId))
-  //   dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
-  //   if (supperGroup?.ownerId === localStorage.userID) {
-  //     dispatch(getCollatedOrder(params.supperGroupId))
-  //   }
-  // }, [order])
+  }, [supperGroup])
 
   useEffect(() => {
     if (selectedSupperGroupStatus) {
