@@ -294,12 +294,16 @@ export const SGStatusCard = (props: Props) => {
             {showContentBody()}
             {!isCancelled && props.isOwner && (
               <OwnerButtonContainer>
-                <UnderlinedButton
-                  onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
-                  text="Update Delivery Details"
-                  color="red"
-                  fontSize="14px"
-                />
+                {isLoading ? (
+                  <Skeleton width="150px" height="14px" />
+                ) : (
+                  <UnderlinedButton
+                    onClick={() => history.push(`${PATHS.DELIVERY_DETAILS}/${props.rawSupperGroupId}/details`)}
+                    text="Update Delivery Details"
+                    color="red"
+                    fontSize="14px"
+                  />
+                )}
               </OwnerButtonContainer>
             )}
           </>

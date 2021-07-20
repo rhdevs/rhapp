@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import styled from 'styled-components'
 import { V1_BLUE } from '../common/colours'
+import { RootState } from '../store/types'
+import { Skeleton } from './Skeleton'
 
 const MainContainer = styled.div`
   position: relative;
@@ -47,6 +50,7 @@ type Props = {
 
 export const Tabs = (props: Props) => {
   const [currentTab, setCurrentTab] = useState<number>(props.defaultValue ?? 1)
+  const { isLoading } = useSelector((state: RootState) => state.supper)
 
   const selectedChild = () => {
     const index = currentTab - 1
@@ -61,7 +65,7 @@ export const Tabs = (props: Props) => {
           return (
             <>
               <TabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
-                {valueName}
+                {isLoading ? <Skeleton height="16px" width="100px" margin="0" /> : valueName}
               </TabContainer>
               {index !== props.valueNamesArr.length - 1 && <Separator />}
             </>

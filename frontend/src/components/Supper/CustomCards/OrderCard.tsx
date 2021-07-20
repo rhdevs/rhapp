@@ -566,7 +566,7 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           <CardHeaderContainer>
-            <MyOrderText>My Order</MyOrderText>
+            <MyOrderText>{isLoading ? <Skeleton height="15px" width="90" /> : 'My Order'}</MyOrderText>
             {isEditable && <RedPlusButton />}
           </CardHeaderContainer>
           {userViewFoodContent()}

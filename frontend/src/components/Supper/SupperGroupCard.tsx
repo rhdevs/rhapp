@@ -277,7 +277,7 @@ export const SupperGroupCard = (props: Props) => {
         </>
       ) : (
         <>
-          {!isLoading && topIcon}
+          {isLoading && topIcon}
           <ClickableContainer onClick={onSupperCardClick}>
             <LeftContainer>
               {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
