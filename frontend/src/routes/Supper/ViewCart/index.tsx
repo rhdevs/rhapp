@@ -146,7 +146,7 @@ const ViewCart = () => {
         <>
           {
             <>
-              <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+              <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
               <OrderCard
                 supperGroup={supperGroup}
                 collatedOrder={collatedOrder}

@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
-import { FoodLine } from './FoodLine'
-import { MainCard } from './MainCard'
+import { FoodLine } from '../FoodLine'
+import { MainCard } from '../MainCard'
 import { CloseOutlined, UserOutlined } from '@ant-design/icons'
-import { Food, Order, UserDetails } from '../../store/supper/types'
-import { TelegramShareButton } from '../TelegramShareButton'
-import { V1_GREY_BACKGROUND } from '../../common/colours'
+import { Food, Order, UserDetails } from '../../../store/supper/types'
+import { TelegramShareButton } from '../../TelegramShareButton'
+import { V1_GREY_BACKGROUND } from '../../../common/colours'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -46,7 +46,7 @@ const ContactCard = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 5px 20px;
-  align-items: end;
+  align-items: center;
 `
 
 const IdentityContainer = styled.div`
@@ -56,7 +56,8 @@ const IdentityContainer = styled.div`
 `
 
 const IdentitySymbol = styled(UserOutlined)`
-  font-size: 25px;
+  font-size: 20px;
+  margin: auto 0;
 `
 
 const NameContainer = styled.div`
@@ -95,15 +96,24 @@ type Prop = {
 
 export const ContactModal = (props: Prop) => {
   const contacts = props.food?.userIdList
-  let userDetails: UserDetails[] | undefined
+  const [userDetails, setUserDetails] = useState<UserDetails[]>([])
 
-  contacts?.map((userId) => {
-    props.orderList
-      ?.filter((order) => order.user.userID === userId)
-      .map((order) => {
-        userDetails?.push({ userId: userId, name: order.user.displayName, telegramHandle: order.user.telegramHandle })
-      })
-  })
+  useEffect(() => {
+    contacts?.map((userId) => {
+      props.orderList
+        ?.filter((order) => {
+          return order.user.userID === userId
+        })
+        .forEach((filteredOrder) => {
+          const indivUserDetail = {
+            userId: userId,
+            name: filteredOrder.user.displayName,
+            telegramHandle: filteredOrder.user.telegramHandle,
+          }
+          setUserDetails(userDetails.concat(indivUserDetail))
+        })
+    })
+  }, [])
 
   const onCloseClick = () => {
     props.contactModalSetter(false)
@@ -111,7 +121,7 @@ export const ContactModal = (props: Prop) => {
 
   return (
     <OverlayBackground>
-      <MainCard flexDirection="column" margin="100px 30px" padding="20px 25px" minHeight="300px">
+      <MainCard flexDirection="column" margin="100px 30px" padding="20px 25px" minHeight="fit-content">
         <HeaderContainer>
           <HeaderText>Contact Users</HeaderText>
           <CloseButton onClick={onCloseClick} />
@@ -127,19 +137,22 @@ export const ContactModal = (props: Prop) => {
           hasNoQuantity
         />
         <ContactsContainer>
-          {userDetails ? (
+          {userDetails.length ? (
             userDetails.map((userDetail: UserDetails) => {
+              const isOwner = userDetail.userId === localStorage.userID
               return (
                 <ContactCard key={userDetail.userId}>
                   <IdentityContainer>
                     <IdentitySymbol />
                     <NameContainer>
-                      <Name>{userDetail.name}</Name>
+                      <Name>{isOwner ? 'You' : userDetail.name}</Name>
                     </NameContainer>
                   </IdentityContainer>
-                  <ButtonContainer>
-                    <TelegramShareButton telegramHandle={userDetail.telegramHandle} size="26px" />
-                  </ButtonContainer>
+                  {!isOwner && (
+                    <ButtonContainer>
+                      <TelegramShareButton telegramHandle={userDetail.telegramHandle} size="26px" />
+                    </ButtonContainer>
+                  )}
                 </ContactCard>
               )
             })

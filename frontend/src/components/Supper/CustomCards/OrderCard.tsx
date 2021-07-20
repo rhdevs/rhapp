@@ -14,7 +14,7 @@ import { FoodLine } from '../FoodLine'
 import { Tabs } from '../../Tabs'
 import { TelegramShareButton } from '../../TelegramShareButton'
 import { openUserTelegram } from '../../../common/telegramMethods'
-import { ContactModal } from '../ContactModal'
+import { ContactModal } from '../Modals/ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
 import { useSelector } from 'react-redux'
@@ -245,7 +245,7 @@ export const OrderCard = (props: Props) => {
           ) : (
             <>
               Delivery Fee
-              {update && (supperGroupIsOpenOrPending || supperGroupStatus === SupperGroupStatus.CLOSED) && (
+              {update && supperGroupStatus === SupperGroupStatus.CLOSED && (
                 <UpdateTextButton
                   underlined
                   onClick={() => history.push(`${PATHS.UPDATE_DELIVERY}/${supperGroupId}/update/delivery`)}
@@ -375,7 +375,7 @@ export const OrderCard = (props: Props) => {
                 <FoodLine
                   key={index}
                   margin="5px 0"
-                  isEditable={isEditable}
+                  isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
                   onEditClick={() => onEditClick(food.foodId, true)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
