@@ -17,8 +17,9 @@ import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../Modals/ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { createOrder } from '../../../store/supper/action'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -180,6 +181,7 @@ type Props = {
 
 export const OrderCard = (props: Props) => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [contactModalFood, setContactModalFood] = useState<Food>()
@@ -287,7 +289,9 @@ export const OrderCard = (props: Props) => {
         <EmptyTextContainer>
           Cart is empty.{' '}
           <UnderlinedButton
-            onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+            onClick={() => {
+              history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
+            }}
             text="Add item"
             fontSize="12px"
             color="red"
@@ -411,7 +415,7 @@ export const OrderCard = (props: Props) => {
       isOwner && (supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING)
     let formattedFoodList = orderList
 
-    if (orderList) {
+    if (orderList && orderList?.length > 0) {
       const ownerOrder = orderList.find((order) => order.user.userID === localStorage.userID)
       if (ownerOrder) {
         formattedFoodList = orderList.filter((order) => {
@@ -419,6 +423,8 @@ export const OrderCard = (props: Props) => {
         })
         formattedFoodList.unshift(ownerOrder)
       }
+    } else {
+      return <OwnerEmptyCartSection />
     }
 
     return (
@@ -508,7 +514,6 @@ export const OrderCard = (props: Props) => {
 
   const ownerFoodContent = () => {
     const ownerOrder = (orderList ?? []).find((order) => order.user.userID === localStorage.userID)
-
     return (
       <>
         {ownerOrder ? (
