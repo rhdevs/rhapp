@@ -64,6 +64,7 @@ export default function PlaceOrder() {
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
+  const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -131,7 +132,7 @@ export default function PlaceOrder() {
                 numberOfItems={numberOfItems()}
                 currentTotal={order?.totalCost}
                 onClick={() => {
-                  if (supperGroup?.ownerId === localStorage.userID) {
+                  if (isOwner) {
                     history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
                   } else {
                     history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)

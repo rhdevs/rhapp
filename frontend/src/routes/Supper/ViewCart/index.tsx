@@ -11,6 +11,7 @@ import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
@@ -26,6 +27,10 @@ const Background = styled.div`
   position: relative;
 `
 
+const OrderContainer = styled.div`
+  margin: 40px 0 0;
+`
+
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,12 +40,12 @@ const ButtonContainer = styled.div`
   padding: 0 10px;
 `
 
-const UpperRowButtons = styled.div`
+export const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
@@ -56,10 +61,11 @@ const ViewCart = () => {
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [closeGroupModalIsOpen, setCloseGroupModalIsOpen] = useState<boolean>(false)
   const [deleteGroupModalIsOpen, setDeleteGroupModalIsOpen] = useState<boolean>(false)
+  const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const { supperGroup, isLoading, collatedOrder, orderId, order } = useSelector((state: RootState) => state.supper)
   const isOwner = supperGroup?.ownerId ? localStorage.userID === supperGroup.ownerId : undefined
   const isEditable = supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING
-  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === localStorage.userID)?.orderId
+  const ownerOrderId = supperGroup?.orderList?.find((order) => order.user.userID === supperGroup.ownerId)?.orderId
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
@@ -79,37 +85,41 @@ const ViewCart = () => {
     } else if (isOwner) {
       return (
         <ButtonContainer>
-          <UpperRowButtons>
-            <UpperRowButtonContainer left>
-              <SupperButton
-                ghost
-                buttonWidth="90%"
-                defaultButtonDescription="Delete Order"
-                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
-              />
-              {deleteOrderModalIsOpen && supperGroup?.supperGroupId && (
-                <DeleteOrderModal
-                  isOwner
-                  supperGroupId={supperGroup.supperGroupId}
-                  orderId={ownerOrderId}
-                  modalSetter={setDeleteOrderModalIsOpen}
+          {order && (
+            <UpperRowButtons>
+              <UpperRowButtonContainer left>
+                <SupperButton
+                  ghost
+                  buttonWidth="90%"
+                  defaultButtonDescription="Delete Order"
+                  onButtonClick={() => setDeleteOrderModalIsOpen(true)}
                 />
-              )}
-            </UpperRowButtonContainer>
-            <UpperRowButtonContainer>
-              <SupperButton
-                buttonWidth="90%"
-                defaultButtonDescription="Close Group"
-                onButtonClick={() => setCloseGroupModalIsOpen(true)}
-              />
-              {closeGroupModalIsOpen && supperGroup?.supperGroupId && (
-                <CloseGroupEarlyModal
-                  supperGroupId={supperGroup.supperGroupId}
-                  modalSetter={setCloseGroupModalIsOpen}
+                {deleteOrderModalIsOpen && (
+                  <DeleteOrderModal
+                    isOwner
+                    supperGroupId={params.supperGroupId}
+                    orderId={ownerOrderId}
+                    onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+                    modalSetter={setDeleteOrderModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+              <UpperRowButtonContainer>
+                <SupperButton
+                  buttonWidth="90%"
+                  defaultButtonDescription="Close Group"
+                  onButtonClick={() => setCloseGroupModalIsOpen(true)}
                 />
-              )}
-            </UpperRowButtonContainer>
-          </UpperRowButtons>
+                {closeGroupModalIsOpen && (
+                  <CloseGroupEarlyModal
+                    supperGroupId={params.supperGroupId}
+                    onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+                    modalSetter={setCloseGroupModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+            </UpperRowButtons>
+          )}
           <LowerRowButton>
             <SupperButton
               center
@@ -118,27 +128,55 @@ const ViewCart = () => {
               defaultButtonDescription="Delete Group"
               onButtonClick={() => setDeleteGroupModalIsOpen(true)}
             />
-            {deleteGroupModalIsOpen && supperGroup?.supperGroupId && (
-              <DeleteGroupModal suppergroupId={supperGroup.supperGroupId} modalSetter={setDeleteGroupModalIsOpen} />
+            {deleteGroupModalIsOpen && (
+              <DeleteGroupModal
+                suppergroupId={params.supperGroupId}
+                onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+                modalSetter={setDeleteGroupModalIsOpen}
+              />
             )}
           </LowerRowButton>
         </ButtonContainer>
       )
     } else {
       return (
-        <ButtonContainer>
-          <SupperButton
-            center
-            defaultButtonDescription="Submit Order"
-            onButtonClick={() => {
-              if (supperGroup?.phoneNumber) {
-                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-              } else {
-                history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
-              }
-            }}
-          />
-        </ButtonContainer>
+        order?.foodList &&
+        order.foodList.length > 0 && (
+          <ButtonContainer>
+            <UpperRowButtons>
+              <UpperRowButtonContainer left>
+                <SupperButton
+                  ghost
+                  buttonWidth="90%"
+                  defaultButtonDescription="Empty Cart"
+                  onButtonClick={() => setEmptyCartModalIsOpen(true)}
+                />
+                {emptyCartModalIsOpen && ownerOrderId && (
+                  <EmptyCartModal
+                    supperGroupId={params.supperGroupId}
+                    orderId={ownerOrderId}
+                    onLeftButtonClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+                    modalSetter={setEmptyCartModalIsOpen}
+                  />
+                )}
+              </UpperRowButtonContainer>
+              <UpperRowButtonContainer>
+                <SupperButton
+                  center
+                  buttonWidth="90%"
+                  defaultButtonDescription="Submit Order"
+                  onButtonClick={() => {
+                    if (order.userContact === 0) {
+                      history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
+                    } else {
+                      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                    }
+                  }}
+                />
+              </UpperRowButtonContainer>
+            </UpperRowButtons>
+          </ButtonContainer>
+        )
       )
     }
   }
@@ -150,20 +188,19 @@ const ViewCart = () => {
         <LoadingSpin />
       ) : (
         <>
-          {
-            <>
-              <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
-              <OrderCard
-                supperGroup={supperGroup}
-                collatedOrder={collatedOrder}
-                ownerId={supperGroup.ownerId}
-                supperGroupStatus={supperGroup.status}
-                isEditable={isEditable}
-                orderId={orderId}
-                order={order}
-              />
-            </>
-          }
+          <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
+          <OrderContainer>
+            <OrderCard
+              supperGroup={supperGroup}
+              supperGroupId={supperGroup.supperGroupId}
+              collatedOrder={collatedOrder}
+              ownerId={supperGroup.ownerId}
+              supperGroupStatus={supperGroup.status}
+              isEditable={isEditable}
+              orderId={orderId}
+              order={order}
+            />
+          </OrderContainer>
           {showButtons()}
         </>
       )}

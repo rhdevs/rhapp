@@ -160,7 +160,7 @@ export const UserPaymentStatus = (props: Props) => {
     //TODO: Test to see if updating individual checking of name works, if not can use array method
     // dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
     const newOrderDetails = { hasReceived: !cancelName }
-    dispatch(updateOrderDetails(props.orderId, newOrderDetails))
+    props.orderId && dispatch(updateOrderDetails(props.orderId, newOrderDetails))
     setCancelName(!cancelName)
   }
 

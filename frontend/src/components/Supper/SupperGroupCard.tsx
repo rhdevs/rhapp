@@ -155,12 +155,12 @@ export const SupperGroupCard = (props: Props) => {
   const showStatusOnly = props.statusOnly ?? false
   const isClickableCard = props.isHome || props.statusOnly
 
-  setTimeout(() => {
-    // if details still dont show after 10s, show error
-    if (isLoading) {
-      setHasError(true)
-    }
-  }, 10000)
+  // setTimeout(() => {
+  //   // if details still dont show after 10s, show error
+  //   if (isLoading) {
+  //     setHasError(true)
+  //   }
+  // }, 10000)
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',

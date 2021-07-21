@@ -120,6 +120,7 @@ export const getOrderById = (orderId: string | undefined) => (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_ID,
         order: resp.data,
@@ -430,7 +431,28 @@ export const createOrder = (userId: string, supperGroupId: string | number) => (
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispatch: Dispatch<ActionTypes>) => {
+export const emptyOrderFoodList = (supperGroupId: string, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(supperGroupId, orderId)
+  if (!supperGroupId || !orderId) return
+  dispatch(setIsLoading(true))
+  const requestBody = { foodList: [] }
+  console.log(requestBody)
+  put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getOrderById(orderId))
+    })
+    .then(() => dispatch(getSupperGroupById(supperGroupId)))
+    .catch((err) => {
+      console.log(err)
+      error('Failed to update order, please try again.')
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const updateOrderDetails = (orderId: string, newOrderDetails) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(orderId, newOrderDetails)
   if (!newOrderDetails || !orderId) return
   dispatch(setIsLoading(true))
@@ -440,7 +462,7 @@ export const updateOrderDetails = (orderId?: string, newOrderDetails?) => (dispa
       if (resp.status === 'failed') {
         throw resp.err
       }
-      // dispatch(getOrderById(orderId))
+      dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
