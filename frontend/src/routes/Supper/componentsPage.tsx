@@ -47,7 +47,7 @@ import { getRestaurantLogo } from '../../common/getRestaurantLogo'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { SupperButton } from '../../components/Supper/SupperButton'
 import { V1_GREY_BACKGROUND } from '../../common/colours'
-import { ConfirmStatusUpdateModal } from '../../components/Supper/Modals/ConfirmStatusUpdateModal'
+import { TwoStepCancelGroupModal } from '../../components/Supper/Modals/TwoStepCancelGroupModal'
 
 const OptionText = styled.text`
   font-family: Inter;
@@ -65,7 +65,7 @@ export default function Supper() {
       <SupperSearchBar />
       <InformationCard splitACMethod />
       <div onClick={() => setIsModalOpen(true)}>open modal</div>
-      {isModalOpen && <ConfirmStatusUpdateModal modalSetter={setIsModalOpen} supperGroupId={1} />}
+      {isModalOpen && <TwoStepCancelGroupModal modalSetter={setIsModalOpen} supperGroupId={1} />}
       <div style={{ width: '80vw' }}>
         <FoodLine backgroundColor={V1_GREY_BACKGROUND} food={foodList[0]} hasNoQuantity />
       </div>
