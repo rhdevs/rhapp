@@ -67,6 +67,12 @@ const ViewCart = () => {
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 
+  useEffect(() => {
+    if (supperGroup?.ownerId === localStorage.userID) {
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+    }
+  }, [supperGroup])
+
   const showButtons = () => {
     if (isOwner === undefined) {
       return <LoadingSpin />

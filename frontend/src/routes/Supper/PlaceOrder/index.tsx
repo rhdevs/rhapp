@@ -130,7 +130,13 @@ export default function PlaceOrder() {
               <ViewCartButton
                 numberOfItems={numberOfItems()}
                 currentTotal={order?.totalCost}
-                onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
+                onClick={() => {
+                  if (supperGroup?.ownerId === localStorage.userID) {
+                    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                  } else {
+                    history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)
+                  }
+                }}
               />
             </>
           ) : (
