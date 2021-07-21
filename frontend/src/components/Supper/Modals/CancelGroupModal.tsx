@@ -16,8 +16,7 @@ export const CancelGroupModal = (props: Props) => {
   const dispatch = useDispatch()
 
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.withDispatch)
-      dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CANCELLED }))
+    if (props.withDispatch) dispatch(updateSupperGroup(props.supperGroupId, { status: SupperGroupStatus.CANCELLED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
 

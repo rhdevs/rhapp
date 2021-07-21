@@ -18,7 +18,7 @@ const TextArea = styled.textarea<{ error?: FieldError | undefined }>`
   border-radius: 10px;
   border: 1px solid #d9d9d9;
   padding: 5px 10px;
-  margin: 0.5rem auto 0 auto;
+  margin: 3px auto 10px auto;
   height: fit-content;
   ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 
@@ -33,6 +33,11 @@ const ErrorText = styled.p`
   width: 100%;
   text-align: center;
   font-family: 'Inter';
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
 `
 
 type Props = {
@@ -82,7 +87,7 @@ export const TwoStepCancelGroupModal = (props: Props) => {
         <SupperModal
           title="Cancel Supper Group?"
           description={
-            <form>
+            <Form>
               <FormHeader headerName="Reason for cancelling" isCompulsory />
               <TextArea
                 defaultValue={''}
@@ -95,7 +100,7 @@ export const TwoStepCancelGroupModal = (props: Props) => {
                 error={errors.cancelReason}
               />
               {errors.cancelReason?.type && <ErrorText>Reason required!</ErrorText>}
-            </form>
+            </Form>
           }
           leftButtonText="Back"
           leftButtonColor={V1_BACKGROUND}

@@ -14,7 +14,7 @@ type Props = {
 export const CloseGroupEarlyModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(updateSupperGroup(props.supperGroupId, { supperGroupStatus: SupperGroupStatus.CLOSED }))
+    dispatch(updateSupperGroup(props.supperGroupId, { status: SupperGroupStatus.CLOSED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (

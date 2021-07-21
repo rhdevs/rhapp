@@ -46,6 +46,7 @@ const DescriptionText = styled.text`
   font-size: 14px;
   padding-top: 0.5rem;
   color: #33363a;
+  text-align: justify;
 `
 
 const ButtonContainer = styled.div`

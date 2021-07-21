@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -109,7 +109,15 @@ type FormValues = {
 }
 
 const DeliveryDetails = () => {
-  const { register, handleSubmit, reset, watch, setValue, errors } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    control,
+    errors,
+    formState: { touched },
+  } = useForm<FormValues>({
     shouldUnregister: false,
   })
   const history = useHistory()
@@ -158,7 +166,6 @@ const DeliveryDetails = () => {
       selectedSupperGroupStatus === SupperGroupStatus.CANCELLED
     ) {
       setOrderStatusHasError(false)
-      setValue('cancelReason', undefined)
     }
   }, [selectedSupperGroupStatus])
 
@@ -172,14 +179,6 @@ const DeliveryDetails = () => {
       setOrderStatusHasError(true)
       return
     }
-    if (
-      selectedSupperGroupStatus === SupperGroupStatus.ORDERED ||
-      selectedSupperGroupStatus === SupperGroupStatus.ARRIVED
-    ) {
-      setValue('cancelReason', 'ignore')
-    } else if (selectedSupperGroupStatus === SupperGroupStatus.CANCELLED) {
-      setValue('location', 'ignore')
-    }
     console.log(errors, watch())
     handleSubmit((data) => {
       if (
@@ -189,8 +188,8 @@ const DeliveryDetails = () => {
         setConfirmStatusUpdateModal(true)
         return
       }
-      dispatch(setIsLoading(true))
 
+      // dispatch(setIsLoading(true))
       const initialGroup = supperGroup
       if (
         initialGroup?.status === selectedSupperGroupStatus &&
@@ -248,17 +247,7 @@ const DeliveryDetails = () => {
     : 20
 
   const onLeftClick = () => {
-    if (
-      supperGroup?.status === selectedSupperGroupStatus &&
-      unixTo12HourTime(supperGroup?.estArrivalTime) === estArrivalTime &&
-      supperGroup?.comments === watch('cancelReason') &&
-      supperGroup?.location === watch('location')
-    ) {
-      // No changes were made
-      history.goBack()
-    } else {
-      setHasChangedModal(true)
-    }
+    Object.values(touched).length ? setHasChangedModal(true) : history.goBack()
   }
 
   const onCancelModalConfirmClick = () => {
@@ -267,6 +256,7 @@ const DeliveryDetails = () => {
       comments: watch('cancelReason'),
     }
     dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+    history.goBack()
   }
 
   return (
@@ -305,14 +295,23 @@ const DeliveryDetails = () => {
               <CancellationBox>
                 <FormHeader headerName="Reason for Cancellation" isCompulsory />
                 <CancellationInputBox>
-                  <InputRow
-                    textarea
-                    placeholder="e.g. Driver cancelled, Restaurant cancelled.."
-                    {...register('cancelReason', {
-                      required: true,
-                      validate: (input) => input.trim().length !== 0,
-                    })}
-                    haserror={errors.cancelReason ? true : false}
+                  <Controller
+                    name="cancelReason"
+                    render={({ onChange, value }) => (
+                      <InputRow
+                        placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
+                        textarea
+                        value={value}
+                        onChange={onChange}
+                        {...register('cancelReason', {
+                          ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
+                          ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
+                        })}
+                        haserror={errors.cancelReason ? true : false}
+                      />
+                    )}
+                    control={control}
+                    defaultValue={null}
                   />
                   {errors.cancelReason?.type === 'required' && <ErrorText>Reason for cancellation required!</ErrorText>}
                   {errors.cancelReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
@@ -338,7 +337,7 @@ const DeliveryDetails = () => {
                     name="location"
                     ref={register({
                       required: true,
-                      validate: (input) => input.trim().length !== 0,
+                      ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
                     })}
                     style={errors.location ? errorStyling : {}}
                     defaultValue={supperGroup?.location ?? ''}
