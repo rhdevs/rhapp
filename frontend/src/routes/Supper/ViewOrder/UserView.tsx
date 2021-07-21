@@ -10,7 +10,6 @@ import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderM
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { setIsLoading } from '../../../store/profile/action'
 import { updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -58,7 +57,6 @@ const UserView = (props: Props) => {
             <>
               <SupperButton
                 ghost
-                //descriptionStyle={{ width: '100%' }}
                 buttonWidth="160px"
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
@@ -67,7 +65,6 @@ const UserView = (props: Props) => {
           )}
           <>
             <SupperButton
-              //descriptionStyle={{ width: '100%' }}
               buttonWidth="160px"
               defaultButtonDescription="Leave Group"
               onButtonClick={() => setLeaveGroupModalIsOpen(true)}
@@ -84,7 +81,6 @@ const UserView = (props: Props) => {
             </InformationContainer>
             <SupperButton
               center
-              //descriptionStyle={{ width: '100%' }}
               defaultButtonDescription="Main Page"
               buttonWidth="200px"
               onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
@@ -95,7 +91,6 @@ const UserView = (props: Props) => {
     } else {
       return (
         <SupperButton
-          //descriptionStyle={{ width: '100%' }}
           defaultButtonDescription="Mark Payment Complete"
           updatedButtonDescription="Payment Completed"
           buttonWidth="200px"
