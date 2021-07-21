@@ -229,7 +229,6 @@ export const FoodLine = (props: Props) => {
       }
     } else {
       let priceValue = price
-      //console.log(updates, wasEdited)
       if (updates?.updateAction === UpdateAction.REMOVE) {
         priceValue = '$0.00'
       }
