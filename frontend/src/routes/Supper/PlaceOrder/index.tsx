@@ -128,21 +128,17 @@ export default function PlaceOrder() {
             <>
               <br />
               <br />
-              {isOwner ? (
-                <ViewCartButton
-                  numberOfItems={numberOfItems()}
-                  currentTotal={order?.totalCost}
-                  onClick={() => {
+              <ViewCartButton
+                numberOfItems={numberOfItems()}
+                currentTotal={order?.totalCost}
+                onClick={() => {
+                  if (isOwner) {
                     history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                  }}
-                />
-              ) : (
-                <ViewCartButton
-                  numberOfItems={numberOfItems()}
-                  currentTotal={order?.totalCost}
-                  onClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
-                />
-              )}
+                  } else {
+                    history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)
+                  }
+                }}
+              />
             </>
           ) : (
             <></>
