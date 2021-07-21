@@ -299,7 +299,7 @@ const DeliveryDetails = () => {
                     name="cancelReason"
                     render={({ onChange, value }) => (
                       <InputRow
-                        placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
+                        placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
                         textarea
                         value={value}
                         onChange={onChange}

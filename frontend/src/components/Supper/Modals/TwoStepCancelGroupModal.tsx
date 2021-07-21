@@ -6,14 +6,15 @@ import { SupperModal } from './SupperModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { updateSupperGroup } from '../../../store/supper/action'
 import { FormHeader } from '../FormHeader'
-import { FieldError, useForm } from 'react-hook-form'
+import { Controller, FieldError, useForm } from 'react-hook-form'
 import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import InputRow from '../../Mobile/InputRow'
 
 const DescriptionText = styled.div`
   padding-bottom: 1rem;
 `
 
-const TextArea = styled.textarea<{ error?: FieldError | undefined }>`
+const TextArea = styled.input<{ error?: FieldError | undefined }>`
   width: 100%;
   border-radius: 10px;
   border: 1px solid #d9d9d9;
@@ -47,7 +48,7 @@ type FormData = {
 export const TwoStepCancelGroupModal = (props: Props) => {
   const dispatch = useDispatch()
   const [modalNum, setModalNum] = useState<number>(1)
-  const { register, handleSubmit, errors } = useForm<FormData>()
+  const { register, handleSubmit, watch, control, errors } = useForm<FormData>()
 
   const onDoneClick = () => {
     handleSubmit((data) => {
@@ -84,7 +85,7 @@ export const TwoStepCancelGroupModal = (props: Props) => {
           description={
             <form>
               <FormHeader headerName="Reason for cancelling" isCompulsory />
-              <TextArea
+              {/* <TextArea
                 defaultValue={''}
                 placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
                 name="cancelReason"
@@ -93,6 +94,24 @@ export const TwoStepCancelGroupModal = (props: Props) => {
                   validate: (input) => input.trim().length !== 0,
                 })}
                 error={errors.cancelReason}
+              /> */}
+              <Controller
+                name="cancelReason"
+                render={({ onChange, value }) => (
+                  <InputRow
+                    placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
+                    textarea
+                    value={value}
+                    onChange={onChange}
+                    {...register('cancelReason', {
+                      required: true,
+                      ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
+                    })}
+                    haserror={errors.cancelReason ? true : false}
+                  />
+                )}
+                control={control}
+                defaultValue={null}
               />
               {errors.cancelReason?.type && <ErrorText>Reason required!</ErrorText>}
             </form>
