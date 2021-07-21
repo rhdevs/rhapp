@@ -290,7 +290,6 @@ export const OrderCard = (props: Props) => {
           Cart is empty.{' '}
           <UnderlinedButton
             onClick={() => {
-              supperGroupId && dispatch(createOrder(localStorage.userID, supperGroupId))
               history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
             }}
             text="Add item"

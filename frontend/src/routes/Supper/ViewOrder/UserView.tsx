@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { InformationCard } from '../../../components/Supper/InformationCard'
@@ -9,8 +10,10 @@ import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderM
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
+import { setIsLoading } from '../../../store/profile/action'
 import { updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { OrderContainer } from './OwnerView'
 
@@ -42,6 +45,7 @@ const UserView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
+  const { isLoading } = useSelector((state: RootState) => state.supper)
   const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
@@ -54,7 +58,7 @@ const UserView = (props: Props) => {
             <>
               <SupperButton
                 ghost
-                descriptionStyle={{ width: '100%' }}
+                //descriptionStyle={{ width: '100%' }}
                 buttonWidth="160px"
                 defaultButtonDescription="Delete Order"
                 onButtonClick={() => setDeleteOrderModalIsOpen(true)}
@@ -63,7 +67,7 @@ const UserView = (props: Props) => {
           )}
           <>
             <SupperButton
-              descriptionStyle={{ width: '100%' }}
+              //descriptionStyle={{ width: '100%' }}
               buttonWidth="160px"
               defaultButtonDescription="Leave Group"
               onButtonClick={() => setLeaveGroupModalIsOpen(true)}
@@ -80,7 +84,7 @@ const UserView = (props: Props) => {
             </InformationContainer>
             <SupperButton
               center
-              descriptionStyle={{ width: '100%' }}
+              //descriptionStyle={{ width: '100%' }}
               defaultButtonDescription="Main Page"
               buttonWidth="200px"
               onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
@@ -91,7 +95,7 @@ const UserView = (props: Props) => {
     } else {
       return (
         <SupperButton
-          descriptionStyle={{ width: '100%' }}
+          //descriptionStyle={{ width: '100%' }}
           defaultButtonDescription="Mark Payment Complete"
           updatedButtonDescription="Payment Completed"
           buttonWidth="200px"
@@ -119,21 +123,27 @@ const UserView = (props: Props) => {
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           suppergroupId={params.supperGroupId}
-          onLeftButtonClick={() => `${PATHS.JOIN_ORDER}/${params.supperGroupId}`}
+          onLeftButtonClick={() => history.push(`${PATHS.JOIN_ORDER}/${params.supperGroupId}`)}
           modalSetter={setLeaveGroupModalIsOpen}
         />
       )}
-      <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
-      <OrderContainer>
-        <OrderCard
-          supperGroup={props.supperGroup}
-          ownerId={props.supperGroup?.ownerId}
-          supperGroupStatus={props.supperGroup?.status}
-          isEditable={props.supperGroupIsOpen}
-          foodList={props.order?.foodList}
-        />
-      </OrderContainer>
-      <ButtonContainer>{showBottomSection()}</ButtonContainer>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
+          <OrderContainer>
+            <OrderCard
+              supperGroup={props.supperGroup}
+              ownerId={props.supperGroup?.ownerId}
+              supperGroupStatus={props.supperGroup?.status}
+              isEditable={props.supperGroupIsOpen}
+              foodList={props.order?.foodList}
+            />
+          </OrderContainer>
+          <ButtonContainer>{showBottomSection()}</ButtonContainer>
+        </>
+      )}
     </>
   )
 }

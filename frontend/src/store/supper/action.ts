@@ -9,10 +9,9 @@ import {
   Updates,
 } from '../supper/types'
 import { SUPPER_ACTIONS } from './types'
-import { Dispatch, GetState, RootState } from '../types'
+import { Dispatch, GetState } from '../types'
 import { get, put, post, del, ENDPOINTS, DOMAINS } from '../endpoints'
 import useSnackbar from '../../hooks/useSnackbar'
-import { useSelector } from 'react-redux'
 
 const [error] = useSnackbar('error')
 
@@ -121,6 +120,7 @@ export const getOrderById = (orderId: string | undefined) => (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_ID,
         order: resp.data,
@@ -431,27 +431,26 @@ export const createOrder = (userId: string, supperGroupId: string | number) => (
   dispatch(setIsLoading(false))
 }
 
-// export const emptyOrderFoodList = (orderId?: string, originalOrder?) => (dispatch: Dispatch<ActionTypes>) => {
-//   console.log(orderId, originalOrder)
-//   if (!originalOrder || !orderId) return
-//   dispatch(setIsLoading(true))
-//   console.log(originalOrder)
-//   const newOrder = { ...originalOrder, foodList: [], totalCost: 0 }
-//   const requestBody = newOrder
-//   console.log(requestBody)
-//   put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
-//     .then((resp) => {
-//       if (resp.status === 'failed') {
-//         throw resp.err
-//       }
-//       dispatch(getOrderById(orderId))
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//       error('Failed to update order, please try again.')
-//     })
-//   dispatch(setIsLoading(false))
-// }
+export const emptyOrderFoodList = (supperGroupId: string, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(supperGroupId, orderId)
+  if (!supperGroupId || !orderId) return
+  dispatch(setIsLoading(true))
+  const requestBody = { foodList: [] }
+  console.log(requestBody)
+  put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getOrderById(orderId))
+    })
+    .then(() => dispatch(getSupperGroupById(supperGroupId)))
+    .catch((err) => {
+      console.log(err)
+      error('Failed to update order, please try again.')
+    })
+  dispatch(setIsLoading(false))
+}
 
 export const updateOrderDetails = (orderId: string, newOrderDetails) => (dispatch: Dispatch<ActionTypes>) => {
   console.log(orderId, newOrderDetails)

@@ -147,6 +147,7 @@ const ViewCart = () => {
                 />
                 {emptyCartModalIsOpen && ownerOrderId && (
                   <EmptyCartModal
+                    supperGroupId={params.supperGroupId}
                     orderId={ownerOrderId}
                     onLeftButtonClick={() => history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)}
                     modalSetter={setEmptyCartModalIsOpen}
@@ -156,10 +157,10 @@ const ViewCart = () => {
               <UpperRowButtonContainer>
                 <SupperButton
                   center
+                  buttonWidth="90%"
                   defaultButtonDescription="Submit Order"
                   onButtonClick={() => {
-                    console.log(order.userContact)
-                    if (order.userContact == 0) {
+                    if (order.userContact === 0) {
                       history.push(`${PATHS.CONFIRM_ORDER}/${params.supperGroupId}/confirm`)
                     } else {
                       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)

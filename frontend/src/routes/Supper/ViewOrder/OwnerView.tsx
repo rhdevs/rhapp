@@ -31,7 +31,6 @@ export const SupperButtonContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  // width: 80vw;
   justify-content: center;
   margin: 40px 20px;
   padding: 0 10px;
@@ -70,8 +69,8 @@ const OwnerView = (props: Props) => {
         <>
           <ButtonContainer>
             {console.log(orderList)}
-            {orderList != undefined &&
-              (orderList.length > 0 || (orderList?.length == 1 && orderList[0].foodList.length > 1)) && (
+            {orderList !== undefined &&
+              (orderList.length > 0 || (orderList?.length === 1 && orderList[0].foodList.length > 1)) && (
                 <UpperRowButtons>
                   <UpperRowButtonContainer left>
                     <SupperButton
@@ -100,7 +99,7 @@ const OwnerView = (props: Props) => {
               />
             </LowerRowButton>
           </ButtonContainer>
-          {orderList != undefined && orderList.length > 0 && <InformationCard closeSupperGroup />}
+          {orderList !== undefined && orderList.length > 0 && <InformationCard closeSupperGroup />}
         </>
       )
     }
@@ -110,11 +109,9 @@ const OwnerView = (props: Props) => {
     <>
       {emptyCartModalIsOpen && ownerOrderId && (
         <EmptyCartModal
+          supperGroupId={params.supperGroupId}
           orderId={ownerOrderId}
           onLeftButtonClick={() => {
-            dispatch(getSupperGroupById(params.supperGroupId))
-            onRefresh
-            isLoading && <LoadingSpin />
             history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
           }}
           modalSetter={setEmptyCartModalIsOpen}
@@ -123,9 +120,7 @@ const OwnerView = (props: Props) => {
       {closeModalIsOpen && (
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
-          onLeftButtonClick={() => {
-            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
-          }}
+          onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
           supperGroupId={params.supperGroupId}
         />
       )}
@@ -143,23 +138,29 @@ const OwnerView = (props: Props) => {
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
-      <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-      <OrderContainer>
-        <OrderCard
-          supperGroup={props.supperGroup}
-          ownerId={localStorage.userID}
-          supperGroupStatus={props.supperGroup?.status}
-          collatedOrder={props.collatedOrder}
-        />
-      </OrderContainer>
-      {showBottomSection()}
-      {props.showTrackPayment && (
-        <SupperButtonContainer>
-          <SupperButton
-            onButtonClick={() => setEndGroupModalIsOpen(true)}
-            defaultButtonDescription="End Supper Group"
-          />
-        </SupperButtonContainer>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+          <OrderContainer>
+            <OrderCard
+              supperGroup={props.supperGroup}
+              ownerId={localStorage.userID}
+              supperGroupStatus={props.supperGroup?.status}
+              collatedOrder={props.collatedOrder}
+            />
+          </OrderContainer>
+          {showBottomSection()}
+          {props.showTrackPayment && (
+            <SupperButtonContainer>
+              <SupperButton
+                onButtonClick={() => setEndGroupModalIsOpen(true)}
+                defaultButtonDescription="End Supper Group"
+              />
+            </SupperButtonContainer>
+          )}
+        </>
       )}
     </>
   )

@@ -1,19 +1,21 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { updateOrderDetails } from '../../../store/supper/action'
+import { emptyOrderFoodList, updateOrderDetails } from '../../../store/supper/action'
 
 import { SupperModal } from './SupperModal'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  supperGroupId: string
   orderId: string
 }
 
 export const EmptyCartModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(updateOrderDetails(props.orderId, { foodList: [] }))
+    // dispatch(updateOrderDetails(props.orderId, { foodList: [] }))
+    dispatch(emptyOrderFoodList(props.supperGroupId, props.orderId))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (

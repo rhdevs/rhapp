@@ -90,7 +90,7 @@ export default function PlaceOrder() {
   return (
     <Background>
       <TopNavBar title="Order" />
-      {isLoading || restaurant == undefined ? (
+      {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
