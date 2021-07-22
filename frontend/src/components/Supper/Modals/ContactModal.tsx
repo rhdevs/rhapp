@@ -100,18 +100,20 @@ export const ContactModal = (props: Prop) => {
   useEffect(() => {
     const contacts = props.food?.userIdList
     console.log('this is the list of userid with that food', contacts)
-    contacts?.forEach((userId) => {
-      const userInfo = props.orderList?.find((order) => order.user.userID === userId)?.user
-      if (userInfo) {
-        const indivUserDetail: UserDetails = {
-          userId: userInfo.userID,
-          name: userInfo.displayName,
-          telegramHandle: userInfo.telegramHandle,
-        }
-        setUserDetails(userDetails.concat(indivUserDetail))
-      }
-    })
-    console.log('this is the userDetails we extracted', userDetails)
+    const userdetails = contacts
+      ?.map((userId) => {
+        const userInfo = props.orderList?.find((order) => order.user.userID === userId)?.user
+        if (userInfo) {
+          const indivUserDetail: UserDetails = {
+            userId: userInfo.userID,
+            name: userInfo.displayName,
+            telegramHandle: userInfo.telegramHandle,
+          }
+          return indivUserDetail
+        } else return {} as UserDetails
+      })
+      ?.filter((k) => k.name !== undefined)
+    setUserDetails(userdetails ?? [])
   }, [props.orderList, props.food])
 
   const onCloseClick = () => {

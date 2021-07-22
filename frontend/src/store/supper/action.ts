@@ -33,12 +33,11 @@ export const getSupperNotification = () => (dispatch: Dispatch<ActionTypes>) => 
 }
 
 export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dispatch<ActionTypes>) => {
-  const requestBody = { supperGroupId: supperGroupId }
   del(
     ENDPOINTS.CLOSE_SUPPER_NOTIFICATIONS,
     DOMAINS.SUPPER,
-    requestBody,
-    `/${localStorage.userID}/supperGroupNotification`,
+    {},
+    `/${localStorage.userID}/supperGroupNotification/${supperGroupId}`,
   )
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -648,6 +647,9 @@ export const unixTo12HourTime = (unixDate?: number) => {
   }
   if (Number(hours) > 12) {
     hours = '0' + (date.getHours() - 12)
+  }
+  if (Number(hours) === 0) {
+    hours = '12'
   }
 
   const formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + letters
