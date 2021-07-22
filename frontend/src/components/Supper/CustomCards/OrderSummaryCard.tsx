@@ -138,7 +138,7 @@ export const OrderSummaryCard = (props: Props) => {
       return (
         <>
           {collatedOrderList.length <= 0 || collatedOrderList === null ? (
-            <EmptyCart /> //<EmptyCartContainer>No Orders</EmptyCartContainer>
+            <EmptyCart />
           ) : (
             collatedOrderList.map((food, index) => {
               const customisations: string[] = []

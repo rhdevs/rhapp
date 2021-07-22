@@ -373,6 +373,7 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
+            console.log('this is the collated food?', food)
             const customisations: string[] = []
             food.custom?.map((custom) =>
               custom.options.map((option) => {
@@ -386,7 +387,7 @@ export const OrderCard = (props: Props) => {
                   key={index}
                   margin="5px 0"
                   isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
-                  onEditClick={() => onEditClick(food.foodId, true)}
+                  onEditClick={() => onEditClick(food.foodIdList ? food.foodIdList[0] : undefined, true)}
                   wasEdited={wasEdited}
                   isCancelActionClickable={isOwner}
                   cancelActionOnClick={() => {

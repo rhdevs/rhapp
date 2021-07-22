@@ -22,6 +22,8 @@ export type Food = {
   custom?: Custom[]
   userIdList?: string[] // for owner to contact users with the same food in collated view
   updates?: Updates // for owner updates
+
+  foodIdList?: string[] //for collated food
 }
 
 export type Option = {
@@ -131,7 +133,6 @@ export type CollatedOrder = {
   supperGroupId: number | undefined
   ownerId: string
   collatedOrderList: Food[]
-  price?: number
 }
 
 export enum SplitACMethod {
@@ -148,7 +149,6 @@ export enum SupperGroupStatus {
   CANCELLED = 'Cancelled',
   AWAITING_PAYMENT = 'Awaiting Payment', // for owner
   ALL_PAID = 'All Paid', // for owner
-  COMPLETED = 'Completed', //TODO: Remove after design is confirmed
   PAID = 'Paid', // for user
   NOT_PAID = 'Not Paid', // for user
 }
