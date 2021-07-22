@@ -640,89 +640,6 @@ def food_order(orderId, foodId):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
-@cross_origin(supports_credentials=True)
-def owner_edit_order(orderId, foodId):
-    try:
-        if request.method == 'GET':
-            data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
-
-            data['orderId'] = str(data.pop('_id'))
-            data['restaurantId'] = str(data['restaurantId'])
-            data['foodMenuId'] = str(data['foodMenuId'])
-
-            response = {"status": "success",
-                        "data": data}
-
-        elif request.method == 'PUT':
-            data = request.get_json()
-
-            if data['updates']['updateAction'] == 'Update':
-                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
-                        or not data['updates']['reason'] \
-                        or not data['updates']['change'] \
-                        or not data['updates']['updatedPrice']:
-                    raise Exception('Update information incomplete')
-            elif data['updates']['updateAction'] == 'Remove':
-                if 'reason' not in data['updates'] or not data['updates']['reason']:
-                    raise Exception('Update information incomplete')
-
-            if 'global' in data['updates'] and data['updates']['global']:
-                data['updates'].pop('global')
-                food = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
-                order = db.Order.find_one({"_id": ObjectId(orderId)})
-                pipeline = [
-                    {'$match': {'supperGroupId': order['supperGroupId']}},
-                    {
-                        '$lookup': {
-                            'from': 'Order',
-                            'localField': 'supperGroupId',
-                            'foreignField': 'supperGroupId',
-                            'as': 'orderList'
-                        }
-                    },
-                    {
-                        '$lookup': {
-                            'from': 'FoodOrder',
-                            'localField': 'orderList.foodIds',
-                            'foreignField': '_id',
-                            'as': 'foods'
-                        }
-                    },
-                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
-                                  'foods.custom': 1, 'foods.comments': 1}},
-                ]
-
-                foods = db.Order.aggregate(pipeline)
-                for item in foods:
-                    foods = item['foods']
-                foods = list(filter(lambda x: x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'] and
-                                    x['comments'] == food['comments']
-                                    if 'comments' in x else
-                                    x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'], foods))
-                foods = list(map(lambda x: x['_id'], foods))
-                print(foods)
-
-                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
-                                                  {"$set": data})
-            else:
-                result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
-                                                          {"$set": data})
-            if result is None:
-                raise Exception('Food not found')
-
-            response = {"status": "success",
-                        "message": "Successfully updated food!",
-                        "data": data}
-
-        return make_response(response, 200)
-    except Exception as e:
-        print(e)
-        return make_response({"status": "failed", "err": str(e)}, 400)
-
-
 @supper_api.route('/restaurant', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def all_restaurants():
@@ -1081,6 +998,79 @@ def collated_orders(supperGroupId):
             'supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/supperGroup/<int:supperGroupId>/owner', methods=['PUT'])
+@cross_origin(supports_credentials=True)
+def owner_edit_order(supperGroupId):
+    try:
+        if request.method == 'PUT':
+            data = request.get_json()
+            foodId = ObjectId(data.pop('foodId'))
+
+            if data['updates']['updateAction'] == 'Update':
+                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
+                        or data['updates']['reason'] is None \
+                        or data['updates']['change'] is None \
+                        or data['updates']['updatedPrice'] is None:
+                    raise Exception('Update information incomplete')
+            elif data['updates']['updateAction'] == 'Remove':
+                if 'reason' not in data['updates'] or data['updates']['reason'] is None:
+                    raise Exception('Update information incomplete')
+
+            if 'global' in data['updates'] and data['updates']['global']:
+                data['updates'].pop('global')
+                food = db.FoodOrder.find_one({"_id": foodId})
+                pipeline = [
+                    {'$match': {'supperGroupId': supperGroupId}},
+                    {
+                        '$lookup': {
+                            'from': 'Order',
+                            'localField': 'supperGroupId',
+                            'foreignField': 'supperGroupId',
+                            'as': 'orderList'
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'FoodOrder',
+                            'localField': 'orderList.foodIds',
+                            'foreignField': '_id',
+                            'as': 'foods'
+                        }
+                    },
+                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
+                                  'foods.custom': 1, 'foods.comments': 1}},
+                ]
+
+                foods = db.Order.aggregate(pipeline)
+                for item in foods:
+                    foods = item['foods']
+                foods = list(filter(lambda x:
+                                    x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'] and
+                                    x['comments'] == food['comments']
+                                    if 'comments' in x else
+                                    x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'], foods))
+                foods = list(map(lambda x: x['_id'], foods))
+
+                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
+                                                  {"$set": data})
+            else:
+                result = db.FoodOrder.find_one_and_update({"_id": foodId},
+                                                          {"$set": data})
+            if result is None:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully updated food!",
+                        "data": data}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
