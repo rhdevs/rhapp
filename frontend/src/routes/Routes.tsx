@@ -74,7 +74,7 @@ export enum PATHS {
   UPDATE_FOOD_ITEM = '/supper',
   UPDATE_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/order/:orderId/food/:foodId',
   UPDATE_ALL_FOOD_ITEM = '/supper',
-  UPDATE_ALL_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/order/:orderId/collated/:collatedfoodId', //check w backend
+  UPDATE_ALL_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/collated/:foodId',
   UPDATE_DELIVERY = '/supper',
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
 }

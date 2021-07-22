@@ -25,7 +25,7 @@ const ErrorText = styled.text`
 `
 
 const UpdateAllItems = () => {
-  const params = useParams<{ supperGroupId: string; collatedfoodId: string }>()
+  const params = useParams<{ supperGroupId: string; foodId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
   const { supperGroup, food, isLoading } = useSelector((state: RootState) => state.supper)
@@ -34,8 +34,14 @@ const UpdateAllItems = () => {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    // dispatch(getFoodInCollatedOrder(params.supperGroupId, params.collatedfoodId))
   }, [dispatch])
+
+  useEffect(() => {
+    if (food && !isLoading) {
+      //might change if we can get an endpoint to send similar collated food based on foodid
+      history.goBack()
+    }
+  }, [food])
 
   return (
     <>
@@ -81,7 +87,7 @@ const UpdateAllItems = () => {
             hasTouchedSetter={setHasTouched}
             food={food}
             supperGroup={supperGroup}
-            foodId={food?.foodId ?? params.collatedfoodId} // need to update based on backend
+            foodId={food?.foodId ?? params.foodId}
           />
         </>
       )}

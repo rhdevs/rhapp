@@ -107,6 +107,7 @@ export enum ENDPOINTS {
   LEAVE_SUPPER_GROUP = '/supperGroup',
   UPDATE_OWNER_EDITS = '/order',
   GET_OWNER_EDITS = '/order',
+  UPDATE_OWNER_EDITS_FOR_ALL = '/supperGroup',
 }
 
 export enum DOMAINS {

@@ -321,7 +321,7 @@ export const OrderCard = (props: Props) => {
     }
     if (canEditUserFood) {
       if (collate) {
-        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID}`) //TODO: Update - waiting for backend
+        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM}/${supperGroupId}/update/collated/${foodId}`)
       } else {
         console.log("this is suppose to show user's orderid", userOrderId)
         history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${userOrderId}/food/${foodId}`)

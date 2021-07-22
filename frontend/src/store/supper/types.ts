@@ -187,6 +187,7 @@ export type Updates = {
   reason?: string
   change?: string
   updatedPrice?: number
+  global?: boolean //true when updating collated food
 }
 
 export enum UpdateAction {

@@ -250,7 +250,8 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: 
   dispatch(setIsLoading(false))
 }
 
-export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getCollatedOrder = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!supperGroupId) return
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
     .then((resp) => {
@@ -853,9 +854,12 @@ export const leaveSupperGroup = (supperGroupId: string | number | undefined) => 
   dispatch(setIsLoading(false))
 }
 
-export const updateOwnerEdits = (orderId: string | undefined, foodId: string | undefined, updates: Updates) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const updateOwnerEdits = (
+  supperGroupId: number | undefined,
+  orderId: string | undefined,
+  foodId: string | undefined,
+  updates: Updates,
+) => (dispatch: Dispatch<ActionTypes>) => {
   if (!(orderId || foodId)) return
   dispatch(setIsLoading(true))
   const requestBody = { updates: updates }
@@ -865,11 +869,34 @@ export const updateOwnerEdits = (orderId: string | undefined, foodId: string | u
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getAllSupperGroups())
+      dispatch(getSupperGroupById(supperGroupId))
     })
     .catch((err) => {
       console.log(err)
       error("Failed to update selected user's food, please try again.")
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const updateOwnerEditsForAll = (
+  supperGroupId: number | undefined,
+  foodId: string | undefined,
+  updates: Updates,
+) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!(supperGroupId || foodId)) return
+  dispatch(setIsLoading(true))
+  const requestBody = { foodId: foodId, updates: updates }
+
+  put(ENDPOINTS.UPDATE_OWNER_EDITS_FOR_ALL, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/owner`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch(getCollatedOrder(supperGroupId))
+    })
+    .catch((err) => {
+      console.log(err)
+      error("Failed to update selected collated's food, please try again.")
     })
   dispatch(setIsLoading(false))
 }
