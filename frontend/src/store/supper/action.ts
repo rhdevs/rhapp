@@ -628,6 +628,11 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
+/**
+ *
+ * @param unixDate epoch/unix date time number
+ * @returns fomatted time in form of HH:MM AM/PM (eg, 01:00AM or 12:10PM)
+ */
 export const unixTo12HourTime = (unixDate?: number) => {
   if (!unixDate) {
     return '-'
