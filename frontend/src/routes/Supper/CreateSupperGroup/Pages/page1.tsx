@@ -187,18 +187,7 @@ export const CreateOrderPageOne = () => {
             />
             {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required!</ErrorText>}
             <FormHeader topMargin headerName="Closing Time" isCompulsory />
-            {/* <Controller
-        control={control}
-        name="ReactDatepicker"
-        render={({ onChange, onBlur, value }) => (
-          <ReactDatePicker
-            onChange={onChange}
-            onBlur={onBlur}
-            selected={value}
-          />
-        )}
-      /> */}
-            {/* <Controller
+            <Controller
               control={control}
               name="closingTime"
               rules={{ required: true }}
@@ -207,7 +196,6 @@ export const CreateOrderPageOne = () => {
                   use12Hours
                   format="h:mm a"
                   onChange={onChange}
-                  ref={register({ required: true })}
                   style={errors.closingTime ? errorStyling : {}}
                   {...(supperGroup?.closingTime && {
                     defaultValue: moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss'),
@@ -215,7 +203,7 @@ export const CreateOrderPageOne = () => {
                 />
               )}
               defaultValue={null}
-            /> */}
+            />
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />
             <PriceContainer>
