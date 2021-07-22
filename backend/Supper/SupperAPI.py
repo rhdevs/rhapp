@@ -63,6 +63,15 @@ supper_api = Blueprint("supper", __name__)
 def root_route():
     return 'What up losers'
 
+@supper_api.route('/reset')
+@cross_origin()
+def reset_database():
+    db.SupperGroup.delete_many({})
+    db.Order.delete_many({})
+    db.FoodOrder.delete_many({})
+    response = {"status": "success"}
+    return make_response(response, 200)
+
 
 ###########################################################
 #                   SUPPER ROUTES                         #
@@ -367,7 +376,10 @@ def supper_group(supperGroupId):
 
             foodIdList = list(db.Order.find(
                 {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
