@@ -63,6 +63,15 @@ supper_api = Blueprint("supper", __name__)
 def root_route():
     return 'What up losers'
 
+@supper_api.route('/reset')
+@cross_origin()
+def reset_database():
+    db.SupperGroup.delete_many({})
+    db.Order.delete_many({})
+    db.FoodOrder.delete_many({})
+    response = {"status": "success"}
+    return make_response(response, 200)
+
 
 ###########################################################
 #                   SUPPER ROUTES                         #
@@ -367,7 +376,10 @@ def supper_group(supperGroupId):
 
             foodIdList = list(db.Order.find(
                 {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
@@ -525,6 +537,17 @@ def add_food(orderId):
                     continue
         data['foodPrice'] = data['foodPrice'] * data['quantity']
 
+        order = db.Order.find_one({'_id': ObjectId(orderId)})
+        supperGroup = db.SupperGroup.find_one(
+                {'supperGroupId': order['supperGroupId']})
+
+        costLimit = supperGroup['costLimit']
+        currentPrice = supperGroup['currentFoodCost']
+
+        # Checks if addition of food price will exceed cost limit
+        if costLimit is not None and ((data['foodPrice'] + currentPrice) > costLimit):
+            raise Exception('Total price exceeded cost limit')
+
         # Add food into FoodOrder
         db.FoodOrder.insert_one(data)
 
@@ -601,6 +624,9 @@ def food_order(orderId, foodId):
                 order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                             {"$inc": {"totalCost": data['foodPrice'] -
                                                                       food_result['foodPrice']}})
+                db.FoodOrder.update_one({"_id": ObjectId(foodId)},
+                                        {"$set": {"foodPrice": data['foodPrice']}})
+
                 if order_result is None:
                     raise Exception('Failed to update order')
 
