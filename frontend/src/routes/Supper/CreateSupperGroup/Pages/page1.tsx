@@ -176,7 +176,7 @@ export const CreateOrderPageOne = () => {
             {errors.supperGroupName?.type === 'validate' && <ErrorText>Invalid Order Name!</ErrorText>}
             {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
             <FormHeader topMargin headerName="Restaurant" isCompulsory />
-            {/* <Controller
+            <Controller
               control={control}
               name="restaurant"
               rules={{ required: true }}
@@ -184,7 +184,7 @@ export const CreateOrderPageOne = () => {
               render={() => (
                 <RestaurantBubbles defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
               )}
-            /> */}
+            />
             {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required!</ErrorText>}
             <FormHeader topMargin headerName="Closing Time" isCompulsory />
             {/* <Controller
@@ -198,7 +198,7 @@ export const CreateOrderPageOne = () => {
           />
         )}
       /> */}
-            <Controller
+            {/* <Controller
               control={control}
               name="closingTime"
               rules={{ required: true }}
@@ -214,7 +214,8 @@ export const CreateOrderPageOne = () => {
                   })}
                 />
               )}
-            />
+              defaultValue={null}
+            /> */}
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />
             <PriceContainer>
