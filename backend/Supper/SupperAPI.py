@@ -895,7 +895,7 @@ def user_supper_group_history(userID):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/user/<userID>/supperGroupNotification/<int:supperGroupId>', methods=['GET', 'POST', 'DELETE'])
+@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def user_supper_group_notification(userID, supperGroupId):
     try:
@@ -927,7 +927,19 @@ def user_supper_group_notification(userID, supperGroupId):
                     data.append(item)
 
             response = {"status": "success", "data": data}
-        elif request.method == 'POST':
+
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/user/<userID>/supperGroupNotification/<int:supperGroupId>', methods=['POST', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_notification(userID, supperGroupId):
+    try:
+        if request.method == 'POST':
             data = request.get_json()
 
             db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
