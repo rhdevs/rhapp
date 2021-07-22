@@ -1084,15 +1084,19 @@ def owner_edit_order(supperGroupId):
                 foods = list(filter(lambda x:
                                     x['foodMenuId'] == food['foodMenuId'] and
                                     x['custom'] == food['custom'] and
+                                    x['cancelAction'] == food['cancelAction'] and
                                     x['comments'] == food['comments']
                                     if 'comments' in x else
                                     x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'], foods))
+                                    x['custom'] == food['custom'] and
+                                    x['cancelAction'] == food['cancelAction'], foods))
                 foods = list(map(lambda x: x['_id'], foods))
 
                 result = db.FoodOrder.update_many({"_id": {'$in': foods}},
                                                   {"$set": data})
             else:
+                if 'global' in data['updates']:
+                    data['updates'].pop('global')
                 result = db.FoodOrder.find_one_and_update({"_id": foodId},
                                                           {"$set": data})
             if result is None:
