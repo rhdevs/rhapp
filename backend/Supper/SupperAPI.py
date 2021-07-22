@@ -361,7 +361,7 @@ def supper_group(supperGroupId):
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
 
-            db.Order.update_many({'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'supperGroupId': supperGroupId},
                                  {'$set': {'notification': True}})
 
             # Add scheduler to close supper group order
