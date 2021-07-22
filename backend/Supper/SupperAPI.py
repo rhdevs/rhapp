@@ -897,7 +897,7 @@ def user_supper_group_history(userID):
 
 @supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def user_supper_group_notification(userID, supperGroupId):
+def get_user_supper_group_notification(userID):
     try:
         if request.method == "GET":
             pipeline = [
