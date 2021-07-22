@@ -181,7 +181,10 @@ export const FoodLine = (props: Props) => {
   if (hasNoQuantity === undefined) hasNoQuantity = quantity ? false : true
   const foodName = props.food?.foodName ?? props.foodName
   const hasFoodName = foodName ? true : false
-  const price = `$${(props.food?.foodPrice ?? props.foodPrice ?? 0).toFixed(2)}`
+  const price = `$${(hasNoQuantity
+    ? (props.food?.foodPrice ?? props.foodPrice ?? 0) / (quantity ?? 1)
+    : props.food?.foodPrice ?? props.foodPrice ?? 0
+  ).toFixed(2)}`
 
   const customisations = props.customisations ?? []
   props.food?.custom?.map((custom) =>
@@ -229,7 +232,6 @@ export const FoodLine = (props: Props) => {
       }
     } else {
       let priceValue = price
-      //console.log(updates, wasEdited)
       if (updates?.updateAction === UpdateAction.REMOVE) {
         priceValue = '$0.00'
       }
