@@ -198,7 +198,7 @@ export const CreateOrderPageOne = () => {
           />
         )}
       /> */}
-            {/* <Controller
+            <Controller
               control={control}
               name="closingTime"
               rules={{ required: true }}
@@ -214,8 +214,7 @@ export const CreateOrderPageOne = () => {
                   })}
                 />
               )}
-              defaultValue={null}
-            /> */}
+            />
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />
             <PriceContainer>
