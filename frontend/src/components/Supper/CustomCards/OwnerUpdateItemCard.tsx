@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
-import { updateOwnerEdits, updateOwnerEditsForAll, updateSupperGroup } from '../../../store/supper/action'
+import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
@@ -98,13 +98,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         change: data.changes,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        dispatch(updateOwnerEditsForAll(props.supperGroup?.supperGroupId, props.foodId, { ...update, global: true }))
-      } else {
-        dispatch(
-          updateOwnerEdits(props.supperGroup?.supperGroupId, props.orderId, props.foodId ?? props.food?.foodId, update),
-        )
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }
@@ -117,11 +111,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         reason: data.editReason,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        dispatch(updateOwnerEditsForAll(props.supperGroup?.supperGroupId, props.foodId, { ...update, global: true }))
-      } else {
-        dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.orderId, props.food?.foodId, update))
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }

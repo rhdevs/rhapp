@@ -856,38 +856,15 @@ export const leaveSupperGroup = (supperGroupId: string | number | undefined) => 
 
 export const updateOwnerEdits = (
   supperGroupId: number | undefined,
-  orderId: string | undefined,
   foodId: string | undefined,
   updates: Updates,
-) => (dispatch: Dispatch<ActionTypes>) => {
-  if (!(orderId || foodId)) return
-  dispatch(setIsLoading(true))
-  const requestBody = { updates: updates }
-
-  put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}/owner`)
-    .then((resp) => {
-      if (resp.status === 'failed') {
-        throw resp.err
-      }
-      dispatch(getSupperGroupById(supperGroupId))
-    })
-    .catch((err) => {
-      console.log(err)
-      error("Failed to update selected user's food, please try again.")
-    })
-  dispatch(setIsLoading(false))
-}
-
-export const updateOwnerEditsForAll = (
-  supperGroupId: number | undefined,
-  foodId: string | undefined,
-  updates: Updates,
+  forAll: boolean,
 ) => (dispatch: Dispatch<ActionTypes>) => {
   if (!(supperGroupId || foodId)) return
   dispatch(setIsLoading(true))
-  const requestBody = { foodId: foodId, updates: updates }
+  const requestBody = { foodId: foodId, updates: { ...updates, global: forAll } }
 
-  put(ENDPOINTS.UPDATE_OWNER_EDITS_FOR_ALL, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/owner`)
+  put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/owner`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -896,7 +873,7 @@ export const updateOwnerEditsForAll = (
     })
     .catch((err) => {
       console.log(err)
-      error("Failed to update selected collated's food, please try again.")
+      error('Failed to update selected food, please try again.')
     })
   dispatch(setIsLoading(false))
 }
