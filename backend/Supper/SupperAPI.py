@@ -361,6 +361,9 @@ def supper_group(supperGroupId):
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
 
+            db.Order.update_many({'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': True}})
+
             # Add scheduler to close supper group order
             closingTime = datetime.fromtimestamp(supperGroup['closingTime'])
             sched.add_job(closeSupperGroup, 'date',
