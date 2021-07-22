@@ -5,10 +5,11 @@ import styled from 'styled-components'
 import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
 import { onRefresh } from '../../../common/reloadPage'
 import { setExpandAll, setPaymentExpandedCount } from '../../../store/supper/action'
-import { SplitACMethod, SupperGroup } from '../../../store/supper/types'
+import { SupperGroup } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { UserPaymentStatus } from '../UserPaymentStatus'
+import { getIndivDeliveryFee } from '../../../common/calculateDeliveryFee'
 
 const HorizontalLine = styled.hr`
   width: 100%;
@@ -73,11 +74,13 @@ export const SGPaymentStatus = (props: Props) => {
           </TopSection>
 
           {groupWithoutOwnerOrder.map((order, index) => {
-            const additionalCost =
-              props.supperGroup?.splitAdditionalCost === SplitACMethod.EQUAL
-                ? props.supperGroup?.additionalCost ?? 0 / (props.supperGroup?.userIdList?.length ?? 0)
-                : ((props.supperGroup?.additionalCost ?? 0) * order.totalCost) /
-                  (props.supperGroup?.currentFoodCost ?? 0 + (props.supperGroup?.additionalCost ?? 0))
+            const deliveryFee = getIndivDeliveryFee(
+              props.supperGroup?.splitAdditionalCost,
+              props.supperGroup?.additionalCost,
+              props.supperGroup?.numOrders,
+              order.totalCost,
+              props.supperGroup?.currentFoodCost,
+            )
             return (
               <>
                 <UserPaymentStatus
@@ -90,7 +93,7 @@ export const SGPaymentStatus = (props: Props) => {
                   foodList={order.foodList}
                   hasReceived={order.hasReceived}
                   totalCost={order.totalCost}
-                  additionalCost={additionalCost}
+                  deliveryFee={deliveryFee}
                   paymentMethod={order.paymentMethod}
                   numOrders={groupWithoutOwnerOrder?.length ?? 0}
                   supperGroupId={props.supperGroup?.supperGroupId}

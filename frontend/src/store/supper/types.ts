@@ -22,6 +22,7 @@ export type Food = {
   custom?: Custom[]
   userIdList?: string[] // for owner to contact users with the same food in collated view
   updates?: Updates // for owner updates
+  foodIdList?: string[] //for collated food
 }
 
 export type Option = {
@@ -131,7 +132,6 @@ export type CollatedOrder = {
   supperGroupId: number | undefined
   ownerId: string
   collatedOrderList: Food[]
-  price?: number
 }
 
 export enum SplitACMethod {
@@ -148,7 +148,6 @@ export enum SupperGroupStatus {
   CANCELLED = 'Cancelled',
   AWAITING_PAYMENT = 'Awaiting Payment', // for owner
   ALL_PAID = 'All Paid', // for owner
-  COMPLETED = 'Completed', //TODO: Remove after design is confirmed
   PAID = 'Paid', // for user
   NOT_PAID = 'Not Paid', // for user
 }
@@ -187,6 +186,7 @@ export type Updates = {
   reason?: string
   change?: string
   updatedPrice?: number
+  global?: boolean //true when updating collated food
 }
 
 export enum UpdateAction {
@@ -254,6 +254,7 @@ export enum SUPPER_ACTIONS {
   GET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER',
   GET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER',
   GET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.GET_RESTAURANT_FILTER',
+  SET_SUPPER_ERROR_MESSAGE = 'SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE',
 }
 
 type SetIsLoading = {
@@ -492,6 +493,11 @@ type GetRestaurantFilter = {
   restaurantFilter: Restaurants[]
 }
 
+type SetSupperErrorMessage = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE
+  supperErrorMessage: string | undefined
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -540,3 +546,4 @@ export type ActionTypes =
   | GetClosingTimeFilter
   | GetAmountLeftFilter
   | GetRestaurantFilter
+  | SetSupperErrorMessage

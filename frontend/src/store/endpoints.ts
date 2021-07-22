@@ -105,8 +105,8 @@ export enum ENDPOINTS {
   GET_JOINED_SUPPER_GROUP_HISTORY = '/user',
   UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supperGroup',
   LEAVE_SUPPER_GROUP = '/supperGroup',
-  UPDATE_OWNER_EDITS = '/order',
   GET_OWNER_EDITS = '/order',
+  UPDATE_OWNER_EDITS = '/supperGroup',
 }
 
 export enum DOMAINS {

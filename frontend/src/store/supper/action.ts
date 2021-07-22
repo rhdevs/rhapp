@@ -250,7 +250,8 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: 
   dispatch(setIsLoading(false))
 }
 
-export const getCollatedOrder = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getCollatedOrder = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!supperGroupId) return
   dispatch(setIsLoading(true))
   get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
     .then((resp) => {
@@ -628,17 +629,25 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
+/**
+ *
+ * @param unixDate epoch/unix date time number
+ * @returns fomatted time in form of HH:MM AM/PM (eg, 01:00AM or 12:10PM)
+ */
 export const unixTo12HourTime = (unixDate?: number) => {
   if (!unixDate) {
     return '-'
   }
   const date = new Date(unixDate * 1000)
-  const hours = '0' + date.getHours()
+  let hours = '0' + date.getHours()
   const minutes = '0' + date.getMinutes()
   let letters = 'PM'
 
   if (Number(hours) < 12) {
     letters = 'AM'
+  }
+  if (Number(hours) > 12) {
+    hours = '0' + (date.getHours() - 12)
   }
 
   const formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + letters
@@ -831,7 +840,7 @@ export const setFoodModalInfo = (foodMenuModalId: string, modalMenuFoodName: str
 export const leaveSupperGroup = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}}`)
+  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -845,23 +854,26 @@ export const leaveSupperGroup = (supperGroupId: string | number | undefined) => 
   dispatch(setIsLoading(false))
 }
 
-export const updateOwnerEdits = (orderId: string | undefined, foodId: string | undefined, updates: Updates) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (!(orderId || foodId)) return
+export const updateOwnerEdits = (
+  supperGroupId: number | undefined,
+  foodId: string | undefined,
+  updates: Updates,
+  forAll: boolean,
+) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!(supperGroupId || foodId)) return
   dispatch(setIsLoading(true))
-  const requestBody = { updates: updates }
+  const requestBody = { foodId: foodId, updates: { ...updates, global: forAll } }
 
-  put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food/${foodId}/owner`)
+  put(ENDPOINTS.UPDATE_OWNER_EDITS, DOMAINS.SUPPER, requestBody, {}, `/${supperGroupId}/owner`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getAllSupperGroups())
+      dispatch(getCollatedOrder(supperGroupId))
     })
     .catch((err) => {
       console.log(err)
-      error("Failed to update selected user's food, please try again.")
+      error('Failed to update selected food, please try again.')
     })
   dispatch(setIsLoading(false))
 }
@@ -901,5 +913,12 @@ export const getRestaurantFilter = (chosenFilter: Restaurants[]) => (dispatch: D
   dispatch({
     type: SUPPER_ACTIONS.GET_RESTAURANT_FILTER,
     restaurantFilter: chosenFilter,
+  })
+}
+
+const setSupperErrorMessage = (supperErrorMessage: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE,
+    supperErrorMessage: supperErrorMessage,
   })
 }

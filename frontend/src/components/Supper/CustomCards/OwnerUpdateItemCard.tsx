@@ -98,11 +98,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         change: data.changes,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        //dispatch(updateOwnerEditsAllFood()) - check w backend
-      } else {
-        dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }
@@ -115,11 +111,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         reason: data.editReason,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        //dispatch(updateOwnerEditsAllFood()) - check w backend
-      } else {
-        dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }

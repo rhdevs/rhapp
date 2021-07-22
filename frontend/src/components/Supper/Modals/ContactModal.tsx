@@ -95,25 +95,24 @@ type Prop = {
 }
 
 export const ContactModal = (props: Prop) => {
-  const contacts = props.food?.userIdList
   const [userDetails, setUserDetails] = useState<UserDetails[]>([])
 
   useEffect(() => {
-    contacts?.map((userId) => {
-      props.orderList
-        ?.filter((order) => {
-          return order.user.userID === userId
-        })
-        .forEach((filteredOrder) => {
-          const indivUserDetail = {
-            userId: userId,
-            name: filteredOrder.user.displayName,
-            telegramHandle: filteredOrder.user.telegramHandle,
-          }
-          setUserDetails(userDetails.concat(indivUserDetail))
-        })
+    const contacts = props.food?.userIdList
+    console.log('this is the list of userid with that food', contacts)
+    contacts?.forEach((userId) => {
+      const userInfo = props.orderList?.find((order) => order.user.userID === userId)?.user
+      if (userInfo) {
+        const indivUserDetail: UserDetails = {
+          userId: userInfo.userID,
+          name: userInfo.displayName,
+          telegramHandle: userInfo.telegramHandle,
+        }
+        setUserDetails(userDetails.concat(indivUserDetail))
+      }
     })
-  }, [])
+    console.log('this is the userDetails we extracted', userDetails)
+  }, [props.orderList, props.food])
 
   const onCloseClick = () => {
     props.contactModalSetter(false)

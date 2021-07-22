@@ -63,6 +63,7 @@ const initialState = {
   closingTimeFilter: Filter.DEFAULT,
   amountLeftFilter: Filter.DEFAULT,
   restaurantFilter: [],
+  supperErrorMessage: undefined,
 }
 
 type State = {
@@ -110,6 +111,7 @@ type State = {
   closingTimeFilter: Filter
   amountLeftFilter: Filter
   restaurantFilter: Restaurants[]
+  supperErrorMessage: string | undefined
 }
 
 export const supper: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -261,6 +263,9 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     }
     case SUPPER_ACTIONS.GET_RESTAURANT_FILTER: {
       return { ...state, restaurantFilter: action.restaurantFilter }
+    }
+    case SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE: {
+      return { ...state, supperErrorMessage: action.supperErrorMessage }
     }
     default:
       return state
