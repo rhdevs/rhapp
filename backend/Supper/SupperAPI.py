@@ -525,6 +525,17 @@ def add_food(orderId):
                     continue
         data['foodPrice'] = data['foodPrice'] * data['quantity']
 
+        order = db.Order.find_one({'_id': ObjectId(orderId)})
+        supperGroup = db.SupperGroup.find_one(
+                {'supperGroupId': order['supperGroupId']})
+
+        costLimit = supperGroup['costLimit']
+        currentPrice = supperGroup['currentFoodCost']
+
+        # Checks if addition of food price will exceed cost limit
+        if costLimit is not None and ((data['foodPrice'] + currentPrice) > costLimit):
+            raise Exception('Total price exceeded cost limit')
+
         # Add food into FoodOrder
         db.FoodOrder.insert_one(data)
 
