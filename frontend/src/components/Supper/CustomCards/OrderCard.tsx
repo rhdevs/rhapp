@@ -17,7 +17,7 @@ import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../Modals/ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 
 const CardHeaderContainer = styled.div`
@@ -222,7 +222,7 @@ export const OrderCard = (props: Props) => {
     total = subTotal + deliveryFee
   }
 
-  const PriceSection = ({ update, order }: { update?: boolean; order?: Order }) => {
+  const PriceSection = ({ update, order }: { update?: boolean; order?: Order | null }) => {
     let priceSectionSubTotal = subTotal
     let priceSectionDeliveryFee = supperGroupDeliveryFee
     let priceSectionTotal = total

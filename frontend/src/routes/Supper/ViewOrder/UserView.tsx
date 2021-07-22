@@ -16,6 +16,7 @@ import { Order, SupperGroup } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { OrderContainer } from './OwnerView'
+import { onRefresh } from '../../../common/reloadPage'
 
 const ButtonContainer = styled.div`
   display: flex;
