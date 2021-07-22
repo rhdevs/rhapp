@@ -1043,11 +1043,14 @@ def collated_orders(supperGroupId):
         data.pop('orderList')
 
         for food in data['foods']:
-            food.pop('_id')
+            hash_dict = {'custom': food['custom'],
+                         'cancelAction': food['cancelAction']}
             if 'comments' in food:
-                food['customHash'] = make_hash({'custom': food['custom'], 'comments': food['comments']})
-            else:
-                food['customHash'] = make_hash(food['custom'])
+                hash_dict['comments'] = food['comments']
+            if 'updates' in food:
+                hash_dict['updates'] = food['updates']
+
+            food['customHash'] = make_hash(hash_dict)
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
@@ -1055,17 +1058,18 @@ def collated_orders(supperGroupId):
         for food in data['foods']:
             if not data['collatedOrderList']:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
             elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and \
                     food['customHash'] == data['collatedOrderList'][-1]['customHash']:
                 data['collatedOrderList'][-1]['quantity'] += food['quantity']
                 data['collatedOrderList'][-1]['foodPrice'] += food['foodPrice']
                 data['collatedOrderList'][-1]['userIdList'].append(food['userID'])
+                data['collatedOrderList'][-1]['foodIdList'].append(str(food['_id']))
             else:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
 
         data.pop('foods')
         for food in data['collatedOrderList']:
