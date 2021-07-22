@@ -895,9 +895,9 @@ def user_supper_group_history(userID):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET', 'POST', 'DELETE'])
+@supper_api.route('/user/<userID>/supperGroupNotification/<int:supperGroupId>', methods=['GET', 'POST', 'DELETE'])
 @cross_origin(supports_credentials=True)
-def user_supper_group_notification(userID):
+def user_supper_group_notification(userID, supperGroupId):
     try:
         if request.method == "GET":
             pipeline = [
@@ -930,7 +930,7 @@ def user_supper_group_notification(userID):
         elif request.method == 'POST':
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
                                  {'$set': {'notification': True}})
 
             response = {"status": "success", "data": data}
@@ -938,7 +938,7 @@ def user_supper_group_notification(userID):
         elif request.method == 'DELETE':
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
                                  {'$set': {'notification': False}})
 
             response = {"status": "success", "data": data}
