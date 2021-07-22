@@ -1047,9 +1047,11 @@ def owner_edit_order(supperGroupId):
                         or data['updates']['change'] is None \
                         or data['updates']['updatedPrice'] is None:
                     raise Exception('Update information incomplete')
+                data['foodPrice'] = data['updates']['updatedPrice']
             elif data['updates']['updateAction'] == 'Remove':
                 if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                     raise Exception('Update information incomplete')
+                data['foodPrice'] = 0
 
             if 'global' in data['updates'] and data['updates']['global']:
                 data['updates'].pop('global')
