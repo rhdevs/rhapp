@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+
 import styled from 'styled-components'
 import LoadingSpin from '../../../components/LoadingSpin'
-
+import PullToRefresh from 'pull-to-refresh-react'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
@@ -125,7 +126,7 @@ const UserView = (props: Props) => {
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <>
+        <PullToRefresh onRefresh={onRefresh}>
           <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
           <OrderContainer>
             <OrderCard
@@ -137,7 +138,7 @@ const UserView = (props: Props) => {
             />
           </OrderContainer>
           <ButtonContainer>{showBottomSection()}</ButtonContainer>
-        </>
+        </PullToRefresh>
       )}
     </>
   )

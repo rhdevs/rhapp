@@ -285,15 +285,20 @@ export const OrderCard = (props: Props) => {
       <>
         <EmptyCart />
         <EmptyTextContainer>
-          Cart is empty.{' '}
-          <UnderlinedButton
-            onClick={() => {
-              history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
-            }}
-            text="Add item"
-            fontSize="12px"
-            color="red"
-          />
+          Cart is empty.
+          {supperGroupIsOpenOrPending && (
+            <>
+              {' '}
+              <UnderlinedButton
+                onClick={() => {
+                  history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
+                }}
+                text="Add item"
+                fontSize="12px"
+                color="red"
+              />
+            </>
+          )}
         </EmptyTextContainer>
       </>
     )
@@ -355,7 +360,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
-          <PriceSection />
+          <PriceSection order={props.order} />
         </>
       )}
     </>

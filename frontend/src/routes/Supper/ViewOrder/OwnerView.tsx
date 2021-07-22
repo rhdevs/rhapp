@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
+import PullToRefresh from 'pull-to-refresh-react'
 import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
@@ -141,7 +142,7 @@ const OwnerView = (props: Props) => {
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <>
+        <PullToRefresh onRefresh={onRefresh}>
           <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
           <OrderContainer>
             <OrderCard
@@ -160,7 +161,7 @@ const OwnerView = (props: Props) => {
               />
             </SupperButtonContainer>
           )}
-        </>
+        </PullToRefresh>
       )}
     </>
   )
