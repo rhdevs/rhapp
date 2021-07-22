@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
-
+import PullToRefresh from 'pull-to-refresh-react'
 import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -18,6 +19,7 @@ import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../sto
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { onRefresh } from '../../../common/reloadPage'
 
 const Background = styled.div`
   min-height: 100vh;
@@ -187,7 +189,7 @@ const ViewCart = () => {
       {isLoading || !(supperGroup && collatedOrder) ? (
         <LoadingSpin />
       ) : (
-        <>
+        <PullToRefresh onRefresh={onRefresh}>
           <SupperGroupCard margin="0 23px" supperGroup={supperGroup} isHome={false} />
           <OrderContainer>
             <OrderCard
@@ -202,7 +204,7 @@ const ViewCart = () => {
             />
           </OrderContainer>
           {showButtons()}
-        </>
+        </PullToRefresh>
       )}
       <BottomNavBar />
     </Background>
