@@ -209,7 +209,6 @@ const EditSupperGroup = () => {
               use12Hours
               format="h:mm a"
               onChange={onChange}
-              ref={register({ required: true })}
               style={errors.closingTime ? errorStyling : {}}
               defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
             />
