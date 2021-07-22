@@ -361,6 +361,9 @@ def supper_group(supperGroupId):
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
 
+            db.Order.update_many({'supperGroupId': data['supperGroupId']},
+                                 {'$set': {'notification': True}})
+
             # Add scheduler to close supper group order
             closingTime = datetime.fromtimestamp(supperGroup['closingTime'])
             sched.add_job(closeSupperGroup, 'date',
@@ -661,89 +664,6 @@ def food_order(orderId, foodId):
 
             response = {"status": "success",
                         "message": "Successfully deleted food!",
-                        "data": data}
-
-        return make_response(response, 200)
-    except Exception as e:
-        print(e)
-        return make_response({"status": "failed", "err": str(e)}, 400)
-
-
-@supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
-@cross_origin(supports_credentials=True)
-def owner_edit_order(orderId, foodId):
-    try:
-        if request.method == 'GET':
-            data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
-
-            data['orderId'] = str(data.pop('_id'))
-            data['restaurantId'] = str(data['restaurantId'])
-            data['foodMenuId'] = str(data['foodMenuId'])
-
-            response = {"status": "success",
-                        "data": data}
-
-        elif request.method == 'PUT':
-            data = request.get_json()
-
-            if data['updates']['updateAction'] == 'Update':
-                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
-                        or not data['updates']['reason'] \
-                        or not data['updates']['change'] \
-                        or not data['updates']['updatedPrice']:
-                    raise Exception('Update information incomplete')
-            elif data['updates']['updateAction'] == 'Remove':
-                if 'reason' not in data['updates'] or not data['updates']['reason']:
-                    raise Exception('Update information incomplete')
-
-            if 'global' in data['updates'] and data['updates']['global']:
-                data['updates'].pop('global')
-                food = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
-                order = db.Order.find_one({"_id": ObjectId(orderId)})
-                pipeline = [
-                    {'$match': {'supperGroupId': order['supperGroupId']}},
-                    {
-                        '$lookup': {
-                            'from': 'Order',
-                            'localField': 'supperGroupId',
-                            'foreignField': 'supperGroupId',
-                            'as': 'orderList'
-                        }
-                    },
-                    {
-                        '$lookup': {
-                            'from': 'FoodOrder',
-                            'localField': 'orderList.foodIds',
-                            'foreignField': '_id',
-                            'as': 'foods'
-                        }
-                    },
-                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
-                                  'foods.custom': 1, 'foods.comments': 1}},
-                ]
-
-                foods = db.Order.aggregate(pipeline)
-                for item in foods:
-                    foods = item['foods']
-                foods = list(filter(lambda x: x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'] and
-                                    x['comments'] == food['comments']
-                                    if 'comments' in x else
-                                    x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'], foods))
-                foods = list(map(lambda x: x['_id'], foods))
-                print(foods)
-
-                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
-                                                  {"$set": data})
-            else:
-                result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
-                                                          {"$set": data})
-            if result is None:
-                raise Exception('Food not found')
-
-            response = {"status": "success",
-                        "message": "Successfully updated food!",
                         "data": data}
 
         return make_response(response, 200)
@@ -1072,11 +992,14 @@ def collated_orders(supperGroupId):
         data.pop('orderList')
 
         for food in data['foods']:
-            food.pop('_id')
+            hash_dict = {'custom': food['custom'],
+                         'cancelAction': food['cancelAction']}
             if 'comments' in food:
-                food['customHash'] = make_hash({'custom': food['custom'], 'comments': food['comments']})
-            else:
-                food['customHash'] = make_hash(food['custom'])
+                hash_dict['comments'] = food['comments']
+            if 'updates' in food:
+                hash_dict['updates'] = food['updates']
+
+            food['customHash'] = make_hash(hash_dict)
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
@@ -1084,17 +1007,18 @@ def collated_orders(supperGroupId):
         for food in data['foods']:
             if not data['collatedOrderList']:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
             elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and \
                     food['customHash'] == data['collatedOrderList'][-1]['customHash']:
                 data['collatedOrderList'][-1]['quantity'] += food['quantity']
                 data['collatedOrderList'][-1]['foodPrice'] += food['foodPrice']
                 data['collatedOrderList'][-1]['userIdList'].append(food['userID'])
+                data['collatedOrderList'][-1]['foodIdList'].append(str(food['_id']))
             else:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
 
         data.pop('foods')
         for food in data['collatedOrderList']:
@@ -1106,6 +1030,79 @@ def collated_orders(supperGroupId):
             'supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/supperGroup/<int:supperGroupId>/owner', methods=['PUT'])
+@cross_origin(supports_credentials=True)
+def owner_edit_order(supperGroupId):
+    try:
+        if request.method == 'PUT':
+            data = request.get_json()
+            foodId = ObjectId(data.pop('foodId'))
+
+            if data['updates']['updateAction'] == 'Update':
+                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
+                        or data['updates']['reason'] is None \
+                        or data['updates']['change'] is None \
+                        or data['updates']['updatedPrice'] is None:
+                    raise Exception('Update information incomplete')
+            elif data['updates']['updateAction'] == 'Remove':
+                if 'reason' not in data['updates'] or data['updates']['reason'] is None:
+                    raise Exception('Update information incomplete')
+
+            if 'global' in data['updates'] and data['updates']['global']:
+                data['updates'].pop('global')
+                food = db.FoodOrder.find_one({"_id": foodId})
+                pipeline = [
+                    {'$match': {'supperGroupId': supperGroupId}},
+                    {
+                        '$lookup': {
+                            'from': 'Order',
+                            'localField': 'supperGroupId',
+                            'foreignField': 'supperGroupId',
+                            'as': 'orderList'
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'FoodOrder',
+                            'localField': 'orderList.foodIds',
+                            'foreignField': '_id',
+                            'as': 'foods'
+                        }
+                    },
+                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
+                                  'foods.custom': 1, 'foods.comments': 1}},
+                ]
+
+                foods = db.Order.aggregate(pipeline)
+                for item in foods:
+                    foods = item['foods']
+                foods = list(filter(lambda x:
+                                    x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'] and
+                                    x['comments'] == food['comments']
+                                    if 'comments' in x else
+                                    x['foodMenuId'] == food['foodMenuId'] and
+                                    x['custom'] == food['custom'], foods))
+                foods = list(map(lambda x: x['_id'], foods))
+
+                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
+                                                  {"$set": data})
+            else:
+                result = db.FoodOrder.find_one_and_update({"_id": foodId},
+                                                          {"$set": data})
+            if result is None:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully updated food!",
+                        "data": data}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
