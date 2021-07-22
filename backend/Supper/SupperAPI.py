@@ -601,6 +601,9 @@ def food_order(orderId, foodId):
                 order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                             {"$inc": {"totalCost": data['foodPrice'] -
                                                                       food_result['foodPrice']}})
+                db.FoodOrder.update_one({"_id": ObjectId(foodId)},
+                                        {"$set": {"foodPrice": data['foodPrice']}})
+
                 if order_result is None:
                     raise Exception('Failed to update order')
 
