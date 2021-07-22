@@ -633,12 +633,15 @@ export const unixTo12HourTime = (unixDate?: number) => {
     return '-'
   }
   const date = new Date(unixDate * 1000)
-  const hours = '0' + date.getHours()
+  let hours = '0' + date.getHours()
   const minutes = '0' + date.getMinutes()
   let letters = 'PM'
 
   if (Number(hours) < 12) {
     letters = 'AM'
+  }
+  if (Number(hours) > 12) {
+    hours = '0' + (date.getHours() - 12)
   }
 
   const formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + letters
