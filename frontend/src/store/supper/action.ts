@@ -831,7 +831,7 @@ export const setFoodModalInfo = (foodMenuModalId: string, modalMenuFoodName: str
 export const leaveSupperGroup = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}}`)
+  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err

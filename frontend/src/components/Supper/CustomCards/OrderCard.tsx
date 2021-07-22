@@ -19,7 +19,6 @@ import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { createOrder } from '../../../store/supper/action'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -181,7 +180,6 @@ type Props = {
 
 export const OrderCard = (props: Props) => {
   const history = useHistory()
-  const dispatch = useDispatch()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [contactModalFood, setContactModalFood] = useState<Food>()
@@ -310,7 +308,7 @@ export const OrderCard = (props: Props) => {
     )
   }
 
-  const onEditClick = (foodId: string | undefined, collate?: boolean) => {
+  const onEditClick = (foodId: string | undefined, collate?: boolean, userOrderId?: string) => {
     if (!foodId) {
       const [error] = useSnackbar('error')
       error('meowmeow is in a bad mood.. try again later!')
@@ -319,7 +317,10 @@ export const OrderCard = (props: Props) => {
     if (canEditUserFood) {
       if (collate) {
         history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID}`) //TODO: Update - waiting for backend
-      } else history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
+      } else {
+        console.log("this is suppose to show user's orderid", userOrderId)
+        history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${userOrderId}/food/${foodId}`)
+      }
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
@@ -488,7 +489,7 @@ export const OrderCard = (props: Props) => {
                       key={foodIndex}
                       margin="5px 0"
                       isEditable={isOrderEditable}
-                      onEditClick={() => onEditClick(food.foodId)}
+                      onEditClick={() => onEditClick(food.foodId, false, orderId)}
                       wasEdited={wasEdited}
                       isCancelActionClickable={isOwner && !isOwnerFood}
                       cancelActionOnClick={cancelActionOnClick}

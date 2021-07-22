@@ -177,8 +177,8 @@ export const CreateOrderPageOne = () => {
             {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
             <FormHeader topMargin headerName="Restaurant" isCompulsory />
             <Controller
-              name="restaurant"
               control={control}
+              name="restaurant"
               rules={{ required: true }}
               defaultValue={null}
               render={() => (
@@ -187,9 +187,20 @@ export const CreateOrderPageOne = () => {
             />
             {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required!</ErrorText>}
             <FormHeader topMargin headerName="Closing Time" isCompulsory />
+            {/* <Controller
+        control={control}
+        name="ReactDatepicker"
+        render={({ onChange, onBlur, value }) => (
+          <ReactDatePicker
+            onChange={onChange}
+            onBlur={onBlur}
+            selected={value}
+          />
+        )}
+      /> */}
             <Controller
-              name="closingTime"
               control={control}
+              name="closingTime"
               rules={{ required: true }}
               render={() => (
                 <StyledTimePicker
@@ -203,6 +214,7 @@ export const CreateOrderPageOne = () => {
                   })}
                 />
               )}
+              defaultValue={null}
             />
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />
