@@ -145,7 +145,7 @@ export const SupperGroupCard = (props: Props) => {
   }, [props.homeSupperGroup, props.supperGroup])
   const { isLoading } = useSelector((state: RootState) => state.supper)
 
-  const [hasError, setHasError] = useState<boolean>(false)
+  // const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
