@@ -105,7 +105,7 @@ type Props = {
   telegramHandle: string
   hasReceived: boolean
   totalCost: number
-  additionalCost: number
+  deliveryFee: number
   paymentMethod?: PaymentMethod | undefined
   numOrders?: number
   supperGroupId?: number
@@ -178,7 +178,7 @@ export const UserPaymentStatus = (props: Props) => {
         <StatusSymbolContainer>
           <StatusSymbol minHeight="" padding="0 5px" text={props.hasPaid ? 'Paid' : 'Unpaid'} />
         </StatusSymbolContainer>
-        <TopMoneyText>${props.totalCost.toFixed(2)}</TopMoneyText>
+        <TopMoneyText>${(props.totalCost + props.deliveryFee).toFixed(2)}</TopMoneyText>
         {arrowIcon}
       </TopContainer>
       <>
@@ -200,7 +200,7 @@ export const UserPaymentStatus = (props: Props) => {
                   <FoodLine margin="10px 0" supperGroupId={props.supperGroupId} food={food} />
                   {index + 1 === props.foodList.length && (
                     <DeliveryFeeText>
-                      Delivery Fee <MoneyText>${props.additionalCost.toFixed(2) ?? '0.00'}</MoneyText>
+                      Delivery Fee <MoneyText>${props.deliveryFee.toFixed(2) ?? '0.00'}</MoneyText>
                     </DeliveryFeeText>
                   )}
                 </>

@@ -12,18 +12,18 @@ import { SplitACMethod } from '../store/supper/types'
  * @returns calculated delivery fee for selected individual
  */
 export const getIndivDeliveryFee = (
-  splitMethod: SplitACMethod,
-  deliveryFee: number,
+  splitMethod: SplitACMethod | undefined,
+  deliveryFee: number | undefined,
   numberOfUsers?: number,
   userOrderTotalPrice?: number,
   currentGroupTotalPrice?: number,
 ) => {
   let indivDeliveryFee = 0
   if (splitMethod === SplitACMethod.EQUAL) {
-    indivDeliveryFee = deliveryFee / (numberOfUsers ?? 1)
+    indivDeliveryFee = (deliveryFee ?? 0) / (numberOfUsers ?? 1)
   } else if (splitMethod === SplitACMethod.PROPORTIONAL) {
     const indivPercentage = (userOrderTotalPrice ?? 0) / (currentGroupTotalPrice ?? 1)
-    indivDeliveryFee = indivPercentage * deliveryFee
+    indivDeliveryFee = indivPercentage * (deliveryFee ?? 0)
   }
   return indivDeliveryFee
 }
