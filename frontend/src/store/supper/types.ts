@@ -22,7 +22,6 @@ export type Food = {
   custom?: Custom[]
   userIdList?: string[] // for owner to contact users with the same food in collated view
   updates?: Updates // for owner updates
-
   foodIdList?: string[] //for collated food
 }
 
