@@ -938,3 +938,10 @@ export const getRestaurantFilter = (chosenFilter: Restaurants[]) => (dispatch: D
     restaurantFilter: chosenFilter,
   })
 }
+
+const setSupperErrorMessage = (supperErrorMessage: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE,
+    supperErrorMessage: supperErrorMessage,
+  })
+}

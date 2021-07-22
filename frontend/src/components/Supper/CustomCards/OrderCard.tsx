@@ -382,23 +382,21 @@ export const OrderCard = (props: Props) => {
             )
             wasEdited = food.updates as boolean
             return (
-              <>
-                <FoodLine
-                  key={index}
-                  margin="5px 0"
-                  isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
-                  onEditClick={() => onEditClick(food.foodIdList ? food.foodIdList[0] : undefined, true)}
-                  wasEdited={wasEdited}
-                  isCancelActionClickable={isOwner}
-                  cancelActionOnClick={() => {
-                    setIsCancelActionModalOpen(true)
-                    setContactModalFood(food)
-                  }}
-                  food={food}
-                  supperGroupId={supperGroupId}
-                  orderId={orderId}
-                />
-              </>
+              <FoodLine
+                key={index}
+                margin="5px 0"
+                isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
+                onEditClick={() => onEditClick(food.foodIdList ? food.foodIdList[0] : undefined, true)}
+                wasEdited={wasEdited}
+                isCancelActionClickable={isOwner}
+                cancelActionOnClick={() => {
+                  setIsCancelActionModalOpen(true)
+                  setContactModalFood(food)
+                }}
+                food={food}
+                supperGroupId={supperGroupId}
+                orderId={orderId}
+              />
             )
           })}
           <HorizontalLine margin="1em 0 0.5em 0" />

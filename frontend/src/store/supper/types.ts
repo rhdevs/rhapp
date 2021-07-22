@@ -255,6 +255,7 @@ export enum SUPPER_ACTIONS {
   GET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER',
   GET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER',
   GET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.GET_RESTAURANT_FILTER',
+  SET_SUPPER_ERROR_MESSAGE = 'SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE',
 }
 
 type SetIsLoading = {
@@ -493,6 +494,11 @@ type GetRestaurantFilter = {
   restaurantFilter: Restaurants[]
 }
 
+type SetSupperErrorMessage = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE
+  supperErrorMessage: string | undefined
+}
+
 export type ActionTypes =
   | SetIsLoading
   | GetAllRestaurants
@@ -541,3 +547,4 @@ export type ActionTypes =
   | GetClosingTimeFilter
   | GetAmountLeftFilter
   | GetRestaurantFilter
+  | SetSupperErrorMessage
