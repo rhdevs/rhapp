@@ -60,7 +60,7 @@ export default function PlaceOrder() {
   const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
-    dispatch(getPlaceOrderPageDetails(params.supperGroupId, params.restaurantId, order))
+    dispatch(getPlaceOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
 
   const onChange = (input: string) => {

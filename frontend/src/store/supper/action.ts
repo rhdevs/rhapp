@@ -2,7 +2,6 @@ import {
   ActionTypes,
   Filter,
   Food,
-  Order,
   PaymentMethod,
   Restaurants,
   SupperGroup,
@@ -924,16 +923,21 @@ const setSupperErrorMessage = (supperErrorMessage: string) => (dispatch: Dispatc
   })
 }
 
-export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string, order: Order | null) => (
+export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string) => (
   dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
 ) => {
   dispatch(setIsLoading(true))
   dispatch(getSupperGroupById(supperGroupId)).then(() => {
     dispatch(getRestaurant(restaurantId)).then(() => {
-      dispatch(getUserOrder(supperGroupId, localStorage.userID)).then(() => dispatch(setIsLoading(false)))
+      dispatch(getUserOrder(supperGroupId, localStorage.userID)).then(() => {
+        const { order } = getState().supper
+
+        if (order) {
+          dispatch(setOrderId(order.orderId))
+        }
+        dispatch(setIsLoading(false))
+      })
     })
   })
-  if (order) {
-    dispatch(setOrderId(order.orderId))
-  }
 }
