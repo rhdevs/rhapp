@@ -2,8 +2,9 @@ import React, { Suspense } from 'react'
 import styled from 'styled-components'
 // import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
-import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import { PrivateRoute, PublicRoute, AuthenticateRoute, getIsLoggedIn } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
+import { setIsLoggedIn } from '../store/route/action'
 
 export enum PATHS {
   // MAIN LANDING PAGE
@@ -148,6 +149,11 @@ const UpdateAllItems = React.lazy(
 )
 
 export default class Routes extends React.Component {
+  componentDidMount() {
+    getIsLoggedIn().then((isLoggedIn) => {
+      setIsLoggedIn(isLoggedIn)
+    })
+  }
   render() {
     return (
       <Root>
