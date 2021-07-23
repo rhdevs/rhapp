@@ -1216,13 +1216,18 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success", "data": data}
         elif request.method == 'DELETE':
-            order_info = list(db.Order.find(
-                {'userID': userID}, {'foodIds': 1, '_id': 1}))
-            if order_info:
-                order_info = order_info[0]
-            foods = order_info['foodIds']
+            foodIdList = list(db.Order.find(
+                {'supperGroupId': supperGroupId, 'userID': userID}, {'foodIds': 1, '_id': 1}))
+            print(foodIdList)
+            orderId = None
+            foods = []
+            for foodIds in foodIdList:
+                orderId = foodIds['_id']
+                print(orderId)
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
-            result = db.Order.delete_one({"_id": order_info['_id']})
+            result = db.Order.delete_one({"_id": orderId})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
 
@@ -1230,7 +1235,6 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
-
         return make_response(response, 200)
     except Exception as e:
         print(e)
