@@ -505,10 +505,9 @@ def get_order(orderId):
                     changes = {'$set': {'status': 'Pending'}}
                     db.SupperGroup.update_one(query, changes)
 
-            # Update foodIds - Empty cart
-            if 'foodIds' in data:
-                if not data['foodIds']: # FoodIds list is empty
-                    print(order['foodIds'])
+            # Update foodList - Empty cart
+            if 'foodList' in data:
+                if not data['foodList']: # FoodList is empty
                     # Remove all foodOrders in Order
                     db.FoodOrder.delete_many({'_id': {'$in': order['foodIds']}})
 
