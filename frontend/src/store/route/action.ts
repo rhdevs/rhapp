@@ -8,3 +8,17 @@ export const redirect = (redirectTo: PATHS) => (dispatch: Dispatch<ActionTypes>)
     redirectTo,
   })
 }
+
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: ROUTE_ACTIONS.SET_IS_LOADING,
+    isLoading: desiredState,
+  })
+}
+
+export const setIsLoggedIn = (isLoggedIn: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: ROUTE_ACTIONS.SET_IS_LOGGED_IN,
+    isLoggedIn: isLoggedIn,
+  })
+}
