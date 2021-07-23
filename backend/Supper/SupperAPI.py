@@ -73,6 +73,12 @@ def reset_database():
     return make_response(response, 200)
 
 
+@supper_api.route('/close')
+@cross_origin()
+def close_supper():
+    closeSupperGroup(8)
+    return 'SupperGroup Close'
+
 ###########################################################
 #                   SUPPER ROUTES                         #
 ###########################################################
@@ -88,7 +94,12 @@ def closeSupperGroup(supperGroupId):
     data['status'] = 'Closed'
     db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                               {"$set": data})
-    # print("Supper Group Closed")
+    # Delete all Orders with no foodIds
+    emptyOrders = list(db.Order.find({'supperGroupId': supperGroupId, 'foodIds': []}, {'foodIds': 0}))
+    orderList = []
+    for order in emptyOrders:
+        orderList.append(order['_id'])
+    db.Order.delete_many({'_id': {'$in': orderList}})
 
 
 def deleteSupperGroup(supperGroupId):
@@ -503,8 +514,11 @@ def get_order(orderId):
 
         elif request.method == 'DELETE':
             foodIdList = list(db.Order.find(
-                {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
