@@ -38,10 +38,7 @@ export const QuantityTracker = (props: Props) => {
   const MAX = props.max !== undefined ? props.max : Number.MAX_SAFE_INTEGER
 
   const subFromCount = () => {
-    const diffVal = count - (props.min ?? 0)
-    if (diffVal < 5) {
-      dispatch(setCount(count - diffVal))
-    } else if (count !== props.min ?? 0) {
+    if (count !== props.min ?? 0) {
       dispatch(setCount(count - 1))
     }
   }
