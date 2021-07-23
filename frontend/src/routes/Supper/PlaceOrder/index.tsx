@@ -12,14 +12,7 @@ import { ViewMenuFoodModal } from '../../../components/Supper/ViewMenuFoodModal'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
 import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
-import {
-  getRestaurant,
-  getSupperGroupById,
-  getUserOrder,
-  setOrderId,
-  setSearchValue,
-  setIsFoodMenuModalOpen,
-} from '../../../store/supper/action'
+import { setSearchValue, setIsFoodMenuModalOpen, getPlaceOrderPageDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 
@@ -67,12 +60,7 @@ export default function PlaceOrder() {
   const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getRestaurant(params.restaurantId))
-    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
-    if (order) {
-      dispatch(setOrderId(order.orderId))
-    }
+    dispatch(getPlaceOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
 
   const onChange = (input: string) => {
