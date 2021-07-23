@@ -82,7 +82,6 @@ export const NotificationBar = () => {
   const onCloseClick = () => {
     //Close notification
     setIsVisible(false)
-    console.log('jdhsfkjds', supperNotifications[0].supperGroupId)
     dispatch(closeSupperNotification(supperNotifications[0].supperGroupId))
   }
 
