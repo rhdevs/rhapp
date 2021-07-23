@@ -150,7 +150,7 @@ const EditPersonalInfoContainer = () => {
             )}
           </label>
 
-          <input id="file-input" type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} />
+          {/* <input id="file-input" type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} /> */}
         </div>
       </>
     )
@@ -173,7 +173,7 @@ const EditPersonalInfoContainer = () => {
           <Form.Item name={['user', 'telegramHandle']} style={{ width: '55vw' }}>
             <Input
               defaultValue={newTelegramHandle}
-              placeholder={'@' + newTelegramHandle}
+              placeholder={newTelegramHandle}
               onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>

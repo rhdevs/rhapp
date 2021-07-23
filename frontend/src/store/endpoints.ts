@@ -6,6 +6,8 @@ export enum ENDPOINTS {
   LOGIN = '/login',
   IS_LOGGEDIN = '/protected',
   REGISTER = '/register',
+  FORGET_PASSWORD = '/forgot',
+  RESET_PASSWORD = '/reset',
 
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
@@ -23,6 +25,7 @@ export enum ENDPOINTS {
   BOOKING = '/bookings',
   VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
+  JCRC_BLOCKOUT = '/bookings/blockout',
 
   // LAUNDRY
   MACHINE_LIST = '/location',

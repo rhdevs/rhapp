@@ -50,6 +50,19 @@ const StyledInput = styled(Input)`
     color: #d9d9d9;
   }
 `
+
+const StyledDateInput = styled(Input)`
+  &.ant-input {
+    width: 70vw;
+    border-radius: 30px;
+    border: 1px solid #d9d9d9;
+    padding: 5px 10px;
+    margin: 0px 0px 20px 0px;
+  }
+  &.ant-input::placeholder {
+    color: #d9d9d9;
+  }
+`
 const StyledTitle = styled.text`
   font-family: Inter;
   color: black;
@@ -61,6 +74,14 @@ const StyledTitle = styled.text`
 `
 
 const DatePickerRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0px;
+  color: #666666;
+`
+
+const CCAPickerRow = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -143,11 +164,12 @@ export default function CreateBooking() {
   }
 
   const handleFromDateChange = (newDate: string) => {
+    console.log(newDate)
     dispatch(editBookingFromDate(new Date(newDate)))
   }
 
   const handleToDateChange = (newDate: string) => {
-    dispatch(editBookingToDate(new Date(newDate)))
+    if (!isNaN(Date.parse(newDate))) dispatch(editBookingToDate(new Date(newDate)))
   }
 
   const convertLocalTime = (date: Date) => {
@@ -213,6 +235,8 @@ export default function CreateBooking() {
             placeholder="Location"
             onChange={(newFacilityName) => setFacility(newFacilityName)}
             filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            notFoundContent="No Matching Facility"
+            allowClear
           />
           <StyledInput
             placeholder="Event Name"
@@ -222,7 +246,7 @@ export default function CreateBooking() {
           <div style={{ width: '100%' }}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
-              <input
+              <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingFromDate)}
                 onChange={(event) => handleFromDateChange(event.target.value)}
@@ -230,7 +254,7 @@ export default function CreateBooking() {
             </DatePickerRow>
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
-              <input
+              <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingToDate)}
                 onChange={(event) => handleToDateChange(event.target.value)}
@@ -242,21 +266,23 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
-          <div style={{ width: '100%', margin: '10px 0px' }}>
+          <CCAPickerRow>
             <StyledTitle>CCA</StyledTitle>
             <AutoComplete
-              style={{ width: '100%' }}
+              style={{ width: '70vw', borderRadius: '30px !important' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
               value={newBookingCCA}
-              placeholder="Select your CCA, else select Personal"
+              placeholder="Select 'Personal' if NA"
               onChange={(value) => setCca(value)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
+              notFoundContent="No Matching CCAs"
+              allowClear
             />
-          </div>
+          </CCAPickerRow>
           <InputRow
             title="Description"
             placeholder="Tell us what your booking is for!"

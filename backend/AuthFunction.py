@@ -2,6 +2,7 @@ import jwt
 from flask import Blueprint
 from flask import current_app
 import datetime
+from db import *
 
 
 def authenticate(token, username):
@@ -14,10 +15,8 @@ def authenticate(token, username):
         print(token, username)
         data = jwt.decode(
             token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
-        print(data)
         currentUser = db.User.find_one(
             {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-        print(currentUser)
         currentUsername = currentUser['userID']
 
         # If username supplied,
@@ -33,7 +32,7 @@ def authenticate(token, username):
     oldTime = originalToken['createdAt']
     # print(datetime.datetime.now())
     # print(oldTime)
-    if datetime.datetime.now() > oldTime + datetime.timedelta(minutes=2):
+    if datetime.datetime.now() > oldTime + datetime.timedelta(weeks=2):
         return False
 
     # recreate session (with createdAt updated to now)
