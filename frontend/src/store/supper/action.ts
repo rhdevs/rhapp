@@ -2,6 +2,7 @@ import {
   ActionTypes,
   Filter,
   Food,
+  Order,
   PaymentMethod,
   Restaurants,
   SupperGroup,
@@ -73,7 +74,7 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (supperGroupId === undefined) return
-  dispatch(setIsLoading(true))
+  // dispatch(setIsLoading(true))
 
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
@@ -89,7 +90,7 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
       console.log(err)
       error('Failed to get supper group, please try again later.')
     })
-  dispatch(setIsLoading(false))
+  // dispatch(setIsLoading(false))
 }
 
 export const getSupperHistory = (userId: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -170,9 +171,8 @@ export const getAllRestaurants = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
-export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}/menu`)
+const getRestaurant = (restaurantId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  await get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}/menu`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -184,10 +184,9 @@ export const getRestaurant = (restaurantId: string) => (dispatch: Dispatch<Actio
       })
     })
     .catch((err) => {
+      dispatch(setSupperErrorMessage('Failed to get restaurant, please try again later.'))
       console.log(err)
-      error('Failed to get restaurant, please try again later.')
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getRestaurantMenu = (restaurantId: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -269,12 +268,12 @@ export const getCollatedOrder = (supperGroupId: string | number | undefined) => 
   dispatch(setIsLoading(false))
 }
 
-export const getUserOrder = (supperGroupId: string | number | undefined, userId: string) => (
+export const getUserOrder = (supperGroupId: string | number | undefined, userId: string) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (!supperGroupId) return
-  dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
+  // dispatch(setIsLoading(true))
+  await get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${userId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -289,7 +288,7 @@ export const getUserOrder = (supperGroupId: string | number | undefined, userId:
       console.log(err)
       error("Failed to get user's order, please try again later.")
     })
-  dispatch(setIsLoading(false))
+  // dispatch(setIsLoading(false))
 }
 
 export const getFilteredSupperGroups = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
@@ -923,4 +922,18 @@ const setSupperErrorMessage = (supperErrorMessage: string) => (dispatch: Dispatc
     type: SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE,
     supperErrorMessage: supperErrorMessage,
   })
+}
+
+export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string, order: Order | null) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch(setIsLoading(true))
+  dispatch(getSupperGroupById(supperGroupId)).then(() => {
+    dispatch(getRestaurant(restaurantId)).then(() => {
+      dispatch(getUserOrder(supperGroupId, localStorage.userID)).then(() => dispatch(setIsLoading(false)))
+    })
+  })
+  if (order) {
+    dispatch(setOrderId(order.orderId))
+  }
 }
