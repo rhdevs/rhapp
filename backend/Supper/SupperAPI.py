@@ -372,7 +372,7 @@ def supper_group(supperGroupId):
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
 
-            db.Order.update_many({'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'supperGroupId': supperGroupId},
                                  {'$set': {'notification': True}})
 
             # Add scheduler to close supper group order
@@ -909,9 +909,9 @@ def user_supper_group_history(userID):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET', 'POST', 'DELETE'])
+@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def user_supper_group_notification(userID):
+def get_user_supper_group_notification(userID):
     try:
         if request.method == "GET":
             pipeline = [
@@ -941,10 +941,22 @@ def user_supper_group_notification(userID):
                     data.append(item)
 
             response = {"status": "success", "data": data}
-        elif request.method == 'POST':
+
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/user/<userID>/supperGroupNotification/<int:supperGroupId>', methods=['POST', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_notification(userID, supperGroupId):
+    try:
+        if request.method == 'POST':
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
                                  {'$set': {'notification': True}})
 
             response = {"status": "success", "data": data}
@@ -952,7 +964,7 @@ def user_supper_group_notification(userID):
         elif request.method == 'DELETE':
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
                                  {'$set': {'notification': False}})
 
             response = {"status": "success", "data": data}
@@ -1064,9 +1076,11 @@ def owner_edit_order(supperGroupId):
                         or data['updates']['change'] is None \
                         or data['updates']['updatedPrice'] is None:
                     raise Exception('Update information incomplete')
+                data['foodPrice'] = data['updates']['updatedPrice']
             elif data['updates']['updateAction'] == 'Remove':
                 if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                     raise Exception('Update information incomplete')
+                data['foodPrice'] = 0
 
             if 'global' in data['updates'] and data['updates']['global']:
                 data['updates'].pop('global')
@@ -1099,15 +1113,19 @@ def owner_edit_order(supperGroupId):
                 foods = list(filter(lambda x:
                                     x['foodMenuId'] == food['foodMenuId'] and
                                     x['custom'] == food['custom'] and
+                                    x['cancelAction'] == food['cancelAction'] and
                                     x['comments'] == food['comments']
                                     if 'comments' in x else
                                     x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'], foods))
+                                    x['custom'] == food['custom'] and
+                                    x['cancelAction'] == food['cancelAction'], foods))
                 foods = list(map(lambda x: x['_id'], foods))
 
                 result = db.FoodOrder.update_many({"_id": {'$in': foods}},
                                                   {"$set": data})
             else:
+                if 'global' in data['updates']:
+                    data['updates'].pop('global')
                 result = db.FoodOrder.find_one_and_update({"_id": foodId},
                                                           {"$set": data})
             if result is None:
