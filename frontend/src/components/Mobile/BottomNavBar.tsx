@@ -47,9 +47,10 @@ function BottomNavBar() {
   return (
     <div style={{ height: '50px', backgroundColor: '#fafaf4' }}>
       <BottomNav>
-        <TabBar unselectedTintColor="#949494" tintColor="#33A3F4" barTintColor="white">
+        <TabBar unselectedTintColor="#949494" tintColor="#de5f4c" barTintColor="white">
           <TabBar.Item
             key="Home"
+            title="Home"
             icon={<StyledButton src={homeIconUnselected} />}
             selectedIcon={<StyledButton src={homeIconSelected} />}
             selected={activeTabIndex() === 1}
@@ -60,6 +61,7 @@ function BottomNavBar() {
           ></TabBar.Item>
           <TabBar.Item
             key="Facilities"
+            title="Facilities"
             icon={<StyledButton src={facilitiesIconUnselected} />}
             selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
             selected={activeTabIndex() === 2}
@@ -68,8 +70,9 @@ function BottomNavBar() {
               history.push(PATHS.FACILITY_BOOKING_MAIN)
             }}
           ></TabBar.Item>
-          <TabBar.Item
+          {/* <TabBar.Item
             key="Calender"
+            title="Calender"
             icon={<StyledButton src={calenderIconUnselected} />}
             selectedIcon={<StyledButton src={calenderIconSelected} />}
             selected={activeTabIndex() === 3}
@@ -77,9 +80,21 @@ function BottomNavBar() {
             onPress={() => {
               history.push(PATHS.SCHEDULE_PAGE)
             }}
+          ></TabBar.Item> */}
+          <TabBar.Item
+            key="Supper"
+            title="Supper"
+            icon={<StyledButton src={calenderIconUnselected} />}
+            selectedIcon={<StyledButton src={calenderIconSelected} />}
+            selected={activeTabIndex() === 3}
+            // badge={'test'}
+            onPress={() => {
+              history.push(PATHS.SUPPER_HOME)
+            }}
           ></TabBar.Item>
           <TabBar.Item
             key="Profile"
+            title="Profile"
             icon={<StyledButton src={profileIconUnselected} />}
             selectedIcon={<StyledButton src={profileIconSelected} />}
             selected={activeTabIndex() === 4}
