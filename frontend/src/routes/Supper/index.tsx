@@ -72,12 +72,12 @@ const SupperGroupHistoryContainer = styled.div`
 
 const SupperGroupHistoryDescription = styled.div`
   color: ${V1_RED};
-  font-size: 12px;
+  font-size: 10px;
   line-height: 8px;
 `
 
 const SupperGroupHistoryImg = styled.img`
-  width: 2.5rem;
+  width: 2rem;
   margin: 0 0px auto auto;
 `
 
