@@ -64,19 +64,21 @@ const NoSupperGroupText = styled.text`
   margin-top: 2rem;
 `
 
-const SupperGroupHistoryButton = styled.div`
+const SupperGroupHistoryContainer = styled.div`
   align-items: center;
-  display: block;
+  display: flex;
+  flex-direction: column;
 `
 
 const SupperGroupHistoryDescription = styled.div`
   color: ${V1_RED};
   font-size: 12px;
+  line-height: 8px;
 `
 
 const SupperGroupHistoryImg = styled.img`
   width: 2.5rem;
-  margin: 0 -15px auto auto;
+  margin: 0 0px auto auto;
 `
 
 const SearchContainer = styled.div`
@@ -105,14 +107,14 @@ export default function Supper() {
   } = useSelector((state: RootState) => state.supper)
 
   const rightIcon = (
-    <SupperGroupHistoryButton>
+    <SupperGroupHistoryContainer>
       <SupperGroupHistoryImg
         src={SupperGroupHistoryIcon}
         alt={'My Supper Groups'}
         onClick={() => history.push(PATHS.SUPPER_HISTORY)}
       />
       <SupperGroupHistoryDescription>History</SupperGroupHistoryDescription>
-    </SupperGroupHistoryButton>
+    </SupperGroupHistoryContainer>
   )
 
   useEffect(() => {
