@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { PATHS } from '../../routes/Routes'
 import { FoodMenu, Order } from '../../store/supper/types'
-import { setIsFoodMenuModalOpen, setFoodModalInfo } from '../../store/supper/action'
 import { RootState } from '../../store/types'
+import { setFoodModalInfo, setIsFoodMenuModalOpen } from '../../store/supper/action/setter'
 
 const MainContainer = styled.div`
   background-color: white;

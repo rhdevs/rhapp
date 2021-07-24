@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
 import { onRefresh } from '../../../common/reloadPage'
-import { setExpandAll, setPaymentExpandedCount } from '../../../store/supper/action'
 import { SupperGroup } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { UserPaymentStatus } from '../UserPaymentStatus'
 import { getIndivDeliveryFee } from '../../../common/calculateDeliveryFee'
+import { setExpandAll, setPaymentExpandedCount } from '../../../store/supper/action/setter'
 
 const HorizontalLine = styled.hr`
   width: 100%;

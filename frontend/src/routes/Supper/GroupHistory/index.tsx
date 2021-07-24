@@ -7,7 +7,8 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { Separator, TabContainer } from '../../../components/Tabs'
-import { getAllUserJoinedSupperGroup, getSupperHistory } from '../../../store/supper/action'
+import { getAllUserJoinedSupperGroup } from '../../../store/supper/action'
+import { getCreatedSupperHistory } from '../../../store/supper/action/level1/getReqests'
 import { HomeSupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
@@ -63,17 +64,17 @@ const EmptyText = styled.text`
 
 export default function GroupHistory() {
   const dispatch = useDispatch()
-  const { joinedSupperGroupHistory, supperGroupHistory } = useSelector((state: RootState) => state.supper)
+  const { joinedSupperGroupHistory, createdSupperHistory } = useSelector((state: RootState) => state.supper)
   const [currentTab, setCurrentTab] = useState<number>(1)
   const sections = ['Created', 'Joined']
 
   useEffect(() => {
-    dispatch(getSupperHistory(localStorage.userID))
+    dispatch(getCreatedSupperHistory())
     dispatch(getAllUserJoinedSupperGroup(localStorage.userID))
   }, [dispatch])
 
   const content = () => {
-    let supperGroupArr: HomeSupperGroup[] = supperGroupHistory
+    let supperGroupArr: HomeSupperGroup[] = createdSupperHistory
     if (currentTab === 2) {
       supperGroupArr = joinedSupperGroupHistory
     }

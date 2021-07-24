@@ -9,7 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getFoodInOrder, resetFoodState, updateFoodInOrder } from '../../../store/supper/action'
+import { updateFoodInOrder } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
@@ -19,6 +19,8 @@ import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
+import { resetFoodState } from '../../../store/supper/action/setter'
+import { getFoodInOrder } from '../../../store/supper/action/level1/getReqests'
 
 const MainContainer = styled.form`
   width: 100vw;

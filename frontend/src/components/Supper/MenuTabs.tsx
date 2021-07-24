@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import 'antd/dist/antd.css'
 import styled from 'styled-components'
 import { Radio } from 'antd'
-import { setMenuTabKey } from '../../store/supper/action'
 import { useDispatch } from 'react-redux'
 import { V1_BACKGROUND, V1_RED } from '../../common/colours'
+import { setMenuTabKey } from '../../store/supper/action/setter'
 
 const MainContainer = styled.div`
   overflow: auto;

@@ -6,12 +6,7 @@ import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import PullToRefresh from 'pull-to-refresh-react'
-import {
-  getCollatedOrder,
-  getSupperGroupById,
-  setSelectedSupperGroupStatus,
-  getUserOrder,
-} from '../../../store/supper/action'
+import { getCollatedOrder, getUserOrder } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
@@ -20,6 +15,8 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
+import { setSelectedSupperGroupStatus } from '../../../store/supper/action/setter'
+import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 
 const MainContainer = styled.div`
   display: grid;

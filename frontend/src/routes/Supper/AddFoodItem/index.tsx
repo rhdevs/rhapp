@@ -10,7 +10,7 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
+import { addFoodToOrder } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
@@ -18,6 +18,7 @@ import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { InformationCard } from '../../../components/Supper/InformationCard'
+import { getFoodMenu, getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 
 const Background = styled.form`
   width: 100vw;
@@ -57,7 +58,7 @@ const AddFoodItem = () => {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getMenuFood(params.foodId))
+    dispatch(getFoodMenu(params.foodId))
   }, [dispatch])
 
   const isOverSupperGroupLimit = () => {

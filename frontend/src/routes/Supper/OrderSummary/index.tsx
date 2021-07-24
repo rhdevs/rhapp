@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { getCollatedOrder, getSupperGroupById, updateSupperGroup } from '../../../store/supper/action'
+import { getCollatedOrder, updateSupperGroup } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -14,6 +14,7 @@ import { SupperButton } from '../../../components/Supper/SupperButton'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoStepCancelGroupModal'
+import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 
 const MainContainer = styled.div`
   width: 100vw;
