@@ -64,7 +64,7 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
 
 export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  await get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/createdSupperHistory`)
+  await get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupHistory`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
