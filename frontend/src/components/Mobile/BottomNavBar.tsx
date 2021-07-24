@@ -12,6 +12,8 @@ import calenderIconSelected from '../../assets/calenderIconSelected.svg'
 import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
+import supperIconSelected from '../../assets/supper/supperIconSelected.png'
+import supperIconUnselected from '../../assets/supper/supperIconUnselected.png'
 import 'antd-mobile/dist/antd-mobile.css'
 
 const StyledButton = styled.img`
@@ -33,7 +35,7 @@ function BottomNavBar() {
 
   const activeTabIndex = () => {
     const pathname = location.pathname
-    if (pathname.startsWith('/schedule')) {
+    if (pathname.startsWith('/supper')) {
       return 3
     } else if (pathname.startsWith('/facility')) {
       return 2
@@ -84,8 +86,8 @@ function BottomNavBar() {
           <TabBar.Item
             key="Supper"
             title="Supper"
-            icon={<StyledButton src={calenderIconUnselected} />}
-            selectedIcon={<StyledButton src={calenderIconSelected} />}
+            icon={<StyledButton src={supperIconUnselected} />}
+            selectedIcon={<StyledButton src={supperIconSelected} />}
             selected={activeTabIndex() === 3}
             // badge={'test'}
             onPress={() => {
