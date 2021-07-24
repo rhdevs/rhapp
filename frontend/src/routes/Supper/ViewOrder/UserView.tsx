@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
@@ -16,11 +16,10 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { OrderContainer } from './OwnerView'
 import { onRefresh } from '../../../common/reloadPage'
-import { updateOrderDetails } from '../../../store/supper/action/level1/putRequests'
 
 const ButtonContainer = styled.div`
   display: flex;
-  margin: 40px 15px;
+  margin: 2rem auto 1rem auto;
   justify-content: space-around;
 `
 
@@ -44,10 +43,8 @@ type Props = {
 
 const UserView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
-  const dispatch = useDispatch()
   const history = useHistory()
   const { isLoading } = useSelector((state: RootState) => state.supper)
-  const [hasPaid, setHasPaid] = useState<boolean>(props.order?.hasPaid ?? false)
   const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
   const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
 
@@ -91,18 +88,16 @@ const UserView = (props: Props) => {
         </>
       )
     } else {
-      return (
-        <SupperButton
-          defaultButtonDescription="Mark Payment Complete"
-          updatedButtonDescription="Payment Completed"
-          buttonWidth="200px"
-          onButtonClick={() => {
-            setHasPaid(!hasPaid)
-            props.order?.orderId && dispatch(updateOrderDetails(props.order?.orderId, { hasPaid: hasPaid }))
-          }}
-          isFlipButton
-        />
-      )
+      if (props.order?.hasPaid) {
+        return <SupperButton ghost defaultButtonDescription="Payment Completed" />
+      } else {
+        return (
+          <SupperButton
+            defaultButtonDescription="Mark Payment Complete"
+            onButtonClick={() => history.push(`${PATHS.USER_PAYMENT}/${props.order?.orderId}`)}
+          />
+        )
+      }
     }
   }
 
