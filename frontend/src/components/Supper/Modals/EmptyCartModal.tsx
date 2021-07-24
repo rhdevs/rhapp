@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { emptyOrderFoodList } from '../../../store/supper/action'
 
+import { emptyOrderFoodList } from '../../../store/supper/action/level1/putRequests'
 import { SupperModal } from './SupperModal'
 
 type Props = {

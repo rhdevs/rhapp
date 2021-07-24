@@ -1,4 +1,5 @@
 import { Reducer } from 'redux'
+import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import {
   ActionTypes,
   Food,
@@ -15,7 +16,6 @@ import {
   Filter,
   Restaurants,
 } from '../supper/types'
-import { unixTo12HourTime } from './action'
 import { SUPPER_ACTIONS } from './types'
 
 const initialState = {
@@ -30,8 +30,8 @@ const initialState = {
   menu: [],
   foodMenu: null,
   orderHistory: [],
-  supperGroupHistory: [],
-  joinedSupperGroupHistory: [],
+  createdSupperHistory: [],
+  joinedSupperHistory: [],
   count: 0,
   priceLimit: 0,
   deliveryTime: 0,
@@ -78,8 +78,8 @@ type State = {
   menu: FoodMenu[]
   foodMenu: FoodMenu | null
   orderHistory: Order[]
-  supperGroupHistory: HomeSupperGroup[]
-  joinedSupperGroupHistory: HomeSupperGroup[]
+  createdSupperHistory: HomeSupperGroup[]
+  joinedSupperHistory: HomeSupperGroup[]
   count: number
   priceLimit: number
   deliveryTime: number
@@ -162,10 +162,10 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
       return { ...state, orderHistory: action.orderHistory }
     }
     case SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY: {
-      return { ...state, supperGroupHistory: action.supperGroupHistory }
+      return { ...state, createdSupperHistory: action.createdSupperHistory }
     }
     case SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY: {
-      return { ...state, joinedSupperGroupHistory: action.joinedSupperGroupHistory }
+      return { ...state, joinedSupperHistory: action.joinedSupperHistory }
     }
     case SUPPER_ACTIONS.SET_COUNT: {
       return { ...state, count: action.count }
@@ -188,7 +188,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS: {
       return { ...state, selectedSupperGroupStatus: action.selectedSupperGroupStatus }
     }
-    case SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS: {
+    case SUPPER_ACTIONS.SET_SEARCHED_SUPPER_GROUPS: {
       return { ...state, filteredSupperGroups: action.filteredSupperGroups }
     }
     case SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE: {
@@ -255,13 +255,13 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
         modalMenuFoodName: action.modalMenuFoodName,
       }
     }
-    case SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER: {
+    case SUPPER_ACTIONS.SET_CLOSING_TIME_FILTER: {
       return { ...state, closingTimeFilter: action.closingTimeFilter }
     }
-    case SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER: {
+    case SUPPER_ACTIONS.SET_AMOUNT_LEFT_FILTER: {
       return { ...state, amountLeftFilter: action.amountLeftFilter }
     }
-    case SUPPER_ACTIONS.GET_RESTAURANT_FILTER: {
+    case SUPPER_ACTIONS.SET_RESTAURANT_FILTER: {
       return { ...state, restaurantFilter: action.restaurantFilter }
     }
     case SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE: {

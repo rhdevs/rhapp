@@ -8,11 +8,12 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { FormHeader } from '../../../components/Supper/FormHeader'
-import { getSupperGroupById, getUserOrder, updateOrderDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { SupperButton } from '../../../components/Supper/SupperButton'
+import { getSupperGroupById, getUserOrder } from '../../../store/supper/action/level1/getReqests'
+import { updateOrderDetails } from '../../../store/supper/action/level1/putRequests'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -71,13 +72,12 @@ export default function ConfirmOrder() {
   }
 
   useEffect(() => {
-    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    dispatch(getUserOrder(params.supperGroupId))
     dispatch(getSupperGroupById(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
     handleSubmit((data) => {
-      //TODO: Test update order
       order?.orderId && dispatch(updateOrderDetails(order.orderId, { userContact: data.number }))
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()

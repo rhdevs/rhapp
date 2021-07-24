@@ -12,9 +12,9 @@ import { MainCard } from '../MainCard'
 import { SGStatusBubble } from '../SGStatusBubble'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { PATHS } from '../../../routes/Routes'
-import { getUserOrder } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { Skeleton } from '../../Skeleton'
+import { getUserOrder } from '../../../store/supper/action/level1/getReqests'
 
 const TopSection = styled.div`
   display: flex;
@@ -136,7 +136,7 @@ export const SGStatusCard = (props: Props) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getUserOrder(props.rawSupperGroupId, localStorage.userID))
+    dispatch(getUserOrder(props.rawSupperGroupId))
   }, [dispatch])
 
   const onClick = () => {

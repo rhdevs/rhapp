@@ -3,13 +3,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { Food } from '../../store/supper/types'
 import Button from '../Mobile/Button'
-import { FoodLineInCard } from './FoodLineInCard'
 import { LeftOutlined } from '@ant-design/icons'
 import { V1_BACKGROUND } from '../../common/colours'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { MainCard } from './MainCard'
 import { useDispatch } from 'react-redux'
+import { FoodLine } from './FoodLine'
 
 const OverlayBackground = styled.div`
   position: fixed;
@@ -144,19 +144,12 @@ export const ViewMenuFoodModal = (props: Props) => {
                   }),
                 )
                 return (
-                  <FoodLineInCard
+                  <FoodLine
+                    key={index}
+                    food={food}
                     isEditable
                     supperGroupId={props.supperGroupId}
                     orderId={props.orderId}
-                    foodId={food.foodId}
-                    key={index}
-                    foodName={food.foodName}
-                    fontPercentage={0.85}
-                    qty={food.quantity}
-                    price={food.foodPrice}
-                    customisations={customisations}
-                    comments={food?.comments}
-                    cancelAction={food.cancelAction}
                   />
                 )
               })}

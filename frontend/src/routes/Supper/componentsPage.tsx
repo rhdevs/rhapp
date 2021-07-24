@@ -12,7 +12,6 @@ import { JoinOrderSGCard } from '../../components/Supper/CustomCards/JoinOrderSG
 import { PaymentMethod, Restaurants, SplitACMethod, SupperGroupStatus } from '../../store/supper/types'
 import { ViewOrderSGCard } from '../../components/Supper/CustomCards/ViewOrderSGCard'
 import { SGStatusBubble } from '../../components/Supper/SGStatusBubble'
-import { OrderSummaryCard } from '../../components/Supper/CustomCards/OrderSummaryCard'
 import {
   foodList,
   orderList,
@@ -25,12 +24,10 @@ import {
 } from '../../store/stubs'
 import { AddUpdateCartButton } from '../../components/Supper/AddUpdateCartButton'
 import { SGCardWithStatus } from '../../components/Supper/CustomCards/SGCardWithStatus'
-import { ExpandableSGCard } from '../../components/Supper/CustomCards/ExpandableSGCard'
 import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbles'
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 import { MenuSection } from '../../components/Supper/MenuSection'
-import { NotificationBarOld } from '../../components/Supper/NotificationBarOld'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
@@ -84,7 +81,6 @@ export default function Supper() {
         label={<OptionText>McCafe Caramel Frappe With Oreo Medium (+$4.45)</OptionText>}
       />
       <RhAppQrCode link="google.com" />
-      <NotificationBarOld supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <Checkbox isChecked={true} />
       <BubbleSection title="Order Information" number={1}>
@@ -96,18 +92,6 @@ export default function Supper() {
       <RestaurantBubbles restaurantList={restaurantList} />
       <PaymentMethodBubbles paymentMethods={paymentMethods} />
       <MainSGCard title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
-      <OrderSummaryCard orderByUser isEditable foodList={foodList} orderList={orderList} />
-      <ExpandableSGCard
-        isOwner
-        supperGroupName="SUPPER FRIENDS"
-        supperGroupId="RHSO#1002"
-        ownerName="Zhou BaoBao"
-        priceLimit={30}
-        currentAmount={10}
-        closingTime="10.30PM"
-        numberOfUsers={10}
-        deliveryFee="10.70"
-      />
       <MainSGCard isOwner title="f> SUPPER FRIENDS" time="11:59PM" users={17} orderId="RHSO#1002" />
       <MaxPriceFixer />
       <DeliveryTimeSetter default={20} />

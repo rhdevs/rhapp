@@ -10,7 +10,7 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
 import { FoodLine } from '../../../../components/Supper/FoodLine'
 import { DiscardChangesModal } from '../../../../components/Supper/Modals/DiscardChangesModal'
-import { getSupperGroupById } from '../../../../store/supper/action'
+import { getSupperGroupById } from '../../../../store/supper/action/level1/getReqests'
 import { RootState } from '../../../../store/types'
 import { OldInfoContainer } from '../UpdateDelivery'
 

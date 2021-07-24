@@ -15,11 +15,11 @@ import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderM
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { onRefresh } from '../../../common/reloadPage'
+import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action/level1/getReqests'
 
 const Background = styled.div`
   min-height: 100vh;
@@ -71,7 +71,7 @@ const ViewCart = () => {
 
   useEffect(() => {
     dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+    dispatch(getUserOrder(params.supperGroupId))
     dispatch(getCollatedOrder(params.supperGroupId))
   }, [dispatch])
 

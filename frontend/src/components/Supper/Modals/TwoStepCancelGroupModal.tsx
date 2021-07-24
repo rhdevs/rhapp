@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { SupperModal } from './SupperModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
-import { updateSupperGroup } from '../../../store/supper/action'
 import { FormHeader } from '../FormHeader'
 import { FieldError, useForm } from 'react-hook-form'
 import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 
 const DescriptionText = styled.div`
   padding-bottom: 1rem;
