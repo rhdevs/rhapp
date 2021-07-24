@@ -131,6 +131,7 @@ const UserView = (props: Props) => {
           <SupperGroupCard supperGroup={props.supperGroup} isHome={false} />
           <OrderContainer>
             <OrderCard
+              order={props.order}
               supperGroup={props.supperGroup}
               ownerId={props.supperGroup?.ownerId}
               supperGroupStatus={props.supperGroup?.status}
