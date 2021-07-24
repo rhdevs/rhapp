@@ -10,7 +10,6 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import { addFoodToOrder } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
@@ -19,6 +18,7 @@ import CancelActionField from '../../../components/Supper/CancelActionField'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { getFoodMenu, getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
+import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
 
 const Background = styled.form`
   width: 100vw;
@@ -112,8 +112,6 @@ const AddFoodItem = () => {
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
-      console.log(newFood)
-      //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
       history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
       console.log(data, count)

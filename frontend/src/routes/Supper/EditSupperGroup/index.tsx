@@ -12,7 +12,6 @@ import { BubbleSection } from '../../../components/Supper/BubbleSection'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
-import { updateSupperGroup } from '../../../store/supper/action'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -26,6 +25,7 @@ import { SupperButton } from '../../../components/Supper/SupperButton'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import { setEditOrderNumber, setSelectedPaymentMethod } from '../../../store/supper/action/setter'
 import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 
 const Background = styled.form`
   width: 100vw;

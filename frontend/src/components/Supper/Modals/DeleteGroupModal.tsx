@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { deleteSupperGroup } from '../../../store/supper/action/level1/deleteRequests'
 
 import { SupperModal } from './SupperModal'
-import { deleteSupperGroup } from '../../../store/supper/action'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>

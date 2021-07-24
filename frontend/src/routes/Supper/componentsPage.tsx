@@ -28,7 +28,6 @@ import { PaymentMethodBubbles } from '../../components/Supper/PaymentMethodBubbl
 import { RestaurantBubbles } from '../../components/Supper/RestaurantBubbles'
 import { SGStatusOptions } from '../../components/Supper/SGStatusOptions'
 import { MenuSection } from '../../components/Supper/MenuSection'
-import { NotificationBarOld } from '../../components/Supper/NotificationBarOld'
 import { SGPaymentStatus } from '../../components/Supper/CustomCards/SGPaymentStatus'
 import { BubbleSection } from '../../components/Supper/BubbleSection'
 import { DeliveryTimeSetter } from '../../components/Supper/DeliveryTimeSetter'
@@ -82,7 +81,6 @@ export default function Supper() {
         label={<OptionText>McCafe Caramel Frappe With Oreo Medium (+$4.45)</OptionText>}
       />
       <RhAppQrCode link="google.com" />
-      <NotificationBarOld supperGroupName="THIS IS THE GROUP naME" />
       <RoundProgress priceLimit={50} currentAmount={19.7} />
       <Checkbox isChecked={true} />
       <BubbleSection title="Order Information" number={1}>

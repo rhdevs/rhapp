@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import PullToRefresh from 'pull-to-refresh-react'
-import { getCollatedOrder, getUserOrder } from '../../../store/supper/action'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
@@ -16,7 +15,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
 import { setSelectedSupperGroupStatus } from '../../../store/supper/action/setter'
-import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
+import { getCollatedOrder, getSupperGroupById, getUserOrder } from '../../../store/supper/action/level1/getReqests'
 
 const MainContainer = styled.div`
   display: grid;
@@ -54,7 +53,7 @@ const ViewOrder = () => {
       if (supperGroup?.ownerId === localStorage.userID) {
         dispatch(getCollatedOrder(params.supperGroupId))
       } else {
-        dispatch(getUserOrder(params.supperGroupId, localStorage.userID))
+        dispatch(getUserOrder(params.supperGroupId))
       }
     }
   }, [supperGroup])

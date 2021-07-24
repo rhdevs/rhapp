@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -15,7 +15,7 @@ import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../Vie
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { onRefresh } from '../../../common/reloadPage'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 

@@ -76,7 +76,26 @@ export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTyp
     })
     .catch((err) => {
       console.log(err)
-      setSupperErrorMessage('Failed to retrieve supper group history, please try again.')
+      dispatch(setSupperErrorMessage('Failed to retrieve supper group history, please try again.'))
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getJoinedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  await get(ENDPOINTS.GET_JOINED_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/joinGroupHistory`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY,
+        joinedSupperHistory: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      dispatch(setSupperErrorMessage('Failed to get joined supper groups, please try again later.'))
     })
   dispatch(setIsLoading(false))
 }
@@ -121,9 +140,9 @@ export const getRestaurantMenu = (restaurantId: string) => async (dispatch: Disp
   dispatch(setIsLoading(false))
 }
 
-export const getFoodMenu = (foodMenuId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getFoodMenu = (foodMenuId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_MENU_FOOD, DOMAINS.SUPPER, `/${foodMenuId}`)
+  await get(ENDPOINTS.GET_MENU_FOOD, DOMAINS.SUPPER, `/${foodMenuId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -140,10 +159,10 @@ export const getFoodMenu = (foodMenuId: string) => (dispatch: Dispatch<ActionTyp
   dispatch(setIsLoading(false))
 }
 
-export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const getFoodInOrder = (orderId?: string, foodId?: string) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!(orderId && foodId)) return
   dispatch(setIsLoading(true))
-  get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
+  await get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -158,4 +177,46 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => (dispatch: 
       dispatch(setSupperErrorMessage('Failed to get food, please try again later.'))
     })
   dispatch(setIsLoading(false))
+}
+
+export const getCollatedOrder = (supperGroupId: string | number | undefined) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  if (!supperGroupId) return
+  dispatch(setIsLoading(true))
+  await get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
+        collatedOrder: { ...resp.data, price: 0.0 },
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      dispatch(setSupperErrorMessage('Failed to get collated order, please try again later.'))
+    })
+  dispatch(setIsLoading(false))
+}
+
+export const getUserOrder = (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
+  if (!supperGroupId) return
+  // dispatch(setIsLoading(true))
+  await get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${localStorage.userID}`)
+    .then((resp) => {
+      if (resp.status === 'failed') {
+        throw resp.err
+      }
+      dispatch({
+        type: SUPPER_ACTIONS.GET_ORDER_BY_USER,
+        order: resp.data,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      dispatch(setSupperErrorMessage("Failed to get user's order, please try again later."))
+    })
+  // dispatch(setIsLoading(false))
 }

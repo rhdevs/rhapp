@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { SupperModal } from './SupperModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
-import { updateSupperGroup } from '../../../store/supper/action'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>

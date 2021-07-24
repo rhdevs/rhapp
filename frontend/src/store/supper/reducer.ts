@@ -31,7 +31,7 @@ const initialState = {
   foodMenu: null,
   orderHistory: [],
   createdSupperHistory: [],
-  joinedSupperGroupHistory: [],
+  joinedSupperHistory: [],
   count: 0,
   priceLimit: 0,
   deliveryTime: 0,
@@ -79,7 +79,7 @@ type State = {
   foodMenu: FoodMenu | null
   orderHistory: Order[]
   createdSupperHistory: HomeSupperGroup[]
-  joinedSupperGroupHistory: HomeSupperGroup[]
+  joinedSupperHistory: HomeSupperGroup[]
   count: number
   priceLimit: number
   deliveryTime: number
@@ -165,7 +165,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
       return { ...state, createdSupperHistory: action.createdSupperHistory }
     }
     case SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY: {
-      return { ...state, joinedSupperGroupHistory: action.joinedSupperGroupHistory }
+      return { ...state, joinedSupperHistory: action.joinedSupperHistory }
     }
     case SUPPER_ACTIONS.SET_COUNT: {
       return { ...state, count: action.count }

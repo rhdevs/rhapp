@@ -339,7 +339,7 @@ type GetSupperGroupHistory = {
 
 type GetJoinedSupperGroupHistory = {
   type: typeof SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY
-  joinedSupperGroupHistory: HomeSupperGroup[]
+  joinedSupperHistory: HomeSupperGroup[]
 }
 
 type SetCount = {

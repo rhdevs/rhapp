@@ -9,7 +9,6 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
-import { updateSupperGroup } from '../../../store/supper/action'
 import { getReadableSupperGroupId } from '../../../common/getReadableSupperGroupId'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
@@ -24,6 +23,7 @@ import { ConfirmStatusUpdateModal } from '../../../components/Supper/Modals/Conf
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { setEstimatedArrivalTime } from '../../../store/supper/action/setter'
 import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 
 const Background = styled.div`
   width: 100vw;
@@ -215,7 +215,6 @@ const DeliveryDetails = () => {
         if (selectedSupperGroupStatus === SupperGroupStatus.ORDERED) {
           updatedInfo = { ...updatedInfo, estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime }
         }
-        console.log(updatedInfo)
         dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
         history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
       }
