@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
+import styled from 'styled-components'
+
+const Background = styled.div`
+  background-color: #f1f1f1 !important;
+  padding: 50px;
+`
 
 function Doc_Supper() {
   const file_name = 'actions.md'
@@ -17,9 +23,9 @@ function Doc_Supper() {
   })
 
   return (
-    <div className="container">
+    <Background>
       <Markdown>{post}</Markdown>
-    </div>
+    </Background>
   )
 }
 
