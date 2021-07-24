@@ -19,6 +19,7 @@ import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
+import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -42,16 +43,30 @@ const EditFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [removeItemModalIsOpen, setRemoveItemModalIsOpen] = useState<boolean>(false)
-
+  const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState<boolean>(false)
   const { isLoading, food, count, supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
-  const { register, handleSubmit, setValue, watch, clearErrors, reset, control, errors } = useForm<CustomData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    clearErrors,
+    reset,
+    control,
+    errors,
+    formState: { touched },
+  } = useForm<CustomData>({
     shouldUnregister: false,
   })
   const compulsoryFields: Custom[] =
     food?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
+
+  const onLeftClick = () => {
+    Object.values(touched).length ? setIsDiscardChangesModalOpen(true) : history.goBack()
+  }
 
   const isOverSupperGroupLimit = () => {
     const maximumLimit = supperGroup?.costLimit
@@ -179,7 +194,7 @@ const EditFoodItem = () => {
 
         if (updatedFoodInfo) {
           dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
-          history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+          history.goBack()
           return
         }
         history.goBack()
@@ -211,7 +226,10 @@ const EditFoodItem = () => {
 
   return (
     <MainContainer onSubmit={onSubmit}>
-      <TopNavBar title="Edit Item" />
+      <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
+      {isDiscardChangesModalOpen && (
+        <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} onLeftButtonClick={() => history.goBack()} />
+      )}
       {isLoading || !food ? (
         <LoadingSpin />
       ) : (

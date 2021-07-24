@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,6 +18,7 @@ import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { InformationCard } from '../../../components/Supper/InformationCard'
+import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 
 const Background = styled.form`
   width: 100vw;
@@ -45,7 +46,17 @@ const AddFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
-  const { register, setValue, handleSubmit, watch, clearErrors, errors, control } = useForm<CustomData>({
+  const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState<boolean>(false)
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    clearErrors,
+    errors,
+    control,
+    formState: { touched },
+  } = useForm<CustomData>({
     mode: 'all',
     reValidateMode: 'onChange',
   })
@@ -59,6 +70,10 @@ const AddFoodItem = () => {
     dispatch(getSupperGroupById(params.supperGroupId))
     dispatch(getMenuFood(params.foodId))
   }, [dispatch])
+
+  const onLeftClick = () => {
+    Object.values(touched).length ? setIsDiscardChangesModalOpen(true) : history.goBack()
+  }
 
   const isOverSupperGroupLimit = () => {
     const maximumLimit = supperGroup?.costLimit
@@ -114,7 +129,7 @@ const AddFoodItem = () => {
       console.log(newFood)
       //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
-      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
+      history.goBack()
       console.log(data, count)
     })()
   }
@@ -147,7 +162,10 @@ const AddFoodItem = () => {
 
   return (
     <Background onSubmit={onSubmit}>
-      <TopNavBar title="Add Item" />
+      <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
+      {isDiscardChangesModalOpen && (
+        <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} onLeftButtonClick={() => history.goBack()} />
+      )}
       {isLoading ? (
         <LoadingSpin />
       ) : (
