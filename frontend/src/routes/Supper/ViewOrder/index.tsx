@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -20,6 +20,7 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   display: grid;
@@ -35,6 +36,7 @@ const MainContainer = styled.div`
 const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { supperGroup, collatedOrder, selectedSupperGroupStatus, order } = useSelector(
     (state: RootState) => state.supper,
   )
@@ -87,7 +89,7 @@ const ViewOrder = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="View Order" />
+      <TopNavBar title="View Order" onLeftClick={() => history.push(`${PATHS.SUPPER_HOME}`)} />
       <PullToRefresh onRefresh={onRefresh}>
         {!selectedSupperGroupStatus ? (
           supperGroupNotFound ? (

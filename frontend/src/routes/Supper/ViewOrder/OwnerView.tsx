@@ -69,7 +69,6 @@ const OwnerView = (props: Props) => {
       return (
         <>
           <ButtonContainer>
-            {console.log(orderList)}
             {orderList !== undefined &&
               (orderList.length > 0 || (orderList?.length === 1 && orderList[0].foodList.length > 1)) && (
                 <UpperRowButtons>
