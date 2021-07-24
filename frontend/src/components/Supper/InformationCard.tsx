@@ -13,7 +13,7 @@ const SymbolContainer = styled.div`
 const InformationSymbol = styled(InfoCircleOutlined)`
   font-size: 12px;
   height: fit-content;
-  margin: auto;
+  margin: 3px auto;
 `
 
 const InformationContainer = styled.div`

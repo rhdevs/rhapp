@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -15,8 +15,7 @@ import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../Vie
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { onRefresh } from '../../../common/reloadPage'
-import { useDispatch, useSelector } from 'react-redux'
-import { getSupperGroupById } from '../../../store/supper/action'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 
@@ -49,7 +48,6 @@ type Props = {
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  const dispatch = useDispatch()
   const { isLoading } = useSelector((state: RootState) => state.supper)
 
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
@@ -59,10 +57,6 @@ const OwnerView = (props: Props) => {
   const orderList = props.supperGroup?.orderList
   const ownerOrder = orderList?.find((order) => order.user.userID === localStorage.userID)
   const ownerOrderId = ownerOrder?.orderId
-
-  useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-  }, [dispatch])
 
   const showBottomSection = () => {
     if (props.supperGroupIsOpen) {

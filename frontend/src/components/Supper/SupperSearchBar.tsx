@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SearchBar from '../Mobile/SearchBar'
 import { useDispatch, useSelector } from 'react-redux'
-import { getFilteredSupperGroups, setSearchValue } from '../../store/supper/action'
+import { setFilteredSupperGroups, setSearchValue } from '../../store/supper/action/setter'
 import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
@@ -17,7 +17,7 @@ export const SupperSearchBar = () => {
   const onChange = (input: string) => {
     console.log(input)
     dispatch(setSearchValue(input))
-    dispatch(getFilteredSupperGroups())
+    dispatch(setFilteredSupperGroups())
   }
 
   return (

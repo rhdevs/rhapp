@@ -8,13 +8,14 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { ViewMenuFoodModal } from '../../../components/Supper/ViewMenuFoodModal'
+import { ViewMenuFoodModal } from '../../../components/Supper/Modals/ViewMenuFoodModal'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
 import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
-import { setSearchValue, setIsFoodMenuModalOpen, getPlaceOrderPageDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/action/setter'
+import { getPlaceOrderPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   width: 100vw;

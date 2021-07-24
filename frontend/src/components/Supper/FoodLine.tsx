@@ -10,8 +10,8 @@ import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
 import { onRefresh } from '../../common/reloadPage'
 import { useDispatch, useSelector } from 'react-redux'
-import { setIsLoading } from '../../store/supper/action'
 import { RootState } from '../../store/types'
+import { setIsLoading } from '../../store/supper/action/setter'
 
 const Background = styled.div<{
   backgroundColor?: string

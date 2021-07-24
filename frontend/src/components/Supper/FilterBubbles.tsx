@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { V1_RED } from '../../common/colours'
 import {
-  getAmountLeftFilter,
-  getClosingTimeFilter,
-  getFilteredSupperGroups,
-  getRestaurantFilter,
-} from '../../store/supper/action'
+  setAmountLeftFilter,
+  setRestaurantFilter,
+  setClosingTimeFilter,
+  setFilteredSupperGroups,
+} from '../../store/supper/action/setter'
 import { Filter, Restaurants } from '../../store/supper/types'
 import { RootState } from '../../store/types'
 
@@ -68,26 +68,26 @@ export const FilterBubbles = () => {
   const [amountLeftIcon, setAmountLeftIcon] = useState<JSX.Element>(defaultFilterIcon)
 
   useEffect(() => {
-    dispatch(getFilteredSupperGroups())
+    dispatch(setFilteredSupperGroups())
   }, [closingTimeFilter, amountLeftFilter, restaurantFilter])
 
   const onClosingTimeFilterClick = () => {
     if (closingTimeFilter === Filter.DEFAULT) {
       if (amountLeftFilter !== Filter.DEFAULT) {
-        dispatch(getAmountLeftFilter(Filter.DEFAULT))
+        dispatch(setAmountLeftFilter(Filter.DEFAULT))
         setAmountLeftIcon(defaultFilterIcon)
       }
-      dispatch(getClosingTimeFilter(Filter.ASCENDING))
+      dispatch(setClosingTimeFilter(Filter.ASCENDING))
       setClosingTimeIcon(ascendingFilterIcon)
     } else if (closingTimeFilter === Filter.ASCENDING) {
       if (amountLeftFilter !== Filter.DEFAULT) {
-        dispatch(getAmountLeftFilter(Filter.DEFAULT))
+        dispatch(setAmountLeftFilter(Filter.DEFAULT))
         setAmountLeftIcon(defaultFilterIcon)
       }
-      dispatch(getClosingTimeFilter(Filter.DESCENDING))
+      dispatch(setClosingTimeFilter(Filter.DESCENDING))
       setClosingTimeIcon(descendingFilterIcon)
     } else {
-      dispatch(getClosingTimeFilter(Filter.DEFAULT))
+      dispatch(setClosingTimeFilter(Filter.DEFAULT))
       setClosingTimeIcon(defaultFilterIcon)
     }
   }
@@ -95,29 +95,29 @@ export const FilterBubbles = () => {
   const onAmountLeftFilterClick = () => {
     if (amountLeftFilter === Filter.DEFAULT) {
       if (closingTimeFilter !== Filter.DEFAULT) {
-        dispatch(getClosingTimeFilter(Filter.DEFAULT))
+        dispatch(setClosingTimeFilter(Filter.DEFAULT))
         setClosingTimeIcon(defaultFilterIcon)
       }
-      dispatch(getAmountLeftFilter(Filter.ASCENDING))
+      dispatch(setAmountLeftFilter(Filter.ASCENDING))
       setAmountLeftIcon(ascendingFilterIcon)
     } else if (amountLeftFilter === Filter.ASCENDING) {
       if (closingTimeFilter !== Filter.DEFAULT) {
-        dispatch(getClosingTimeFilter(Filter.DEFAULT))
+        dispatch(setClosingTimeFilter(Filter.DEFAULT))
         setClosingTimeIcon(defaultFilterIcon)
       }
-      dispatch(getAmountLeftFilter(Filter.DESCENDING))
+      dispatch(setAmountLeftFilter(Filter.DESCENDING))
       setAmountLeftIcon(descendingFilterIcon)
     } else {
-      dispatch(getAmountLeftFilter(Filter.DEFAULT))
+      dispatch(setAmountLeftFilter(Filter.DEFAULT))
       setAmountLeftIcon(defaultFilterIcon)
     }
   }
 
   const onRestaurantFilterClick = (restaurant: Restaurants) => {
     if (restaurantFilter.includes(restaurant))
-      dispatch(getRestaurantFilter(restaurantFilter.filter((r) => r !== restaurant)))
+      dispatch(setRestaurantFilter(restaurantFilter.filter((r) => r !== restaurant)))
     else {
-      dispatch(getRestaurantFilter(restaurantFilter.concat(restaurant)))
+      dispatch(setRestaurantFilter(restaurantFilter.concat(restaurant)))
     }
   }
 

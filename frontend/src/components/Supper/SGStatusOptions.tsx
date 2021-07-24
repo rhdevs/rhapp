@@ -5,9 +5,9 @@ import { StatusSymbol } from './StatusSymbol'
 import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setSelectedSupperGroupStatus } from '../../store/supper/action'
 import { SupperGroupStatus } from '../../store/supper/types'
 import { V1_BLUE } from '../../common/colours'
+import { setSelectedSupperGroupStatus } from '../../store/supper/action/setter'
 
 const CheckIcon = styled.img`
   margin-top: -4px;

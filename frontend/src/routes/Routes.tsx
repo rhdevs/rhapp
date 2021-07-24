@@ -4,8 +4,11 @@ import styled from 'styled-components'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
+import doc_supperActions from '../docs/supper/Doc_Supper'
 
 export enum PATHS {
+  // DOCUMENTATION
+  DOCS_SUPPER_ACTIONS = '/docs/supper/actions',
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
@@ -201,6 +204,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.UPDATE_DELIVERY_BY_ID} component={UpdateDelivery} />
             <PrivateRoute exact path={PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID} component={UpdateAllItems} />
 
+            <PublicRoute exact path={PATHS.DOCS_SUPPER_ACTIONS} component={doc_supperActions} />
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
         </Suspense>

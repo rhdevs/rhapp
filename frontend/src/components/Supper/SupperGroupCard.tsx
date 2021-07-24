@@ -12,13 +12,7 @@ import {
 } from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
-import {
-  deleteSupperGroup,
-  getReadableSupperGroupId,
-  leaveSupperGroup,
-  setIsLoading,
-  unixTo12HourTime,
-} from '../../store/supper/action'
+import { getReadableSupperGroupId } from '../../common/getReadableSupperGroupId'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
@@ -33,6 +27,9 @@ import { SupperShareModal } from './Modals/SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
 import { RootState } from '../../store/types'
 import { ConfirmationModal } from '../Mobile/ConfirmationModal'
+import { setIsLoading } from '../../store/supper/action/setter'
+import { unixTo12HourTime } from '../../common/unixTo12HourTime'
+import { deleteSupperGroup, leaveSupperGroup } from '../../store/supper/action/level1/deleteRequests'
 
 const LeftContainer = styled.div`
   flex: 30%;

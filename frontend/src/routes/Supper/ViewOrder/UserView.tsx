@@ -11,12 +11,12 @@ import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderM
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { updateOrderDetails } from '../../../store/supper/action'
 import { Order, SupperGroup } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { OrderContainer } from './OwnerView'
 import { onRefresh } from '../../../common/reloadPage'
+import { updateOrderDetails } from '../../../store/supper/action/level1/putRequests'
 
 const ButtonContainer = styled.div`
   display: flex;

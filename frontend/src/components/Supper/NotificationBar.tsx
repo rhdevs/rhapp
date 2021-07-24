@@ -6,7 +6,8 @@ import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { closeSupperNotification, getSupperNotification } from '../../store/supper/action'
+import { getSupperNotifications } from '../../store/supper/action/level1/getReqests'
+import { closeSupperNotification } from '../../store/supper/action/level1/deleteRequests'
 
 const Container = styled.div`
   position: fixed;
@@ -86,7 +87,7 @@ export const NotificationBar = () => {
   }
 
   useEffect(() => {
-    dispatch(getSupperNotification())
+    dispatch(getSupperNotifications())
   }, [dispatch])
 
   useEffect(() => {

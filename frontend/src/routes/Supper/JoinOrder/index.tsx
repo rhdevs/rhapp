@@ -6,13 +6,14 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { createOrder, getSupperGroupById } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperButton } from '../../../components/Supper/SupperButton'
+import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
+import { createOrder } from '../../../store/supper/action/level1/postRequests'
 
 const Background = styled.div`
   height: 100vh;
@@ -38,7 +39,7 @@ export default function JoinOrder() {
   }, [dispatch])
 
   const onClick = () => {
-    dispatch(createOrder(localStorage.userID, params.supperGroupId))
+    dispatch(createOrder(params.supperGroupId))
     history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
   }
 
