@@ -1,15 +1,15 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { Food } from '../../store/supper/types'
-import Button from '../Mobile/Button'
+import { Food } from '../../../store/supper/types'
+import Button from '../../Mobile/Button'
 import { LeftOutlined } from '@ant-design/icons'
-import { V1_BACKGROUND } from '../../common/colours'
+import { V1_BACKGROUND } from '../../../common/colours'
 import { useHistory } from 'react-router-dom'
-import { PATHS } from '../../routes/Routes'
-import { MainCard } from './MainCard'
+import { PATHS } from '../../../routes/Routes'
+import { MainCard } from '../MainCard'
 import { useDispatch } from 'react-redux'
-import { FoodLine } from './FoodLine'
+import { FoodLine } from '../FoodLine'
 
 const OverlayBackground = styled.div`
   position: fixed;

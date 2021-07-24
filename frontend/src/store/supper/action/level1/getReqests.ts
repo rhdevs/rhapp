@@ -121,23 +121,22 @@ export const getOrderById = (orderId: string | undefined) => async (dispatch: Di
   dispatch(setIsLoading(false))
 }
 
-export const getRestaurantMenu = (restaurantId: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  await get(ENDPOINTS.GET_RESTAURANT_MENU, DOMAINS.SUPPER, `/${restaurantId}/menu`)
+export const getRestaurant = (restaurantId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  await get(ENDPOINTS.GET_RESTAURANT, DOMAINS.SUPPER, `/${restaurantId}/menu`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
+      console.log(resp.data)
       dispatch({
-        type: SUPPER_ACTIONS.GET_RESTAURANT_MENU,
-        menu: resp.data,
+        type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
+        restaurant: resp.data,
       })
     })
     .catch((err) => {
       console.log(err)
-      dispatch(setSupperErrorMessage('Failed to get restaurant menu, please try again later.'))
+      dispatch(setSupperErrorMessage('Failed to get restaurant, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getFoodMenu = (foodMenuId: string) => async (dispatch: Dispatch<ActionTypes>) => {

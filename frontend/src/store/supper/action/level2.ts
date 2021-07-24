@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../../types'
 import { ActionTypes } from '../types'
-import { getRestaurantMenu, getSupperGroupById, getUserOrder } from './level1/getReqests'
+import { getRestaurant, getSupperGroupById, getUserOrder } from './level1/getReqests'
 import { setIsLoading, setOrderId } from './setter'
 
 export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string) => (
@@ -9,7 +9,7 @@ export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: st
 ) => {
   dispatch(setIsLoading(true))
   dispatch(getSupperGroupById(supperGroupId)).then(() => {
-    dispatch(getRestaurantMenu(restaurantId)).then(() => {
+    dispatch(getRestaurant(restaurantId)).then(() => {
       dispatch(getUserOrder(supperGroupId)).then(() => {
         const { order } = getState().supper
 
