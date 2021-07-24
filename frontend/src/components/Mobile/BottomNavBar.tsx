@@ -15,6 +15,7 @@ import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 import supperIconSelected from '../../assets/supper/supperIconSelected.png'
 import supperIconUnselected from '../../assets/supper/supperIconUnselected.png'
 import 'antd-mobile/dist/antd-mobile.css'
+import { V1_BACKGROUND } from '../../common/colours'
 
 const StyledButton = styled.img`
   width: 28px;
@@ -47,7 +48,7 @@ function BottomNavBar() {
   }
 
   return (
-    <div style={{ height: '50px', backgroundColor: '#fafaf4' }}>
+    <div style={{ height: '50px', backgroundColor: `${V1_BACKGROUND}` }}>
       <BottomNav>
         <TabBar unselectedTintColor="#949494" tintColor="#de5f4c" barTintColor="white">
           <TabBar.Item
