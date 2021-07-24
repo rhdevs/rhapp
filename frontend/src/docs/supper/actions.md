@@ -104,6 +104,8 @@ Direct connection with backend.
 
 ### GET
 
+Get Object from backend.
+
 - **getSupperNotification** <br>
   Get an array of supper notifications from `/user/:userId/supperGroupNotification`.
 - **getAllSupperGroups** <br>
@@ -143,13 +145,71 @@ Direct connection with backend.
   Get Supper Groups created by the user from `/user/:userId/joinGroupHistory`. <br>
   Used in: GroupHistory
 
-### SET
+### PUT
 
-### POST/PUT
+Edit Object in backend.
 
-- updateSupperGroupPaymentStatus
+- **updateSupperGroup** <br>
+  Update Supper Group at `/supper/:supperGroupId`. <br>
+  Input: `supperGroupId: string | number | undefined, updatedInfo: any` <br>
+  Used in: OrderSummary, DeliveryDetails, EditSupperGroup
+- **emptyOrderFoodList** <br>
+  Empty order foodlist at `/order/:orderId`. <br>
+  Input: `supperGroupId: string, orderId: string`
+- **updateOrderDetails** <br>
+  Update order details at `/order/:orderId`. <br>
+  Input: `orderId: string, newOrderDetails: any` <br>
+  Used in: ConfirmOrder, UserView (ViewOrder)
+- **updateFoodInOrder** <br>
+  Update food in order at `/order/:orderId/food/:foodId`. <br>
+  Input: `newFood:any, orderId:string, foodId: string` <br>
+  Used in: EditFoodItem
+- **updateOwnerEdits** <br>
+  Update owner edits at `/supperGroup/:supperGroupId/owner` <br>
+  Input: `supperGroupId: number | undefined, foodId: string | undefined, updates: Updates, forAll: boolean`
+
+### POST
+
+Create Object in backend.
+
+- **createSupperGroup** <br>
+  Create Supper Group at `/supperGroup`. <br>
+  Input: `newSupperGroup: SupperGroup` <br>
+  Used in: Page3 of CreateSupperGroup
+- **createOrder** <br>
+  Create order at `/order`. <br>
+  Input:`supperGroupId: string | number` <br>
+  Used in: JoinOrder, Page3 of CreateOrder
+- **addFoodToOrder**
+  Add food to order at `/order/:orderId/food`. <br>
+  Input: `newFood: Food, orderId: string` <br>
+  Used in: AddFoodItem
+
+### Delete
+
+Remove Object from backend.
+
+- **closeSupperNotification** <br>
+  Close supper notification through `/user/:userId/supperGroupNotification/:supperGroupId`. <br>
+  Input: `supperGroupId: number`
+- **deleteSupperGroup** <br>
+  Delete supper group through `supperGroup/:supperGroupId`. <br>
+  Input: `supperGroupId: string|number|undefined`
+- **deleteOrder**
+  Delete order through `/order/:orderId`.
+  Input: `supperGroupId: string | number, orderId: string | undefined` <br>
+- **deleteFoodInOrder**
+  Delete food in order through `/order/:orderId/foood/:foodId`. <br>
+  Input: `orderId: string |undefined, foodId: string | undefined`
+- **leaveSupperGroup** <br>
+  Remove user from supper group through `/supperGroup/:supperGroupId/user/:userId`. <br>
+  Input: `supperGroupId: string | number | undefined`
 
 ## Level 2 Functions
 
-- More abstract
-- pages
+Get information for pages.
+
+- **getPlaceOrderPageDetails**
+  Get details for Order Page. <br>
+  Input: `supperGroupId: string, restaurantId: string` <br>
+  Used in: Order
