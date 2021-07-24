@@ -116,7 +116,8 @@ Get Object from backend.
   Input: `string | number | undefined` <br>
   Used in: UpdateItem, UpdateDelivery, UpdateAllItems, JoinOrder, OrderSummary, ViewOrder, DeliveryDetails, EditSupperGroup, AddFoodItem, ConfirmOrder, ViewCart
 - **getCreatedSupperHistory** <br>
-  Get Supper Groups created by the user from `/user/:userId/supperGroupHistory. <br> Input: `userId: string` <br>
+  Get Supper Groups created by the user from `/user/:userId/supperGroupHistory.` <br>
+  Input: `userId: string` <br>
   Used in: GroupHistory
 - **getOrderById** <br>
   Get order from `/order/:orderId`. <br>
@@ -162,7 +163,7 @@ Edit Object in backend.
   Used in: ConfirmOrder, UserView (ViewOrder)
 - **updateFoodInOrder** <br>
   Update food in order at `/order/:orderId/food/:foodId`. <br>
-  Input: `newFood:any, orderId:string, foodId: string` <br>
+  Input: `newFood: any, orderId: string, foodId: string` <br>
   Used in: EditFoodItem
 - **updateOwnerEdits** <br>
   Update owner edits at `/supperGroup/:supperGroupId/owner` <br>
