@@ -112,9 +112,8 @@ Get Object from backend.
   Get an array of supper notifications from `/user/:userId/supperGroupNotification`. <br>
   Input: -
 - **getAllSupperGroups** <br>
-  Get all supper group from `/supperGroup`. <br>
+  Get all supper group displayed in Supper Home Page from `/supperGroup`. <br>
   Input: - <br>
-  Files: SupperHome
 - **getSupperGroupById** <br>
   Get supper group from `/supperGroup/:SupperGroupId`. <br>
   Input: `string | number | undefined` <br>
@@ -215,7 +214,18 @@ Remove Object from backend.
 
 Get information for pages.
 
-- **getPlaceOrderPageDetails**
-  Get details for Order Page. <br>
+- **getPlaceOrderPageDetails** <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
   Files: `/PlaceOrder`
+- **getAddFoodItemPageDetails** <br>
+  Input: `supperGroupId: string, foodId: string` <br>
+  Files: `/AddFoodItem`
+- **getDeliveryDetails** <br>
+  Input: `supperGroupId: string` <br>
+  Files: `/DeliveryDetails`
+- **getEditFoodItemDetails** <br>
+  Input: `orderId: string, foodId: string` <br>
+  Files: `/EditFoodItem`
+- **getEditSupperGroupDetails** <br>
+  Input: `supperGroupId: string` <br>
+  Files: `/EditSupperGroup`

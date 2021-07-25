@@ -21,6 +21,7 @@ import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
 import { resetFoodState } from '../../../store/supper/action/setter'
 import { getFoodInOrder } from '../../../store/supper/action/level1/getReqests'
 import { updateFoodInOrder } from '../../../store/supper/action/level1/putRequests'
+import { getEditFoodItemDetails } from '../../../store/supper/action/level2'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -190,8 +191,7 @@ const EditFoodItem = () => {
   }
 
   useEffect(() => {
-    dispatch(resetFoodState())
-    dispatch(getFoodInOrder(params.orderId, params.foodId))
+    dispatch(getEditFoodItemDetails(params.orderId, params.foodId))
   }, [dispatch])
 
   useEffect(() => {
