@@ -65,6 +65,7 @@ const ReasonText = styled.text`
   font-size: 14px;
   margin: auto;
   padding-top: 5px;
+  display: inline-flex;
 `
 
 const OtherInfoContainer = styled.div`
@@ -168,11 +169,18 @@ export const SGStatusCard = (props: Props) => {
   }
 
   const showContentBody = () => {
+    if (isLoading) {
+      return (
+        <StatusContainer>
+          <Skeleton width="90px" height="32px" />
+        </StatusContainer>
+      )
+    }
     if (isArrived) {
       return (
         <>
           <StatusContainer>
-            {isLoading ? <Skeleton width="90px" height="32px" /> : <SGStatusBubble text={SupperGroupStatus.ARRIVED} />}
+            <SGStatusBubble text={SupperGroupStatus.ARRIVED} />
             {!props.isOwner && (
               <Button
                 stopPropagation={true}
@@ -186,46 +194,32 @@ export const SGStatusCard = (props: Props) => {
             <OtherInfoSubContainer>
               <IconImage src={locationIcon} alt="Location Icon" />
               <LocationText>
-                {isLoading ? (
-                  <Skeleton width="150px" height="14px" />
-                ) : (
-                  <>
-                    {props.location} @ {props.collectionTime}
-                  </>
-                )}
+                {props.location} @ {props.collectionTime}
               </LocationText>
             </OtherInfoSubContainer>
             <OtherInfoSubContainer>
               <IconImage src={moneyIcon} alt="Money Icon" />
               <PaymentTextContainer>
-                {isLoading ? (
-                  <Skeleton width="200px" height="12px" />
-                ) : (
-                  <>
-                    {props.paymentMethod?.map((pm, index) => {
-                      if (pm.paymentMethod === PaymentMethod.CASH) {
-                        return <CashText key={index}>{pm.paymentMethod}</CashText>
-                      } else {
-                        let link = pm.link
-                        if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
-                          link = 'https://' + pm.link
-                        }
-                        return (
-                          <UnderlinedButton
-                            fontSize="12px"
-                            margin="0 3px"
-                            key={index}
-                            onClick={() =>
-                              window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')
-                            }
-                            text={pm.paymentMethod}
-                            color="rgba(0, 38, 66, 0.7)"
-                          />
-                        )
-                      }
-                    })}
-                  </>
-                )}
+                {props.paymentMethod?.map((pm, index) => {
+                  if (pm.paymentMethod === PaymentMethod.CASH) {
+                    return <CashText key={index}>{pm.paymentMethod}</CashText>
+                  } else {
+                    let link = pm.link
+                    if (!(pm.link?.includes('https://') || pm.link?.includes('http://'))) {
+                      link = 'https://' + pm.link
+                    }
+                    return (
+                      <UnderlinedButton
+                        fontSize="12px"
+                        margin="0 3px"
+                        key={index}
+                        onClick={() => window.open(link === null ? undefined : link, '_blank', 'noopener,noreferrer')}
+                        text={pm.paymentMethod}
+                        color="rgba(0, 38, 66, 0.7)"
+                      />
+                    )
+                  }
+                })}
               </PaymentTextContainer>
             </OtherInfoSubContainer>
           </OtherInfoContainer>
@@ -235,11 +229,7 @@ export const SGStatusCard = (props: Props) => {
       return (
         <>
           <StatusContainer>
-            {isLoading ? (
-              <Skeleton width="90px" height="32px" />
-            ) : (
-              <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
-            )}
+            <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
             {!props.isOwner && (
               <Button
                 stopPropagation={true}
@@ -249,19 +239,13 @@ export const SGStatusCard = (props: Props) => {
               />
             )}
           </StatusContainer>
-          <ReasonText>
-            Reason: {isLoading ? <Skeleton width="150px" height="14px" /> : <>{props.cancelReason ?? '-'}</>}
-          </ReasonText>
+          <ReasonText>Reason: {props.cancelReason ?? '-'}</ReasonText>
         </>
       )
     } else {
       return (
         <StatusContainer>
-          {isLoading ? (
-            <Skeleton width="90px" height="32px" />
-          ) : (
-            <SGStatusBubble text={props.supperGroupStatus ?? ''} />
-          )}
+          <SGStatusBubble text={props.supperGroupStatus ?? ''} />
           {!props.isOwner && (
             <Button
               stopPropagation={true}

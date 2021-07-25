@@ -1,7 +1,15 @@
 import { Dispatch, GetState } from '../../types'
 import { ActionTypes } from '../types'
-import { getCollatedOrder, getFoodInOrder, getRestaurant, getSupperGroupById, getUserOrder } from './level1/getReqests'
-import { setFoodState, setIsLoading, setOrderId, setSupperErrorMessage } from './setter'
+import {
+  getCollatedOrder,
+  getCreatedSupperHistory,
+  getFoodInOrder,
+  getJoinedSupperHistory,
+  getRestaurant,
+  getSupperGroupById,
+  getUserOrder,
+} from './level1/getReqests'
+import { setFoodState, setIsLoading, setOrderId, setSelectedSupperGroupStatus, setSupperErrorMessage } from './setter'
 
 export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string) => async (
   dispatch: Dispatch<ActionTypes>,
@@ -57,5 +65,34 @@ export const getUpdateAllItemsPageDetails = (supperGroupId: string, foodId: stri
       dispatch(setFoodState(currentFood))
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')))
+  dispatch(setIsLoading(false))
+}
+
+export const getGroupHistoryPageDetails = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  await Promise.all([dispatch(getCreatedSupperHistory()), dispatch(getJoinedSupperHistory())]).catch(() =>
+    dispatch(setSupperErrorMessage('Could not get group history page details! Please try again later.')),
+  )
+  dispatch(setIsLoading(false))
+}
+
+export const getViewOrderPageDetails = (supperGroupId: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  dispatch(setIsLoading(true))
+  await dispatch(getSupperGroupById(supperGroupId))
+    .then(() => {
+      const { supperGroup } = getState().supper
+      if (supperGroup) {
+        dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
+        if (supperGroup?.ownerId === localStorage.userID) {
+          dispatch(getCollatedOrder(supperGroupId))
+        } else {
+          dispatch(getUserOrder(supperGroupId))
+        }
+      }
+    })
+    .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
   dispatch(setIsLoading(false))
 }

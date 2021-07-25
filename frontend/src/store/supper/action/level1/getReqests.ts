@@ -21,7 +21,6 @@ export const getSupperNotifications = () => async (dispatch: Dispatch<ActionType
 }
 
 export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -36,15 +35,12 @@ export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) 
       console.log(err)
       setSupperErrorMessage('Failed to get all supper groups, please try again later.')
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getSupperGroupById = (supperGroupId: string | number | undefined) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (supperGroupId === undefined) return
-  // dispatch(setIsLoading(true))
-
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -59,11 +55,9 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
       console.log(err)
       setSupperErrorMessage('Failed to get supper group, please try again later.')
     })
-  // dispatch(setIsLoading(false))
 }
 
 export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupHistory`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -78,11 +72,9 @@ export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTyp
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to retrieve supper group history, please try again.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getJoinedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_JOINED_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/joinGroupHistory`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -97,7 +89,6 @@ export const getJoinedSupperHistory = () => async (dispatch: Dispatch<ActionType
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get joined supper groups, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getOrderById = (orderId: string | undefined) => async (dispatch: Dispatch<ActionTypes>) => {

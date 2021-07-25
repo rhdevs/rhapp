@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import LoadingSpin from '../../../components/LoadingSpin'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { Separator, TabContainer } from '../../../components/Tabs'
-import { getCreatedSupperHistory, getJoinedSupperHistory } from '../../../store/supper/action/level1/getReqests'
+import { getGroupHistoryPageDetails } from '../../../store/supper/action/level2'
 import { HomeSupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
@@ -63,13 +64,12 @@ const EmptyText = styled.text`
 
 export default function GroupHistory() {
   const dispatch = useDispatch()
-  const { joinedSupperHistory, createdSupperHistory } = useSelector((state: RootState) => state.supper)
+  const { joinedSupperHistory, createdSupperHistory, isLoading } = useSelector((state: RootState) => state.supper)
   const [currentTab, setCurrentTab] = useState<number>(1)
   const sections = ['Created', 'Joined']
 
   useEffect(() => {
-    dispatch(getCreatedSupperHistory())
-    dispatch(getJoinedSupperHistory())
+    dispatch(getGroupHistoryPageDetails())
   }, [dispatch])
 
   const content = () => {
@@ -88,7 +88,9 @@ export default function GroupHistory() {
         supperGroup.status !== SupperGroupStatus.OPEN && supperGroup.status !== SupperGroupStatus.PENDING,
     )
 
-    return (
+    return isLoading ? (
+      <LoadingSpin />
+    ) : (
       <>
         <SubHeader>Active</SubHeader>
         {openOrPendingSupperGroups.length ? (

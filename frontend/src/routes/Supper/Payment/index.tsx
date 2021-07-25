@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import { MarkPaymentCompleteModal } from '../../../components/Supper/Modals/Mark
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { paymentMethods } from '../../../store/stubs'
+import { setSelectedPaymentMethod } from '../../../store/supper/action/setter'
 import { PaymentMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 
@@ -63,6 +64,7 @@ type FormValues = {
 const Payment = () => {
   const params = useParams<{ orderId: string }>()
   const history = useHistory()
+  const dispatch = useDispatch()
   const [markPaymentCompleteModalIsOpen, setMarkPaymentCompleteModalIsOpen] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
   const {
@@ -81,12 +83,16 @@ const Payment = () => {
   }
 
   useEffect(() => {
+    dispatch(setSelectedPaymentMethod([]))
+  }, [])
+
+  useEffect(() => {
     if (watch('paymentMethod') !== selectedPaymentMethod) setValue('paymentMethod', selectedPaymentMethod)
     if (selectedPaymentMethod.length) clearErrors('paymentMethod')
   }, [watch('paymentMethod'), selectedPaymentMethod])
 
   const onLeftClick = () => {
-    Object.values(touched).length ? setHasChangedModal(true) : history.goBack()
+    Object.values(touched).length || selectedPaymentMethod.length ? setHasChangedModal(true) : history.goBack()
   }
 
   const onSubmit = (e) => {
@@ -104,7 +110,7 @@ const Payment = () => {
           modalSetter={setMarkPaymentCompleteModalIsOpen}
           orderId={params.orderId}
           phoneNumber={watch('phoneNumber')}
-          paymentMethod={watch('paymentMethod')}
+          paymentMethod={watch('paymentMethod')[0]}
         />
       )}
       {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}

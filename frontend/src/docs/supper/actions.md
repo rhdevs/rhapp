@@ -217,22 +217,28 @@ Get information for pages.
   Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
   Actions used: `getSupperGroupById`, `getRestaurant`, `getUserOrder` and `setOrderId`<br>
-  Used in: Order
+  Used in: `/PlaceOrder`
 
 - **getOrderSummaryPageDetails** <br>
   Get details for Order Summary Page. <br>
   Input: `supperGroupId: string` <br>
   Actions used: `getCollatedOrder` and `getSupperGroupById` <br>
-  Used in: Order Summary
+  Used in: `/OrderSummary`
 
 - **getUpdateItemPageDetails** <br>
   Get details for Update Item Page. <br>
   Input: `supperGroupId: string, orderId: string, foodId: string` <br>
   Actions used: `getSupperGroupById` and `getFoodInOrder` <br>
-  Used in: Update Item
+  Used in: `/OrderSummary/UpdateItem`
 
 - **getUpdateAllItemsPageDetails** <br>
   Get details for Update All Items Page. <br>
   Input: `supperGroupId: string, foodId: string` <br>
   Actions used: `getCollatedOrder` and `setFoodState` <br>
-  Used in: Update Item
+  Used in: `/OrderSummary/UpdateAllItems`
+
+- **getGroupHistoryPageDetails** <br>
+  Get details for Group History Page. <br>
+  Input: - <br>
+  Actions used: `getCreatedSupperHistory` and `getJoinedSupperHistory` <br>
+  Files: `/GroupHistory`
