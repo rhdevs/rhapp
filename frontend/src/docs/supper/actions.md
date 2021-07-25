@@ -196,10 +196,10 @@ Remove Object from backend.
 - **deleteSupperGroup** <br>
   Delete supper group through `supperGroup/:supperGroupId`. <br>
   Input: `supperGroupId: string|number|undefined`
-- **deleteOrder**
+- **deleteOrder** <br>
   Delete order through `/order/:orderId`.
   Input: `supperGroupId: string | number, orderId: string | undefined` <br>
-- **deleteFoodInOrder**
+- **deleteFoodInOrder** <br>
   Delete food in order through `/order/:orderId/foood/:foodId`. <br>
   Input: `orderId: string |undefined, foodId: string | undefined`
 - **leaveSupperGroup** <br>
@@ -210,7 +210,14 @@ Remove Object from backend.
 
 Get information for pages.
 
-- **getPlaceOrderPageDetails**
+- **getPlaceOrderPageDetails** <br>
   Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
+  Actions used: `getSupperGroupById`, `getRestaurant`, `getUserOrder` and `setOrderId`<br>
   Used in: Order
+
+- **getOrderSummaryPageDetails** <br>
+  Get details for Order Summary Page. <br>
+  Input: `supperGroupId: string` <br>
+  Actions used: `getCollatedOrder` and `getSupperGroupById` <br>
+  Used in: Order Summary

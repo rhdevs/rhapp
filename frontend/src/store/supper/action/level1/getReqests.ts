@@ -182,7 +182,6 @@ export const getCollatedOrder = (supperGroupId: string | number | undefined) => 
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (!supperGroupId) return
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -197,12 +196,10 @@ export const getCollatedOrder = (supperGroupId: string | number | undefined) => 
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get collated order, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getUserOrder = (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
-  // dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${localStorage.userID}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -217,5 +214,4 @@ export const getUserOrder = (supperGroupId: string | number | undefined) => asyn
       console.log(err)
       dispatch(setSupperErrorMessage("Failed to get user's order, please try again later."))
     })
-  // dispatch(setIsLoading(false))
 }

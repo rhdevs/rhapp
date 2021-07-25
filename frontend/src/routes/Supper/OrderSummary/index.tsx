@@ -13,8 +13,8 @@ import { SupperButton } from '../../../components/Supper/SupperButton'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoStepCancelGroupModal'
-import { getCollatedOrder, getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { getOrderSummaryPageDetails } from '../../../store/supper/action/level2'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -40,8 +40,7 @@ const OrderSummary = () => {
   const [twoStepModalIsOpen, setTwoStepModalIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    dispatch(getCollatedOrder(params.supperGroupId))
-    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getOrderSummaryPageDetails(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
