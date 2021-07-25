@@ -3,7 +3,6 @@ import { Dispatch } from '../../../types'
 import { ActionTypes, SUPPER_ACTIONS } from '../../types'
 import { setIsLoading, setSupperErrorMessage } from '../setter'
 
-//------------------------ GET --------------------------
 export const getSupperNotifications = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupNotification`)
     .then((resp) => {
@@ -21,7 +20,6 @@ export const getSupperNotifications = () => async (dispatch: Dispatch<ActionType
 }
 
 export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.ALL_SUPPER_GROUPS, DOMAINS.SUPPER)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -36,15 +34,12 @@ export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) 
       console.log(err)
       setSupperErrorMessage('Failed to get all supper groups, please try again later.')
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getSupperGroupById = (supperGroupId: string | number | undefined) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (supperGroupId === undefined) return
-  // dispatch(setIsLoading(true))
-
   await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -59,11 +54,9 @@ export const getSupperGroupById = (supperGroupId: string | number | undefined) =
       console.log(err)
       setSupperErrorMessage('Failed to get supper group, please try again later.')
     })
-  // dispatch(setIsLoading(false))
 }
 
 export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupHistory`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -78,11 +71,9 @@ export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTyp
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to retrieve supper group history, please try again.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getJoinedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_JOINED_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/joinGroupHistory`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -97,7 +88,6 @@ export const getJoinedSupperHistory = () => async (dispatch: Dispatch<ActionType
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get joined supper groups, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getOrderById = (orderId: string | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -108,7 +98,6 @@ export const getOrderById = (orderId: string | undefined) => async (dispatch: Di
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_ID,
         order: resp.data,
@@ -127,7 +116,6 @@ export const getRestaurant = (restaurantId: string) => async (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
         restaurant: resp.data,
@@ -160,7 +148,6 @@ export const getFoodMenu = (foodMenuId: string) => async (dispatch: Dispatch<Act
 
 export const getFoodInOrder = (orderId?: string, foodId?: string) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!(orderId && foodId)) return
-  // dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -175,14 +162,12 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => async (disp
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get food, please try again later.'))
     })
-  // dispatch(setIsLoading(false))
 }
 
 export const getCollatedOrder = (supperGroupId: string | number | undefined) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (!supperGroupId) return
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -197,12 +182,10 @@ export const getCollatedOrder = (supperGroupId: string | number | undefined) => 
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get collated order, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getUserOrder = (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
-  // dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_USER_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/user/${localStorage.userID}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -217,5 +200,4 @@ export const getUserOrder = (supperGroupId: string | number | undefined) => asyn
       console.log(err)
       dispatch(setSupperErrorMessage("Failed to get user's order, please try again later."))
     })
-  // dispatch(setIsLoading(false))
 }

@@ -180,7 +180,7 @@ const EditFoodItem = () => {
 
         if (updatedFoodInfo) {
           dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
-          history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+          history.push(`${PATHS.ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
           return
         }
         history.goBack()

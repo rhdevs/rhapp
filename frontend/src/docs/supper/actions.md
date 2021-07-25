@@ -40,7 +40,7 @@ Functions that update store variables.
 - **setSearchValue** <br>
   Input: `string` <br>
   Variable updated: `searchValue` <br>
-  Files: `/PlaceOrder`
+  Files: `/Order`
 - **setSupperGroup** <br>
   Input: `SupperGroup` <br>
   Variable updated: `supperGroup` <br>
@@ -83,7 +83,7 @@ Functions that update store variables.
 - **setIsFoodMenuModalOpen** <br>
   Input: `boolean` <br>
   Variable updated:`isFoodMenuModalOpen` <br>
-  Files: `/PlaceOrder`
+  Files: `/Order`
 - **setFoodModalInfo** <br>
   Input: `foodMenuModalId: string, modalMenuFoodName: string` <br>
   Variable updated:`foodMenuModalId, modalMenuFoodName`
@@ -99,6 +99,9 @@ Functions that update store variables.
 - **setSupperErrorMessage** <br>
   Input: `string` <br>
   Variable updated: `supperErrorMessage`
+- **setFoodState** <br>
+  Input: `Food | undefined` <br>
+  Variable updated: `food`
 
 ## Level 1 Functions
 
@@ -128,7 +131,7 @@ Get Object from backend.
 - **getRestaurantMenu** <br>
   Get restaurant with menu from `/restaurant/:restaurantId/menu` <br>
   Input: `restaurantId:string` <br>
-  Files: `/PlaceOrder`
+  Files: `/Order`
 - **getFoodMenu** <br>
   Get food in menu from `/restaurant/food/:foodMenuId`. <br>
   Input: `foodId: string` <br>
@@ -200,10 +203,10 @@ Remove Object from backend.
 - **deleteSupperGroup** <br>
   Delete supper group through `supperGroup/:supperGroupId`. <br>
   Input: `supperGroupId: string|number|undefined`
-- **deleteOrder** - to be removed
+- **deleteOrder** - to be removed <br>
   Delete order through `/order/:orderId`.
   Input: `supperGroupId: string | number, orderId: string | undefined` <br>
-- **deleteFoodInOrder**
+- **deleteFoodInOrder** <br>
   Delete food in order through `/order/:orderId/foood/:foodId`. <br>
   Input: `orderId: string |undefined, foodId: string | undefined`
 - **leaveSupperGroup** <br>
@@ -214,10 +217,41 @@ Remove Object from backend.
 
 Get information for pages.
 
-- **getPlaceOrderPageDetails** <br>
+- **getOrderPageDetails** <br>
+  Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
-  Actions used: `getSupperGroupById`, `getRestaurant` and `getUserOrder` <br>
-  Files: `/PlaceOrder`
+  Actions used: `getSupperGroupById`, `getRestaurant`, `getUserOrder` and `setOrderId`<br>
+  Files: `/Order`
+- **getOrderSummaryPageDetails** <br>
+  Get details for Order Summary Page. <br>
+  Input: `supperGroupId: string` <br>
+  Actions used: `getCollatedOrder` and `getSupperGroupById` <br>
+  Files: `/OrderSummary`
+- **getUpdateItemPageDetails** <br>
+  Get details for Update Item Page. <br>
+  Input: `supperGroupId: string, orderId: string, foodId: string` <br>
+  Actions used: `getSupperGroupById` and `getFoodInOrder` <br>
+  Files: `/OrderSummary/UpdateItem`
+- **getUpdateAllItemsPageDetails** <br>
+  Get details for Update All Items Page. <br>
+  Input: `supperGroupId: string, foodId: string` <br>
+  Actions used: `getCollatedOrder` and `setFoodState` <br>
+  Files: `/OrderSummary/UpdateAllItems`
+- **getGroupHistoryPageDetails** <br>
+  Get details for Group History Page. <br>
+  Input: - <br>
+  Actions used: `getCreatedSupperHistory` and `getJoinedSupperHistory` <br>
+  Files: `/GroupHistory`
+- **getJoinGroupPageDetails** <br>
+  Get details for Join Group Page. <br>
+  Input: - <br>
+  Actions used: `getSupperGroupById` <br>
+  Files: `/JoinGroup`
+- **getSupperHomePageDetails** <br>
+  Get details for Supper Home Page. <br>
+  Input: - <br>
+  Actions used: `getAllSupperGroups` <br>
+  Files: `/`
 - **getAddFoodItemPageDetails** <br>
   Input: `supperGroupId: string, foodId: string` <br>
   Actions used: `getSupperGroupById` <br>

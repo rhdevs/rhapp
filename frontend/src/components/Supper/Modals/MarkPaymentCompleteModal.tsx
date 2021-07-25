@@ -9,7 +9,7 @@ import { SupperModal } from './SupperModal'
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   orderId: string
-  paymentMethod: PaymentMethod[]
+  paymentMethod: PaymentMethod
   phoneNumber: number
 }
 

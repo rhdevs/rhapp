@@ -129,6 +129,7 @@ const ErrorText = styled.text`
 `
 
 type Props = {
+  placeholder?: boolean
   backgroundColor?: string
   borderRadius?: string
   margin?: string
@@ -240,10 +241,10 @@ export const FoodLine = (props: Props) => {
       }
       return (
         <>
-          {quantity && !hasNoQuantity && (
+          {(quantity || props.placeholder) && !hasNoQuantity && (
             <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
           )}
-          {foodName && (
+          {(foodName || props.placeholder) && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
           <PriceContainer color={wasEdited ? V1_RED : 'black'}>

@@ -55,10 +55,10 @@ export enum PATHS {
   SUPPER_HISTORY = '/supper/history',
   CREATE_SUPPER_GROUP = '/supper/create',
   CREATE_SUPPER_GROUP_BY_PAGE = '/supper/create/:page',
-  JOIN_ORDER = '/supper/join/order',
-  JOIN_ORDER_BY_ID = '/supper/join/order/:supperGroupId',
-  PLACE_ORDER = '/supper',
-  PLACE_ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
+  JOIN_GROUP = '/supper/join/order',
+  JOIN_GROUP_BY_ID = '/supper/join/order/:supperGroupId',
+  ORDER = '/supper',
+  ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
   ORDER_SUMMARY = '/supper/view/summary',
   ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
   VIEW_ORDER = '/supper/view/order',
@@ -128,8 +128,8 @@ const GroupHistory = React.lazy(() => import(/* webpackChunckName: "GroupHistory
 const CreateSupperGroup = React.lazy(
   () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
 )
-const JoinOrder = React.lazy(() => import(/* webpackChunckName: "JoinOrder" */ './Supper/JoinOrder'))
-const PlaceOrder = React.lazy(() => import(/* webpackChunckName: "PlaceOrder" */ './Supper/PlaceOrder'))
+const JoinGroup = React.lazy(() => import(/* webpackChunckName: "JoinGroup" */ './Supper/JoinGroup'))
+const Order = React.lazy(() => import(/* webpackChunckName: "Order" */ './Supper/Order'))
 const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
 const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
 const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
@@ -189,8 +189,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
             <PrivateRoute exact path={PATHS.SUPPER_HISTORY} component={GroupHistory} />
             <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_BY_PAGE} component={CreateSupperGroup} />
-            <PublicRoute exact path={PATHS.JOIN_ORDER_BY_ID} component={JoinOrder} />
-            <PrivateRoute exact path={PATHS.PLACE_ORDER_BY_ID} component={PlaceOrder} />
+            <PublicRoute exact path={PATHS.JOIN_GROUP_BY_ID} component={JoinGroup} />
+            <PrivateRoute exact path={PATHS.ORDER_BY_ID} component={Order} />
             <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
             <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
             <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />

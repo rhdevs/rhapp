@@ -12,8 +12,8 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperButton } from '../../../components/Supper/SupperButton'
-import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { createOrder } from '../../../store/supper/action/level1/postRequests'
+import { getJoinGroupPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   height: 100vh;
@@ -28,24 +28,24 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `
 
-export default function JoinOrder() {
+const JoinGroup = () => {
   const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getJoinGroupPageDetails(params.supperGroupId))
   }, [dispatch])
 
   const onClick = () => {
     dispatch(createOrder(params.supperGroupId))
-    history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
+    history.push(`${PATHS.ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
   }
 
   return (
     <Background>
-      <TopNavBar title="Join Order" />
+      <TopNavBar title="Join Group" />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -60,3 +60,5 @@ export default function JoinOrder() {
     </Background>
   )
 }
+
+export default JoinGroup

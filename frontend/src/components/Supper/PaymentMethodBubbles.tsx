@@ -59,7 +59,7 @@ export const PaymentMethodBubbles = (props: Props) => {
                 border={V1_BLUE}
                 color="white"
                 borderWidth="1px"
-                backgroundColor={V1_BLUE}
+                backgroundColor="bluegrey"
                 shadow
                 key={index}
                 text={paymentMethod}

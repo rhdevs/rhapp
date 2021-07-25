@@ -13,13 +13,11 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => async (dispatc
   } else {
     requestBody = newSupperGroup
   }
-  console.log(requestBody)
   await post(ENDPOINTS.ADD_SUPPER_GROUP, DOMAINS.SUPPER, requestBody)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch(setSupperGroup(resp.data.supperGroup))
       dispatch(setNewSupperGroupId(resp.data.supperGroup.supperGroupId))
       dispatch(setIsLoading(false))
@@ -31,13 +29,13 @@ export const createSupperGroup = (newSupperGroup: SupperGroup) => async (dispatc
     })
 }
 
-export const createOrder = (supperGroupId: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+export const createOrder = (supperGroupId: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
   const requestBody = {
     userID: localStorage.userID,
     supperGroupId: Number(supperGroupId),
   }
-  post(ENDPOINTS.CREATE_ORDER, DOMAINS.SUPPER, requestBody, {})
+  await post(ENDPOINTS.CREATE_ORDER, DOMAINS.SUPPER, requestBody, {})
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -51,10 +49,10 @@ export const createOrder = (supperGroupId: string | number) => (dispatch: Dispat
   dispatch(setIsLoading(false))
 }
 
-export const addFoodToOrder = (newFood: Food, orderId: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const addFoodToOrder = (newFood: Food, orderId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = newFood
   dispatch(setIsLoading(true))
-  post(ENDPOINTS.ADD_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food`)
+  await post(ENDPOINTS.ADD_FOOD, DOMAINS.SUPPER, requestBody, {}, `/${orderId}/food`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err

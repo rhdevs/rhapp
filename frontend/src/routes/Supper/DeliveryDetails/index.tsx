@@ -254,9 +254,7 @@ const DeliveryDetails = () => {
           <LoadingSpin />
         ) : (
           <>
-            {hasChangedModal && (
-              <DiscardChangesModal modalSetter={setHasChangedModal} onLeftButtonClick={() => history.goBack()} />
-            )}
+            {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
             {isCancelModalOpen && (
               <CancelGroupModal
                 modalSetter={setIsCancelModalOpen}

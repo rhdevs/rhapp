@@ -16,11 +16,6 @@ import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal
 import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import LoadingSpin from '../../../components/LoadingSpin'
-
-export const OrderContainer = styled.div`
-  margin: 40px 0px 0px 0;
-`
 
 export const SupperButtonContainer = styled.div`
   display: flex;
@@ -72,11 +67,11 @@ const OwnerView = (props: Props) => {
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
+    if (isLoading) return
     if (props.supperGroupIsOpen) {
       return (
         <>
           <ButtonContainer>
-            {console.log(orderList)}
             {orderList !== undefined &&
               (orderList.length > 0 || (orderList?.length === 1 && orderList[0].foodList.length > 1)) && (
                 <UpperRowButtons>
@@ -146,30 +141,24 @@ const OwnerView = (props: Props) => {
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <PullToRefresh onRefresh={onRefresh}>
-          <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-          <OrderContainer>
-            <OrderCard
-              supperGroup={props.supperGroup}
-              ownerId={localStorage.userID}
-              supperGroupStatus={props.supperGroup?.status}
-              collatedOrder={props.collatedOrder}
+      <PullToRefresh onRefresh={onRefresh}>
+        <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+        <OrderCard
+          supperGroup={props.supperGroup}
+          ownerId={localStorage.userID}
+          supperGroupStatus={props.supperGroup?.status}
+          collatedOrder={props.collatedOrder}
+        />
+        {showBottomSection()}
+        {props.showTrackPayment && !isLoading && (
+          <SupperButtonContainer>
+            <SupperButton
+              onButtonClick={() => setEndGroupModalIsOpen(true)}
+              defaultButtonDescription="End Supper Group"
             />
-          </OrderContainer>
-          {showBottomSection()}
-          {props.showTrackPayment && (
-            <SupperButtonContainer>
-              <SupperButton
-                onButtonClick={() => setEndGroupModalIsOpen(true)}
-                defaultButtonDescription="End Supper Group"
-              />
-            </SupperButtonContainer>
-          )}
-        </PullToRefresh>
-      )}
+          </SupperButtonContainer>
+        )}
+      </PullToRefresh>
     </>
   )
 }

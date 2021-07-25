@@ -22,10 +22,10 @@ export const closeSupperNotification = (supperGroupId: number) => (dispatch: Dis
     })
 }
 
-export const deleteSupperGroup = (supperGroupId?: string | number) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteSupperGroup = (supperGroupId?: string | number) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.DELETE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}`)
+  await del(ENDPOINTS.DELETE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -39,10 +39,12 @@ export const deleteSupperGroup = (supperGroupId?: string | number) => (dispatch:
   dispatch(setIsLoading(false))
 }
 
-export const deleteOrder = (supperGroupId: string | number, orderId?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const deleteOrder = (supperGroupId: string | number, orderId?: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   if (!orderId) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.DELETE_ORDER, DOMAINS.SUPPER, {}, `/${orderId}`)
+  await del(ENDPOINTS.DELETE_ORDER, DOMAINS.SUPPER, {}, `/${orderId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -56,12 +58,12 @@ export const deleteOrder = (supperGroupId: string | number, orderId?: string) =>
   dispatch(setIsLoading(false))
 }
 
-export const deleteFoodInOrder = (orderId: string | undefined, foodId: string | undefined) => (
+export const deleteFoodInOrder = (orderId: string | undefined, foodId: string | undefined) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   if (!(orderId || foodId)) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${orderId}/food/${foodId}`)
+  await del(ENDPOINTS.DELETE_FOOD, DOMAINS.SUPPER, {}, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
@@ -75,10 +77,12 @@ export const deleteFoodInOrder = (orderId: string | undefined, foodId: string | 
   dispatch(setIsLoading(false))
 }
 
-export const leaveSupperGroup = (supperGroupId: string | number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+export const leaveSupperGroup = (supperGroupId: string | number | undefined) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   if (!supperGroupId) return
   dispatch(setIsLoading(true))
-  del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}`)
+  await del(ENDPOINTS.LEAVE_SUPPER_GROUP, DOMAINS.SUPPER, {}, `/${supperGroupId}/user/${localStorage.userID}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
