@@ -113,7 +113,7 @@ const Payment = () => {
           <FormHeader headerName="Which payment mode did you pay via?" isCompulsory />
           <PaymentMethodBubbles
             onlyOne
-            {...register('paymentMethod', { required: true })}
+            {...register('paymentMethod', { required: true, validate: (input) => input.length !== 0 })}
             paymentMethods={paymentMethods}
           />
           {errors.paymentMethod && <ErrorText>Payment method required!</ErrorText>}
