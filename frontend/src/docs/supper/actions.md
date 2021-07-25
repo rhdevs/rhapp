@@ -40,11 +40,7 @@ Functions that update store variables.
 - **setSearchValue** <br>
   Input: `string` <br>
   Variable updated: `searchValue` <br>
-<<<<<<< HEAD
-  Used in: Order
-=======
-  Files: `/PlaceOrder`
->>>>>>> minimain
+  Files: `/Order`
 - **setSupperGroup** <br>
   Input: `SupperGroup` <br>
   Variable updated: `supperGroup` <br>
@@ -69,13 +65,8 @@ Functions that update store variables.
 - **setCounter** <br>
   Input: `number` <br>
   Variable updated: `counter` <br>
-<<<<<<< HEAD
-  Used in: Page3 of CreateSupperGroup
-- **setFoodStates** <br>
-=======
   Files: `CreateSupperGroup/Pages/Page3`
 - **resetFoodStates** <br>
->>>>>>> minimain
   Sets variable as null. <br>
   Input: - <br>
   Variable updated: `food` <br>
@@ -92,11 +83,7 @@ Functions that update store variables.
 - **setIsFoodMenuModalOpen** <br>
   Input: `boolean` <br>
   Variable updated:`isFoodMenuModalOpen` <br>
-<<<<<<< HEAD
-  Used in: Order
-=======
-  Files: `/PlaceOrder`
->>>>>>> minimain
+  Files: `/Order`
 - **setFoodModalInfo** <br>
   Input: `foodMenuModalId: string, modalMenuFoodName: string` <br>
   Variable updated:`foodMenuModalId, modalMenuFoodName`
@@ -133,11 +120,7 @@ Get Object from backend.
 - **getSupperGroupById** <br>
   Get supper group from `/supperGroup/:SupperGroupId`. <br>
   Input: `string | number | undefined` <br>
-<<<<<<< HEAD
-  Used in: UpdateItem, UpdateDelivery, UpdateAllItems, JoinGroup, OrderSummary, ViewOrder, DeliveryDetails, EditSupperGroup, AddFoodItem, ConfirmOrder, ViewCart
-=======
   Files: `/OrderSummary/UpdateItem, /OrderSummary/UpdateDelivery, /OrderSummary/UpdateAllItems, /OrderSummary/index, /JoinOrder, /ViewOrder, /DeliveryDetails, /EditSupperGroup, /AddFoodItem, /ConfirmOrder`
->>>>>>> minimain
 - **getCreatedSupperHistory** <br>
   Get Supper Groups created by the user from `/user/:userId/supperGroupHistory.` <br>
   Input: `userId: string` <br>
@@ -148,11 +131,7 @@ Get Object from backend.
 - **getRestaurantMenu** <br>
   Get restaurant with menu from `/restaurant/:restaurantId/menu` <br>
   Input: `restaurantId:string` <br>
-<<<<<<< HEAD
-  Used in: Order
-=======
-  Files: `/PlaceOrder`
->>>>>>> minimain
+  Files: `/Order`
 - **getFoodMenu** <br>
   Get food in menu from `/restaurant/food/:foodMenuId`. <br>
   Input: `foodId: string` <br>
@@ -208,11 +187,7 @@ Create Object in backend.
 - **createOrder** <br>
   Create order at `/order`. <br>
   Input:`supperGroupId: string | number` <br>
-<<<<<<< HEAD
-  Used in: JoinGroup, Page3 of CreateOrder
-=======
   Files: `/JoinOrder, /CreateOrder/Pages/Page3`
->>>>>>> minimain
 - **addFoodToOrder**
   Add food to order at `/order/:orderId/food`. <br>
   Input: `newFood: Food, orderId: string` <br>
@@ -242,53 +217,41 @@ Remove Object from backend.
 
 Get information for pages.
 
-<<<<<<< HEAD
 - **getOrderPageDetails** <br>
   Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
   Actions used: `getSupperGroupById`, `getRestaurant`, `getUserOrder` and `setOrderId`<br>
   Files: `/Order`
-
 - **getOrderSummaryPageDetails** <br>
   Get details for Order Summary Page. <br>
   Input: `supperGroupId: string` <br>
   Actions used: `getCollatedOrder` and `getSupperGroupById` <br>
   Files: `/OrderSummary`
-
 - **getUpdateItemPageDetails** <br>
   Get details for Update Item Page. <br>
   Input: `supperGroupId: string, orderId: string, foodId: string` <br>
   Actions used: `getSupperGroupById` and `getFoodInOrder` <br>
   Files: `/OrderSummary/UpdateItem`
-
 - **getUpdateAllItemsPageDetails** <br>
   Get details for Update All Items Page. <br>
   Input: `supperGroupId: string, foodId: string` <br>
   Actions used: `getCollatedOrder` and `setFoodState` <br>
   Files: `/OrderSummary/UpdateAllItems`
-
 - **getGroupHistoryPageDetails** <br>
   Get details for Group History Page. <br>
   Input: - <br>
   Actions used: `getCreatedSupperHistory` and `getJoinedSupperHistory` <br>
   Files: `/GroupHistory`
-
 - **getJoinGroupPageDetails** <br>
   Get details for Join Group Page. <br>
   Input: - <br>
   Actions used: `getSupperGroupById` <br>
   Files: `/JoinGroup`
-
 - **getSupperHomePageDetails** <br>
   Get details for Supper Home Page. <br>
   Input: - <br>
   Actions used: `getAllSupperGroups` <br>
   Files: `/`
-=======
-- **getPlaceOrderPageDetails** <br>
-  Input: `supperGroupId: string, restaurantId: string` <br>
-  Actions used: `getSupperGroupById`, `getRestaurant` and `getUserOrder` <br>
-  Files: `/PlaceOrder`
 - **getAddFoodItemPageDetails** <br>
   Input: `supperGroupId: string, foodId: string` <br>
   Actions used: `getSupperGroupById` <br>
@@ -305,4 +268,3 @@ Get information for pages.
   Input: `supperGroupId: string` <br>
   Actions used: `getSupperGroupById` <br>
   Files: `/EditSupperGroup`
->>>>>>> minimain
