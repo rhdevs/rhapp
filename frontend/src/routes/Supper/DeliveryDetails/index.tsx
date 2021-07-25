@@ -22,7 +22,6 @@ import { PATHS } from '../../Routes'
 import { ConfirmStatusUpdateModal } from '../../../components/Supper/Modals/ConfirmStatusUpdateModal'
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { setEstimatedArrivalTime } from '../../../store/supper/action/setter'
-import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { getDeliveryDetails } from '../../../store/supper/action/level2'
 
