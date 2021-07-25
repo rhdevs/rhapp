@@ -19,6 +19,7 @@ import { V1_BACKGROUND } from '../../../common/colours'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { getFoodMenu, getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
+import { getAddFoodItemPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.form`
   width: 100vw;
@@ -57,8 +58,7 @@ const AddFoodItem = () => {
     }) ?? []
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getFoodMenu(params.foodId))
+    dispatch(getAddFoodItemPageDetails(params.supperGroupId, params.foodId))
   }, [dispatch])
 
   const isOverSupperGroupLimit = () => {

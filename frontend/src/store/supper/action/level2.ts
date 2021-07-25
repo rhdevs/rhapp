@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../../types'
 import { ActionTypes } from '../types'
-import { getRestaurant, getSupperGroupById, getUserOrder } from './level1/getReqests'
+import { getFoodMenu, getRestaurant, getSupperGroupById, getUserOrder } from './level1/getReqests'
 import { setIsLoading, setOrderId } from './setter'
 
 export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string) => (
@@ -20,4 +20,12 @@ export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: st
       })
     })
   })
+}
+
+export const getAddFoodItemPageDetails = (supperGroupId: string, foodId: string) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch(setIsLoading(true))
+  await Promise.all([dispatch(getSupperGroupById(supperGroupId)), dispatch(getFoodMenu(foodId))])
+  dispatch(setIsLoading(false))
 }
