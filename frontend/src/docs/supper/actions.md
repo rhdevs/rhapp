@@ -39,7 +39,7 @@ Functions that update store variables.
 - **setSearchValue** <br>
   Input: `string` <br>
   Variable updated: `searchValue` <br>
-  Used in: PlaceOrder
+  Used in: Order
 - **setSupperGroup** <br>
   Input: `SupperGroup` <br>
   Variable updated: `supperGroup` <br>
@@ -81,7 +81,7 @@ Functions that update store variables.
 - **setIsFoodMenuModalOpen** <br>
   Input: `boolean` <br>
   Variable updated:`isFoodMenuModalOpen` <br>
-  Used in: PlaceOrder
+  Used in: Order
 - **setFoodModalInfo** <br>
   Input: `foodMenuModalId: string, modalMenuFoodName: string` <br>
   Variable updated:`foodMenuModalId, modalMenuFoodName`
@@ -117,7 +117,7 @@ Get Object from backend.
 - **getSupperGroupById** <br>
   Get supper group from `/supperGroup/:SupperGroupId`. <br>
   Input: `string | number | undefined` <br>
-  Used in: UpdateItem, UpdateDelivery, UpdateAllItems, JoinOrder, OrderSummary, ViewOrder, DeliveryDetails, EditSupperGroup, AddFoodItem, ConfirmOrder, ViewCart
+  Used in: UpdateItem, UpdateDelivery, UpdateAllItems, JoinGroup, OrderSummary, ViewOrder, DeliveryDetails, EditSupperGroup, AddFoodItem, ConfirmOrder, ViewCart
 - **getCreatedSupperHistory** <br>
   Get Supper Groups created by the user from `/user/:userId/supperGroupHistory.` <br>
   Input: `userId: string` <br>
@@ -128,7 +128,7 @@ Get Object from backend.
 - **getRestaurantMenu** <br>
   Get restaurant with menu from `/restaurant/:restaurantId/menu` <br>
   Input: `restaurantId:string` <br>
-  Used in: PlaceOrder
+  Used in: Order
 - **getFoodMenu** <br>
   Get food in menu from `/restaurant/food/:foodMenuId`. <br>
   Input: `foodId: string` <br>
@@ -183,7 +183,7 @@ Create Object in backend.
 - **createOrder** <br>
   Create order at `/order`. <br>
   Input:`supperGroupId: string | number` <br>
-  Used in: JoinOrder, Page3 of CreateOrder
+  Used in: JoinGroup, Page3 of CreateOrder
 - **addFoodToOrder**
   Add food to order at `/order/:orderId/food`. <br>
   Input: `newFood: Food, orderId: string` <br>
@@ -213,11 +213,11 @@ Remove Object from backend.
 
 Get information for pages.
 
-- **getPlaceOrderPageDetails** <br>
+- **getOrderPageDetails** <br>
   Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
   Actions used: `getSupperGroupById`, `getRestaurant`, `getUserOrder` and `setOrderId`<br>
-  Files: `/PlaceOrder`
+  Files: `/Order`
 
 - **getOrderSummaryPageDetails** <br>
   Get details for Order Summary Page. <br>
@@ -243,7 +243,7 @@ Get information for pages.
   Actions used: `getCreatedSupperHistory` and `getJoinedSupperHistory` <br>
   Files: `/GroupHistory`
 
-- **getJoinOrderPageDetails** <br>
+- **getJoinGroupPageDetails** <br>
   Get details for Join Group Page. <br>
   Input: - <br>
   Actions used: `getSupperGroupById` <br>
