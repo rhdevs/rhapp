@@ -24,8 +24,8 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import { setEditOrderNumber, setSelectedPaymentMethod } from '../../../store/supper/action/setter'
-import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { getEditSupperGroupDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.form`
   width: 100vw;
@@ -157,7 +157,7 @@ const EditSupperGroup = () => {
   })
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getEditSupperGroupDetails(params.supperGroupId))
   }, [dispatch])
 
   useEffect(() => {

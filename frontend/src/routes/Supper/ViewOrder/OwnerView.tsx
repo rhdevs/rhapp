@@ -11,7 +11,6 @@ import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupperGroupModal'
-import { LowerRowButton, UpperRowButtonContainer, UpperRowButtons } from '../ViewCart'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { onRefresh } from '../../../common/reloadPage'
@@ -29,6 +28,20 @@ export const ButtonContainer = styled.div`
   justify-content: center;
   margin: 40px 20px;
   padding: 0 10px;
+`
+
+export const UpperRowButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+  width: 50%;
+  text-align: ${(props) => (props.left ? 'left' : 'right')};
+`
+
+export const LowerRowButton = styled.div`
+  margin: 25px 0 0;
 `
 
 type Props = {

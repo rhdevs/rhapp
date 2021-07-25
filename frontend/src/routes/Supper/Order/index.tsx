@@ -58,7 +58,6 @@ const Order = () => {
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
-  const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
     dispatch(getOrderPageDetails(params.supperGroupId, params.restaurantId))
@@ -121,11 +120,7 @@ const Order = () => {
                 numberOfItems={numberOfItems()}
                 currentTotal={order?.totalCost}
                 onClick={() => {
-                  if (isOwner) {
-                    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                  } else {
-                    history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)
-                  }
+                  history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
                 }}
               />
             </>

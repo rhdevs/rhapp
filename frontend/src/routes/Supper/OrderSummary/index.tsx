@@ -56,7 +56,14 @@ const OrderSummary = () => {
       ) : (
         <>
           {twoStepModalIsOpen && (
-            <TwoStepCancelGroupModal modalSetter={setTwoStepModalIsOpen} supperGroupId={params.supperGroupId} />
+            <TwoStepCancelGroupModal
+              modalSetter={setTwoStepModalIsOpen}
+              supperGroupId={params.supperGroupId}
+              onLeftButtonClick={() => {
+                history.replace(PATHS.SUPPER_HOME)
+                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+              }}
+            />
           )}
           <OrderCard
             margin="0 23px"

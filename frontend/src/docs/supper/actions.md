@@ -15,6 +15,7 @@ Functions that update store variables.
   Variable updated: `isLoading`
 - **setFilteredSupperGroups** <br>
   Filter Supper Groups in SupperHome Page. <br>
+  Input: - <br>
   Variable updated: `filteredSupperGroups`
 - **setCount** <br>
   Input: `number`
@@ -28,22 +29,26 @@ Functions that update store variables.
 - **setSelectedPaymentMethod** <br>
   Input: `PaymentMethod[]` <br>
   Variable updated: `selectedPaymentMethod` <br>
-  Used in: EditSupperGroup
+  Files: `/EditSupperGroup`
 - **setSelectedRestaurant** <br>
   Input: `string` <br>
   Variable updated: `selectedRestaurant`
 - **setSelectedSupperGroupStatus** <br>
   Input: `SupperGroupStatus | null` <br>
   Variable updated: `selectedSupperGroupStatus` <br>
-  Used in: ViewOrder
+  Files: `/ViewOrder`
 - **setSearchValue** <br>
   Input: `string` <br>
   Variable updated: `searchValue` <br>
+<<<<<<< HEAD
   Used in: Order
+=======
+  Files: `/PlaceOrder`
+>>>>>>> minimain
 - **setSupperGroup** <br>
   Input: `SupperGroup` <br>
   Variable updated: `supperGroup` <br>
-  Used in: Page1, Page2, Page3 and index of CreateSupperGroup
+  Files: `/CreateSupperGroup/Pages/Page1, /CreateSupperGroup/Pages/Page2, /CreateSupperGroup/Pages/Page3`
 - **setMenuTabKey** <br>
   Input: `string` <br>
   Variable updated: `menuTabKey` <br>
@@ -56,19 +61,25 @@ Functions that update store variables.
 - **setEstimatedArrivalTime** <br>
   Input: `number` <br>
   Variable updated: `estArrivalTime` <br>
-  Used in: DeliveryDetails
+  Files: `/DeliveryDetails`
 - **setEditOrderNumber** <br>
   Input: `number` <br>
   Variable updated: `editOrderNumber` <br>
-  Used in: EditSupperGroup
+  Files: `/EditSupperGroup`
 - **setCounter** <br>
   Input: `number` <br>
   Variable updated: `counter` <br>
+<<<<<<< HEAD
   Used in: Page3 of CreateSupperGroup
 - **setFoodStates** <br>
+=======
+  Files: `CreateSupperGroup/Pages/Page3`
+- **resetFoodStates** <br>
+>>>>>>> minimain
   Sets variable as null. <br>
+  Input: - <br>
   Variable updated: `food` <br>
-  Used in: EditFoodItems
+  Files: `/EditFoodItems`
 - **setOrderId** <br>
   Input: `string | undefined` <br>
   Variable updated: `orderId`
@@ -81,7 +92,11 @@ Functions that update store variables.
 - **setIsFoodMenuModalOpen** <br>
   Input: `boolean` <br>
   Variable updated:`isFoodMenuModalOpen` <br>
+<<<<<<< HEAD
   Used in: Order
+=======
+  Files: `/PlaceOrder`
+>>>>>>> minimain
 - **setFoodModalInfo** <br>
   Input: `foodMenuModalId: string, modalMenuFoodName: string` <br>
   Variable updated:`foodMenuModalId, modalMenuFoodName`
@@ -110,44 +125,54 @@ Direct connection with backend.
 Get Object from backend.
 
 - **getSupperNotification** <br>
-  Get an array of supper notifications from `/user/:userId/supperGroupNotification`.
+  Get an array of supper notifications from `/user/:userId/supperGroupNotification`. <br>
+  Input: -
 - **getAllSupperGroups** <br>
-  Get all supper group from `/supperGroup`.
-  Used in: SupperHome
+  Get all supper group displayed in Supper Home Page from `/supperGroup`. <br>
+  Input: - <br>
 - **getSupperGroupById** <br>
   Get supper group from `/supperGroup/:SupperGroupId`. <br>
   Input: `string | number | undefined` <br>
+<<<<<<< HEAD
   Used in: UpdateItem, UpdateDelivery, UpdateAllItems, JoinGroup, OrderSummary, ViewOrder, DeliveryDetails, EditSupperGroup, AddFoodItem, ConfirmOrder, ViewCart
+=======
+  Files: `/OrderSummary/UpdateItem, /OrderSummary/UpdateDelivery, /OrderSummary/UpdateAllItems, /OrderSummary/index, /JoinOrder, /ViewOrder, /DeliveryDetails, /EditSupperGroup, /AddFoodItem, /ConfirmOrder`
+>>>>>>> minimain
 - **getCreatedSupperHistory** <br>
   Get Supper Groups created by the user from `/user/:userId/supperGroupHistory.` <br>
   Input: `userId: string` <br>
-  Used in: GroupHistory
+  Files: `/GroupHistory`
 - **getOrderById** <br>
   Get order from `/order/:orderId`. <br>
   Input: `orderId: string | undefined`
 - **getRestaurantMenu** <br>
   Get restaurant with menu from `/restaurant/:restaurantId/menu` <br>
   Input: `restaurantId:string` <br>
+<<<<<<< HEAD
   Used in: Order
+=======
+  Files: `/PlaceOrder`
+>>>>>>> minimain
 - **getFoodMenu** <br>
   Get food in menu from `/restaurant/food/:foodMenuId`. <br>
   Input: `foodId: string` <br>
-  Used in: AddFoodItem
+  Files: `/AddFoodItem`
 - **getFoodInOrder** <br>
   Get food in order from `/order/:orderId/:food/:foodId`. <br>
   Input: `orderId: string | undefined, foodId: string | undefined` <br>
-  Used in: UpdateItem, EditFoodItem
+  Files: `OrderSummary/UpdateItem, /EditFoodItem`
 - **getCollatedOrder** <br>
   Get collated order from `/supperGroup/:supperGroupId/collated`. <br>
   Input: `supperGroupId: string | number | undefined` <br>
-  Used in: OrderSummary, ViewOrder, ViewCard
+  Files: `OrderSummary/index , /ViewOrder`
 - **getUserOrder** <br>
   Get user's order from `/supperGroup/:supperGroupId/user/:userId`. <br>
   Input: `supperGroupId: string | number | undefined` <br>
-  Used in: ViewOrder, ViewCart, ConfirmOrder
+  Files: `ViewOrder`
 - **getJoinedSupperHistory** <br>
   Get Supper Groups created by the user from `/user/:userId/joinGroupHistory`. <br>
-  Used in: GroupHistory
+  Input: - <br>
+  Files: `/GroupHistory`
 
 ### PUT
 
@@ -156,18 +181,18 @@ Edit Object in backend.
 - **updateSupperGroup** <br>
   Update Supper Group at `/supper/:supperGroupId`. <br>
   Input: `supperGroupId: string | number | undefined, updatedInfo: any` <br>
-  Used in: OrderSummary, DeliveryDetails, EditSupperGroup
+  Files: `/OrderSummary/index, /DeliveryDetails, /EditSupperGroup`
 - **emptyOrderFoodList** <br>
   Empty order foodlist at `/order/:orderId`. <br>
   Input: `supperGroupId: string, orderId: string`
 - **updateOrderDetails** <br>
   Update order details at `/order/:orderId`. <br>
   Input: `orderId: string, newOrderDetails: any` <br>
-  Used in: ConfirmOrder, UserView (ViewOrder)
+  Files: `/ConfirmOrder, ViewOrder/UserView`
 - **updateFoodInOrder** <br>
   Update food in order at `/order/:orderId/food/:foodId`. <br>
   Input: `newFood: any, orderId: string, foodId: string` <br>
-  Used in: EditFoodItem
+  Files: `/EditFoodItem`
 - **updateOwnerEdits** <br>
   Update owner edits at `/supperGroup/:supperGroupId/owner` <br>
   Input: `supperGroupId: number | undefined, foodId: string | undefined, updates: Updates, forAll: boolean`
@@ -179,15 +204,19 @@ Create Object in backend.
 - **createSupperGroup** <br>
   Create Supper Group at `/supperGroup`. <br>
   Input: `newSupperGroup: SupperGroup` <br>
-  Used in: Page3 of CreateSupperGroup
+  Files: `/CreateSupperGroup/Page3`
 - **createOrder** <br>
   Create order at `/order`. <br>
   Input:`supperGroupId: string | number` <br>
+<<<<<<< HEAD
   Used in: JoinGroup, Page3 of CreateOrder
+=======
+  Files: `/JoinOrder, /CreateOrder/Pages/Page3`
+>>>>>>> minimain
 - **addFoodToOrder**
   Add food to order at `/order/:orderId/food`. <br>
   Input: `newFood: Food, orderId: string` <br>
-  Used in: AddFoodItem
+  Files: `/AddFoodItem`
 
 ### Delete
 
@@ -213,6 +242,7 @@ Remove Object from backend.
 
 Get information for pages.
 
+<<<<<<< HEAD
 - **getOrderPageDetails** <br>
   Get details for Order Page. <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
@@ -254,3 +284,25 @@ Get information for pages.
   Input: - <br>
   Actions used: `getAllSupperGroups` <br>
   Files: `/`
+=======
+- **getPlaceOrderPageDetails** <br>
+  Input: `supperGroupId: string, restaurantId: string` <br>
+  Actions used: `getSupperGroupById`, `getRestaurant` and `getUserOrder` <br>
+  Files: `/PlaceOrder`
+- **getAddFoodItemPageDetails** <br>
+  Input: `supperGroupId: string, foodId: string` <br>
+  Actions used: `getSupperGroupById` <br>
+  Files: `/AddFoodItem`
+- **getDeliveryDetails** <br>
+  Input: `supperGroupId: string` <br>
+  Actions used: `getSupperGroupById` and `setEstimatedArrivalTime` <br>
+  Files: `/DeliveryDetails`
+- **getEditFoodItemDetails** <br>
+  Input: `orderId: string, foodId: string` <br>
+  Actions used: `resetFoodState` and `getFoodInOrder` <br>
+  Files: `/EditFoodItem`
+- **getEditSupperGroupDetails** <br>
+  Input: `supperGroupId: string` <br>
+  Actions used: `getSupperGroupById` <br>
+  Files: `/EditSupperGroup`
+>>>>>>> minimain

@@ -3,7 +3,6 @@ import { Dispatch } from '../../../types'
 import { ActionTypes, SUPPER_ACTIONS } from '../../types'
 import { setIsLoading, setSupperErrorMessage } from '../setter'
 
-//------------------------ GET --------------------------
 export const getSupperNotifications = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_SUPPER_NOTIFICATIONS, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupNotification`)
     .then((resp) => {
@@ -99,7 +98,6 @@ export const getOrderById = (orderId: string | undefined) => async (dispatch: Di
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_ORDER_BY_ID,
         order: resp.data,
@@ -118,7 +116,6 @@ export const getRestaurant = (restaurantId: string) => async (dispatch: Dispatch
       if (resp.status === 'failed') {
         throw resp.err
       }
-      console.log(resp.data)
       dispatch({
         type: SUPPER_ACTIONS.GET_RESTAURANT_BY_ID,
         restaurant: resp.data,
