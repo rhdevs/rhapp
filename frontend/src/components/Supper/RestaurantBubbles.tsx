@@ -52,12 +52,12 @@ export const RestaurantBubbles = (props: Props) => {
           if (selectedRestaurant === restaurant) {
             return (
               <StatusSymbol
-                isDisabled={props.isDisabled ?? false}
-                border={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
+                isFaded={props.isDisabled}
+                border={V1_BLUE}
                 color="white"
                 borderWidth="1px"
                 shadow
-                backgroundColor={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
+                backgroundColor={V1_BLUE}
                 key={index}
                 text={restaurant}
                 rightIcon={CHECK_ICON}

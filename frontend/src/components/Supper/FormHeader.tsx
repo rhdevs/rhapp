@@ -9,9 +9,9 @@ const Header = styled.text<{ margin?: string; topMargin?: boolean }>`
   margin-bottom: 5px;
   ${(props) => props.margin && `margin: ${props.margin}`}
 `
-const RedText = styled.text<{ noPadding?: boolean }>`
+const RedText = styled.text`
   color: red;
-  padding-right: ${(props) => (props.noPadding ? '0' : '5px')};
+  padding-right: 5px;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -23,11 +23,10 @@ type Props = {
   isCompulsory?: boolean
   topMargin?: boolean
   margin?: string
-  noPadding?: boolean
 }
 
 export const FormHeader = (props: Props) => {
-  const RedAsterisk = <RedText noPadding={props.noPadding}>*</RedText>
+  const RedAsterisk = <RedText>*</RedText>
 
   return (
     <Header margin={props.margin} topMargin={props.topMargin}>

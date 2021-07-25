@@ -110,12 +110,7 @@ const Payment = () => {
       {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
       <Form onSubmit={onSubmit}>
         <FormSection>
-          <FormHeader
-            headerName="Which payment mode did you pay via?"
-            isCompulsory
-            margin="5px auto 6px auto"
-            noPadding
-          />
+          <FormHeader headerName="Which payment mode did you pay via?" isCompulsory />
           <PaymentMethodBubbles
             onlyOne
             {...register('paymentMethod', { required: true })}

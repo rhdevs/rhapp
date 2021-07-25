@@ -47,7 +47,7 @@ export const SGStatusOptions = (props: Props) => {
               border={V1_BLUE}
               color="white"
               borderWidth="1px"
-              backgroundColor="bluegrey"
+              backgroundColor={V1_BLUE}
               shadow
               key={index}
               text={supperGroupStatus}
