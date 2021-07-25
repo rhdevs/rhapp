@@ -11,7 +11,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
-import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
+// import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -55,7 +55,7 @@ export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }
 export const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
-
+// TO REMOVE!!
 const ViewCart = () => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -97,13 +97,14 @@ const ViewCart = () => {
                   onButtonClick={() => setDeleteOrderModalIsOpen(true)}
                 />
                 {deleteOrderModalIsOpen && (
-                  <DeleteOrderModal
-                    isOwner
-                    supperGroupId={params.supperGroupId}
-                    orderId={ownerOrderId}
-                    onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
-                    modalSetter={setDeleteOrderModalIsOpen}
-                  />
+                  // <DeleteOrderModal
+                  //   isOwner
+                  //   supperGroupId={params.supperGroupId}
+                  //   orderId={ownerOrderId}
+                  //   onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+                  //   modalSetter={setDeleteOrderModalIsOpen}
+                  // />
+                  <></>
                 )}
               </UpperRowButtonContainer>
               <UpperRowButtonContainer>

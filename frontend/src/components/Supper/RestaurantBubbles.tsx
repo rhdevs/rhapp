@@ -15,7 +15,7 @@ const CheckIcon = styled.img`
 
 const ScrollableContainer = styled.div<{ margin?: string }>`
   overflow: scroll;
-  width: 75vw;
+  max-width: 90vw;
   margin: ${(props) => props.margin ?? 'auto'};
 `
 
@@ -25,7 +25,6 @@ const MainContainer = styled.div`
   white-space: nowrap;
   padding: 5px 0;
   width: fit-content;
-  margin-right: 10px;
 `
 
 type Props = {
@@ -53,35 +52,31 @@ export const RestaurantBubbles = (props: Props) => {
           if (selectedRestaurant === restaurant) {
             return (
               <StatusSymbol
-                isDisabled={props.isDisabled ?? false}
-                border={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
+                isDisabled={props.isDisabled}
+                border={V1_BLUE}
                 color="white"
                 borderWidth="1px"
-                backgroundColor={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
-                shadow="0px 4px 4px 0px #6b6b6b"
+                shadow
+                backgroundColor={V1_BLUE}
                 key={index}
                 text={restaurant}
                 rightIcon={CHECK_ICON}
-                fontWeight={500}
-                fontSize="14px"
                 minWidth=""
               />
             )
           } else {
             return (
               <StatusSymbol
-                isDisabled={props.isDisabled ?? false}
                 onClick={() => {
                   if (!props.isDisabled) dispatch(setSelectedRestaurant(restaurant))
                 }}
-                border={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
-                color={props.isDisabled ?? false ? SHADED_DARK_BLUE : V1_BLUE}
+                isFaded={props.isDisabled}
+                border={V1_BLUE}
+                color={V1_BLUE}
                 borderWidth="1px"
-                shadow="0px 4px 4px 0px #6b6b6b"
+                shadow
                 key={index}
                 text={restaurant}
-                fontWeight={500}
-                fontSize="14px"
                 minWidth=""
               />
             )
