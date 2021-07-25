@@ -25,7 +25,6 @@ const MainContainer = styled.div`
   height: fit-content;
   min-height: 100vh;
   background-color: ${V1_BACKGROUND};
-  padding-bottom: 2rem;
 `
 
 const ViewOrder = () => {
@@ -92,29 +91,27 @@ const ViewOrder = () => {
             <LoadingSpin />
           )
         ) : (
-          <>
-            <div>
-              {supperGroup?.ownerId === localStorage.userID ? (
-                <OwnerView
-                  supperGroupIsOpen={supperGroupIsOpen}
-                  supperGroup={supperGroup}
-                  collatedOrder={collatedOrder}
-                  supperGroupIsOrdered={supperGroupIsOrdered}
-                  supperGroupIsCancelled={supperGroupIsCancelled}
-                  showTrackPayment={showTrackPayment}
-                />
-              ) : (
-                <UserView
-                  supperGroupIsOpen={supperGroupIsOpen}
-                  supperGroup={supperGroup}
-                  supperGroupIsCancelled={supperGroupIsCancelled}
-                  order={order}
-                  deliveryFee={deliveryFee}
-                  totalFee={totalFee}
-                />
-              )}
-            </div>
-          </>
+          <div>
+            {supperGroup?.ownerId === localStorage.userID ? (
+              <OwnerView
+                supperGroupIsOpen={supperGroupIsOpen}
+                supperGroup={supperGroup}
+                collatedOrder={collatedOrder}
+                supperGroupIsOrdered={supperGroupIsOrdered}
+                supperGroupIsCancelled={supperGroupIsCancelled}
+                showTrackPayment={showTrackPayment}
+              />
+            ) : (
+              <UserView
+                supperGroupIsOpen={supperGroupIsOpen}
+                supperGroup={supperGroup}
+                supperGroupIsCancelled={supperGroupIsCancelled}
+                order={order}
+                deliveryFee={deliveryFee}
+                totalFee={totalFee}
+              />
+            )}
+          </div>
         )}
       </PullToRefresh>
       <BottomNavBar />

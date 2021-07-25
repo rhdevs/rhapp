@@ -55,12 +55,13 @@ export const CreateOrderPageThree = () => {
   useEffect(() => {
     console.log(newSupperGroupId, supperGroup?.restaurantId)
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
+      history.replace(PATHS.SUPPER_HOME)
       history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
   }, [newSupperGroupId, supperGroup?.restaurantId])
 
   const onLeftClick = () => {
-    history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
+    history.goBack()
   }
 
   let pmError = 0

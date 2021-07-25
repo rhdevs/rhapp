@@ -47,13 +47,11 @@ export const SGStatusOptions = (props: Props) => {
               border={V1_BLUE}
               color="white"
               borderWidth="1px"
-              backgroundColor="bluegrey"
-              shadow="0px 4px 4px 0px #6b6b6b"
+              backgroundColor={V1_BLUE}
+              shadow
               key={index}
               text={supperGroupStatus}
               rightIcon={CHECK_ICON}
-              fontWeight={500}
-              fontSize="14px"
             />
           )
         } else {
@@ -65,11 +63,9 @@ export const SGStatusOptions = (props: Props) => {
               border={V1_BLUE}
               color={V1_BLUE}
               borderWidth="1px"
-              shadow="0px 4px 4px 0px #6b6b6b"
+              shadow
               key={index}
               text={supperGroupStatus}
-              fontWeight={500}
-              fontSize="14px"
               isFaded={props.onlyArrivedOption}
             />
           )
