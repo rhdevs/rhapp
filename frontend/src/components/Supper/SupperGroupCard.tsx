@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -12,17 +12,10 @@ import {
 } from '../../store/supper/types'
 import { MainCard } from './MainCard'
 import { Progress } from 'antd'
-import {
-  deleteSupperGroup,
-  getReadableSupperGroupId,
-  leaveSupperGroup,
-  setIsLoading,
-  unixTo12HourTime,
-} from '../../store/supper/action'
+import { getReadableSupperGroupId } from '../../common/getReadableSupperGroupId'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
-import { onRefresh } from '../../common/reloadPage'
 import { useHistory } from 'react-router-dom'
 import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
@@ -33,6 +26,8 @@ import { SupperShareModal } from './Modals/SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
 import { RootState } from '../../store/types'
 import { ConfirmationModal } from '../Mobile/ConfirmationModal'
+import { unixTo12HourTime } from '../../common/unixTo12HourTime'
+import { deleteSupperGroup, leaveSupperGroup } from '../../store/supper/action/level1/deleteRequests'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -101,11 +96,11 @@ const StyledProgessBar = styled(Progress)`
   margin-right: 10px;
 `
 
-const ErrorText = styled.text`
-  text-align: center;
-  color: ${V1_RED};
-  font-family: 'Inter';
-`
+// const ErrorText = styled.text`
+//   text-align: center;
+//   color: ${V1_RED};
+//   font-family: 'Inter';
+// `
 
 const Icon = styled.img`
   padding-left: 5px;
@@ -134,18 +129,7 @@ export const SupperGroupCard = (props: Props) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
-  useEffect(() => {
-    if (props.isHome ? props.homeSupperGroup : props.supperGroup) {
-      dispatch(setIsLoading(false))
-      console.log(isLoading, 'should be false')
-    } else {
-      dispatch(setIsLoading(true))
-      console.log(isLoading, 'should be true')
-    }
-  }, [props.homeSupperGroup, props.supperGroup])
   const { isLoading } = useSelector((state: RootState) => state.supper)
-
-  const [hasError, setHasError] = useState<boolean>(false)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
@@ -154,13 +138,6 @@ export const SupperGroupCard = (props: Props) => {
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showStatusOnly = props.statusOnly ?? false
   const isClickableCard = props.isHome || props.statusOnly
-
-  // setTimeout(() => {
-  //   // if details still dont show after 10s, show error
-  //   if (isLoading) {
-  //     setHasError(true)
-  //   }
-  // }, 10000)
 
   const iconStyle = {
     color: 'rgba(0, 0, 0, 0.65)',
@@ -252,7 +229,7 @@ export const SupperGroupCard = (props: Props) => {
           history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
         } else {
           // New SG to user
-          history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+          history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
         }
       }
     }
@@ -265,8 +242,8 @@ export const SupperGroupCard = (props: Props) => {
         {isDeleteModalOpen && deleteModal}
         {isLeaveModalOpen && leaveModal}
       </>
-      {hasError ? (
-        <>
+      {/* {hasError ? (
+        <> find a way to do error handline
           <LeftContainer>
             <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />
           </LeftContainer>
@@ -276,54 +253,52 @@ export const SupperGroupCard = (props: Props) => {
               <u onClick={() => history.goBack()}>go back</u>
             </ErrorText>
           </RightContainer>
-        </>
-      ) : (
-        <>
-          {!isLoading && topIcon}
-          <ClickableContainer onClick={onSupperCardClick}>
-            <LeftContainer>
-              {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
-            </LeftContainer>
-            <RightContainer>
-              <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
-              <StyledGroupNameText>
-                {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
-              </StyledGroupNameText>
-              {isLoading ? (
-                <Skeleton width="150px" />
-              ) : (
-                <GroupInfoContainer>
-                  <InfoSubContainer>
-                    <FieldTimeOutlined style={iconStyle} />
-                    {closingTime}
-                  </InfoSubContainer>
-                  <InfoSubContainer color={V1_RED}>
-                    <UserOutlined style={iconStyle} />
-                    {numberOfUsers}
-                  </InfoSubContainer>
-                  <InfoSubContainer>
-                    <CarOutlined style={iconStyle} />
-                    {deliveryCost} {splitMethodIcon}
-                  </InfoSubContainer>
-                </GroupInfoContainer>
-              )}
-              {isLoading ? (
-                <Skeleton width="180px" />
-              ) : (
-                <GroupCostInfoContainer>
-                  <StyledProgessBar
-                    strokeColor={V1_RED}
-                    strokeWidth={12}
-                    percent={percentageInProgressBar}
-                    showInfo={false}
-                  />
-                  {amountLeft}
-                </GroupCostInfoContainer>
-              )}
-            </RightContainer>
-          </ClickableContainer>
-        </>
-      )}
+        </>*/}
+      <>
+        {!isLoading && topIcon}
+        <ClickableContainer onClick={onSupperCardClick}>
+          <LeftContainer>
+            {isLoading ? <Skeleton image /> : <RestaurantLogo src={restaurantLogo} alt="Restaurant logo" />}
+          </LeftContainer>
+          <RightContainer>
+            <StyledGroupIdText>{isLoading ? <Skeleton /> : idText}</StyledGroupIdText>
+            <StyledGroupNameText>
+              {isLoading ? <Skeleton height="14px" width="200px" /> : supperGroupName}
+            </StyledGroupNameText>
+            {isLoading ? (
+              <Skeleton width="150px" />
+            ) : (
+              <GroupInfoContainer>
+                <InfoSubContainer>
+                  <FieldTimeOutlined style={iconStyle} />
+                  {closingTime}
+                </InfoSubContainer>
+                <InfoSubContainer color={V1_RED}>
+                  <UserOutlined style={iconStyle} />
+                  {numberOfUsers}
+                </InfoSubContainer>
+                <InfoSubContainer>
+                  <CarOutlined style={iconStyle} />
+                  {deliveryCost} {splitMethodIcon}
+                </InfoSubContainer>
+              </GroupInfoContainer>
+            )}
+            {isLoading ? (
+              <Skeleton width="180px" />
+            ) : (
+              <GroupCostInfoContainer>
+                <StyledProgessBar
+                  strokeColor={V1_RED}
+                  strokeWidth={12}
+                  percent={percentageInProgressBar}
+                  showInfo={false}
+                />
+                {amountLeft}
+              </GroupCostInfoContainer>
+            )}
+          </RightContainer>
+        </ClickableContainer>
+      </>
     </MainCard>
   ) : (
     <SGStatusCard

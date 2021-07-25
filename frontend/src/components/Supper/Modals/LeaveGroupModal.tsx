@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { leaveSupperGroup } from '../../../store/supper/action'
+import { leaveSupperGroup } from '../../../store/supper/action/level1/deleteRequests'
 
 import { SupperModal } from './SupperModal'
 

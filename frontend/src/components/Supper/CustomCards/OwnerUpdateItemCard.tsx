@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
-import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
+import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'

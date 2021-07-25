@@ -6,8 +6,8 @@ import { StatusSymbol } from './StatusSymbol'
 import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setSelectedPaymentMethod } from '../../store/supper/action'
 import { V1_BLUE } from '../../common/colours'
+import { setSelectedPaymentMethod } from '../../store/supper/action/setter'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -15,7 +15,8 @@ const CheckIcon = styled.img`
 
 const ScrollableContainer = styled.div<{ margin?: string }>`
   overflow: scroll;
-  width: 75vw;
+  width: fit-content;
+  max-width: 90vw;
   margin: ${(props) => props.margin ?? 'auto'};
 `
 
@@ -29,6 +30,7 @@ const MainContainer = styled.div`
 `
 
 type Props = {
+  onlyOne?: boolean
   paymentMethods: PaymentMethod[]
   margin?: string
 }
@@ -47,40 +49,38 @@ export const PaymentMethodBubbles = (props: Props) => {
             return (
               <StatusSymbol
                 onClick={() => {
-                  dispatch(
-                    setSelectedPaymentMethod(
-                      selectedPaymentMethod.filter((pm) => {
+                  const updatedPaymentMethod = props.onlyOne
+                    ? []
+                    : selectedPaymentMethod.filter((pm) => {
                         return pm !== paymentMethod
-                      }),
-                    ),
-                  )
+                      })
+                  dispatch(setSelectedPaymentMethod(updatedPaymentMethod))
                 }}
                 border={V1_BLUE}
                 color="white"
                 borderWidth="1px"
                 backgroundColor="bluegrey"
-                shadow="0px 4px 4px 0px #6b6b6b"
+                shadow
                 key={index}
                 text={paymentMethod}
                 rightIcon={CHECK_ICON}
-                fontWeight={500}
-                fontSize="14px"
               />
             )
           } else {
             return (
               <StatusSymbol
                 onClick={() => {
-                  dispatch(setSelectedPaymentMethod(selectedPaymentMethod.concat(paymentMethod)))
+                  const updatedPaymentMethod = props.onlyOne
+                    ? [paymentMethod]
+                    : selectedPaymentMethod.concat(paymentMethod)
+                  dispatch(setSelectedPaymentMethod(updatedPaymentMethod))
                 }}
                 border={V1_BLUE}
                 color={V1_BLUE}
                 borderWidth="1px"
-                shadow="0px 4px 4px 0px #6b6b6b"
+                shadow
                 key={index}
                 text={paymentMethod}
-                fontWeight={500}
-                fontSize="14px"
               />
             )
           }

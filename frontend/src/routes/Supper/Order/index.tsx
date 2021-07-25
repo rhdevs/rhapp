@@ -8,13 +8,14 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { ViewMenuFoodModal } from '../../../components/Supper/ViewMenuFoodModal'
+import { ViewMenuFoodModal } from '../../../components/Supper/Modals/ViewMenuFoodModal'
 import { MenuSection } from '../../../components/Supper/MenuSection'
 import { MenuTabs } from '../../../components/Supper/MenuTabs'
 import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
-import { setSearchValue, setIsFoodMenuModalOpen, getPlaceOrderPageDetails } from '../../../store/supper/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
+import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/action/setter'
+import { getOrderPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   width: 100vw;
@@ -42,7 +43,7 @@ const Restaurant = styled.text`
   margin-left: 5px;
 `
 
-export default function PlaceOrder() {
+const Order = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
@@ -57,10 +58,9 @@ export default function PlaceOrder() {
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
-  const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
-    dispatch(getPlaceOrderPageDetails(params.supperGroupId, params.restaurantId))
+    dispatch(getOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
 
   const onChange = (input: string) => {
@@ -120,11 +120,7 @@ export default function PlaceOrder() {
                 numberOfItems={numberOfItems()}
                 currentTotal={order?.totalCost}
                 onClick={() => {
-                  if (isOwner) {
-                    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                  } else {
-                    history.push(`${PATHS.VIEW_CART}/${params.supperGroupId}`)
-                  }
+                  history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
                 }}
               />
             </>
@@ -136,3 +132,5 @@ export default function PlaceOrder() {
     </Background>
   )
 }
+
+export default Order

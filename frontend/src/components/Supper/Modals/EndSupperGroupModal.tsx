@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { deleteSupperGroup } from '../../../store/supper/action'
 
+import { deleteSupperGroup } from '../../../store/supper/action/level1/deleteRequests'
 import { SupperModal } from './SupperModal'
 
 type Props = {

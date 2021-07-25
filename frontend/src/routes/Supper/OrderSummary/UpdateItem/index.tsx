@@ -10,7 +10,7 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
 import { FoodLine } from '../../../../components/Supper/FoodLine'
 import { DiscardChangesModal } from '../../../../components/Supper/Modals/DiscardChangesModal'
-import { getFoodInOrder, getSupperGroupById } from '../../../../store/supper/action'
+import { getUpdateItemPageDetails } from '../../../../store/supper/action/level2'
 import { RootState } from '../../../../store/types'
 import { OldInfoContainer } from '../UpdateDelivery'
 
@@ -33,32 +33,20 @@ const UpdateItem = () => {
   const [discardChangesModalIsOpen, setDiscardChangesModalIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getFoodInOrder(params.orderId, params.foodId))
+    dispatch(getUpdateItemPageDetails(params.supperGroupId, params.orderId, params.foodId))
   }, [dispatch])
 
   return (
     <>
       <TopNavBar
         title="Order Summary"
-        onLeftClick={() => {
-          if (hasTouched) {
-            setDiscardChangesModalIsOpen(true)
-          } else {
-            history.goBack()
-          }
-        }}
+        onLeftClick={() => (hasTouched ? setDiscardChangesModalIsOpen(true) : history.goBack())}
       />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
-          {discardChangesModalIsOpen && (
-            <DiscardChangesModal
-              modalSetter={setDiscardChangesModalIsOpen}
-              onLeftButtonClick={() => history.goBack()}
-            />
-          )}
+          {discardChangesModalIsOpen && <DiscardChangesModal modalSetter={setDiscardChangesModalIsOpen} />}
           {food ? (
             <FoodLine
               backgroundColor={V1_GREY_BACKGROUND}
@@ -70,8 +58,8 @@ const UpdateItem = () => {
           ) : (
             <OldInfoContainer>
               <ErrorText>
-                Do you remember what you clicked? bc we forgot... <u onClick={onRefresh}>Reload</u> or
-                <u onClick={() => history.goBack()}> go back</u>
+                Do you remember what you clicked? bc we forgot... <u onClick={onRefresh}>Reload</u> or{' '}
+                <u onClick={() => history.goBack()}>go back</u>
               </ErrorText>
             </OldInfoContainer>
           )}

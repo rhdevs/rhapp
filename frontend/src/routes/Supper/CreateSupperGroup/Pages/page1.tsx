@@ -14,7 +14,7 @@ import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
-import { setSupperGroup, unixToFormattedTime } from '../../../../store/supper/action'
+import { unixToFormattedTime } from '../../../../common/unixToFormattedTime'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, initSupperGroup } from '..'
@@ -23,6 +23,7 @@ import { V1_BLUE } from '../../../../common/colours'
 import { Restaurants, SupperGroup } from '../../../../store/supper/types'
 import { errorStyling, Input, StyledTimePicker } from '../../EditSupperGroup'
 import { ConfirmationModal } from '../../../../components/Mobile/ConfirmationModal'
+import { setSupperGroup } from '../../../../store/supper/action/setter'
 
 const FormContainer = styled.div`
   width: 80vw;

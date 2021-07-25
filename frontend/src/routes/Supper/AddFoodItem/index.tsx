@@ -10,7 +10,6 @@ import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
-import { addFoodToOrder, getMenuFood, getSupperGroupById } from '../../../store/supper/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
@@ -19,6 +18,8 @@ import CancelActionField from '../../../components/Supper/CancelActionField'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
+import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
+import { getAddFoodItemPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.form`
   width: 100vw;
@@ -67,8 +68,7 @@ const AddFoodItem = () => {
     }) ?? []
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(getMenuFood(params.foodId))
+    dispatch(getAddFoodItemPageDetails(params.supperGroupId, params.foodId))
   }, [dispatch])
 
   const onLeftClick = () => {
@@ -126,8 +126,6 @@ const AddFoodItem = () => {
         cancelAction: data.cancelAction as CancelAction,
         custom: custom,
       }
-      console.log(newFood)
-      //TODO: TEST Send new food to backend
       dispatch(addFoodToOrder(newFood, params.orderId))
       history.goBack()
       console.log(data, count)
@@ -163,9 +161,7 @@ const AddFoodItem = () => {
   return (
     <Background onSubmit={onSubmit}>
       <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
-      {isDiscardChangesModalOpen && (
-        <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} onLeftButtonClick={() => history.goBack()} />
-      )}
+      {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
       {isLoading ? (
         <LoadingSpin />
       ) : (

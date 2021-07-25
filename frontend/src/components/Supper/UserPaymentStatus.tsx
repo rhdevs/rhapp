@@ -8,13 +8,9 @@ import { TelegramShareButton } from '../TelegramShareButton'
 import { Checkbox } from '../Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import {
-  setExpandAll,
-  setPaymentExpandedCount,
-  // setPaymentUpdateArray,
-  updateOrderDetails,
-} from '../../store/supper/action'
 import { FoodLine } from './FoodLine'
+import { setExpandAll, setPaymentExpandedCount } from '../../store/supper/action/setter'
+import { updateOrderDetails } from '../../store/supper/action/level1/putRequests'
 
 const MainContainer = styled.div`
   display: flex;

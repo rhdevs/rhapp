@@ -9,7 +9,6 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
-import { setCreateOrderPage, setSupperGroup } from '../../../../store/supper/action'
 import { SplitACMethod, SupperGroup } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -17,6 +16,7 @@ import { DeliveryFeeInput, errorStyling, StyledRadioGroup, Wrapper } from '../..
 import { RadioButton } from '../../../../components/RadioButton'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import { InformationCard } from '../../../../components/Supper/InformationCard'
+import { setSupperGroup } from '../../../../store/supper/action/setter'
 
 const FormSection = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ export const CreateOrderPageTwo = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { register, handleSubmit, setValue, setError, clearErrors, reset, errors } = useForm<FormValues>()
-  const { supperGroup, createOrderPage, isLoading } = useSelector((state: RootState) => state.supper)
+  const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     if (supperGroup?.splitAdditionalCost) {
@@ -45,7 +45,6 @@ export const CreateOrderPageTwo = () => {
   }, [supperGroup?.splitAdditionalCost, reset])
 
   const onLeftClick = () => {
-    dispatch(setCreateOrderPage(createOrderPage - 1))
     history.goBack()
   }
 
@@ -61,8 +60,6 @@ export const CreateOrderPageTwo = () => {
         additionalCost: data.estDeliveryFee,
         splitAdditionalCost: data.splitDeliveryFee,
       }
-      dispatch(setCreateOrderPage(createOrderPage + 1))
-      console.log('secondSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
       history.push(`${PATHS.CREATE_SUPPER_GROUP}/3`)
     })()

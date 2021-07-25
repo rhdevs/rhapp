@@ -19,6 +19,7 @@ import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { getIndivDeliveryFee } from '../../../common/calculateDeliveryFee'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -168,7 +169,7 @@ type Props = {
   collatedOrder?: CollatedOrder | null
   order?: Order | null
   foodList?: Food[]
-  deliveryCost?: number
+  indivDeliveryFee?: number
   numberOfUsers?: number
   splitCostMethod?: SplitACMethod
   supperTotalCost?: number
@@ -209,16 +210,8 @@ export const OrderCard = (props: Props) => {
     deliveryFee = supperGroupDeliveryFee
     total = props.supperGroup?.totalPrice ?? 0
   } else {
-    const numberOfUsers = props.numberOfUsers ?? 1
-    const isEqualMethod = props.splitCostMethod === SplitACMethod.EQUAL
     subTotal = props.order?.totalCost ?? 0
-    const totalSupper = props.supperTotalCost ?? 0
-    deliveryFee =
-      (isEqualMethod
-        ? (props.supperGroup?.additionalCost ?? 0) / numberOfUsers
-        : totalSupper > 0 //to prevent infinity
-        ? (subTotal / totalSupper) * (props.supperGroup?.additionalCost ?? 0)
-        : 0) ?? 0
+    deliveryFee = props.indivDeliveryFee ?? 0
     total = subTotal + deliveryFee
   }
 
@@ -228,7 +221,13 @@ export const OrderCard = (props: Props) => {
     let priceSectionTotal = total
     if (order) {
       priceSectionSubTotal = order.totalCost
-      priceSectionDeliveryFee = deliveryFee
+      priceSectionDeliveryFee = getIndivDeliveryFee(
+        props.supperGroup?.splitAdditionalCost,
+        props.supperGroup?.additionalCost,
+        props.supperGroup?.numOrders,
+        order?.totalCost,
+        props.supperGroup?.currentFoodCost,
+      )
     }
     priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
     const wasDeliveryUpdated = props.supperGroup?.wasDeliveryUpdated
@@ -291,7 +290,7 @@ export const OrderCard = (props: Props) => {
               {' '}
               <UnderlinedButton
                 onClick={() => {
-                  history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
+                  history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)
                 }}
                 text="Add item"
                 fontSize="12px"
@@ -307,7 +306,7 @@ export const OrderCard = (props: Props) => {
   const RedPlusButton = () => {
     return (
       <PlusCircleFilled
-        onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+        onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
         style={{ fontSize: '20px', color: V1_RED }}
       />
     )

@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
-import { setSupperGroup } from '../../../store/supper/action'
+import { setSupperGroup } from '../../../store/supper/action/setter'
 import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CreateOrderPageOne } from './Pages/page1'

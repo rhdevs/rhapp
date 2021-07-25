@@ -12,7 +12,8 @@ import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { PaymentMethodBubbles } from '../../../../components/Supper/PaymentMethodBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { paymentMethods } from '../../../../store/stubs'
-import { createSupperGroup, setCounter, setIsLoading, setSupperGroup } from '../../../../store/supper/action'
+import { createSupperGroup } from '../../../../store/supper/action/level1/postRequests'
+import { setCounter, setIsLoading, setSupperGroup } from '../../../../store/supper/action/setter'
 import { PaymentInfo, PaymentMethod, SupperGroup } from '../../../../store/supper/types'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
@@ -54,12 +55,13 @@ export const CreateOrderPageThree = () => {
   useEffect(() => {
     console.log(newSupperGroupId, supperGroup?.restaurantId)
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
-      history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
+      history.replace(PATHS.SUPPER_HOME)
+      history.push(`${PATHS.ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
   }, [newSupperGroupId, supperGroup?.restaurantId])
 
   const onLeftClick = () => {
-    history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
+    history.goBack()
   }
 
   let pmError = 0
@@ -115,7 +117,7 @@ export const CreateOrderPageThree = () => {
         dispatch(setIsLoading(true))
         dispatch(createSupperGroup(updatedSPInfo))
         if (supperGroup?.restaurantId !== undefined && newSupperGroupId !== undefined) {
-          history.push(`${PATHS.PLACE_ORDER}/${supperGroup?.supperGroupId}/${supperGroup?.restaurantId}/order`)
+          history.push(`${PATHS.ORDER}/${supperGroup?.supperGroupId}/${supperGroup?.restaurantId}/order`)
         }
       } else {
         history.push(`${PATHS.CREATE_SUPPER_GROUP}/${invalidInfoPageNum}`)

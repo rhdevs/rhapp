@@ -5,9 +5,9 @@ import { StatusSymbol } from './StatusSymbol'
 import tick from '../../assets/whiteTick.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setSelectedSupperGroupStatus } from '../../store/supper/action'
 import { SupperGroupStatus } from '../../store/supper/types'
 import { V1_BLUE } from '../../common/colours'
+import { setSelectedSupperGroupStatus } from '../../store/supper/action/setter'
 
 const CheckIcon = styled.img`
   margin-top: -4px;
@@ -48,12 +48,10 @@ export const SGStatusOptions = (props: Props) => {
               color="white"
               borderWidth="1px"
               backgroundColor="bluegrey"
-              shadow="0px 4px 4px 0px #6b6b6b"
+              shadow
               key={index}
               text={supperGroupStatus}
               rightIcon={CHECK_ICON}
-              fontWeight={500}
-              fontSize="14px"
             />
           )
         } else {
@@ -65,11 +63,9 @@ export const SGStatusOptions = (props: Props) => {
               border={V1_BLUE}
               color={V1_BLUE}
               borderWidth="1px"
-              shadow="0px 4px 4px 0px #6b6b6b"
+              shadow
               key={index}
               text={supperGroupStatus}
-              fontWeight={500}
-              fontSize="14px"
               isFaded={props.onlyArrivedOption}
             />
           )
