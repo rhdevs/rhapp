@@ -7,7 +7,6 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import PullToRefresh from 'pull-to-refresh-react'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { InformationCard } from '../../../components/Supper/InformationCard'
-import { DeleteOrderModal } from '../../../components/Supper/Modals/DeleteOrderModal'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -16,6 +15,7 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { OrderContainer } from './OwnerView'
 import { onRefresh } from '../../../common/reloadPage'
+import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const UserView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
   const { isLoading } = useSelector((state: RootState) => state.supper)
-  const [deleteOrderModalIsOpen, setDeleteOrderModalIsOpen] = useState<boolean>(false)
+  const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
 
   const showBottomSection = () => {
@@ -57,8 +57,8 @@ const UserView = (props: Props) => {
               <SupperButton
                 ghost
                 buttonWidth="160px"
-                defaultButtonDescription="Delete Order"
-                onButtonClick={() => setDeleteOrderModalIsOpen(true)}
+                defaultButtonDescription="Empty Cart"
+                onButtonClick={() => setEmptyCartModalIsOpen(true)}
               />
             </>
           )}
@@ -103,13 +103,12 @@ const UserView = (props: Props) => {
 
   return (
     <>
-      {deleteOrderModalIsOpen && (
-        <DeleteOrderModal
-          isOwner={false}
+      {emptyCartModalIsOpen && (
+        <EmptyCartModal
+          modalSetter={setEmptyCartModalIsOpen}
+          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           supperGroupId={params.supperGroupId}
           orderId={props.order?.orderId}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
-          modalSetter={setDeleteOrderModalIsOpen}
         />
       )}
       {leaveGroupModalIsOpen && (

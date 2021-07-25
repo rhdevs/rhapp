@@ -8,14 +8,16 @@ type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   supperGroupId: string
-  orderId: string
+  orderId: string | undefined
 }
 
 export const EmptyCartModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(emptyOrderFoodList(props.supperGroupId, props.orderId))
-    if (props.onLeftButtonClick) props.onLeftButtonClick(e)
+    if (props.orderId) {
+      dispatch(emptyOrderFoodList(props.supperGroupId, props.orderId))
+      if (props.onLeftButtonClick) props.onLeftButtonClick(e)
+    }
   }
   return (
     <SupperModal

@@ -60,6 +60,7 @@ type FormValues = {
   number: string
 }
 
+// TO REMOVE!!
 export default function ConfirmOrder() {
   const { register, handleSubmit, errors } = useForm<FormValues>()
   const dispatch = useDispatch()

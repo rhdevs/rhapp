@@ -196,7 +196,7 @@ Remove Object from backend.
 - **deleteSupperGroup** <br>
   Delete supper group through `supperGroup/:supperGroupId`. <br>
   Input: `supperGroupId: string|number|undefined`
-- **deleteOrder**
+- **deleteOrder** - to be removed
   Delete order through `/order/:orderId`.
   Input: `supperGroupId: string | number, orderId: string | undefined` <br>
 - **deleteFoodInOrder**
