@@ -228,7 +228,7 @@ Get information for pages.
   Files: `/DeliveryDetails`
 - **getEditFoodItemDetails** <br>
   Input: `orderId: string, foodId: string` <br>
-  Actions used: `resetFoodState` and `resetFoodState` <br>
+  Actions used: `resetFoodState` and `getFoodInOrder` <br>
   Files: `/EditFoodItem`
 - **getEditSupperGroupDetails** <br>
   Input: `supperGroupId: string` <br>
