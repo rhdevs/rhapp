@@ -22,8 +22,8 @@ import { PATHS } from '../../Routes'
 import { ConfirmStatusUpdateModal } from '../../../components/Supper/Modals/ConfirmStatusUpdateModal'
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { setEstimatedArrivalTime } from '../../../store/supper/action/setter'
-import { getSupperGroupById } from '../../../store/supper/action/level1/getReqests'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { getDeliveryDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   width: 100vw;
@@ -105,6 +105,11 @@ type FormValues = {
   cancelReason: string
 }
 
+export const calculateArrivalTime = (deliveryTime: number) => {
+  const estimatedTime = Math.round(Date.now() / 1000) + deliveryTime * 60
+  return estimatedTime
+}
+
 const DeliveryDetails = () => {
   const {
     register,
@@ -137,14 +142,7 @@ const DeliveryDetails = () => {
   }
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(
-      setEstimatedArrivalTime(
-        calculateArrivalTime(
-          supperGroup?.estArrivalTime ? Math.round((supperGroup?.estArrivalTime - currentUNIXDate) / 60) : 20,
-        ),
-      ),
-    )
+    dispatch(getDeliveryDetails(params.supperGroupId))
   }, [dispatch])
 
   // To set initial fields with suppergroup details
@@ -219,11 +217,6 @@ const DeliveryDetails = () => {
         history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
       }
     })()
-  }
-
-  const calculateArrivalTime = (deliveryTime: number) => {
-    const estimatedTime = Math.round(Date.now() / 1000) + deliveryTime * 60
-    return estimatedTime
   }
 
   useEffect(() => {
