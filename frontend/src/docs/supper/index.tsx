@@ -5,8 +5,12 @@ import styled from 'styled-components'
 import Markdown from 'markdown-to-jsx'
 
 const Background = styled.div`
-  background-color: #f1f1f1 !important;
-  padding: 50px;
+  background-color: #f1f1f1;
+  padding: 1rem 1.5rem;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+  overflow-wrap: anywhere;
 `
 
 const Supper_Documentation = () => {
