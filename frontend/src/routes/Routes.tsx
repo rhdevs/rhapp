@@ -4,11 +4,12 @@ import styled from 'styled-components'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
-import doc_supperActions from '../docs/supper/Doc_Supper'
 
 export enum PATHS {
   // DOCUMENTATION
-  DOCS_SUPPER_ACTIONS = '/docs/supper/actions',
+  DOCS_LANDING_PAGE = '/docs',
+  DOCS_SUPPER_BY_FILE = '/docs/supper/:file',
+  DOCS_SUPPER = '/docs/supper',
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
@@ -81,6 +82,9 @@ export enum PATHS {
   UPDATE_DELIVERY = '/supper',
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
 }
+//DOCUMENTATION
+const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
+const Supper_Documentation = React.lazy(() => import(/* webpackChunckName: "Supper_Documentation" */ '../docs/supper'))
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
@@ -204,7 +208,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.UPDATE_DELIVERY_BY_ID} component={UpdateDelivery} />
             <PrivateRoute exact path={PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID} component={UpdateAllItems} />
 
-            <PublicRoute exact path={PATHS.DOCS_SUPPER_ACTIONS} component={doc_supperActions} />
+            <PublicRoute exact path={PATHS.DOCS_LANDING_PAGE} component={Docs} />
+            <PublicRoute exact path={PATHS.DOCS_SUPPER_BY_FILE} component={Supper_Documentation} />
+
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
         </Suspense>

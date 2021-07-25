@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import Markdown from 'markdown-to-jsx'
+import { useParams } from 'react-router-dom'
+
 import styled from 'styled-components'
+import Markdown from 'markdown-to-jsx'
 
 const Background = styled.div`
   background-color: #f1f1f1 !important;
   padding: 50px;
 `
 
-function Doc_Supper() {
-  const file_name = 'actions.md'
-  const [post, setPost] = useState('')
+const Supper_Documentation = () => {
+  const params = useParams<{ file: string }>()
+  const file_name = `${params.file}.md`
+  const [readme, setReadme] = useState('')
 
   useEffect(() => {
     import(`./${file_name}`)
       .then((res) => {
         fetch(res.default)
           .then((res) => res.text())
-          .then((res) => setPost(res))
+          .then((res) => setReadme(res))
           .catch((err) => console.log(err))
       })
       .catch((err) => console.log(err))
@@ -24,9 +27,9 @@ function Doc_Supper() {
 
   return (
     <Background>
-      <Markdown>{post}</Markdown>
+      <Markdown>{readme}</Markdown>
     </Background>
   )
 }
 
-export default Doc_Supper
+export default Supper_Documentation
