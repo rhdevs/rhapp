@@ -136,7 +136,7 @@ export const SGStatusCard = (props: Props) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getUserOrder(props.rawSupperGroupId))
+    if (props.supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT) dispatch(getUserOrder(props.rawSupperGroupId))
   }, [dispatch])
 
   const onClick = () => {

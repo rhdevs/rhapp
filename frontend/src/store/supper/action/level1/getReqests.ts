@@ -160,7 +160,6 @@ export const getFoodMenu = (foodMenuId: string) => async (dispatch: Dispatch<Act
 
 export const getFoodInOrder = (orderId?: string, foodId?: string) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!(orderId && foodId)) return
-  dispatch(setIsLoading(true))
   await get(ENDPOINTS.GET_FOOD, DOMAINS.SUPPER, `/${orderId}/food/${foodId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
@@ -175,7 +174,6 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => async (disp
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to get food, please try again later.'))
     })
-  dispatch(setIsLoading(false))
 }
 
 export const getCollatedOrder = (supperGroupId: string | number | undefined) => async (

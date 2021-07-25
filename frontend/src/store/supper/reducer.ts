@@ -236,7 +236,7 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID: {
       return { ...state, newSupperGroupId: action.newSupperGroupId }
     }
-    case SUPPER_ACTIONS.RESET_FOOD_STATE: {
+    case SUPPER_ACTIONS.SET_FOOD_STATE: {
       return { ...state, food: action.food }
     }
     case SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS: {

@@ -65,7 +65,7 @@ Functions that update store variables.
   Input: `number` <br>
   Variable updated: `counter` <br>
   Used in: Page3 of CreateSupperGroup
-- **resetFoodStates** <br>
+- **setFoodStates** <br>
   Sets variable as null. <br>
   Variable updated: `food` <br>
   Used in: EditFoodItems
@@ -97,6 +97,9 @@ Functions that update store variables.
 - **setSupperErrorMessage** <br>
   Input: `string` <br>
   Variable updated: `supperErrorMessage`
+- **setFoodState** <br>
+  Input: `Food | undefined` <br>
+  Variable updated: `food`
 
 ## Level 1 Functions
 
@@ -221,3 +224,15 @@ Get information for pages.
   Input: `supperGroupId: string` <br>
   Actions used: `getCollatedOrder` and `getSupperGroupById` <br>
   Used in: Order Summary
+
+- **getUpdateItemPageDetails** <br>
+  Get details for Update Item Page. <br>
+  Input: `supperGroupId: string, orderId: string, foodId: string` <br>
+  Actions used: `getSupperGroupById` and `getFoodInOrder` <br>
+  Used in: Update Item
+
+- **getUpdateAllItemsPageDetails** <br>
+  Get details for Update All Items Page. <br>
+  Input: `supperGroupId: string, foodId: string` <br>
+  Actions used: `getCollatedOrder` and `setFoodState` <br>
+  Used in: Update Item

@@ -51,24 +51,13 @@ const UpdateDelivery = () => {
     <>
       <TopNavBar
         title="Order Summary"
-        onLeftClick={() => {
-          if (hasTouched) {
-            setDiscardChangesModalIsOpen(true)
-          } else {
-            history.goBack()
-          }
-        }}
+        onLeftClick={() => (hasTouched ? setDiscardChangesModalIsOpen(true) : history.goBack())}
       />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <>
-          {discardChangesModalIsOpen && (
-            <DiscardChangesModal
-              modalSetter={setDiscardChangesModalIsOpen}
-              onLeftButtonClick={() => history.goBack()}
-            />
-          )}
+          {discardChangesModalIsOpen && <DiscardChangesModal modalSetter={setDiscardChangesModalIsOpen} />}
           <OldInfoContainer>
             <DeliveryText>Total Delivery Fee</DeliveryText>
             <PriceText>${(supperGroup?.additionalCost ?? 0).toFixed(2)}</PriceText>

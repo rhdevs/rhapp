@@ -246,7 +246,7 @@ export enum SUPPER_ACTIONS {
   SET_MENU_FOOD_ID = 'SUPPER_ACTIONS.SET_MENU_FOOD_ID',
   SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
-  RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
+  SET_FOOD_STATE = 'SUPPER_ACTIONS.SET_FOOD_STATE',
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
   GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
   SET_IS_FOOD_MODAL_OPEN = 'SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN',
@@ -457,9 +457,9 @@ type SetNewSupperGroupId = {
   newSupperGroupId: number
 }
 
-type ResetFoodState = {
-  type: typeof SUPPER_ACTIONS.RESET_FOOD_STATE
-  food: null
+type SetFoodState = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_STATE
+  food: null | Food
 }
 
 type getSupperNotificationss = {
@@ -539,7 +539,7 @@ export type ActionTypes =
   | SetMenuFoodId
   | SetCreateOrderPage
   | SetNewSupperGroupId
-  | ResetFoodState
+  | SetFoodState
   | getSupperNotificationss
   | SetIsFoodModalOpen
   | SetFoodModalInfo

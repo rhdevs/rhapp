@@ -3,6 +3,7 @@ import { getReadableSupperGroupId } from '../../../common/getReadableSupperGroup
 import {
   ActionTypes,
   Filter,
+  Food,
   PaymentMethod,
   Restaurants,
   SupperGroup,
@@ -167,7 +168,7 @@ export const setCounter = (counter: number) => (dispatch: Dispatch<ActionTypes>)
 
 export const resetFoodState = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
-    type: SUPPER_ACTIONS.RESET_FOOD_STATE,
+    type: SUPPER_ACTIONS.SET_FOOD_STATE,
     food: null,
   })
 }
@@ -262,5 +263,13 @@ export const setSupperErrorMessage = (supperErrorMessage: string) => (dispatch: 
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE,
     supperErrorMessage: supperErrorMessage,
+  })
+}
+
+export const setFoodState = (food: Food | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+  if (!food) return
+  dispatch({
+    type: SUPPER_ACTIONS.SET_FOOD_STATE,
+    food: food,
   })
 }
