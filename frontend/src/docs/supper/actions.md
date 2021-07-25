@@ -216,16 +216,21 @@ Get information for pages.
 
 - **getPlaceOrderPageDetails** <br>
   Input: `supperGroupId: string, restaurantId: string` <br>
+  Actions used: `getSupperGroupById`, `getRestaurant` and `getUserOrder` <br>
   Files: `/PlaceOrder`
 - **getAddFoodItemPageDetails** <br>
   Input: `supperGroupId: string, foodId: string` <br>
+  Actions used: `getSupperGroupById` <br>
   Files: `/AddFoodItem`
 - **getDeliveryDetails** <br>
   Input: `supperGroupId: string` <br>
+  Actions used: `getSupperGroupById` and `setEstimatedArrivalTime` <br>
   Files: `/DeliveryDetails`
 - **getEditFoodItemDetails** <br>
   Input: `orderId: string, foodId: string` <br>
+  Actions used: `resetFoodState` and `resetFoodState` <br>
   Files: `/EditFoodItem`
 - **getEditSupperGroupDetails** <br>
   Input: `supperGroupId: string` <br>
+  Actions used: `getSupperGroupById` <br>
   Files: `/EditSupperGroup`

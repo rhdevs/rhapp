@@ -54,7 +54,6 @@ export const getDeliveryDetails = (supperGroupId: string) => (dispatch: Dispatch
 
 export const getEditFoodItemDetails = (orderId: string, foodId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  dispatch(setIsLoading(true))
   await Promise.all([dispatch(resetFoodState()), dispatch(getFoodInOrder(orderId, foodId))]).catch(() =>
     dispatch(setSupperErrorMessage('Could not get Edit Food Item page details! Please try again.')),
   )
