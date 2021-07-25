@@ -57,7 +57,7 @@ export const RestaurantBubbles = (props: Props) => {
                 color="white"
                 borderWidth="1px"
                 shadow
-                backgroundColor={V1_BLUE}
+                backgroundColor="bluegrey"
                 key={index}
                 text={restaurant}
                 rightIcon={CHECK_ICON}
