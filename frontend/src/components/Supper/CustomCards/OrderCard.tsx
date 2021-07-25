@@ -290,7 +290,7 @@ export const OrderCard = (props: Props) => {
               {' '}
               <UnderlinedButton
                 onClick={() => {
-                  history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
+                  history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)
                 }}
                 text="Add item"
                 fontSize="12px"
@@ -306,7 +306,7 @@ export const OrderCard = (props: Props) => {
   const RedPlusButton = () => {
     return (
       <PlusCircleFilled
-        onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+        onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
         style={{ fontSize: '20px', color: V1_RED }}
       />
     )

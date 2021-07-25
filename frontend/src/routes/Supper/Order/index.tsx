@@ -15,7 +15,7 @@ import { ViewCartButton } from '../../../components/Supper/ViewCartButton'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/action/setter'
-import { getPlaceOrderPageDetails } from '../../../store/supper/action/level2'
+import { getOrderPageDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   width: 100vw;
@@ -43,7 +43,7 @@ const Restaurant = styled.text`
   margin-left: 5px;
 `
 
-export default function PlaceOrder() {
+const Order = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
@@ -61,7 +61,7 @@ export default function PlaceOrder() {
   const isOwner = localStorage.userID === supperGroup?.ownerId
 
   useEffect(() => {
-    dispatch(getPlaceOrderPageDetails(params.supperGroupId, params.restaurantId))
+    dispatch(getOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
 
   const onChange = (input: string) => {
@@ -137,3 +137,5 @@ export default function PlaceOrder() {
     </Background>
   )
 }
+
+export default Order

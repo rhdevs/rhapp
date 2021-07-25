@@ -229,7 +229,7 @@ export const SupperGroupCard = (props: Props) => {
           history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
         } else {
           // New SG to user
-          history.push(`${PATHS.JOIN_ORDER}/${rawSupperGroupId}`)
+          history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
         }
       }
     }

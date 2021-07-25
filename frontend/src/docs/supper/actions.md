@@ -242,3 +242,15 @@ Get information for pages.
   Input: - <br>
   Actions used: `getCreatedSupperHistory` and `getJoinedSupperHistory` <br>
   Files: `/GroupHistory`
+
+- **getJoinOrderPageDetails** <br>
+  Get details for Join Group Page. <br>
+  Input: - <br>
+  Actions used: `getSupperGroupById` <br>
+  Files: `/JoinGroup`
+
+- **getSupperHomePageDetails** <br>
+  Get details for Supper Home Page. <br>
+  Input: - <br>
+  Actions used: `getAllSupperGroups` <br>
+  Files: `/`

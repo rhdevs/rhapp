@@ -56,7 +56,7 @@ export const CreateOrderPageThree = () => {
     console.log(newSupperGroupId, supperGroup?.restaurantId)
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
       history.replace(PATHS.SUPPER_HOME)
-      history.push(`${PATHS.PLACE_ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
+      history.push(`${PATHS.ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
     }
   }, [newSupperGroupId, supperGroup?.restaurantId])
 
@@ -117,7 +117,7 @@ export const CreateOrderPageThree = () => {
         dispatch(setIsLoading(true))
         dispatch(createSupperGroup(updatedSPInfo))
         if (supperGroup?.restaurantId !== undefined && newSupperGroupId !== undefined) {
-          history.push(`${PATHS.PLACE_ORDER}/${supperGroup?.supperGroupId}/${supperGroup?.restaurantId}/order`)
+          history.push(`${PATHS.ORDER}/${supperGroup?.supperGroupId}/${supperGroup?.restaurantId}/order`)
         }
       } else {
         history.push(`${PATHS.CREATE_SUPPER_GROUP}/${invalidInfoPageNum}`)

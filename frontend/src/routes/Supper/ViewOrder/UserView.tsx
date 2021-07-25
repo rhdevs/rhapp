@@ -105,7 +105,7 @@ const UserView = (props: Props) => {
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           suppergroupId={params.supperGroupId}
-          onLeftButtonClick={() => history.push(`${PATHS.JOIN_ORDER}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
           modalSetter={setLeaveGroupModalIsOpen}
         />
       )}

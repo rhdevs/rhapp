@@ -1,6 +1,7 @@
 import { Dispatch, GetState } from '../../types'
 import { ActionTypes } from '../types'
 import {
+  getAllSupperGroups,
   getCollatedOrder,
   getCreatedSupperHistory,
   getFoodInOrder,
@@ -11,7 +12,7 @@ import {
 } from './level1/getReqests'
 import { setFoodState, setIsLoading, setOrderId, setSelectedSupperGroupStatus, setSupperErrorMessage } from './setter'
 
-export const getPlaceOrderPageDetails = (supperGroupId: string, restaurantId: string) => async (
+export const getOrderPageDetails = (supperGroupId: string, restaurantId: string) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -95,4 +96,18 @@ export const getViewOrderPageDetails = (supperGroupId: string) => async (
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
   dispatch(setIsLoading(false))
+}
+
+export const getJoinGroupPageDetails = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  dispatch(getSupperGroupById(supperGroupId))
+    .then(() => dispatch(setIsLoading(false)))
+    .catch(() => dispatch(setSupperErrorMessage('Could not get join group page details! Please try again later.')))
+}
+
+export const getSupperHomePageDetails = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setIsLoading(true))
+  dispatch(getAllSupperGroups())
+    .then(() => dispatch(setIsLoading(false)))
+    .catch(() => dispatch(setSupperErrorMessage('Could not get supper home page details! Please try again later.')))
 }

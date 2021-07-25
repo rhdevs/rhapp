@@ -113,7 +113,7 @@ const AddFoodItem = () => {
         custom: custom,
       }
       dispatch(addFoodToOrder(newFood, params.orderId))
-      history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
+      history.push(`${PATHS.ORDER}/${params.supperGroupId}/${foodMenu?.restaurantId}/order`)
       console.log(data, count)
     })()
   }
