@@ -1,9 +1,17 @@
 import { createGlobalStyle } from 'styled-components'
+import Inter from './assets/Inter/Inter-VariableFont_slnt,wght.ttf'
 
 // TODO: Fix this error (not changed bc it will mess up our current ui since different weights are not imported)
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'Inter';
+    src: url(${Inter}) format('truetype');
+    font-weight: 125 950;
+    font-stretch: 100%;
+    font-style: normal;
+  }
+
   body {
-    color: #fafaf4
     font-family: Inter;
     background-color: #fafaf4 !important;
   }

@@ -55,7 +55,7 @@ export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState
     newPostBody: '',
     newPostImages: [],
     newPostOfficial: false,
-    newPostCca: position[0]?.ccaID,
+    newPostCca: 0,
   })
 }
 

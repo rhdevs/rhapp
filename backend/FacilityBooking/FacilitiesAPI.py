@@ -167,9 +167,9 @@ def check_bookings(facilityID):
             {'$match':
                 {'$and': [
                     {'facilityID': int(facilityID)},
-                    {'startTime': {'$gte': int(
-                        request.args.get('startTime'))}},
-                    {"endTime": {"$lte": int(request.args.get('endTime'))}}
+                    {'startTime': {'$lte': int(
+                        request.args.get('endTime'))}},
+                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
                 ]}
              },
             {'$lookup': {
@@ -290,7 +290,7 @@ def edit_booking(bookingID):
         if (not request.args.get("token")):
             raise Exception("No token")
 
-        if (not authenticate(request.args.get("token"), data[0].userID)):
+        if (not authenticate(request.args.get("token"), data[0]['userID'])):
             raise Exception("Auth Failure")
 
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
@@ -320,7 +320,7 @@ def delete_booking(bookingID):
         if (not request.args.get("token")):
             raise Exception("No token")
 
-        if (not authenticate(request.args.get("token"), data[0].userID)):
+        if (not authenticate(request.args.get("token"), data[0]['userID'])):
             raise Exception("Auth Failure")
 
         if (len(data) == 0):
