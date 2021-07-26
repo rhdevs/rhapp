@@ -15,7 +15,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
-import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
+// import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
@@ -32,11 +32,11 @@ const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
+  // const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
   const { isLoading, supperGroup, collatedOrder, selectedSupperGroupStatus, order, supperErrorMessage } = useSelector(
     (state: RootState) => state.supper,
   )
-  const isOwner = supperGroup?.ownerId === localStorage.userID
+  // const isOwner = supperGroup?.ownerId === localStorage.userID
 
   useEffect(() => {
     if (supperGroup?.status === SupperGroupStatus.CLOSED) {
@@ -52,15 +52,15 @@ const ViewOrder = () => {
     <MainContainer>
       <TopNavBar
         title="View Order"
-        onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())}
+        // onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())}
       />
-      {leaveGroupModalIsOpen && (
+      {/* {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           suppergroupId={params.supperGroupId}
           onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
           modalSetter={setLeaveGroupModalIsOpen}
         />
-      )}
+      )} */}
       <PullToRefresh onRefresh={onRefresh}>
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
           <SupperErrorContent />
