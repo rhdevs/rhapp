@@ -73,6 +73,12 @@ def reset_database():
     return make_response(response, 200)
 
 
+@supper_api.route('/close')
+@cross_origin()
+def close_supper():
+    closeSupperGroup(8)
+    return 'SupperGroup Close'
+
 ###########################################################
 #                   SUPPER ROUTES                         #
 ###########################################################
@@ -88,7 +94,12 @@ def closeSupperGroup(supperGroupId):
     data['status'] = 'Closed'
     db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                               {"$set": data})
-    # print("Supper Group Closed")
+    # Delete all Orders with no foodIds
+    emptyOrders = list(db.Order.find({'supperGroupId': supperGroupId, 'foodIds': []}, {'foodIds': 0}))
+    orderList = []
+    for order in emptyOrders:
+        orderList.append(order['_id'])
+    db.Order.delete_many({'_id': {'$in': orderList}})
 
 
 def deleteSupperGroup(supperGroupId):
@@ -494,6 +505,12 @@ def get_order(orderId):
                     changes = {'$set': {'status': 'Pending'}}
                     db.SupperGroup.update_one(query, changes)
 
+            # Update foodList - Empty cart
+            if 'foodList' in data:
+                if not data['foodList']: # FoodList is empty
+                    # Remove all foodOrders in Order
+                    db.FoodOrder.delete_many({'_id': {'$in': order['foodIds']}})
+
             db.Order.update_one({"_id": ObjectId(orderId)},
                                 {"$set": data})
 
@@ -503,8 +520,11 @@ def get_order(orderId):
 
         elif request.method == 'DELETE':
             foodIdList = list(db.Order.find(
-                {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
@@ -1215,13 +1235,18 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success", "data": data}
         elif request.method == 'DELETE':
-            order_info = list(db.Order.find(
-                {'userID': userID}, {'foodIds': 1, '_id': 1}))
-            if order_info:
-                order_info = order_info[0]
-            foods = order_info['foodIds']
+            foodIdList = list(db.Order.find(
+                {'supperGroupId': supperGroupId, 'userID': userID}, {'foodIds': 1, '_id': 1}))
+            print(foodIdList)
+            orderId = None
+            foods = []
+            for foodIds in foodIdList:
+                orderId = foodIds['_id']
+                print(orderId)
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
-            result = db.Order.delete_one({"_id": order_info['_id']})
+            result = db.Order.delete_one({"_id": orderId})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
 
@@ -1229,7 +1254,6 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
-
         return make_response(response, 200)
     except Exception as e:
         print(e)
