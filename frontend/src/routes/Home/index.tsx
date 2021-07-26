@@ -51,7 +51,7 @@ const ButtonGroup = styled.div`
 `
 
 const ActionButton = styled(Button)`
-  width: 160px;
+  width: 150px;
   height: 80px !important;
   border-radius: 28px !important;
   margin: 7px 18px !important;
@@ -154,7 +154,7 @@ export default function Home() {
           {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
         </TopBar>
         <AnnouncementCarousel />
-        <BannerContainer>
+        {/* <BannerContainer>
           <BannerText>App under Beta testing</BannerText>
           <StyledTelegramIcon
             onClick={() => {
@@ -163,7 +163,7 @@ export default function Home() {
             src={TelegramIcon}
             alt="Telegram Icon"
           />
-        </BannerContainer>
+        </BannerContainer> */}
         <ButtonGroup>
           {buttons.map((button) => (
             // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />

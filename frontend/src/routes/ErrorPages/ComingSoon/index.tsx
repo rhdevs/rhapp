@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import NotFoundCatImg from '../../../assets/notFound.svg'
+import ComingSoonCatImg from '../../../assets/ComingSoonCat.png'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -11,11 +11,11 @@ const MainContainer = styled.div`
   text-align: center;
 `
 
-export default function NotFound() {
+export default function ComingSoon() {
   return (
     <MainContainer>
-      <img src={NotFoundCatImg} />
-      <h1>Sorry, Page not found. Try navigating to other pages</h1>
+      <img src={ComingSoonCatImg} width="90%" />
+      <h1>Look forward to our announcement!</h1>
       <BottomNavBar />
     </MainContainer>
   )

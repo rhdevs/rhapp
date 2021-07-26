@@ -40,5 +40,7 @@ yarn-error.log/
 
 # IDE stuff
 .idea/
+
+#Apple files
 .DS_Store
 */.DS_Store

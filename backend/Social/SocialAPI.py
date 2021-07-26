@@ -43,27 +43,11 @@ def profiles():
 
         elif request.method == 'PUT':
             data = request.get_json()
-
-            userID = str(data.get('userID'))
-            displayName = str(data.get('displayName'))
-            bio = str(data.get('bio'))
-            profilePictureUrl = str(data.get('profilePictureUrl'))
-            block = int(data.get('block'))
-            telegramHandle = str(data.get('telegramHandle'))
-            modules = data.get('modules')
-
-            body = {
-                "userID": userID,
-                "displayName": displayName,
-                "bio": bio,
-                "profilePictureUrl": profilePictureUrl,
-                "block": block,
-                "telegramHandle": telegramHandle,
-                "modules": modules
-            }
+            if "profilePictureURI" in data:
+                data["profilePictureUrl"] = data.pop("profilePictureURI")
 
             result = db.Profiles.update_one(
-                {"userID": userID}, {'$set': body}, upsert=True)
+                {"userID": data["userID"]}, {'$set': data}, upsert=True)
 
             if int(result.matched_count) > 0:
                 response = {

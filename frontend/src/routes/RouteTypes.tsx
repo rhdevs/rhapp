@@ -1,12 +1,16 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
+import { SetIsJcrc } from '../store/facilityBooking/action'
 import { useDispatch } from 'react-redux'
 
 const getIsLoggedIn = async () => {
   const dispatch = useDispatch()
   const token = localStorage.token
   const userId = localStorage.getItem('userID')
+  if (userId === 'RH_JCRC') {
+    dispatch(SetIsJcrc(true))
+  }
   if (token) {
     await fetch(DOMAIN_URL.AUTH + ENDPOINTS.IS_LOGGEDIN + '?token=' + token, {
       method: 'GET',
