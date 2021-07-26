@@ -39,6 +39,12 @@ const ViewOrder = () => {
   const isOwner = supperGroup?.ownerId === localStorage.userID
 
   useEffect(() => {
+    if (supperGroup?.status === SupperGroupStatus.CLOSED) {
+      history.replace(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+    }
+  }, [supperGroup?.status])
+
+  useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
   }, [dispatch])
 
