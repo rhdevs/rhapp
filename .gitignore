@@ -40,7 +40,10 @@ yarn-error.log/
 
 # IDE stuff
 .idea/
+<<<<<<< HEAD
 
 #Apple files
+=======
+>>>>>>> minimain
 .DS_Store
 */.DS_Store
