@@ -1055,6 +1055,7 @@ def owner_edit_order(supperGroupId):
         if request.method == 'PUT':
             data = request.get_json()
             foodId = ObjectId(data.pop('foodId'))
+            food = db.FoodOrder.find_one({"_id": foodId})
 
             if data['updates']['updateAction'] == 'Update':
                 if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
@@ -1070,7 +1071,6 @@ def owner_edit_order(supperGroupId):
 
             if 'global' in data['updates'] and data['updates']['global']:
                 data['updates'].pop('global')
-                food = db.FoodOrder.find_one({"_id": foodId})
                 pipeline = [
                     {'$match': {'supperGroupId': supperGroupId}},
                     {
@@ -1086,16 +1086,23 @@ def owner_edit_order(supperGroupId):
                             'from': 'FoodOrder',
                             'localField': 'orderList.foodIds',
                             'foreignField': '_id',
-                            'as': 'foods'
+                            'as': 'foodList'
                         }
                     },
-                    {'$project': {'_id': 0, 'foods._id': 1, 'foods.foodMenuId': 1,
-                                  'foods.custom': 1, 'foods.comments': 1}},
+                    {'$project': {'_id': 1, 'foodIds': 1, 'foodList._id': 1, 'foodList.foodMenuId': 1,
+                                  'foodList.quantity': 1, 'foodList.custom': 1, 'foodList.comments': 1,
+                                  'foodList.cancelAction': 1, 'foodList.foodPrice': 1}},
                 ]
 
-                foods = db.Order.aggregate(pipeline)
-                for item in foods:
-                    foods = item['foods']
+                result = db.Order.aggregate(pipeline)
+
+                foods = []
+                for item in result:
+                    item['foodList'] = list(filter(lambda x: x['_id'] in item['foodIds'], item['foodList']))
+                    for food in item['foodList']:
+                        food['orderId'] = item['_id']
+                    foods += item['foodList']
+
                 foods = list(filter(lambda x:
                                     x['foodMenuId'] == food['foodMenuId'] and
                                     x['custom'] == food['custom'] and
@@ -1105,15 +1112,21 @@ def owner_edit_order(supperGroupId):
                                     x['foodMenuId'] == food['foodMenuId'] and
                                     x['custom'] == food['custom'] and
                                     x['cancelAction'] == food['cancelAction'], foods))
-                foods = list(map(lambda x: x['_id'], foods))
+                print(foods)
 
-                result = db.FoodOrder.update_many({"_id": {'$in': foods}},
-                                                  {"$set": data})
+                for food in foods:
+                    db.Order.update({'_id': food['orderId']},
+                                    {'$inc': {'totalCost': (data['foodPrice'] * food['quantity']) - food['foodPrice']}})
+                    db.FoodOrder.update({'_id': food['_id']},
+                                        {'$set': {'updates': data['updates'],
+                                                  'foodPrice': data['foodPrice'] * food['quantity']}})
+
             else:
                 if 'global' in data['updates']:
                     data['updates'].pop('global')
-                result = db.FoodOrder.find_one_and_update({"_id": foodId},
-                                                          {"$set": data})
+                data['foodPrice'] = data['updates']['updatedPrice'] * food['quantity']
+                result = db.FoodOrder.find_one_and_update({'_id': foodId},
+                                                          {'$set': data})
             if result is None:
                 raise Exception('Food not found')
 
