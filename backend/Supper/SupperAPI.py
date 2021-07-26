@@ -943,7 +943,6 @@ def get_user_supper_group_notification(userID):
                 item['supperGroupName'] = item.pop(
                     'supperGroup')['supperGroupName']
                 if 'notification' in item and item['notification']:
-                    item.pop('notification')
                     data.append(item)
 
             response = {"status": "success", "data": data}
@@ -960,10 +959,11 @@ def get_user_supper_group_notification(userID):
 def user_supper_group_notification(userID, supperGroupId):
     try:
         if request.method == 'POST':
+            # data = {notification: Update/Delete <str>}
             data = request.get_json()
 
             db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
-                                 {'$set': {'notification': True}})
+                                 {'$set': data})
 
             response = {"status": "success", "data": data}
 
@@ -971,7 +971,7 @@ def user_supper_group_notification(userID, supperGroupId):
             data = request.get_json()
 
             db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
-                                 {'$set': {'notification': False}})
+                                 {'$unset': {'notification': ''}})
 
             response = {"status": "success", "data": data}
 
