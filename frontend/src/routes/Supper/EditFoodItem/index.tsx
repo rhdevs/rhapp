@@ -56,7 +56,7 @@ const EditFoodItem = () => {
     reset,
     control,
     errors,
-    formState: { touched },
+    formState,
   } = useForm<CustomData>({
     shouldUnregister: false,
   })
@@ -66,7 +66,7 @@ const EditFoodItem = () => {
     }) ?? []
 
   const onLeftClick = () => {
-    Object.values(touched).length ? setIsDiscardChangesModalOpen(true) : history.goBack()
+    formState.touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
   }
 
   const isOverSupperGroupLimit = () => {

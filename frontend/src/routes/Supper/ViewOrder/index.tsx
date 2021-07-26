@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -15,6 +15,8 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
+import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   display: grid;
@@ -29,9 +31,12 @@ const MainContainer = styled.div`
 const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
+  const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
   const { isLoading, supperGroup, collatedOrder, selectedSupperGroupStatus, order, supperErrorMessage } = useSelector(
     (state: RootState) => state.supper,
   )
+  const isOwner = supperGroup?.ownerId === localStorage.userID
 
   useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
@@ -39,7 +44,14 @@ const ViewOrder = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="View Order" />
+      <TopNavBar title="View Order" onLeftClick={() => (isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())} />
+      {leaveGroupModalIsOpen && (
+        <LeaveGroupModal
+          suppergroupId={params.supperGroupId}
+          onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
+          modalSetter={setLeaveGroupModalIsOpen}
+        />
+      )}
       <PullToRefresh onRefresh={onRefresh}>
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
           <SupperErrorContent />

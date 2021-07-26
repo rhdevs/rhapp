@@ -72,7 +72,7 @@ const AddFoodItem = () => {
   }, [dispatch])
 
   const onLeftClick = () => {
-    Object.values(touched).length ? setIsDiscardChangesModalOpen(true) : history.goBack()
+    touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
   }
 
   const isOverSupperGroupLimit = () => {

@@ -52,13 +52,13 @@ const UserView = (props: Props) => {
           {props.order?.foodList && props.order.foodList.length > 0 && (
             <SupperButton
               ghost
-              buttonWidth="160px"
+              buttonWidth="140px"
               defaultButtonDescription="Empty Cart"
               onButtonClick={() => setEmptyCartModalIsOpen(true)}
             />
           )}
           <SupperButton
-            buttonWidth="160px"
+            buttonWidth="140px"
             defaultButtonDescription="Leave Group"
             onButtonClick={() => setLeaveGroupModalIsOpen(true)}
           />
