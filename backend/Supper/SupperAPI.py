@@ -1148,6 +1148,8 @@ def owner_edit_order(supperGroupId):
             else:
                 if 'global' in data['updates']:
                     data['updates'].pop('global')
+                db.Order.update({'_id': food['orderId']},
+                                {'$inc': {'totalCost': (data['foodPrice'] * food['quantity']) - food['foodPrice']}})
                 data['foodPrice'] = data['updates']['updatedPrice'] * food['quantity']
                 result = db.FoodOrder.find_one_and_update({'_id': foodId},
                                                           {'$set': data})
