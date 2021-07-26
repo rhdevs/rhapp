@@ -20,6 +20,7 @@ import { RootState } from '../../../store/types'
 export const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 30px;
 `
 
 export const ButtonContainer = styled.div`
@@ -137,7 +138,7 @@ const OwnerView = (props: Props) => {
       {endGroupModalIsOpen && (
         <EndSupperGroupModal
           modalSetter={setEndGroupModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
@@ -155,6 +156,14 @@ const OwnerView = (props: Props) => {
             <SupperButton
               onButtonClick={() => setEndGroupModalIsOpen(true)}
               defaultButtonDescription="End Supper Group"
+            />
+          </SupperButtonContainer>
+        )}
+        {props.supperGroupIsCancelled && (
+          <SupperButtonContainer>
+            <SupperButton
+              onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+              defaultButtonDescription="Main Page"
             />
           </SupperButtonContainer>
         )}

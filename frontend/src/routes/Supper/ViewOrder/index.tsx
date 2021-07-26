@@ -44,7 +44,10 @@ const ViewOrder = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="View Order" onLeftClick={() => (isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())} />
+      <TopNavBar
+        title="View Order"
+        onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())}
+      />
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           suppergroupId={params.supperGroupId}
