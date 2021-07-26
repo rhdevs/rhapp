@@ -509,6 +509,8 @@ def get_order(orderId):
             if 'foodList' in data:
                 if not data['foodList']: # FoodList is empty
                     # Remove all foodOrders in Order
+                    data.pop('foodList')
+                    data['totalCost'] = 0
                     db.FoodOrder.delete_many({'_id': {'$in': order['foodIds']}})
 
             db.Order.update_one({"_id": ObjectId(orderId)},
