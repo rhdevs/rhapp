@@ -373,7 +373,7 @@ def supper_group(supperGroupId):
                                       {"$set": data})
 
             db.Order.update_many({'supperGroupId': supperGroupId},
-                                 {'$set': {'notification': True}})
+                                 {'$set': {'notification': 'Update'}})
 
             # Add scheduler to close supper group order
             closingTime = datetime.fromtimestamp(supperGroup['closingTime'])
@@ -400,6 +400,8 @@ def supper_group(supperGroupId):
             if remove == 0:
                 raise Exception("Supper group not found")
             db.Order.delete_many({'supperGroupId': supperGroupId})
+            db.Order.update_many({'supperGroupId': supperGroupId},
+                                 {'$set': {'notification': 'Delete'}})
             db.FoodOrder.delete_many({'_id': {'$in': foods}})
             response = {"status": "success",
                         "message": "Supper Group Deleted"}
