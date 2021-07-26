@@ -9,7 +9,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { Order, SupperGroup } from '../../../store/supper/types'
+import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { onRefresh } from '../../../common/reloadPage'
@@ -78,7 +78,7 @@ const UserView = (props: Props) => {
           />
         </BottomContainer>
       )
-    } else {
+    } else if (props.supperGroup?.status !== SupperGroupStatus.CLOSED) {
       if (props.order?.hasPaid) {
         return <SupperButton ghost defaultButtonDescription="Payment Completed" />
       } else {
