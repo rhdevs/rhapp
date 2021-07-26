@@ -10,7 +10,7 @@ import { PlusButton } from '../../components/Supper/PlusButton'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
-import { V1_BACKGROUND } from '../../common/colours'
+import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 import { SupperSearchBar } from '../../components/Supper/SupperSearchBar'
 import { Filter, HomeSupperGroup } from '../../store/supper/types'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
@@ -64,9 +64,21 @@ const NoSupperGroupText = styled.text`
   margin-top: 2rem;
 `
 
+const SupperGroupHistoryContainer = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`
+
+const SupperGroupHistoryDescription = styled.div`
+  color: ${V1_RED};
+  font-size: 10px;
+  line-height: 8px;
+`
+
 const SupperGroupHistoryImg = styled.img`
-  width: 2.5rem;
-  margin: 0 -15px auto auto;
+  width: 2rem;
+  margin: 0 0px auto auto;
 `
 
 const SearchContainer = styled.div`
@@ -95,11 +107,14 @@ export default function Supper() {
   } = useSelector((state: RootState) => state.supper)
 
   const rightIcon = (
-    <SupperGroupHistoryImg
-      src={SupperGroupHistoryIcon}
-      alt={'My Supper Groups'}
-      onClick={() => history.push(PATHS.SUPPER_HISTORY)}
-    />
+    <SupperGroupHistoryContainer>
+      <SupperGroupHistoryImg
+        src={SupperGroupHistoryIcon}
+        alt={'My Supper Groups'}
+        onClick={() => history.push(PATHS.SUPPER_HISTORY)}
+      />
+      <SupperGroupHistoryDescription>History</SupperGroupHistoryDescription>
+    </SupperGroupHistoryContainer>
   )
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
@@ -9,11 +10,12 @@ import { PATHS } from '../../Routes'
 import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { SetIsJcrc } from '../../../store/facilityBooking/action'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
   margin: 0px 23px;
-  padding-top: 70px;
+  padding-top: 50px;
   text-align: center;
 `
 
@@ -58,9 +60,13 @@ const PostButton = styled.div`
     background: #de5f4c;
     border-color: #de5f4c;
   }
+  .ant-btn-default: {
+    float: left;
+    width: 50% !important;
+  }
 `
 const AlertGroup = styled.div`
-  margin: 23px;
+  margin: 0px;
 `
 const StyledUsernameInput = styled.div`
   .ant-input {
@@ -76,11 +82,14 @@ const StyledPasswordInput = styled.div`
   }
   .ant-input {
     border-radius: 15px;
+    font-size: 20px;
+    font-weight: 200;
   }
 `
 
 export default function Login() {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -121,6 +130,9 @@ export default function Login() {
         .then((data) => {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          if (username === 'RH_JCRC') {
+            dispatch(SetIsJcrc(true))
+          }
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
@@ -152,7 +164,6 @@ export default function Login() {
             />
           </StyledUsernameInput>
           <br />
-          <br />
           <InputTextLabel>Password: </InputTextLabel>
           <StyledPasswordInput>
             <Input.Password
@@ -164,7 +175,7 @@ export default function Login() {
               onPressEnter={loginHandler}
             />
           </StyledPasswordInput>
-          <br /> <br />
+          <br />
           {error.message !== '' && (
             <AlertGroup>
               <Alert message={error.message} type="error" closable showIcon />
@@ -187,6 +198,17 @@ export default function Login() {
               }}
             >
               Register
+            </Button>
+            <Button
+              type="default"
+              shape="round"
+              size="large"
+              block
+              onClick={() => {
+                history.push(PATHS.FORGET_PASSWORD_PAGE)
+              }}
+            >
+              Forget Password
             </Button>
           </PostButton>
         </LoginContainer>

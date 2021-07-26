@@ -15,7 +15,7 @@ import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/newIcons/washer.svg'
 import facilities_icon from '../../assets/newIcons/booking.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
-import supper_icon from '../../assets/supperIcon.svg'
+import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
 
@@ -51,7 +51,7 @@ const ButtonGroup = styled.div`
 `
 
 const ActionButton = styled(Button)`
-  width: 160px;
+  width: 150px;
   height: 80px !important;
   border-radius: 28px !important;
   margin: 7px 18px !important;
@@ -135,11 +135,11 @@ export default function Home() {
       },
     },
     {
-      name: 'supper (WIP)',
+      name: 'supper',
       src: supper_icon,
       filter: 'invert(1)',
       clickHandler: () => {
-        //
+        history.push(PATHS.SUPPER_HOME)
       },
     },
   ]
@@ -154,7 +154,7 @@ export default function Home() {
           {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
         </TopBar>
         <AnnouncementCarousel />
-        <BannerContainer>
+        {/* <BannerContainer>
           <BannerText>App under Beta testing</BannerText>
           <StyledTelegramIcon
             onClick={() => {
@@ -163,7 +163,7 @@ export default function Home() {
             src={TelegramIcon}
             alt="Telegram Icon"
           />
-        </BannerContainer>
+        </BannerContainer> */}
         <ButtonGroup>
           {buttons.map((button) => (
             // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
