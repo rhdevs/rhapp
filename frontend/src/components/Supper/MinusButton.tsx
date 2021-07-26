@@ -3,8 +3,8 @@ import { MinusCircleFilled } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { useEffect } from 'react'
-import { setCount } from '../../store/supper/action'
 import { V1_BLUE, V1_RED } from '../../common/colours'
+import { setCount } from '../../store/supper/action/setter'
 
 type Props = {
   min?: number | undefined

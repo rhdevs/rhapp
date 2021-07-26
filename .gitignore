@@ -40,5 +40,5 @@ yarn-error.log/
 
 # IDE stuff
 .idea/
-
+.DS_Store
 */.DS_Store

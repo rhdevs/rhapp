@@ -7,7 +7,6 @@ import SupperGroupHistoryIcon from '../../assets/supper/SupperGroupHistoryIcon.s
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { PlusButton } from '../../components/Supper/PlusButton'
-import { getAllSupperGroups } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 import { PATHS } from '../Routes'
 import LoadingSpin from '../../components/LoadingSpin'
@@ -20,6 +19,7 @@ import { Tooltip } from 'antd'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
+import { getAllSupperGroups } from '../../store/supper/action/level1/getReqests'
 
 const Background = styled.div`
   display: grid;

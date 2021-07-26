@@ -17,9 +17,9 @@ import { openUserTelegram } from '../../../common/telegramMethods'
 import { ContactModal } from '../Modals/ContactModal'
 import { SGPaymentStatus } from './SGPaymentStatus'
 import { Skeleton } from '../../Skeleton'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
-import { createOrder } from '../../../store/supper/action'
+import { getIndivDeliveryFee } from '../../../common/calculateDeliveryFee'
 
 const CardHeaderContainer = styled.div`
   display: flex;
@@ -169,7 +169,7 @@ type Props = {
   collatedOrder?: CollatedOrder | null
   order?: Order | null
   foodList?: Food[]
-  deliveryCost?: number
+  indivDeliveryFee?: number
   numberOfUsers?: number
   splitCostMethod?: SplitACMethod
   supperTotalCost?: number
@@ -181,7 +181,6 @@ type Props = {
 
 export const OrderCard = (props: Props) => {
   const history = useHistory()
-  const dispatch = useDispatch()
   const [isCancelActionModalOpen, setIsCancelActionModalOpen] = useState<boolean>(false)
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [contactModalFood, setContactModalFood] = useState<Food>()
@@ -211,26 +210,24 @@ export const OrderCard = (props: Props) => {
     deliveryFee = supperGroupDeliveryFee
     total = props.supperGroup?.totalPrice ?? 0
   } else {
-    const numberOfUsers = props.numberOfUsers ?? 1
-    const isEqualMethod = props.splitCostMethod === SplitACMethod.EQUAL
     subTotal = props.order?.totalCost ?? 0
-    const totalSupper = props.supperTotalCost ?? 0
-    deliveryFee =
-      (isEqualMethod
-        ? (props.supperGroup?.additionalCost ?? 0) / numberOfUsers
-        : totalSupper > 0 //to prevent infinity
-        ? (subTotal / totalSupper) * (props.supperGroup?.additionalCost ?? 0)
-        : 0) ?? 0
+    deliveryFee = props.indivDeliveryFee ?? 0
     total = subTotal + deliveryFee
   }
 
-  const PriceSection = ({ update, order }: { update?: boolean; order?: Order }) => {
+  const PriceSection = ({ update, order }: { update?: boolean; order?: Order | null }) => {
     let priceSectionSubTotal = subTotal
     let priceSectionDeliveryFee = supperGroupDeliveryFee
     let priceSectionTotal = total
     if (order) {
       priceSectionSubTotal = order.totalCost
-      priceSectionDeliveryFee = deliveryFee
+      priceSectionDeliveryFee = getIndivDeliveryFee(
+        props.supperGroup?.splitAdditionalCost,
+        props.supperGroup?.additionalCost,
+        props.supperGroup?.numOrders,
+        order?.totalCost,
+        props.supperGroup?.currentFoodCost,
+      )
     }
     priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
     const wasDeliveryUpdated = props.supperGroup?.wasDeliveryUpdated
@@ -287,15 +284,20 @@ export const OrderCard = (props: Props) => {
       <>
         <EmptyCart />
         <EmptyTextContainer>
-          Cart is empty.{' '}
-          <UnderlinedButton
-            onClick={() => {
-              history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)
-            }}
-            text="Add item"
-            fontSize="12px"
-            color="red"
-          />
+          Cart is empty.
+          {supperGroupIsOpenOrPending && (
+            <>
+              {' '}
+              <UnderlinedButton
+                onClick={() => {
+                  history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)
+                }}
+                text="Add item"
+                fontSize="12px"
+                color="red"
+              />
+            </>
+          )}
         </EmptyTextContainer>
       </>
     )
@@ -304,13 +306,13 @@ export const OrderCard = (props: Props) => {
   const RedPlusButton = () => {
     return (
       <PlusCircleFilled
-        onClick={() => history.push(`${PATHS.PLACE_ORDER}/${supperGroupId}/${restaurantId}/order`)}
+        onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
         style={{ fontSize: '20px', color: V1_RED }}
       />
     )
   }
 
-  const onEditClick = (foodId: string | undefined, collate?: boolean) => {
+  const onEditClick = (foodId: string | undefined, collate?: boolean, userOrderId?: string) => {
     if (!foodId) {
       const [error] = useSnackbar('error')
       error('meowmeow is in a bad mood.. try again later!')
@@ -318,8 +320,11 @@ export const OrderCard = (props: Props) => {
     }
     if (canEditUserFood) {
       if (collate) {
-        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID}`) //TODO: Update - waiting for backend
-      } else history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${orderId}/food/${foodId}`)
+        history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM}/${supperGroupId}/update/collated/${foodId}`)
+      } else {
+        console.log("this is suppose to show user's orderid", userOrderId)
+        history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${userOrderId}/food/${foodId}`)
+      }
     } else {
       history.push(`${PATHS.EDIT_FOOD_ITEM}/${supperGroupId}/order/${orderId}/food/${foodId}`)
     }
@@ -354,7 +359,7 @@ export const OrderCard = (props: Props) => {
               />
             )
           })}
-          <PriceSection />
+          <PriceSection order={props.order} />
         </>
       )}
     </>
@@ -367,6 +372,7 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
+            console.log('this is the collated food?', food)
             const customisations: string[] = []
             food.custom?.map((custom) =>
               custom.options.map((option) => {
@@ -375,23 +381,21 @@ export const OrderCard = (props: Props) => {
             )
             wasEdited = food.updates as boolean
             return (
-              <>
-                <FoodLine
-                  key={index}
-                  margin="5px 0"
-                  isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
-                  onEditClick={() => onEditClick(food.foodId, true)}
-                  wasEdited={wasEdited}
-                  isCancelActionClickable={isOwner}
-                  cancelActionOnClick={() => {
-                    setIsCancelActionModalOpen(true)
-                    setContactModalFood(food)
-                  }}
-                  food={food}
-                  supperGroupId={supperGroupId}
-                  orderId={orderId}
-                />
-              </>
+              <FoodLine
+                key={index}
+                margin="5px 0"
+                isEditable={props.supperGroup?.status === SupperGroupStatus.CLOSED && isOwner}
+                onEditClick={() => onEditClick(food.foodIdList ? food.foodIdList[0] : undefined, true)}
+                wasEdited={wasEdited}
+                isCancelActionClickable={isOwner}
+                cancelActionOnClick={() => {
+                  setIsCancelActionModalOpen(true)
+                  setContactModalFood(food)
+                }}
+                food={food}
+                supperGroupId={supperGroupId}
+                orderId={orderId}
+              />
             )
           })}
           <HorizontalLine margin="1em 0 0.5em 0" />
@@ -488,7 +492,7 @@ export const OrderCard = (props: Props) => {
                       key={foodIndex}
                       margin="5px 0"
                       isEditable={isOrderEditable}
-                      onEditClick={() => onEditClick(food.foodId)}
+                      onEditClick={() => onEditClick(food.foodId, false, orderId)}
                       wasEdited={wasEdited}
                       isCancelActionClickable={isOwner && !isOwnerFood}
                       cancelActionOnClick={cancelActionOnClick}

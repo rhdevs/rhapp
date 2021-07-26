@@ -1,11 +1,12 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+
 import styled from 'styled-components'
 import { PATHS } from '../../routes/Routes'
 import { FoodMenu, Order } from '../../store/supper/types'
-import { setIsFoodMenuModalOpen, setFoodModalInfo } from '../../store/supper/action'
 import { RootState } from '../../store/types'
+import { setFoodModalInfo, setIsFoodMenuModalOpen } from '../../store/supper/action/setter'
 
 const MainContainer = styled.div`
   background-color: white;
@@ -98,13 +99,15 @@ export const MenuSection = (props: Props) => {
       )
       return selectedMenuItems.length ? (
         selectedMenuItems.map((foodMenu, index) => {
-          const QUANTITY = props.order?.foodList?.find((food) => food.foodMenuId === foodMenu.foodMenuId)?.quantity
+          const filteredFood = props.order?.foodList?.filter((food) => food.foodMenuId === foodMenu.foodMenuId) ?? []
+          let QUANTITY = 0
+          filteredFood.forEach((food) => (QUANTITY += food.quantity))
           return (
             <FoodMainContainer key={index} noBottomBorder={index + 1 === selectedMenuItems?.length}>
               <FoodAndQuantityContainer
                 onClick={() => {
                   if (!props.supperGroupId || !props.orderId || !foodMenu.foodMenuId) return
-                  if (QUANTITY && QUANTITY > 0) {
+                  if ((QUANTITY ?? 0) > 0) {
                     dispatch(setFoodModalInfo(foodMenu.foodMenuId, foodMenu.foodMenuName))
                     dispatch(setIsFoodMenuModalOpen(true))
                   } else {
@@ -117,7 +120,7 @@ export const MenuSection = (props: Props) => {
                 }}
               >
                 <FoodContainer>{foodMenu.foodMenuName}</FoodContainer>
-                <QuantityContainer>{QUANTITY && `x${QUANTITY}`}</QuantityContainer>
+                {QUANTITY ? <QuantityContainer>x{QUANTITY}</QuantityContainer> : undefined}
               </FoodAndQuantityContainer>
               <PriceContainer>${foodMenu.price.toFixed(2)}</PriceContainer>
             </FoodMainContainer>

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
-import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action'
+import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
@@ -98,11 +98,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         change: data.changes,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        //dispatch(updateOwnerEditsAllFood()) - check w backend
-      } else {
-        dispatch(updateOwnerEdits(props.orderId, props.foodId ?? props.food?.foodId, update))
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }
@@ -115,11 +111,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
         reason: data.editReason,
         updatedPrice: data.newPrice,
       }
-      if (props.all) {
-        //dispatch(updateOwnerEditsAllFood()) - check w backend
-      } else {
-        dispatch(updateOwnerEdits(props.orderId, props.food?.foodId, update))
-      }
+      dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
     })()
   }

@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { SupperModal } from './SupperModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
-import { updateSupperGroup } from '../../../store/supper/action'
 import { FormHeader } from '../FormHeader'
 import { FieldError, useForm } from 'react-hook-form'
 import { V1_BACKGROUND, V1_RED } from '../../../common/colours'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 
 const DescriptionText = styled.div`
   padding-bottom: 1rem;
@@ -42,6 +42,7 @@ const Form = styled.form`
 
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
   supperGroupId: string | number
 }
 
@@ -49,7 +50,7 @@ type FormData = {
   cancelReason: string
 }
 
-export const TwoStepCancelGroupModal = (props: Props) => {
+export const TwoStepCancelGroupModal = (props: Props, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
   const dispatch = useDispatch()
   const [modalNum, setModalNum] = useState<number>(1)
   const { register, handleSubmit, errors } = useForm<FormData>()
@@ -64,6 +65,7 @@ export const TwoStepCancelGroupModal = (props: Props) => {
       dispatch(updateSupperGroup(props.supperGroupId, updatedInfo))
       props.modalSetter(false)
     })()
+    if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
 
   return (

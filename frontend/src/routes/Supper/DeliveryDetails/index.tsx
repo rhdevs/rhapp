@@ -9,14 +9,7 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DeliveryTimeSetter } from '../../../components/Supper/DeliveryTimeSetter'
 import { SGStatusOptions } from '../../../components/Supper/SGStatusOptions'
 import { supperGroupStatusList } from '../../../store/stubs'
-import {
-  getSupperGroupById,
-  getReadableSupperGroupId,
-  setEstimatedArrivalTime,
-  updateSupperGroup,
-  unixTo12HourTime,
-  setIsLoading,
-} from '../../../store/supper/action'
+import { getReadableSupperGroupId } from '../../../common/getReadableSupperGroupId'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import InputRow from '../../../components/Mobile/InputRow'
@@ -27,6 +20,10 @@ import { SupperButton } from '../../../components/Supper/SupperButton'
 import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
 import { PATHS } from '../../Routes'
 import { ConfirmStatusUpdateModal } from '../../../components/Supper/Modals/ConfirmStatusUpdateModal'
+import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
+import { setEstimatedArrivalTime } from '../../../store/supper/action/setter'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { getDeliveryDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.div`
   width: 100vw;
@@ -108,6 +105,11 @@ type FormValues = {
   cancelReason: string
 }
 
+export const calculateArrivalTime = (deliveryTime: number) => {
+  const estimatedTime = Math.round(Date.now() / 1000) + deliveryTime * 60
+  return estimatedTime
+}
+
 const DeliveryDetails = () => {
   const {
     register,
@@ -140,14 +142,7 @@ const DeliveryDetails = () => {
   }
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
-    dispatch(
-      setEstimatedArrivalTime(
-        calculateArrivalTime(
-          supperGroup?.estArrivalTime ? Math.round((supperGroup?.estArrivalTime - currentUNIXDate) / 60) : 20,
-        ),
-      ),
-    )
+    dispatch(getDeliveryDetails(params.supperGroupId))
   }, [dispatch])
 
   // To set initial fields with suppergroup details
@@ -189,7 +184,6 @@ const DeliveryDetails = () => {
         return
       }
 
-      // dispatch(setIsLoading(true))
       const initialGroup = supperGroup
       if (
         initialGroup?.status === selectedSupperGroupStatus &&
@@ -219,17 +213,10 @@ const DeliveryDetails = () => {
         if (selectedSupperGroupStatus === SupperGroupStatus.ORDERED) {
           updatedInfo = { ...updatedInfo, estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime }
         }
-        console.log(updatedInfo)
         dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
-        dispatch(setIsLoading(false))
         history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
       }
     })()
-  }
-
-  const calculateArrivalTime = (deliveryTime: number) => {
-    const estimatedTime = Math.round(Date.now() / 1000) + deliveryTime * 60
-    return estimatedTime
   }
 
   useEffect(() => {
@@ -267,9 +254,7 @@ const DeliveryDetails = () => {
           <LoadingSpin />
         ) : (
           <>
-            {hasChangedModal && (
-              <DiscardChangesModal modalSetter={setHasChangedModal} onLeftButtonClick={() => history.goBack()} />
-            )}
+            {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
             {isCancelModalOpen && (
               <CancelGroupModal
                 modalSetter={setIsCancelModalOpen}

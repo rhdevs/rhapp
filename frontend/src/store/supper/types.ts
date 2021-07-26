@@ -22,6 +22,7 @@ export type Food = {
   custom?: Custom[]
   userIdList?: string[] // for owner to contact users with the same food in collated view
   updates?: Updates // for owner updates
+  foodIdList?: string[] //for collated food
 }
 
 export type Option = {
@@ -131,7 +132,6 @@ export type CollatedOrder = {
   supperGroupId: number | undefined
   ownerId: string
   collatedOrderList: Food[]
-  price?: number
 }
 
 export enum SplitACMethod {
@@ -148,7 +148,6 @@ export enum SupperGroupStatus {
   CANCELLED = 'Cancelled',
   AWAITING_PAYMENT = 'Awaiting Payment', // for owner
   ALL_PAID = 'All Paid', // for owner
-  COMPLETED = 'Completed', //TODO: Remove after design is confirmed
   PAID = 'Paid', // for user
   NOT_PAID = 'Not Paid', // for user
 }
@@ -187,6 +186,7 @@ export type Updates = {
   reason?: string
   change?: string
   updatedPrice?: number
+  global?: boolean //true when updating collated food
 }
 
 export enum UpdateAction {
@@ -230,7 +230,7 @@ export enum SUPPER_ACTIONS {
   SET_SELECTED_PAYMENT_METHOD = 'SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD',
   SET_SELECTED_RESTAURANT = 'SUPPER_ACTIONS.SET_SELECTED_RESTAURANT',
   SET_SELECTED_SUPPER_GROUP_STATUS = 'SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS',
-  GET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS',
+  SET_SEARCHED_SUPPER_GROUPS = 'SUPPER_ACTIONS.SET_SEARCHED_SUPPER_GROUPS',
   SET_SEARCH_SUPPER_GROUP_VALUE = 'SUPPER_ACTIONS.SET_SEARCH_SUPPER_GROUP_VALUE',
   SET_TABS_KEY = 'SUPPER_ACTIONS.SET_TABS_KEY',
   GET_EDIT_FOOD_ITEM = 'SUPPER_ACTIONS.GET_EDIT_FOOD_ITEM',
@@ -246,14 +246,15 @@ export enum SUPPER_ACTIONS {
   SET_MENU_FOOD_ID = 'SUPPER_ACTIONS.SET_MENU_FOOD_ID',
   SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
-  RESET_FOOD_STATE = 'SUPPER_ACTIONS.RESET_FOOD_STATE',
+  SET_FOOD_STATE = 'SUPPER_ACTIONS.SET_FOOD_STATE',
   GET_SUPPER_NOTIFICATIONS = 'SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS',
   GET_FILTERED_SUPPER_GROUPS = 'SUPPER_ACTIONS.GET_FILTERED_SUPPER_GROUPS',
   SET_IS_FOOD_MODAL_OPEN = 'SUPPER_ACTIONS.SET_IS_FOOD_MODAL_OPEN',
   SET_FOOD_MODAL_INFO = 'SUPPER_ACTIONS.SET_FOOD_MODAL_INFO',
-  GET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER',
-  GET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER',
-  GET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.GET_RESTAURANT_FILTER',
+  SET_CLOSING_TIME_FILTER = 'SUPPER_ACTIONS.SET_CLOSING_TIME_FILTER',
+  SET_AMOUNT_LEFT_FILTER = 'SUPPER_ACTIONS.SET_AMOUNT_LEFT_FILTER',
+  SET_RESTAURANT_FILTER = 'SUPPER_ACTIONS.SET_RESTAURANT_FILTER',
+  SET_SUPPER_ERROR_MESSAGE = 'SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE',
 }
 
 type SetIsLoading = {
@@ -333,12 +334,12 @@ type GetOrderHistory = {
 
 type GetSupperGroupHistory = {
   type: typeof SUPPER_ACTIONS.GET_SUPPER_GROUP_HISTORY
-  supperGroupHistory: HomeSupperGroup[]
+  createdSupperHistory: HomeSupperGroup[]
 }
 
 type GetJoinedSupperGroupHistory = {
   type: typeof SUPPER_ACTIONS.GET_JOINED_SUPPER_GROUP_HISTORY
-  joinedSupperGroupHistory: HomeSupperGroup[]
+  joinedSupperHistory: HomeSupperGroup[]
 }
 
 type SetCount = {
@@ -376,8 +377,8 @@ type SetSelectedSupperGroupStatus = {
   selectedSupperGroupStatus: SupperGroupStatus | null
 }
 
-type GetFilteredSupperGroups = {
-  type: typeof SUPPER_ACTIONS.GET_SEARCHED_SUPPER_GROUPS
+type setFilteredSupperGroups = {
+  type: typeof SUPPER_ACTIONS.SET_SEARCHED_SUPPER_GROUPS
   filteredSupperGroups: HomeSupperGroup[]
 }
 
@@ -456,12 +457,12 @@ type SetNewSupperGroupId = {
   newSupperGroupId: number
 }
 
-type ResetFoodState = {
-  type: typeof SUPPER_ACTIONS.RESET_FOOD_STATE
-  food: null
+type SetFoodState = {
+  type: typeof SUPPER_ACTIONS.SET_FOOD_STATE
+  food: null | Food
 }
 
-type GetSupperNotifications = {
+type getSupperNotificationss = {
   type: typeof SUPPER_ACTIONS.GET_SUPPER_NOTIFICATIONS
   supperNotifications: SupperNotification[]
 }
@@ -477,19 +478,24 @@ type SetFoodModalInfo = {
   modalMenuFoodName: string
 }
 
-type GetClosingTimeFilter = {
-  type: typeof SUPPER_ACTIONS.GET_CLOSING_TIME_FILTER
+type setClosingTimeFilter = {
+  type: typeof SUPPER_ACTIONS.SET_CLOSING_TIME_FILTER
   closingTimeFilter: Filter
 }
 
-type GetAmountLeftFilter = {
-  type: typeof SUPPER_ACTIONS.GET_AMOUNT_LEFT_FILTER
+type setAmountLeftFilter = {
+  type: typeof SUPPER_ACTIONS.SET_AMOUNT_LEFT_FILTER
   amountLeftFilter: Filter
 }
 
-type GetRestaurantFilter = {
-  type: typeof SUPPER_ACTIONS.GET_RESTAURANT_FILTER
+type setRestaurantFilter = {
+  type: typeof SUPPER_ACTIONS.SET_RESTAURANT_FILTER
   restaurantFilter: Restaurants[]
+}
+
+type SetSupperErrorMessage = {
+  type: typeof SUPPER_ACTIONS.SET_SUPPER_ERROR_MESSAGE
+  supperErrorMessage: string | undefined
 }
 
 export type ActionTypes =
@@ -518,7 +524,7 @@ export type ActionTypes =
   | SetSelectedPaymentMethod
   | SetSelectedRestaurant
   | SetSelectedSupperGroupStatus
-  | GetFilteredSupperGroups
+  | setFilteredSupperGroups
   | SetSearchSupperGroupValue
   | SetTabsKey
   | SetMenuTabKey
@@ -533,10 +539,11 @@ export type ActionTypes =
   | SetMenuFoodId
   | SetCreateOrderPage
   | SetNewSupperGroupId
-  | ResetFoodState
-  | GetSupperNotifications
+  | SetFoodState
+  | getSupperNotificationss
   | SetIsFoodModalOpen
   | SetFoodModalInfo
-  | GetClosingTimeFilter
-  | GetAmountLeftFilter
-  | GetRestaurantFilter
+  | setClosingTimeFilter
+  | setAmountLeftFilter
+  | setRestaurantFilter
+  | SetSupperErrorMessage

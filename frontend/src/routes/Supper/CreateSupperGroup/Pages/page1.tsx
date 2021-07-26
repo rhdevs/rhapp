@@ -14,7 +14,7 @@ import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
 import { restaurantList } from '../../../../store/stubs'
-import { setSupperGroup, unixToFormattedTime } from '../../../../store/supper/action'
+import { unixToFormattedTime } from '../../../../common/unixToFormattedTime'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
 import { ErrorText, initSupperGroup } from '..'
@@ -23,6 +23,7 @@ import { V1_BLUE } from '../../../../common/colours'
 import { Restaurants, SupperGroup } from '../../../../store/supper/types'
 import { errorStyling, Input, StyledTimePicker } from '../../EditSupperGroup'
 import { ConfirmationModal } from '../../../../components/Mobile/ConfirmationModal'
+import { setSupperGroup } from '../../../../store/supper/action/setter'
 
 const FormContainer = styled.div`
   width: 80vw;
@@ -177,8 +178,8 @@ export const CreateOrderPageOne = () => {
             {errors.supperGroupName?.type === 'maxLength' && <ErrorText>Group name exceeded 50 characters!</ErrorText>}
             <FormHeader topMargin headerName="Restaurant" isCompulsory />
             <Controller
-              name="restaurant"
               control={control}
+              name="restaurant"
               rules={{ required: true }}
               defaultValue={null}
               render={() => (
@@ -188,21 +189,21 @@ export const CreateOrderPageOne = () => {
             {errors.restaurant?.type === 'required' && <ErrorText>Restaurant is required!</ErrorText>}
             <FormHeader topMargin headerName="Closing Time" isCompulsory />
             <Controller
-              name="closingTime"
               control={control}
+              name="closingTime"
               rules={{ required: true }}
               render={() => (
                 <StyledTimePicker
                   use12Hours
                   format="h:mm a"
                   onChange={onChange}
-                  ref={register({ required: true })}
                   style={errors.closingTime ? errorStyling : {}}
                   {...(supperGroup?.closingTime && {
                     defaultValue: moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss'),
                   })}
                 />
               )}
+              defaultValue={null}
             />
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />

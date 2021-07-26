@@ -10,8 +10,8 @@ import { useHistory } from 'react-router-dom'
 import { Skeleton } from '../Skeleton'
 import { onRefresh } from '../../common/reloadPage'
 import { useDispatch, useSelector } from 'react-redux'
-import { setIsLoading } from '../../store/supper/action'
 import { RootState } from '../../store/types'
+import { setIsLoading } from '../../store/supper/action/setter'
 
 const Background = styled.div<{
   backgroundColor?: string
@@ -129,6 +129,7 @@ const ErrorText = styled.text`
 `
 
 type Props = {
+  placeholder?: boolean
   backgroundColor?: string
   borderRadius?: string
   margin?: string
@@ -181,7 +182,10 @@ export const FoodLine = (props: Props) => {
   if (hasNoQuantity === undefined) hasNoQuantity = quantity ? false : true
   const foodName = props.food?.foodName ?? props.foodName
   const hasFoodName = foodName ? true : false
-  const price = `$${(props.food?.foodPrice ?? props.foodPrice ?? 0).toFixed(2)}`
+  const price = `$${(hasNoQuantity
+    ? (props.food?.foodPrice ?? props.foodPrice ?? 0) / (quantity ?? 1)
+    : props.food?.foodPrice ?? props.foodPrice ?? 0
+  ).toFixed(2)}`
 
   const customisations = props.customisations ?? []
   props.food?.custom?.map((custom) =>
@@ -237,10 +241,10 @@ export const FoodLine = (props: Props) => {
       }
       return (
         <>
-          {quantity && !hasNoQuantity && (
+          {(quantity || props.placeholder) && !hasNoQuantity && (
             <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
           )}
-          {foodName && (
+          {(foodName || props.placeholder) && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
           <PriceContainer color={wasEdited ? V1_RED : 'black'}>

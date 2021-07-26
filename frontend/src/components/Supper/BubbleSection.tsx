@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setEditOrderNumber } from '../../store/supper/action'
 import { RootState } from '../../store/types'
 import { V1_BLUE } from '../../common/colours'
+import { setEditOrderNumber } from '../../store/supper/action/setter'
 
 const MainContainer = styled.div`
   margin: 0.5rem 1rem;

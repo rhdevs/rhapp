@@ -9,7 +9,6 @@ import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartButton'
 import { MainCard } from '../../../components/Supper/MainCard'
 import { QuantityTracker } from '../../../components/Supper/QuantityTracker'
-import { getFoodInOrder, resetFoodState, updateFoodInOrder } from '../../../store/supper/action'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import SelectField from '../../../components/Supper/SelectField'
@@ -19,6 +18,8 @@ import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
+import { updateFoodInOrder } from '../../../store/supper/action/level1/putRequests'
+import { getEditFoodItemDetails } from '../../../store/supper/action/level2'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -179,7 +180,7 @@ const EditFoodItem = () => {
 
         if (updatedFoodInfo) {
           dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
-          history.push(`${PATHS.PLACE_ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+          history.push(`${PATHS.ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
           return
         }
         history.goBack()
@@ -188,8 +189,7 @@ const EditFoodItem = () => {
   }
 
   useEffect(() => {
-    dispatch(resetFoodState())
-    dispatch(getFoodInOrder(params.orderId, params.foodId))
+    dispatch(getEditFoodItemDetails(params.orderId, params.foodId))
   }, [dispatch])
 
   useEffect(() => {
@@ -212,7 +212,7 @@ const EditFoodItem = () => {
   return (
     <MainContainer onSubmit={onSubmit}>
       <TopNavBar title="Edit Item" />
-      {isLoading || !food ? (
+      {isLoading ? (
         <LoadingSpin />
       ) : (
         <>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { setCount, setPriceLimit } from '../../store/supper/action'
+import { setCount, setPriceLimit } from '../../store/supper/action/setter'
 import { RootState } from '../../store/types'
 import { MinusButton } from './MinusButton'
 import { PlusButton } from './PlusButton'

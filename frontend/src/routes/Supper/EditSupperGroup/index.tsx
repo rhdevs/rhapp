@@ -12,13 +12,7 @@ import { BubbleSection } from '../../../components/Supper/BubbleSection'
 import { MaxPriceFixer } from '../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../components/Supper/RestaurantBubbles'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
-import {
-  getSupperGroupById,
-  setEditOrderNumber,
-  setSelectedPaymentMethod,
-  unixToFormattedTime,
-  updateSupperGroup,
-} from '../../../store/supper/action'
+import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 import { PaymentInfo, PaymentMethod, SplitACMethod } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { paymentMethods, restaurantList } from '../../../store/stubs'
@@ -29,6 +23,9 @@ import { FormHeader } from '../../../components/Supper/FormHeader'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+import { setEditOrderNumber, setSelectedPaymentMethod } from '../../../store/supper/action/setter'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { getEditSupperGroupDetails } from '../../../store/supper/action/level2'
 
 const Background = styled.form`
   width: 100vw;
@@ -160,7 +157,7 @@ const EditSupperGroup = () => {
   })
 
   useEffect(() => {
-    dispatch(getSupperGroupById(params.supperGroupId))
+    dispatch(getEditSupperGroupDetails(params.supperGroupId))
   }, [dispatch])
 
   useEffect(() => {
@@ -209,7 +206,6 @@ const EditSupperGroup = () => {
               use12Hours
               format="h:mm a"
               onChange={onChange}
-              ref={register({ required: true })}
               style={errors.closingTime ? errorStyling : {}}
               defaultValue={moment(`${unixToFormattedTime(supperGroup?.closingTime)}`, 'HH:mm:ss')}
             />

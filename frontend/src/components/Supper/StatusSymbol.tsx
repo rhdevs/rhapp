@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import Friends from '../../assets/Friends.svg'
-import { CarOutlined } from '@ant-design/icons'
 import { V1_BLUE, V1_RED } from '../../common/colours'
 
 const MainContainer = styled.div<{
@@ -10,7 +8,7 @@ const MainContainer = styled.div<{
   backgroundColor?: string | undefined
   borderColor: string
   borderWidth: string
-  shadow?: string | undefined
+  shadow?: boolean | undefined
   minWidth?: string | undefined
   isDisabled?: boolean | undefined
   minHeight?: string | undefined
@@ -21,9 +19,9 @@ const MainContainer = styled.div<{
   border: ${(props) => `${props.borderWidth} solid ${props.borderColor}`};
   border-radius: 20px;
   width: fit-content;
-  padding: ${(props) => props.padding ?? '2px 7px'};
+  padding: ${(props) => props.padding ?? '2px 5px'};
   height: fit-content;
-  min-height: ${(props) => props.minHeight ?? '33px'};
+  min-height: ${(props) => props.minHeight ?? '30px'};
   min-width: ${(props) => `${props.minWidth}` ?? '3rem'};
   margin: ${(props) => `${props.hasCustomMargin ? '5px 5px 5px 0' : '5px'}`};
   text-align: center;
@@ -31,7 +29,7 @@ const MainContainer = styled.div<{
   flex-direction: row;
   align-items: center;
   background-color: ${(props) => props.backgroundColor ?? ''};
-  box-shadow: ${(props) => props.shadow ?? ''};
+  box-shadow: ${(props) => (props.shadow ? '0px 4px 4px 0px rgba(0, 0, 0, 0.24)' : '')};
   ${(props) => props.isFaded && 'opacity: 0.4;'}
 `
 
@@ -62,8 +60,7 @@ type Props = {
   rightIcon?: ReactElement
   backgroundColor?: string
   hasNoLeftMargin?: boolean
-  type?: string
-  shadow?: string
+  shadow?: boolean
   border?: string
   borderWidth?: string
   color?: string
@@ -82,20 +79,6 @@ export const StatusSymbol = (props: Props) => {
   const BLUE_GREY = 'rgba(0, 38, 66, 0.7)'
 
   const hasCustomMargin = props.hasNoLeftMargin ?? false
-  const PEOPLE_ICON = <img src={Friends} alt="Friends Icon" />
-
-  let leftIcon = props.leftIcon
-  let preText = props.preText
-  let text = props.text
-  if (props.type === 'numberOfUsers') {
-    leftIcon = PEOPLE_ICON
-  } else if (props.type === 'estDeliveryFee') {
-    leftIcon = <CarOutlined />
-    preText = 'est.'
-  } else if (props.type === 'deliveryFee') {
-    leftIcon = <CarOutlined />
-    text = `${props.text}*`
-  }
 
   let BACKGROUND_COLOR = props.backgroundColor ?? ''
   if (props.backgroundColor === 'bluegrey') {
@@ -107,7 +90,7 @@ export const StatusSymbol = (props: Props) => {
   const ICON_COLOR = props.iconColor ?? BLUE_GREY
   const RIGHT_ICON = props.rightIcon ?? <></>
   const FONT_WEIGHT = props.fontWeight ?? 600
-  const FONT_SIZE = props.fontSize ?? '13px'
+  const FONT_SIZE = props.fontSize ?? '12px'
 
   return (
     <MainContainer
@@ -125,10 +108,10 @@ export const StatusSymbol = (props: Props) => {
       padding={props.padding}
       isFaded={props.isFaded}
     >
-      {leftIcon && <IconContainer color={ICON_COLOR}>{leftIcon}</IconContainer>}
-      {preText && <PreTextContainer textColor={TEXT_COLOR}>{preText}</PreTextContainer>}
+      {props.leftIcon && <IconContainer color={ICON_COLOR}>{props.leftIcon}</IconContainer>}
+      {props.preText && <PreTextContainer textColor={TEXT_COLOR}>{props.preText}</PreTextContainer>}
       <TextContainer fontWeight={FONT_WEIGHT} fontSize={FONT_SIZE} textColor={TEXT_COLOR}>
-        {text}
+        {props.text}
       </TextContainer>
       {<IconContainer color={ICON_COLOR}>{RIGHT_ICON}</IconContainer>}
     </MainContainer>
