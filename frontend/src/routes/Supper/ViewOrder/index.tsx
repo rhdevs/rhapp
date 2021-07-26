@@ -34,9 +34,10 @@ const ViewOrder = () => {
   const { isLoading, supperGroup, collatedOrder, selectedSupperGroupStatus, order, supperErrorMessage } = useSelector(
     (state: RootState) => state.supper,
   )
+  const isOwner = supperGroup?.ownerId === localStorage.userID
 
   useEffect(() => {
-    if (supperGroup?.status === SupperGroupStatus.CLOSED) {
+    if (supperGroup?.status === SupperGroupStatus.CLOSED && isOwner) {
       history.replace(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
     }
   }, [supperGroup?.status])

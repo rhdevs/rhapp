@@ -78,7 +78,10 @@ const UserView = (props: Props) => {
           />
         </BottomContainer>
       )
-    } else if (props.supperGroup?.status !== SupperGroupStatus.CLOSED) {
+    } else if (
+      props.supperGroup?.status === SupperGroupStatus.ARRIVED ||
+      props.supperGroup?.status === SupperGroupStatus.AWAITING_PAYMENT
+    ) {
       if (props.order?.hasPaid) {
         return <SupperButton ghost defaultButtonDescription="Payment Completed" />
       } else {
