@@ -156,6 +156,7 @@ export default function Profile() {
       <TabPane tab="Details" key="2">
         <>
           <CCAItem />
+          {/* Commented out as no module validation and no scheduling feature */}
           {/* <ModulesItem /> */}
         </>
       </TabPane>

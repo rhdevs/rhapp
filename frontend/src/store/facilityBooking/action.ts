@@ -75,14 +75,17 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
-  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`).then((bookingList) => {
-    newList = bookingList.data
-  })
-  dispatch({
-    type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
-    myBookings: newList as Booking[],
-  })
-  dispatch(SetIsLoading(false))
+  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`)
+    .then((bookingList) => {
+      newList = bookingList.data
+    })
+    .then(() => {
+      dispatch({
+        type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
+        myBookings: newList as Booking[],
+      })
+      dispatch(SetIsLoading(false))
+    })
 }
 
 // -1 stands for closed, any others means open for that specific ID.

@@ -5,7 +5,6 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import ComingSoonCatImg from '../../../assets/ComingSoonCat.png'
 
 const MainContainer = styled.div`
-  width: 100%;
   height: 100vh;
   background-color: #fafaf4;
   text-align: center;

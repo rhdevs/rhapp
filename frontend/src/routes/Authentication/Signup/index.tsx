@@ -98,6 +98,7 @@ export default function Signup() {
       userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email,
+      // Commented out as we are not storing CCA leadership positions at the moment
       // position: [0], //0 = 'Resident'
       displayName: formData.display,
       bio: formData.bio,
@@ -181,11 +182,11 @@ export default function Signup() {
       pass = false
       return pass
     }
-    // if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
-    //   setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
-    //   pass = false
-    //   return pass
-    // }
+    if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
+      setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
+      pass = false
+      return pass
+    }
     return pass
   }
 
@@ -260,7 +261,7 @@ export default function Signup() {
             <>
               <AccountText>Full Name</AccountText>
               <Input
-                placeholder="Mao Tan Ah Beng"
+                placeholder="Please enter a name"
                 name="display"
                 style={{ borderRadius: '10px' }}
                 value={formData.display}
@@ -269,7 +270,7 @@ export default function Signup() {
               <br /> <br />
               <AccountText>Telegram Handle</AccountText>
               <Input
-                placeholder="xiaomaomaozxc"
+                placeholder="Do not include the @ symbol"
                 name="telegram"
                 style={{ borderRadius: '10px' }}
                 value={formData.telegram}

@@ -149,7 +149,7 @@ const EditPersonalInfoContainer = () => {
               />
             )}
           </label>
-
+          {/* Commented out following line to disable  */}
           {/* <input id="file-input" type="file" accept="image/*" onChange={onFileChange} style={{ display: 'none' }} /> */}
         </div>
       </>

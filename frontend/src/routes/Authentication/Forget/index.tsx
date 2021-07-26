@@ -39,10 +39,10 @@ const LongButton = {
   size: 'small',
   backgroundColor: '#DE5F4C',
   borderColor: '#DE5F4C',
-  boxShadow: '0px 2px 0px rgba(0, 0, 0, 0.043)',
+  boxShadow: '0 2px 0 rgba(0, 0, 0, 0.043)',
   borderRadius: '8px',
   margin: 'auto',
-  marginTop: '2vh',
+  marginTop: '15px',
   display: 'block',
 }
 

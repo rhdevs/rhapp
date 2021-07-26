@@ -85,7 +85,7 @@ const CCAPickerRow = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin: 10px 0px;
+  margin: 10px 0;
   color: #666666;
 `
 
@@ -164,7 +164,6 @@ export default function CreateBooking() {
   }
 
   const handleFromDateChange = (newDate: string) => {
-    console.log(newDate)
     dispatch(editBookingFromDate(new Date(newDate)))
   }
 

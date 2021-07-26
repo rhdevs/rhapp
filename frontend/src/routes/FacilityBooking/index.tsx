@@ -165,7 +165,6 @@ export default function FacilityBooking() {
       style={{ paddingLeft: '17vw' }}
       src={JCRCBlockOutIcon}
       onClick={() => {
-        // setJCRCBlockOutPopUp(true)
         dispatch(SetBlockOutIsOpen(true))
       }}
     />
@@ -215,14 +214,9 @@ export default function FacilityBooking() {
   return (
     <>
       {isJcrc ? (
-        <TopNavBar
-          title={'Facilities'}
-          leftIcon={true}
-          centerComponent={JCRCBlockOutButton}
-          rightComponent={MyBookingIcon}
-        />
+        <TopNavBar title={'Facilities'} leftIcon centerComponent={JCRCBlockOutButton} rightComponent={MyBookingIcon} />
       ) : (
-        <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
+        <TopNavBar title={'Facilities'} leftIcon rightComponent={MyBookingIcon} />
       )}
       <MainContainer>
         {isLoading && <LoadingSpin />}

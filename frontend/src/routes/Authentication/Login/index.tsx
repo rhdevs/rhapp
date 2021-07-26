@@ -66,7 +66,7 @@ const PostButton = styled.div`
   }
 `
 const AlertGroup = styled.div`
-  margin: 0px;
+  margin: 0;
 `
 const StyledUsernameInput = styled.div`
   .ant-input {

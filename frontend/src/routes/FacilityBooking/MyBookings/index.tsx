@@ -69,7 +69,6 @@ const BookingHeader = styled.div`
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
-
   color: rgba(0, 0, 0, 0.65);
 `
 
@@ -78,7 +77,6 @@ const BookingSubHeaderCCAName = styled.div`
   font-weight: normal;
   font-size: 12px;
   line-height: 12px;
-
   color: rgba(0, 0, 0, 0.65);
 `
 const BookingSubHeaderEventName = styled.div`
@@ -86,10 +84,9 @@ const BookingSubHeaderEventName = styled.div`
   font-weight: normal;
   font-size: 12px;
   line-height: 12px;
-
   color: rgba(0, 0, 0, 0.65);
 `
-// TODO: fix styling when backend is up
+
 const BookingTime = styled.p`
   font-style: normal;
   font-weight: thin;

@@ -32,8 +32,8 @@ const LongButton = {
 
 const ButtonDiv = styled.div`
   display: flex
-  justify-content: 'center';
-  align-items: 'center';
+  justify-content: center;
+  align-items: center;
 `
 const AlertGroup = styled.div`
   margin: 0px;

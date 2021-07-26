@@ -86,7 +86,7 @@ const EventLabels = styled.div`
 `
 
 const EventBoldLabel = styled.div`
-  margin-bottom: 0em;
+  margin-bottom: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -129,7 +129,6 @@ const BookingSubHeaderCCAName = styled.div`
   font-weight: normal;
   font-size: 13px;
   line-height: 14px;
-
   color: rgba(0, 0, 0, 0.65);
 `
 
@@ -138,7 +137,6 @@ const BookingSubHeaderEventName = styled.div`
   font-weight: normal;
   font-size: 13px;
   line-height: 14px;
-
   color: rgba(0, 0, 0, 0.65);
 `
 

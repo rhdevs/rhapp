@@ -7,7 +7,6 @@ import { PATHS } from '../../Routes'
 import { Button } from 'antd'
 
 const MainContainer = styled.div`
-  width: 100%;
   height: 100vh;
   background-color: #fafaf4;
   text-align: center;

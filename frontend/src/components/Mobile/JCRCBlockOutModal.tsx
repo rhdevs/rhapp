@@ -27,7 +27,7 @@ const OverlayContainer = styled.div`
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 2;
   display: block;
 `
 
@@ -42,7 +42,7 @@ const MainContainer = styled.div`
   margin-right: auto;
   padding: 15px;
   box-shadow: 0px 2px 5px 1px #888888;
-  z-index: 1000;
+  z-index: 3;
 `
 
 const TitleTextContainer = styled.div`
@@ -64,7 +64,6 @@ const ButtonContainer = styled.div`
   margin-top: 50px;
 `
 const VenueSelectionContainer = styled.div`
-  // border: 0.1px ridge rgb(0, 0, 0);
   margin-right: 20px;
   display: flex;
   justify-content: space-around;
@@ -87,7 +86,6 @@ const VenueSelection = styled.div`
 const VenueOptions = styled.label`
   display: flex;
   justify-content: space-between;
-  // border: 0.1px ridge rgb(0, 0, 0);
   align-items: center;
 `
 
@@ -98,7 +96,6 @@ const Venueinput = styled.input`
 `
 
 const TimeSelectionContainer = styled.div`
-  // border: 0.1px ridge rgb(0, 0, 0);
   width: 100%;
   display: flex;
   margin-bottom: 10px;
@@ -107,7 +104,6 @@ const TimeSelectionContainer = styled.div`
 const TimeSelectionToFrom = styled.text`
   margin-left: 20px;
   width: 20%;
-  // border: 0.1px ridge rgb(0, 0, 0);
   self-align: left;
 `
 

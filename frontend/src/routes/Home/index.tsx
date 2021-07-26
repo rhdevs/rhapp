@@ -154,16 +154,6 @@ export default function Home() {
           {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
         </TopBar>
         <AnnouncementCarousel />
-        {/* <BannerContainer>
-          <BannerText>App under Beta testing</BannerText>
-          <StyledTelegramIcon
-            onClick={() => {
-              window.open('https://t.me/joinchat/NhfZLX0Ed2VjZWM1')
-            }}
-            src={TelegramIcon}
-            alt="Telegram Icon"
-          />
-        </BannerContainer> */}
         <ButtonGroup>
           {buttons.map((button) => (
             // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
