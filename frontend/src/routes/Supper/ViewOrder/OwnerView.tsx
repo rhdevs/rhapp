@@ -16,6 +16,7 @@ import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal
 import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import LoadingSpin from '../../../components/LoadingSpin'
 
 export const SupperButtonContainer = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ const OwnerView = (props: Props) => {
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
-    if (isLoading) return
+    // if (isLoading) return
     if (props.supperGroupIsOpen) {
       return (
         <>
@@ -143,29 +144,35 @@ const OwnerView = (props: Props) => {
         />
       )}
       <PullToRefresh onRefresh={onRefresh}>
-        <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-        <OrderCard
-          supperGroup={props.supperGroup}
-          ownerId={localStorage.userID}
-          supperGroupStatus={props.supperGroup?.status}
-          collatedOrder={props.collatedOrder}
-        />
-        {showBottomSection()}
-        {props.showTrackPayment && !isLoading && (
-          <SupperButtonContainer>
-            <SupperButton
-              onButtonClick={() => setEndGroupModalIsOpen(true)}
-              defaultButtonDescription="End Supper Group"
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+            <OrderCard
+              supperGroup={props.supperGroup}
+              ownerId={localStorage.userID}
+              supperGroupStatus={props.supperGroup?.status}
+              collatedOrder={props.collatedOrder}
             />
-          </SupperButtonContainer>
-        )}
-        {props.supperGroupIsCancelled && (
-          <SupperButtonContainer>
-            <SupperButton
-              onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-              defaultButtonDescription="Main Page"
-            />
-          </SupperButtonContainer>
+            {showBottomSection()}
+            {props.showTrackPayment && !isLoading && (
+              <SupperButtonContainer>
+                <SupperButton
+                  onButtonClick={() => setEndGroupModalIsOpen(true)}
+                  defaultButtonDescription="End Supper Group"
+                />
+              </SupperButtonContainer>
+            )}
+            {props.supperGroupIsCancelled && (
+              <SupperButtonContainer>
+                <SupperButton
+                  onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+                  defaultButtonDescription="Main Page"
+                />
+              </SupperButtonContainer>
+            )}
+          </>
         )}
       </PullToRefresh>
     </>

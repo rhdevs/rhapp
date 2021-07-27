@@ -103,9 +103,9 @@ export const getViewOrderPageDetails = (supperGroupId: string) => async (
           dispatch(getUserOrder(supperGroupId))
         }
       }
+      dispatch(setIsLoading(false))
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
-  dispatch(setIsLoading(false))
 }
 
 export const getJoinGroupPageDetails = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
