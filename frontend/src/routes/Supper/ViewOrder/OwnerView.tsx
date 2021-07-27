@@ -123,11 +123,7 @@ const OwnerView = (props: Props) => {
           />
         )}
         {closeModalIsOpen && (
-          <CloseGroupEarlyModal
-            modalSetter={setCloseModalIsOpen}
-            onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
-            supperGroupId={params.supperGroupId}
-          />
+          <CloseGroupEarlyModal modalSetter={setCloseModalIsOpen} supperGroupId={params.supperGroupId} />
         )}
         {deleteModalIsOpen && (
           <DeleteGroupModal

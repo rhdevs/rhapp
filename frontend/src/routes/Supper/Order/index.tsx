@@ -17,6 +17,7 @@ import { PATHS } from '../../Routes'
 import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/action/setter'
 import { getOrderPageDetails } from '../../../store/supper/action/level2'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
+import { SupperGroupStatus } from '../../../store/supper/types'
 
 const Background = styled.div`
   width: 100vw;
@@ -65,6 +66,12 @@ const Order = () => {
   useEffect(() => {
     dispatch(getOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
+
+  useEffect(() => {
+    if (supperGroup?.status === SupperGroupStatus.CLOSED) {
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+    }
+  }, [supperGroup?.status])
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))

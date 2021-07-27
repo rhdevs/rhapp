@@ -38,7 +38,8 @@ const ViewOrder = () => {
 
   useEffect(() => {
     if (supperGroup?.status === SupperGroupStatus.CLOSED && isOwner) {
-      history.replace(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+      history.replace(`${PATHS.SUPPER_HOME}`)
+      history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
     }
   }, [supperGroup?.status])
 

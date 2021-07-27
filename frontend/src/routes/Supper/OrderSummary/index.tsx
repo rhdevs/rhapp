@@ -47,7 +47,7 @@ const OrderSummary = () => {
 
   useEffect(() => {
     if (supperGroup?.status === SupperGroupStatus.CANCELLED) {
-      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     }
   }, [supperGroup?.status])
 
