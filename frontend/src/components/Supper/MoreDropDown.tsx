@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { Dropdown, Menu } from 'antd'
-import { DeleteOutlined, MoreOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { CloseCircleOutlined, MoreOutlined, ShareAltOutlined } from '@ant-design/icons'
 import redEditIcon from '../../assets/RedSupperEditIcon.svg'
 import doorIcon from '../../assets/supper/DoorIcon.svg'
 import { V1_RED } from '../../common/colours'
@@ -49,7 +49,7 @@ export const MoreDropDown = (props: Props) => {
     setIsVisible(false)
     setTimeout(() => props.cancelModalSetter(true), 200)
   }
-  const deleteIcon = <DeleteOutlined style={antdIconStyling} />
+  const cancelIcon = <CloseCircleOutlined style={antdIconStyling} />
 
   const onShareClick = () => {
     setIsVisible(false)
@@ -72,7 +72,7 @@ export const MoreDropDown = (props: Props) => {
               {editIcon} Edit Group
             </Menu.Item>
             <Menu.Item key="1" onClick={onCancelClick}>
-              {deleteIcon} Cancel Group
+              {cancelIcon} Cancel Group
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="2" onClick={onShareClick}>

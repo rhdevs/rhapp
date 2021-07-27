@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -16,18 +18,14 @@ import { getReadableSupperGroupId } from '../../common/getReadableSupperGroupId'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
-import { useHistory } from 'react-router-dom'
 import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
 import { MoreDropDown } from './MoreDropDown'
-import { useDispatch, useSelector } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './Modals/SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
 import { RootState } from '../../store/types'
-import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
-import { leaveSupperGroup } from '../../store/supper/action/level1/deleteRequests'
 import { CancelGroupModal } from './Modals/CancelGroupModal'
 import { LeaveGroupModal } from './Modals/LeaveGroupModal'
 
@@ -129,7 +127,6 @@ type Props = {
 
 export const SupperGroupCard = (props: Props) => {
   const history = useHistory()
-  const dispatch = useDispatch()
   const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)

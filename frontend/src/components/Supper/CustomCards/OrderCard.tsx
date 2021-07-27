@@ -64,7 +64,7 @@ const MyOrderText = styled.text`
 const NameText = styled.text<{ isOwner?: boolean }>`
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   color: ${(props) => (props.isOwner ? 'black' : 'rgba(0, 0, 0, 0.65)')};

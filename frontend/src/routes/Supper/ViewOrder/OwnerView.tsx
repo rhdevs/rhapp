@@ -26,7 +26,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 40px 20px;
+  margin: 0 20px;
   padding: 0 10px;
 `
 

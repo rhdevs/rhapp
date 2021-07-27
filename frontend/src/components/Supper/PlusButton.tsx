@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PlusCircleFilled } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
@@ -13,37 +13,38 @@ type Props = {
 
 export const PlusButton = (props: Props) => {
   const SHADED_RED = 'rgba(235, 87, 87, 0.5)'
+  const SHADED_DARK_BLUE = 'rgb(0, 38, 66, 0.5)'
   const CREATE_SIZE = '48.7px'
   const COUNTING_SIZE = '25px'
+  const SHADOW_FILTER = 'drop-shadow(2px 2.5px 3px rgba(0, 0, 0, 0.15))'
+  console.log(props.color)
+  const [buttonColor, setButtonColor] = useState<string>(props.color === 'DARK_BLUE' ? V1_BLUE : V1_RED)
+  const buttonSize = props.isAdding ? COUNTING_SIZE : CREATE_SIZE
 
   const { count } = useSelector((state: RootState) => state.supper)
 
-  let BUTTON_COLOR = V1_RED
-  let BUTTON_SIZE = CREATE_SIZE
-  let SHADOW_FILTER = 'drop-shadow(2px 2.5px 3px rgba(0, 0, 0, 0.15))'
-
   const MAX = props.max !== undefined ? props.max : Math.max()
 
-  if (props.isAdding === true) {
-    BUTTON_SIZE = COUNTING_SIZE
-    SHADOW_FILTER = ''
-    if (count >= MAX) {
-      BUTTON_COLOR = SHADED_RED
+  useEffect(() => {
+    if (props.isAdding) {
+      if (count >= MAX) {
+        setButtonColor(buttonColor === V1_RED ? SHADED_RED : SHADED_DARK_BLUE)
+      } else {
+        if (buttonColor === SHADED_RED || buttonColor === SHADED_DARK_BLUE) {
+          setButtonColor(buttonColor === SHADED_RED ? V1_RED : V1_BLUE)
+        }
+      }
     }
-  }
-
-  if (props.color === 'DARK_BLUE') {
-    BUTTON_COLOR = V1_BLUE
-  }
+  }, [props.isAdding, count])
 
   return (
     <PlusCircleFilled
       style={{
-        color: BUTTON_COLOR,
-        fontSize: BUTTON_SIZE,
-        filter: SHADOW_FILTER,
+        color: buttonColor,
+        fontSize: buttonSize,
+        filter: props.isAdding ? '' : SHADOW_FILTER,
       }}
-      onClick={props.onClick}
+      onClick={count >= MAX && props.isAdding ? undefined : props.onClick}
       max={MAX}
     />
   )

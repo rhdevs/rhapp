@@ -186,6 +186,7 @@ export type Updates = {
   reason?: string
   change?: string
   updatedPrice?: number
+  updatedQuantity?: number
   global?: boolean //true when updating collated food
 }
 

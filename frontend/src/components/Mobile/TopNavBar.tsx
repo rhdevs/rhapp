@@ -8,7 +8,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 const TitleText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 30px;
   line-height: 14px;
   color: #002642;
