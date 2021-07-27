@@ -74,13 +74,7 @@ export const SGPaymentStatus = (props: Props) => {
           </TopSection>
 
           {groupWithoutOwnerOrder.map((order, index) => {
-            const deliveryFee = getIndivDeliveryFee(
-              props.supperGroup?.splitAdditionalCost,
-              props.supperGroup?.additionalCost,
-              props.supperGroup?.numOrders,
-              order.totalCost,
-              props.supperGroup?.currentFoodCost,
-            )
+            const deliveryFee = getIndivDeliveryFee(order.totalCost, props.supperGroup)
             return (
               <>
                 <UserPaymentStatus

@@ -221,13 +221,7 @@ export const OrderCard = (props: Props) => {
     let priceSectionTotal = total
     if (order) {
       priceSectionSubTotal = order.totalCost
-      priceSectionDeliveryFee = getIndivDeliveryFee(
-        props.supperGroup?.splitAdditionalCost,
-        props.supperGroup?.additionalCost,
-        props.supperGroup?.numOrders,
-        order?.totalCost,
-        props.supperGroup?.currentFoodCost,
-      )
+      priceSectionDeliveryFee = getIndivDeliveryFee(order?.totalCost, props.supperGroup)
     }
     priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
     const wasDeliveryUpdated = props.supperGroup?.wasDeliveryUpdated
