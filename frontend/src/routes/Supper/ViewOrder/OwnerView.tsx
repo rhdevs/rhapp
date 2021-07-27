@@ -111,38 +111,39 @@ const OwnerView = (props: Props) => {
 
   return (
     <>
-      {emptyCartModalIsOpen && ownerOrderId && (
-        <EmptyCartModal
-          supperGroupId={params.supperGroupId}
-          orderId={ownerOrderId}
-          onLeftButtonClick={() => {
-            history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-          }}
-          modalSetter={setEmptyCartModalIsOpen}
-        />
-      )}
-      {closeModalIsOpen && (
-        <CloseGroupEarlyModal
-          modalSetter={setCloseModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
-          supperGroupId={params.supperGroupId}
-        />
-      )}
-      {deleteModalIsOpen && (
-        <DeleteGroupModal
-          modalSetter={setDeleteModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-          suppergroupId={params.supperGroupId}
-        />
-      )}
-      {endGroupModalIsOpen && (
-        <EndSupperGroupModal
-          modalSetter={setEndGroupModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-          suppergroupId={props.supperGroup?.supperGroupId}
-        />
-      )}
       <PullToRefresh onRefresh={onRefresh}>
+        {emptyCartModalIsOpen && ownerOrderId && (
+          <EmptyCartModal
+            supperGroupId={params.supperGroupId}
+            orderId={ownerOrderId}
+            onLeftButtonClick={() => {
+              history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+            }}
+            modalSetter={setEmptyCartModalIsOpen}
+          />
+        )}
+        {closeModalIsOpen && (
+          <CloseGroupEarlyModal
+            modalSetter={setCloseModalIsOpen}
+            onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+            supperGroupId={params.supperGroupId}
+          />
+        )}
+        {deleteModalIsOpen && (
+          <DeleteGroupModal
+            modalSetter={setDeleteModalIsOpen}
+            onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+            suppergroupId={params.supperGroupId}
+          />
+        )}
+        {endGroupModalIsOpen && (
+          <EndSupperGroupModal
+            modalSetter={setEndGroupModalIsOpen}
+            onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+            suppergroupId={props.supperGroup?.supperGroupId}
+          />
+        )}
+
         {isLoading ? (
           <LoadingSpin />
         ) : (

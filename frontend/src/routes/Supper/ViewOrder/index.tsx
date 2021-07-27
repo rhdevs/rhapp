@@ -48,8 +48,8 @@ const ViewOrder = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="View Order" />
       <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title="View Order" />
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
           <SupperErrorContent />
         ) : isLoading ? (

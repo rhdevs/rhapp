@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import PullToRefresh from 'pull-to-refresh-react'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -15,6 +16,7 @@ import { SupperGroupStatus } from '../../../store/supper/types'
 import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoStepCancelGroupModal'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { getOrderSummaryPageDetails } from '../../../store/supper/action/level2'
+import { onRefresh } from '../../../common/reloadPage'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -57,43 +59,45 @@ const OrderSummary = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="Order Summary" />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          {twoStepModalIsOpen && (
-            <TwoStepCancelGroupModal
-              modalSetter={setTwoStepModalIsOpen}
-              supperGroupId={params.supperGroupId}
-              onLeftButtonClick={() => {
-                history.replace(PATHS.SUPPER_HOME)
-                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-              }}
+      <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title="Order Summary" />
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            {twoStepModalIsOpen && (
+              <TwoStepCancelGroupModal
+                modalSetter={setTwoStepModalIsOpen}
+                supperGroupId={params.supperGroupId}
+                onLeftButtonClick={() => {
+                  history.replace(PATHS.SUPPER_HOME)
+                  history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                }}
+              />
+            )}
+            <OrderCard
+              margin="0 23px"
+              collatedOrder={collatedOrder}
+              ownerId={supperGroup?.ownerId}
+              supperGroupStatus={supperGroup?.status}
+              splitCostMethod={supperGroup?.splitAdditionalCost}
+              supperGroup={supperGroup}
+              supperTotalCost={supperGroup?.totalPrice}
+              isEditable
             />
-          )}
-          <OrderCard
-            margin="0 23px"
-            collatedOrder={collatedOrder}
-            ownerId={supperGroup?.ownerId}
-            supperGroupStatus={supperGroup?.status}
-            splitCostMethod={supperGroup?.splitAdditionalCost}
-            supperGroup={supperGroup}
-            supperTotalCost={supperGroup?.totalPrice}
-            isEditable
-          />
-          <ButtonContainer>
-            <SupperButton
-              ghost
-              center
-              defaultButtonDescription="Order Cancelled"
-              onButtonClick={() => setTwoStepModalIsOpen(true)}
-            />
-            <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} />
-          </ButtonContainer>
-          <InformationCard updateSummary />
-        </>
-      )}
+            <ButtonContainer>
+              <SupperButton
+                ghost
+                center
+                defaultButtonDescription="Order Cancelled"
+                onButtonClick={() => setTwoStepModalIsOpen(true)}
+              />
+              <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} />
+            </ButtonContainer>
+            <InformationCard updateSummary />
+          </>
+        )}
+      </PullToRefresh>
     </MainContainer>
   )
 }
