@@ -31,12 +31,10 @@ export const setFilteredSupperGroups = () => (dispatch: Dispatch<ActionTypes>, g
   } else if (closingTimeFilter == Filter.DESCENDING) {
     filteredSearchSupperGroups.sort((x, y) => (y.closingTime ?? 0) - (x.closingTime ?? 0))
   }
-  console.log('before sort ', filteredSearchSupperGroups)
   if (amountLeftFilter == Filter.ASCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (x.costLimit ?? Infinity - x.currentFoodCost) - (y.costLimit ?? Infinity - y.currentFoodCost),
     )
-    console.log('after sort ', filteredSearchSupperGroups)
   } else if (amountLeftFilter == Filter.DESCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (y.costLimit ?? Infinity - y.currentFoodCost) - (x.costLimit ?? Infinity - x.currentFoodCost),

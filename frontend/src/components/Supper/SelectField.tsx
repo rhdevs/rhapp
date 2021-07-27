@@ -78,7 +78,6 @@ export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
 export const OptionText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 200;
   font-size: 14px;
   margin: 0 0 3px 2px;
   word-break: break-word;
