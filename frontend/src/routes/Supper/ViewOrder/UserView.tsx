@@ -97,22 +97,22 @@ const UserView = (props: Props) => {
 
   return (
     <>
-      {emptyCartModalIsOpen && (
-        <EmptyCartModal
-          modalSetter={setEmptyCartModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
-          supperGroupId={params.supperGroupId}
-          orderId={props.order?.orderId}
-        />
-      )}
-      {leaveGroupModalIsOpen && (
-        <LeaveGroupModal
-          suppergroupId={params.supperGroupId}
-          onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
-          modalSetter={setLeaveGroupModalIsOpen}
-        />
-      )}
       <PullToRefresh onRefresh={onRefresh}>
+        {emptyCartModalIsOpen && (
+          <EmptyCartModal
+            modalSetter={setEmptyCartModalIsOpen}
+            onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+            supperGroupId={params.supperGroupId}
+            orderId={props.order?.orderId}
+          />
+        )}
+        {leaveGroupModalIsOpen && (
+          <LeaveGroupModal
+            suppergroupId={params.supperGroupId}
+            onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
+            modalSetter={setLeaveGroupModalIsOpen}
+          />
+        )}
         <SupperGroupCard margin="0 23px 23px" supperGroup={props.supperGroup} isHome={false} />
         <OrderCard
           order={props.order}

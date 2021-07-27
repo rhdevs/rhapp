@@ -138,7 +138,7 @@ const OwnerView = (props: Props) => {
       {endGroupModalIsOpen && (
         <EndSupperGroupModal
           modalSetter={setEndGroupModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}

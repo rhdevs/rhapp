@@ -43,8 +43,15 @@ const OrderSummary = () => {
     dispatch(getOrderSummaryPageDetails(params.supperGroupId))
   }, [dispatch])
 
+  useEffect(() => {
+    if (supperGroup?.status === SupperGroupStatus.CANCELLED) {
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+    }
+  }, [supperGroup?.status])
+
   const onClick = () => {
     dispatch(updateSupperGroup(params.supperGroupId, { status: SupperGroupStatus.ORDERED }))
+    history.replace(`${PATHS.SUPPER_HOME}`)
     history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
   }
 
