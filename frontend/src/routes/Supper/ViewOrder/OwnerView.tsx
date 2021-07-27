@@ -69,7 +69,6 @@ const OwnerView = (props: Props) => {
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
-    // if (isLoading) return
     if (props.supperGroupIsOpen) {
       return (
         <>

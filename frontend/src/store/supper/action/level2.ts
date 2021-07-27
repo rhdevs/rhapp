@@ -74,9 +74,9 @@ export const getUpdateAllItemsPageDetails = (supperGroupId: string, foodId: stri
       const { collatedOrder } = getState().supper
       const currentFood = collatedOrder?.collatedOrderList.find((food) => food.foodIdList?.includes(foodId))
       dispatch(setFoodState(currentFood))
+      dispatch(setIsLoading(false))
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')))
-  dispatch(setIsLoading(false))
 }
 
 export const getGroupHistoryPageDetails = () => async (dispatch: Dispatch<ActionTypes>) => {
