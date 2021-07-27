@@ -55,7 +55,7 @@ const EmptyTextContainer = styled.div`
 const MyOrderText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   display: flex;
   align-items: center;
@@ -298,10 +298,20 @@ export const OrderCard = (props: Props) => {
   }
 
   const RedPlusButton = () => {
+    // return (
+    //   <PlusCircleFilled
+    //     onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
+    //     style={{ fontSize: '20px', color: V1_RED }}
+    //   />
+    // )
     return (
-      <PlusCircleFilled
-        onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
-        style={{ fontSize: '20px', color: V1_RED }}
+      <UnderlinedButton
+        onClick={() => {
+          history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)
+        }}
+        text="Add item"
+        fontSize="14px"
+        color="red"
       />
     )
   }

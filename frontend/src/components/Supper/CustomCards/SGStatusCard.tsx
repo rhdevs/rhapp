@@ -40,14 +40,14 @@ const TextSubContainer = styled.div`
 
 const TitleContainer = styled.text`
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 17px;
 `
 
 const OrderIdContainer = styled.text`
   font-size: 14px;
   line-height: 15px;
-  font-weight: 200;
+  font-weight: 300;
   padding-bottom: 4px;
 `
 

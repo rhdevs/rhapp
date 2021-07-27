@@ -26,8 +26,8 @@ const MainContainer = styled.div<{
 const TextContainer = styled.text<{ roundVersion?: boolean }>`
   margin: 0 4px;
   font-size: ${(props) => (props.roundVersion ? '12px' : '14px')};
-  font-weight: bold;
-  ${(props) => !props.roundVersion && `font-family: 'Inter';`}
+  font-weight: 500;
+  ${(props) => !props.roundVersion && `font-family: Inter;`}
   text-transform: uppercase;
 `
 
