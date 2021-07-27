@@ -6,7 +6,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
-import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
@@ -16,6 +15,7 @@ import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal
 import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
 
 export const SupperButtonContainer = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const OwnerView = (props: Props) => {
 
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
+  const [cancelGroupModalIsOpen, setCancelGroupModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
   const orderList = props.supperGroup?.orderList
   const ownerOrder = orderList?.find((order) => order.user.userID === localStorage.userID)
@@ -97,8 +97,8 @@ const OwnerView = (props: Props) => {
                 center
                 ghost
                 buttonWidth="100%"
-                defaultButtonDescription="Delete Group"
-                onButtonClick={() => setDeleteModalIsOpen(true)}
+                defaultButtonDescription="Cancel Group"
+                onButtonClick={() => setCancelGroupModalIsOpen(true)}
               />
             </LowerRowButton>
           </ButtonContainer>
@@ -123,21 +123,28 @@ const OwnerView = (props: Props) => {
       {closeModalIsOpen && (
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => {
+            history.replace(PATHS.SUPPER_HOME)
+            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+          }}
           supperGroupId={params.supperGroupId}
         />
       )}
-      {deleteModalIsOpen && (
-        <DeleteGroupModal
-          modalSetter={setDeleteModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-          suppergroupId={params.supperGroupId}
+      {cancelGroupModalIsOpen && (
+        <CancelGroupModal
+          withDispatch
+          modalSetter={setCancelGroupModalIsOpen}
+          onLeftButtonClick={() => {
+            history.replace(PATHS.SUPPER_HOME)
+            history.goBack()
+          }}
+          supperGroupId={params.supperGroupId}
         />
       )}
       {endGroupModalIsOpen && (
         <EndSupperGroupModal
           modalSetter={setEndGroupModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+          onLeftButtonClick={() => history.push(PATHS.SUPPER_HOME)}
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}

@@ -171,7 +171,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onDeleteItemClick}
-              defaultButtonDescription={props.all ? 'Delete Item for All' : 'Delete Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Delete Item for All' : 'Delete Item'
+              }
               ghost
               buttonWidth="100%"
               style={{ margin: '2rem 0 0.5rem 0' }}
@@ -179,7 +181,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onUpdateItemClick}
-              defaultButtonDescription={props.all ? 'Update Item for All' : 'Update Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Update Item for All' : 'Update Item'
+              }
               buttonWidth="100%"
               style={{ margin: '1rem 0 0 0' }}
             />

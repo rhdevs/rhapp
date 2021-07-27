@@ -21,7 +21,7 @@ type Props = {
   userIdList: string[] | undefined
   supperGroupId: number | undefined
   shareModalSetter: React.Dispatch<React.SetStateAction<boolean>>
-  deleteModalSetter: React.Dispatch<React.SetStateAction<boolean>>
+  cancelModalSetter: React.Dispatch<React.SetStateAction<boolean>>
   leaveModalSetter: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -45,9 +45,9 @@ export const MoreDropDown = (props: Props) => {
   }
   const editIcon = <Icon src={redEditIcon} alt="Edit Icon" />
 
-  const onDeleteClick = () => {
+  const onCancelClick = () => {
     setIsVisible(false)
-    setTimeout(() => props.deleteModalSetter(true), 200)
+    setTimeout(() => props.cancelModalSetter(true), 200)
   }
   const deleteIcon = <DeleteOutlined style={antdIconStyling} />
 
@@ -71,8 +71,8 @@ export const MoreDropDown = (props: Props) => {
             <Menu.Item key="0" onClick={onEditClick}>
               {editIcon} Edit Group
             </Menu.Item>
-            <Menu.Item key="1" onClick={onDeleteClick}>
-              {deleteIcon} Delete Group
+            <Menu.Item key="1" onClick={onCancelClick}>
+              {deleteIcon} Cancel Group
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item key="2" onClick={onShareClick}>
