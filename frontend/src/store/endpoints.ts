@@ -145,7 +145,7 @@ export const DOMAIN_URL = {
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/supper'
-      : '//rhapp-backend-devel.rhdevs.repl.co/supper',
+      : '//rhappmiddleware.herokuapp.com/rhappsupper',
 }
 
 async function makeRequest(
