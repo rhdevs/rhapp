@@ -1085,6 +1085,8 @@ def owner_edit_order(supperGroupId):
             foodId = ObjectId(data.pop('foodId'))
             food = db.FoodOrder.find_one({"_id": foodId})
 
+            data['foodPrice'] = 0
+
             if data['updates']['updateAction'] == 'Update':
                 if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
                         or data['updates']['reason'] is None \
@@ -1095,10 +1097,13 @@ def owner_edit_order(supperGroupId):
             elif data['updates']['updateAction'] == 'Remove':
                 if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                     raise Exception('Update information incomplete')
-                data['foodPrice'] = 0
 
-            if 'global' in data['updates'] and data['updates']['global']:
-                data['updates'].pop('global')
+            if 'updatedQuantity' in data['updates']:
+                data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
+            else:
+                data['foodPrice'] = data['foodPrice'] * food['quantity']
+
+            if 'global' in data['updates'] and data['updates'].pop('global'):
                 pipeline = [
                     {'$match': {'supperGroupId': supperGroupId}},
                     {
@@ -1140,21 +1145,16 @@ def owner_edit_order(supperGroupId):
                                     x['foodMenuId'] == food['foodMenuId'] and
                                     x['custom'] == food['custom'] and
                                     x['cancelAction'] == food['cancelAction'], foods))
-                print(foods)
 
                 for food in foods:
                     db.Order.update({'_id': food['orderId']},
-                                    {'$inc': {'totalCost': (data['foodPrice'] * food['quantity']) - food['foodPrice']}})
+                                    {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']}})
                     db.FoodOrder.update({'_id': food['_id']},
-                                        {'$set': {'updates': data['updates'],
-                                                  'foodPrice': data['foodPrice'] * food['quantity']}})
+                                        {'$set': data})
 
             else:
-                if 'global' in data['updates']:
-                    data['updates'].pop('global')
-                db.Order.update({'_id': food['orderId']},
-                                {'$inc': {'totalCost': (data['foodPrice'] * food['quantity']) - food['foodPrice']}})
-                data['foodPrice'] = data['updates']['updatedPrice'] * food['quantity']
+                db.Order.update({'foodIds': food['_id']},
+                                {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']}})
                 result = db.FoodOrder.find_one_and_update({'_id': foodId},
                                                           {'$set': data})
             if result is None:
