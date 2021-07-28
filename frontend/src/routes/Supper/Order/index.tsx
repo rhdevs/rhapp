@@ -90,7 +90,7 @@ const Order = () => {
       <TopNavBar title="Order" onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())} />
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
-          suppergroupId={params.supperGroupId}
+          supperGroupId={params.supperGroupId}
           onLeftButtonClick={() => {
             if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
               history.push(`${PATHS.SUPPER_HOME}`)
