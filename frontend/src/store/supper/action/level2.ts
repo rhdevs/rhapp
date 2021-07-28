@@ -167,3 +167,15 @@ export const getEditSupperGroupDetails = (supperGroupId: string) => (dispatch: D
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
 }
+
+export const getSupperGroupForPaymentList = (supperGroupId: number | undefined) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  if (!supperGroupId) return
+  dispatch(setIsLoading(true))
+  dispatch(getSupperGroupById(supperGroupId))
+    .then(() => {
+      dispatch(setIsLoading(false))
+    })
+    .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
+}

@@ -72,7 +72,7 @@ const LeftContainer = styled.div`
   align-items: center;
 `
 
-const NameText = styled.text<{ cancelName: boolean }>`
+const NameText = styled.text<{ cancelName?: boolean }>`
   font-weight: 500;
   font-size: 17px;
   text-decoration: ${(props) => (props.cancelName ? 'line-through' : 'none')};
@@ -109,9 +109,14 @@ type Props = {
 
 export const UserPaymentStatus = (props: Props) => {
   const { isExpandAll, expandedCount } = useSelector((state: RootState) => state.supper)
-  const [cancelName, setCancelName] = useState(props.hasReceived)
+  const [cancelName, setCancelName] = useState<boolean>()
   const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    console.log('hellllo')
+    setCancelName(props.hasReceived)
+  }, [])
 
   useEffect(() => {
     if (isExpandAll) {
@@ -153,10 +158,8 @@ export const UserPaymentStatus = (props: Props) => {
   )
 
   const onClick = () => {
-    //TODO: Test to see if updating individual checking of name works, if not can use array method
-    // dispatch(setPaymentUpdateArray(props.orderId, !cancelName))
     const newOrderDetails = { hasReceived: !cancelName }
-    props.orderId && dispatch(updateOrderDetails(props.orderId, newOrderDetails))
+    props.orderId && dispatch(updateOrderDetails(props.orderId, newOrderDetails, false))
     setCancelName(!cancelName)
   }
 

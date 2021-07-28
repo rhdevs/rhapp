@@ -52,6 +52,7 @@ export const SGPaymentStatus = (props: Props) => {
   const groupWithoutOwnerOrder = props.supperGroup?.orderList?.filter(
     (order) => order.user.userID !== localStorage.userID,
   )
+
   return (
     <>
       {groupWithoutOwnerOrder && groupWithoutOwnerOrder?.length ? (
