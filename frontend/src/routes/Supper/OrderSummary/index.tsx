@@ -25,6 +25,7 @@ import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 import { supper } from '../../../store/supper/reducer'
+import Supper from '..'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -102,7 +103,7 @@ const OrderSummary = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (supperGroup?.status === SupperGroupStatus.CANCELLED) {
+    if (supperGroup?.status === SupperGroupStatus.CANCELLED || SupperGroupStatus.ORDERED) {
       history.replace(`${PATHS.SUPPER_HOME}`)
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     }
@@ -139,8 +140,6 @@ const OrderSummary = () => {
         clearErrors('estArrivalTime')
       }
       dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
-      history.replace(`${PATHS.SUPPER_HOME}`)
-      history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 
