@@ -53,7 +53,7 @@ export const DeliveryTimeSetter = (props: Props) => {
     <TimerContainer center={props.center ?? false} margin={props.margin}>
       <MinusButton increment={5} min={props.min} defaultValue={props.default} color="DARK_BLUE" onClick={subTime} />
       <ValueContainer>{deliveryTime} mins</ValueContainer>
-      <PlusButton color="DARK_BLUE" isAdding={true} onClick={addTime} />
+      <PlusButton color="DARK_BLUE" isAdding onClick={addTime} />
     </TimerContainer>
   )
 }

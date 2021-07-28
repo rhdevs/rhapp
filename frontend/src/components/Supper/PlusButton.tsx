@@ -17,13 +17,12 @@ export const PlusButton = (props: Props) => {
   const CREATE_SIZE = '48.7px'
   const COUNTING_SIZE = '25px'
   const SHADOW_FILTER = 'drop-shadow(2px 2.5px 3px rgba(0, 0, 0, 0.15))'
-  console.log(props.color)
   const [buttonColor, setButtonColor] = useState<string>(props.color === 'DARK_BLUE' ? V1_BLUE : V1_RED)
   const buttonSize = props.isAdding ? COUNTING_SIZE : CREATE_SIZE
 
   const { count } = useSelector((state: RootState) => state.supper)
 
-  const MAX = props.max !== undefined ? props.max : Math.max()
+  const MAX = props.max !== undefined ? props.max : Infinity
 
   useEffect(() => {
     if (props.isAdding) {
