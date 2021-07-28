@@ -77,7 +77,9 @@ const OrderSummary = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { collatedOrder, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
+  const { collatedOrder, isLoading, supperGroup, selectedSupperGroupStatus } = useSelector(
+    (state: RootState) => state.supper,
+  )
   const [twoStepModalIsOpen, setTwoStepModalIsOpen] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
   const {
@@ -103,11 +105,11 @@ const OrderSummary = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (supperGroup?.status === SupperGroupStatus.CANCELLED || SupperGroupStatus.ORDERED) {
+    if (supperGroup?.status === SupperGroupStatus.CANCELLED || supperGroup?.status === SupperGroupStatus.ORDERED) {
       history.replace(`${PATHS.SUPPER_HOME}`)
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     }
-  }, [supperGroup?.status])
+  }, [selectedSupperGroupStatus, supperGroup])
 
   const onLeftClick = () => {
     Object.values(touched).length ? setHasChangedModal(true) : history.goBack()
