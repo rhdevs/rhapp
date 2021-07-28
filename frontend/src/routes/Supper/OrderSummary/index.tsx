@@ -68,16 +68,14 @@ const ButtonContainer = styled.div`
 
 type FormValues = {
   location: string
-  estArrivalTime: string
+  estArrivalTime: number | undefined
 }
 
 const OrderSummary = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string }>()
-  const { collatedOrder, isLoading, deliveryTime, supperGroup, estArrivalTime } = useSelector(
-    (state: RootState) => state.supper,
-  )
+  const { collatedOrder, isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
   const [twoStepModalIsOpen, setTwoStepModalIsOpen] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
   const {
@@ -130,23 +128,11 @@ const OrderSummary = () => {
   }
 
   const onClick = () => {
-    handleSubmit((data) => {
-      const initialGroup = supperGroup
-      if (
-        unixTo12HourTime(initialGroup?.estArrivalTime) === estArrivalTime &&
-        initialGroup?.location === data.location
-      ) {
-        // No changes were made - ignore submission
-        return
-      }
-      const updatedInfo: {
-        status: SupperGroupStatus.ORDERED
-        location: string
-        estArrivalTime?: number
-      } = {
+    handleSubmit((data: FormValues) => {
+      const updatedInfo = {
         status: SupperGroupStatus.ORDERED,
         location: data.location,
-        estArrivalTime: Math.round(Date.now() / 1000) + 60 * deliveryTime,
+        estArrivalTime: data.estArrivalTime,
       }
       if (updatedInfo.estArrivalTime) {
         clearErrors('estArrivalTime')
@@ -154,7 +140,7 @@ const OrderSummary = () => {
       dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
       history.replace(`${PATHS.SUPPER_HOME}`)
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-    })
+    })()
   }
 
   return (
