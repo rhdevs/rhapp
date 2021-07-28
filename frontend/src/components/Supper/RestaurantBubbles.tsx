@@ -15,8 +15,7 @@ const CheckIcon = styled.img`
 
 const ScrollableContainer = styled.div<{ margin?: string }>`
   overflow: scroll;
-  max-width: 90vw;
-  margin: ${(props) => props.margin ?? 'auto'};
+  margin: ${(props) => props.margin ?? '0 0 5px 0'};
 `
 
 const MainContainer = styled.div`

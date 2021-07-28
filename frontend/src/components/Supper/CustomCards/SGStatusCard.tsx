@@ -40,14 +40,14 @@ const TextSubContainer = styled.div`
 
 const TitleContainer = styled.text`
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 17px;
 `
 
 const OrderIdContainer = styled.text`
   font-size: 14px;
   line-height: 15px;
-  font-weight: 200;
+  font-weight: 300;
   padding-bottom: 4px;
 `
 
@@ -76,7 +76,6 @@ const OtherInfoContainer = styled.div`
 const OtherInfoSubContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
   width: 80%;
   margin: auto;
@@ -85,6 +84,7 @@ const OtherInfoSubContainer = styled.div`
 const IconImage = styled.img`
   width: 12px;
   margin: 5px;
+  height: fit-content;
 `
 
 const LocationText = styled.text`

@@ -8,7 +8,7 @@ import { updateSupperGroup } from '../../../store/supper/action/level1/putReques
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  supperGroupId: string | number
+  supperGroupId: string | number | undefined
   withDispatch?: boolean
 }
 
@@ -16,7 +16,8 @@ export const CancelGroupModal = (props: Props) => {
   const dispatch = useDispatch()
 
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (props.withDispatch) dispatch(updateSupperGroup(props.supperGroupId, { status: SupperGroupStatus.CANCELLED }))
+    if (props.withDispatch && props.supperGroupId)
+      dispatch(updateSupperGroup(props.supperGroupId, { status: SupperGroupStatus.CANCELLED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
 

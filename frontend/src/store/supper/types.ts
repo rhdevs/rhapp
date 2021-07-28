@@ -186,6 +186,7 @@ export type Updates = {
   reason?: string
   change?: string
   updatedPrice?: number
+  updatedQuantity?: number
   global?: boolean //true when updating collated food
 }
 
@@ -195,8 +196,15 @@ export enum UpdateAction {
 }
 
 export type SupperNotification = {
+  notification: NotificationType
   supperGroupId: number
   supperGroupName: string
+  ownerName: string
+}
+
+export enum NotificationType {
+  FOOD = 'Food',
+  UPDATE = 'Update',
 }
 
 export enum Filter {
@@ -242,7 +250,6 @@ export enum SUPPER_ACTIONS {
   SET_COUNTER = 'SUPPER_ACTIONS.SET_COUNTER',
   SET_FOOD_ID = 'SUPPER_ACTIONS.SET_FOOD_ID',
   SET_ORDER_ID = 'SUPPER_ACTIONS.SET_ORDER_ID',
-  SET_PAYMENT_UPDATE_ARRAY = 'SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY',
   SET_MENU_FOOD_ID = 'SUPPER_ACTIONS.SET_MENU_FOOD_ID',
   SET_CREATE_ORDER_PAGE = 'SUPPER_ACTIONS.SET_CREATE_ORDER_PAGE',
   SET_NEW_SUPPER_GROUP_ID = 'SUPPER_ACTIONS.SET_NEW_SUPPER_GROUP_ID',
@@ -437,11 +444,6 @@ type GetOrderId = {
   orderId: string
 }
 
-type SetPaymentUpdateArray = {
-  type: typeof SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY
-  paymentUpdateArray: PaymentUpdateInfo[]
-}
-
 type SetMenuFoodId = {
   type: typeof SUPPER_ACTIONS.SET_MENU_FOOD_ID
   foodMenuId: string
@@ -535,7 +537,6 @@ export type ActionTypes =
   | SetCounter
   | SetFoodId
   | GetOrderId
-  | SetPaymentUpdateArray
   | SetMenuFoodId
   | SetCreateOrderPage
   | SetNewSupperGroupId

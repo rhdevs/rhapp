@@ -193,10 +193,6 @@ export default function CreateBooking() {
     }
   }
 
-  const toCustomDateFormat = (date: Date) => {
-    return `${dayjs(date).format('ddd, MMM D, YYYY, h:mm A')}`
-  }
-
   const locationOptions = facilityList
     .filter((facility) => facility.facilityName !== 'Conference Room' && facility.facilityName !== 'Main Area')
     .map((facility) => ({

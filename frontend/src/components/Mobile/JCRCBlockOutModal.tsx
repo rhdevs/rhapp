@@ -238,7 +238,7 @@ function JCRCBlockOutModal({
 
       setBlockoutLoading(false)
       if (response.status >= 400) {
-        const body = await response.json()
+        await response.json()
         setBlockoutFailure(true)
         setBlockoutSuccess(false)
         setAlertMsg('Something went wrong, please try again.')

@@ -52,6 +52,7 @@ export const SGPaymentStatus = (props: Props) => {
   const groupWithoutOwnerOrder = props.supperGroup?.orderList?.filter(
     (order) => order.user.userID !== localStorage.userID,
   )
+
   return (
     <>
       {groupWithoutOwnerOrder && groupWithoutOwnerOrder?.length ? (
@@ -74,13 +75,7 @@ export const SGPaymentStatus = (props: Props) => {
           </TopSection>
 
           {groupWithoutOwnerOrder.map((order, index) => {
-            const deliveryFee = getIndivDeliveryFee(
-              props.supperGroup?.splitAdditionalCost,
-              props.supperGroup?.additionalCost,
-              props.supperGroup?.numOrders,
-              order.totalCost,
-              props.supperGroup?.currentFoodCost,
-            )
+            const deliveryFee = getIndivDeliveryFee(order.totalCost, props.supperGroup)
             return (
               <>
                 <UserPaymentStatus
