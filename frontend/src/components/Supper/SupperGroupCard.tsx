@@ -226,10 +226,10 @@ export const SupperGroupCard = (props: Props) => {
       else {
         if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
           // User is the owner or already has an ongoing order
-          if (isOpenOrPending) {
-            history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
-          } else {
+          if (ownerId === localStorage.userID && supperGroup?.status === SupperGroupStatus.CLOSED) {
             history.push(`${PATHS.ORDER_SUMMARY}/${rawSupperGroupId}`)
+          } else {
+            history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
           }
         } else {
           // New SG to user
