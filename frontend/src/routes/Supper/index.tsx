@@ -137,7 +137,7 @@ export default function Supper() {
   }
   return (
     <Background>
-      <PullToRefresh onRefresh={onRefresh}>
+      <PullToRefresh style={{ maxHeight: '100vh' }} onRefresh={onRefresh}>
         <StickyContainer>
           <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
           <SearchContainer>
