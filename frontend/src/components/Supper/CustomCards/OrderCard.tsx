@@ -322,7 +322,6 @@ export const OrderCard = (props: Props) => {
       if (collate) {
         history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM}/${supperGroupId}/update/collated/${foodId}`)
       } else {
-        console.log("this is suppose to show user's orderid", userOrderId)
         history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${userOrderId}/food/${foodId}`)
       }
     } else {
@@ -372,7 +371,6 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
-            console.log('this is the collated food?', food)
             const customisations: string[] = []
             food.custom?.map((custom) =>
               custom.options.map((option) => {
