@@ -100,7 +100,7 @@ const UserView = (props: Props) => {
       {emptyCartModalIsOpen && (
         <EmptyCartModal
           modalSetter={setEmptyCartModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => history.goBack()}
           supperGroupId={params.supperGroupId}
           orderId={props.order?.orderId}
         />

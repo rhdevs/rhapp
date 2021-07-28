@@ -87,7 +87,13 @@ const Order = () => {
 
   return (
     <Background>
-      <TopNavBar title="Order" onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())} />
+      <TopNavBar
+        title="Order"
+        onLeftClick={() => {
+          console.log(order?.foodList)
+          !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
+        }}
+      />
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           supperGroupId={params.supperGroupId}
