@@ -196,8 +196,15 @@ export enum UpdateAction {
 }
 
 export type SupperNotification = {
+  notification: NotificationType
   supperGroupId: number
   supperGroupName: string
+  ownerName: string
+}
+
+export enum NotificationType {
+  FOOD = 'Food',
+  UPDATE = 'Update',
 }
 
 export enum Filter {
