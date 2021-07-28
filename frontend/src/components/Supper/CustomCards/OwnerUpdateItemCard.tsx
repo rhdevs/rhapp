@@ -9,6 +9,7 @@ import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/actio
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
+import { QuantityTracker } from '../QuantityTracker'
 import { SupperButton } from '../SupperButton'
 
 const Input = styled.input<{ error?: FieldError | undefined }>`
@@ -49,6 +50,7 @@ type Props = {
 type FormData = {
   changes: string | undefined
   newPrice: number
+  newQuantity: number
   editReason: string
   newDeliveryFee: number
 }
@@ -92,11 +94,17 @@ export const OwnerUpdateItemCard = (props: Props) => {
       setValue('newPrice', props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0)
     }
     handleSubmit((data) => {
+      const priceWasUpdated =
+        (props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0) === data.newPrice ? false : true
+      const quantityWasUpdated =
+        (props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 0) === data.newQuantity ? false : true
+
       const update: Updates = {
         updateAction: UpdateAction.UPDATE,
         reason: data.editReason,
         change: data.changes,
-        updatedPrice: data.newPrice,
+        ...(priceWasUpdated && { updatedPrice: data.newPrice }),
+        ...(quantityWasUpdated && !props.all && { updatedQuantity: data.newQuantity }),
       }
       dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
@@ -155,6 +163,17 @@ export const OwnerUpdateItemCard = (props: Props) => {
               })}
             />
             {errors.newPrice?.type === 'min' && <ErrorText>Invalid price!</ErrorText>}
+            {!props.all && (
+              <>
+                <FormHeader headerName="New Quantity" topMargin />
+                <QuantityTracker
+                  center
+                  min={1}
+                  max={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                  default={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                />
+              </>
+            )}
             <FormHeader headerName="Reason for edit" isCompulsory topMargin />
             <TextArea
               defaultValue={''}
@@ -171,7 +190,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onDeleteItemClick}
-              defaultButtonDescription={props.all ? 'Delete Item for All' : 'Delete Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Delete Item for All' : 'Delete Item'
+              }
               ghost
               buttonWidth="100%"
               style={{ margin: '2rem 0 0.5rem 0' }}
@@ -179,7 +200,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onUpdateItemClick}
-              defaultButtonDescription={props.all ? 'Update Item for All' : 'Update Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Update Item for All' : 'Update Item'
+              }
               buttonWidth="100%"
               style={{ margin: '1rem 0 0 0' }}
             />

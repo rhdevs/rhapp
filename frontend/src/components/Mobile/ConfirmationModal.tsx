@@ -38,7 +38,7 @@ const TitleContainer = styled.div<{ flex?: boolean }>`
 const TitleText = styled.text`
   font-family: Inter;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 400;
 `
 
 const DescriptionText = styled.text`

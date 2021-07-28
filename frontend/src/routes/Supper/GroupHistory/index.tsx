@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
@@ -11,6 +12,7 @@ import { Separator, TabContainer } from '../../../components/Tabs'
 import { getGroupHistoryPageDetails } from '../../../store/supper/action/level2'
 import { HomeSupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   min-height: 100vh;
@@ -62,8 +64,9 @@ const EmptyText = styled.text`
   justify-content: center;
 `
 
-export default function GroupHistory() {
+const GroupHistory = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { joinedSupperHistory, createdSupperHistory, isLoading } = useSelector((state: RootState) => state.supper)
   const [currentTab, setCurrentTab] = useState<number>(1)
   const sections = ['Created', 'Joined']
@@ -118,7 +121,7 @@ export default function GroupHistory() {
 
   return (
     <Background>
-      <TopNavBar title="History" />
+      <TopNavBar title="History" onLeftClick={() => history.push(PATHS.SUPPER_HOME)} />
       <div>
         <MainTabsContainer>
           {sections.map((section, index) => {
@@ -139,3 +142,5 @@ export default function GroupHistory() {
     </Background>
   )
 }
+
+export default GroupHistory

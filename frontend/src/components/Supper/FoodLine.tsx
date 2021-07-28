@@ -41,7 +41,7 @@ const Background = styled.div<{
   ${(props) => props.borderRadius && `border-radius: ${props.borderRadius};`}
 `
 
-const QuantityContainer = styled.div`
+const QuantityContainer = styled.div<{ color?: string }>`
   grid-area: quantity;
   justify-self: end;
   font-family: Inter;
@@ -49,7 +49,7 @@ const QuantityContainer = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 15px;
-  color: ${V1_RED};
+  color: ${(props) => props.color};
 `
 
 const FoodNameContainer = styled.div`
@@ -57,7 +57,7 @@ const FoodNameContainer = styled.div`
   justify-items: stretch;
   font-family: Inter;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
 `
@@ -104,7 +104,7 @@ const StyledText = styled.text<{ color?: string }>`
 const BoldText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 12px;
   line-height: 15px;
 `
@@ -242,12 +242,18 @@ export const FoodLine = (props: Props) => {
       return (
         <>
           {(quantity || props.placeholder) && !hasNoQuantity && (
-            <QuantityContainer>{isLoading ? <Skeleton width="25px" /> : `${quantity}x`}</QuantityContainer>
+            <QuantityContainer color={wasEdited && updates?.updatedQuantity ? V1_RED : 'black'}>
+              {isLoading ? (
+                <Skeleton width="25px" />
+              ) : (
+                `${wasEdited && updates?.updatedQuantity ? updates?.updatedQuantity : quantity}x`
+              )}
+            </QuantityContainer>
           )}
           {(foodName || props.placeholder) && (
             <FoodNameContainer>{isLoading ? <Skeleton height="14px" width="150px" /> : foodName}</FoodNameContainer>
           )}
-          <PriceContainer color={wasEdited ? V1_RED : 'black'}>
+          <PriceContainer color={wasEdited && updates?.updatedPrice ? V1_RED : 'black'}>
             {isLoading ? <Skeleton width="35px" /> : priceValue}
           </PriceContainer>
           <MainContainer>

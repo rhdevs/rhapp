@@ -97,28 +97,29 @@ const UserView = (props: Props) => {
 
   return (
     <>
+      {emptyCartModalIsOpen && (
+        <EmptyCartModal
+          modalSetter={setEmptyCartModalIsOpen}
+          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          supperGroupId={params.supperGroupId}
+          orderId={props.order?.orderId}
+        />
+      )}
+      {leaveGroupModalIsOpen && (
+        <LeaveGroupModal
+          supperGroupId={params.supperGroupId}
+          onLeftButtonClick={() => {
+            if ((props.supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+              history.push(`${PATHS.SUPPER_HOME}`)
+            } else {
+              history.replace(PATHS.SUPPER_HOME)
+              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            }
+          }}
+          modalSetter={setLeaveGroupModalIsOpen}
+        />
+      )}
       <PullToRefresh onRefresh={onRefresh}>
-        {emptyCartModalIsOpen && (
-          <EmptyCartModal
-            modalSetter={setEmptyCartModalIsOpen}
-            onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
-            supperGroupId={params.supperGroupId}
-            orderId={props.order?.orderId}
-          />
-        )}
-        {leaveGroupModalIsOpen && (
-          <LeaveGroupModal
-            suppergroupId={params.supperGroupId}
-            onLeftButtonClick={() => {
-              if ((props.supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-                history.push(`${PATHS.SUPPER_HOME}`)
-              } else {
-                history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
-              }
-            }}
-            modalSetter={setLeaveGroupModalIsOpen}
-          />
-        )}
         <SupperGroupCard margin="0 23px 23px" supperGroup={props.supperGroup} isHome={false} />
         <OrderCard
           order={props.order}

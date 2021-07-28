@@ -121,7 +121,6 @@ export default function Supper() {
     dispatch(getAllSupperGroups())
   }, [dispatch])
 
-  console.log(filteredSupperGroups)
   let supperGroups: HomeSupperGroup[] | null = allSupperGroups
   let errorText = 'Hungry? Start a supper group!'
   if (

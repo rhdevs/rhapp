@@ -174,7 +174,6 @@ const DeliveryDetails = () => {
       setOrderStatusHasError(true)
       return
     }
-    console.log(errors, watch())
     handleSubmit((data) => {
       if (
         selectedSupperGroupStatus === SupperGroupStatus.ARRIVED &&

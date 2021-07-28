@@ -5,7 +5,6 @@ import { MainCard } from '../MainCard'
 import { UnderlinedButton } from '../UnderlinedButton'
 import EmptyCart_src from '../../../assets/EmptyCart.svg'
 import { CollatedOrder, Food, Order, SplitACMethod, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
-import { PlusCircleFilled } from '@ant-design/icons'
 import { V1_RED } from '../../../common/colours'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../../routes/Routes'
@@ -55,7 +54,7 @@ const EmptyTextContainer = styled.div`
 const MyOrderText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   display: flex;
   align-items: center;
@@ -64,7 +63,7 @@ const MyOrderText = styled.text`
 const NameText = styled.text<{ isOwner?: boolean }>`
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   color: ${(props) => (props.isOwner ? 'black' : 'rgba(0, 0, 0, 0.65)')};
@@ -221,13 +220,7 @@ export const OrderCard = (props: Props) => {
     let priceSectionTotal = total
     if (order) {
       priceSectionSubTotal = order.totalCost
-      priceSectionDeliveryFee = getIndivDeliveryFee(
-        props.supperGroup?.splitAdditionalCost,
-        props.supperGroup?.additionalCost,
-        props.supperGroup?.numOrders,
-        order?.totalCost,
-        props.supperGroup?.currentFoodCost,
-      )
+      priceSectionDeliveryFee = getIndivDeliveryFee(order?.totalCost, props.supperGroup)
     }
     priceSectionTotal = priceSectionSubTotal + priceSectionDeliveryFee
     const wasDeliveryUpdated = props.supperGroup?.wasDeliveryUpdated
@@ -304,10 +297,20 @@ export const OrderCard = (props: Props) => {
   }
 
   const RedPlusButton = () => {
+    // return (
+    //   <PlusCircleFilled
+    //     onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
+    //     style={{ fontSize: '20px', color: V1_RED }}
+    //   />
+    // )
     return (
-      <PlusCircleFilled
-        onClick={() => history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)}
-        style={{ fontSize: '20px', color: V1_RED }}
+      <UnderlinedButton
+        onClick={() => {
+          history.push(`${PATHS.ORDER}/${supperGroupId}/${restaurantId}/order`)
+        }}
+        text="Add item"
+        fontSize="14px"
+        color="red"
       />
     )
   }
@@ -322,7 +325,6 @@ export const OrderCard = (props: Props) => {
       if (collate) {
         history.push(`${PATHS.UPDATE_ALL_FOOD_ITEM}/${supperGroupId}/update/collated/${foodId}`)
       } else {
-        console.log("this is suppose to show user's orderid", userOrderId)
         history.push(`${PATHS.UPDATE_FOOD_ITEM}/${supperGroupId}/update/order/${userOrderId}/food/${foodId}`)
       }
     } else {
@@ -372,7 +374,6 @@ export const OrderCard = (props: Props) => {
       ) : (
         <>
           {collatedFoodList?.map((food, index) => {
-            console.log('this is the collated food?', food)
             const customisations: string[] = []
             food.custom?.map((custom) =>
               custom.options.map((option) => {
