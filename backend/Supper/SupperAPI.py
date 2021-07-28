@@ -941,15 +941,15 @@ def get_user_supper_group_notification(userID):
                 {
                     '$unwind': {'path': '$supperGroup'}
                 },
-                {'$project': {'supperGroupId': 1,
+                {'$project': {'supperGroupId': 1, 'supperGroup.ownerName': 1,
                               'supperGroup.supperGroupName': 1, 'notification': 1, '_id': 0}}
             ]
 
             result = db.Order.aggregate(pipeline)
             data = []
             for item in result:
-                item['supperGroupName'] = item.pop(
-                    'supperGroup')['supperGroupName']
+                item['supperGroupName'] = item['supperGroup']['supperGroupName']
+                item['ownerName'] = item.pop('supperGroup')['ownerName']
                 if 'notification' in item and item['notification']:
                     data.append(item)
 
@@ -1148,13 +1148,15 @@ def owner_edit_order(supperGroupId):
 
                 for food in foods:
                     db.Order.update({'_id': food['orderId']},
-                                    {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']}})
+                                    {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
+                                     '$set': {'notification': 'Food'}})
                     db.FoodOrder.update({'_id': food['_id']},
                                         {'$set': data})
 
             else:
                 db.Order.update({'foodIds': food['_id']},
-                                {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']}})
+                                {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
+                                 '$set': {'notification': 'Food'}})
                 result = db.FoodOrder.find_one_and_update({'_id': foodId},
                                                           {'$set': data})
             if result is None:
