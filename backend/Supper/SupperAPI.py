@@ -369,6 +369,10 @@ def supper_group(supperGroupId):
 
             data = request.get_json()
 
+            if 'status' in data and data['status'] == 'Cancelled':
+                db.Order.update_many({'supperGroupId': supperGroupId},
+                                    {'$set': {'notification': 'Delete'}})
+
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
 
