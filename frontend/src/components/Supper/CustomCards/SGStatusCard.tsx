@@ -76,7 +76,6 @@ const OtherInfoContainer = styled.div`
 const OtherInfoSubContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: center;
   width: 80%;
   margin: auto;
@@ -85,6 +84,7 @@ const OtherInfoSubContainer = styled.div`
 const IconImage = styled.img`
   width: 12px;
   margin: 5px;
+  height: fit-content;
 `
 
 const LocationText = styled.text`

@@ -17,12 +17,13 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
 
-export const SupperButtonContainer = styled.div`
+const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  padding-bottom: 10px;
 `
 
-export const ButtonContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,17 +31,17 @@ export const ButtonContainer = styled.div`
   padding: 0 10px;
 `
 
-export const UpperRowButtons = styled.div`
+const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
-export const LowerRowButton = styled.div`
+const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
 
