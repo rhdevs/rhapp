@@ -125,8 +125,8 @@ const OwnerView = (props: Props) => {
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
           onLeftButtonClick={() => {
-            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
             history.replace(PATHS.SUPPER_HOME)
+            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
           }}
           supperGroupId={params.supperGroupId}
         />
