@@ -24,6 +24,7 @@ import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
+import { supper } from '../../../store/supper/reducer'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -172,43 +173,47 @@ const OrderSummary = () => {
               supperTotalCost={supperGroup?.totalPrice}
               isEditable
             />
-            <FormContainer>
-              <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
-              <Controller
-                control={control}
-                name="estArrivalTime"
-                rules={{ required: true }}
-                render={() => (
-                  <StyledTimePicker
-                    use12Hours
-                    format="h:mm a"
-                    onChange={onChange}
-                    style={errors.estArrivalTime ? errorStyling : {}}
-                    {...(supperGroup?.estArrivalTime && {
-                      defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
-                    })}
+            {supperGroup?.status === SupperGroupStatus.CLOSED && (
+              <>
+                <FormContainer>
+                  <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
+                  <Controller
+                    control={control}
+                    name="estArrivalTime"
+                    rules={{ required: true }}
+                    render={() => (
+                      <StyledTimePicker
+                        use12Hours
+                        format="h:mm a"
+                        onChange={onChange}
+                        style={errors.estArrivalTime ? errorStyling : {}}
+                        {...(supperGroup?.estArrivalTime && {
+                          defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
+                        })}
+                      />
+                    )}
+                    defaultValue={null}
                   />
-                )}
-                defaultValue={null}
-              />
-              {errors.estArrivalTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
-            </FormContainer>
-            <FormContainer>
-              <FormHeader headerName="Collection Point" isCompulsory />
-              <InputText
-                type="text"
-                placeholder="Enter Location"
-                name="location"
-                ref={register({
-                  required: true,
-                  ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
-                })}
-                style={errors.location ? errorStyling : {}}
-                defaultValue={supperGroup?.location ?? ''}
-              />
-              {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
-              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-            </FormContainer>
+                  {errors.estArrivalTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
+                </FormContainer>
+                <FormContainer>
+                  <FormHeader headerName="Collection Point" isCompulsory />
+                  <InputText
+                    type="text"
+                    placeholder="Enter Location"
+                    name="location"
+                    ref={register({
+                      required: true,
+                      ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
+                    })}
+                    style={errors.location ? errorStyling : {}}
+                    defaultValue={supperGroup?.location ?? ''}
+                  />
+                  {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
+                  {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+                </FormContainer>
+              </>
+            )}
             <ButtonContainer>
               <SupperButton
                 ghost
