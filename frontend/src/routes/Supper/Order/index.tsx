@@ -91,7 +91,13 @@ const Order = () => {
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
           suppergroupId={params.supperGroupId}
-          onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => {
+            if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+              history.push(`${PATHS.SUPPER_HOME}`)
+            } else {
+              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            }
+          }}
           modalSetter={setLeaveGroupModalIsOpen}
         />
       )}
