@@ -418,15 +418,19 @@ def supper_group(supperGroupId):
 def create_order():
     try:
         data = request.get_json()
-        data['foodIds'] = []
-        data['totalCost'] = 0
-        data['paymentMethod'] = 'Nil'
-        data['userContact'] = 0
-        data["createdAt"] = int(datetime.now().timestamp())
-        data['hasPaid'] = False
-        data['hasReceived'] = False
-        db.Order.insert_one(data)
-        data['orderId'] = str(data.pop('_id'))
+        check = db.Order.find_one({'userID': data['userID'], 'supperGroupId': data['supperGroupId']})
+        if check and '_id' in check:
+            data['orderId'] = str(check['_id'])
+        else:
+            data['foodIds'] = []
+            data['totalCost'] = 0
+            data['paymentMethod'] = 'Nil'
+            data['userContact'] = 0
+            data["createdAt"] = int(datetime.now().timestamp())
+            data['hasPaid'] = False
+            data['hasReceived'] = False
+            db.Order.insert_one(data)
+            data['orderId'] = str(data.pop('_id'))
 
         response = {"status": "success",
                     "message": "Order created successfully.",
