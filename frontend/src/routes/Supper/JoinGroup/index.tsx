@@ -38,6 +38,11 @@ const JoinGroup = () => {
     dispatch(getJoinGroupPageDetails(params.supperGroupId))
   }, [dispatch])
 
+  useEffect(() => {
+    if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+      history.push(`${PATHS.SUPPER_HOME}`)
+    }
+  }, [])
   const onClick = () => {
     dispatch(createOrder(params.supperGroupId))
     history.push(`${PATHS.ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)

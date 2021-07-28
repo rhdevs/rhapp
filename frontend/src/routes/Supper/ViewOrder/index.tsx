@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
@@ -15,6 +15,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { onRefresh } from '../../../common/reloadPage'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
+import { PATHS } from '../../Routes'
 
 const MainContainer = styled.div`
   display: grid;
@@ -29,9 +30,18 @@ const MainContainer = styled.div`
 const ViewOrder = () => {
   const params = useParams<{ supperGroupId: string }>()
   const dispatch = useDispatch()
+  const history = useHistory()
   const { isLoading, supperGroup, collatedOrder, selectedSupperGroupStatus, order, supperErrorMessage } = useSelector(
     (state: RootState) => state.supper,
   )
+  const isOwner = supperGroup?.ownerId === localStorage.userID
+
+  useEffect(() => {
+    if (supperGroup?.status === SupperGroupStatus.CLOSED && isOwner) {
+      history.replace(`${PATHS.SUPPER_HOME}`)
+      history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+    }
+  }, [supperGroup?.status])
 
   useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
@@ -39,8 +49,8 @@ const ViewOrder = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="View Order" />
       <PullToRefresh onRefresh={onRefresh}>
+        <TopNavBar title="View Order" />
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
           <SupperErrorContent />
         ) : isLoading ? (
