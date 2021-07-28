@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
@@ -16,6 +16,8 @@ import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/action/setter'
 import { getOrderPageDetails } from '../../../store/supper/action/level2'
+import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
+import { SupperGroupStatus } from '../../../store/supper/types'
 
 const Background = styled.div`
   width: 100vw;
@@ -47,6 +49,7 @@ const Order = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ supperGroupId: string; restaurantId: string }>()
+  const [leaveGroupModalIsOpen, setLeaveGroupModalIsOpen] = useState<boolean>(false)
   const {
     supperGroup,
     restaurant,
@@ -58,10 +61,17 @@ const Order = () => {
     isFoodMenuModalOpen,
     modalMenuFoodName,
   } = useSelector((state: RootState) => state.supper)
+  const isOwner = supperGroup?.ownerId === localStorage.userID
 
   useEffect(() => {
     dispatch(getOrderPageDetails(params.supperGroupId, params.restaurantId))
   }, [dispatch])
+
+  useEffect(() => {
+    if (supperGroup?.status === SupperGroupStatus.CLOSED) {
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+    }
+  }, [supperGroup?.status])
 
   const onChange = (input: string) => {
     dispatch(setSearchValue(input))
@@ -77,7 +87,20 @@ const Order = () => {
 
   return (
     <Background>
-      <TopNavBar title="Order" />
+      <TopNavBar title="Order" onLeftClick={() => (!isOwner ? setLeaveGroupModalIsOpen(true) : history.goBack())} />
+      {leaveGroupModalIsOpen && (
+        <LeaveGroupModal
+          suppergroupId={params.supperGroupId}
+          onLeftButtonClick={() => {
+            if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+              history.push(`${PATHS.SUPPER_HOME}`)
+            } else {
+              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            }
+          }}
+          modalSetter={setLeaveGroupModalIsOpen}
+        />
+      )}
       {isLoading ? (
         <LoadingSpin />
       ) : (

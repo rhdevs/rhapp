@@ -9,7 +9,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { Order, SupperGroup } from '../../../store/supper/types'
+import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { onRefresh } from '../../../common/reloadPage'
@@ -52,13 +52,13 @@ const UserView = (props: Props) => {
           {props.order?.foodList && props.order.foodList.length > 0 && (
             <SupperButton
               ghost
-              buttonWidth="160px"
+              buttonWidth="140px"
               defaultButtonDescription="Empty Cart"
               onButtonClick={() => setEmptyCartModalIsOpen(true)}
             />
           )}
           <SupperButton
-            buttonWidth="160px"
+            buttonWidth="140px"
             defaultButtonDescription="Leave Group"
             onButtonClick={() => setLeaveGroupModalIsOpen(true)}
           />
@@ -78,7 +78,10 @@ const UserView = (props: Props) => {
           />
         </BottomContainer>
       )
-    } else {
+    } else if (
+      props.supperGroup?.status === SupperGroupStatus.ARRIVED ||
+      props.supperGroup?.status === SupperGroupStatus.AWAITING_PAYMENT
+    ) {
       if (props.order?.hasPaid) {
         return <SupperButton ghost defaultButtonDescription="Payment Completed" />
       } else {
@@ -106,8 +109,12 @@ const UserView = (props: Props) => {
         <LeaveGroupModal
           supperGroupId={params.supperGroupId}
           onLeftButtonClick={() => {
-            history.replace(PATHS.SUPPER_HOME)
-            history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            if ((props.supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+              history.push(`${PATHS.SUPPER_HOME}`)
+            } else {
+              history.replace(PATHS.SUPPER_HOME)
+              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            }
           }}
           modalSetter={setLeaveGroupModalIsOpen}
         />

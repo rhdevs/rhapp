@@ -43,7 +43,6 @@ export const SupperButton = (props: Props) => {
       buttonHeight={props.buttonHeight}
       style={{ ...props.style, width: 'fit-content', padding: 0 }}
       descriptionStyle={{
-        fontWeight: 200,
         fontSize: '15px',
         padding: '5px 16px',
       }}
