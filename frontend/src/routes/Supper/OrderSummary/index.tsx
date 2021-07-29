@@ -139,6 +139,7 @@ const OrderSummary = () => {
         clearErrors('estArrivalTime')
       }
       dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 
@@ -219,7 +220,7 @@ const OrderSummary = () => {
                 defaultButtonDescription="Order Cancelled"
                 onButtonClick={() => setTwoStepModalIsOpen(true)}
               />
-              <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} />
+              <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} htmlType="submit" />
             </ButtonContainer>
             <InformationCard updateSummary />
           </>
