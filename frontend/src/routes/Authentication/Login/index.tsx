@@ -93,7 +93,6 @@ const ButtonLabel = styled.div`
   width: 100%;
   white-space: break-spaces;
   overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const StyledButtonContainer = styled.div`
@@ -215,7 +214,7 @@ export default function Login() {
                   history.push(PATHS.SIGNUP_PAGE)
                 }}
               >
-                Register
+                <ButtonLabel>Register</ButtonLabel>
               </Button>
             </PostButton>
             <PostButton>
