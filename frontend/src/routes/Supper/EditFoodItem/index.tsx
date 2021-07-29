@@ -108,7 +108,6 @@ const EditFoodItem = () => {
   }
 
   const hasCustomUpdate = (formData, initialCustom: Custom[] | undefined) => {
-    console.log('THIS WENT TO FALSE?!', formData)
     let isValid = false
     formData.forEach((data) => {
       const optionTitle = data[0]
@@ -149,7 +148,6 @@ const EditFoodItem = () => {
 
       handleSubmit((data: Food) => {
         const initialFoodInfo = food
-        console.log('data', data, '; and old food', initialFoodInfo)
         let updatedFoodInfo
         if (initialFoodInfo?.comments !== data.comments) {
           updatedFoodInfo = { ...updatedFoodInfo, comments: data.comments as string }
@@ -168,7 +166,6 @@ const EditFoodItem = () => {
         //convert data from watch to [ [[option title], [option's details]] , ...]
         let formData = Object.entries(watch())
         formData = formData.filter((entry) => entry[0] !== 'cancelAction' && entry[0] !== 'comments') //remove cancelAction and comments details
-        console.log('formData', formData)
         if (hasCustomUpdate(formData, initialFoodInfo?.custom)) {
           // Changes were made to custom
           const custom: Custom[] = (initialFoodInfo?.custom ?? []).map((customFood) => {
@@ -195,7 +192,6 @@ const EditFoodItem = () => {
           })
           updatedFoodInfo = { ...updatedFoodInfo, custom: custom }
         }
-        console.log('updatedFoodInfo', updatedFoodInfo)
         if (updatedFoodInfo) {
           dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
           history.goBack()

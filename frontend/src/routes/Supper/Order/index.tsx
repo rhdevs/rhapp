@@ -89,10 +89,9 @@ const Order = () => {
     <Background>
       <TopNavBar
         title="Order"
-        onLeftClick={() => {
-          console.log(order?.foodList)
+        onLeftClick={() =>
           !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
-        }}
+        }
       />
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
