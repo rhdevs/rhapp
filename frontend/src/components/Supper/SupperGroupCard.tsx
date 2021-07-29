@@ -26,8 +26,8 @@ import { SupperShareModal } from './Modals/SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
 import { RootState } from '../../store/types'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
-import { CancelGroupModal } from './Modals/CancelGroupModal'
 import { LeaveGroupModal } from './Modals/LeaveGroupModal'
+import { TwoStepCancelGroupModal } from './Modals/TwoStepCancelGroupModal'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -95,12 +95,6 @@ const StyledProgessBar = styled(Progress)`
   width: 100px;
   margin-right: 10px;
 `
-
-// const ErrorText = styled.text`
-//   text-align: center;
-//   color: ${V1_RED};
-//   font-family: 'Inter';
-// `
 
 const Icon = styled.img`
   padding-left: 5px;
@@ -188,14 +182,13 @@ export const SupperGroupCard = (props: Props) => {
   const shareModal = <SupperShareModal rawSupperGroupId={rawSupperGroupId} teleShareModalSetter={setIsShareModalOpen} />
 
   const cancelModal = (
-    <CancelGroupModal
+    <TwoStepCancelGroupModal
       modalSetter={setIsCancelGroupModalOpen}
-      withDispatch
+      supperGroupId={rawSupperGroupId}
       onLeftButtonClick={() => {
         history.replace(PATHS.SUPPER_HOME)
         history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
       }}
-      supperGroupId={rawSupperGroupId}
     />
   )
 

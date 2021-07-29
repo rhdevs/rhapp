@@ -43,7 +43,7 @@ const Form = styled.form`
 type Props = {
   modalSetter: React.Dispatch<React.SetStateAction<boolean>>
   onLeftButtonClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
-  supperGroupId: string | number
+  supperGroupId: string | number | undefined
 }
 
 type FormData = {
