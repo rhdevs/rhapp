@@ -132,7 +132,6 @@ export const CreateOrderPageOne = () => {
         closingTime: data.closingTime,
         costLimit: hasMaxPrice ? priceLimit : undefined,
       }
-      console.log('firstSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
       history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
     })()
