@@ -1099,11 +1099,6 @@ def owner_edit_order(supperGroupId):
                 if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                     raise Exception('Update information incomplete')
 
-            if 'updatedQuantity' in data['updates']:
-                data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
-            else:
-                data['foodPrice'] = data['foodPrice'] * food['quantity']
-
             if 'global' in data['updates'] and data['updates'].pop('global'):
                 pipeline = [
                     {'$match': {'supperGroupId': supperGroupId}},
@@ -1148,6 +1143,10 @@ def owner_edit_order(supperGroupId):
                                     x['cancelAction'] == food['cancelAction'], foods))
 
                 for food in foods:
+                    if 'updatedQuantity' in data['updates']:
+                        data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
+                    else:
+                        data['foodPrice'] = data['foodPrice'] * food['quantity']
                     db.Order.update({'_id': food['orderId']},
                                     {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
                                      '$set': {'notification': 'Food'}})
@@ -1155,6 +1154,11 @@ def owner_edit_order(supperGroupId):
                                         {'$set': data})
 
             else:
+                if 'updatedQuantity' in data['updates']:
+                    data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
+                else:
+                    data['foodPrice'] = data['foodPrice'] * food['quantity']
+
                 db.Order.update({'foodIds': food['_id']},
                                 {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
                                  '$set': {'notification': 'Food'}})
