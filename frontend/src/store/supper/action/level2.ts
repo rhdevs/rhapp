@@ -1,6 +1,6 @@
 import { calculateArrivalTime } from '../../../routes/Supper/DeliveryDetails'
 import { Dispatch, GetState } from '../../types'
-import { ActionTypes, SupperGroup, SupperGroupStatus } from '../types'
+import { ActionTypes } from '../types'
 import {
   getAllSupperGroups,
   getCollatedOrder,
@@ -20,7 +20,6 @@ import {
   setSelectedSupperGroupStatus,
   setSupperErrorMessage,
   setEstimatedArrivalTime,
-  setSupperGroup,
 } from './setter'
 
 export const getOrderPageDetails = (supperGroupId: string, restaurantId: string) => async (
@@ -180,28 +179,4 @@ export const getSupperGroupForPaymentList = (supperGroupId: number | undefined) 
       dispatch(setIsLoading(false))
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
-}
-
-export const setCreateGroupPageDetails = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(setIsLoading(true))
-  const initSupperGroup: SupperGroup = {
-    costLimit: undefined,
-    createdAt: undefined,
-    currentFoodCost: 0,
-    location: '',
-    numOrders: 0,
-    ownerId: localStorage.userID,
-    ownerName: '',
-    ownerTele: '',
-    paymentInfo: [],
-    restaurantName: '',
-    splitAdditionalCost: undefined,
-    status: SupperGroupStatus.OPEN,
-    supperGroupId: undefined,
-    supperGroupName: '',
-    totalPrice: 0,
-    closingTime: undefined,
-  }
-  dispatch(setSupperGroup(initSupperGroup))
-  dispatch(setIsLoading(false))
 }

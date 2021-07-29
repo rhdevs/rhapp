@@ -530,3 +530,22 @@ export const dummyCollatedOrderList: CollatedOrder = {
   ownerId: 'A1234567B',
   collatedOrderList: foodList,
 }
+
+export const initSupperGroup: SupperGroup = {
+  costLimit: undefined,
+  createdAt: undefined,
+  currentFoodCost: 0,
+  location: '',
+  numOrders: 0,
+  ownerId: localStorage.userID,
+  ownerName: '',
+  ownerTele: '',
+  paymentInfo: [],
+  restaurantName: '',
+  splitAdditionalCost: undefined,
+  status: SupperGroupStatus.OPEN,
+  supperGroupId: undefined,
+  supperGroupName: '',
+  totalPrice: 0,
+  closingTime: undefined,
+}

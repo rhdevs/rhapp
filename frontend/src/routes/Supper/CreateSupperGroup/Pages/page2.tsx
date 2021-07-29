@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { ErrorText, initSupperGroup } from '..'
+import { ErrorText } from '..'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { FormHeader } from '../../../../components/Supper/FormHeader'
 import { LineProgress } from '../../../../components/Supper/LineProgess'
@@ -17,6 +17,7 @@ import { RadioButton } from '../../../../components/RadioButton'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import { InformationCard } from '../../../../components/Supper/InformationCard'
 import { setSupperGroup } from '../../../../store/supper/action/setter'
+import { initSupperGroup } from '../../../../store/stubs'
 
 const FormSection = styled.div`
   display: flex;
