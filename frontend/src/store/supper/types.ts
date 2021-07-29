@@ -150,6 +150,7 @@ export enum SupperGroupStatus {
   ALL_PAID = 'All Paid', // for owner
   PAID = 'Paid', // for user
   NOT_PAID = 'Not Paid', // for user
+  COMPLETED = 'Completed', // when owner indicates they want to end group
 }
 
 export enum PaymentMethod {

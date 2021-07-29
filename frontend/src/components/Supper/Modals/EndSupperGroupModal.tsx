@@ -1,7 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-import { deleteSupperGroup } from '../../../store/supper/action/level1/deleteRequests'
+import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
+import { SupperGroupStatus } from '../../../store/supper/types'
 import { SupperModal } from './SupperModal'
 
 type Props = {
@@ -13,14 +14,14 @@ type Props = {
 export const EndSupperGroupModal = (props: Props) => {
   const dispatch = useDispatch()
   const onLeftClick = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(deleteSupperGroup(props.suppergroupId))
+    dispatch(updateSupperGroup(props.suppergroupId, { status: SupperGroupStatus.COMPLETED }))
     if (props.onLeftButtonClick) props.onLeftButtonClick(e)
   }
   return (
     <SupperModal
       title="End Supper Group?"
-      description="All order and payment information will be deleted."
-      leftButtonText="End"
+      description="Ending supper group will update the group’s status as completed. You can revisit this supper group anytime within the next 5 days from the history page. Thereafter it will be deleted."
+      leftButtonText="Confirm"
       modalSetter={props.modalSetter}
       onLeftButtonClick={onLeftClick}
     />
