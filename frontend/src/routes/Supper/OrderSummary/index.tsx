@@ -127,9 +127,12 @@ const OrderSummary = () => {
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
+    console.log('hellloooo', time, timeString, currentUNIXDate, epochClosingTime)
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
+      console.log('pass liao', epochClosingTime)
     }
+
     setValue('estArrivalTime', epochClosingTime)
     clearErrors('estArrivalTime')
   }

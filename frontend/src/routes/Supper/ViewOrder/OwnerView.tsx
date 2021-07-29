@@ -159,6 +159,7 @@ const OwnerView = (props: Props) => {
               ownerId={localStorage.userID}
               supperGroupStatus={props.supperGroup?.status}
               collatedOrder={props.collatedOrder}
+              order={ownerOrder}
             />
             {showBottomSection()}
             {props.showTrackPayment && !isLoading && (
