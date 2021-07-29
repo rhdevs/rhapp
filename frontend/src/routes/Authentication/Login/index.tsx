@@ -97,7 +97,7 @@ const ButtonLabel = styled.div`
 
 const StyledButtonContainer = styled.div`
   display: grid;
-  grid-template-columns: 47% 47%;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 70px;
   column-gap: 6%;
 `
