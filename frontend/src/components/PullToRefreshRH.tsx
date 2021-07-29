@@ -8,7 +8,7 @@ const PullToRefreshContainer = styled(PullToRefresh)`
   &.pull-down-container {
     overflow-y: hidden;
     height: 100%;
-    max-height: 100%;
+    max-height: 100vh;
     position: relative;
   }
 `

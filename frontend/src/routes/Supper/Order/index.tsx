@@ -18,7 +18,8 @@ import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/ac
 import { getOrderPageDetails } from '../../../store/supper/action/level2'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
-import PullToRefreshRH from '../../../components/PullToRefreshRH'
+import ReactPullToRefresh from 'react-pull-to-refresh'
+import { onRefresh } from '../../../common/reloadPage'
 
 const Background = styled.div`
   width: 100vw;
@@ -87,14 +88,14 @@ const Order = () => {
   }
 
   return (
-    <PullToRefreshRH>
-      <Background>
-        <TopNavBar
-          title="Order"
-          onLeftClick={() =>
-            !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
-          }
-        />
+    <Background>
+      <TopNavBar
+        title="Order"
+        onLeftClick={() =>
+          !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
+        }
+      />
+      <ReactPullToRefresh onRefresh={onRefresh}>
         {leaveGroupModalIsOpen && (
           <LeaveGroupModal
             supperGroupId={params.supperGroupId}
@@ -159,8 +160,8 @@ const Order = () => {
             )}
           </>
         )}
-      </Background>
-    </PullToRefreshRH>
+      </ReactPullToRefresh>
+    </Background>
   )
 }
 

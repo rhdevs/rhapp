@@ -26,7 +26,7 @@ export const CustomHeaders = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 17px;
 `
 
 export const RedText = styled.text`

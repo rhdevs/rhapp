@@ -21,7 +21,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
-import PullToRefreshRH from '../../../components/PullToRefreshRH'
+import ReactPullToRefresh from 'react-pull-to-refresh'
+import { onRefresh } from '../../../common/reloadPage'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -153,9 +154,9 @@ const OrderSummary = () => {
   }
 
   return (
-    <PullToRefreshRH>
-      <MainContainer>
-        <TopNavBar title="Order Summary" onLeftClick={onLeftClick} />
+    <MainContainer>
+      <TopNavBar title="Order Summary" onLeftClick={onLeftClick} />
+      <ReactPullToRefresh onRefresh={onRefresh}>
         {isLoading ? (
           <LoadingSpin />
         ) : (
@@ -238,8 +239,8 @@ const OrderSummary = () => {
             <InformationCard updateSummary />
           </>
         )}
-      </MainContainer>
-    </PullToRefreshRH>
+      </ReactPullToRefresh>
+    </MainContainer>
   )
 }
 

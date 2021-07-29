@@ -20,7 +20,8 @@ import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { updateFoodInOrder } from '../../../store/supper/action/level1/putRequests'
 import { getEditFoodItemDetails } from '../../../store/supper/action/level2'
-import PullToRefreshRH from '../../../components/PullToRefreshRH'
+import ReactPullToRefresh from 'react-pull-to-refresh'
+import { onRefresh } from '../../../common/reloadPage'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -34,8 +35,8 @@ const MainContainer = styled.form`
 const FoodItemHeader = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 21px;
 `
 
 type CustomData = Record<string, string | string[] | CancelAction>
@@ -56,7 +57,7 @@ const EditFoodItem = () => {
     reset,
     control,
     errors,
-    formState,
+    formState: { touched },
   } = useForm<CustomData>({
     shouldUnregister: false,
   })
@@ -66,7 +67,7 @@ const EditFoodItem = () => {
     }) ?? []
 
   const onLeftClick = () => {
-    formState.touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
+    touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
   }
 
   const isOverSupperGroupLimit = () => {
@@ -224,9 +225,9 @@ const EditFoodItem = () => {
   }, [food, reset])
 
   return (
-    <PullToRefreshRH>
-      <MainContainer onSubmit={onSubmit}>
-        <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
+    <MainContainer onSubmit={onSubmit}>
+      <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
+      <ReactPullToRefresh onRefresh={onRefresh}>
         {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
         {isLoading ? (
           <LoadingSpin />
@@ -288,8 +289,8 @@ const EditFoodItem = () => {
             </MainCard>
           </>
         )}
-      </MainContainer>
-    </PullToRefreshRH>
+      </ReactPullToRefresh>
+    </MainContainer>
   )
 }
 

@@ -19,7 +19,8 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
 import { getAddFoodItemPageDetails } from '../../../store/supper/action/level2'
-import PullToRefreshRH from '../../../components/PullToRefreshRH'
+import ReactPullToRefresh from 'react-pull-to-refresh'
+import { onRefresh } from '../../../common/reloadPage'
 
 const Background = styled.form`
   width: 100vw;
@@ -37,8 +38,8 @@ const MainContainer = styled.div`
 const FoodItemHeader = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 21px;
 `
 
 type CustomData = Record<string, string | string[] | CancelAction>
@@ -158,9 +159,9 @@ const AddFoodItem = () => {
   }
 
   return (
-    <PullToRefreshRH>
-      <Background onSubmit={onSubmit}>
-        <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
+    <Background onSubmit={onSubmit}>
+      <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
+      <ReactPullToRefresh onRefresh={onRefresh}>
         {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
         {isLoading ? (
           <LoadingSpin />
@@ -209,8 +210,8 @@ const AddFoodItem = () => {
             <InformationCard disclaimer margin="0" />
           </MainContainer>
         )}
-      </Background>
-    </PullToRefreshRH>
+      </ReactPullToRefresh>
+    </Background>
   )
 }
 

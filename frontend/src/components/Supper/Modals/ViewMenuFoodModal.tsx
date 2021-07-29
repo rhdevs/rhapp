@@ -49,8 +49,8 @@ const Header = styled.div`
 `
 
 const HeaderText = styled.text`
-  font-weight: 700;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 21px;
   color: black;
   font-family: Inter;
 `

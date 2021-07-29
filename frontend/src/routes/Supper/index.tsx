@@ -138,8 +138,8 @@ export default function Supper() {
     errorText = 'No supper groups found.'
   }
   return (
-    <Background>
-      <PullToRefreshRH>
+    <PullToRefreshRH>
+      <Background>
         <StickyContainer>
           <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
           <SearchContainer>
@@ -156,7 +156,6 @@ export default function Supper() {
           </SearchContainer>
           <FilterBubbles />
         </StickyContainer>
-
         {isLoading ? (
           <LoadingSpin />
         ) : (
@@ -175,8 +174,8 @@ export default function Supper() {
         <PlusButtonDiv>
           <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
         </PlusButtonDiv>
-      </PullToRefreshRH>
-      <BottomNavBar />
-    </Background>
+        <BottomNavBar />
+      </Background>
+    </PullToRefreshRH>
   )
 }
