@@ -1148,7 +1148,8 @@ def owner_edit_order(supperGroupId):
 
                 for food in foods:
                     if 'updatedQuantity' in data['updates']:
-                        data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
+                        data['quantity'] = data['updates']['updatedQuantity']
+                        data['foodPrice'] = data['foodPrice'] * data['quantity']
                     else:
                         data['foodPrice'] = data['foodPrice'] * food['quantity']
                     db.Order.update({'_id': food['orderId']},
@@ -1159,7 +1160,8 @@ def owner_edit_order(supperGroupId):
 
             else:
                 if 'updatedQuantity' in data['updates']:
-                    data['foodPrice'] = data['foodPrice'] * data['updates']['updatedQuantity']
+                    data['quantity'] = data['updates']['updatedQuantity']
+                    data['foodPrice'] = data['foodPrice'] * data['quantity']
                 else:
                     data['foodPrice'] = data['foodPrice'] * food['quantity']
 
