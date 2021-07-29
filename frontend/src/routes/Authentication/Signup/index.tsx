@@ -171,7 +171,7 @@ export default function Signup() {
       pass = false
       return pass
     }
-    if (!formData.email.includes('@u.nus.edu') && !formData.email.includes('@nus.edu.sg')) {
+    if (!formData.email.endsWith('@u.nus.edu') && !formData.email.endsWith('@nus.edu.sg')) {
       setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu or @nus.edu.sg' })
       pass = false
       return pass
