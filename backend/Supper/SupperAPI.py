@@ -1092,7 +1092,10 @@ def owner_edit_order(supperGroupId):
             if 'updatedPrice' in data['updates'] and data['updates']['updatedPrice']:
                 data['foodPrice'] = data['updates']['updatedPrice']
             else:
-                data['foodPrice'] = 0
+                if data['updates']['updateAction'] == 'Update':
+                    data['foodPrice'] = food['foodPrice']
+                else:
+                    data['foodPrice'] = 0
 
             if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                 raise Exception('Update information incomplete')
