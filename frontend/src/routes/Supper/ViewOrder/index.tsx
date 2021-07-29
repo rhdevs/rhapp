@@ -22,8 +22,7 @@ const MainContainer = styled.div`
   grid-template-rows: min-content 1fr min-content;
   grid-template-areas: '.' '.' '.';
   width: 100vw;
-  height: fit-content;
-  min-height: 100vh;
+  height: 100vh;
   background-color: ${V1_BACKGROUND};
 `
 
@@ -48,8 +47,8 @@ const ViewOrder = () => {
   }, [dispatch])
 
   return (
-    <MainContainer>
-      <PullToRefresh onRefresh={onRefresh}>
+    <PullToRefresh style={{ height: '100vh' }} onRefresh={onRefresh}>
+      <MainContainer>
         <TopNavBar title="View Order" />
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
           <SupperErrorContent />
@@ -79,9 +78,9 @@ const ViewOrder = () => {
             )}
           </div>
         )}
-      </PullToRefresh>
-      <BottomNavBar />
-    </MainContainer>
+        <BottomNavBar />
+      </MainContainer>
+    </PullToRefresh>
   )
 }
 
