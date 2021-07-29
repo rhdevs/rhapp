@@ -1087,13 +1087,13 @@ def owner_edit_order(supperGroupId):
         if request.method == 'PUT':
             data = request.get_json()
             foodId = ObjectId(data.pop('foodId'))
-            food = db.FoodOrder.find_one({"_id": foodId})
+            food_orig = db.FoodOrder.find_one({"_id": foodId})
 
             if 'updatedPrice' in data['updates'] and data['updates']['updatedPrice']:
                 data['foodPrice'] = data['updates']['updatedPrice']
             else:
                 if data['updates']['updateAction'] == 'Update':
-                    data['foodPrice'] = food['foodPrice']
+                    data['foodPrice'] = food_orig['foodPrice']
                 else:
                     data['foodPrice'] = 0
 
@@ -1147,7 +1147,7 @@ def owner_edit_order(supperGroupId):
                     else:
                         return False
 
-                foods = list(filter(lambda x: check_food_details(food, x), foods))
+                foods = list(filter(lambda x: check_food_details(food_orig, x), foods))
 
                 for food in foods:
                     if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
@@ -1166,10 +1166,10 @@ def owner_edit_order(supperGroupId):
                     data['quantity'] = data['updates']['updatedQuantity']
                     data['foodPrice'] = data['foodPrice'] * data['quantity']
                 else:
-                    data['foodPrice'] = data['foodPrice'] * food['quantity']
+                    data['foodPrice'] = data['foodPrice'] * food_orig['quantity']
 
-                db.Order.update({'foodIds': food['_id']},
-                                {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
+                db.Order.update({'foodIds': food_orig['_id']},
+                                {'$inc': {'totalCost': data['foodPrice'] - food_orig['foodPrice']},
                                  '$set': {'notification': 'Food'}})
                 result = db.FoodOrder.find_one_and_update({'_id': foodId},
                                                           {'$set': data})
