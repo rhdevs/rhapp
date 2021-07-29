@@ -102,7 +102,10 @@ const OrderSummary = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (supperGroup?.status === SupperGroupStatus.CANCELLED || supperGroup?.status === SupperGroupStatus.ORDERED) {
+    if (
+      supperGroup?.status === SupperGroupStatus.CANCELLED ||
+      (supperGroup?.status === SupperGroupStatus.ORDERED && !isLoading)
+    ) {
       history.replace(PATHS.SUPPER_HOME)
       history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     }

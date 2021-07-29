@@ -115,7 +115,7 @@ export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes
   })
 }
 
-export const setSupperGroup = (updatedSupperGroup: SupperGroup) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSupperGroup = (updatedSupperGroup: SupperGroup) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SUPPER_ACTIONS.SET_SUPPER_GROUP,
     supperGroup: updatedSupperGroup,

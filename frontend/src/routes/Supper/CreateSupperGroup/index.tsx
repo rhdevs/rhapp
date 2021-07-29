@@ -5,7 +5,8 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
-import { setSupperGroup } from '../../../store/supper/action/setter'
+import { setCreateGroupPageDetails } from '../../../store/supper/action/level2'
+// import { setSupperGroup } from '../../../store/supper/action/setter'
 import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CreateOrderPageOne } from './Pages/page1'
@@ -63,7 +64,7 @@ export default function CreateSupperGroup() {
   const history = useHistory()
 
   useEffect(() => {
-    dispatch(setSupperGroup(initSupperGroup))
+    dispatch(setCreateGroupPageDetails())
   }, [])
 
   if (!(params.page === '1' || params.page === '2' || params.page === '3')) {
