@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import PullToRefresh from 'pull-to-refresh-react'
-import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
+import { CollatedOrder, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -47,18 +47,15 @@ const LowerRowButton = styled.div`
 `
 
 type Props = {
-  supperGroupIsOpen: boolean
   supperGroup: SupperGroup | null
   collatedOrder: CollatedOrder | null
-  supperGroupIsOrdered: boolean
-  supperGroupIsCancelled: boolean
   showTrackPayment: boolean
 }
 
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  const { isLoading } = useSelector((state: RootState) => state.supper)
+  const { isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
 
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
@@ -69,7 +66,7 @@ const OwnerView = (props: Props) => {
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
-    if (props.supperGroupIsOpen) {
+    if (supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) {
       return (
         <>
           <ButtonContainer>
@@ -170,7 +167,7 @@ const OwnerView = (props: Props) => {
                 />
               </SupperButtonContainer>
             )}
-            {props.supperGroupIsCancelled && (
+            {supperGroup?.status === SupperGroupStatus.CANCELLED && (
               <SupperButtonContainer>
                 <SupperButton
                   onButtonClick={() => history.push(PATHS.SUPPER_HOME)}

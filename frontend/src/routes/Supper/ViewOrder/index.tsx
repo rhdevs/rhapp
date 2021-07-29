@@ -58,11 +58,8 @@ const ViewOrder = () => {
           <div>
             {supperGroup?.ownerId === localStorage.userID ? (
               <OwnerView
-                supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
                 supperGroup={supperGroup}
                 collatedOrder={collatedOrder}
-                supperGroupIsOrdered={selectedSupperGroupStatus === SupperGroupStatus.ORDERED}
-                supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
                 showTrackPayment={
                   selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
                   selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
