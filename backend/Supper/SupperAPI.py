@@ -313,8 +313,8 @@ def supper_group(supperGroupId):
                         'as': 'userList'
                     }
                 },
-                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
-                              }
+                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0,
+                              'userList.profilePictureUrl': 0}
                  }
             ]
 
@@ -469,7 +469,7 @@ def get_order(orderId):
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)
@@ -1231,7 +1231,7 @@ def user_order(supperGroupId, userID):
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)
