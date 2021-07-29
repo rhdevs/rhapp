@@ -237,7 +237,7 @@ export const FoodLine = (props: Props) => {
         priceValue = '$0.00'
       }
       if (updates?.updateAction === UpdateAction.UPDATE) {
-        priceValue = `$${(updates.updatedPrice ?? 0).toFixed(2)}`
+        priceValue = `$${(props.food?.foodPrice ?? 0).toFixed(2)}`
       }
       return (
         <>

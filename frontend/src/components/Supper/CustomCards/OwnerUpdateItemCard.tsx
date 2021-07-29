@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
 import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
 import { QuantityTracker } from '../QuantityTracker'
@@ -69,6 +70,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
   })
   const dispatch = useDispatch()
   const history = useHistory()
+  const { count } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     if (props.foodItem) {
@@ -90,21 +92,18 @@ export const OwnerUpdateItemCard = (props: Props) => {
   }, [touched, watch()])
 
   const onUpdateItemClick = () => {
-    if (!watch('newPrice')) {
-      setValue('newPrice', props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0)
-    }
     handleSubmit((data) => {
       const priceWasUpdated =
         (props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0) === data.newPrice ? false : true
       const quantityWasUpdated =
-        (props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 0) === data.newQuantity ? false : true
+        (props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 0) === count ? false : true
 
       const update: Updates = {
         updateAction: UpdateAction.UPDATE,
         reason: data.editReason,
         change: data.changes,
         ...(priceWasUpdated && { updatedPrice: data.newPrice }),
-        ...(quantityWasUpdated && !props.all && { updatedQuantity: data.newQuantity }),
+        ...(quantityWasUpdated && !props.all && { updatedQuantity: count }),
       }
       dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()

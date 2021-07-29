@@ -20,12 +20,9 @@ import { onRefresh } from '../../../common/reloadPage'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { FormHeader } from '../../../components/Supper/FormHeader'
 import { Controller, useForm } from 'react-hook-form'
-import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
-import { supper } from '../../../store/supper/reducer'
-import Supper from '..'
 
 const MainContainer = styled.div`
   width: 100vw;
