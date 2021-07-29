@@ -27,7 +27,7 @@ const TopContainer = styled.div`
 `
 
 const TopMoneyText = styled.text`
-  width: 20%;
+  width: fit-content;
   margin: auto;
   justify-content: flex-end;
   display: flex;

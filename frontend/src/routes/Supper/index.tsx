@@ -20,6 +20,8 @@ import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { getAllSupperGroups } from '../../store/supper/action/level1/getReqests'
+import { setSupperGroup } from '../../store/supper/action/setter'
+import { initSupperGroup } from '../../store/stubs'
 
 const Background = styled.div`
   display: grid;
@@ -119,6 +121,7 @@ export default function Supper() {
 
   useEffect(() => {
     dispatch(getAllSupperGroups())
+    dispatch(setSupperGroup(initSupperGroup)) // to prevent create group page from being filled with other group details
   }, [dispatch])
 
   let supperGroups: HomeSupperGroup[] | null = allSupperGroups

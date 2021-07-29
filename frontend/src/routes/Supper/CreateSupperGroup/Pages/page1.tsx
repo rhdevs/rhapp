@@ -13,11 +13,11 @@ import { LineProgress } from '../../../../components/Supper/LineProgess'
 import { MaxPriceFixer } from '../../../../components/Supper/MaxPriceFixer'
 import { RestaurantBubbles } from '../../../../components/Supper/RestaurantBubbles'
 import { UnderlinedButton } from '../../../../components/Supper/UnderlinedButton'
-import { restaurantList } from '../../../../store/stubs'
+import { initSupperGroup, restaurantList } from '../../../../store/stubs'
 import { unixToFormattedTime } from '../../../../common/unixToFormattedTime'
 import { RootState } from '../../../../store/types'
 import { PATHS } from '../../../Routes'
-import { ErrorText, initSupperGroup } from '..'
+import { ErrorText } from '..'
 import LoadingSpin from '../../../../components/LoadingSpin'
 import { V1_BLUE } from '../../../../common/colours'
 import { Restaurants, SupperGroup } from '../../../../store/supper/types'
@@ -64,6 +64,7 @@ export const CreateOrderPageOne = () => {
 
   useEffect(() => {
     if (supperGroup) {
+      console.log(supperGroup)
       reset({
         supperGroupName: supperGroup.supperGroupName,
         restaurant: supperGroup.restaurantName as Restaurants,

@@ -93,17 +93,18 @@ export const getViewOrderPageDetails = (supperGroupId: string) => async (
 ) => {
   dispatch(setIsLoading(true))
   await dispatch(getSupperGroupById(supperGroupId))
-    .then(() => {
+    .then(async () => {
       const { supperGroup } = getState().supper
       if (supperGroup) {
-        dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null))
-        if (supperGroup?.ownerId === localStorage.userID) {
-          dispatch(getCollatedOrder(supperGroupId))
-        } else {
-          dispatch(getUserOrder(supperGroupId))
-        }
+        await Promise.all([
+          dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null)),
+          supperGroup?.ownerId === localStorage.userID
+            ? dispatch(getCollatedOrder(supperGroupId))
+            : dispatch(getUserOrder(supperGroupId)),
+        ]).then(() => dispatch(setIsLoading(false)))
+      } else {
+        dispatch(setIsLoading(false))
       }
-      dispatch(setIsLoading(false))
     })
     .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
 }

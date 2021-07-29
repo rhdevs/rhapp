@@ -21,7 +21,6 @@ import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupM
 const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 30px;
   padding-bottom: 10px;
 `
 
