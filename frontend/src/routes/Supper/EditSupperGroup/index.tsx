@@ -26,6 +26,7 @@ import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import { setEditOrderNumber, setSelectedPaymentMethod } from '../../../store/supper/action/setter'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { getEditSupperGroupDetails } from '../../../store/supper/action/level2'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const Background = styled.form`
   width: 100vw;
@@ -464,60 +465,62 @@ const EditSupperGroup = () => {
   }
 
   return (
-    <Background onSubmit={onSubmit}>
-      <TopNavBar
-        title="Edit Group"
-        onLeftClick={() => {
-          Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
-        }}
-      />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          {modalIsOpen && (
-            <ConfirmationModal
-              title="Discard Changes?"
-              hasLeftButton
-              leftButtonText="Delete"
-              onLeftButtonClick={onConfirmDiscardClick}
-              rightButtonText="Cancel"
-              onRightButtonClick={onCancelClick}
-            />
-          )}
-          <BubbleSection
-            error={errorSectionArr.includes(1)}
-            canHide
-            isOpen={editOrderNumber === 1}
-            title="Order Information"
-            number={1}
-          >
-            {orderInformationSection()}
-          </BubbleSection>
-          <BubbleSection
-            error={errorSectionArr.includes(2)}
-            canHide
-            isOpen={editOrderNumber === 2}
-            title="Delivery Information"
-            number={2}
-          >
-            {deliveryInformationSection()}
-          </BubbleSection>
-          <BubbleSection
-            error={errorSectionArr.includes(3)}
-            canHide
-            isOpen={editOrderNumber === 3}
-            title="Payment Information"
-            number={3}
-          >
-            {paymentInformationSection()}
-          </BubbleSection>
-          <ButtonContainer>
-            <SupperButton htmlType="submit" defaultButtonDescription="Save Changes" />
-          </ButtonContainer>
-        </>
-      )}
-    </Background>
+    <PullToRefreshRH>
+      <Background onSubmit={onSubmit}>
+        <TopNavBar
+          title="Edit Group"
+          onLeftClick={() => {
+            Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
+          }}
+        />
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            {modalIsOpen && (
+              <ConfirmationModal
+                title="Discard Changes?"
+                hasLeftButton
+                leftButtonText="Delete"
+                onLeftButtonClick={onConfirmDiscardClick}
+                rightButtonText="Cancel"
+                onRightButtonClick={onCancelClick}
+              />
+            )}
+            <BubbleSection
+              error={errorSectionArr.includes(1)}
+              canHide
+              isOpen={editOrderNumber === 1}
+              title="Order Information"
+              number={1}
+            >
+              {orderInformationSection()}
+            </BubbleSection>
+            <BubbleSection
+              error={errorSectionArr.includes(2)}
+              canHide
+              isOpen={editOrderNumber === 2}
+              title="Delivery Information"
+              number={2}
+            >
+              {deliveryInformationSection()}
+            </BubbleSection>
+            <BubbleSection
+              error={errorSectionArr.includes(3)}
+              canHide
+              isOpen={editOrderNumber === 3}
+              title="Payment Information"
+              number={3}
+            >
+              {paymentInformationSection()}
+            </BubbleSection>
+            <ButtonContainer>
+              <SupperButton htmlType="submit" defaultButtonDescription="Save Changes" />
+            </ButtonContainer>
+          </>
+        )}
+      </Background>
+    </PullToRefreshRH>
   )
 }
 

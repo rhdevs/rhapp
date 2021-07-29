@@ -19,6 +19,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
 import { getAddFoodItemPageDetails } from '../../../store/supper/action/level2'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const Background = styled.form`
   width: 100vw;
@@ -157,57 +158,59 @@ const AddFoodItem = () => {
   }
 
   return (
-    <Background onSubmit={onSubmit}>
-      <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
-      {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <MainContainer>
-          <FoodItemHeader>{foodMenu?.foodMenuName}</FoodItemHeader>
-          {foodMenu?.custom?.map((custom, index) => (
-            <SelectField
-              custom={custom}
-              index={index}
-              key={index}
+    <PullToRefreshRH>
+      <Background onSubmit={onSubmit}>
+        <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
+        {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <MainContainer>
+            <FoodItemHeader>{foodMenu?.foodMenuName}</FoodItemHeader>
+            {foodMenu?.custom?.map((custom, index) => (
+              <SelectField
+                custom={custom}
+                index={index}
+                key={index}
+                register={register}
+                clearErrors={clearErrors}
+                setValue={setValue}
+                errors={errors}
+                watch={watch}
+              />
+            ))}
+            <CancelActionField
+              cancelActionError={errors.cancelAction}
               register={register}
               clearErrors={clearErrors}
               setValue={setValue}
-              errors={errors}
-              watch={watch}
             />
-          ))}
-          <CancelActionField
-            cancelActionError={errors.cancelAction}
-            register={register}
-            clearErrors={clearErrors}
-            setValue={setValue}
-          />
-          <Controller
-            name="comments"
-            render={({ onChange, value }) => (
-              <InputRow
-                placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
-                textarea
-                value={value}
-                onChange={onChange}
-                {...register('comments')}
-              />
-            )}
-            control={control}
-            defaultValue={null}
-          />
-          <QuantityTracker margin="0.7rem 0" center min={1} default={1} />
-          <AddUpdateCartButton
-            isGrey={!isFormFieldsValid()}
-            htmlType="submit"
-            add
-            currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
-          />
-          <InformationCard disclaimer margin="0" />
-        </MainContainer>
-      )}
-    </Background>
+            <Controller
+              name="comments"
+              render={({ onChange, value }) => (
+                <InputRow
+                  placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
+                  textarea
+                  value={value}
+                  onChange={onChange}
+                  {...register('comments')}
+                />
+              )}
+              control={control}
+              defaultValue={null}
+            />
+            <QuantityTracker margin="0.7rem 0" center min={1} default={1} />
+            <AddUpdateCartButton
+              isGrey={!isFormFieldsValid()}
+              htmlType="submit"
+              add
+              currentTotal={String((((foodMenu?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
+            />
+            <InformationCard disclaimer margin="0" />
+          </MainContainer>
+        )}
+      </Background>
+    </PullToRefreshRH>
   )
 }
 

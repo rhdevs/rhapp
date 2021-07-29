@@ -18,6 +18,7 @@ import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/ac
 import { getOrderPageDetails } from '../../../store/supper/action/level2'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const Background = styled.div`
   width: 100vw;
@@ -86,78 +87,80 @@ const Order = () => {
   }
 
   return (
-    <Background>
-      <TopNavBar
-        title="Order"
-        onLeftClick={() =>
-          !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
-        }
-      />
-      {leaveGroupModalIsOpen && (
-        <LeaveGroupModal
-          supperGroupId={params.supperGroupId}
-          onLeftButtonClick={() => {
-            if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-              history.push(`${PATHS.SUPPER_HOME}`)
-            } else {
-              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
-            }
-          }}
-          modalSetter={setLeaveGroupModalIsOpen}
+    <PullToRefreshRH>
+      <Background>
+        <TopNavBar
+          title="Order"
+          onLeftClick={() =>
+            !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
+          }
         />
-      )}
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          {isFoodMenuModalOpen && (
-            <ViewMenuFoodModal
-              orderId={orderId ?? order?.orderId}
-              supperGroupId={Number(params.supperGroupId)}
-              foodList={order?.foodList}
-              foodMenuId={foodMenuModalId}
-              menuFoodName={modalMenuFoodName}
-              viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
-            />
-          )}
-          <SupperGroupCard isHome={false} supperGroup={supperGroup} margin="0 23px 23px" />
-          <SearchBarContainer>
-            <StickyContainer>
-              <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
-              <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
-              {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
-            </StickyContainer>
-            <MenuSection
-              supperGroupId={supperGroup?.supperGroupId}
-              orderId={orderId ?? order?.orderId}
-              order={order}
-              menu={
-                searchValue === ''
-                  ? restaurant?.menu
-                  : restaurant?.menu.filter((food) =>
-                      food.foodMenuName.toLowerCase().includes(searchValue.toLowerCase()),
-                    )
+        {leaveGroupModalIsOpen && (
+          <LeaveGroupModal
+            supperGroupId={params.supperGroupId}
+            onLeftButtonClick={() => {
+              if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+                history.push(`${PATHS.SUPPER_HOME}`)
+              } else {
+                history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
               }
-            />
-          </SearchBarContainer>
-          {order?.foodList.length ? (
-            <>
-              <br />
-              <br />
-              <ViewCartButton
-                numberOfItems={numberOfItems()}
-                currentTotal={order?.totalCost}
-                onClick={() => {
-                  history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                }}
+            }}
+            modalSetter={setLeaveGroupModalIsOpen}
+          />
+        )}
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            {isFoodMenuModalOpen && (
+              <ViewMenuFoodModal
+                orderId={orderId ?? order?.orderId}
+                supperGroupId={Number(params.supperGroupId)}
+                foodList={order?.foodList}
+                foodMenuId={foodMenuModalId}
+                menuFoodName={modalMenuFoodName}
+                viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
               />
-            </>
-          ) : (
-            <></>
-          )}
-        </>
-      )}
-    </Background>
+            )}
+            <SupperGroupCard isHome={false} supperGroup={supperGroup} margin="0 23px 23px" />
+            <SearchBarContainer>
+              <StickyContainer>
+                <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
+                <SearchBar placeholder="Search for food" value={searchValue} onChange={onChange} />
+                {searchValue === '' && <MenuTabs menuSections={restaurant?.allSection} />}
+              </StickyContainer>
+              <MenuSection
+                supperGroupId={supperGroup?.supperGroupId}
+                orderId={orderId ?? order?.orderId}
+                order={order}
+                menu={
+                  searchValue === ''
+                    ? restaurant?.menu
+                    : restaurant?.menu.filter((food) =>
+                        food.foodMenuName.toLowerCase().includes(searchValue.toLowerCase()),
+                      )
+                }
+              />
+            </SearchBarContainer>
+            {order?.foodList.length ? (
+              <>
+                <br />
+                <br />
+                <ViewCartButton
+                  numberOfItems={numberOfItems()}
+                  currentTotal={order?.totalCost}
+                  onClick={() => {
+                    history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+                  }}
+                />
+              </>
+            ) : (
+              <></>
+            )}
+          </>
+        )}
+      </Background>
+    </PullToRefreshRH>
   )
 }
 
