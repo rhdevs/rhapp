@@ -48,7 +48,7 @@ const InputText = styled.input`
   width: 100%;
 `
 const ErrorContainer = styled.div`
-  margin: 10px 0px;
+  margin: 10px 0px 0px;
 `
 
 const ErrorText = styled.p<{ padding?: string }>`
