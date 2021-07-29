@@ -1133,15 +1133,21 @@ def owner_edit_order(supperGroupId):
                         food['orderId'] = item['_id']
                     foods += item['foodList']
 
-                foods = list(filter(lambda x:
-                                    x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'] and
-                                    x['cancelAction'] == food['cancelAction'] and
-                                    x['comments'] == food['comments']
-                                    if 'comments' in x else
-                                    x['foodMenuId'] == food['foodMenuId'] and
-                                    x['custom'] == food['custom'] and
-                                    x['cancelAction'] == food['cancelAction'], foods))
+                def check_food_details(food_main, food_sub):
+                    if 'comments' in food_main and food_main['comments'] and \
+                       'comments' in food_sub and food_sub['comments']:
+                        return food_main['foodMenuId'] == food_sub['foodMenuId'] and \
+                                food_main['custom'] == food_sub['custom'] and \
+                                food_main['cancelAction'] == food_sub['cancelAction'] and \
+                                food_main['comments'] == food_sub['comments']
+                    elif 'comments' not in food_main and 'comments' not in food_sub:
+                        return food_main['foodMenuId'] == food_sub['foodMenuId'] and \
+                                food_main['custom'] == food_sub['custom'] and \
+                                food_main['cancelAction'] == food_sub['cancelAction']
+                    else:
+                        return False
+
+                foods = list(filter(lambda x: check_food_details(food, x), foods))
 
                 for food in foods:
                     if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
