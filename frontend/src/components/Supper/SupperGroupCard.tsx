@@ -191,7 +191,10 @@ export const SupperGroupCard = (props: Props) => {
     <CancelGroupModal
       modalSetter={setIsCancelGroupModalOpen}
       withDispatch
-      onLeftButtonClick={() => history.goBack()}
+      onLeftButtonClick={() => {
+        history.replace(PATHS.SUPPER_HOME)
+        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+      }}
       supperGroupId={rawSupperGroupId}
     />
   )
@@ -200,8 +203,12 @@ export const SupperGroupCard = (props: Props) => {
     <LeaveGroupModal
       modalSetter={setIsLeaveModalOpen}
       onLeftButtonClick={() => {
-        history.replace(PATHS.SUPPER_HOME)
-        history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
+        if (supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) {
+          history.replace(PATHS.SUPPER_HOME)
+          history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
+        } else {
+          history.push(PATHS.SUPPER_HOME)
+        }
       }}
       supperGroupId={rawSupperGroupId}
     />
@@ -211,8 +218,8 @@ export const SupperGroupCard = (props: Props) => {
     if (isClickableCard) {
       if (props.onClick) return props.onClick(e)
       else {
+        // User is the owner or already has an ongoing order
         if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-          // User is the owner or already has an ongoing order
           if (ownerId === localStorage.userID && supperGroup?.status === SupperGroupStatus.CLOSED) {
             history.push(`${PATHS.ORDER_SUMMARY}/${rawSupperGroupId}`)
           } else {

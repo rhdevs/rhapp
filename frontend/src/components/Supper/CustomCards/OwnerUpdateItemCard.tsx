@@ -149,7 +149,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
                 required: false,
               })}
             />
-            <FormHeader headerName="New Price" topMargin />
+            <FormHeader headerName="New Price (per quantity)" topMargin />
             <Input
               type="number"
               placeholder="Indicate new price"

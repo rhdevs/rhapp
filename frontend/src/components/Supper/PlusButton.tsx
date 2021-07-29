@@ -27,10 +27,18 @@ export const PlusButton = (props: Props) => {
   useEffect(() => {
     if (props.isAdding) {
       if (count >= MAX) {
-        setButtonColor(buttonColor === V1_RED ? SHADED_RED : SHADED_DARK_BLUE)
+        if (buttonColor === V1_RED) {
+          setButtonColor(SHADED_RED)
+        } else if (buttonColor === V1_BLUE) {
+          setButtonColor(SHADED_DARK_BLUE)
+        }
       } else {
         if (buttonColor === SHADED_RED || buttonColor === SHADED_DARK_BLUE) {
-          setButtonColor(buttonColor === SHADED_RED ? V1_RED : V1_BLUE)
+          if (buttonColor === SHADED_RED) {
+            setButtonColor(V1_RED)
+          } else if (buttonColor === SHADED_DARK_BLUE) {
+            setButtonColor(V1_BLUE)
+          }
         }
       }
     }

@@ -109,14 +109,13 @@ type Props = {
 
 export const UserPaymentStatus = (props: Props) => {
   const { isExpandAll, expandedCount } = useSelector((state: RootState) => state.supper)
-  const [cancelName, setCancelName] = useState<boolean>()
+  const [cancelName, setCancelName] = useState<boolean>(props.hasReceived)
   const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    console.log('hellllo')
-    setCancelName(props.hasReceived)
-  }, [])
+  // useEffect(() => {
+  //   setCancelName(props.hasReceived)
+  // }, [])
 
   useEffect(() => {
     if (isExpandAll) {
