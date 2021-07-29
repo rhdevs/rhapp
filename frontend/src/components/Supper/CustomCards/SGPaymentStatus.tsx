@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
 import { onRefresh } from '../../../common/reloadPage'
-import { SupperGroup } from '../../../store/supper/types'
+import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { UserPaymentStatus } from '../UserPaymentStatus'
@@ -22,8 +22,9 @@ const StyledText = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   margin: 10px auto;
+  width: 100%;
 `
 
 const TopSection = styled.div`
@@ -48,6 +49,7 @@ export const SGPaymentStatus = (props: Props) => {
   const dispatch = useDispatch()
   const { isExpandAll } = useSelector((state: RootState) => state.supper)
   const buttonText = isExpandAll ? 'Expand all' : 'Collapse all'
+  const unclickable = props.supperGroup?.status === SupperGroupStatus.COMPLETED
 
   const groupWithoutOwnerOrder = props.supperGroup?.orderList?.filter(
     (order) => order.user.userID !== localStorage.userID,
@@ -99,7 +101,7 @@ export const SGPaymentStatus = (props: Props) => {
           })}
         </>
       ) : (
-        <StyledText>No orders found!</StyledText>
+        <StyledText>nobody ordered w u! loser!!</StyledText>
       )}
     </>
   )

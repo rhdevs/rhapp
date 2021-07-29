@@ -16,6 +16,7 @@ import { SupperErrorContent } from '../../../components/Supper/SupperErrorConten
 import { onRefresh } from '../../../common/reloadPage'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
 import { PATHS } from '../../Routes'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const MainContainer = styled.div`
   display: grid;
@@ -47,7 +48,7 @@ const ViewOrder = () => {
   }, [dispatch, params.supperGroupId, supperGroup?.status])
 
   return (
-    <PullToRefresh style={{ height: '100vh' }} onRefresh={onRefresh}>
+    <PullToRefreshRH>
       <MainContainer>
         <TopNavBar title="View Order" />
         {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
@@ -77,7 +78,7 @@ const ViewOrder = () => {
         )}
         <BottomNavBar />
       </MainContainer>
-    </PullToRefresh>
+    </PullToRefreshRH>
   )
 }
 

@@ -277,7 +277,7 @@ export const SGStatusCard = (props: Props) => {
         {!props.statusOnly && (
           <>
             {showContentBody()}
-            {!isCancelled && props.isOwner && (
+            {!isCancelled && !(props.supperGroupStatus === SupperGroupStatus.COMPLETED) && props.isOwner && (
               <OwnerButtonContainer>
                 {isLoading ? (
                   <Skeleton width="150px" height="14px" />

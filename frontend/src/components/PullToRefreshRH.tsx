@@ -1,13 +1,23 @@
 import React from 'react'
 
+import styled from 'styled-components'
 import { onRefresh } from '../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 
+export const PullToRefreshContainer = styled(PullToRefresh)`
+  &.pull-down-container {
+    overflow-y: hidden;
+    height: 100%;
+    max-height: 100%;
+    position: relative;
+  }
+`
+
 const PullToRefreshRH = ({ children }: { children: React.ReactNode }) => {
   return (
-    <PullToRefresh style={{ height: '100vh' }} onRefresh={onRefresh}>
+    <PullToRefreshContainer style={{ height: '100vh' }} onRefresh={onRefresh}>
       {children}
-    </PullToRefresh>
+    </PullToRefreshContainer>
   )
 }
 export default PullToRefreshRH
