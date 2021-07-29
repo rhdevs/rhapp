@@ -64,12 +64,13 @@ const MoneyText = styled.text`
   font-size: ${0.85 * 14}px;
 `
 
-const LeftContainer = styled.div`
+const LeftContainer = styled.div<{ unclickable?: boolean }>`
   width: 50%;
   margin: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
+  ${(props) => props.unclickable && 'cursor: not-allowed;'}
 `
 
 const NameText = styled.text<{ cancelName?: boolean }>`
@@ -163,9 +164,14 @@ export const UserPaymentStatus = (props: Props) => {
   return (
     <MainContainer>
       <TopContainer>
-        <LeftContainer>
+        <LeftContainer unclickable={props.unclickable}>
           <CheckboxContainer>
-            <Checkbox margin="auto 5px auto 0" isChecked={cancelName} onClick={onClick} />
+            <Checkbox
+              margin="auto 5px auto 0"
+              isChecked={cancelName}
+              onClick={onClick}
+              isDisabled={props.unclickable}
+            />
           </CheckboxContainer>
           <NameText onClick={onClick} cancelName={cancelName}>
             {props.name}
@@ -181,7 +187,7 @@ export const UserPaymentStatus = (props: Props) => {
         {isExpanded && (
           <>
             <DetailsContainer>
-              {props.phoneNumber}
+              {props.phoneNumber === 0 ? '-' : props.phoneNumber}
               <TelegramShareButton telegramHandle={props.telegramHandle} />
             </DetailsContainer>
             {props.foodList.map((food, index) => {
