@@ -174,7 +174,7 @@ const OwnerView = (props: Props) => {
             {props.supperGroupIsCancelled && (
               <SupperButtonContainer>
                 <SupperButton
-                  onButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+                  onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
                   defaultButtonDescription="Main Page"
                 />
               </SupperButtonContainer>

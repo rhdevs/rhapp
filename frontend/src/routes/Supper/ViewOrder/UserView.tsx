@@ -109,7 +109,10 @@ const UserView = (props: Props) => {
         <LeaveGroupModal
           supperGroupId={params.supperGroupId}
           onLeftButtonClick={() => {
-            if ((props.supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+            if (
+              (props.supperGroup?.userIdList ?? []).includes(localStorage.userID) ||
+              (props.supperGroup?.status !== SupperGroupStatus.PENDING && props.supperGroupIsOpen)
+            ) {
               history.push(`${PATHS.SUPPER_HOME}`)
             } else {
               history.replace(PATHS.SUPPER_HOME)
