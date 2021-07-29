@@ -80,7 +80,7 @@ export const NotificationBar = () => {
     setIsVisible(false)
     dispatch(closeSupperNotification(supperNotifications[0].supperGroupId))
     //TODO: Currently it will only open the first notification, should have an interface for when there is more than 1
-    history.push(`${PATHS.VIEW_ORDER}/${supperGroupId}`)
+    history.replace(`${PATHS.VIEW_ORDER}/${supperGroupId}`)
   }
 
   const onCloseClick = () => {
