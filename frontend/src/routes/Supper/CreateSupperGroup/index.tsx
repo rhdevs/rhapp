@@ -5,8 +5,8 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import { initSupperGroup } from '../../../store/stubs'
 import { setSupperGroup } from '../../../store/supper/action/setter'
-import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CreateOrderPageOne } from './Pages/page1'
 import { CreateOrderPageTwo } from './Pages/page2'
@@ -37,25 +37,6 @@ export const InputText = styled.input<{ flex?: boolean; error?: FieldError | und
   ${(props) => props.flex && 'display: flex;'}
   ${(props) => props.error && 'borderColor: red; background:#ffd1d1;'}
 `
-
-export const initSupperGroup: SupperGroup = {
-  costLimit: undefined,
-  createdAt: undefined,
-  currentFoodCost: 0,
-  location: '',
-  numOrders: 0,
-  ownerId: localStorage.userID,
-  ownerName: '',
-  ownerTele: '',
-  paymentInfo: [],
-  restaurantName: '',
-  splitAdditionalCost: undefined,
-  status: SupperGroupStatus.OPEN,
-  supperGroupId: undefined,
-  supperGroupName: '',
-  totalPrice: 0,
-  closingTime: undefined,
-}
 
 export default function CreateSupperGroup() {
   const params = useParams<{ page: string }>()
