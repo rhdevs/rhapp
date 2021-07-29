@@ -1094,14 +1094,8 @@ def owner_edit_order(supperGroupId):
             else:
                 data['foodPrice'] = 0
 
-            if data['updates']['updateAction'] == 'Update':
-                if any(k not in data['updates'] for k in ('reason', 'change')) \
-                        or data['updates']['reason'] is None \
-                        or data['updates']['change'] is None:
-                    raise Exception('Update information incomplete')
-            elif data['updates']['updateAction'] == 'Remove':
-                if 'reason' not in data['updates'] or data['updates']['reason'] is None:
-                    raise Exception('Update information incomplete')
+            if 'reason' not in data['updates'] or data['updates']['reason'] is None:
+                raise Exception('Update information incomplete')
 
             if 'global' in data['updates'] and data['updates'].pop('global'):
                 pipeline = [
