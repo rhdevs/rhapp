@@ -94,14 +94,19 @@ export const OwnerUpdateItemCard = (props: Props) => {
   const onUpdateItemClick = () => {
     handleSubmit((data) => {
       const priceWasUpdated =
-        (props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0) === data.newPrice ? false : true
+        data.newPrice === null
+          ? false
+          : (props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0) === data.newPrice
+          ? false
+          : true
       const quantityWasUpdated =
         (props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 0) === count ? false : true
+      const hasChanges = data.changes !== ''
 
       const update: Updates = {
         updateAction: UpdateAction.UPDATE,
         reason: data.editReason,
-        change: data.changes,
+        ...(hasChanges && { change: data.changes }),
         ...(priceWasUpdated && { updatedPrice: data.newPrice }),
         ...(quantityWasUpdated && !props.all && { updatedQuantity: count }),
       }
