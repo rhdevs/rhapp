@@ -44,7 +44,7 @@ const ViewOrder = () => {
 
   useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
-  }, [dispatch, params.supperGroupId])
+  }, [dispatch, params.supperGroupId, supperGroup?.status])
 
   return (
     <PullToRefresh style={{ height: '100vh' }} onRefresh={onRefresh}>
