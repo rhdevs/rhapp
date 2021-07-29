@@ -47,6 +47,9 @@ const InputText = styled.input`
   height: 35px;
   width: 100%;
 `
+const ErrorContainer = styled.div`
+  margin: 10px 0px;
+`
 
 const ErrorText = styled.p<{ padding?: string }>`
   margin: 0;
@@ -79,6 +82,7 @@ const OrderSummary = () => {
   )
   const [twoStepModalIsOpen, setTwoStepModalIsOpen] = useState<boolean>(false)
   const [hasChangedModal, setHasChangedModal] = useState<boolean>(false)
+  const [isPlacingOrder, setIsPlacingOrder] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
@@ -98,7 +102,9 @@ const OrderSummary = () => {
   }
 
   useEffect(() => {
-    dispatch(getOrderSummaryPageDetails(params.supperGroupId))
+    if (!isPlacingOrder) {
+      dispatch(getOrderSummaryPageDetails(params.supperGroupId))
+    }
   }, [dispatch])
 
   useEffect(() => {
@@ -139,6 +145,7 @@ const OrderSummary = () => {
         clearErrors('estArrivalTime')
       }
       dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
+      setIsPlacingOrder(true)
       history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
@@ -193,7 +200,11 @@ const OrderSummary = () => {
                     )}
                     defaultValue={null}
                   />
-                  {errors.estArrivalTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
+                  <ErrorContainer>
+                    {errors.estArrivalTime?.type === 'required' && (
+                      <ErrorText>Estimated Arrival Time required!</ErrorText>
+                    )}
+                  </ErrorContainer>
                 </FormContainer>
                 <FormContainer>
                   <FormHeader headerName="Collection Point" isCompulsory />
@@ -208,7 +219,7 @@ const OrderSummary = () => {
                     style={errors.location ? errorStyling : {}}
                     defaultValue={supperGroup?.location ?? ''}
                   />
-                  {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
+                  {errors.location?.type === 'required' && <ErrorText>Collection Point required!</ErrorText>}
                   {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
                 </FormContainer>
               </>
