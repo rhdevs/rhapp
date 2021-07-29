@@ -16,7 +16,7 @@ import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
+import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoStepCancelGroupModal'
 
 const SupperButtonContainer = styled.div`
   display: flex;
@@ -132,14 +132,13 @@ const OwnerView = (props: Props) => {
         />
       )}
       {cancelGroupModalIsOpen && (
-        <CancelGroupModal
-          withDispatch
+        <TwoStepCancelGroupModal
           modalSetter={setCancelGroupModalIsOpen}
-          onLeftButtonClick={() => {
-            history.goBack()
-            history.replace(PATHS.SUPPER_HOME)
-          }}
           supperGroupId={params.supperGroupId}
+          onLeftButtonClick={() => {
+            history.replace(PATHS.SUPPER_HOME)
+            history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+          }}
         />
       )}
       {endGroupModalIsOpen && (
