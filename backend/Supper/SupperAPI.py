@@ -1038,7 +1038,7 @@ def collated_orders(supperGroupId):
         for food in data['foods']:
             hash_dict = {'custom': food['custom'],
                          'cancelAction': food['cancelAction']}
-            if 'comments' in food:
+            if 'comments' in food and food['comments']:
                 hash_dict['comments'] = food['comments']
             if 'updates' in food:
                 hash_dict['updates'] = food['updates']
@@ -1144,7 +1144,7 @@ def owner_edit_order(supperGroupId):
                                     x['cancelAction'] == food['cancelAction'], foods))
 
                 for food in foods:
-                    if 'updatedQuantity' in data['updates']:
+                    if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
                         data['quantity'] = data['updates']['updatedQuantity']
                         data['foodPrice'] = data['foodPrice'] * data['quantity']
                     else:
@@ -1156,7 +1156,7 @@ def owner_edit_order(supperGroupId):
                                         {'$set': data})
 
             else:
-                if 'updatedQuantity' in data['updates']:
+                if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
                     data['quantity'] = data['updates']['updatedQuantity']
                     data['foodPrice'] = data['foodPrice'] * data['quantity']
                 else:
