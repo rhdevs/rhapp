@@ -19,6 +19,7 @@ const ButtonContainer = styled.div`
   display: flex;
   margin: 2rem auto 1rem auto;
   justify-content: space-around;
+  padding: 0 1rem;
 `
 
 const BottomContainer = styled.div`

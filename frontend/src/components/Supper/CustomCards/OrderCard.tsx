@@ -488,6 +488,7 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
+                  console.log(orderId)
                   return (
                     <FoodLine
                       key={foodIndex}

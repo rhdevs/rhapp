@@ -40,7 +40,15 @@ export const PrivateRoute = (routeProps: any) => {
       <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
     )
   } else {
-    return <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+    return (
+      <Route
+        {...rest}
+        render={(props) => {
+          console.log(props.location)
+          return <Redirect push to={{ pathname: '/auth/login', state: { from: props.location.pathname } }} />
+        }}
+      />
+    )
   }
 }
 
@@ -50,13 +58,24 @@ export const PublicRoute = (routeProps: any) => {
   return <Route {...rest} sensitive render={(props) => <Component {...props} />} />
 }
 
+type StateType = {
+  from: { pathname: string }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const AuthenticateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
 
   if (localStorage.token) {
     return getIsLoggedIn() ? (
-      <Route {...rest} render={() => <Redirect push to="/" />} />
+      <Route
+        {...rest}
+        render={(props) => {
+          const state = props.location.state as StateType
+          const redirectUrl = state?.from ?? '/'
+          return <Redirect push to={redirectUrl} />
+        }}
+      />
     ) : (
       <Route {...rest} render={(props) => <Component {...props} />} />
     )

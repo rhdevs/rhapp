@@ -11,7 +11,6 @@ import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartBut
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
@@ -139,7 +138,6 @@ const AddFoodItem = () => {
       )
       if (satisfiedFields.length === compulsoryFields.length) return true
     }
-
     return false
   }
 

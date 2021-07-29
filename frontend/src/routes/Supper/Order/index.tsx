@@ -120,7 +120,7 @@ const Order = () => {
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
-          <SupperGroupCard isHome={false} supperGroup={supperGroup} />
+          <SupperGroupCard isHome={false} supperGroup={supperGroup} margin="0 23px 23px" />
           <SearchBarContainer>
             <StickyContainer>
               <Restaurant>{restaurant?.name ?? '-'}</Restaurant>
