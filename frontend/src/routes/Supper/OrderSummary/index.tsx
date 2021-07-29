@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import PullToRefresh from 'pull-to-refresh-react'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -23,6 +22,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const MainContainer = styled.div`
   width: 100vw;
@@ -154,8 +154,8 @@ const OrderSummary = () => {
   }
 
   return (
-    <MainContainer>
-      <PullToRefresh onRefresh={onRefresh}>
+    <PullToRefreshRH>
+      <MainContainer>
         <TopNavBar title="Order Summary" onLeftClick={onLeftClick} />
         {isLoading ? (
           <LoadingSpin />
@@ -239,8 +239,8 @@ const OrderSummary = () => {
             <InformationCard updateSummary />
           </>
         )}
-      </PullToRefresh>
-    </MainContainer>
+      </MainContainer>
+    </PullToRefreshRH>
   )
 }
 

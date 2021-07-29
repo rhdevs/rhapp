@@ -145,39 +145,37 @@ const OwnerView = (props: Props) => {
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
-      <PullToRefresh onRefresh={onRefresh}>
-        {isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <>
-            <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-            <OrderCard
-              supperGroup={props.supperGroup}
-              ownerId={localStorage.userID}
-              supperGroupStatus={props.supperGroup?.status}
-              collatedOrder={props.collatedOrder}
-              order={ownerOrder}
-            />
-            {showBottomSection()}
-            {props.showTrackPayment && !isLoading && (
-              <SupperButtonContainer>
-                <SupperButton
-                  onButtonClick={() => setEndGroupModalIsOpen(true)}
-                  defaultButtonDescription="End Supper Group"
-                />
-              </SupperButtonContainer>
-            )}
-            {supperGroup?.status === SupperGroupStatus.CANCELLED && (
-              <SupperButtonContainer>
-                <SupperButton
-                  onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
-                  defaultButtonDescription="Main Page"
-                />
-              </SupperButtonContainer>
-            )}
-          </>
-        )}
-      </PullToRefresh>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+          <OrderCard
+            supperGroup={props.supperGroup}
+            ownerId={localStorage.userID}
+            supperGroupStatus={props.supperGroup?.status}
+            collatedOrder={props.collatedOrder}
+            order={ownerOrder}
+          />
+          {showBottomSection()}
+          {props.showTrackPayment && !isLoading && (
+            <SupperButtonContainer>
+              <SupperButton
+                onButtonClick={() => setEndGroupModalIsOpen(true)}
+                defaultButtonDescription="End Supper Group"
+              />
+            </SupperButtonContainer>
+          )}
+          {supperGroup?.status === SupperGroupStatus.CANCELLED && (
+            <SupperButtonContainer>
+              <SupperButton
+                onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
+                defaultButtonDescription="Main Page"
+              />
+            </SupperButtonContainer>
+          )}
+        </>
+      )}
     </>
   )
 }

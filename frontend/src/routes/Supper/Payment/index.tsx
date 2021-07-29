@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 import { FormHeader } from '../../../components/Supper/FormHeader'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { MarkPaymentCompleteModal } from '../../../components/Supper/Modals/MarkPaymentCompleteModal'
@@ -103,46 +104,48 @@ const Payment = () => {
   }
 
   return (
-    <Background>
-      <TopNavBar title="Payment" onLeftClick={onLeftClick} />
-      {markPaymentCompleteModalIsOpen && (
-        <MarkPaymentCompleteModal
-          modalSetter={setMarkPaymentCompleteModalIsOpen}
-          orderId={params.orderId}
-          phoneNumber={watch('phoneNumber')}
-          paymentMethod={watch('paymentMethod')[0]}
-        />
-      )}
-      {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
-      <Form onSubmit={onSubmit}>
-        <FormSection>
-          <FormHeader fontSize="15px" headerName="Which payment mode did you pay via?" isCompulsory />
-          <PaymentMethodBubbles
-            onlyOne
-            {...register('paymentMethod', { required: true, validate: (input) => input.length !== 0 })}
-            paymentMethods={paymentMethods}
+    <PullToRefreshRH>
+      <Background>
+        <TopNavBar title="Payment" onLeftClick={onLeftClick} />
+        {markPaymentCompleteModalIsOpen && (
+          <MarkPaymentCompleteModal
+            modalSetter={setMarkPaymentCompleteModalIsOpen}
+            orderId={params.orderId}
+            phoneNumber={watch('phoneNumber')}
+            paymentMethod={watch('paymentMethod')[0]}
           />
-          {errors.paymentMethod && <ErrorText>Payment method required!</ErrorText>}
-        </FormSection>
-        <FormSection>
-          <FormHeader fontSize="15px" headerName="What is your phone number?" isCompulsory />
-          <Input
-            type="number"
-            defaultValue={''}
-            placeholder="Phone Number"
-            name="phoneNumber"
-            ref={register({
-              required: true,
-              valueAsNumber: true,
-            })}
-            style={errors.phoneNumber ? errorStyling : {}}
-          />
-          {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
-        </FormSection>
-        <SupperButton style={{ marginTop: '1.5rem' }} defaultButtonDescription="Done" htmlType="submit" center />
-      </Form>
-      <BottomNavBar />
-    </Background>
+        )}
+        {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
+        <Form onSubmit={onSubmit}>
+          <FormSection>
+            <FormHeader fontSize="15px" headerName="Which payment mode did you pay via?" isCompulsory />
+            <PaymentMethodBubbles
+              onlyOne
+              {...register('paymentMethod', { required: true, validate: (input) => input.length !== 0 })}
+              paymentMethods={paymentMethods}
+            />
+            {errors.paymentMethod && <ErrorText>Payment method required!</ErrorText>}
+          </FormSection>
+          <FormSection>
+            <FormHeader fontSize="15px" headerName="What is your phone number?" isCompulsory />
+            <Input
+              type="number"
+              defaultValue={''}
+              placeholder="Phone Number"
+              name="phoneNumber"
+              ref={register({
+                required: true,
+                valueAsNumber: true,
+              })}
+              style={errors.phoneNumber ? errorStyling : {}}
+            />
+            {errors.phoneNumber?.type === 'required' && <ErrorText>Phone Number required!</ErrorText>}
+          </FormSection>
+          <SupperButton style={{ marginTop: '1.5rem' }} defaultButtonDescription="Done" htmlType="submit" center />
+        </Form>
+        <BottomNavBar />
+      </Background>
+    </PullToRefreshRH>
   )
 }
 

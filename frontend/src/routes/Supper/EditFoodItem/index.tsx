@@ -20,6 +20,7 @@ import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { updateFoodInOrder } from '../../../store/supper/action/level1/putRequests'
 import { getEditFoodItemDetails } from '../../../store/supper/action/level2'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const MainContainer = styled.form`
   width: 100vw;
@@ -223,70 +224,72 @@ const EditFoodItem = () => {
   }, [food, reset])
 
   return (
-    <MainContainer onSubmit={onSubmit}>
-      <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
-      {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          {removeItemModalIsOpen && (
-            <RemoveItemModal
-              modalSetter={setRemoveItemModalIsOpen}
-              onLeftButtonClick={() => history.goBack()}
-              orderId={params.orderId}
-              foodId={params.foodId}
-            />
-          )}
-          <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
-            <FoodItemHeader>{food?.foodName}</FoodItemHeader>
-            <>
-              {food?.custom?.map((custom, index) => (
-                <SelectField
-                  custom={custom}
-                  index={index}
-                  key={index}
-                  register={register}
-                  clearErrors={clearErrors}
-                  setValue={setValue}
-                  errors={errors}
-                  watch={watch}
-                />
-              ))}
-            </>
+    <PullToRefreshRH>
+      <MainContainer onSubmit={onSubmit}>
+        <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
+        {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            {removeItemModalIsOpen && (
+              <RemoveItemModal
+                modalSetter={setRemoveItemModalIsOpen}
+                onLeftButtonClick={() => history.goBack()}
+                orderId={params.orderId}
+                foodId={params.foodId}
+              />
+            )}
+            <MainCard flexDirection="column" padding="21px" margin="0 23px 23px">
+              <FoodItemHeader>{food?.foodName}</FoodItemHeader>
+              <>
+                {food?.custom?.map((custom, index) => (
+                  <SelectField
+                    custom={custom}
+                    index={index}
+                    key={index}
+                    register={register}
+                    clearErrors={clearErrors}
+                    setValue={setValue}
+                    errors={errors}
+                    watch={watch}
+                  />
+                ))}
+              </>
 
-            <CancelActionField
-              cancelActionError={errors.cancelAction}
-              register={register}
-              clearErrors={clearErrors}
-              setValue={setValue}
-              defaultValue={food?.cancelAction as CancelAction}
-            />
-            <Controller
-              name="comments"
-              render={({ onChange, value }) => (
-                <InputRow
-                  placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
-                  textarea
-                  value={value}
-                  onChange={onChange}
-                  {...register('comments')}
-                />
-              )}
-              control={control}
-              defaultValue={food?.comments ?? null}
-            />
-            <QuantityTracker margin="0.7rem 0" default={food?.quantity ?? 1} center min={0} />
-            <AddUpdateCartButton
-              isGrey={count === 0 ? false : !isFormFieldsValid()}
-              htmlType="submit"
-              {...(count === 0 ? { remove: true } : { update: true })}
-              currentTotal={String((((food?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
-            />
-          </MainCard>
-        </>
-      )}
-    </MainContainer>
+              <CancelActionField
+                cancelActionError={errors.cancelAction}
+                register={register}
+                clearErrors={clearErrors}
+                setValue={setValue}
+                defaultValue={food?.cancelAction as CancelAction}
+              />
+              <Controller
+                name="comments"
+                render={({ onChange, value }) => (
+                  <InputRow
+                    placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
+                    textarea
+                    value={value}
+                    onChange={onChange}
+                    {...register('comments')}
+                  />
+                )}
+                control={control}
+                defaultValue={food?.comments ?? null}
+              />
+              <QuantityTracker margin="0.7rem 0" default={food?.quantity ?? 1} center min={0} />
+              <AddUpdateCartButton
+                isGrey={count === 0 ? false : !isFormFieldsValid()}
+                htmlType="submit"
+                {...(count === 0 ? { remove: true } : { update: true })}
+                currentTotal={String((((food?.price ?? 0) + calculateAdditionalCost()) * count).toFixed(2))}
+              />
+            </MainCard>
+          </>
+        )}
+      </MainContainer>
+    </PullToRefreshRH>
   )
 }
 

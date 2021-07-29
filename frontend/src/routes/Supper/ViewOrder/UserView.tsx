@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
-import PullToRefresh from 'pull-to-refresh-react'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
@@ -12,7 +11,6 @@ import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import { onRefresh } from '../../../common/reloadPage'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
 
 const ButtonContainer = styled.div`
@@ -123,18 +121,16 @@ const UserView = (props: Props) => {
           modalSetter={setLeaveGroupModalIsOpen}
         />
       )}
-      <PullToRefresh onRefresh={onRefresh}>
-        <SupperGroupCard margin="0 23px 23px" supperGroup={props.supperGroup} isHome={false} />
-        <OrderCard
-          order={props.order}
-          supperGroup={props.supperGroup}
-          ownerId={props.supperGroup?.ownerId}
-          supperGroupStatus={props.supperGroup?.status}
-          isEditable={props.supperGroupIsOpen}
-          foodList={props.order?.foodList}
-        />
-        <ButtonContainer>{showBottomSection()}</ButtonContainer>
-      </PullToRefresh>
+      <SupperGroupCard margin="0 23px 23px" supperGroup={props.supperGroup} isHome={false} />
+      <OrderCard
+        order={props.order}
+        supperGroup={props.supperGroup}
+        ownerId={props.supperGroup?.ownerId}
+        supperGroupStatus={props.supperGroup?.status}
+        isEditable={props.supperGroupIsOpen}
+        foodList={props.order?.foodList}
+      />
+      <ButtonContainer>{showBottomSection()}</ButtonContainer>
     </>
   )
 }

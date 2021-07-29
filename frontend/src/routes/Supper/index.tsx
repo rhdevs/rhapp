@@ -16,12 +16,11 @@ import { Filter, HomeSupperGroup } from '../../store/supper/types'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
-import PullToRefresh from 'pull-to-refresh-react'
-import { onRefresh } from '../../common/reloadPage'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
 import { getAllSupperGroups } from '../../store/supper/action/level1/getReqests'
 import { setSupperGroup } from '../../store/supper/action/setter'
 import { initSupperGroup } from '../../store/stubs'
+import PullToRefreshRH from '../../components/PullToRefreshRH'
 
 const Background = styled.div`
   display: grid;
@@ -140,7 +139,7 @@ export default function Supper() {
   }
   return (
     <Background>
-      <PullToRefresh style={{ maxHeight: '100vh' }} onRefresh={onRefresh}>
+      <PullToRefreshRH>
         <StickyContainer>
           <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
           <SearchContainer>
@@ -176,7 +175,7 @@ export default function Supper() {
         <PlusButtonDiv>
           <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
         </PlusButtonDiv>
-      </PullToRefresh>
+      </PullToRefreshRH>
       <BottomNavBar />
     </Background>
   )
