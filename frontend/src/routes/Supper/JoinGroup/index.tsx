@@ -14,6 +14,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { createOrder } from '../../../store/supper/action/level1/postRequests'
 import { getJoinGroupPageDetails } from '../../../store/supper/action/level2'
+import { SupperGroupStatus } from '../../../store/supper/types'
 
 const Background = styled.div`
   height: 100vh;
@@ -57,9 +58,11 @@ const JoinGroup = () => {
       ) : (
         <>
           <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-          <ButtonContainer>
-            <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />
-          </ButtonContainer>
+          {(supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) && (
+            <ButtonContainer>
+              <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />
+            </ButtonContainer>
+          )}
           <BottomNavBar />
         </>
       )}

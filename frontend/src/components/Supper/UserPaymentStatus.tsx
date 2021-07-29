@@ -105,6 +105,7 @@ type Props = {
   paymentMethod?: PaymentMethod | undefined
   numOrders?: number
   supperGroupId?: number
+  unclickable?: boolean
 }
 
 export const UserPaymentStatus = (props: Props) => {
@@ -112,10 +113,6 @@ export const UserPaymentStatus = (props: Props) => {
   const [cancelName, setCancelName] = useState<boolean>(props.hasReceived)
   const [isExpanded, setIsExpanded] = useState(props.isExpanded ?? false)
   const dispatch = useDispatch()
-
-  // useEffect(() => {
-  //   setCancelName(props.hasReceived)
-  // }, [])
 
   useEffect(() => {
     if (isExpandAll) {
@@ -157,6 +154,7 @@ export const UserPaymentStatus = (props: Props) => {
   )
 
   const onClick = () => {
+    if (props.unclickable) return
     const newOrderDetails = { hasReceived: !cancelName }
     props.orderId && dispatch(updateOrderDetails(props.orderId, newOrderDetails, false))
     setCancelName(!cancelName)

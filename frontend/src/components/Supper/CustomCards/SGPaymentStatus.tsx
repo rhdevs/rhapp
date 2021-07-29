@@ -94,6 +94,7 @@ export const SGPaymentStatus = (props: Props) => {
                   paymentMethod={order.paymentMethod}
                   numOrders={groupWithoutOwnerOrder?.length ?? 0}
                   supperGroupId={props.supperGroup?.supperGroupId}
+                  unclickable={unclickable}
                 />
                 {index + 1 !== groupWithoutOwnerOrder?.length && <HorizontalLine />}
               </>
