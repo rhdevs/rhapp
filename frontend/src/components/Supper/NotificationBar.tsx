@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { getSupperNotifications } from '../../store/supper/action/level1/getReqests'
 import { closeSupperNotification } from '../../store/supper/action/level1/deleteRequests'
+import { NotificationType } from '../../store/supper/types'
 
 const Container = styled.div`
   position: fixed;
@@ -35,6 +36,8 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 95%;
+  max-width: 95%
+  word-break: break-word;
 `
 
 const RightContainer = styled.div`
@@ -70,14 +73,14 @@ export const NotificationBar = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const [isVisible, setIsVisible] = useState<boolean>(false)
-
+  const [notifText, setNotifText] = useState<JSX.Element>(<></>)
   const { supperNotifications } = useSelector((state: RootState) => state.supper)
   const onNotifClick = () => {
     const supperGroupId = supperNotifications[0].supperGroupId
     setIsVisible(false)
     dispatch(closeSupperNotification(supperNotifications[0].supperGroupId))
     //TODO: Currently it will only open the first notification, should have an interface for when there is more than 1
-    history.push(`${PATHS.VIEW_ORDER}/${supperGroupId}`)
+    history.replace(`${PATHS.VIEW_ORDER}/${supperGroupId}`)
   }
 
   const onCloseClick = () => {
@@ -91,7 +94,25 @@ export const NotificationBar = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (supperNotifications.length) setIsVisible(true)
+    if (supperNotifications.length) {
+      setIsVisible(true)
+      if (supperNotifications[0].notification === NotificationType.FOOD) {
+        setNotifText(
+          <HeaderText>
+            {supperNotifications[0].ownerName} updated your order in{' '}
+            <GroupNameText>{supperNotifications[0].supperGroupName}</GroupNameText>
+          </HeaderText>,
+        )
+      } else if (supperNotifications[0].notification === NotificationType.UPDATE) {
+        setNotifText(
+          <HeaderText>
+            <GroupNameText>{supperNotifications[0].supperGroupName}</GroupNameText> has been updated!
+          </HeaderText>,
+        )
+      } else {
+        setIsVisible(false)
+      }
+    }
   }, [supperNotifications])
 
   return (
@@ -99,9 +120,7 @@ export const NotificationBar = () => {
       {isVisible && (
         <MainContainer>
           <LeftContainer onClick={onNotifClick}>
-            <HeaderText>
-              <GroupNameText>{supperNotifications[0].supperGroupName}</GroupNameText> has been updated!
-            </HeaderText>
+            {notifText}
             <DescriptionText>Tap to view.</DescriptionText>
           </LeftContainer>
           <RightContainer>

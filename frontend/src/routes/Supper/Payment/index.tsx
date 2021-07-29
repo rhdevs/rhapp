@@ -116,7 +116,7 @@ const Payment = () => {
       {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
       <Form onSubmit={onSubmit}>
         <FormSection>
-          <FormHeader headerName="Which payment mode did you pay via?" isCompulsory />
+          <FormHeader fontSize="15px" headerName="Which payment mode did you pay via?" isCompulsory />
           <PaymentMethodBubbles
             onlyOne
             {...register('paymentMethod', { required: true, validate: (input) => input.length !== 0 })}
@@ -125,7 +125,7 @@ const Payment = () => {
           {errors.paymentMethod && <ErrorText>Payment method required!</ErrorText>}
         </FormSection>
         <FormSection>
-          <FormHeader headerName="What is your phone number?" isCompulsory />
+          <FormHeader fontSize="15px" headerName="What is your phone number?" isCompulsory />
           <Input
             type="number"
             defaultValue={''}

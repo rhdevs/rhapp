@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { getRestaurantLogo } from '../../common/getRestaurantLogo'
@@ -16,18 +18,16 @@ import { getReadableSupperGroupId } from '../../common/getReadableSupperGroupId'
 import { V1_RED } from '../../common/colours'
 import { CarOutlined, FieldTimeOutlined, UserOutlined } from '@ant-design/icons'
 import { Skeleton } from '../Skeleton'
-import { useHistory } from 'react-router-dom'
 import EqualCircle from '../../assets/supper/EqualCircle.svg'
 import PercentCircle from '../../assets/supper/PercentCircle.svg'
 import { MoreDropDown } from './MoreDropDown'
-import { useDispatch, useSelector } from 'react-redux'
 import { PATHS } from '../../routes/Routes'
 import { SupperShareModal } from './Modals/SupperShareModal'
 import { SGStatusCard } from './CustomCards/SGStatusCard'
 import { RootState } from '../../store/types'
-import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
-import { deleteSupperGroup, leaveSupperGroup } from '../../store/supper/action/level1/deleteRequests'
+import { CancelGroupModal } from './Modals/CancelGroupModal'
+import { LeaveGroupModal } from './Modals/LeaveGroupModal'
 
 const LeftContainer = styled.div`
   flex: 30%;
@@ -56,14 +56,14 @@ const RightContainer = styled.div`
 const StyledGroupIdText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 200;
+  font-weight: 300;
   font-size: 12px;
 `
 
 const StyledGroupNameText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
 `
 
@@ -127,11 +127,10 @@ type Props = {
 
 export const SupperGroupCard = (props: Props) => {
   const history = useHistory()
-  const dispatch = useDispatch()
   const supperGroup = props.isHome ? props.homeSupperGroup : props.supperGroup
   const { isLoading } = useSelector((state: RootState) => state.supper)
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
+  const [isCancelGroupModalOpen, setIsCancelGroupModalOpen] = useState<boolean>(false)
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState<boolean>(false)
   const supperGroupStatus = supperGroup?.status
   const isOpenOrPending =
@@ -157,7 +156,7 @@ export const SupperGroupCard = (props: Props) => {
       userIdList={userIdList}
       supperGroupId={rawSupperGroupId}
       shareModalSetter={setIsShareModalOpen}
-      deleteModalSetter={setIsDeleteModalOpen}
+      cancelModalSetter={setIsCancelGroupModalOpen}
       leaveModalSetter={setIsLeaveModalOpen}
     />
   )
@@ -188,35 +187,30 @@ export const SupperGroupCard = (props: Props) => {
 
   const shareModal = <SupperShareModal rawSupperGroupId={rawSupperGroupId} teleShareModalSetter={setIsShareModalOpen} />
 
-  const deleteModal = (
-    <ConfirmationModal
-      title="Delete group?"
-      description="Deleting group will remove everyone's cart and delete supper group."
-      hasLeftButton={true}
-      leftButtonText={'Confirm'}
+  const cancelModal = (
+    <CancelGroupModal
+      modalSetter={setIsCancelGroupModalOpen}
+      withDispatch
       onLeftButtonClick={() => {
-        dispatch(deleteSupperGroup(rawSupperGroupId))
-        //TODO: Check if this should be the action after deletion
-        history.goBack()
+        history.replace(PATHS.SUPPER_HOME)
+        history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
       }}
-      rightButtonText={'Cancel'}
-      onRightButtonClick={() => setIsDeleteModalOpen(false)}
+      supperGroupId={rawSupperGroupId}
     />
   )
 
   const leaveModal = (
-    <ConfirmationModal
-      title="Leave group?"
-      description="You will be removed from the supper group."
-      hasLeftButton={true}
-      leftButtonText={'Confirm'}
+    <LeaveGroupModal
+      modalSetter={setIsLeaveModalOpen}
       onLeftButtonClick={() => {
-        dispatch(leaveSupperGroup(rawSupperGroupId))
-        //TODO: Check if this should be the action after leave
-        history.push(`${PATHS.SUPPER_HOME}`)
+        if (supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) {
+          history.replace(PATHS.SUPPER_HOME)
+          history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
+        } else {
+          history.push(PATHS.SUPPER_HOME)
+        }
       }}
-      rightButtonText={'Cancel'}
-      onRightButtonClick={() => setIsLeaveModalOpen(false)}
+      supperGroupId={rawSupperGroupId}
     />
   )
 
@@ -224,9 +218,13 @@ export const SupperGroupCard = (props: Props) => {
     if (isClickableCard) {
       if (props.onClick) return props.onClick(e)
       else {
+        // User is the owner or already has an ongoing order
         if (ownerId === localStorage.userID || (supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
-          // User is the owner or already has an ongoing order
-          history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+          if (ownerId === localStorage.userID && supperGroup?.status === SupperGroupStatus.CLOSED) {
+            history.push(`${PATHS.ORDER_SUMMARY}/${rawSupperGroupId}`)
+          } else {
+            history.push(`${PATHS.VIEW_ORDER}/${rawSupperGroupId}`)
+          }
         } else {
           // New SG to user
           history.push(`${PATHS.JOIN_GROUP}/${rawSupperGroupId}`)
@@ -239,7 +237,7 @@ export const SupperGroupCard = (props: Props) => {
     <MainCard margin={props.margin} flexDirection="row" minHeight="fit-content">
       <>
         {isShareModalOpen && shareModal}
-        {isDeleteModalOpen && deleteModal}
+        {isCancelGroupModalOpen && cancelModal}
         {isLeaveModalOpen && leaveModal}
       </>
       {/* {hasError ? (

@@ -224,9 +224,6 @@ export const supper: Reducer<State, ActionTypes> = (state = initialState, action
     case SUPPER_ACTIONS.SET_ORDER_ID: {
       return { ...state, orderId: action.orderId }
     }
-    case SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY: {
-      return { ...state, paymentUpdateArray: action.paymentUpdateArray }
-    }
     case SUPPER_ACTIONS.SET_MENU_FOOD_ID: {
       return { ...state, foodMenuId: action.foodMenuId }
     }

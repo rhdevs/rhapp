@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { ErrorText } from '../../../routes/Supper/CreateSupperGroup'
 import { updateOwnerEdits, updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { Food, SupperGroup, UpdateAction, Updates } from '../../../store/supper/types'
+import { RootState } from '../../../store/types'
 import { FormHeader } from '../FormHeader'
 import { MainCard } from '../MainCard'
+import { QuantityTracker } from '../QuantityTracker'
 import { SupperButton } from '../SupperButton'
 
 const Input = styled.input<{ error?: FieldError | undefined }>`
@@ -49,6 +51,7 @@ type Props = {
 type FormData = {
   changes: string | undefined
   newPrice: number
+  newQuantity: number
   editReason: string
   newDeliveryFee: number
 }
@@ -67,6 +70,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
   })
   const dispatch = useDispatch()
   const history = useHistory()
+  const { count } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
     if (props.foodItem) {
@@ -88,15 +92,18 @@ export const OwnerUpdateItemCard = (props: Props) => {
   }, [touched, watch()])
 
   const onUpdateItemClick = () => {
-    if (!watch('newPrice')) {
-      setValue('newPrice', props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0)
-    }
     handleSubmit((data) => {
+      const priceWasUpdated =
+        (props.food?.updates?.updatedPrice ?? props.food?.foodPrice ?? 0) === data.newPrice ? false : true
+      const quantityWasUpdated =
+        (props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 0) === count ? false : true
+
       const update: Updates = {
         updateAction: UpdateAction.UPDATE,
         reason: data.editReason,
         change: data.changes,
-        updatedPrice: data.newPrice,
+        ...(priceWasUpdated && { updatedPrice: data.newPrice }),
+        ...(quantityWasUpdated && !props.all && { updatedQuantity: count }),
       }
       dispatch(updateOwnerEdits(props.supperGroup?.supperGroupId, props.foodId, update, props.all ?? false))
       history.goBack()
@@ -142,7 +149,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
                 required: false,
               })}
             />
-            <FormHeader headerName="New Price" topMargin />
+            <FormHeader headerName="New Price (per quantity)" topMargin />
             <Input
               type="number"
               placeholder="Indicate new price"
@@ -155,6 +162,17 @@ export const OwnerUpdateItemCard = (props: Props) => {
               })}
             />
             {errors.newPrice?.type === 'min' && <ErrorText>Invalid price!</ErrorText>}
+            {!props.all && (
+              <>
+                <FormHeader headerName="New Quantity" topMargin />
+                <QuantityTracker
+                  center
+                  min={1}
+                  max={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                  default={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                />
+              </>
+            )}
             <FormHeader headerName="Reason for edit" isCompulsory topMargin />
             <TextArea
               defaultValue={''}
@@ -171,7 +189,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onDeleteItemClick}
-              defaultButtonDescription={props.all ? 'Delete Item for All' : 'Delete Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Delete Item for All' : 'Delete Item'
+              }
               ghost
               buttonWidth="100%"
               style={{ margin: '2rem 0 0.5rem 0' }}
@@ -179,7 +199,9 @@ export const OwnerUpdateItemCard = (props: Props) => {
             <SupperButton
               htmlType="submit"
               onButtonClick={onUpdateItemClick}
-              defaultButtonDescription={props.all ? 'Update Item for All' : 'Update Item'}
+              defaultButtonDescription={
+                props.all && (props.food?.quantity ?? 0) > 1 ? 'Update Item for All' : 'Update Item'
+              }
               buttonWidth="100%"
               style={{ margin: '1rem 0 0 0' }}
             />

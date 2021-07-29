@@ -150,6 +150,12 @@ export const ViewMenuFoodModal = (props: Props) => {
                     isEditable
                     supperGroupId={props.supperGroupId}
                     orderId={props.orderId}
+                    onEditClick={() => {
+                      dispatch(props.viewMenuFoodModalSetter(false))
+                      history.push(
+                        `${PATHS.EDIT_FOOD_ITEM}/${props.supperGroupId}/order/${props.orderId}/food/${food.foodId}`,
+                      )
+                    }}
                   />
                 )
               })}

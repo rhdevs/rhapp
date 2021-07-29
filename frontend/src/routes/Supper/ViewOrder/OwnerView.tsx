@@ -6,7 +6,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
-import { DeleteGroupModal } from '../../../components/Supper/Modals/DeleteGroupModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
 import { OrderCard } from '../../../components/Supper/CustomCards/OrderCard'
 import { SupperButton } from '../../../components/Supper/SupperButton'
@@ -16,31 +15,35 @@ import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal
 import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
+import LoadingSpin from '../../../components/LoadingSpin'
+import { CancelGroupModal } from '../../../components/Supper/Modals/CancelGroupModal'
 
-export const SupperButtonContainer = styled.div`
+const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 30px;
+  padding-bottom: 10px;
 `
 
-export const ButtonContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 40px 20px;
+  margin: 0 20px;
   padding: 0 10px;
 `
 
-export const UpperRowButtons = styled.div`
+const UpperRowButtons = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-export const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
+const UpperRowButtonContainer = styled.div<{ left?: boolean | undefined }>`
   width: 50%;
   text-align: ${(props) => (props.left ? 'left' : 'right')};
 `
 
-export const LowerRowButton = styled.div`
+const LowerRowButton = styled.div`
   margin: 25px 0 0;
 `
 
@@ -60,14 +63,13 @@ const OwnerView = (props: Props) => {
 
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false)
+  const [cancelGroupModalIsOpen, setCancelGroupModalIsOpen] = useState<boolean>(false)
   const [endGroupModalIsOpen, setEndGroupModalIsOpen] = useState<boolean>(false)
   const orderList = props.supperGroup?.orderList
   const ownerOrder = orderList?.find((order) => order.user.userID === localStorage.userID)
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
-    if (isLoading) return
     if (props.supperGroupIsOpen) {
       return (
         <>
@@ -97,8 +99,8 @@ const OwnerView = (props: Props) => {
                 center
                 ghost
                 buttonWidth="100%"
-                defaultButtonDescription="Delete Group"
-                onButtonClick={() => setDeleteModalIsOpen(true)}
+                defaultButtonDescription="Cancel Group"
+                onButtonClick={() => setCancelGroupModalIsOpen(true)}
               />
             </LowerRowButton>
           </ButtonContainer>
@@ -123,40 +125,61 @@ const OwnerView = (props: Props) => {
       {closeModalIsOpen && (
         <CloseGroupEarlyModal
           modalSetter={setCloseModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => {
+            history.replace(PATHS.SUPPER_HOME)
+            history.push(`${PATHS.ORDER_SUMMARY}/${params.supperGroupId}`)
+          }}
           supperGroupId={params.supperGroupId}
         />
       )}
-      {deleteModalIsOpen && (
-        <DeleteGroupModal
-          modalSetter={setDeleteModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
-          suppergroupId={params.supperGroupId}
+      {cancelGroupModalIsOpen && (
+        <CancelGroupModal
+          withDispatch
+          modalSetter={setCancelGroupModalIsOpen}
+          onLeftButtonClick={() => {
+            history.goBack()
+            history.replace(PATHS.SUPPER_HOME)
+          }}
+          supperGroupId={params.supperGroupId}
         />
       )}
       {endGroupModalIsOpen && (
         <EndSupperGroupModal
           modalSetter={setEndGroupModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.SUPPER_HOME}`)}
+          onLeftButtonClick={() => history.push(PATHS.SUPPER_HOME)}
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
       <PullToRefresh onRefresh={onRefresh}>
-        <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-        <OrderCard
-          supperGroup={props.supperGroup}
-          ownerId={localStorage.userID}
-          supperGroupStatus={props.supperGroup?.status}
-          collatedOrder={props.collatedOrder}
-        />
-        {showBottomSection()}
-        {props.showTrackPayment && !isLoading && (
-          <SupperButtonContainer>
-            <SupperButton
-              onButtonClick={() => setEndGroupModalIsOpen(true)}
-              defaultButtonDescription="End Supper Group"
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+            <OrderCard
+              supperGroup={props.supperGroup}
+              ownerId={localStorage.userID}
+              supperGroupStatus={props.supperGroup?.status}
+              collatedOrder={props.collatedOrder}
             />
-          </SupperButtonContainer>
+            {showBottomSection()}
+            {props.showTrackPayment && !isLoading && (
+              <SupperButtonContainer>
+                <SupperButton
+                  onButtonClick={() => setEndGroupModalIsOpen(true)}
+                  defaultButtonDescription="End Supper Group"
+                />
+              </SupperButtonContainer>
+            )}
+            {props.supperGroupIsCancelled && (
+              <SupperButtonContainer>
+                <SupperButton
+                  onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
+                  defaultButtonDescription="Main Page"
+                />
+              </SupperButtonContainer>
+            )}
+          </>
         )}
       </PullToRefresh>
     </>

@@ -18,11 +18,15 @@ export const MarkPaymentCompleteModal = (props: Props) => {
   const history = useHistory()
   const onLeftClick = () => {
     dispatch(
-      updateOrderDetails(props.orderId, {
-        hasPaid: true,
-        paymentMethod: props.paymentMethod,
-        userContact: props.phoneNumber,
-      }),
+      updateOrderDetails(
+        props.orderId,
+        {
+          hasPaid: true,
+          paymentMethod: props.paymentMethod,
+          userContact: props.phoneNumber,
+        },
+        true,
+      ),
     )
     history.goBack()
   }

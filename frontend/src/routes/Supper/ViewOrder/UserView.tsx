@@ -9,7 +9,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
-import { Order, SupperGroup } from '../../../store/supper/types'
+import { Order, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
 import { onRefresh } from '../../../common/reloadPage'
@@ -52,13 +52,13 @@ const UserView = (props: Props) => {
           {props.order?.foodList && props.order.foodList.length > 0 && (
             <SupperButton
               ghost
-              buttonWidth="160px"
+              buttonWidth="140px"
               defaultButtonDescription="Empty Cart"
               onButtonClick={() => setEmptyCartModalIsOpen(true)}
             />
           )}
           <SupperButton
-            buttonWidth="160px"
+            buttonWidth="140px"
             defaultButtonDescription="Leave Group"
             onButtonClick={() => setLeaveGroupModalIsOpen(true)}
           />
@@ -78,7 +78,10 @@ const UserView = (props: Props) => {
           />
         </BottomContainer>
       )
-    } else {
+    } else if (
+      props.supperGroup?.status === SupperGroupStatus.ARRIVED ||
+      props.supperGroup?.status === SupperGroupStatus.AWAITING_PAYMENT
+    ) {
       if (props.order?.hasPaid) {
         return <SupperButton ghost defaultButtonDescription="Payment Completed" />
       } else {
@@ -97,15 +100,25 @@ const UserView = (props: Props) => {
       {emptyCartModalIsOpen && (
         <EmptyCartModal
           modalSetter={setEmptyCartModalIsOpen}
-          onLeftButtonClick={() => history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)}
+          onLeftButtonClick={() => history.goBack()}
           supperGroupId={params.supperGroupId}
           orderId={props.order?.orderId}
         />
       )}
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
-          suppergroupId={params.supperGroupId}
-          onLeftButtonClick={() => history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)}
+          supperGroupId={params.supperGroupId}
+          onLeftButtonClick={() => {
+            if (
+              (props.supperGroup?.userIdList ?? []).includes(localStorage.userID) ||
+              (props.supperGroup?.status !== SupperGroupStatus.PENDING && props.supperGroupIsOpen)
+            ) {
+              history.push(`${PATHS.SUPPER_HOME}`)
+            } else {
+              history.replace(PATHS.SUPPER_HOME)
+              history.push(`${PATHS.JOIN_GROUP}/${params.supperGroupId}`)
+            }
+          }}
           modalSetter={setLeaveGroupModalIsOpen}
         />
       )}

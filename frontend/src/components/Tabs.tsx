@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import styled from 'styled-components'
-import { V1_BLUE } from '../common/colours'
 import { RootState } from '../store/types'
 import { Skeleton } from './Skeleton'
 
@@ -24,7 +23,7 @@ export const TabContainer = styled.div<{ isSelected?: boolean }>`
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
-  color: ${(props) => (props.isSelected ? V1_BLUE : 'rgba(0, 0, 0, 0.55)')};
+  color: ${(props) => (props.isSelected ? 'black' : 'rgba(0, 0, 0, 0.55)')};
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

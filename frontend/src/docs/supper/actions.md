@@ -74,9 +74,6 @@ Functions that update store variables.
 - **setOrderId** <br>
   Input: `string | undefined` <br>
   Variable updated: `orderId`
-- **\*setPaymentUpdateArray (might delete)** <br>
-  Input: `orderId: string, hasReceived: boolean` <br>
-  Variable updated: `paymentUpdateArray`
 - **setNewSupperGroupId** <br>
   Input: `number` <br>
   Variable updated:`newSupperGroupId`

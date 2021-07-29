@@ -31,12 +31,10 @@ export const setFilteredSupperGroups = () => (dispatch: Dispatch<ActionTypes>, g
   } else if (closingTimeFilter == Filter.DESCENDING) {
     filteredSearchSupperGroups.sort((x, y) => (y.closingTime ?? 0) - (x.closingTime ?? 0))
   }
-  console.log('before sort ', filteredSearchSupperGroups)
   if (amountLeftFilter == Filter.ASCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (x.costLimit ?? Infinity - x.currentFoodCost) - (y.costLimit ?? Infinity - y.currentFoodCost),
     )
-    console.log('after sort ', filteredSearchSupperGroups)
   } else if (amountLeftFilter == Filter.DESCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (y.costLimit ?? Infinity - y.currentFoodCost) - (x.costLimit ?? Infinity - x.currentFoodCost),
@@ -178,39 +176,6 @@ export const setOrderId = (orderId: string | undefined) => (dispatch: Dispatch<A
   dispatch({
     type: SUPPER_ACTIONS.SET_ORDER_ID,
     orderId: orderId,
-  })
-}
-
-// might remove if problem can be solved!!!
-const setPaymentUpdateArray = (orderId?: string, hasReceived?: boolean) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  console.log(orderId, hasReceived)
-  if (!orderId) return
-  if (hasReceived === undefined) return
-
-  const { paymentUpdateArray } = getState().supper
-  let newPaymentUpdate = paymentUpdateArray
-  const index = paymentUpdateArray.findIndex((payment) => payment.orderId === orderId)
-  const newPaymentUpdateInfo = {
-    orderId: orderId,
-    hasReceived: hasReceived,
-  }
-
-  if (index === -1) {
-    newPaymentUpdate = paymentUpdateArray.concat(newPaymentUpdateInfo)
-  } else {
-    newPaymentUpdate = paymentUpdateArray.map((payment) => {
-      if (payment.orderId === orderId) {
-        return newPaymentUpdateInfo
-      } else return payment
-    })
-  }
-
-  dispatch({
-    type: SUPPER_ACTIONS.SET_PAYMENT_UPDATE_ARRAY,
-    paymentUpdateArray: newPaymentUpdate,
   })
 }
 

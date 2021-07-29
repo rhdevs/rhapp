@@ -94,7 +94,7 @@ export const CreateOrderPageOne = () => {
 
   const onLeftClick = () => {
     if (JSON.stringify(supperGroup) === JSON.stringify(initSupperGroup)) {
-      history.goBack()
+      history.push(PATHS.SUPPER_HOME)
     } else {
       setModalIsOpen(true)
     }

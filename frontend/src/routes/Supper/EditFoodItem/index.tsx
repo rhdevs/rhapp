@@ -18,6 +18,7 @@ import InputRow from '../../../components/Mobile/InputRow'
 import { PATHS } from '../../Routes'
 import { V1_BACKGROUND } from '../../../common/colours'
 import { RemoveItemModal } from '../../../components/Supper/Modals/RemoveItem'
+import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { updateFoodInOrder } from '../../../store/supper/action/level1/putRequests'
 import { getEditFoodItemDetails } from '../../../store/supper/action/level2'
 
@@ -43,16 +44,30 @@ const EditFoodItem = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [removeItemModalIsOpen, setRemoveItemModalIsOpen] = useState<boolean>(false)
-
+  const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState<boolean>(false)
   const { isLoading, food, count, supperGroup } = useSelector((state: RootState) => state.supper)
   const params = useParams<{ supperGroupId: string; orderId: string; foodId: string }>()
-  const { register, handleSubmit, setValue, watch, clearErrors, reset, control, errors } = useForm<CustomData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    clearErrors,
+    reset,
+    control,
+    errors,
+    formState,
+  } = useForm<CustomData>({
     shouldUnregister: false,
   })
   const compulsoryFields: Custom[] =
     food?.custom?.filter((custom) => {
       return custom.min !== 0
     }) ?? []
+
+  const onLeftClick = () => {
+    formState.touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
+  }
 
   const isOverSupperGroupLimit = () => {
     const maximumLimit = supperGroup?.costLimit
@@ -92,7 +107,8 @@ const EditFoodItem = () => {
     return false
   }
 
-  const hasCustomUpdate = (formData, initialCustom) => {
+  const hasCustomUpdate = (formData, initialCustom: Custom[] | undefined) => {
+    let isValid = false
     formData.forEach((data) => {
       const optionTitle = data[0]
       /* Convert data array with indiv option names
@@ -113,10 +129,10 @@ const EditFoodItem = () => {
       const fieldDifference1 = optionDetails.filter((x) => !selectedInitialOptions.includes(x))
       const fieldDifference2 = selectedInitialOptions.filter((x) => !optionDetails.includes(x))
       if (fieldDifference1.length || fieldDifference2.length) {
-        return true
+        isValid = true
       }
     })
-    return false
+    return isValid
   }
 
   const onSubmit = (e) => {
@@ -150,7 +166,6 @@ const EditFoodItem = () => {
         //convert data from watch to [ [[option title], [option's details]] , ...]
         let formData = Object.entries(watch())
         formData = formData.filter((entry) => entry[0] !== 'cancelAction' && entry[0] !== 'comments') //remove cancelAction and comments details
-
         if (hasCustomUpdate(formData, initialFoodInfo?.custom)) {
           // Changes were made to custom
           const custom: Custom[] = (initialFoodInfo?.custom ?? []).map((customFood) => {
@@ -177,10 +192,9 @@ const EditFoodItem = () => {
           })
           updatedFoodInfo = { ...updatedFoodInfo, custom: custom }
         }
-
         if (updatedFoodInfo) {
           dispatch(updateFoodInOrder(updatedFoodInfo, params.orderId, params.foodId))
-          history.push(`${PATHS.ORDER}/${params.supperGroupId}/${food?.restaurantId}/order`)
+          history.goBack()
           return
         }
         history.goBack()
@@ -211,7 +225,8 @@ const EditFoodItem = () => {
 
   return (
     <MainContainer onSubmit={onSubmit}>
-      <TopNavBar title="Edit Item" />
+      <TopNavBar title="Edit Item" onLeftClick={onLeftClick} />
+      {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
       {isLoading ? (
         <LoadingSpin />
       ) : (

@@ -45,22 +45,24 @@ export const emptyOrderFoodList = (supperGroupId: string, orderId: string) => as
   dispatch(setIsLoading(false))
 }
 
-export const updateOrderDetails = (orderId: string, newOrderDetails) => async (dispatch: Dispatch<ActionTypes>) => {
+export const updateOrderDetails = (orderId: string, newOrderDetails, hasIsLoading: boolean) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   if (!newOrderDetails || !orderId) return
-  dispatch(setIsLoading(true))
+  hasIsLoading && dispatch(setIsLoading(true))
   const requestBody = newOrderDetails
   await put(ENDPOINTS.UPDATE_ORDER_DETAILS, DOMAINS.SUPPER, requestBody, {}, `/${orderId}`)
     .then((resp) => {
       if (resp.status === 'failed') {
         throw resp.err
       }
-      dispatch(getOrderById(orderId))
+      hasIsLoading && dispatch(getOrderById(orderId))
     })
     .catch((err) => {
       console.log(err)
       dispatch(setSupperErrorMessage('Failed to update order, please try again.'))
     })
-  dispatch(setIsLoading(false))
+  hasIsLoading && dispatch(setIsLoading(false))
 }
 
 export const updateFoodInOrder = (newFood, orderId: string, foodId: string) => async (

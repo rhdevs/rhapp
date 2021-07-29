@@ -121,7 +121,6 @@ export default function Supper() {
     dispatch(getAllSupperGroups())
   }, [dispatch])
 
-  console.log(filteredSupperGroups)
   let supperGroups: HomeSupperGroup[] | null = allSupperGroups
   let errorText = 'Hungry? Start a supper group!'
   if (
@@ -138,23 +137,24 @@ export default function Supper() {
   }
   return (
     <Background>
-      <StickyContainer>
-        <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
-        <SearchContainer>
-          <SupperSearchBar />
-          <Tooltip
-            zIndex={3}
-            style={{ position: 'relative' }}
-            overlayInnerStyle={{ borderRadius: '5px' }}
-            placement="bottomRight"
-            title="You may search for a supper group directly by typing the owner’s name, supper group name, or the supper group ID"
-          >
-            <InfoIcon />
-          </Tooltip>
-        </SearchContainer>
-        <FilterBubbles />
-      </StickyContainer>
-      <PullToRefresh onRefresh={onRefresh}>
+      <PullToRefresh style={{ maxHeight: '100vh' }} onRefresh={onRefresh}>
+        <StickyContainer>
+          <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
+          <SearchContainer>
+            <SupperSearchBar />
+            <Tooltip
+              zIndex={3}
+              style={{ position: 'relative' }}
+              overlayInnerStyle={{ borderRadius: '5px' }}
+              placement="bottomRight"
+              title="You may search for a supper group directly by typing the owner’s name, supper group name, or the supper group ID"
+            >
+              <InfoIcon />
+            </Tooltip>
+          </SearchContainer>
+          <FilterBubbles />
+        </StickyContainer>
+
         {isLoading ? (
           <LoadingSpin />
         ) : (

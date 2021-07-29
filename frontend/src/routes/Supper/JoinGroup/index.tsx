@@ -38,6 +38,13 @@ const JoinGroup = () => {
     dispatch(getJoinGroupPageDetails(params.supperGroupId))
   }, [dispatch])
 
+  // TODO: check if required, bc the methods to come here already check the conditions
+  // useEffect(() => {
+  //   if ((supperGroup?.userIdList ?? []).includes(localStorage.userID)) {
+  //     history.replace(PATHS.SUPPER_HOME)
+  //   }
+  // }, [])
+
   const onClick = () => {
     dispatch(createOrder(params.supperGroupId))
     history.push(`${PATHS.ORDER}/${params.supperGroupId}/${supperGroup?.restaurantId}/order`)
