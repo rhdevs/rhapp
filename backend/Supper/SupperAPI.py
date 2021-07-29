@@ -1085,15 +1085,16 @@ def owner_edit_order(supperGroupId):
             foodId = ObjectId(data.pop('foodId'))
             food = db.FoodOrder.find_one({"_id": foodId})
 
-            data['foodPrice'] = 0
+            if 'updatedPrice' in data['updates'] and data['updates']['updatedPrice']:
+                data['foodPrice'] = data['updates']['updatedPrice']
+            else:
+                data['foodPrice'] = 0
 
             if data['updates']['updateAction'] == 'Update':
-                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
+                if any(k not in data['updates'] for k in ('reason', 'change')) \
                         or data['updates']['reason'] is None \
-                        or data['updates']['change'] is None \
-                        or data['updates']['updatedPrice'] is None:
+                        or data['updates']['change'] is None:
                     raise Exception('Update information incomplete')
-                data['foodPrice'] = data['updates']['updatedPrice']
             elif data['updates']['updateAction'] == 'Remove':
                 if 'reason' not in data['updates'] or data['updates']['reason'] is None:
                     raise Exception('Update information incomplete')
