@@ -1150,7 +1150,7 @@ def owner_edit_order(supperGroupId):
                 foods = list(filter(lambda x: check_food_details(food_orig, x), foods))
 
                 for food in foods:
-                    if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
+                    if 'updatedQuantity' in data['updates'] and data['updates']['updatedQuantity']:
                         data['quantity'] = data['updates']['updatedQuantity']
                         data['foodPrice'] = data['foodPrice'] * data['quantity']
                     else:
@@ -1162,7 +1162,7 @@ def owner_edit_order(supperGroupId):
                                         {'$set': data})
 
             else:
-                if 'updatedQuantity' in data['updates'] and data['updates']['quantity']:
+                if 'updatedQuantity' in data['updates'] and data['updates']['updatedQuantity']:
                     data['quantity'] = data['updates']['updatedQuantity']
                     data['foodPrice'] = data['foodPrice'] * data['quantity']
                 else:
