@@ -21,6 +21,7 @@ import { getAllSupperGroups } from '../../store/supper/action/level1/getReqests'
 import { setSupperGroup } from '../../store/supper/action/setter'
 import { initSupperGroup } from '../../store/stubs'
 import PullToRefreshRH from '../../components/PullToRefreshRH'
+import { getSupperHomePageDetails } from '../../store/supper/action/level2'
 
 const Background = styled.div`
   display: grid;
@@ -119,7 +120,7 @@ export default function Supper() {
   )
 
   useEffect(() => {
-    dispatch(getAllSupperGroups())
+    dispatch(getSupperHomePageDetails())
     dispatch(setSupperGroup(initSupperGroup)) // to prevent create group page from being filled with other group details
   }, [dispatch])
 
