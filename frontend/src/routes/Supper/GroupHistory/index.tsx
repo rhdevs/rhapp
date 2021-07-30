@@ -119,10 +119,12 @@ const GroupHistory = () => {
 
   return (
     <Background>
-      <TopNavBar title="History" onLeftClick={() => history.push(PATHS.SUPPER_HOME)} rightComponent={<RefreshIcon />} />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
+      <div>
+        <TopNavBar
+          title="History"
+          onLeftClick={() => history.push(PATHS.SUPPER_HOME)}
+          rightComponent={<RefreshIcon />}
+        />
         <>
           <MainTabsContainer>
             {sections.map((section, index) => {
@@ -137,9 +139,9 @@ const GroupHistory = () => {
               )
             })}
           </MainTabsContainer>
-          {content()}
         </>
-      )}
+      </div>
+      <div>{isLoading ? <LoadingSpin /> : content()}</div>
       <BottomNavBar />
     </Background>
   )
