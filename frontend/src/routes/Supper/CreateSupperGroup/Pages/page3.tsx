@@ -48,12 +48,10 @@ export const CreateOrderPageThree = () => {
       pmError = 0
       clearErrors('paymentMethod')
       setValue('paymentMethod', selectedPaymentMethod)
-      console.log('selectedPaymentMethod', selectedPaymentMethod)
     }
   }, [selectedPaymentMethod])
 
   useEffect(() => {
-    console.log(newSupperGroupId, supperGroup?.restaurantId)
     if (newSupperGroupId !== undefined && supperGroup?.restaurantId !== undefined) {
       history.replace(PATHS.SUPPER_HOME)
       history.push(`${PATHS.ORDER}/${newSupperGroupId}/${supperGroup?.restaurantId}/order`)
@@ -101,15 +99,11 @@ export const CreateOrderPageThree = () => {
         .map((pm) => (newPI = newPI.concat({ paymentMethod: pm, link: data[`${pm}`] ?? null })))
 
       if (newPI.length) {
-        console.log(newPI)
         const updatedPI = selectedPaymentMethod.map((pm) => {
           return { paymentMethod: pm, link: data[`${pm}`] }
         })
         updatedSPInfo = { ...updatedSPInfo, paymentInfo: updatedPI }
-        console.log('paymentInfo', updatedPI)
       }
-
-      console.log('thirdSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
 
       // Check validity of all information

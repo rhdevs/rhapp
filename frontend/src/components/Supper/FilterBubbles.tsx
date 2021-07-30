@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
-import { V1_RED } from '../../common/colours'
+import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 import {
   setAmountLeftFilter,
   setRestaurantFilter,
@@ -15,17 +15,20 @@ import { RootState } from '../../store/types'
 
 const MainContainer = styled.div`
   margin: 20px auto 5px auto;
-  overflow: scroll;
+  overflow-x: scroll;
   width: 90%;
+  height: fit-content;
 `
 
 const BubblesContainer = styled.div`
   width: fit-content;
+  height: fit-content;
   padding: 0 5px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   grid-column-gap: 10px;
+  background-color: ${V1_BACKGROUND};
 `
 
 const Bubble = styled.div<{ isActive?: boolean }>`

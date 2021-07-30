@@ -14,7 +14,7 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
 import { PATHS } from '../../Routes'
-import PullToRefreshRH from '../../../components/PullToRefreshRH'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const MainContainer = styled.div`
   display: grid;
@@ -46,37 +46,35 @@ const ViewOrder = () => {
   }, [dispatch, params.supperGroupId, supperGroup?.status, order?.hasPaid])
 
   return (
-    <PullToRefreshRH>
-      <MainContainer>
-        <TopNavBar title="View Order" />
-        {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
-          <SupperErrorContent />
-        ) : isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <div>
-            {supperGroup?.ownerId === localStorage.userID ? (
-              <OwnerView
-                supperGroup={supperGroup}
-                collatedOrder={collatedOrder}
-                showTrackPayment={
-                  selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
-                  selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
-                }
-              />
-            ) : (
-              <UserView
-                supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
-                supperGroup={supperGroup}
-                supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
-                order={order}
-              />
-            )}
-          </div>
-        )}
-        <BottomNavBar />
-      </MainContainer>
-    </PullToRefreshRH>
+    <MainContainer>
+      <TopNavBar title="View Order" rightComponent={<RefreshIcon />} />
+      {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
+        <SupperErrorContent />
+      ) : isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <div>
+          {supperGroup?.ownerId === localStorage.userID ? (
+            <OwnerView
+              supperGroup={supperGroup}
+              collatedOrder={collatedOrder}
+              showTrackPayment={
+                selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+                selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
+              }
+            />
+          ) : (
+            <UserView
+              supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
+              supperGroup={supperGroup}
+              supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
+              order={order}
+            />
+          )}
+        </div>
+      )}
+      <BottomNavBar />
+    </MainContainer>
   )
 }
 

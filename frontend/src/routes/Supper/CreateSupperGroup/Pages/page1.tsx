@@ -64,7 +64,6 @@ export const CreateOrderPageOne = () => {
 
   useEffect(() => {
     if (supperGroup) {
-      console.log(supperGroup)
       reset({
         supperGroupName: supperGroup.supperGroupName,
         restaurant: supperGroup.restaurantName as Restaurants,

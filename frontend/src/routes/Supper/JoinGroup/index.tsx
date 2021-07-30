@@ -59,7 +59,7 @@ const JoinGroup = () => {
           <LoadingSpin />
         ) : (
           <>
-            <SupperGroupCard margin="0 23px 23px" supperGroup={supperGroup} isHome={false} />
+            <SupperGroupCard supperGroup={supperGroup} isHome={false} />
             {(supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) && (
               <ButtonContainer>
                 <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />

@@ -19,7 +19,7 @@ import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoSt
 const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 `
 
 const ButtonContainer = styled.div`

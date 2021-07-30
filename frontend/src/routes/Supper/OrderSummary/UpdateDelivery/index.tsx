@@ -8,6 +8,7 @@ import LoadingSpin from '../../../../components/LoadingSpin'
 import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
 import { DiscardChangesModal } from '../../../../components/Supper/Modals/DiscardChangesModal'
+import { RefreshIcon } from '../../../../components/Supper/RefreshIcon'
 import { getSupperGroupById } from '../../../../store/supper/action/level1/getReqests'
 import { RootState } from '../../../../store/types'
 
@@ -52,6 +53,7 @@ const UpdateDelivery = () => {
       <TopNavBar
         title="Order Summary"
         onLeftClick={() => (hasTouched ? setDiscardChangesModalIsOpen(true) : history.goBack())}
+        rightComponent={<RefreshIcon />}
       />
       {isLoading ? (
         <LoadingSpin />

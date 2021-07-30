@@ -21,8 +21,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { StyledTimePicker } from '../EditSupperGroup'
 import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
-import ReactPullToRefresh from 'react-pull-to-refresh'
-import { onRefresh } from '../../../common/reloadPage'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
+
 const MainContainer = styled.div`
   width: 100vw;
   height: 100%;
@@ -128,10 +128,8 @@ const OrderSummary = () => {
     const currentUNIXDate = Math.round(Date.now() / 1000)
 
     let epochClosingTime = moment(time._d).unix()
-    console.log('hellloooo', time, timeString, currentUNIXDate, epochClosingTime)
     if (currentUNIXDate > epochClosingTime) {
       epochClosingTime += 24 * 60 * 60 // Add a day
-      console.log('pass liao', epochClosingTime)
     }
 
     setValue('estArrivalTime', epochClosingTime)
@@ -155,85 +153,84 @@ const OrderSummary = () => {
 
   return (
     <MainContainer>
-      <TopNavBar title="Order Summary" onLeftClick={onLeftClick} />
-      <ReactPullToRefresh onRefresh={onRefresh}>
-        {isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <>
-            {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
-            {twoStepModalIsOpen && (
-              <TwoStepCancelGroupModal
-                modalSetter={setTwoStepModalIsOpen}
-                supperGroupId={params.supperGroupId}
-                onLeftButtonClick={() => {
-                  history.replace(PATHS.SUPPER_HOME)
-                  history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
-                }}
-              />
-            )}
-            <OrderCard
-              margin="0 23px"
-              collatedOrder={collatedOrder}
-              ownerId={supperGroup?.ownerId}
-              supperGroupStatus={supperGroup?.status}
-              splitCostMethod={supperGroup?.splitAdditionalCost}
-              supperGroup={supperGroup}
-              supperTotalCost={supperGroup?.totalPrice}
-              isEditable
+      <TopNavBar title="Order Summary" onLeftClick={onLeftClick} rightComponent={<RefreshIcon />} />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
+          {twoStepModalIsOpen && (
+            <TwoStepCancelGroupModal
+              modalSetter={setTwoStepModalIsOpen}
+              supperGroupId={params.supperGroupId}
+              onLeftButtonClick={() => {
+                history.replace(PATHS.SUPPER_HOME)
+                history.push(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
+              }}
             />
-            <FormContainer>
-              <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
-              <Controller
-                control={control}
-                name="estArrivalTime"
-                rules={{ required: true }}
-                render={() => (
-                  <StyledTimePicker
-                    use12Hours
-                    format="h:mm a"
-                    onChange={onChange}
-                    style={errors.estArrivalTime ? errorStyling : {}}
-                    {...(supperGroup?.estArrivalTime && {
-                      defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
-                    })}
-                  />
-                )}
-                defaultValue={null}
-              />
-              <ErrorContainer>
-                {errors.estArrivalTime?.type === 'required' && <ErrorText>Estimated Arrival Time required!</ErrorText>}
-              </ErrorContainer>
-            </FormContainer>
-            <FormContainer>
-              <FormHeader headerName="Collection Point" isCompulsory />
-              <InputText
-                type="text"
-                placeholder="Enter Location"
-                name="location"
-                ref={register({
-                  required: true,
-                  ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
-                })}
-                style={errors.location ? errorStyling : {}}
-                defaultValue={supperGroup?.location ?? ''}
-              />
-              {errors.location?.type === 'required' && <ErrorText>Collection Point required!</ErrorText>}
-              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-            </FormContainer>
-          </>
-        )}
-        <ButtonContainer>
-          <SupperButton
-            ghost
-            center
-            defaultButtonDescription="Order Cancelled"
-            onButtonClick={() => setTwoStepModalIsOpen(true)}
+          )}
+          <OrderCard
+            margin="0 23px"
+            collatedOrder={collatedOrder}
+            ownerId={supperGroup?.ownerId}
+            supperGroupStatus={supperGroup?.status}
+            splitCostMethod={supperGroup?.splitAdditionalCost}
+            supperGroup={supperGroup}
+            supperTotalCost={supperGroup?.totalPrice}
+            isEditable
           />
-          <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} htmlType="submit" />
-        </ButtonContainer>
-        <InformationCard updateSummary />
-      </ReactPullToRefresh>
+          <FormContainer>
+            <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
+            <Controller
+              control={control}
+              name="estArrivalTime"
+              rules={{ required: true }}
+              render={() => (
+                <StyledTimePicker
+                  use12Hours
+                  format="h:mm a"
+                  onChange={onChange}
+                  style={errors.estArrivalTime ? errorStyling : {}}
+                  {...(supperGroup?.estArrivalTime && {
+                    defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
+                  })}
+                />
+              )}
+              defaultValue={null}
+            />
+            <ErrorContainer>
+              {errors.estArrivalTime?.type === 'required' && <ErrorText>Estimated Arrival Time required!</ErrorText>}
+            </ErrorContainer>
+          </FormContainer>
+          <FormContainer>
+            <FormHeader headerName="Collection Point" isCompulsory />
+            <InputText
+              type="text"
+              placeholder="Enter Location"
+              name="location"
+              ref={register({
+                required: true,
+                ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
+              })}
+              style={errors.location ? errorStyling : {}}
+              defaultValue={supperGroup?.location ?? ''}
+            />
+            {errors.location?.type === 'required' && <ErrorText>Collection Point required!</ErrorText>}
+            {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+          </FormContainer>
+
+          <ButtonContainer>
+            <SupperButton
+              ghost
+              center
+              defaultButtonDescription="Order Cancelled"
+              onButtonClick={() => setTwoStepModalIsOpen(true)}
+            />
+            <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} htmlType="submit" />
+          </ButtonContainer>
+          <InformationCard updateSummary />
+        </>
+      )}
     </MainContainer>
   )
 }

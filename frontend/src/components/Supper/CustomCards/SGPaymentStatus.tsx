@@ -2,8 +2,6 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
-import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
-import { onRefresh } from '../../../common/reloadPage'
 import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { UnderlinedButton } from '../UnderlinedButton'
@@ -24,7 +22,8 @@ const StyledText = styled.text`
   font-weight: 500;
   font-size: 14px;
   margin: 10px auto;
-  width: 100%;
+  display: flex;
+  justify-content: center;
 `
 
 const TopSection = styled.div`
@@ -33,11 +32,6 @@ const TopSection = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 10px;
-`
-
-const StyledReloadIcon = styled(ReloadOutlined)`
-  margin: auto 0;
-  font-size: 17px;
 `
 
 type Props = {
@@ -54,6 +48,12 @@ export const SGPaymentStatus = (props: Props) => {
   const groupWithoutOwnerOrder = props.supperGroup?.orderList?.filter(
     (order) => order.user.userID !== localStorage.userID,
   )
+  const emptyUserListTextArr = [
+    'nobody ordered w u! loser!!',
+    'Nothing to show.',
+    'Nothing to show.',
+    'Nothing to show.',
+  ]
 
   return (
     <>
@@ -73,7 +73,6 @@ export const SGPaymentStatus = (props: Props) => {
                 }
               }}
             />
-            <StyledReloadIcon onClick={() => onRefresh()} />
           </TopSection>
 
           {groupWithoutOwnerOrder.map((order, index) => {
@@ -102,7 +101,7 @@ export const SGPaymentStatus = (props: Props) => {
           })}
         </>
       ) : (
-        <StyledText>nobody ordered w u! loser!!</StyledText>
+        <StyledText>{emptyUserListTextArr[Math.floor(Math.random() * emptyUserListTextArr.length)]}</StyledText>
       )}
     </>
   )

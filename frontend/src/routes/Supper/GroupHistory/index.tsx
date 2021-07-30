@@ -13,8 +13,7 @@ import { getGroupHistoryPageDetails } from '../../../store/supper/action/level2'
 import { HomeSupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
-import ReactPullToRefresh from 'react-pull-to-refresh'
-import { onRefresh } from '../../../common/reloadPage'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const Background = styled.div`
   min-height: 100vh;
@@ -92,10 +91,7 @@ const GroupHistory = () => {
       (supperGroup: HomeSupperGroup) =>
         supperGroup.status !== SupperGroupStatus.OPEN && supperGroup.status !== SupperGroupStatus.PENDING,
     )
-
-    return isLoading ? (
-      <LoadingSpin />
-    ) : (
+    return (
       <>
         <SubHeader>Active</SubHeader>
         {openOrPendingSupperGroups.length ? (
@@ -123,23 +119,27 @@ const GroupHistory = () => {
 
   return (
     <Background>
-      <TopNavBar title="History" onLeftClick={() => history.push(PATHS.SUPPER_HOME)} />
-      <ReactPullToRefresh onRefresh={onRefresh}>
-        <MainTabsContainer>
-          {sections.map((section, index) => {
-            const isSelected = sections.indexOf(section) === currentTab - 1
-            return (
-              <>
-                <TabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
-                  {section}
-                </TabContainer>
-                {index !== sections.length - 1 && <Separator />}
-              </>
-            )
-          })}
-        </MainTabsContainer>
-        {content()}
-      </ReactPullToRefresh>
+      <TopNavBar title="History" onLeftClick={() => history.push(PATHS.SUPPER_HOME)} rightComponent={<RefreshIcon />} />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <MainTabsContainer>
+            {sections.map((section, index) => {
+              const isSelected = sections.indexOf(section) === currentTab - 1
+              return (
+                <>
+                  <TabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
+                    {section}
+                  </TabContainer>
+                  {index !== sections.length - 1 && <Separator />}
+                </>
+              )
+            })}
+          </MainTabsContainer>
+          {content()}
+        </>
+      )}
       <BottomNavBar />
     </Background>
   )
