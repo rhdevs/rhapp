@@ -41,7 +41,7 @@ export const SupperButton = (props: Props) => {
       updatedTextColor={props.updatedTextColor}
       buttonWidth={props.buttonWidth}
       buttonHeight={props.buttonHeight}
-      style={{ ...props.style, width: 'fit-content', padding: 0 }}
+      style={{ ...props.style, width: 'fit-content', padding: 0, minHeight: '32px' }}
       descriptionStyle={{
         fontSize: '15px',
         padding: '5px 16px',

@@ -49,8 +49,8 @@ const Header = styled.div`
 `
 
 const HeaderText = styled.text`
-  font-weight: 700;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 21px;
   color: black;
   font-family: Inter;
 `
@@ -135,7 +135,7 @@ export const ViewMenuFoodModal = (props: Props) => {
             <SubHeaderContainer>
               <SubHeaderText>In Your Cart</SubHeaderText>
             </SubHeaderContainer>
-            <MainCard flexDirection="column" margin="5px 8px 15px 8px" padding="5px">
+            <MainCard flexDirection="column" margin="5px 8px 15px 8px" padding="inherit">
               {filteredFoodList.map((food, index) => {
                 const customisations: string[] = []
                 food.custom?.map((custom) =>

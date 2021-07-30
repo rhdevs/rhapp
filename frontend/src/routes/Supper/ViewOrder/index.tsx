@@ -5,7 +5,6 @@ import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import PullToRefresh from 'pull-to-refresh-react'
 import { SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import OwnerView from './OwnerView'
@@ -13,9 +12,9 @@ import UserView from './UserView'
 import { V1_BACKGROUND } from '../../../common/colours'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperErrorContent } from '../../../components/Supper/SupperErrorContent'
-import { onRefresh } from '../../../common/reloadPage'
 import { getViewOrderPageDetails } from '../../../store/supper/action/level2'
 import { PATHS } from '../../Routes'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const MainContainer = styled.div`
   display: grid;
@@ -44,43 +43,38 @@ const ViewOrder = () => {
 
   useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
-  }, [dispatch])
+  }, [dispatch, params.supperGroupId, supperGroup?.status, order?.hasPaid])
 
   return (
-    <PullToRefresh style={{ height: '100vh' }} onRefresh={onRefresh}>
-      <MainContainer>
-        <TopNavBar title="View Order" />
-        {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
-          <SupperErrorContent />
-        ) : isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <div>
-            {supperGroup?.ownerId === localStorage.userID ? (
-              <OwnerView
-                supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
-                supperGroup={supperGroup}
-                collatedOrder={collatedOrder}
-                supperGroupIsOrdered={selectedSupperGroupStatus === SupperGroupStatus.ORDERED}
-                supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
-                showTrackPayment={
-                  selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
-                  selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
-                }
-              />
-            ) : (
-              <UserView
-                supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
-                supperGroup={supperGroup}
-                supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
-                order={order}
-              />
-            )}
-          </div>
-        )}
-        <BottomNavBar />
-      </MainContainer>
-    </PullToRefresh>
+    <MainContainer>
+      <TopNavBar title="View Order" rightComponent={<RefreshIcon />} />
+      {supperErrorMessage === 'Could not get view order page details! Please try again later.' ? (
+        <SupperErrorContent />
+      ) : isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <div>
+          {supperGroup?.ownerId === localStorage.userID ? (
+            <OwnerView
+              supperGroup={supperGroup}
+              collatedOrder={collatedOrder}
+              showTrackPayment={
+                selectedSupperGroupStatus === SupperGroupStatus.ARRIVED ||
+                selectedSupperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT
+              }
+            />
+          ) : (
+            <UserView
+              supperGroupIsOpen={selectedSupperGroupStatus === SupperGroupStatus.OPEN}
+              supperGroup={supperGroup}
+              supperGroupIsCancelled={selectedSupperGroupStatus === SupperGroupStatus.CANCELLED}
+              order={order}
+            />
+          )}
+        </div>
+      )}
+      <BottomNavBar />
+    </MainContainer>
   )
 }
 

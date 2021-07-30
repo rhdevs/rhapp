@@ -11,6 +11,7 @@ import { FormHeader } from '../../../components/Supper/FormHeader'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { MarkPaymentCompleteModal } from '../../../components/Supper/Modals/MarkPaymentCompleteModal'
 import { PaymentMethodBubbles } from '../../../components/Supper/PaymentMethodBubbles'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { paymentMethods } from '../../../store/stubs'
 import { setSelectedPaymentMethod } from '../../../store/supper/action/setter'
@@ -104,7 +105,7 @@ const Payment = () => {
 
   return (
     <Background>
-      <TopNavBar title="Payment" onLeftClick={onLeftClick} />
+      <TopNavBar title="Payment" onLeftClick={onLeftClick} rightComponent={<RefreshIcon />} />
       {markPaymentCompleteModalIsOpen && (
         <MarkPaymentCompleteModal
           modalSetter={setMarkPaymentCompleteModalIsOpen}

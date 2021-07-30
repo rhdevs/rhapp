@@ -14,6 +14,8 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { SupperButton } from '../../../components/Supper/SupperButton'
 import { createOrder } from '../../../store/supper/action/level1/postRequests'
 import { getJoinGroupPageDetails } from '../../../store/supper/action/level2'
+import { SupperGroupStatus } from '../../../store/supper/types'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const Background = styled.div`
   height: 100vh;
@@ -50,20 +52,24 @@ const JoinGroup = () => {
   }
 
   return (
-    <Background>
-      <TopNavBar title="Join Group" />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <>
-          <SupperGroupCard supperGroup={supperGroup} isHome={false} />
-          <ButtonContainer>
-            <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />
-          </ButtonContainer>
-          <BottomNavBar />
-        </>
-      )}
-    </Background>
+    <PullToRefreshRH>
+      <Background>
+        <TopNavBar title="Join Group" />
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          <>
+            <SupperGroupCard supperGroup={supperGroup} isHome={false} />
+            {(supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) && (
+              <ButtonContainer>
+                <SupperButton onButtonClick={onClick} defaultButtonDescription="Join Group" />
+              </ButtonContainer>
+            )}
+            <BottomNavBar />
+          </>
+        )}
+      </Background>
+    </PullToRefreshRH>
   )
 }
 

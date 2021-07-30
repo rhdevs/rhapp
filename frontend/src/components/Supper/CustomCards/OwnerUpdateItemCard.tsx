@@ -140,108 +140,111 @@ export const OwnerUpdateItemCard = (props: Props) => {
   }
 
   return (
-    <MainCard margin="0 23px" flexDirection="column" padding="1.5rem 2rem !important" minHeight="fit-content">
-      <>
-        {props.foodItem && (
-          <>
-            <FormHeader headerName="What changed?" />
-            <Input
-              type="text"
-              defaultValue={''}
-              placeholder="List changes here"
-              name="changes"
-              ref={register({
-                required: false,
-              })}
-            />
-            <FormHeader headerName="New Price (per quantity)" topMargin />
-            <Input
-              type="number"
-              placeholder="Indicate new price"
-              name="newPrice"
-              defaultValue={''}
-              ref={register({
-                required: false,
-                valueAsNumber: true,
-                min: 0,
-              })}
-            />
-            {errors.newPrice?.type === 'min' && <ErrorText>Invalid price!</ErrorText>}
-            {!props.all && (
-              <>
-                <FormHeader headerName="New Quantity" topMargin />
-                <QuantityTracker
-                  center
-                  min={1}
-                  max={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
-                  default={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
-                />
-              </>
-            )}
-            <FormHeader headerName="Reason for edit" isCompulsory topMargin />
-            <TextArea
-              defaultValue={''}
-              placeholder="e.g. Price different on app, sides unavailable, etc.."
-              name="editReason"
-              ref={register({
-                required: false,
-                ...(props.foodItem && { validate: (input) => input.trim().length !== 0 }),
-              })}
-              error={errors.editReason}
-            />
-            {errors.editReason?.type === 'required' && <ErrorText>Reason required!</ErrorText>}
-            {errors.editReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
-            <SupperButton
-              htmlType="submit"
-              onButtonClick={onDeleteItemClick}
-              defaultButtonDescription={
-                props.all && (props.food?.quantity ?? 0) > 1 ? 'Delete Item for All' : 'Delete Item'
-              }
-              ghost
-              buttonWidth="100%"
-              style={{ margin: '2rem 0 0.5rem 0' }}
-            />
-            <SupperButton
-              htmlType="submit"
-              onButtonClick={onUpdateItemClick}
-              defaultButtonDescription={
-                props.all && (props.food?.quantity ?? 0) > 1 ? 'Update Item for All' : 'Update Item'
-              }
-              buttonWidth="100%"
-              style={{ margin: '1rem 0 0 0' }}
-            />
-          </>
-        )}
-        {props.deliveryFee && (
-          <>
-            <FormHeader headerName="Delivery Fee" isCompulsory />
-            <Input
-              type="number"
-              placeholder="Indicate new delivery fee"
-              name="newDeliveryFee"
-              defaultValue={''}
-              ref={register({
-                required: true,
-                ...(props.deliveryFee && { validate: (input) => input.trim().length !== 0 }),
-                valueAsNumber: true,
-                min: 0,
-              })}
-              error={errors.newDeliveryFee}
-            />
-            {errors.newDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
-            {(errors.newDeliveryFee?.type === 'min' || errors.newDeliveryFee?.type === 'validate') && (
-              <ErrorText>Invalid delivery fee!</ErrorText>
-            )}
-            <SupperButton
-              htmlType="submit"
-              onButtonClick={onUpdateDeliveryClick}
-              defaultButtonDescription="Update"
-              buttonWidth="100%"
-              style={{ margin: '2rem 0 0 0' }}
-            />
-          </>
-        )}
-      </>
-    </MainCard>
+    <>
+      <MainCard margin="0 23px" flexDirection="column" padding="1.5rem 2rem !important" minHeight="fit-content">
+        <>
+          {props.foodItem && (
+            <>
+              <FormHeader headerName="What changed?" />
+              <Input
+                type="text"
+                defaultValue={''}
+                placeholder="List changes here"
+                name="changes"
+                ref={register({
+                  required: false,
+                })}
+              />
+              <FormHeader headerName="New Price (per quantity)" topMargin />
+              <Input
+                type="number"
+                placeholder="Indicate new price"
+                name="newPrice"
+                defaultValue={''}
+                ref={register({
+                  required: false,
+                  valueAsNumber: true,
+                  min: 0,
+                })}
+              />
+              {errors.newPrice?.type === 'min' && <ErrorText>Invalid price!</ErrorText>}
+              {!props.all && (
+                <>
+                  <FormHeader headerName="New Quantity" topMargin />
+                  <QuantityTracker
+                    center
+                    min={1}
+                    max={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                    default={props.food?.updates?.updatedQuantity ?? props.food?.quantity ?? 1}
+                  />
+                </>
+              )}
+              <FormHeader headerName="Reason for edit" isCompulsory topMargin />
+              <TextArea
+                defaultValue={''}
+                placeholder="e.g. Price different on app, sides unavailable, etc.."
+                name="editReason"
+                ref={register({
+                  required: false,
+                  ...(props.foodItem && { validate: (input) => input.trim().length !== 0 }),
+                })}
+                error={errors.editReason}
+              />
+              {errors.editReason?.type === 'required' && <ErrorText>Reason required!</ErrorText>}
+              {errors.editReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
+              <SupperButton
+                htmlType="submit"
+                onButtonClick={onDeleteItemClick}
+                defaultButtonDescription={
+                  props.all && (props.food?.quantity ?? 0) > 1 ? 'Delete Item for All' : 'Delete Item'
+                }
+                ghost
+                buttonWidth="100%"
+                style={{ margin: '2rem 0 0.5rem 0' }}
+              />
+              <SupperButton
+                htmlType="submit"
+                onButtonClick={onUpdateItemClick}
+                defaultButtonDescription={
+                  props.all && (props.food?.quantity ?? 0) > 1 ? 'Update Item for All' : 'Update Item'
+                }
+                buttonWidth="100%"
+                style={{ margin: '1rem 0 0 0' }}
+              />
+            </>
+          )}
+          {props.deliveryFee && (
+            <>
+              <FormHeader headerName="Delivery Fee" isCompulsory />
+              <Input
+                type="number"
+                placeholder="Indicate new delivery fee"
+                name="newDeliveryFee"
+                defaultValue={''}
+                ref={register({
+                  required: true,
+                  ...(props.deliveryFee && { validate: (input) => input.trim().length !== 0 }),
+                  valueAsNumber: true,
+                  min: 0,
+                })}
+                error={errors.newDeliveryFee}
+              />
+              {errors.newDeliveryFee?.type === 'required' && <ErrorText>Delivery fee required!</ErrorText>}
+              {(errors.newDeliveryFee?.type === 'min' || errors.newDeliveryFee?.type === 'validate') && (
+                <ErrorText>Invalid delivery fee!</ErrorText>
+              )}
+              <SupperButton
+                htmlType="submit"
+                onButtonClick={onUpdateDeliveryClick}
+                defaultButtonDescription="Update"
+                buttonWidth="100%"
+                style={{ margin: '2rem 0 0 0' }}
+              />
+            </>
+          )}
+        </>
+      </MainCard>
+      <br />
+    </>
   )
 }

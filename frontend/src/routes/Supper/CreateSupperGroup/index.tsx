@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import styled from 'styled-components'
 import { V1_BACKGROUND } from '../../../common/colours'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 import { initSupperGroup } from '../../../store/stubs'
 import { setSupperGroup } from '../../../store/supper/action/setter'
 import { PATHS } from '../../Routes'
@@ -61,5 +62,9 @@ export default function CreateSupperGroup() {
     }
   }
 
-  return <Background>{formPage(Number(params.page))}</Background>
+  return (
+    <PullToRefreshRH>
+      <Background>{formPage(Number(params.page))}</Background>
+    </PullToRefreshRH>
+  )
 }

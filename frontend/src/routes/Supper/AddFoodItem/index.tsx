@@ -11,7 +11,6 @@ import { AddUpdateCartButton } from '../../../components/Supper/AddUpdateCartBut
 import { RootState } from '../../../store/types'
 import { CancelAction, Custom, Food, Option } from '../../../store/supper/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
 import SelectField from '../../../components/Supper/SelectField'
 import useSnackbar from '../../../hooks/useSnackbar'
 import CancelActionField from '../../../components/Supper/CancelActionField'
@@ -20,6 +19,7 @@ import { InformationCard } from '../../../components/Supper/InformationCard'
 import { DiscardChangesModal } from '../../../components/Supper/Modals/DiscardChangesModal'
 import { addFoodToOrder } from '../../../store/supper/action/level1/postRequests'
 import { getAddFoodItemPageDetails } from '../../../store/supper/action/level2'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const Background = styled.form`
   width: 100vw;
@@ -37,8 +37,8 @@ const MainContainer = styled.div`
 const FoodItemHeader = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
-  font-size: 24px;
+  font-weight: 500;
+  font-size: 21px;
 `
 
 type CustomData = Record<string, string | string[] | CancelAction>
@@ -128,7 +128,6 @@ const AddFoodItem = () => {
       }
       dispatch(addFoodToOrder(newFood, params.orderId))
       history.goBack()
-      console.log(data, count)
     })()
   }
 
@@ -139,7 +138,6 @@ const AddFoodItem = () => {
       )
       if (satisfiedFields.length === compulsoryFields.length) return true
     }
-
     return false
   }
 
@@ -160,7 +158,7 @@ const AddFoodItem = () => {
 
   return (
     <Background onSubmit={onSubmit}>
-      <TopNavBar title="Add Item" onLeftClick={onLeftClick} />
+      <TopNavBar title="Add Item" onLeftClick={onLeftClick} rightComponent={<RefreshIcon />} />
       {isDiscardChangesModalOpen && <DiscardChangesModal modalSetter={setIsDiscardChangesModalOpen} />}
       {isLoading ? (
         <LoadingSpin />

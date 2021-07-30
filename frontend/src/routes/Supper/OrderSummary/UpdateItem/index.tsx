@@ -10,6 +10,7 @@ import TopNavBar from '../../../../components/Mobile/TopNavBar'
 import { OwnerUpdateItemCard } from '../../../../components/Supper/CustomCards/OwnerUpdateItemCard'
 import { FoodLine } from '../../../../components/Supper/FoodLine'
 import { DiscardChangesModal } from '../../../../components/Supper/Modals/DiscardChangesModal'
+import { RefreshIcon } from '../../../../components/Supper/RefreshIcon'
 import { getUpdateItemPageDetails } from '../../../../store/supper/action/level2'
 import { RootState } from '../../../../store/types'
 import { OldInfoContainer } from '../UpdateDelivery'
@@ -41,6 +42,7 @@ const UpdateItem = () => {
       <TopNavBar
         title="Order Summary"
         onLeftClick={() => (hasTouched ? setDiscardChangesModalIsOpen(true) : history.goBack())}
+        rightComponent={<RefreshIcon />}
       />
       {isLoading ? (
         <LoadingSpin />

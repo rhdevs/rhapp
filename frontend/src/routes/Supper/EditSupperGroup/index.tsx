@@ -26,6 +26,7 @@ import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import { setEditOrderNumber, setSelectedPaymentMethod } from '../../../store/supper/action/setter'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { getEditSupperGroupDetails } from '../../../store/supper/action/level2'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const Background = styled.form`
   width: 100vw;
@@ -470,6 +471,7 @@ const EditSupperGroup = () => {
         onLeftClick={() => {
           Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
         }}
+        rightComponent={<RefreshIcon />}
       />
       {isLoading ? (
         <LoadingSpin />

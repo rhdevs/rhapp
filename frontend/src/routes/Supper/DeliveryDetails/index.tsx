@@ -24,6 +24,7 @@ import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { setEstimatedArrivalTime } from '../../../store/supper/action/setter'
 import { updateSupperGroup } from '../../../store/supper/action/level1/putRequests'
 import { getDeliveryDetails } from '../../../store/supper/action/level2'
+import PullToRefreshRH from '../../../components/PullToRefreshRH'
 
 const Background = styled.div`
   width: 100vw;
@@ -246,96 +247,100 @@ const DeliveryDetails = () => {
   }
 
   return (
-    <Background>
-      <TopNavBar title="Delivery Details" onLeftClick={onLeftClick} />
-      <MainContainer>
-        {isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <>
-            {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
-            {isCancelModalOpen && (
-              <CancelGroupModal
-                modalSetter={setIsCancelModalOpen}
-                onLeftButtonClick={onCancelModalConfirmClick}
-                supperGroupId={params.supperGroupId}
+    <PullToRefreshRH>
+      <Background>
+        <TopNavBar title="Delivery Details" onLeftClick={onLeftClick} />
+        <MainContainer>
+          {isLoading ? (
+            <LoadingSpin />
+          ) : (
+            <>
+              {hasChangedModal && <DiscardChangesModal modalSetter={setHasChangedModal} />}
+              {isCancelModalOpen && (
+                <CancelGroupModal
+                  modalSetter={setIsCancelModalOpen}
+                  onLeftButtonClick={onCancelModalConfirmClick}
+                  supperGroupId={params.supperGroupId}
+                />
+              )}
+              {confirmStatusUpdateModal && (
+                <ConfirmStatusUpdateModal
+                  supperGroupId={params.supperGroupId}
+                  modalSetter={setConfirmStatusUpdateModal}
+                />
+              )}
+              <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
+              <FormHeader isCompulsory headerName="Order Status" topMargin />
+              <SGStatusOptions
+                onlyArrivedOption={supperGroup?.status === SupperGroupStatus.ARRIVED}
+                default={supperGroup?.status}
+                supperGroupStatusList={supperGroupStatusList}
               />
-            )}
-            {confirmStatusUpdateModal && (
-              <ConfirmStatusUpdateModal
-                supperGroupId={params.supperGroupId}
-                modalSetter={setConfirmStatusUpdateModal}
-              />
-            )}
-            <StyledSGIdText>{getReadableSupperGroupId(supperGroup?.supperGroupId)}</StyledSGIdText>
-            <FormHeader isCompulsory headerName="Order Status" topMargin />
-            <SGStatusOptions
-              onlyArrivedOption={supperGroup?.status === SupperGroupStatus.ARRIVED}
-              default={supperGroup?.status}
-              supperGroupStatusList={supperGroupStatusList}
-            />
-            {orderStatusHasError && <ErrorText padding="5px 0 0 0">Status required!</ErrorText>}
-            {supperGroupIsCancelled ? (
-              <CancellationBox>
-                <FormHeader headerName="Reason for Cancellation" isCompulsory />
-                <CancellationInputBox>
-                  <Controller
-                    name="cancelReason"
-                    render={({ onChange, value }) => (
-                      <InputRow
-                        placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
-                        textarea
-                        value={value}
-                        onChange={onChange}
-                        {...register('cancelReason', {
-                          ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
-                          ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
-                        })}
-                        haserror={errors.cancelReason ? true : false}
-                      />
+              {orderStatusHasError && <ErrorText padding="5px 0 0 0">Status required!</ErrorText>}
+              {supperGroupIsCancelled ? (
+                <CancellationBox>
+                  <FormHeader headerName="Reason for Cancellation" isCompulsory />
+                  <CancellationInputBox>
+                    <Controller
+                      name="cancelReason"
+                      render={({ onChange, value }) => (
+                        <InputRow
+                          placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
+                          textarea
+                          value={value}
+                          onChange={onChange}
+                          {...register('cancelReason', {
+                            ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
+                            ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
+                          })}
+                          haserror={errors.cancelReason ? true : false}
+                        />
+                      )}
+                      control={control}
+                      defaultValue={null}
+                    />
+                    {errors.cancelReason?.type === 'required' && (
+                      <ErrorText>Reason for cancellation required!</ErrorText>
                     )}
-                    control={control}
-                    defaultValue={null}
-                  />
-                  {errors.cancelReason?.type === 'required' && <ErrorText>Reason for cancellation required!</ErrorText>}
-                  {errors.cancelReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
-                </CancellationInputBox>
-              </CancellationBox>
-            ) : (
-              <>
-                {!supperGroupIsArrived && (
-                  <>
-                    <DeliveryTimeContainer>
-                      <FormHeader margin="0" headerName="Delivery Time" />
-                      <StyledTimeText>{estArrivalTime}</StyledTimeText>
-                    </DeliveryTimeContainer>
-                    <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
-                  </>
-                )}
-                <br />
-                <FormHeader headerName="Collection Point" isCompulsory />
+                    {errors.cancelReason?.type === 'validate' && <ErrorText>Invalid reason!</ErrorText>}
+                  </CancellationInputBox>
+                </CancellationBox>
+              ) : (
                 <>
-                  <InputText
-                    type="text"
-                    placeholder="Enter Location"
-                    name="location"
-                    ref={register({
-                      required: true,
-                      ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
-                    })}
-                    style={errors.location ? errorStyling : {}}
-                    defaultValue={supperGroup?.location ?? ''}
-                  />
-                  {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
-                  {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+                  {!supperGroupIsArrived && (
+                    <>
+                      <DeliveryTimeContainer>
+                        <FormHeader margin="0" headerName="Delivery Time" />
+                        <StyledTimeText>{estArrivalTime}</StyledTimeText>
+                      </DeliveryTimeContainer>
+                      <DeliveryTimeSetter center default={defaultDeliveryTime < 0 ? 0 : defaultDeliveryTime} />
+                    </>
+                  )}
+                  <br />
+                  <FormHeader headerName="Collection Point" isCompulsory />
+                  <>
+                    <InputText
+                      type="text"
+                      placeholder="Enter Location"
+                      name="location"
+                      ref={register({
+                        required: true,
+                        ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
+                      })}
+                      style={errors.location ? errorStyling : {}}
+                      defaultValue={supperGroup?.location ?? ''}
+                    />
+                    {errors.location?.type === 'required' && <ErrorText>Location required!</ErrorText>}
+                    {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+                  </>
                 </>
-              </>
-            )}
-            <br /> <SupperButton center defaultButtonDescription="Save Changes" onButtonClick={onSubmit} />
-          </>
-        )}
-      </MainContainer>
-    </Background>
+              )}
+              <br /> <SupperButton center defaultButtonDescription="Save Changes" onButtonClick={onSubmit} />
+            </>
+          )}
+        </MainContainer>
+      </Background>
+    </PullToRefreshRH>
   )
 }
 

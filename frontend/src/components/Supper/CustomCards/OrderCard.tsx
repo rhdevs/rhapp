@@ -196,7 +196,9 @@ export const OrderCard = (props: Props) => {
   const supperGroupIsOpenOrPending =
     supperGroupStatus === SupperGroupStatus.OPEN || supperGroupStatus === SupperGroupStatus.PENDING
   const showTrackPaymentCard =
-    isOwner && supperGroupStatus === (SupperGroupStatus.ARRIVED || SupperGroupStatus.AWAITING_PAYMENT)
+    (isOwner && supperGroupStatus === SupperGroupStatus.ARRIVED) ||
+    supperGroupStatus === SupperGroupStatus.AWAITING_PAYMENT ||
+    supperGroupStatus === SupperGroupStatus.COMPLETED
   const canEditUserFood = isOwner && !supperGroupIsOpenOrPending
   const isEditable = props.isEditable ?? (!isOwner && supperGroupIsOpenOrPending)
   const restaurantId = props.supperGroup?.restaurantId ?? props.restaurantId
@@ -488,6 +490,7 @@ export const OrderCard = (props: Props) => {
                     }),
                   )
                   wasEdited = food.updates as boolean
+                  console.log(orderId)
                   return (
                     <FoodLine
                       key={foodIndex}

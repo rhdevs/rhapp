@@ -64,7 +64,6 @@ export const CreateOrderPageOne = () => {
 
   useEffect(() => {
     if (supperGroup) {
-      console.log(supperGroup)
       reset({
         supperGroupName: supperGroup.supperGroupName,
         restaurant: supperGroup.restaurantName as Restaurants,
@@ -132,7 +131,6 @@ export const CreateOrderPageOne = () => {
         closingTime: data.closingTime,
         costLimit: hasMaxPrice ? priceLimit : undefined,
       }
-      console.log('firstSubmit', updatedSPInfo)
       dispatch(setSupperGroup(updatedSPInfo))
       history.push(`${PATHS.CREATE_SUPPER_GROUP}/2`)
     })()

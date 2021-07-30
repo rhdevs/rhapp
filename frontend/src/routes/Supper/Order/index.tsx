@@ -18,6 +18,7 @@ import { setIsFoodMenuModalOpen, setSearchValue } from '../../../store/supper/ac
 import { getOrderPageDetails } from '../../../store/supper/action/level2'
 import { LeaveGroupModal } from '../../../components/Supper/Modals/LeaveGroupModal'
 import { SupperGroupStatus } from '../../../store/supper/types'
+import { RefreshIcon } from '../../../components/Supper/RefreshIcon'
 
 const Background = styled.div`
   width: 100vw;
@@ -92,6 +93,7 @@ const Order = () => {
         onLeftClick={() =>
           !isOwner && order?.foodList.length === 0 ? setLeaveGroupModalIsOpen(true) : history.goBack()
         }
+        rightComponent={<RefreshIcon />}
       />
       {leaveGroupModalIsOpen && (
         <LeaveGroupModal
@@ -120,7 +122,7 @@ const Order = () => {
               viewMenuFoodModalSetter={setIsFoodMenuModalOpen}
             />
           )}
-          <SupperGroupCard isHome={false} supperGroup={supperGroup} />
+          <SupperGroupCard isHome={false} supperGroup={supperGroup} margin="0 23px 23px" />
           <SearchBarContainer>
             <StickyContainer>
               <Restaurant>{restaurant?.name ?? '-'}</Restaurant>

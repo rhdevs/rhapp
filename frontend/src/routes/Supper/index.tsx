@@ -16,12 +16,11 @@ import { Filter, HomeSupperGroup } from '../../store/supper/types'
 import { SupperGroupCard } from '../../components/Supper/SupperGroupCard'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd'
-import PullToRefresh from 'pull-to-refresh-react'
-import { onRefresh } from '../../common/reloadPage'
 import { FilterBubbles } from '../../components/Supper/FilterBubbles'
-import { getAllSupperGroups } from '../../store/supper/action/level1/getReqests'
 import { setSupperGroup } from '../../store/supper/action/setter'
 import { initSupperGroup } from '../../store/stubs'
+import PullToRefreshRH from '../../components/PullToRefreshRH'
+import { getSupperHomePageDetails } from '../../store/supper/action/level2'
 
 const Background = styled.div`
   display: grid;
@@ -120,7 +119,7 @@ export default function Supper() {
   )
 
   useEffect(() => {
-    dispatch(getAllSupperGroups())
+    dispatch(getSupperHomePageDetails())
     dispatch(setSupperGroup(initSupperGroup)) // to prevent create group page from being filled with other group details
   }, [dispatch])
 
@@ -139,8 +138,8 @@ export default function Supper() {
     errorText = 'No supper groups found.'
   }
   return (
-    <Background>
-      <PullToRefresh style={{ maxHeight: '100vh' }} onRefresh={onRefresh}>
+    <PullToRefreshRH>
+      <Background>
         <StickyContainer>
           <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
           <SearchContainer>
@@ -157,7 +156,6 @@ export default function Supper() {
           </SearchContainer>
           <FilterBubbles />
         </StickyContainer>
-
         {isLoading ? (
           <LoadingSpin />
         ) : (
@@ -176,8 +174,8 @@ export default function Supper() {
         <PlusButtonDiv>
           <PlusButton onClick={() => history.push(`${PATHS.CREATE_SUPPER_GROUP}/1`)} />
         </PlusButtonDiv>
-      </PullToRefresh>
-      <BottomNavBar />
-    </Background>
+        <BottomNavBar />
+      </Background>
+    </PullToRefreshRH>
   )
 }

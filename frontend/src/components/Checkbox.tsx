@@ -8,6 +8,7 @@ const Container = styled.label<{
   checked?: boolean | undefined
   margin?: string | undefined
   sizePercentage?: number | undefined
+  isDisabled?: boolean
 }>`
   display: block;
   position: relative;
@@ -21,6 +22,7 @@ const Container = styled.label<{
   height: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   width: ${(props) => (props.sizePercentage ?? 1) * 20}px;
   ${(props) => props.flexPercentage && `flex: ${props.flexPercentage}%;`}
+  ${(props) => props.isDisabled && 'cursor: not-allowed'}
 `
 
 const Checkmark = styled.span<{
@@ -84,7 +86,12 @@ export const Checkbox = (props: Props) => {
   const [isChecked, setIsChecked] = useState(props.isChecked ?? false)
 
   return (
-    <Container flexPercentage={props.flexPercentage} sizePercentage={props.sizePercentage} margin={props.margin}>
+    <Container
+      flexPercentage={props.flexPercentage}
+      sizePercentage={props.sizePercentage}
+      margin={props.margin}
+      isDisabled={props.isDisabled}
+    >
       <Background
         onClick={(e) => {
           if (!props.isDisabled) {

@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
-import PullToRefresh from 'pull-to-refresh-react'
-import { CollatedOrder, SupperGroup } from '../../../store/supper/types'
+import { CollatedOrder, SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { PATHS } from '../../Routes'
 import { CloseGroupEarlyModal } from '../../../components/Supper/Modals/CloseGroupEarlyModal'
 import { SupperGroupCard } from '../../../components/Supper/SupperGroupCard'
@@ -12,7 +11,6 @@ import { SupperButton } from '../../../components/Supper/SupperButton'
 import { EndSupperGroupModal } from '../../../components/Supper/Modals/EndSupperGroupModal'
 import { InformationCard } from '../../../components/Supper/InformationCard'
 import { EmptyCartModal } from '../../../components/Supper/Modals/EmptyCartModal'
-import { onRefresh } from '../../../common/reloadPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -21,7 +19,7 @@ import { TwoStepCancelGroupModal } from '../../../components/Supper/Modals/TwoSt
 const SupperButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 `
 
 const ButtonContainer = styled.div`
@@ -47,18 +45,15 @@ const LowerRowButton = styled.div`
 `
 
 type Props = {
-  supperGroupIsOpen: boolean
   supperGroup: SupperGroup | null
   collatedOrder: CollatedOrder | null
-  supperGroupIsOrdered: boolean
-  supperGroupIsCancelled: boolean
   showTrackPayment: boolean
 }
 
 const OwnerView = (props: Props) => {
   const params = useParams<{ supperGroupId: string }>()
   const history = useHistory()
-  const { isLoading } = useSelector((state: RootState) => state.supper)
+  const { isLoading, supperGroup } = useSelector((state: RootState) => state.supper)
 
   const [emptyCartModalIsOpen, setEmptyCartModalIsOpen] = useState<boolean>(false)
   const [closeModalIsOpen, setCloseModalIsOpen] = useState<boolean>(false)
@@ -69,7 +64,7 @@ const OwnerView = (props: Props) => {
   const ownerOrderId = ownerOrder?.orderId
 
   const showBottomSection = () => {
-    if (props.supperGroupIsOpen) {
+    if (supperGroup?.status === SupperGroupStatus.OPEN || supperGroup?.status === SupperGroupStatus.PENDING) {
       return (
         <>
           <ButtonContainer>
@@ -148,38 +143,37 @@ const OwnerView = (props: Props) => {
           suppergroupId={props.supperGroup?.supperGroupId}
         />
       )}
-      <PullToRefresh onRefresh={onRefresh}>
-        {isLoading ? (
-          <LoadingSpin />
-        ) : (
-          <>
-            <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
-            <OrderCard
-              supperGroup={props.supperGroup}
-              ownerId={localStorage.userID}
-              supperGroupStatus={props.supperGroup?.status}
-              collatedOrder={props.collatedOrder}
-            />
-            {showBottomSection()}
-            {props.showTrackPayment && !isLoading && (
-              <SupperButtonContainer>
-                <SupperButton
-                  onButtonClick={() => setEndGroupModalIsOpen(true)}
-                  defaultButtonDescription="End Supper Group"
-                />
-              </SupperButtonContainer>
-            )}
-            {props.supperGroupIsCancelled && (
-              <SupperButtonContainer>
-                <SupperButton
-                  onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
-                  defaultButtonDescription="Main Page"
-                />
-              </SupperButtonContainer>
-            )}
-          </>
-        )}
-      </PullToRefresh>
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <>
+          <SupperGroupCard margin="0 23px" supperGroup={props.supperGroup} isHome={false} />
+          <OrderCard
+            supperGroup={props.supperGroup}
+            ownerId={localStorage.userID}
+            supperGroupStatus={props.supperGroup?.status}
+            collatedOrder={props.collatedOrder}
+            order={ownerOrder}
+          />
+          {showBottomSection()}
+          {props.showTrackPayment && !isLoading && (
+            <SupperButtonContainer>
+              <SupperButton
+                onButtonClick={() => setEndGroupModalIsOpen(true)}
+                defaultButtonDescription="End Supper Group"
+              />
+            </SupperButtonContainer>
+          )}
+          {supperGroup?.status === SupperGroupStatus.CANCELLED && (
+            <SupperButtonContainer>
+              <SupperButton
+                onButtonClick={() => history.push(PATHS.SUPPER_HOME)}
+                defaultButtonDescription="Main Page"
+              />
+            </SupperButtonContainer>
+          )}
+        </>
+      )}
     </>
   )
 }

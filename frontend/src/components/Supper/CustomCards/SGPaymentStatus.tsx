@@ -2,9 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
-import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
-import { onRefresh } from '../../../common/reloadPage'
-import { SupperGroup } from '../../../store/supper/types'
+import { SupperGroup, SupperGroupStatus } from '../../../store/supper/types'
 import { RootState } from '../../../store/types'
 import { UnderlinedButton } from '../UnderlinedButton'
 import { UserPaymentStatus } from '../UserPaymentStatus'
@@ -22,8 +20,10 @@ const StyledText = styled.text`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   margin: 10px auto;
+  display: flex;
+  justify-content: center;
 `
 
 const TopSection = styled.div`
@@ -32,11 +32,6 @@ const TopSection = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 10px;
-`
-
-const StyledReloadIcon = styled(ReloadOutlined)`
-  margin: auto 0;
-  font-size: 17px;
 `
 
 type Props = {
@@ -48,10 +43,17 @@ export const SGPaymentStatus = (props: Props) => {
   const dispatch = useDispatch()
   const { isExpandAll } = useSelector((state: RootState) => state.supper)
   const buttonText = isExpandAll ? 'Expand all' : 'Collapse all'
+  const unclickable = props.supperGroup?.status === SupperGroupStatus.COMPLETED
 
   const groupWithoutOwnerOrder = props.supperGroup?.orderList?.filter(
     (order) => order.user.userID !== localStorage.userID,
   )
+  const emptyUserListTextArr = [
+    'nobody ordered w u! loser!!',
+    'Nothing to show.',
+    'Nothing to show.',
+    'Nothing to show.',
+  ]
 
   return (
     <>
@@ -71,7 +73,6 @@ export const SGPaymentStatus = (props: Props) => {
                 }
               }}
             />
-            <StyledReloadIcon onClick={() => onRefresh()} />
           </TopSection>
 
           {groupWithoutOwnerOrder.map((order, index) => {
@@ -92,6 +93,7 @@ export const SGPaymentStatus = (props: Props) => {
                   paymentMethod={order.paymentMethod}
                   numOrders={groupWithoutOwnerOrder?.length ?? 0}
                   supperGroupId={props.supperGroup?.supperGroupId}
+                  unclickable={unclickable}
                 />
                 {index + 1 !== groupWithoutOwnerOrder?.length && <HorizontalLine />}
               </>
@@ -99,7 +101,7 @@ export const SGPaymentStatus = (props: Props) => {
           })}
         </>
       ) : (
-        <StyledText>No orders found!</StyledText>
+        <StyledText>{emptyUserListTextArr[Math.floor(Math.random() * emptyUserListTextArr.length)]}</StyledText>
       )}
     </>
   )
