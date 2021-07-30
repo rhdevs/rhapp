@@ -5965,11 +5965,6 @@ gzip-size@5.1.1:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
-hammerjs@^2.0.4:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
-
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz"
@@ -10661,14 +10656,6 @@ react-native-swipeout@^2.2.2:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
     react-tween-state "^0.1.5"
-
-react-pull-to-refresh@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-pull-to-refresh/-/react-pull-to-refresh-1.1.2.tgz#cf488ed3ac5b941d44c31fcb55b2b3a0f7669544"
-  integrity sha512-uOFKAFn207Z97a03/WQRZHFUwhA7cOvEJkYgK2x8peqjnht0Dt2PfVXc5VQj0GlpPHYzQT70fn2B55oSCf0yHA==
-  dependencies:
-    hammerjs "^2.0.4"
-    prop-types "^15.5.10"
 
 react-qrcode-logo@^2.4.0:
   version "2.4.0"
