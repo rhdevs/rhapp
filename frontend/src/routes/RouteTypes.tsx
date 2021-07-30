@@ -44,7 +44,6 @@ export const PrivateRoute = (routeProps: any) => {
       <Route
         {...rest}
         render={(props) => {
-          console.log(props.location)
           return <Redirect push to={{ pathname: '/auth/login', state: { from: props.location.pathname } }} />
         }}
       />

@@ -15,7 +15,6 @@ export const SupperSearchBar = () => {
   const { searchValue } = useSelector((state: RootState) => state.supper)
 
   const onChange = (input: string) => {
-    console.log(input)
     dispatch(setSearchValue(input))
     dispatch(setFilteredSupperGroups())
   }

@@ -99,7 +99,6 @@ export const ContactModal = (props: Prop) => {
 
   useEffect(() => {
     const contacts = props.food?.userIdList
-    console.log('this is the list of userid with that food', contacts)
     const userdetails = contacts
       ?.map((userId) => {
         const userInfo = props.orderList?.find((order) => order.user.userID === userId)?.user

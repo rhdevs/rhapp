@@ -57,7 +57,6 @@ export const TwoStepCancelGroupModal = (props: Props, e: React.MouseEvent<HTMLEl
 
   const onDoneClick = () => {
     handleSubmit((data) => {
-      console.log(data)
       const updatedInfo = {
         status: SupperGroupStatus.CANCELLED,
         comments: data.cancelReason,
