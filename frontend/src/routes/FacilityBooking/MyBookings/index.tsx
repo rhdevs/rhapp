@@ -233,8 +233,6 @@ export default function ViewMyBookings() {
                             history.replace(PATHS.FACILITY_BOOKING_MAIN)
                             history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
                           }}
-                          top={10}
-                          bottom={-30}
                           rightButtonText={'Cancel'}
                           onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
                         />

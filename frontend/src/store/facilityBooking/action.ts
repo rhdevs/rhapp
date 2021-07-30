@@ -280,12 +280,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       return
     }
   }
-  if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
-    //More than 2 weeks in advance
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    dispatch(SetCreateBookingError('You cannot create a booking more than 2 weeks in advance!'))
-    return
-  } else if (new Date().getTime() > newBookingFromDate.getTime()) {
+  if (new Date().getTime() > newBookingFromDate.getTime()) {
     //Creating a booking in the past
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
     dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
