@@ -23,7 +23,6 @@ import moment from 'moment'
 import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 import ReactPullToRefresh from 'react-pull-to-refresh'
 import { onRefresh } from '../../../common/reloadPage'
-
 const MainContainer = styled.div`
   width: 100vw;
   height: 100%;
@@ -104,8 +103,10 @@ const OrderSummary = () => {
   useEffect(() => {
     if (!isPlacingOrder) {
       dispatch(getOrderSummaryPageDetails(params.supperGroupId))
+    } else {
+      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     }
-  }, [dispatch])
+  }, [dispatch, isPlacingOrder])
 
   useEffect(() => {
     if (supperGroup?.status === SupperGroupStatus.CANCELLED || supperGroup?.status === SupperGroupStatus.ORDERED) {
@@ -149,7 +150,6 @@ const OrderSummary = () => {
       }
       dispatch(updateSupperGroup(params.supperGroupId, updatedInfo))
       setIsPlacingOrder(true)
-      history.replace(`${PATHS.VIEW_ORDER}/${params.supperGroupId}`)
     })()
   }
 
@@ -182,63 +182,57 @@ const OrderSummary = () => {
               supperTotalCost={supperGroup?.totalPrice}
               isEditable
             />
-            {supperGroup?.status === SupperGroupStatus.CLOSED && (
-              <>
-                <FormContainer>
-                  <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
-                  <Controller
-                    control={control}
-                    name="estArrivalTime"
-                    rules={{ required: true }}
-                    render={() => (
-                      <StyledTimePicker
-                        use12Hours
-                        format="h:mm a"
-                        onChange={onChange}
-                        style={errors.estArrivalTime ? errorStyling : {}}
-                        {...(supperGroup?.estArrivalTime && {
-                          defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
-                        })}
-                      />
-                    )}
-                    defaultValue={null}
-                  />
-                  <ErrorContainer>
-                    {errors.estArrivalTime?.type === 'required' && (
-                      <ErrorText>Estimated Arrival Time required!</ErrorText>
-                    )}
-                  </ErrorContainer>
-                </FormContainer>
-                <FormContainer>
-                  <FormHeader headerName="Collection Point" isCompulsory />
-                  <InputText
-                    type="text"
-                    placeholder="Enter Location"
-                    name="location"
-                    ref={register({
-                      required: true,
-                      ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
+            <FormContainer>
+              <FormHeader topMargin headerName="Est Arrival Time" isCompulsory />
+              <Controller
+                control={control}
+                name="estArrivalTime"
+                rules={{ required: true }}
+                render={() => (
+                  <StyledTimePicker
+                    use12Hours
+                    format="h:mm a"
+                    onChange={onChange}
+                    style={errors.estArrivalTime ? errorStyling : {}}
+                    {...(supperGroup?.estArrivalTime && {
+                      defaultValue: moment(`${unixToFormattedTime(supperGroup?.estArrivalTime)}`, 'HH:mm:ss'),
                     })}
-                    style={errors.location ? errorStyling : {}}
-                    defaultValue={supperGroup?.location ?? ''}
                   />
-                  {errors.location?.type === 'required' && <ErrorText>Collection Point required!</ErrorText>}
-                  {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
-                </FormContainer>
-              </>
-            )}
-            <ButtonContainer>
-              <SupperButton
-                ghost
-                center
-                defaultButtonDescription="Order Cancelled"
-                onButtonClick={() => setTwoStepModalIsOpen(true)}
+                )}
+                defaultValue={null}
               />
-              <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} htmlType="submit" />
-            </ButtonContainer>
-            <InformationCard updateSummary />
+              <ErrorContainer>
+                {errors.estArrivalTime?.type === 'required' && <ErrorText>Estimated Arrival Time required!</ErrorText>}
+              </ErrorContainer>
+            </FormContainer>
+            <FormContainer>
+              <FormHeader headerName="Collection Point" isCompulsory />
+              <InputText
+                type="text"
+                placeholder="Enter Location"
+                name="location"
+                ref={register({
+                  required: true,
+                  ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
+                })}
+                style={errors.location ? errorStyling : {}}
+                defaultValue={supperGroup?.location ?? ''}
+              />
+              {errors.location?.type === 'required' && <ErrorText>Collection Point required!</ErrorText>}
+              {errors.location?.type === 'validate' && <ErrorText>Invalid location!</ErrorText>}
+            </FormContainer>
           </>
         )}
+        <ButtonContainer>
+          <SupperButton
+            ghost
+            center
+            defaultButtonDescription="Order Cancelled"
+            onButtonClick={() => setTwoStepModalIsOpen(true)}
+          />
+          <SupperButton center defaultButtonDescription="Order Placed" onButtonClick={onClick} htmlType="submit" />
+        </ButtonContainer>
+        <InformationCard updateSummary />
       </ReactPullToRefresh>
     </MainContainer>
   )

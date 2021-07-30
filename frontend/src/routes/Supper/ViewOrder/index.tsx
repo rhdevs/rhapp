@@ -43,7 +43,7 @@ const ViewOrder = () => {
 
   useEffect(() => {
     dispatch(getViewOrderPageDetails(params.supperGroupId))
-  }, [dispatch, params.supperGroupId, supperGroup?.status])
+  }, [dispatch, params.supperGroupId, supperGroup?.status, order?.hasPaid])
 
   return (
     <PullToRefreshRH>
