@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
+
 import styled from 'styled-components'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import 'antd/dist/antd.css'
 import { Input, Space, Button, Alert } from 'antd'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { post, ENDPOINTS, DOMAINS, get } from '../../../store/endpoints'
 import sha256 from 'crypto-js/sha256'
 import InvalidToken from '../../ErrorPages/InvalidToken'
@@ -45,7 +45,6 @@ export default function ChangePassword() {
   const [error, setError] = useState({ message: '' })
   const [validToken, setTokenValidity] = useState(true)
   const [success, setSuccess] = useState(false)
-  const history = useHistory()
   const params = useParams<{ resetToken: string }>()
 
   useEffect(() => {

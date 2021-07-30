@@ -13,12 +13,12 @@ import {
   fetchSelectedFacility,
   setIsDeleteMyBooking,
 } from '../../../store/facilityBooking/action'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { format } from 'date-fns'
 import deletepic from '../../../assets/delete.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { PATHS } from '../../Routes'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;

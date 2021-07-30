@@ -14,13 +14,14 @@ const Column = styled.div`
   margin: 10px 0px;
 `
 
-const StyledInput = styled(Input)`
+const StyledInput = styled(Input)<{ haserror?: boolean }>`
   &.ant-input {
     width: 100%;
     border-radius: 30px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid ${(props) => (props.haserror ? 'red' : '#d9d9d9')};
     padding: 5px 10px;
     margin: 0px 0px 0px 0px;
+    ${(props) => props.haserror && `background: #ffd1d1;`}
   }
   &.ant-input::placeholder {
     color: #7d7d7d;
@@ -28,14 +29,15 @@ const StyledInput = styled(Input)`
 `
 
 const { TextArea } = Input
-const StyledTextArea = styled(TextArea)`
+const StyledTextArea = styled(TextArea)<{ haserror?: boolean }>`
   &.ant-input {
     width: 100%;
     border-radius: 15px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid ${(props) => (props.haserror ? 'red' : '#d9d9d9')};
     padding: 5px 10px;
     margin: 0px 0px 0px 0px;
     resize: none;
+    ${(props) => props.haserror && `background: #ffd1d1;`}
   }
   &.ant-input::placeholder {
     color: #7d7d7d;
@@ -58,10 +60,11 @@ type InputRowProps = {
   value?: string
   setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textarea?: boolean
+  haserror?: boolean
   onChange?: () => void
 }
 
-export default function InputRow({ title, placeholder, value, setValue, textarea, onChange }: InputRowProps) {
+export default function InputRow({ title, placeholder, value, setValue, textarea, onChange, haserror }: InputRowProps) {
   const Container = textarea ? Column : Row
 
   const [inputValue, setInputValue] = useState('')
@@ -71,6 +74,7 @@ export default function InputRow({ title, placeholder, value, setValue, textarea
       {title && <StyledTitle>{title}</StyledTitle>}
       {textarea ? (
         <StyledTextArea
+          haserror={haserror}
           placeholder={placeholder}
           value={value ?? inputValue}
           onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
@@ -78,6 +82,7 @@ export default function InputRow({ title, placeholder, value, setValue, textarea
         />
       ) : (
         <StyledInput
+          haserror={haserror}
           placeholder={placeholder}
           value={value ?? inputValue}
           onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}

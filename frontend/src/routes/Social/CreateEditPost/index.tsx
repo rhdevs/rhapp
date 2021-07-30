@@ -24,8 +24,8 @@ import { fetchUserCCAs } from '../../../store/profile/action'
 import { PostImage } from './Components/postImage'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import DropDownSelector from '../../../components/Mobile/DropDownSelector'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;
