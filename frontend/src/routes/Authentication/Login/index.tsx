@@ -61,8 +61,10 @@ const PostButton = styled.div`
     border-color: #de5f4c;
   }
   .ant-btn-default: {
+    height: min-content;
+    margin: 10px;
     float: left;
-    width: 50% !important;
+    border-radius: 20px;
   }
 `
 const AlertGroup = styled.div`
@@ -85,6 +87,19 @@ const StyledPasswordInput = styled.div`
     font-size: 20px;
     font-weight: 200;
   }
+`
+
+const ButtonLabel = styled.div`
+  width: 100%;
+  white-space: break-spaces;
+  overflow: hidden;
+`
+
+const StyledButtonContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 70px;
+  column-gap: 6%;
 `
 
 export default function Login() {
@@ -187,30 +202,36 @@ export default function Login() {
             </Button>
           </PostButton>
           <br />
-          <PostButton>
-            <Button
-              type="default"
-              shape="round"
-              size="large"
-              block
-              onClick={() => {
-                history.push(PATHS.SIGNUP_PAGE)
-              }}
-            >
-              Register
-            </Button>
-            <Button
-              type="default"
-              shape="round"
-              size="large"
-              block
-              onClick={() => {
-                history.push(PATHS.FORGET_PASSWORD_PAGE)
-              }}
-            >
-              Forget Password
-            </Button>
-          </PostButton>
+          <StyledButtonContainer>
+            <PostButton>
+              <Button
+                type="default"
+                shape="round"
+                size="large"
+                block
+                style={{ height: '100%', borderRadius: '20px' }}
+                onClick={() => {
+                  history.push(PATHS.SIGNUP_PAGE)
+                }}
+              >
+                <ButtonLabel>Register</ButtonLabel>
+              </Button>
+            </PostButton>
+            <PostButton>
+              <Button
+                type="default"
+                shape="round"
+                size="large"
+                block
+                style={{ height: '100%', borderRadius: '20px' }}
+                onClick={() => {
+                  history.push(PATHS.FORGET_PASSWORD_PAGE)
+                }}
+              >
+                <ButtonLabel>Forget Password</ButtonLabel>
+              </Button>
+            </PostButton>
+          </StyledButtonContainer>
         </LoginContainer>
       )}
     </div>

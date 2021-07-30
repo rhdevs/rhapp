@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import 'antd/dist/antd.css'
 import useSnackbar from '../../../hooks/useSnackbar'
 import dayjs from 'dayjs'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import StyledCarousel from '../../../components/Mobile/StyledCarousel'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { EllipsisOutlined, EditFilled, DeleteFilled } from '@ant-design/icons'
@@ -18,6 +17,7 @@ import Avatar from '../../../components/Mobile/Avatar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { DeletePost, GetSpecificPost } from '../../../store/social/action'
 import { getInitials } from '../../../common/getInitials'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;

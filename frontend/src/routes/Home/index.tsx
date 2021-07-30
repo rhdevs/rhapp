@@ -15,7 +15,7 @@ import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/newIcons/washer.svg'
 import facilities_icon from '../../assets/newIcons/booking.svg'
 import calendar_icon from '../../assets/calenderIconSelected.svg'
-import supper_icon from '../../assets/supperIcon.svg'
+import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
 
@@ -135,11 +135,11 @@ export default function Home() {
       },
     },
     {
-      name: 'supper (WIP)',
+      name: 'supper',
       src: supper_icon,
       filter: 'invert(1)',
       clickHandler: () => {
-        //
+        history.push(PATHS.SUPPER_HOME)
       },
     },
   ]

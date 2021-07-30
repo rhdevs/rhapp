@@ -63,6 +63,21 @@ supper_api = Blueprint("supper", __name__)
 def root_route():
     return 'What up losers'
 
+@supper_api.route('/reset')
+@cross_origin()
+def reset_database():
+    db.SupperGroup.delete_many({})
+    db.Order.delete_many({})
+    db.FoodOrder.delete_many({})
+    response = {"status": "success"}
+    return make_response(response, 200)
+
+
+@supper_api.route('/close')
+@cross_origin()
+def close_supper():
+    closeSupperGroup(8)
+    return 'SupperGroup Close'
 
 ###########################################################
 #                   SUPPER ROUTES                         #
@@ -79,7 +94,12 @@ def closeSupperGroup(supperGroupId):
     data['status'] = 'Closed'
     db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                               {"$set": data})
-    # print("Supper Group Closed")
+    # Delete all Orders with no foodIds
+    emptyOrders = list(db.Order.find({'supperGroupId': supperGroupId, 'foodIds': []}, {'foodIds': 0}))
+    orderList = []
+    for order in emptyOrders:
+        orderList.append(order['_id'])
+    db.Order.delete_many({'_id': {'$in': orderList}})
 
 
 def deleteSupperGroup(supperGroupId):
@@ -293,8 +313,8 @@ def supper_group(supperGroupId):
                         'as': 'userList'
                     }
                 },
-                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0
-                              }
+                {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0,
+                              'userList.profilePictureUrl': 0}
                  }
             ]
 
@@ -310,11 +330,11 @@ def supper_group(supperGroupId):
                         map(lambda x: str(x), order['foodIds']))
 
                 for food in data['foodList']:
-                    food['_id'] = str(food['_id'])
+                    food['foodId'] = str(food.pop('_id'))
                     for order in data['orderList']:
-                        if food['_id'] in order['foodIds']:
+                        if food['foodId'] in order['foodIds']:
                             order['foodList'].append(food)
-                            order['foodIds'].remove(food['_id'])
+                            order['foodIds'].remove(food['foodId'])
 
                 for user in data['userList']:
                     user['_id'] = str(user['_id'])
@@ -349,8 +369,15 @@ def supper_group(supperGroupId):
 
             data = request.get_json()
 
+            if 'status' in data and data['status'] == 'Cancelled':
+                db.Order.update_many({'supperGroupId': supperGroupId},
+                                    {'$set': {'notification': 'Delete'}})
+
             db.SupperGroup.update_one({"supperGroupId": supperGroupId},
                                       {"$set": data})
+
+            db.Order.update_many({'supperGroupId': supperGroupId},
+                                 {'$set': {'notification': 'Update'}})
 
             # Add scheduler to close supper group order
             closingTime = datetime.fromtimestamp(supperGroup['closingTime'])
@@ -367,13 +394,18 @@ def supper_group(supperGroupId):
 
             foodIdList = list(db.Order.find(
                 {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             remove = db.SupperGroup.delete_one(
                 {"supperGroupId": supperGroupId}).deleted_count
             if remove == 0:
                 raise Exception("Supper group not found")
             db.Order.delete_many({'supperGroupId': supperGroupId})
+            db.Order.update_many({'supperGroupId': supperGroupId},
+                                 {'$set': {'notification': 'Delete'}})
             db.FoodOrder.delete_many({'_id': {'$in': foods}})
             response = {"status": "success",
                         "message": "Supper Group Deleted"}
@@ -390,15 +422,19 @@ def supper_group(supperGroupId):
 def create_order():
     try:
         data = request.get_json()
-        data['foodIds'] = []
-        data['totalCost'] = 0
-        data['paymentMethod'] = 'Nil'
-        data['userContact'] = 0
-        data["createdAt"] = int(datetime.now().timestamp())
-        data['hasPaid'] = False
-        data['hasReceived'] = False
-        db.Order.insert_one(data)
-        data['orderId'] = str(data.pop('_id'))
+        check = db.Order.find_one({'userID': data['userID'], 'supperGroupId': data['supperGroupId']})
+        if check and '_id' in check:
+            data['orderId'] = str(check['_id'])
+        else:
+            data['foodIds'] = []
+            data['totalCost'] = 0
+            data['paymentMethod'] = 'Nil'
+            data['userContact'] = 0
+            data["createdAt"] = int(datetime.now().timestamp())
+            data['hasPaid'] = False
+            data['hasReceived'] = False
+            db.Order.insert_one(data)
+            data['orderId'] = str(data.pop('_id'))
 
         response = {"status": "success",
                     "message": "Order created successfully.",
@@ -433,7 +469,7 @@ def get_order(orderId):
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)
@@ -479,6 +515,14 @@ def get_order(orderId):
                     changes = {'$set': {'status': 'Pending'}}
                     db.SupperGroup.update_one(query, changes)
 
+            # Update foodList - Empty cart
+            if 'foodList' in data:
+                if not data['foodList']: # FoodList is empty
+                    # Remove all foodOrders in Order
+                    data.pop('foodList')
+                    data['totalCost'] = 0
+                    db.FoodOrder.delete_many({'_id': {'$in': order['foodIds']}})
+
             db.Order.update_one({"_id": ObjectId(orderId)},
                                 {"$set": data})
 
@@ -488,8 +532,11 @@ def get_order(orderId):
 
         elif request.method == 'DELETE':
             foodIdList = list(db.Order.find(
-                {'_id': ObjectId(orderId)}, {'foodIds': 1, '_id': 0}))
-            foods = [food.get('foodIds') for food in foodIdList]
+                {'supperGroupId': supperGroupId}, {'foodIds': 1, '_id': 0}))
+            foods = []
+            for foodIds in foodIdList:
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
             result = db.Order.delete_one({"_id": ObjectId(orderId)})
             if result.deleted_count == 0:
@@ -524,6 +571,17 @@ def add_food(orderId):
                 else:
                     continue
         data['foodPrice'] = data['foodPrice'] * data['quantity']
+
+        order = db.Order.find_one({'_id': ObjectId(orderId)})
+        supperGroup = db.SupperGroup.find_one(
+                {'supperGroupId': order['supperGroupId']})
+
+        costLimit = supperGroup['costLimit']
+        currentPrice = supperGroup['currentFoodCost']
+
+        # Checks if addition of food price will exceed cost limit
+        if costLimit is not None and ((data['foodPrice'] + currentPrice) > costLimit):
+            raise Exception('Total price exceeded cost limit')
 
         # Add food into FoodOrder
         db.FoodOrder.insert_one(data)
@@ -597,10 +655,16 @@ def food_order(orderId, foodId):
             if food_result is None:
                 raise Exception('Food not found')
 
+            # Owner manually edit foodPrice
             if 'foodPrice' in data:
+                
+                db.FoodOrder.update_one({"_id": ObjectId(foodId)},
+                                        {"$set": {"foodPrice": data['foodPrice']}})
+                
                 order_result = db.Order.find_one_and_update({"_id": ObjectId(orderId)},
                                                             {"$inc": {"totalCost": data['foodPrice'] -
                                                                       food_result['foodPrice']}})
+
                 if order_result is None:
                     raise Exception('Failed to update order')
 
@@ -632,48 +696,6 @@ def food_order(orderId, foodId):
 
             response = {"status": "success",
                         "message": "Successfully deleted food!",
-                        "data": data}
-
-        return make_response(response, 200)
-    except Exception as e:
-        print(e)
-        return make_response({"status": "failed", "err": str(e)}, 400)
-
-
-@supper_api.route('/order/<orderId>/food/<foodId>/owner', methods=['GET', 'PUT'])
-@cross_origin(supports_credentials=True)
-def owner_edit_order(orderId, foodId):
-    try:
-        if request.method == 'GET':
-            data = db.FoodOrder.find_one({"_id": ObjectId(foodId)})
-
-            data['orderId'] = str(data.pop('_id'))
-            data['restaurantId'] = str(data['restaurantId'])
-            data['foodMenuId'] = str(data['foodMenuId'])
-
-            response = {"status": "success",
-                        "data": data}
-
-        elif request.method == 'PUT':
-            data = request.get_json()
-
-            if data['updates']['updateAction'] == 'Update':
-                if any(k not in data['updates'] for k in ('reason', 'change', 'updatedPrice')) \
-                        or not data['updates']['reason'] \
-                        or not data['updates']['change'] \
-                        or not data['updates']['updatedPrice']:
-                    raise Exception('Update information incomplete')
-            elif data['updates']['updateAction'] == 'Remove':
-                if 'reason' not in data['updates'] or not data['updates']['reason']:
-                    raise Exception('Update information incomplete')
-
-            result = db.FoodOrder.find_one_and_update({"_id": ObjectId(foodId)},
-                                                      {"$set": data})
-            if result is None:
-                raise Exception('Food not found')
-
-            response = {"status": "success",
-                        "message": "Successfully updated food!",
                         "data": data}
 
         return make_response(response, 200)
@@ -905,9 +927,9 @@ def user_supper_group_history(userID):
         return make_response({"status": "failed", "err": str(e)}, 400)
 
 
-@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET', 'POST', 'DELETE'])
+@supper_api.route('/user/<userID>/supperGroupNotification', methods=['GET'])
 @cross_origin(supports_credentials=True)
-def user_supper_group_notification(userID):
+def get_user_supper_group_notification(userID):
     try:
         if request.method == "GET":
             pipeline = [
@@ -923,33 +945,45 @@ def user_supper_group_notification(userID):
                 {
                     '$unwind': {'path': '$supperGroup'}
                 },
-                {'$project': {'supperGroupId': 1,
+                {'$project': {'supperGroupId': 1, 'supperGroup.ownerName': 1,
                               'supperGroup.supperGroupName': 1, 'notification': 1, '_id': 0}}
             ]
 
             result = db.Order.aggregate(pipeline)
             data = []
             for item in result:
-                item['supperGroupName'] = item.pop(
-                    'supperGroup')['supperGroupName']
+                item['supperGroupName'] = item['supperGroup']['supperGroupName']
+                item['ownerName'] = item.pop('supperGroup')['ownerName']
                 if 'notification' in item and item['notification']:
-                    item.pop('notification')
                     data.append(item)
 
             response = {"status": "success", "data": data}
-        elif request.method == 'POST':
+
+        return make_response(response, 200)
+
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/user/<userID>/supperGroupNotification/<int:supperGroupId>', methods=['POST', 'DELETE'])
+@cross_origin(supports_credentials=True)
+def user_supper_group_notification(userID, supperGroupId):
+    try:
+        if request.method == 'POST':
+            # data = {notification: Update/Delete <str>}
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
-                                 {'$set': {'notification': True}})
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
+                                 {'$set': data})
 
             response = {"status": "success", "data": data}
 
         elif request.method == 'DELETE':
             data = request.get_json()
 
-            db.Order.update_many({'userID': userID, 'supperGroupId': data['supperGroupId']},
-                                 {'$set': {'notification': False}})
+            db.Order.update_many({'userID': userID, 'supperGroupId': supperGroupId},
+                                 {'$unset': {'notification': ''}})
 
             response = {"status": "success", "data": data}
 
@@ -1002,8 +1036,14 @@ def collated_orders(supperGroupId):
         data.pop('orderList')
 
         for food in data['foods']:
-            food.pop('_id')
-            food['customHash'] = make_hash(food['custom'])
+            hash_dict = {'custom': food['custom'],
+                         'cancelAction': food['cancelAction']}
+            if 'comments' in food and food['comments']:
+                hash_dict['comments'] = food['comments']
+            if 'updates' in food:
+                hash_dict['updates'] = food['updates']
+
+            food['customHash'] = make_hash(hash_dict)
 
         data['foods'].sort(key=lambda x: (x['foodMenuId'], x['customHash']))
 
@@ -1011,18 +1051,18 @@ def collated_orders(supperGroupId):
         for food in data['foods']:
             if not data['collatedOrderList']:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
-            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and food['customHash'] == \
-                    data['collatedOrderList'][-1]['customHash']:
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
+            elif food['foodMenuId'] == data['collatedOrderList'][-1]['foodMenuId'] and \
+                    food['customHash'] == data['collatedOrderList'][-1]['customHash']:
                 data['collatedOrderList'][-1]['quantity'] += food['quantity']
                 data['collatedOrderList'][-1]['foodPrice'] += food['foodPrice']
-                data['collatedOrderList'][-1]['userIdList'].append(
-                    food['userID'])
+                data['collatedOrderList'][-1]['userIdList'].append(food['userID'])
+                data['collatedOrderList'][-1]['foodIdList'].append(str(food['_id']))
             else:
                 data['collatedOrderList'].append(food)
-                data['collatedOrderList'][-1]['userIdList'] = [food['userID']]
-                data['collatedOrderList'][-1].pop('userID')
+                data['collatedOrderList'][-1]['userIdList'] = [data['collatedOrderList'][-1].pop('userID')]
+                data['collatedOrderList'][-1]['foodIdList'] = [str(data['collatedOrderList'][-1].pop('_id'))]
 
         data.pop('foods')
         for food in data['collatedOrderList']:
@@ -1034,6 +1074,112 @@ def collated_orders(supperGroupId):
             'supperGroupId', 'ownerId', 'collatedOrderList') if key in data}
 
         response = {"status": "success", "data": data}
+        return make_response(response, 200)
+    except Exception as e:
+        print(e)
+        return make_response({"status": "failed", "err": str(e)}, 400)
+
+
+@supper_api.route('/supperGroup/<int:supperGroupId>/owner', methods=['PUT'])
+@cross_origin(supports_credentials=True)
+def owner_edit_order(supperGroupId):
+    try:
+        if request.method == 'PUT':
+            data = request.get_json()
+            foodId = ObjectId(data.pop('foodId'))
+            food_orig = db.FoodOrder.find_one({"_id": foodId})
+
+            if 'updatedPrice' in data['updates'] and data['updates']['updatedPrice']:
+                data['foodPrice'] = data['updates']['updatedPrice']
+            else:
+                if data['updates']['updateAction'] == 'Update':
+                    data['foodPrice'] = food_orig['foodPrice']
+                else:
+                    data['foodPrice'] = 0
+
+            if 'reason' not in data['updates'] or data['updates']['reason'] is None:
+                raise Exception('Update information incomplete')
+
+            if 'global' in data['updates'] and data['updates'].pop('global'):
+                pipeline = [
+                    {'$match': {'supperGroupId': supperGroupId}},
+                    {
+                        '$lookup': {
+                            'from': 'Order',
+                            'localField': 'supperGroupId',
+                            'foreignField': 'supperGroupId',
+                            'as': 'orderList'
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'FoodOrder',
+                            'localField': 'orderList.foodIds',
+                            'foreignField': '_id',
+                            'as': 'foodList'
+                        }
+                    },
+                    {'$project': {'_id': 1, 'foodIds': 1, 'foodList._id': 1, 'foodList.foodMenuId': 1,
+                                  'foodList.quantity': 1, 'foodList.custom': 1, 'foodList.comments': 1,
+                                  'foodList.cancelAction': 1, 'foodList.foodPrice': 1}},
+                ]
+
+                result = db.Order.aggregate(pipeline)
+
+                foods = []
+                for item in result:
+                    item['foodList'] = list(filter(lambda x: x['_id'] in item['foodIds'], item['foodList']))
+                    for food in item['foodList']:
+                        food['orderId'] = item['_id']
+                    foods += item['foodList']
+
+                def check_food_details(food_main, food_sub):
+                    if 'comments' in food_main and food_main['comments'] and \
+                       'comments' in food_sub and food_sub['comments']:
+                        return food_main['foodMenuId'] == food_sub['foodMenuId'] and \
+                                food_main['custom'] == food_sub['custom'] and \
+                                food_main['cancelAction'] == food_sub['cancelAction'] and \
+                                food_main['comments'] == food_sub['comments']
+                    elif 'comments' not in food_main and 'comments' not in food_sub:
+                        return food_main['foodMenuId'] == food_sub['foodMenuId'] and \
+                                food_main['custom'] == food_sub['custom'] and \
+                                food_main['cancelAction'] == food_sub['cancelAction']
+                    else:
+                        return False
+
+                foods = list(filter(lambda x: check_food_details(food_orig, x), foods))
+
+                for food in foods:
+                    if 'updatedQuantity' in data['updates'] and data['updates']['updatedQuantity']:
+                        data['quantity'] = data['updates']['updatedQuantity']
+                        data['foodPrice'] = data['foodPrice'] * data['quantity']
+                    else:
+                        data['foodPrice'] = data['foodPrice'] * food['quantity']
+                    db.Order.update({'_id': food['orderId']},
+                                    {'$inc': {'totalCost': data['foodPrice'] - food['foodPrice']},
+                                     '$set': {'notification': 'Food'}})
+                    db.FoodOrder.update({'_id': food['_id']},
+                                        {'$set': data})
+
+            else:
+                if 'updatedQuantity' in data['updates'] and data['updates']['updatedQuantity']:
+                    data['quantity'] = data['updates']['updatedQuantity']
+                    data['foodPrice'] = data['foodPrice'] * data['quantity']
+                else:
+                    data['foodPrice'] = data['foodPrice'] * food_orig['quantity']
+
+                db.Order.update({'foodIds': food_orig['_id']},
+                                {'$inc': {'totalCost': data['foodPrice'] - food_orig['foodPrice']},
+                                 '$set': {'notification': 'Food'}})
+                result = db.FoodOrder.find_one_and_update({'_id': foodId},
+                                                          {'$set': data})
+            if result is None:
+                raise Exception('Food not found')
+
+            response = {"status": "success",
+                        "message": "Successfully updated food!",
+                        "data": data}
+
         return make_response(response, 200)
     except Exception as e:
         print(e)
@@ -1091,7 +1237,7 @@ def user_order(supperGroupId, userID):
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)
@@ -1115,13 +1261,18 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success", "data": data}
         elif request.method == 'DELETE':
-            order_info = list(db.Order.find(
-                {'userID': userID}, {'foodIds': 1, '_id': 1}))
-            if order_info:
-                order_info = order_info[0]
-            foods = order_info['foodIds']
+            foodIdList = list(db.Order.find(
+                {'supperGroupId': supperGroupId, 'userID': userID}, {'foodIds': 1, '_id': 1}))
+            print(foodIdList)
+            orderId = None
+            foods = []
+            for foodIds in foodIdList:
+                orderId = foodIds['_id']
+                print(orderId)
+                if foodIds['foodIds']: # Check list is not empty
+                    foods.append(foodIds['foodIds'][0])
 
-            result = db.Order.delete_one({"_id": order_info['_id']})
+            result = db.Order.delete_one({"_id": orderId})
             if result.deleted_count == 0:
                 raise Exception("Order not found")
 
@@ -1129,7 +1280,6 @@ def user_order(supperGroupId, userID):
 
             response = {"status": "success",
                         "message": "Successfully deleted order!"}
-
         return make_response(response, 200)
     except Exception as e:
         print(e)

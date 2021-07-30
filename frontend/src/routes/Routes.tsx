@@ -6,6 +6,10 @@ import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
 
 export enum PATHS {
+  // DOCUMENTATION
+  DOCS_LANDING_PAGE = '/docs',
+  DOCS_SUPPER_BY_FILE = '/docs/supper/:file',
+  DOCS_SUPPER = '/docs/supper',
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
@@ -47,7 +51,40 @@ export enum PATHS {
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
+  //SUPPER
+  SUPPER_HOME = '/supper',
+  SUPPER_COMPONENTS_PAGE = '/supper/components',
+  SUPPER_HISTORY = '/supper/history',
+  CREATE_SUPPER_GROUP = '/supper/create',
+  CREATE_SUPPER_GROUP_BY_PAGE = '/supper/create/:page',
+  JOIN_GROUP = '/supper/join/order',
+  JOIN_GROUP_BY_ID = '/supper/join/order/:supperGroupId',
+  ORDER = '/supper',
+  ORDER_BY_ID = '/supper/:supperGroupId/:restaurantId/order',
+  ORDER_SUMMARY = '/supper/view/summary',
+  ORDER_SUMMARY_BY_ID = '/supper/view/summary/:supperGroupId',
+  VIEW_ORDER = '/supper/view/order',
+  VIEW_ORDER_BY_ID = '/supper/view/order/:supperGroupId',
+  DELIVERY_DETAILS = '/supper/order',
+  DELIVERY_DETAILS_BY_ID = '/supper/order/:supperGroupId/details',
+  EDIT_SUPPER_GROUP = '/supper/edit/order',
+  EDIT_SUPPER_GROUP_BY_ID = '/supper/edit/order/:supperGroupId',
+  EDIT_FOOD_ITEM = '/supper/edit',
+  EDIT_FOOD_ITEM_BY_ID = '/supper/edit/:supperGroupId/order/:orderId/food/:foodId',
+  ADD_FOOD_ITEM = '/supper',
+  ADD_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/order/:orderId/add/:foodId',
+  UPDATE_FOOD_ITEM = '/supper',
+  UPDATE_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/order/:orderId/food/:foodId',
+  UPDATE_ALL_FOOD_ITEM = '/supper',
+  UPDATE_ALL_FOOD_ITEM_BY_ID = '/supper/:supperGroupId/update/collated/:foodId',
+  UPDATE_DELIVERY = '/supper',
+  UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
+  USER_PAYMENT = '/supper/payment/order',
+  USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
 }
+//DOCUMENTATION
+const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
+const Supper_Documentation = React.lazy(() => import(/* webpackChunckName: "Supper_Documentation" */ '../docs/supper'))
 
 const Home = React.lazy(() => import(/* webpackChunckName: "Home" */ './Home'))
 const Search = React.lazy(() => import(/* webpackChunckName: "Search" */ './Home/Search'))
@@ -90,6 +127,29 @@ const ViewWashingMachine = React.lazy(
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
 
+//SUPPER
+const SupperComponents = React.lazy(() => import('./Supper/componentsPage'))
+const SupperHome = React.lazy(() => import(/* webpackChunckName: "SupperHome" */ './Supper'))
+const GroupHistory = React.lazy(() => import(/* webpackChunckName: "GroupHistory" */ './Supper/GroupHistory'))
+const CreateSupperGroup = React.lazy(
+  () => import(/* webpackChunckName: "CreateSupperGroup" */ './Supper/CreateSupperGroup'),
+)
+const JoinGroup = React.lazy(() => import(/* webpackChunckName: "JoinGroup" */ './Supper/JoinGroup'))
+const Order = React.lazy(() => import(/* webpackChunckName: "Order" */ './Supper/Order'))
+const OrderSummary = React.lazy(() => import(/* webpackChunckName: "OrderSummary" */ './Supper/OrderSummary'))
+const ViewOrder = React.lazy(() => import(/* webpackChunckName: "ViewOrder" */ './Supper/ViewOrder'))
+const DeliveryDetails = React.lazy(() => import(/* webpackChunckName: "DeliveryDetails" */ './Supper/DeliveryDetails'))
+const EditSupperGroup = React.lazy(() => import(/* webpackChunckName: "EditSupperGroup" */ './Supper/EditSupperGroup'))
+const AddFoodItem = React.lazy(() => import(/* webpackChunckName: "AddFoodItem" */ './Supper/AddFoodItem'))
+const EditFoodItem = React.lazy(() => import(/* webpackChunckName: "EditFoodItem" */ './Supper/EditFoodItem'))
+const UpdateItem = React.lazy(() => import(/* webpackChunckName: "UpdateItem" */ './Supper/OrderSummary/UpdateItem'))
+const UpdateDelivery = React.lazy(
+  () => import(/* webpackChunckName: "UpdateDelivery" */ './Supper/OrderSummary/UpdateDelivery'),
+)
+const UpdateAllItems = React.lazy(
+  () => import(/* webpackChuckName: "UpdateAllItems" */ './Supper/OrderSummary/UpdateAllItems'),
+)
+const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
 export default class Routes extends React.Component {
   render() {
     return (
@@ -132,6 +192,26 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.CREATE_POST} component={CreateEditPost} />
             <PrivateRoute exact path={PATHS.EDIT_POST} component={CreateEditPost} />
             <PublicRoute exact path={PATHS.VIEW_POST_ID} component={ViewPost} />
+
+            <PrivateRoute exact path={PATHS.SUPPER_HOME} component={SupperHome} />
+            <PrivateRoute exact path={PATHS.SUPPER_COMPONENTS_PAGE} component={SupperComponents} />
+            <PrivateRoute exact path={PATHS.SUPPER_HISTORY} component={GroupHistory} />
+            <PrivateRoute exact path={PATHS.CREATE_SUPPER_GROUP_BY_PAGE} component={CreateSupperGroup} />
+            <PublicRoute exact path={PATHS.JOIN_GROUP_BY_ID} component={JoinGroup} />
+            <PrivateRoute exact path={PATHS.ORDER_BY_ID} component={Order} />
+            <PrivateRoute exact path={PATHS.ORDER_SUMMARY_BY_ID} component={OrderSummary} />
+            <PrivateRoute exact path={PATHS.VIEW_ORDER_BY_ID} component={ViewOrder} />
+            <PrivateRoute exact path={PATHS.DELIVERY_DETAILS_BY_ID} component={DeliveryDetails} />
+            <PrivateRoute exact path={PATHS.EDIT_SUPPER_GROUP_BY_ID} component={EditSupperGroup} />
+            <PrivateRoute exact path={PATHS.EDIT_FOOD_ITEM_BY_ID} component={EditFoodItem} />
+            <PrivateRoute exact path={PATHS.ADD_FOOD_ITEM_BY_ID} component={AddFoodItem} />
+            <PrivateRoute exact path={PATHS.UPDATE_FOOD_ITEM_BY_ID} component={UpdateItem} />
+            <PrivateRoute exact path={PATHS.UPDATE_DELIVERY_BY_ID} component={UpdateDelivery} />
+            <PrivateRoute exact path={PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID} component={UpdateAllItems} />
+            <PrivateRoute exact path={PATHS.USER_PAYMENT_BY_ID} component={Payment} />
+
+            <PublicRoute exact path={PATHS.DOCS_LANDING_PAGE} component={Docs} />
+            <PublicRoute exact path={PATHS.DOCS_SUPPER_BY_FILE} component={Supper_Documentation} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>
