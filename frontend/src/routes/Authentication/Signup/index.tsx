@@ -144,6 +144,9 @@ export default function Signup() {
                 setError({ message: err })
                 setIsLoading(false)
               })
+          } else if (data.status === 401) {
+            setError({ message: 'This user already has an account.' })
+            setIsLoading(false)
           } else {
             setError({ message: 'Server Error! Contact a RHDEVS member for assistance!' })
             setIsLoading(false)
