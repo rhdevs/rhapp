@@ -181,11 +181,11 @@ export default function Signup() {
       pass = false
       return pass
     }
-    // if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
-    //   setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
-    //   pass = false
-    //   return pass
-    // }
+    if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
+      setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
+      pass = false
+      return pass
+    }
     return pass
   }
 
