@@ -144,6 +144,9 @@ export default function Signup() {
                 setError({ message: err })
                 setIsLoading(false)
               })
+          } else if (data.status === 401) {
+            setError({ message: 'This user already has an account.' })
+            setIsLoading(false)
           } else {
             setError({ message: 'Server Error! Contact a RHDEVS member for assistance!' })
             setIsLoading(false)
@@ -181,11 +184,11 @@ export default function Signup() {
       pass = false
       return pass
     }
-    // if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
-    //   setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
-    //   pass = false
-    //   return pass
-    // }
+    if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
+      setError({ message: 'Please check your telegram handle is valid and does not contain the @symbol' })
+      pass = false
+      return pass
+    }
     return pass
   }
 
