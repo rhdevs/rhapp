@@ -148,7 +148,9 @@ export default function FacilityBooking() {
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(getFacilityList())
-    console.log(isJcrc)
+    return () => {
+      dispatch(changeTab('All'))
+    }
   }, [dispatch])
 
   const MyBookingIcon = (
