@@ -130,7 +130,9 @@ export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedBooking, isDeleteMyBooking, isLoading, isJcrc } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   const fetchTelegram = async (booking) => {
     try {
@@ -221,11 +223,8 @@ export default function ViewBooking() {
                   <p>{selectedBooking?.description}</p>
                 </>
               </DetailsGroup>
-              {selectedBooking?.userID !== localStorage.getItem('userID') ? (
-                <ActionButtonGroup>
-                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
-                </ActionButtonGroup>
-              ) : (
+              {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
+                /* {isJcrc ? ( */
                 <ActionButtonGroup>
                   <Icon
                     src={editIcon}
@@ -235,6 +234,10 @@ export default function ViewBooking() {
                     }}
                   />
                   <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                </ActionButtonGroup>
+              ) : (
+                <ActionButtonGroup>
+                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
                 </ActionButtonGroup>
               )}
             </EventCard>
