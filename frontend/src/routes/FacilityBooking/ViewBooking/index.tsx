@@ -224,7 +224,6 @@ export default function ViewBooking() {
                 </>
               </DetailsGroup>
               {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
-                /* {isJcrc ? ( */
                 <ActionButtonGroup>
                   <Icon
                     src={editIcon}
