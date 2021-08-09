@@ -233,6 +233,9 @@ export default function ViewBooking() {
                     }}
                   />
                   <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                  {selectedBooking?.userID !== localStorage.getItem('userID') && (
+                    <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                  )}
                 </ActionButtonGroup>
               ) : (
                 <ActionButtonGroup>
