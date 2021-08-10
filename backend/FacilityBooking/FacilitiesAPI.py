@@ -250,6 +250,9 @@ def add_booking():
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
 
+        if not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
+            raise Exception("You must be in RH Dance to make this booking")
+
         lastbookingID = list(db.Bookings.find().sort(
             [('_id', pymongo.DESCENDING)]).limit(1))
         newBookingID = 1 if len(lastbookingID) == 0 else int(
