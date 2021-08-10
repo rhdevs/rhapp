@@ -250,7 +250,7 @@ def add_booking():
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
 
-        if not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
+        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             raise Exception("You must be in RH Dance to make this booking")
 
         lastbookingID = list(db.Bookings.find().sort(
