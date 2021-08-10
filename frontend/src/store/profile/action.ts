@@ -108,7 +108,7 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => (
+export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string, block: number) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -120,6 +120,7 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     bio: bio,
     modules: newModules,
     profilePictureUrl: userProfilePictureBase64,
+    block: block,
   }
 
   // 1. Update local state
