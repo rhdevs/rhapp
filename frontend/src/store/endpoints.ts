@@ -25,6 +25,7 @@ export enum ENDPOINTS {
   BOOKING = '/bookings',
   VIEW_BOOKING = '/bookings',
   USER_BOOKINGS = '/bookings/user',
+  JCRC_BLOCKOUT = '/bookings/blockout',
 
   // LAUNDRY
   MACHINE_LIST = '/location',
@@ -81,27 +82,34 @@ export enum ENDPOINTS {
   SEARCH = '/search',
 
   // SUPPER
-  ALL_RESTAURANTS = '/supper/restaurant',
-  GET_RESTAURANT = '/supper/restaurant',
-  GET_RESTAURANT_MENU = '/supper/restaurant',
-  GET_MENU_FOOD = '/supper/restaurant',
-  ADD_FOOD = '/supper',
-  GET_FOOD = '/supper',
-  EDIT_FOOD = '/supper',
-  DELETE_FOOD = '/supper',
-  GET_COLLATED_ORDER = '/supper',
-  GET_USER_ORDER = '/supper',
-  ALL_SUPPER_GROUPS = '/supper',
-  ADD_SUPPER_GROUP = '/supper',
-  GET_SUPPER_GROUP_BY_ID = '/supper',
-  ADD_ORDER = '/supper',
-  UPDATE_SUPPER_GROUP = '/supper',
-  DELETE_SUPPER_GROUP = '/supper',
-  GET_ORDER_IN_SUPPER_GROUP = '/supper',
-  UPDATE_ORDER_DETAILS = '/supper',
-  DELETE_ORDER = '/supper',
-  GET_ORDER_HISTORY = '/supper/user',
-  GET_SUPPER_GROUP_HISTORY = '/supper/user',
+  GET_SUPPER_NOTIFICATIONS = '/user',
+  CLOSE_SUPPER_NOTIFICATIONS = '/user',
+  ALL_RESTAURANTS = '/restaurants',
+  GET_RESTAURANT = '/restaurant',
+  GET_RESTAURANT_MENU = '/restaurant',
+  GET_MENU_FOOD = '/restaurant/food',
+  ADD_FOOD = '/order',
+  GET_FOOD = '/order',
+  EDIT_FOOD = '/order',
+  DELETE_FOOD = '/order',
+  GET_COLLATED_ORDER = '/supperGroup',
+  GET_USER_ORDER = '/supperGroup',
+  ALL_SUPPER_GROUPS = '/supperGroup',
+  ADD_SUPPER_GROUP = '/supperGroup',
+  GET_SUPPER_GROUP_BY_ID = '/supperGroup',
+  CREATE_ORDER = '/order',
+  UPDATE_SUPPER_GROUP = '/supperGroup',
+  DELETE_SUPPER_GROUP = '/supperGroup',
+  GET_ORDER_BY_ID = '/order',
+  UPDATE_ORDER_DETAILS = '/order',
+  DELETE_ORDER = '/order',
+  GET_ORDER_HISTORY = '/user',
+  GET_SUPPER_GROUP_HISTORY = '/user',
+  GET_JOINED_SUPPER_GROUP_HISTORY = '/user',
+  UPDATE_SUPPER_GROUP_PAYMENT_STATUS = '/supperGroup',
+  LEAVE_SUPPER_GROUP = '/supperGroup',
+  GET_OWNER_EDITS = '/order',
+  UPDATE_OWNER_EDITS = '/supperGroup',
 }
 
 export enum DOMAINS {
@@ -110,7 +118,7 @@ export enum DOMAINS {
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
   AUTH = 'auth',
-  SUPPER = 'facility', //'supper',
+  SUPPER = 'supper',
 }
 
 export const DOMAIN_URL = {
@@ -134,11 +142,10 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/auth'
       : '//rhappmiddleware.herokuapp.com/rhappauth',
-  //TODO: update with supper domain url
   SUPPER:
     process.env.REACT_APP_MODE === 'production'
-      ? '//rhappfacilities.rhdevs.repl.co'
-      : '//rhapp-middleware.herokuapp.com/rhappfacilities',
+      ? '//rhapp-backend.rhdevs.repl.co/supper'
+      : '//rhappmiddleware.herokuapp.com/rhappsupper',
 }
 
 async function makeRequest(
@@ -180,12 +187,11 @@ async function makeRequest(
           ? '//rhapp-backend.rhdevs.repl.co/auth'
           : '//rhappmiddleware.herokuapp.com/rhappauth'
       break
-    //TODO: update with supper request url
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ =
         process.env.REACT_APP_MODE === 'production'
-          ? '//rhappsocial.rhdevs.repl.co'
-          : '//rhapp-middleware.herokuapp.com/rhappsocial'
+          ? '//rhapp-backend.rhdevs.repl.co/supper'
+          : '//rhappmiddleware.herokuapp.com/rhappsupper'
       break
   }
   return axios({

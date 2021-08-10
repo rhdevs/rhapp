@@ -1,6 +1,19 @@
 import { Booking, Facility } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
+import {
+  Order,
+  PaymentMethod,
+  SupperGroupStatus,
+  FoodMenu,
+  SupperGroup,
+  SplitACMethod,
+  Restaurant,
+  CollatedOrder,
+  CancelAction,
+  Food,
+  UserDetails,
+} from './supper/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -156,7 +169,7 @@ export const searchResultsStub: SearchResult[] = [
 
 export const userProfileStub: User = {
   _id: '0',
-  userID: localStorage.username,
+  userID: localStorage.userID,
   profilePictureUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',
@@ -167,3 +180,372 @@ export const userProfileStub: User = {
 }
 
 export const dummyUserId = 'A1234567B'
+
+// foodId: string
+// comments?: string
+// quantity: number
+// foodMenu: FoodMenu
+// foodPrice?: number
+
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+
+// title: string
+// options: Option[]
+// max: number | null
+// min: number
+// customNumber: number
+
+// name: string
+// isSelected: boolean
+// price: number
+export const foodList: Food[] = [
+  {
+    foodId: '12345364832764134',
+    comments: 'CHILLI PLS! or something to make it more spicy because I want to eat something spicy!',
+    cancelAction: CancelAction.REMOVE,
+    quantity: 1,
+    foodMenuId: 'i3572f8whff582842',
+    restaurantId: 'jkhw8237429dh8wqe',
+    foodName: 'McGriddles with Egg Meal',
+    price: 6.7,
+    custom: [
+      {
+        title: 'Sides',
+        options: [
+          { name: 'Fries', isSelected: true, price: 0 },
+          { name: 'Apple pie', isSelected: false, price: 1.2 },
+        ],
+        max: 1,
+        min: 1,
+        customNumber: 1,
+      },
+      {
+        title: 'Drinks',
+        options: [
+          { name: 'Coca Cola', isSelected: true, price: 0 },
+          { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+          { name: 'Milo', isSelected: false, price: 1.5 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 2,
+      },
+    ],
+
+    foodPrice: 8.6,
+  },
+  {
+    foodId: '12345364832764134',
+    quantity: 2,
+    cancelAction: CancelAction.CONTACT,
+    foodMenuId: 'i3572f8whff582842',
+    restaurantId: 'jkhw8237429dh8wqe',
+    foodName: 'McGriddles with Egg Meal',
+    price: 6.7,
+    custom: [
+      {
+        title: 'Sides',
+        options: [
+          { name: 'Fries', isSelected: false, price: 0 },
+          { name: 'Apple pie', isSelected: false, price: 1.2 },
+        ],
+        max: null,
+        min: 0,
+        customNumber: 1,
+      },
+      {
+        title: 'Drinks',
+        options: [
+          { name: 'Coca Cola', isSelected: false, price: 0 },
+          { name: 'Ice Lemon Tea', isSelected: false, price: 1.2 },
+          { name: 'Milo', isSelected: false, price: 1.5 },
+        ],
+        max: 1,
+        min: 1,
+        customNumber: 2,
+      },
+    ],
+
+    foodPrice: 8.6,
+  },
+]
+
+// orderId: string
+// user: string
+// supperGroupId: string
+// userContact?: number
+// foodList: Food[]
+// totalCost: number
+// hasPaid: boolean //1 if user paid owner (user POV)
+// paymentMethod: PaymentMethod
+// hasReceived: boolean //1 if owner received payment (owner POV)
+// createdAt: number
+export const orderList: Order[] = [
+  {
+    orderId: 'y34u23423jhkdfaksd',
+    user: {
+      _id: '12',
+      userID: 'j324ioasdia90da',
+      profilePictureUrl:
+        'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
+      displayName: 'Jane Doe',
+      telegramHandle: 'jane_doe',
+      block: 8,
+      bio: 'This is my bio, I am jane doe',
+      modules: ['CS1010', 'CFG1000', 'CS2040S'],
+    },
+    supperGroupId: 2,
+    userContact: 99234567,
+    foodList: foodList,
+    totalCost: 23,
+    hasPaid: false, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.CASH,
+    hasReceived: true, //1 if owner received payment (owner POV)
+    createdAt: 122,
+  },
+  {
+    orderId: 'kajldskfhskfksdf',
+    user: userProfileStub,
+    supperGroupId: 1,
+    userContact: 91234567,
+    foodList: foodList,
+    totalCost: 13,
+    hasPaid: true, //1 if user paid owner (user POV)
+    paymentMethod: PaymentMethod.GOOGLEPAY,
+    hasReceived: false, //1 if owner received payment (owner POV)
+    createdAt: 12,
+  },
+]
+
+export const userDetailsStub: UserDetails[] = [
+  { userId: '1', name: 'Gougou', telegramHandle: 'gg' },
+  // { userId: '2', name: 'Moumou has a really really long name...', telegramHandle: 'mm' },
+  // { userId: '3', name: 'Poupou', telegramHandle: 'pp' },
+]
+
+export const paymentMethods = [PaymentMethod.CASH, PaymentMethod.GOOGLEPAY, PaymentMethod.PAYLAH, PaymentMethod.PAYNOW]
+
+export const restaurantList = ["McDonald's", "Al Amaan's", 'Kimly Dim Sum']
+
+export const supperGroupStatusList = [SupperGroupStatus.ORDERED, SupperGroupStatus.ARRIVED, SupperGroupStatus.CANCELLED]
+// foodMenuId: string
+// restaurantId: string
+// foodMenuName: string
+// price: number
+// custom?: Custom[]
+export const foodMenuStub: FoodMenu[] = [
+  { foodMenuId: 'msm', restaurantId: 'mdn', foodMenuName: 'McSpicy Meal', section: 'Value Meals', price: 7.9 },
+  { foodMenuId: 'fofm', restaurantId: 'mdn', foodMenuName: 'Filet-O-Fish Meal', section: 'Value Meals', price: 5 },
+  {
+    foodMenuId: 'snm',
+    restaurantId: 'mdn',
+    foodMenuName: 'Spicy McNuggets Meal',
+    section: 'Upsized Value Meals',
+    price: 7.5,
+  },
+  { foodMenuId: 'ccc', restaurantId: 'mdn', foodMenuName: 'Corn', section: 'Ala Carte', price: 3.0 },
+  { foodMenuId: 'mcm', restaurantId: 'mdn', foodMenuName: 'Mc Muffin', section: 'Breakfast', price: 3.0 },
+]
+
+export const foodItemStub: FoodMenu = {
+  foodMenuId: 'snm',
+  restaurantId: 'mdn',
+  foodMenuName: 'Spicy McNuggets Meal',
+  price: 7.5,
+  custom: [
+    {
+      title: 'Sides',
+      options: [
+        { name: 'fries', price: 0, isSelected: true },
+        { name: 'corn cup', price: 0, isSelected: false },
+      ],
+      min: 1,
+      max: 1,
+      customNumber: 1,
+    },
+    {
+      title: 'Drinks',
+      options: [
+        { name: 'Coke Small', price: 0 },
+        { name: 'Coke medium', price: 0.5 },
+        { name: 'Coke Large', price: 1 },
+        { name: 'Coke No Sugar Small', price: 0 },
+        { name: 'Coke No Sugar Medium', price: 0.5 },
+        { name: 'Coke No Sugar large', price: 1 },
+      ],
+      min: 0,
+      max: 2,
+      customNumber: 1,
+    },
+  ],
+  section: 'Upsized Value Meals',
+}
+
+export const supperGroupStub: SupperGroup = {
+  additionalCost: 3,
+  comments: 'pls feed me',
+  costLimit: 1000,
+  createdAt: 10000000,
+  currentFoodCost: 100,
+  location: 'Blk 5 Hard Court',
+  numOrders: 2,
+  ownerId: 'A1234567B',
+  ownerTele: 'leongggg',
+  ownerName: 'Leong',
+  paymentInfo: [
+    { paymentMethod: PaymentMethod.PAYLAH, link: 'http://www.google.com' },
+    { paymentMethod: PaymentMethod.GOOGLEPAY, link: 'www.google.com' },
+  ],
+  restaurantName: "McDonald's",
+  splitAdditionalCost: SplitACMethod.EQUAL,
+  status: SupperGroupStatus.OPEN,
+  supperGroupId: 1,
+  supperGroupName: 'feed me',
+  totalPrice: 15.7,
+  userIdList: ['A1234567D', 'A1234567C', 'A1234567B'],
+  closingTime: 10000000,
+  estArrivalTime: 100453488,
+  orderList: orderList,
+  phoneNumber: 99999999,
+}
+
+// Restaurant = {
+//   restaurantId: string
+//   name: string
+//   restaurantLogo: string
+//   menu: FoodMenu[]
+//   allSection: string[]
+// }
+// export type FoodMenu = {
+//   foodMenuId: string
+//   restaurantId: string
+//   foodMenuName: string
+//   section: string
+//   price: number
+//   custom?: Custom[]
+// }
+
+export const AlAmaanStub: Restaurant = {
+  restaurantId: 'alalalala',
+  name: "Al Amaan's",
+  restaurantLogo: 'logo',
+  menu: [
+    { foodMenuId: 'tyn', restaurantId: 'alamaan', foodMenuName: 'Tomyum Noodles', section: 'Thai Kitchen', price: 6.5 },
+    {
+      foodMenuId: 'bsn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Bandung Soup Noodles',
+      section: 'Thai Kitchen',
+      price: 4.5,
+    },
+    {
+      foodMenuId: 'TSSC',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Thai Sweet and Spicy Chicken',
+      section: 'Thai Kitchen',
+      price: 4.0,
+    },
+    {
+      foodMenuId: 'hkn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Pad Thai',
+      section: 'Thai Kitchen',
+      price: 5.5,
+    },
+    {
+      foodMenuId: 'gn',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Garlic Naan',
+      section: 'Indian Kitchen',
+      price: 2.4,
+    },
+    {
+      foodMenuId: 'fnc',
+      restaurantId: 'alamaan',
+      foodMenuName: 'Fish & Chips',
+      section: 'Western Kitchen',
+      price: 5.5,
+    },
+  ],
+  allSection: ['Thai Kitchen', 'Indian Kitchen', 'Western Kitchen'],
+}
+
+export const KimlyStub: Restaurant = {
+  restaurantId: 'kkkkkk',
+  name: 'Kimly Dim Sum',
+  restaurantLogo: 'logo',
+  menu: [
+    { foodMenuId: 'bkb', restaurantId: 'kimly', foodMenuName: 'Bak Kwa Pau', section: 'Mains', price: 1.2 },
+    {
+      foodMenuId: 'bpp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Big Pau (Pork)',
+      section: 'Mains',
+      price: 1.9,
+    },
+    {
+      foodMenuId: 'csp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Char Siew Pau (Mini)',
+      section: 'Mains',
+      price: 1.3,
+    },
+    {
+      foodMenuId: 'tp',
+      restaurantId: 'kimly',
+      foodMenuName: 'Teh Ping',
+      section: 'Drinks',
+      price: 1.5,
+    },
+    {
+      foodMenuId: 'bd',
+      restaurantId: 'kimly',
+      foodMenuName: 'Bandung',
+      section: 'Drinks',
+      price: 2.0,
+    },
+  ],
+  allSection: ['Mains', 'Drinks'],
+}
+
+export const McDonaldstub: Restaurant = {
+  restaurantId: 'mdmdmdmd',
+  name: "McDonald's",
+  restaurantLogo: 'logo',
+  menu: foodMenuStub,
+  allSection: ['Value Meals', 'Upsized Value Meals', 'Ala Carte', 'Breakfast'],
+}
+
+export const supperGroupId = 1
+
+// supperGroupId: string;
+// ownerId: string;
+// collatedOrderList: Food[];
+export const dummyCollatedOrderList: CollatedOrder = {
+  supperGroupId: 1,
+  ownerId: 'A1234567B',
+  collatedOrderList: foodList,
+}
+
+export const initSupperGroup: SupperGroup = {
+  costLimit: undefined,
+  createdAt: undefined,
+  currentFoodCost: 0,
+  location: '',
+  numOrders: 0,
+  ownerId: localStorage.userID,
+  ownerName: '',
+  ownerTele: '',
+  paymentInfo: [],
+  restaurantName: '',
+  splitAdditionalCost: undefined,
+  status: SupperGroupStatus.OPEN,
+  supperGroupId: undefined,
+  supperGroupName: '',
+  totalPrice: 0,
+  closingTime: undefined,
+}

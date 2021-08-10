@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
-import { Alert, Button, Input } from 'antd'
-import 'antd/dist/antd.css'
 
+import styled from 'styled-components'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { post, ENDPOINTS, DOMAINS } from '../../../store/endpoints'
+import { Alert, Button, Input } from 'antd'
+import 'antd/dist/antd.css'
 
 const ForgetPasswordContainer = styled.div`
   text-align: center;
@@ -47,7 +46,6 @@ const LongButton = {
 }
 
 export default function ForgetPassword() {
-  const history = useHistory()
   const [email, setEmail] = useState('')
   const [error, setError] = useState({ message: '' })
   const [success, setSuccess] = useState(false)
@@ -68,7 +66,7 @@ export default function ForgetPassword() {
         })
         .catch((err) => {
           console.log(err)
-          setError({ message: 'Something went wrong' })
+          setError({ message: 'Something went wrong, please try again.' })
         })
     }
   }
@@ -97,7 +95,11 @@ export default function ForgetPassword() {
         )}
         {success && (
           <AlertGroup>
-            <Alert message={'Please check your email for the reset link.'} type="success" showIcon />
+            <Alert
+              message={'Please check your email for the reset link. It might be in your spam folder!'}
+              type="success"
+              showIcon
+            />
           </AlertGroup>
         )}
         <ButtonDiv>

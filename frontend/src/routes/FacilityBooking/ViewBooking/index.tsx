@@ -13,12 +13,12 @@ import {
   fetchSelectedFacility,
   setIsDeleteMyBooking,
 } from '../../../store/facilityBooking/action'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { format } from 'date-fns'
 import deletepic from '../../../assets/delete.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { PATHS } from '../../Routes'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -28,7 +28,7 @@ const MainContainer = styled.div`
 `
 
 const EventCard = styled.div`
-  background: linear-gradient(to top, #ffffff 75%, #ef9688 25%);
+  background: linear-gradient(to top, #ffffff 78%, #ef9688 22%);
   cursor: pointer;
   margin: 23px;
   padding: 15px;
@@ -38,7 +38,7 @@ const EventCard = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   height: 100%;
   display: grid;
-  grid-template-rows: 25% 50% 25%;
+  grid-template-rows: 22% 63% 15%;
 `
 
 const HeaderGroup = styled.div`
@@ -66,8 +66,8 @@ const DetailsGroup = styled.div`
 `
 
 const Icon = styled.img`
-  height: 28px;
-  width: 28px;
+  height: 40px;
+  width: 40px;
 `
 
 const ActionButtonGroup = styled.div`
@@ -103,8 +103,8 @@ const CardTimeLabel = styled.p`
 
 const TimeDetails = styled.div`
   display: grid;
-  grid-template-columns: 35% 65%;
-  margin: 0px;
+  grid-template-columns: 15% 85%;
+  margin: 15px 0px;
 `
 
 const DateTimeDetails = styled.div`
@@ -115,14 +115,24 @@ const DateTimeDetails = styled.div`
 `
 const EventOwnerDetails = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 35% 65%;
+  margin: 7px 0px;
+  align-items: baseline;
+`
+const EventFacilityName = styled.div`
+  display: grid;
+  grid-template-columns: 35% 65%;
+  margin: 7px 0px;
+  align-items: baseline;
 `
 
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { selectedBooking, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedBooking, isDeleteMyBooking, isLoading, isJcrc } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   const fetchTelegram = async (booking) => {
     try {
@@ -162,7 +172,7 @@ export default function ViewBooking() {
     const endDate = new Date(eventEndTime * 1000)
     const timeDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600)
 
-    return Math.floor(timeDiff)
+    return Math.round(timeDiff * 2) / 2
   }
 
   return (
@@ -181,23 +191,29 @@ export default function ViewBooking() {
               <DetailsGroup>
                 <TimeDetails>
                   <CardDurationLabel>
-                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime)} Hr
+                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime) > 1
+                      ? timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hrs'
+                      : timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hr'}
                   </CardDurationLabel>
                   <DateTimeDetails>
                     {selectedBooking && (
                       <>
                         <CardTimeLabel>
-                          <b>Start Time: </b>
+                          <b>Start: </b>
                           {formatDate(selectedBooking.startTime)}
                         </CardTimeLabel>
                         <CardTimeLabel>
-                          <b>End Time: </b>
+                          <b>End: </b>
                           {formatDate(selectedBooking.endTime)}
                         </CardTimeLabel>
                       </>
                     )}
                   </DateTimeDetails>
                 </TimeDetails>
+                <EventFacilityName>
+                  <CardSubtitle>Facility</CardSubtitle>
+                  <p style={{ textAlign: 'right' }}>{selectedBooking?.facilityName}</p>
+                </EventFacilityName>
                 <EventOwnerDetails>
                   <CardSubtitle>Created by</CardSubtitle>
                   <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
@@ -207,11 +223,7 @@ export default function ViewBooking() {
                   <p>{selectedBooking?.description}</p>
                 </>
               </DetailsGroup>
-              {selectedBooking?.userID !== localStorage.getItem('userID') ? (
-                <ActionButtonGroup>
-                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
-                </ActionButtonGroup>
-              ) : (
+              {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
                 <ActionButtonGroup>
                   <Icon
                     src={editIcon}
@@ -221,6 +233,13 @@ export default function ViewBooking() {
                     }}
                   />
                   <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                  {selectedBooking?.userID !== localStorage.getItem('userID') && (
+                    <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                  )}
+                </ActionButtonGroup>
+              ) : (
+                <ActionButtonGroup>
+                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
                 </ActionButtonGroup>
               )}
             </EventCard>

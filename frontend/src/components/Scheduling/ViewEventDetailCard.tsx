@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { format } from 'date-fns'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
-import ConfirmationModal from '../Mobile/ConfirmationModal'
 import {
   deleteSingleNusModsEvent,
   deleteSelectedEvent,
@@ -14,6 +13,7 @@ import { PATHS } from '../../routes/Routes'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Button } from 'antd'
+import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 
 const Background = styled.div`
   background-color: #fafaf4;

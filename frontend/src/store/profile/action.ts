@@ -66,7 +66,7 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const fetchUserFriends = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
-  if (userID != null) {
+  if (userID !== null) {
     dispatch(setIsLoading(true))
     await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.FRIEND + '/' + userID, {
       method: 'GET',
@@ -81,7 +81,7 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
 }
 
 export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
-  if (userID != null) {
+  if (userID !== null) {
     dispatch(setIsLoading(true))
     await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.SPECIFIC_POST + '/' + userID, {
       method: 'GET',
@@ -108,7 +108,7 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string) => (
+export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string, block: number) => (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
@@ -120,6 +120,7 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     bio: bio,
     modules: newModules,
     profilePictureUrl: userProfilePictureBase64,
+    block: block,
   }
 
   // 1. Update local state

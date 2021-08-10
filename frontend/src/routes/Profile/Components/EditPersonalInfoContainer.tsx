@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Input, Button, Avatar } from 'antd'
+import { Form, Input, Button, Avatar, InputNumber } from 'antd'
 import 'antd/dist/antd.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
@@ -89,9 +89,11 @@ const EditPersonalInfoContainer = () => {
     }
   }, [canPush])
 
-  const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string } }) => {
+  const onFinish = (values: { user: { bio: string; displayName: string; telegramHandle: string; block: number } }) => {
     // ACTION: "SENDS A POST REQUEST"
-    dispatch(handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle))
+    dispatch(
+      handleEditProfileDetails(values.user.bio, values.user.displayName, values.user.telegramHandle, values.user.block),
+    )
   }
 
   // On file select (from the pop up)
@@ -177,7 +179,13 @@ const EditPersonalInfoContainer = () => {
               onChange={() => dispatch(setHasChanged(true))}
             />
           </Form.Item>
-          <BlockParagraph>Block {user.block}</BlockParagraph>
+          <Form.Item name={['user', 'block']} style={{ width: '55vw' }}>
+            <InputNumber
+              defaultValue={user.block}
+              placeholder="Block number"
+              onChange={() => dispatch(setHasChanged(true))}
+            />
+          </Form.Item>
         </PersonalInfoSpan>
         <Form.Item name={['user', 'bio']} style={{ paddingLeft: '3px', borderRadius: '20px', width: '80vw' }}>
           <Input.TextArea defaultValue={newBio} placeholder={newBio} />

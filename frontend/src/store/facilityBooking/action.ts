@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
-import { ENDPOINTS, DOMAINS, get, DOMAIN_URL } from '../endpoints'
+import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -74,15 +74,15 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
-  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, '/' + userId)
-    .then((resp) => resp)
-    .then((bookingList) => {
-      newList = bookingList.data
-    })
+  const TokenId = localStorage.getItem('token')
+  await get(ENDPOINTS.USER_BOOKINGS, DOMAINS.FACILITY, `/${userId}?token=${TokenId}`).then((bookingList) => {
+    newList = bookingList.data
+  })
   dispatch({
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
   })
+  dispatch(SetIsLoading(false))
 }
 
 // -1 stands for closed, any others means open for that specific ID.
@@ -91,19 +91,15 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Di
 }
 
 export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + bookingId.toString(), {
-    method: 'DELETE',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then(() => {
-      const { myBookings } = getState().facilityBooking
-      dispatch({
-        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
-      })
-      setIsDeleteMyBooking(-1)
+  const TokenId = localStorage.getItem('token')
+  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
+    const { myBookings } = getState().facilityBooking
+    dispatch({
+      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
     })
+    dispatch(setIsDeleteMyBooking(-1))
+  })
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
@@ -219,7 +215,6 @@ export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<A
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
-    console.log(resp)
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
   })
 
@@ -285,27 +280,25 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       return
     }
   }
-  if (dayjs(newBookingFromDate).diff(dayjs(new Date()), 'week') > 2) {
-    //More than 2 weeks in advance
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    dispatch(SetCreateBookingError('You cannot create a booking more than 2 weeks in advance!'))
-    return
-  } else if (new Date().getTime() > newBookingFromDate.getTime()) {
+  if (new Date().getTime() > newBookingFromDate.getTime()) {
     //Creating a booking in the past
     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
     dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
     return
   }
   if (!isEdit) {
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
+    const TokenId = localStorage.getItem('token')
+    const response = await fetch(
+      DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + TokenId + '&userID=' + localStorage.getItem('userID'),
+      {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       },
-      body: JSON.stringify(requestBody),
-    })
-
+    )
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
@@ -326,14 +319,14 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     }
   } else {
     const { newBooking } = getState().facilityBooking
-    const response = await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '/' + newBooking?.bookingID, {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
+    const TokenId = localStorage.getItem('token')
+    const response = await put(
+      ENDPOINTS.BOOKING,
+      DOMAINS.FACILITY,
+      requestBody,
+      {},
+      `/${newBooking?.bookingID}?token=${TokenId}`,
+    )
 
     if (response.status >= 400) {
       const body = await response.json()
@@ -343,11 +336,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       } else if (body.err == 'Conflict Booking') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
       } else {
-        dispatch(
-          SetCreateBookingError(
-            'Check your fields again! All fields should be filled up, and event should be <4 hours!',
-          ),
-        )
+        dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
       }
     } else {
       dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
@@ -362,6 +351,14 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
+}
+
+export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
+}
+
+export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {

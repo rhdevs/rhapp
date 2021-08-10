@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import cross from '../../../../assets/CircleCross.svg'
-import ConfirmationModal from '../../../../components/Mobile/ConfirmationModal'
+import { ConfirmationModal } from '../../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   text-align: left;

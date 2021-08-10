@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button, Input } from 'antd'
@@ -9,6 +10,7 @@ import { PATHS } from '../../Routes'
 import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
+import { SetIsJcrc } from '../../../store/facilityBooking/action'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
@@ -59,8 +61,10 @@ const PostButton = styled.div`
     border-color: #de5f4c;
   }
   .ant-btn-default: {
+    height: min-content;
+    margin: 10px;
     float: left;
-    width: 50% !important;
+    border-radius: 20px;
   }
 `
 const AlertGroup = styled.div`
@@ -80,11 +84,27 @@ const StyledPasswordInput = styled.div`
   }
   .ant-input {
     border-radius: 15px;
+    font-size: 20px;
+    font-weight: 200;
   }
+`
+
+const ButtonLabel = styled.div`
+  width: 100%;
+  white-space: break-spaces;
+  overflow: hidden;
+`
+
+const StyledButtonContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 70px;
+  column-gap: 6%;
 `
 
 export default function Login() {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -125,6 +145,9 @@ export default function Login() {
         .then((data) => {
           localStorage.setItem('token', data.token)
           localStorage.setItem('userID', username)
+          if (username === 'RH_JCRC') {
+            dispatch(SetIsJcrc(true))
+          }
           history.push(PATHS.HOME_PAGE)
           setIsLoading(false)
         })
@@ -179,30 +202,36 @@ export default function Login() {
             </Button>
           </PostButton>
           <br />
-          <PostButton>
-            <Button
-              type="default"
-              shape="round"
-              size="large"
-              block
-              onClick={() => {
-                history.push(PATHS.SIGNUP_PAGE)
-              }}
-            >
-              Register
-            </Button>
-            <Button
-              type="default"
-              shape="round"
-              size="large"
-              block
-              onClick={() => {
-                history.push(PATHS.FORGET_PASSWORD_PAGE)
-              }}
-            >
-              Forget Password
-            </Button>
-          </PostButton>
+          <StyledButtonContainer>
+            <PostButton>
+              <Button
+                type="default"
+                shape="round"
+                size="large"
+                block
+                style={{ height: '100%', borderRadius: '20px' }}
+                onClick={() => {
+                  history.push(PATHS.SIGNUP_PAGE)
+                }}
+              >
+                <ButtonLabel>Register</ButtonLabel>
+              </Button>
+            </PostButton>
+            <PostButton>
+              <Button
+                type="default"
+                shape="round"
+                size="large"
+                block
+                style={{ height: '100%', borderRadius: '20px' }}
+                onClick={() => {
+                  history.push(PATHS.FORGET_PASSWORD_PAGE)
+                }}
+              >
+                <ButtonLabel>Forget Password</ButtonLabel>
+              </Button>
+            </PostButton>
+          </StyledButtonContainer>
         </LoginContainer>
       )}
     </div>

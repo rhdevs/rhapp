@@ -8,7 +8,7 @@ import 'antd-mobile/dist/antd-mobile.css'
 const TitleText = styled.text`
   font-family: Inter;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 30px;
   line-height: 14px;
   color: #002642;
@@ -25,6 +25,9 @@ const StyledNavBar = styled(NavBar)`
   position: sticky;
   top:0;
   z-index:200;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
 `
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -47,7 +50,7 @@ function TopNavBar({
   title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
-  rightComponent?: ReactElement
+  rightComponent?: ReactElement | undefined
   centerComponent?: ReactElement
   onLeftClick?: () => void
 }) {

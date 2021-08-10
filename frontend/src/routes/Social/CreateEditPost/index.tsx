@@ -24,8 +24,8 @@ import { fetchUserCCAs } from '../../../store/profile/action'
 import { PostImage } from './Components/postImage'
 import { PATHS } from '../../Routes'
 import LoadingSpin from '../../../components/LoadingSpin'
-import ConfirmationModal from '../../../components/Mobile/ConfirmationModal'
 import DropDownSelector from '../../../components/Mobile/DropDownSelector'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -285,7 +285,8 @@ export default function CreateEditPost() {
               />
             </Content>
             {isUploading && <LoadingSpin />}
-            {!isUploading && newPostImages.length < 3 && (
+            {/* Deprecate Uploading photos */}
+            {/* {!isUploading && newPostImages.length < 3 && (
               <Footer>
                 <InputFile
                   type="file"
@@ -300,7 +301,7 @@ export default function CreateEditPost() {
                   <FileImageFilled style={{ fontSize: '20px' }} />
                 </InputLabel>
               </Footer>
-            )}
+            )} */}
           </Card>
           {/* TODO: check if user has a role*/}
           {true && (
