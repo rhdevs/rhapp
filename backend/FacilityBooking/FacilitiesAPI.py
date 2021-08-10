@@ -238,7 +238,7 @@ def add_booking():
             formData["ccaID"] = int(formData["ccaID"])
 
         if (formData["endTime"] < formData["startTime"]):
-            raise Exception("End time eariler than start time")
+            raise Exception("End time earlier than start time")
 
         conflict = list(db.Bookings.find({"facilityID": formData.get("facilityID"),
                                           "endTime": {
