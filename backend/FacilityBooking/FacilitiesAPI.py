@@ -240,12 +240,30 @@ def add_booking():
         if (formData["endTime"] < formData["startTime"]):
             raise Exception("End time eariler than start time")
 
-        conflict = list(db.Bookings.find({"facilityID": formData.get("facilityID"),
-                                          "endTime": {
-            "$gt": formData.get('startTime')},
-            "startTime": {
-            "$lt": formData.get('endTime')}
-        }, {"_id": 0}))
+        if (not formData.get("repeat")):
+            formData["repeat"] = 1
+
+        # Handle repeats
+        condition = []
+
+        for i in range(formData["repeat"]):
+            condition.append({
+                "endTime": {
+                    "$gt": formData.get('startTime') + i * 7 * 24 * 60 * 60
+                }, "startTime": {
+                    "$lt": formData.get('endTime')
+                }
+            })
+
+        conflict = list(
+            db.Bookings.find(
+                {
+                    "facilityID": formData.get("facilityID"),
+                    "$or": condition
+                },
+                {"_id": 0}
+            )
+        )
 
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
@@ -256,7 +274,16 @@ def add_booking():
             lastbookingID[0].get("bookingID")) + 1
 
         formData["bookingID"] = newBookingID
-        db.Bookings.insert_one(formData)
+
+        insertData = []
+        for i in range(formData["repeat"]):
+            insertData.append(formData.copy())
+            formData["bookingID"] += 1
+            formData["startTime"] += 7 * 24 * 60 * 60
+            formData["endTime"] += 7 * 24 * 60 * 60
+
+        db.Bookings.insert(insertData)
+
         response = {"status": "success"}
 
         # Logging
@@ -326,14 +353,12 @@ def delete_booking(bookingID):
         if (len(data) == 0):
             raise Exception("Booking not found")
 
-        db.Bookings.delete_one({"bookingID": int(bookingID)})
+        retval = db.Bookings.delete_one({"bookingID": int(bookingID)})
 
         # Logging
-        formData = {}
-        formData["action"] = "Delete Booking"
-        formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        formData["bookingID"] = bookingID
-        db.BookingLogs.insert_one(formData)
+        retval["action"] = "Delete Booking"
+        retval["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        db.BookingLogs.insert_one(retval)
 
         response = {"status": "success"}
     except Exception as e:
