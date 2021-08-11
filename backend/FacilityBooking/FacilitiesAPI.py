@@ -251,7 +251,7 @@ def add_booking():
             raise Exception("Conflict Booking")
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
-            raise Exception("You must be in RH Dance to make this booking")
+            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
         lastbookingID = list(db.Bookings.find().sort(
             [('_id', pymongo.DESCENDING)]).limit(1))
