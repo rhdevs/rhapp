@@ -238,7 +238,7 @@ def add_booking():
             formData["ccaID"] = int(formData["ccaID"])
 
         if (formData["endTime"] < formData["startTime"]):
-            raise Exception("End time eariler than start time")
+            raise Exception("End time earlier than start time")
 
         conflict = list(db.Bookings.find({"facilityID": formData.get("facilityID"),
                                           "endTime": {
@@ -249,6 +249,9 @@ def add_booking():
 
         if (len(conflict) != 0):
             raise Exception("Conflict Booking")
+
+        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
+            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
         lastbookingID = list(db.Bookings.find().sort(
             [('_id', pymongo.DESCENDING)]).limit(1))
