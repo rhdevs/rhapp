@@ -153,7 +153,6 @@ def all_supper_group():
             db.SupperGroup.update_one(query, changes)
 
             # Filters only open and public supper groups
-            print(not supperGroup['isPrivate'])
             if supperGroup['status'] == 'Open' and (not supperGroup['isPrivate']):
                 data.append(supperGroup)
 
