@@ -1,2 +1,5 @@
 run = "python ./backend/main.py"
 language = "python3"
+
+[packager]
+ignoredPaths=["*"]
