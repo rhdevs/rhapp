@@ -24,6 +24,7 @@ export type Booking = {
   startTime: number
   endTime: number
   description: string
+  repeat?: number
 }
 
 export type Event = {
@@ -66,6 +67,7 @@ export enum FACILITY_ACTIONS {
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
   SET_VIEW_FACILITY_NAME = 'FACILITY_ACTION.SET_VIEW_FACILITY_NAME',
   SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTION.SET_CREATE_BOOKING_ERROR',
+  SET_REPEAT_WEEKLY = 'FACILITY_ACTION.SET_REPEAT_WEEKLY',
 }
 
 type SetCreateBookingError = {
@@ -209,6 +211,11 @@ type SetFacilityBookings = {
   facilityBookings: Booking[]
 }
 
+type SetRepeatWeekly = {
+  type: typeof FACILITY_ACTIONS.SET_REPEAT_WEEKLY
+  repeatWeekly: number
+}
+
 type dayNumber = { [dayString: string]: number }
 export const DAY_STRING_TO_NUMBER: dayNumber = {
   Sunday: 0,
@@ -251,3 +258,4 @@ export type ActionTypes =
   | SetCreateBookingError
   | SetBookingFacilityId
   | SetIsJcrc
+  | SetRepeatWeekly

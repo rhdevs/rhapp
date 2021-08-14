@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
-import { Alert, AutoComplete, Input } from 'antd'
+import { Alert, AutoComplete, Input, InputNumber } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
@@ -25,9 +25,11 @@ import {
   SetIsLoading,
   setNewBookingFacilityName,
   setSelectedFacility,
+  setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
+import { repeat } from 'lodash'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -89,6 +91,14 @@ const CCAPickerRow = styled.div`
   color: #666666;
 `
 
+const RepeatWeeklyPickerRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0px;
+  color: #666666;
+`
+
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -107,6 +117,7 @@ export default function CreateBooking() {
     createSuccess,
     createFailure,
     newBookingFacilityId,
+    repeatWeekly,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -164,8 +175,7 @@ export default function CreateBooking() {
   }
 
   const handleFromDateChange = (newDate: string) => {
-    console.log(newDate)
-    dispatch(editBookingFromDate(new Date(newDate)))
+    if (!isNaN(Date.parse(newDate))) dispatch(editBookingFromDate(new Date(newDate)))
   }
 
   const handleToDateChange = (newDate: string) => {
@@ -193,13 +203,21 @@ export default function CreateBooking() {
     }
   }
 
+  const setRepeat = (repeatWeekly: number) => {
+    if (repeatWeekly) dispatch(setBookingRepeat(repeatWeekly))
+  }
+
+  /* 
+  TODO: There are two places that are called conference room, 1 in kuok and 1 in UL. The name has to deconflict.
+  Used to be there are two Main Area also but since name is short, they are not Main Area (UL) and Main Area (Hall)
+  */
   const locationOptions = facilityList
-    .filter((facility) => facility.facilityName !== 'Conference Room' && facility.facilityName !== 'Main Area')
+    .filter((facility) => facility.facilityName !== 'Conference Room')
     .map((facility) => ({
       value: facility.facilityName,
     }))
 
-  locationOptions.push({ value: 'Conference Room' }, { value: 'Main Area' })
+  locationOptions.push({ value: 'Conference Room' })
 
   return (
     <div>
@@ -262,6 +280,12 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
+          {!newBooking?.bookingID && (
+            <RepeatWeeklyPickerRow>
+              <StyledTitle>Number of Weeks</StyledTitle>
+              <InputNumber defaultValue={1} min={1} max={15} value={repeatWeekly} onChange={setRepeat} />
+            </RepeatWeeklyPickerRow>
+          )}
           <CCAPickerRow>
             <StyledTitle>CCA</StyledTitle>
             <AutoComplete

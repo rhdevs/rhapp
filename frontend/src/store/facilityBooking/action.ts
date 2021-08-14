@@ -2,6 +2,7 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
+import { repeat } from 'lodash'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -257,6 +258,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     newBookingFacilityName,
     facilityList,
     ccaList,
+    repeatWeekly,
   } = getState().facilityBooking
 
   const requestBody = {
@@ -267,6 +269,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
+    repeat: repeatWeekly,
   }
   if (selectedFacilityId === 0) {
     //validate if selected facility id is zero
@@ -302,10 +305,13 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      if (body.err == 'End time eariler than start time') {
+      if (body.err == 'End time earlier than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
       } else if (body.err == 'Conflict Booking') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
+      } else if (body.err == 'You must be in RH Dance to make this booking') {
+        // As of this version, Dance Studio can only be booked by people who are in RH Dance.
+        dispatch(SetCreateBookingError('You must be in RH Dance to make this booking'))
       } else {
         dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
       }
@@ -384,4 +390,12 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
       return booking.data
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
+}
+
+export const setBookingRepeat = (repeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log(repeatWeekly)
+  dispatch({
+    type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
+    repeatWeekly: repeatWeekly,
+  })
 }
