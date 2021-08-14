@@ -2,7 +2,6 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
-import { repeat } from 'lodash'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -393,7 +392,6 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
 }
 
 export const setBookingRepeat = (repeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log(repeatWeekly)
   dispatch({
     type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
     repeatWeekly: repeatWeekly,

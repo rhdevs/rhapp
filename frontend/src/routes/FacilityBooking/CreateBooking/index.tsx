@@ -29,7 +29,6 @@ import {
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import { repeat } from 'lodash'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -209,7 +208,7 @@ export default function CreateBooking() {
 
   /* 
   TODO: There are two places that are called conference room, 1 in kuok and 1 in UL. The name has to deconflict.
-  Used to be there are two Main Area also but since name is short, they are not Main Area (UL) and Main Area (Hall)
+  Used to be there are two Main Area also but since name is short, they are now Main Area (UL) and Main Area (Hall)
   */
   const locationOptions = facilityList
     .filter((facility) => facility.facilityName !== 'Conference Room')
