@@ -343,21 +343,24 @@ def delete_booking(bookingID):
     try:
 
         data = db.Bookings.find_one({"bookingID": int(bookingID)})
-
+        del data['_id']
+        print(data)
+        print(1)
         if (not request.args.get("token")):
             raise Exception("No token")
 
-        if (not authenticate(request.args.get("token"), data[0]['userID'])):
+        if (not authenticate(request.args.get("token"), data['userID'])):
             raise Exception("Auth Failure")
 
         if (len(data) == 0):
             raise Exception("Booking not found")
-
+        print(2)
         # Logging
         data["action"] = "Delete Booking"
         data["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(3)
         db.BookingLogs.insert_one(data)
-
+        print(4)
         response = {"status": "success"}
     except Exception as e:
         print(e)
