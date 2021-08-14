@@ -318,7 +318,6 @@ export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<Act
     createdAt: createdAt,
     profilePic: profilePic,
   }
-  console.log(newPost)
   dispatch({
     type: SOCIAL_ACTIONS.GET_SPECIFIC_POST,
     viewPost: newPost,
