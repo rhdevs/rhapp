@@ -353,7 +353,9 @@ def delete_booking(bookingID):
         if (len(data) == 0):
             raise Exception("Booking not found")
 
-        retval = db.Bookings.delete_one({"bookingID": int(bookingID)})
+        retval = list(db.Bookings.find({"bookingID": int(bookingID)}))[0]
+        db.Bookings.delete_one(
+            {"bookingID": int(bookingID)})
 
         # Logging
         retval["action"] = "Delete Booking"
