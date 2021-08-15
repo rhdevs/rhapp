@@ -152,8 +152,8 @@ def all_supper_group():
                                 'totalPrice': supperGroup['totalPrice']}}
             db.SupperGroup.update_one(query, changes)
 
-            # Filters only open supper groups
-            if supperGroup['status'] == 'Open':
+            # Filters only open and public supper groups
+            if supperGroup['status'] == 'Open' and (not supperGroup['isPrivate']):
                 data.append(supperGroup)
 
         data.sort(key=lambda x: x.get('createdAt'), reverse=True)

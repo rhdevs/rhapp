@@ -125,6 +125,10 @@ def register():
         bio = formData["bio"]
         block = formData["block"]
         telegramHandle = formData["telegramHandle"]
+
+        if telegramHandle.startswith('@'):
+            telegramHandle = telegramHandle[1:]
+
         if db.User.find({'userID': userID}).count():  # entry exists
             return jsonify({'message': 'User already exists'}), 401
         # add to User table
@@ -142,7 +146,7 @@ def register():
                                 "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
                                 })
     except Exception as e:
-        return jsonify({'message': 'An error was encountered.'}), 500
+        return jsonify({'message': e}), 500
     return jsonify({'message': 'User successfully created!'}), 200
 
 
