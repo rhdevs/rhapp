@@ -180,7 +180,6 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
 
 export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  console.log(cca)
   fetch(DOMAIN_URL.EVENT + '/user_CCA', {
     method: 'POST',
     mode: 'cors',
