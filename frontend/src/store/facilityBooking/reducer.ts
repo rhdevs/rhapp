@@ -34,7 +34,7 @@ const initialState = {
   ccaList: [],
   facilityBookings: [],
   selectedFacilityName: '',
-  repeatWeekly: 1,
+  numRepeatWeekly: 1,
 }
 
 type State = {
@@ -65,7 +65,7 @@ type State = {
   facilityBookings: Booking[]
   selectedFacilityName: string
   createBookingError: string
-  repeatWeekly: number
+  numRepeatWeekly: number
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -261,7 +261,7 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     case FACILITY_ACTIONS.SET_REPEAT_WEEKLY: {
       return {
         ...state,
-        repeatWeekly: action.repeatWeekly,
+        numRepeatWeekly: action.numRepeatWeekly,
       }
     }
     default:

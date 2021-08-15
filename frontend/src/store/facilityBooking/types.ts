@@ -213,7 +213,7 @@ type SetFacilityBookings = {
 
 type SetRepeatWeekly = {
   type: typeof FACILITY_ACTIONS.SET_REPEAT_WEEKLY
-  repeatWeekly: number
+  numRepeatWeekly: number
 }
 
 type dayNumber = { [dayString: string]: number }

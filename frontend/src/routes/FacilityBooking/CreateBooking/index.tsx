@@ -116,7 +116,7 @@ export default function CreateBooking() {
     createSuccess,
     createFailure,
     newBookingFacilityId,
-    repeatWeekly,
+    numRepeatWeekly,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -202,8 +202,8 @@ export default function CreateBooking() {
     }
   }
 
-  const setRepeat = (repeatWeekly: number) => {
-    if (repeatWeekly) dispatch(setBookingRepeat(repeatWeekly))
+  const setRepeat = (numRepeatWeekly: number) => {
+    if (numRepeatWeekly) dispatch(setBookingRepeat(numRepeatWeekly))
   }
 
   /* 
@@ -282,7 +282,7 @@ export default function CreateBooking() {
           {!newBooking?.bookingID && (
             <RepeatWeeklyPickerRow>
               <StyledTitle>Number of Weeks</StyledTitle>
-              <InputNumber defaultValue={1} min={1} max={15} value={repeatWeekly} onChange={setRepeat} />
+              <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
             </RepeatWeeklyPickerRow>
           )}
           <CCAPickerRow>

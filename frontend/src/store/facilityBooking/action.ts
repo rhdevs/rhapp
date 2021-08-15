@@ -257,7 +257,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     newBookingFacilityName,
     facilityList,
     ccaList,
-    repeatWeekly,
+    numRepeatWeekly,
   } = getState().facilityBooking
 
   const requestBody = {
@@ -268,7 +268,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
     description: newBookingDescription,
-    repeat: repeatWeekly,
+    repeat: numRepeatWeekly,
   }
   if (selectedFacilityId === 0) {
     //validate if selected facility id is zero
@@ -391,9 +391,9 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
 
-export const setBookingRepeat = (repeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setBookingRepeat = (numRepeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
-    repeatWeekly: repeatWeekly,
+    numRepeatWeekly: numRepeatWeekly,
   })
 }
