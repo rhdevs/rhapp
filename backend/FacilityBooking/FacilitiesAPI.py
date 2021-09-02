@@ -251,7 +251,7 @@ def add_booking():
                 "endTime": {
                     "$gt": formData.get('startTime') + i * 7 * 24 * 60 * 60
                 }, "startTime": {
-                    "$lt": formData.get('endTime')
+                    "$lt": formData.get('endTime') + i * 7 * 24 * 60 * 60
                 }
             })
 
