@@ -95,7 +95,7 @@ type Props = {
 }
 
 export const SupperShareModal = (props: Props) => {
-  const link = `rhapp.lol${PATHS.JOIN_GROUP}/${props.rawSupperGroupId}`
+  const link = `www.rhapp.lol${PATHS.JOIN_GROUP}/${props.rawSupperGroupId}`
 
   const onCloseClick = () => {
     props.teleShareModalSetter(false)
