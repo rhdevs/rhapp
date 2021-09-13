@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
-import { CloseOutlined } from '@ant-design/icons'
+import CloseOutlined from '@ant-design/icons/lib/icons/CloseOutlined'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { useDispatch, useSelector } from 'react-redux'

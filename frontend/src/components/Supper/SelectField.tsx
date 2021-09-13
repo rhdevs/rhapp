@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { UpOutlined } from '@ant-design/icons/lib/icons'
+import UpOutlined from '@ant-design/icons/lib/icons/UpOutlined'
 import { DeepMap, FieldError } from 'react-hook-form'
 import { Checkbox } from '../Checkbox'
 import { CancelAction, Custom, Option } from '../../store/supper/types'
