@@ -2,7 +2,8 @@ import React, { ReactChild, ReactChildren, useState } from 'react'
 
 import styled from 'styled-components'
 
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
+import CaretDownOutlined from '@ant-design/icons/lib/icons/CaretDownOutlined'
+import CaretUpOutlined from '@ant-design/icons/lib/icons/CaretUpOutlined'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'

@@ -19,7 +19,7 @@ import {
 import { AutoComplete, Card } from 'antd'
 import deleteIcon from '../../../assets/cancel.svg'
 import tickIcon from '../../../assets/tick.svg'
-import { PlusCircleFilled } from '@ant-design/icons'
+import PlusCircleFilled from '@ant-design/icons/lib/icons/PlusCircleFilled'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { PlusCircleFilled } from '@ant-design/icons'
+import PlusCircleFilled from '@ant-design/icons/lib/icons/PlusCircleFilled'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { V1_BLUE, V1_RED } from '../../common/colours'

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
-import { LeftOutlined } from '@ant-design/icons'
+import LeftOutlined from '@ant-design/icons/lib/icons/LeftOutlined'
 import { getHallEventTypes, setCreatedEventID, setSelectedEvent } from '../../../store/scheduling/action'
 import { RootState } from '../../../store/types'
 import { DAY_STRING_TO_NUMBER } from '../../../store/scheduling/types'

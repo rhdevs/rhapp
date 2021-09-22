@@ -1,4 +1,5 @@
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons/lib/icons'
+import CaretDownOutlined from '@ant-design/icons/lib/icons/CaretDownOutlined'
+import CaretUpOutlined from '@ant-design/icons/lib/icons/CaretUpOutlined'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
