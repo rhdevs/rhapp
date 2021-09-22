@@ -18,7 +18,7 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     .then((resp) => resp.json())
     .then((data) => {
       const facilityList = data.data
-      const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front). Forgive me for this...
+      const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
       facilityList.splice(6, 0, commHallBack)
       const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
       dispatch({
