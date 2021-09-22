@@ -1,5 +1,5 @@
 import React from 'react'
-import { ReloadOutlined } from '@ant-design/icons/lib/icons'
+import ReloadOutlined from '@ant-design/icons/lib/icons/ReloadOutlined'
 
 import styled from 'styled-components'
 import { onRefresh } from '../../common/reloadPage'

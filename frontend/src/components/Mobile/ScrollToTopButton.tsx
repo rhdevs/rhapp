@@ -1,5 +1,5 @@
 import React from 'react'
-import { UpOutlined } from '@ant-design/icons'
+import UpOutlined from '@ant-design/icons/lib/icons/UpOutlined'
 import styled from 'styled-components'
 
 const Button = styled.div`

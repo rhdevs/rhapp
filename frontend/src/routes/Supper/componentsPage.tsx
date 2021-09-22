@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { SmileOutlined } from '@ant-design/icons'
+import SmileOutlined from '@ant-design/icons/lib/icons/SmileOutlined'
 import { StatusSymbol } from '../../components/Supper/StatusSymbol'
 import { MaxPriceFixer } from '../../components/Supper/MaxPriceFixer'
 import { QuantityTracker } from '../../components/Supper/QuantityTracker'

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons'
+import CaretDownOutlined from '@ant-design/icons/lib/icons/CaretDownOutlined'
+import CaretUpOutlined from '@ant-design/icons/lib/icons/CaretUpOutlined'
 import { Food, PaymentMethod } from '../../store/supper/types'
 import { StatusSymbol } from './StatusSymbol'
 import { TelegramShareButton } from '../TelegramShareButton'

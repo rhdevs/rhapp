@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MinusCircleFilled } from '@ant-design/icons'
+import MinusCircleFilled from '@ant-design/icons/lib/icons/MinusCircleFilled'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { useEffect } from 'react'

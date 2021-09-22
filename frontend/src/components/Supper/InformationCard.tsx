@@ -2,7 +2,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { MainCard } from './MainCard'
-import { InfoCircleOutlined } from '@ant-design/icons'
+import InfoCircleOutlined from '@ant-design/icons/lib/icons/InfoCircleOutlined'
 
 const SymbolContainer = styled.div`
   padding: 0 10px 0 0;

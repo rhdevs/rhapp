@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import 'antd/dist/antd.css'
-import { FileImageFilled } from '@ant-design/icons'
+// import { FileImageFilled } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { Button, Switch } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
