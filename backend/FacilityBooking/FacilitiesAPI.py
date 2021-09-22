@@ -247,13 +247,18 @@ def add_booking():
         condition = []
 
         for i in range(formData["repeat"]):
-            condition.append({
-                "endTime": {
-                    "$gt": formData.get('startTime') + i * 7 * 24 * 60 * 60
-                }, "startTime": {
-                    "$lt": formData.get('endTime') + i * 7 * 24 * 60 * 60
+            condition.append({ '$and': [
+                {
+                    "endTime": {
+                        "$gt": formData.get('startTime') + i * 7 * 24 * 60 * 60
+                    }
+                }, 
+                {
+                    "startTime": {
+                        "$lt": formData.get('endTime') + i * 7 * 24 * 60 * 60
+                    }
                 }
-            })
+            ]})
 
         conflict = list(
             db.Bookings.find(
