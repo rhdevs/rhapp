@@ -209,6 +209,8 @@ export default function FacilityBooking() {
         return <FacilityAvatar src={Gym} />
       case 15:
         return <FacilityAvatar src={DanceStudio} />
+      case 16:
+        return <FacilityAvatar src={MainAreaCommHall} />
       default:
         return <FacilityAvatar src={DummyAvatar} />
     }
