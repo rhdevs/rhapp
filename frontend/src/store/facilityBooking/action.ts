@@ -17,10 +17,13 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
   })
     .then((resp) => resp.json())
     .then((data) => {
-      const uniqueLocationList = [...new Set(data.data.map((item: Facility) => item.facilityLocation))]
+      const facilityList = data.data
+      const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front). Forgive me for this...
+      facilityList.splice(6, 0, commHallBack)
+      const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
-        facilityList: data.data,
+        facilityList: facilityList,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
       dispatch(SetIsLoading(false))
