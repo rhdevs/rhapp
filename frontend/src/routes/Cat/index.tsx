@@ -1,58 +1,40 @@
-import React, { useState } from 'react'
+import React from 'react'
 import 'antd/dist/antd.css'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { Button } from 'antd-mobile'
 import Cat1 from './cat1'
 import Cat2 from './cat2'
+import { DecreaseCatCount, IncreaseCatCount, SetDisplayCatNumber } from '../../store/cat/action'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
 
 export default function Cat() {
-  const [catCount, setCatCount] = useState(3)
-  const [displayCatNumber, setDisplayCatNumber] = useState(0)
-  const [isCatCountSingular, setIsCatCountSingular] = useState(false)
-
-  const handleIncreasePussyCount = () => {
-    setCatCount(catCount + 1)
-    handleCatCountSingular(catCount + 1)
-  }
-
-  const handleDecreasePussyCount = () => {
-    setCatCount(catCount - 1)
-    handleCatCountSingular(catCount - 1)
-  }
-
-  const handleCatCountSingular = (newCount: number) => {
-    console.log('[catCount] count is: ', catCount)
-    if (newCount === 1) {
-      setIsCatCountSingular(true)
-    } else {
-      setIsCatCountSingular(false)
-    }
-  }
+  const dispatch = useDispatch()
+  const { catCount, isCatCountSingular, displayCatNumber } = useSelector((state: RootState) => state.cat)
 
   return (
     <div>
       <TopNavBar title={`${catCount} Cat${!isCatCountSingular ? 's' : ''} Only`} />
-      <Button onClick={handleIncreasePussyCount}>Click to increase pussy count</Button>
-      <Button onClick={handleDecreasePussyCount}>Click to decrease pussy count</Button>
+      <Button onClick={() => dispatch(IncreaseCatCount())}>Click to increase pussy count</Button>
+      <Button onClick={() => dispatch(DecreaseCatCount())}>Click to decrease pussy count</Button>
 
-      <Button onClick={() => setDisplayCatNumber(0)}>Hide all Cats</Button>
-      <Button onClick={() => setDisplayCatNumber(1)}>Go to Cat 1</Button>
-      <Button onClick={() => setDisplayCatNumber(2)}>Go to Cat 2</Button>
+      <Button onClick={() => dispatch(SetDisplayCatNumber(0))}>Hide all Cats</Button>
+      <Button onClick={() => dispatch(SetDisplayCatNumber(1))}>Go to Cat 1</Button>
+      <Button onClick={() => dispatch(SetDisplayCatNumber(2))}>Go to Cat 2</Button>
 
       {displayCatNumber === 1 && (
         <div>
           <Cat1
-            handleIncreasePussyCount={handleIncreasePussyCount}
-            handleDecreasePussyCount={handleDecreasePussyCount}
+            handleIncreasePussyCount={() => dispatch(IncreaseCatCount())}
+            handleDecreasePussyCount={() => dispatch(DecreaseCatCount())}
           />
         </div>
       )}
-
       {displayCatNumber === 2 && (
         <div>
           <Cat2
-            handleIncreasePussyCount={handleIncreasePussyCount}
-            handleDecreasePussyCount={handleDecreasePussyCount}
+            handleIncreasePussyCount={() => dispatch(IncreaseCatCount())}
+            handleDecreasePussyCount={() => dispatch(DecreaseCatCount())}
           />
         </div>
       )}

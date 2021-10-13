@@ -10,6 +10,7 @@ import { social } from './social/reducer'
 import { laundry } from './laundry/reducer'
 import { profile } from './profile/reducer'
 import { supper } from './supper/reducer'
+import { cat } from './cat/reducer'
 
 export const rootReducer = combineReducers({
   home,
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers({
   profile,
   laundry,
   supper,
+  cat,
 })
 const middlewares = [thunk]
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(...middlewares)))
