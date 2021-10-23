@@ -224,6 +224,7 @@ export default function ViewFacility() {
   }
 
   const getHumanReadableDate = (eventTime: number) => {
+    console.log(eventTime)
     const date = new Date((eventTime + 28800) * 1000)
     const day = date.getUTCDate()
     const monthInt = date.getUTCMonth()
@@ -307,7 +308,8 @@ export default function ViewFacility() {
                       <EventBoldLabel>
                         📅{' '}
                         <b>
-                          {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
+                          {getHumanReadableTime(event.startTime)} {getHumanReadableDate(event.startTime)} to{' '}
+                          {getHumanReadableTime(event.endTime)} {getHumanReadableDate(event.endTime)}
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
