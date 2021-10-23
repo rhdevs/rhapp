@@ -224,7 +224,6 @@ export default function ViewFacility() {
   }
 
   const getHumanReadableDate = (eventTime: number) => {
-    console.log(eventTime)
     const date = new Date((eventTime + 28800) * 1000)
     const day = date.getUTCDate()
     const monthInt = date.getUTCMonth()
