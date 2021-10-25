@@ -228,7 +228,7 @@ export default function ViewFacility() {
     const day = date.getUTCDate()
     const monthInt = date.getUTCMonth()
 
-    return day + ' ' + months[monthInt]
+    return '[' + day + '/' + monthInt + ']'
   }
 
   const AlertSection = (
@@ -307,8 +307,8 @@ export default function ViewFacility() {
                       <EventBoldLabel>
                         📅{' '}
                         <b>
-                          {getHumanReadableTime(event.startTime)} {getHumanReadableDate(event.startTime)} to{' '}
-                          {getHumanReadableTime(event.endTime)} {getHumanReadableDate(event.endTime)}
+                          {getHumanReadableDate(event.startTime)} {getHumanReadableTime(event.startTime)} to{' '}
+                          {getHumanReadableDate(event.endTime)} {getHumanReadableTime(event.endTime)}
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
