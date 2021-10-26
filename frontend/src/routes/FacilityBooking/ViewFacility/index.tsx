@@ -83,6 +83,7 @@ const AlertGroup = styled.div`
 
 const EventLabels = styled.div`
   align-self: center;
+  width: 80%;
 `
 
 const EventBoldLabel = styled.div`
@@ -90,6 +91,7 @@ const EventBoldLabel = styled.div`
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
+  overflow: hidden;
 `
 
 const EventNormalLabel = styled.div`
@@ -228,7 +230,7 @@ export default function ViewFacility() {
     const day = date.getUTCDate()
     const monthInt = date.getUTCMonth()
 
-    return day + ' ' + months[monthInt]
+    return '[' + day + '/' + monthInt + ']'
   }
 
   const AlertSection = (
@@ -307,7 +309,8 @@ export default function ViewFacility() {
                       <EventBoldLabel>
                         📅{' '}
                         <b>
-                          {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
+                          {getHumanReadableDate(event.startTime)} {getHumanReadableTime(event.startTime)} to{' '}
+                          {getHumanReadableDate(event.endTime)} {getHumanReadableTime(event.endTime)}
                         </b>
                       </EventBoldLabel>
                       <EventNormalLabel>
