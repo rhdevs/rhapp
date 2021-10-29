@@ -268,7 +268,7 @@ def add_booking():
             {"_id": 0}
         ).count()
 
-        if (conflict != 0):
+        if (conflict > 0):
             raise Exception("Conflict Booking")
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
