@@ -330,6 +330,11 @@ def edit_booking(bookingID):
                         "startTime": {
                             "$lt": formData.get('endTime')
                         }
+                    },
+                    {
+                        "bookingID": {
+                            "$ne": int(bookingID)
+                        }
                     }
                 ]
             },
