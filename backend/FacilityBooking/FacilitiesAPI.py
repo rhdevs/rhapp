@@ -247,12 +247,12 @@ def add_booking():
         condition = []
 
         for i in range(formData["repeat"]):
-            condition.append({ '$and': [
+            condition.append({'$and': [
                 {
                     "endTime": {
                         "$gt": formData.get('startTime') + i * 7 * 24 * 60 * 60
                     }
-                }, 
+                },
                 {
                     "startTime": {
                         "$lt": formData.get('endTime') + i * 7 * 24 * 60 * 60
@@ -260,17 +260,15 @@ def add_booking():
                 }
             ]})
 
-        conflict = list(
-            db.Bookings.find(
-                {
-                    "facilityID": formData.get("facilityID"),
-                    "$or": condition
-                },
-                {"_id": 0}
-            )
-        )
+        conflict = db.Bookings.find(
+            {
+                "facilityID": formData.get("facilityID"),
+                "$or": condition
+            },
+            {"_id": 0}
+        ).count()
 
-        if (len(conflict) != 0):
+        if (conflict > 0):
             raise Exception("Conflict Booking")
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
@@ -318,6 +316,33 @@ def edit_booking(bookingID):
             formData["ccaID"] = int(formData["ccaID"])
 
         data = list(db.Bookings.find({"bookingID": int(bookingID)}))
+
+        conflict = db.Bookings.find(
+            {
+                "facilityID": formData.get("facilityID"),
+                '$and': [
+                    {
+                        "endTime": {
+                            "$gt": formData.get('startTime')
+                        }
+                    },
+                    {
+                        "startTime": {
+                            "$lt": formData.get('endTime')
+                        }
+                    },
+                    {
+                        "bookingID": {
+                            "$ne": int(bookingID)
+                        }
+                    }
+                ]
+            },
+            {"_id": 0}
+        ).count()
+
+        if (conflict > 0):
+            raise Exception("Conflict Booking")
 
         if (len(data) == 0):
             raise Exception("Booking not found")
