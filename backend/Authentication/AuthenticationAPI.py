@@ -1,3 +1,7 @@
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import base64
+from EmailService import createService
 import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -16,20 +20,6 @@ sys.path.append("../")
 
 authentication_api = Blueprint("authentication", __name__)
 
-#### FORGOT PASSWORD STUFF ####
-
-
-def load_mail():
-    current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
-    current_app.config['MAIL_PORT'] = 587
-    # to test input your own NUS acc email
-    current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
-    # to test input your own NUS acc password
-    current_app.config['MAIL_PASSWORD'] = os.environ['EMAIL_PW']
-    current_app.config['MAIL_USE_TLS'] = True
-    current_app.config['MAIL_USE_SSL'] = False
-    current_app.config['SERVER_NAME'] = 'rhapp.lol'
-    return Mail(current_app)
 
 # Uncomment the create_index command if you need to recreate the expiration index for Session collection
 # https://stackoverflow.com/questions/54750273/pymongo-and-ttl-wrong-expiration-time
@@ -206,15 +196,14 @@ def logout():
     return jsonify({'message': 'You have been successfully logged out'}), 200
 
 
-"""
-https://stackoverflow.com/questions/23039734/flask-login-password-reset
-https://www.youtube.com/watch?v=zYWpEJAHvaI
+# Credits
+# https://www.youtube.com/watch?v=44ERDGa9Dr4
+# https://learndataanalysis.org/how-to-use-gmail-api-to-send-an-email-in-python/
 
-Forgot route:
-Asks the user for email to send password reset token.
-Check if email exists in database of users.
-If so, create reset token (valid for fixed period eg 15 mins?), send link with /auth/reset?token=<token> to user email
-"""
+CLIENT_SECRET_FILE = '../credentials.json'
+API_NAME = 'gmail'
+API_VERSION = 'v1'
+SCOPES = ['https://mail.google.com/']  # Full accesss to gmail
 
 
 @authentication_api.route('/forgot', methods=['POST'])
@@ -228,29 +217,37 @@ def submitEmail():
         })
         # if there is a user associated with the email, create password reset token (using JWS) then send email with reset token
         if associatedUser:
-            mail = load_mail()
+            # Get token and insert into database
             newResetToken = getPasswordResetToken(associatedUser['userID'])
             db.PasswordResetSession.insert_one(
-                {'userID': associatedUser['userID'],
-                 'email': email
-                 })
+                {
+                    'userID': associatedUser['userID'],
+                    'email': email
+                })
+            # Get reset URL
             with current_app.test_request_context():
                 redirectUrl = url_for(
                     'authentication.reset_token', token=newResetToken, _external=True)
-            msg = Message('Password Reset for RHApp',
-                          sender=current_app.config.get("MAIL_USERNAME"),
-                          recipients=[email])
-            msg.body = f'''To reset your password, please visit this URL:\n 
-            
-            {redirectUrl}\n
 
-            If you didn't request for a password reset, please ignore this message.
-            
+            # Start of Gmail API
+            service = createService(
+                CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+            emailMsg = f'''
+            To reset your password, please click on the URL:\n
+            {redirectUrl}\n
+            If you did not request for a password reset, please ignore this message.
             '''
-            mail.send(msg)
-            # to reset the domain, prevent subsequent requests being routed to rhapp.lol instead of repl server
-            current_app.config.update(SERVER_NAME=None)
-        # print message regardless of whether email is valid or not
+            mimeMessage = MIMEMultipart()
+            mimeMessage['to'] = email
+            mimeMessage['subject'] = 'RHApp Password Reset'
+            mimeMessage.attach(MIMEText(emailMsg, 'plain'))
+            raw_string = base64.urlsafe_b64encode(
+                mimeMessage.as_bytes()).decode()
+
+            service.users().messages().send(
+                userId='me', body={'raw': raw_string}).execute()
+
+        # Return success message regardless of whether email is valid or not
         return jsonify({'status': 'success', 'message': 'You will receive an email if there is an account associated with the email address'}), 200
     except Exception as e:
         print(e)
