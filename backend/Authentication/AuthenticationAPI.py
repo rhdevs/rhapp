@@ -26,11 +26,11 @@ authentication_api = Blueprint("authentication", __name__)
 # db.Session.create_index("createdAt", expireAfterSeconds = 120)
 
 # Uncomment the below create_index command if you need to recreate the expiration index for PasswordResetSession collection
-#db.PasswordResetSession.create_index("resetTokenCreatedAt", expireAfterSeconds=300)
+# db.PasswordResetSession.create_index("resetTokenCreatedAt", expireAfterSeconds=300)
 
 
 """
-check_for_token function: 
+check_for_token function:
 checks for and verifies token. Used in /protected
 """
 
@@ -65,8 +65,8 @@ def check_for_token(func):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
-            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
-            #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
+            # db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+            # db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
             db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
                               '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
 
@@ -156,10 +156,10 @@ def login():
     if not db.User.find_one({'userID': userID, 'passwordHash': passwordHash}):
         return jsonify({'message': 'Invalid credentials'}), 403
     # insert new session into Session table
-    #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
+    # db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
     db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
                       'userID': userID, 'passwordHash': passwordHash, 'createdAt': datetime.datetime.now()}}, upsert=True)
-    #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
+    # db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
     token = jwt.encode({'userID': userID,
                         'passwordHash': passwordHash  # to change timedelta to 15 minutes in production
@@ -200,7 +200,7 @@ def logout():
 # https://www.youtube.com/watch?v=44ERDGa9Dr4
 # https://learndataanalysis.org/how-to-use-gmail-api-to-send-an-email-in-python/
 
-CLIENT_SECRET_FILE = '../credentials.json'
+CLIENT_SECRET_FILE = 'backend/credentials.json'
 API_NAME = 'gmail'
 API_VERSION = 'v1'
 SCOPES = ['https://mail.google.com/']  # Full accesss to gmail
@@ -229,14 +229,14 @@ def submitEmail():
                 redirectUrl = url_for(
                     'authentication.reset_token', token=newResetToken, _external=True)
 
+            # For debugging CLIENT_SECRET_FILE path
+            # print(os.getcwd())
             # Start of Gmail API
             service = createService(
                 CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-            emailMsg = f'''
-            To reset your password, please click on the URL:\n
-            {redirectUrl}\n
-            If you did not request for a password reset, please ignore this message.
-            '''
+            emailMsg = "To reset your password, please click on the URL:\n\n" + redirectUrl + \
+                "\n\nIf you did not request for a password reset, please ignore this message."
+
             mimeMessage = MIMEMultipart()
             mimeMessage['to'] = email
             mimeMessage['subject'] = 'RHApp Password Reset'

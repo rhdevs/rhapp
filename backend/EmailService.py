@@ -20,7 +20,7 @@ def createService(client_secret_file, api_name, api_version, *scopes):
 
     cred = None
 
-    pickle_file = f'token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
+    pickle_file = f'backend/token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
     # print(pickle_file)
 
     if os.path.exists(pickle_file):
@@ -31,6 +31,7 @@ def createService(client_secret_file, api_name, api_version, *scopes):
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
         else:
+            print(os.getcwd())
             flow = InstalledAppFlow.from_client_secrets_file(
                 CLIENT_SECRET_FILE, SCOPES)
             cred = flow.run_local_server()
