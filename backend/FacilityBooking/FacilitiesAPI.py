@@ -268,8 +268,15 @@ def add_booking():
             {"_id": 0}
         ).count()
 
+        conflictadd = []
+        conflictadd.append( {
+                "facilityID": formData.get("facilityID"),
+                "$or": condition
+            },
+            {"_id": 0})
+
         if (conflict > 0):
-            raise Exception("Conflict Booking")
+            raise Exception(conflictadd)
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
@@ -341,8 +348,32 @@ def edit_booking(bookingID):
             {"_id": 0}
         ).count()
 
+        conflictedit = []
+        conflictedit.append({
+                "facilityID": formData.get("facilityID"),
+                '$and': [
+                    {
+                        "endTime": {
+                            "$gt": formData.get('startTime')
+                        }
+                    },
+                    {
+                        "startTime": {
+                            "$lt": formData.get('endTime')
+                        }
+                    },
+                    {
+                        "bookingID": {
+                            "$ne": int(bookingID)
+                        }
+                    }
+                ]
+                },
+                {"_id": 0})
+
         if (conflict > 0):
-            raise Exception("Conflict Booking")
+            raise Exception(conflictedit)
+
 
         if (len(data) == 0):
             raise Exception("Booking not found")
