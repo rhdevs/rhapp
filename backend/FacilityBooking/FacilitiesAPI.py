@@ -163,14 +163,22 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
+        condition = {
+            "$and": [
+                {'facilityID': int(facilityID)},
+            ]
+        }
+        if (request.args.get('endTime') != None):
+            condition['$and'].append({'startTime': {'$lte': int(
+                request.args.get('endTime'))}})
+
+        if (request.args.get('startTime') != None):
+            condition['$and'].append({'endTime': {'$gt': int(
+                request.args.get('startTime'))}})
+
         pipeline = [
             {'$match':
-                {'$and': [
-                    {'facilityID': int(facilityID)},
-                    {'startTime': {'$lte': int(
-                        request.args.get('endTime'))}},
-                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
-                ]}
+                condition
              },
             {'$lookup': {
                 'from': 'Profiles',
@@ -237,7 +245,7 @@ def add_booking():
         else:
             formData["ccaID"] = int(formData["ccaID"])
 
-        if (formData["endTime"] < formData["startTime"]):
+        if (formData["endTime"] <= formData["startTime"]):
             raise Exception("End time earlier than start time")
 
         if (not formData.get("repeat")):
