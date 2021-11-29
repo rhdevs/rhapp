@@ -173,7 +173,7 @@ def check_bookings(facilityID):
                 request.args.get('endTime'))}})
 
         if (request.args.get('startTime') != None):
-            condition['$and'].append({'endTime': {'$gte': int(
+            condition['$and'].append({'endTime': {'$gt': int(
                 request.args.get('startTime'))}})
 
         pipeline = [
