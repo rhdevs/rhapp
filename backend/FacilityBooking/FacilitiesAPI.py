@@ -163,14 +163,22 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
+        condition = {
+            "$and": [
+                {'facilityID': int(facilityID)},
+            ]
+        }
+        if (request.args.get('endTime') != None):
+            condition['$and'].append({'startTime': {'$lte': int(
+                request.args.get('endTime'))}})
+
+        if (request.args.get('startTime') != None):
+            condition['$and'].append({'endTime': {'$gt': int(
+                request.args.get('startTime'))}})
+
         pipeline = [
             {'$match':
-                {'$and': [
-                    {'facilityID': int(facilityID)},
-                    {'startTime': {'$lte': int(
-                        request.args.get('endTime'))}},
-                    {"endTime": {"$gte": int(request.args.get('startTime'))}}
-                ]}
+                condition
              },
             {'$lookup': {
                 'from': 'Profiles',
@@ -237,7 +245,7 @@ def add_booking():
         else:
             formData["ccaID"] = int(formData["ccaID"])
 
-        if (formData["endTime"] < formData["startTime"]):
+        if (formData["endTime"] <= formData["startTime"]):
             raise Exception("End time earlier than start time")
 
         if (not formData.get("repeat")):
@@ -264,19 +272,11 @@ def add_booking():
             {
                 "facilityID": formData.get("facilityID"),
                 "$or": condition
-            },
-            {"_id": 0}
-        ).count()
+            }
+        )
 
-        conflictadd = []
-        conflictadd.append( {
-                "facilityID": formData.get("facilityID"),
-                "$or": condition
-            },
-            {"_id": 0})
-
-        if (conflict > 0):
-            raise Exception(conflictadd)
+        if (len(conflict) > 0):
+            return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
@@ -344,36 +344,11 @@ def edit_booking(bookingID):
                         }
                     }
                 ]
-            },
-            {"_id": 0}
-        ).count()
+            }
+        )
 
-        conflictedit = []
-        conflictedit.append({
-                "facilityID": formData.get("facilityID"),
-                '$and': [
-                    {
-                        "endTime": {
-                            "$gt": formData.get('startTime')
-                        }
-                    },
-                    {
-                        "startTime": {
-                            "$lt": formData.get('endTime')
-                        }
-                    },
-                    {
-                        "bookingID": {
-                            "$ne": int(bookingID)
-                        }
-                    }
-                ]
-                },
-                {"_id": 0})
-
-        if (conflict > 0):
-            raise Exception(conflictedit)
-
+        if (len(conflict) > 0):
+            return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
 
         if (len(data) == 0):
             raise Exception("Booking not found")
