@@ -250,6 +250,8 @@ def submitEmail():
             mail.send(msg)
             # to reset the domain, prevent subsequent requests being routed to rhapp.lol instead of repl server
             current_app.config.update(SERVER_NAME=None)
+        else:
+            return jsonify({'status': 'failed', 'message': 'No user with this email found'}), 400
         # print message regardless of whether email is valid or not
         return jsonify({'status': 'success', 'message': 'You will receive an email if there is an account associated with the email address'}), 200
     except Exception as e:
