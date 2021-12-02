@@ -268,12 +268,14 @@ def add_booking():
                 }
             ]})
 
-        conflict = db.Bookings.find(
+        conflict = list(db.Bookings.find(
             {
                 "facilityID": formData.get("facilityID"),
                 "$or": condition
+            }, {
+                "_id": 0
             }
-        )
+        ))
 
         if (len(conflict) > 0):
             return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
@@ -324,7 +326,7 @@ def edit_booking(bookingID):
 
         data = list(db.Bookings.find({"bookingID": int(bookingID)}))
 
-        conflict = db.Bookings.find(
+        conflict = list(db.Bookings.find(
             {
                 "facilityID": formData.get("facilityID"),
                 '$and': [
@@ -344,8 +346,10 @@ def edit_booking(bookingID):
                         }
                     }
                 ]
+            }, {
+                "_id": 0
             }
-        )
+        ))
 
         if (len(conflict) > 0):
             return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
