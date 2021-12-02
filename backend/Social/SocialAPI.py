@@ -309,8 +309,8 @@ def posts():
                 # TODO once we have enough users, use the query below instead so we do not see the whole universe's posts
                 # query = {"$or": [{"userID": {"$in": friends}}, {"isOfficial": True}, {"userID": userID}]}
 
-                data = db.Posts.find(
-                    {}, sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
+                data = list(db.Posts.find(
+                    {}, sort=[('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5))
 
                 # Pipeline is good, but OUR ATLAS FREE TIER DOES NOT ALLOW SORTING, SKIPPING AND LIMITING IN PIPELINE
 
@@ -342,11 +342,16 @@ def posts():
 
                 response = []
 
+                userIDList = [x["userID"] for x in data]
+                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}))
+                profileDict = {}
+                for x in profiles:
+                    profileDict[x["userID"]] = x
+
                 # for item in data:
                 #     response.append(item)
                 for item in data:
-                    profile = db.Profiles.find_one(
-                        {'userID': item.get('userID')})
+                    profile = profileDict.get(item["userID"])
                     item['name'] = profile.get(
                         'displayName') if profile != None else None
                     item['profilePictureURI'] = profile.get(
