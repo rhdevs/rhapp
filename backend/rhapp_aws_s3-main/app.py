@@ -1,9 +1,10 @@
 from boto3 import client, resource
 from credentials import ACCESS_KEY, SECRET_ACCESS_KEY
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import io
-from PIL import Image, ImageGrab
+import os
+from PIL import Image
+
+bucketLocation = 'rhapp-picture-bucket'
 
 user = client(
     's3',
@@ -19,37 +20,53 @@ res = resource(
     region_name='ap-southeast-1'
 )
 
-bucket = res.Bucket('rhapp-picture-bucket')
+bucket = res.Bucket(bucketLocation)
+
+def file_exist(key):
+    obj = list(bucket.objects.filter(Prefix=key))
+    if len(obj)>0:
+        return True
+    else:
+        return False
 
 #create
-def create(file):
-    obj = bucket.Object(file)
-    img = Image.open('stickman.png')
+def create(key, fileLocation):
+    obj = bucket.Object(key)
+    img = Image.open(fileLocation)
+    fileName, fileExtension = os.path.splitext(fileLocation)
+    fileExtension = fileExtension[1:]
     image_stream = io.BytesIO()
-    img.save(image_stream, format='png')
+    img.save(image_stream, format=fileExtension)
     image_stream.flush()
     obj.put(Body=image_stream.getvalue())
 
 #read
-def read(file):
-    obj = bucket.Object(file)
-    image_stream = io.BytesIO()
-    obj.download_fileobj(image_stream)
-    img = mpimg.imread(image_stream, format='jpg')
-    imgplot = plt.imshow(img)
-    plt.show()
+def read(key):
+    if file_exist(key):
+        presigned_url = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+        return presigned_url
+    else:
+        raise FileNotFoundError
 
 #update
-def update(file):
-    delete(file)
-    create(file)
+def update(oldKey, newKey, fileLocation=''):
+    if not file_exist(oldKey):
+        raise FileNotFoundError
+    newObj = bucket.Object(newKey)
+    if fileLocation=='':
+            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+            delete(oldKey)
+    else:
+        delete(oldKey)
+        create(newKey, fileLocation)
+    
 
 #delete
-def delete(file):
-    obj = bucket.Object(file)
+def delete(key):
+    obj = bucket.Object(key)
     obj.delete()
 
-#create('pictures/stickman.png')
-#read('pictures/stickman2.png')
-#update('pictures/stickman2.png')
+create('pictures/stickman.png', 'assets/stickman.png')
+#print(read('pictures/stickman2.png'))
+#update('pictures/stickman2.png', 'pictures/stickman2.png', 'assets/stickman2.png')
 #delete('pictures/profile.png')
