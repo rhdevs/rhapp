@@ -43,10 +43,9 @@ def create(key, fileLocation):
 #read
 def read(key):
     if file_exist(key):
-        presigned_url = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-        return presigned_url
-    else:
         raise FileNotFoundError
+    presigned_url = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+    return presigned_url
 
 #update
 def update(oldKey, newKey, fileLocation=''):
@@ -63,10 +62,12 @@ def update(oldKey, newKey, fileLocation=''):
 
 #delete
 def delete(key):
+    if not file_exist(key):
+        raise FileNotFoundError
     obj = bucket.Object(key)
     obj.delete()
 
-create('pictures/stickman.png', 'assets/stickman.png')
+#create('pictures/stickman.png', 'assets/stickman.png')
 #print(read('pictures/stickman2.png'))
 #update('pictures/stickman2.png', 'pictures/stickman2.png', 'assets/stickman2.png')
 #delete('pictures/profile.png')
