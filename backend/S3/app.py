@@ -22,7 +22,7 @@ res = resource(
 
 bucket = res.Bucket(bucketLocation)
 
-def file_exist(key):
+def fileExist(key):
     obj = list(bucket.objects.filter(Prefix=key))
     if len(obj)>0:
         return True
@@ -31,28 +31,30 @@ def file_exist(key):
 
 #create
 def create(key, fileLocation):
+    if fileExist(key):
+        raise FileExistsError
     obj = bucket.Object(key)
     img = Image.open(fileLocation)
     fileName, fileExtension = os.path.splitext(fileLocation)
     fileExtension = fileExtension[1:]
-    image_stream = io.BytesIO()
-    img.save(image_stream, format=fileExtension)
-    image_stream.flush()
-    obj.put(Body=image_stream.getvalue())
+    ImageStream = io.BytesIO()
+    img.save(ImageStream, format=fileExtension)
+    ImageStream.flush()
+    obj.put(Body=ImageStream.getvalue())
 
 #read
 def read(key):
-    if file_exist(key):
+    if not fileExist(key):
         raise FileNotFoundError
-    presigned_url = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-    return presigned_url
+    PresignedUrl = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+    return PresignedUrl
 
 #update
 def update(oldKey, newKey, fileLocation=''):
-    if not file_exist(oldKey):
+    if not fileExist(oldKey):
         raise FileNotFoundError
     newObj = bucket.Object(newKey)
-    if fileLocation=='':
+    if fileLocation == '':
             newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
             delete(oldKey)
     else:
@@ -62,7 +64,7 @@ def update(oldKey, newKey, fileLocation=''):
 
 #delete
 def delete(key):
-    if not file_exist(key):
+    if not fileExist(key):
         raise FileNotFoundError
     obj = bucket.Object(key)
     obj.delete()

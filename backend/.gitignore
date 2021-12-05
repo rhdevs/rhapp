@@ -132,3 +132,6 @@ dmypy.json
 .pyre/
 
 db.py
+
+#credentials for aws S3
+S3/credentials.py
