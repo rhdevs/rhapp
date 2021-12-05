@@ -169,7 +169,7 @@ def check_bookings(facilityID):
             ]
         }
         if (request.args.get('endTime') != None):
-            condition['$and'].append({'startTime': {'$lte': int(
+            condition['$and'].append({'startTime': {'$lt': int(
                 request.args.get('endTime'))}})
 
         if (request.args.get('startTime') != None):
