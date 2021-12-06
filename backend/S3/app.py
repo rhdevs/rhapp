@@ -22,14 +22,17 @@ res = resource(
 
 bucket = res.Bucket(bucketLocation)
 
+
 def fileExist(key):
     obj = list(bucket.objects.filter(Prefix=key))
-    if len(obj)>0:
+    if len(obj) > 0:
         return True
     else:
         return False
 
-#create
+# create
+
+
 def create(key, fileLocation):
     if fileExist(key):
         raise FileExistsError
@@ -42,34 +45,34 @@ def create(key, fileLocation):
     ImageStream.flush()
     obj.put(Body=ImageStream.getvalue())
 
-#read
+# read
+
+
 def read(key):
     if not fileExist(key):
         raise FileNotFoundError
-    PresignedUrl = user.generate_presigned_url('get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+    PresignedUrl = user.generate_presigned_url(
+        'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
     return PresignedUrl
 
-#update
+# update
+
+
 def update(oldKey, newKey, fileLocation=''):
     if not fileExist(oldKey):
         raise FileNotFoundError
     newObj = bucket.Object(newKey)
     if fileLocation == '':
-            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
-            delete(oldKey)
+        newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+        delete(oldKey)
     else:
         delete(oldKey)
         create(newKey, fileLocation)
-    
 
-#delete
+
+# delete
 def delete(key):
     if not fileExist(key):
         raise FileNotFoundError
     obj = bucket.Object(key)
     obj.delete()
-
-#create('pictures/stickman.png', 'assets/stickman.png')
-#print(read('pictures/stickman2.png'))
-#update('pictures/stickman2.png', 'pictures/stickman2.png', 'assets/stickman2.png')
-#delete('pictures/profile.png')
