@@ -41,6 +41,8 @@ def create(key, fileLocation):
     fileName, fileExtension = os.path.splitext(fileLocation)
     fileExtension = fileExtension[1:]
     ImageStream = io.BytesIO()
+    if fileExtension == 'jpg':
+        fileExtension = 'jpeg'
     img.save(ImageStream, format=fileExtension)
     ImageStream.flush()
     obj.put(Body=ImageStream.getvalue())
@@ -61,8 +63,10 @@ def read(key):
 def update(oldKey, newKey, fileLocation=''):
     if not fileExist(oldKey):
         raise FileNotFoundError
-    newObj = bucket.Object(newKey)
+    if fileExist(newKey):
+        raise FileExistsError
     if fileLocation == '':
+        newObj = bucket.Object(newKey)
         newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
         delete(oldKey)
     else:
