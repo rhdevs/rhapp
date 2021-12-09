@@ -1,8 +1,5 @@
 from boto3 import client, resource
 from credentials import ACCESS_KEY, SECRET_ACCESS_KEY
-import io
-import os
-from PIL import Image
 
 bucketLocation = 'rhapp-picture-bucket'
 
@@ -36,16 +33,7 @@ def fileExist(key):
 def create(key, fileLocation):
     if fileExist(key):
         raise FileExistsError
-    obj = bucket.Object(key)
-    img = Image.open(fileLocation)
-    fileName, fileExtension = os.path.splitext(fileLocation)
-    fileExtension = fileExtension[1:]
-    ImageStream = io.BytesIO()
-    if fileExtension == 'jpg':
-        fileExtension = 'jpeg'
-    img.save(ImageStream, format=fileExtension)
-    ImageStream.flush()
-    obj.put(Body=ImageStream.getvalue())
+    user.upload_file(fileLocation, bucketLocation, key)
 
 # read
 
