@@ -1,2 +1,2 @@
-access_key = "AKIAUTMEFUBUQBVK5RNN"
-secret_access_key = "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"
+access_key = ""
+secret_access_key = ""
