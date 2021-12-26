@@ -33,7 +33,8 @@ def getUserTimetable(userID):
             raise Exception("No data found.")
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -44,7 +45,8 @@ def getAllEvents():
         data = list(db.Events.find())
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -58,7 +60,8 @@ def getAllPrivateEvents():
             item['eventID'] = str(item.pop('_id'))
             response["data"].append(item)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -73,7 +76,8 @@ def getPrivateEventOfUserAfterTime(userID, startTime):
             item['eventID'] = str(item.pop('_id'))
             response["data"].append(item)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -88,7 +92,8 @@ def getPublicEventsPagination(pagination, startTime=0):
             item['eventID'] = str(item.pop('_id'))
             response["data"].append(item)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -102,7 +107,8 @@ def getAllPublicEvents():
             item['eventID'] = str(item.pop('_id'))
             response["data"].append(item)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -114,7 +120,8 @@ def getPublicEventAfterTime(startTime):
             {"startDateTime": {"$gt": int(startTime)}, "isPrivate": False}))
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -125,7 +132,8 @@ def getAllCCA():
         data = list(db.CCA.find({}, {'_id': 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -144,7 +152,8 @@ def getEventsCCA(ccaID, referenceTime=0):
             data = list(db.Events.find({"ccaID": ccaID}))
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -158,7 +167,8 @@ def getEventsDetails(eventID):
             item['eventID'] = str(item.pop('_id'))
             response["data"].append(item)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -169,7 +179,8 @@ def getCCADetails(ccaID):
         data = list(db.CCA.find({"ccaID": ccaID}, {'_id': 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -182,7 +193,8 @@ def getUserCCAs(userID):
         data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -197,7 +209,8 @@ def getUserAttendanceAll(userID):
         response = list(map(renameEvent, data))
         response = {"status": "success", "data": response}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -221,7 +234,8 @@ def getUserAttendance(userID, referenceTime):
         response = map(renameEvent, response)
         response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -233,7 +247,8 @@ def getEventAttendees(eventID):
         response = {"status": "success", "data": list(response)}
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -244,7 +259,8 @@ def getCCAMembers(ccaID):
         response = db.UserCCA.find({"ccaID": ccaID})
         response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -268,7 +284,8 @@ def editUserCCA():
             db.UserCCA.delete_many(body)
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
 
 
@@ -280,7 +297,8 @@ def getCCAMembersName():
         response = db.UserCCA.find({"ccaName": ccaName})
         response = {"status": "success", "data": list(response)}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -296,7 +314,8 @@ def getUserPermissions(userID):
         response = {"status": "success", "data": list(response)}
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -322,7 +341,8 @@ def addDeletePermissions():
             })
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
 
 
@@ -371,7 +391,8 @@ def createEvent():
         response = {"status": "success", "data": body}
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -382,7 +403,8 @@ def deleteEvent(eventID):
         db.Events.delete_one({"_id": ObjectId(eventID)})
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
 
 
@@ -427,7 +449,8 @@ def editEvent():
             response = {"status": "success", "data": body}
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -449,7 +472,8 @@ def editAttendance():
             db.Attendance.delete_many(body)
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
 
 
@@ -460,7 +484,8 @@ def getMods(userID):
         data = db.NUSMods.find({"userID": userID})
         response = {"status": "success", "data": list(data)}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -501,7 +526,8 @@ def deleteOneMod():
         return {"status": "success"}, 200
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @scheduling_api.route("/nusmods", methods=['POST'])
@@ -522,7 +548,8 @@ def addMods():
         return {"status": "success"}, 200
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @scheduling_api.route("/nusmods/addNUSMods", methods=['POST'])
@@ -599,6 +626,6 @@ def addNUSModsEvents():
         data = list(db.NUSMods.find_one({"userID": userID}))
         response = {"status": "success", "data": data}
     except Exception as e:
-
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)

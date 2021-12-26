@@ -29,7 +29,7 @@ def all_facilities():
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -40,10 +40,11 @@ def get_facility_name(facilityID):
         data = list(db.Facilities.find(
             {"facilityID": int(facilityID)}, {"_id": 0}))
         if len(data) == 0:
-            raise Exception("Facility not found")
+            return {"err": "Facility not found", "status": "failed"}, 400
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -91,11 +92,13 @@ def get_one_booking(bookingID):
         bookingInfo = db.Bookings.aggregate(pipeline)
         for booking in bookingInfo:
             data = booking
-        response = {"status": "success", "data": data}
         if len(data) == 0:
-            raise Exception("Booking not found")
+            return {"err": "Booking not found", "status": "failed"}, 400
+        response = {"status": "success", "data": data}
+
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -104,10 +107,10 @@ def get_one_booking(bookingID):
 def user_bookings(userID):
     try:
         if (not request.args.get("token")):
-            raise Exception("No token")
+            return {"err": "No token", "status": "failed"}, 401
 
         if (not authenticate(request.args.get("token"), userID)):
-            raise Exception("Auth Failure")
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         pipeline = [
             {'$match':
@@ -155,7 +158,8 @@ def user_bookings(userID):
 
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -219,7 +223,8 @@ def check_bookings(facilityID):
 
         response = {"status": "success", "data": data}
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
 
@@ -231,10 +236,10 @@ def add_booking():
         formData = request.get_json()
 
         if (not request.args.get("token")):
-            raise Exception("No token")
+            return {"err": "No token", "status": "failed"}, 401
 
-        if (not authenticate(request.args.get("token"), formData["userID"])):
-            raise Exception("Authentication Failure")
+        if (not authenticate(request.args.get("token"), formData.get("userID"))):
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
@@ -246,7 +251,7 @@ def add_booking():
             formData["ccaID"] = int(formData["ccaID"])
 
         if (formData["endTime"] <= formData["startTime"]):
-            raise Exception("End time earlier than start time")
+            return {"err": "End time earlier than start time", "status": "failed"}, 400
 
         if (not formData.get("repeat")):
             formData["repeat"] = 1
@@ -305,10 +310,9 @@ def add_booking():
         formData["action"] = "Add Booking"
         formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         db.BookingLogs.insert_one(formData)
-
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
 
@@ -323,6 +327,9 @@ def edit_booking(bookingID):
             formData["ccaID"] = int(0)
         else:
             formData["ccaID"] = int(formData["ccaID"])
+
+        if (formData["endTime"] <= formData["startTime"]):
+            return {"err": "End time earlier than start time", "status": "failed"}, 400
 
         data = list(db.Bookings.find({"bookingID": int(bookingID)}))
 
@@ -355,13 +362,13 @@ def edit_booking(bookingID):
             return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
 
         if (len(data) == 0):
-            raise Exception("Booking not found")
+            return {"err": "Booking not found", "status": "failed"}, 404
 
         if (not request.args.get("token")):
-            raise Exception("No token")
+            return {"err": "No token", "status": "failed"}, 401
 
-        if (not authenticate(request.args.get("token"), data[0]['userID'])):
-            raise Exception("Auth Failure")
+        if (not data[0] or not data[0]['userID'] or not authenticate(request.args.get("token"), data[0]['userID'])):
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         db.Bookings.update_one({"bookingID": int(bookingID)}, {
             "$set": request.get_json()})
@@ -375,7 +382,7 @@ def edit_booking(bookingID):
         response = {"status": "success"}
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
 
@@ -387,14 +394,15 @@ def delete_booking(bookingID):
 
         data = db.Bookings.find_one({"bookingID": int(bookingID)})
         del data['_id']
-        if (not request.args.get("token")):
-            raise Exception("No token")
 
-        if (not authenticate(request.args.get("token"), data['userID'])):
-            raise Exception("Auth Failure")
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), data.get("userID"))):
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         if (len(data) == 0):
-            raise Exception("Booking not found")
+            return {"err": "Booking not found", "status": "failed"}, 404
 
         db.Bookings.delete_one(
             {"bookingID": int(bookingID)})
@@ -405,7 +413,7 @@ def delete_booking(bookingID):
         response = {"status": "success"}
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
 
@@ -419,11 +427,11 @@ def user_telegram(userID):
             'telegramHandle') if profile else "No User Found"
 
         if (telegramHandle == "No User Found"):
-            raise Exception("User not found")
+            return {"err": "User not found", "status": "failed"}, 404
         response = {"status": "success", "data": telegramHandle}
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
 
@@ -432,10 +440,11 @@ def user_telegram(userID):
 def blockout():
     try:
         if (not request.args.get("token")):
-            raise Exception("No token")
+            return {"err": "No token", "status": "failed"}, 401
 
         if (not authenticate(request.args.get("token"), "RH_JCRC")):
-            raise Exception("Auth Failure")
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
         formData = request.get_json()
 
         print(formData)
@@ -483,5 +492,5 @@ def blockout():
         response = {"status": "success"}
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
