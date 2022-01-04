@@ -1,5 +1,6 @@
 from db import *
-from flask import Flask, request, jsonify, Response, make_response
+from credentials import *
+from flask import Flask, request, jsonify, Response, make_response, current_app
 from flask_cors import CORS, cross_origin
 import pymongo
 import json
@@ -7,6 +8,7 @@ import os
 import time
 import jwt
 import sys
+import boto3
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from flask import Blueprint
@@ -26,7 +28,7 @@ def renamePost(post):
 @social_api.route("/")
 @cross_origin(supports_credentials=True)
 def hello():
-    return "Welcome the Raffles Hall Social server"
+    return "Welcome to the Raffles Hall Social server"
 
 
 @social_api.route('/profiles', methods=['GET', 'PUT'])
@@ -92,14 +94,20 @@ def users():
 @social_api.route("/profile/picture/<string:userID>", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getUserPicture(userID):
+    s3 = boto3.resource('s3')
+    BUCKET_NAME = current_app.config['BUCKET_NAME']
+    BUCKET = s3.bucket('BUCKET_NAME')
+    object = s3.Object('BUCKET_NAME', 'IMG_KEY')
+    IMG_KEY = db.Profiles.find({"imageKey": 1})
     response = {}
     defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
     try:
+        imageObjKey = read('IMG_KEY')
         image = db.Profiles.find_one(
             {"userID": userID}, {"profilePictureUrl": 1})
         response['status'] = "success"
         response['data'] = {
-            'image': image.get('profilePictureUrl')
+            'image': object.get('IMG_KEY')
         }
 
         return make_response(response, 200)
