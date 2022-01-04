@@ -9,6 +9,7 @@ from Scheduling.SchedulingAPI import scheduling_api
 from Supper.SupperAPI import supper_api
 from Authentication.AuthenticationAPI import authentication_api
 from db import *
+from credentials import *
 from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
@@ -16,6 +17,8 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = "Content-Type"
 app.config['SECRET_KEY'] = AUTH_SECRET_KEY
 app.config['PASSWORD_RESET_SECRET'] = AUTH_PASSWORD_RESET_SECRET
+app.config['BUCKET_NAME'] = S3_BUCKET_NAME
+app.config['BUCKET_URL'] = S3_BUCKET_URL
 
 app.register_blueprint(laundry_api, url_prefix="/laundry")
 app.register_blueprint(social_api, url_prefix="/social")
