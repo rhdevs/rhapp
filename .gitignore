@@ -47,3 +47,6 @@ yarn-error.log/
 */.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+# S3
+/backend/S3/credentials.py
