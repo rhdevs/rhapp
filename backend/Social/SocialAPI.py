@@ -52,7 +52,7 @@ def profiles():
                 data["imageKey"] = data.pop("imageKey")
 
             result = db.Profiles.update_one(
-                {"userID": data["userID"]}, {'$set': data}, upsert=True)
+                {"userID": data["userID"]}, {'$set': newKey}, upsert=True)
 
             if int(result.matched_count) > 0:
                 response = {
