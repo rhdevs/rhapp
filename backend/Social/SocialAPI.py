@@ -44,8 +44,12 @@ def profiles():
 
         elif request.method == 'PUT':
             data = request.get_json()
-            if "profilePictureURI" in data:
-                data["profilePictureUrl"] = data.pop("profilePictureURI")
+            newKey = data["key"]
+            newFileLocation = data["fileLocation"]
+            newImageKey = create(newKey, newFileLocation)
+
+            if newImageKey in data:
+                data["imageKey"] = data.pop("imageKey")
 
             result = db.Profiles.update_one(
                 {"userID": data["userID"]}, {'$set': data}, upsert=True)
@@ -92,7 +96,7 @@ def getUserPicture(userID):
     defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
     try:
         image = db.Profiles.find_one(
-            {"userID": userID}, {"profilePictureUrl": 1})
+            {"userID": userID}, {"imageKey": 1})
         response['status'] = "success"
         response['data'] = {
             'image': S3.app.read('IMG_KEY')
