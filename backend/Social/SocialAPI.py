@@ -1,4 +1,5 @@
 from db import *
+from S3.app import *
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
@@ -86,6 +87,7 @@ def users():
 @social_api.route("/profile/picture/<string:userID>", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def getUserPicture(userID):
+    IMG_KEY = db.Profiles.find({"imageKey": 1})
     response = {}
     defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
     try:
@@ -93,7 +95,7 @@ def getUserPicture(userID):
             {"userID": userID}, {"profilePictureUrl": 1})
         response['status'] = "success"
         response['data'] = {
-            'image': image.get('profilePictureUrl')
+            'image': S3.app.read('IMG_KEY')
         }
 
         return make_response(response, 200)
