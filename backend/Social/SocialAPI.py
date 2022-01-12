@@ -44,12 +44,17 @@ def profiles():
             return make_response(response, 200)
 
         elif request.method == 'PUT':
+            s3 = boto3.resource('s3')
+            BUCKET_NAME = current_app.config['BUCKET_NAME']
+            BUCKET = s3.bucket('BUCKET_NAME')
+            object = s3.Object('BUCKET_NAME', 'IMG_KEY')
+            newImageKey = object.put('IMG_KEY')
             data = request.get_json()
-            if "profilePictureURI" in data:
-                data["profilePictureUrl"] = data.pop("profilePictureURI")
+            if "newImageKey" in data:
+                data["imageKey"] = data.pop("imageKey")
 
             result = db.Profiles.update_one(
-                {"userID": data["userID"]}, {'$set': data}, upsert=True)
+                {"userID": data["userID"]}, {'$set': data["newImageKey"]}, upsert=True)
 
             if int(result.matched_count) > 0:
                 response = {
