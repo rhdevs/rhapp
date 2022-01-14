@@ -156,7 +156,7 @@ export default function ViewBooking() {
 
   const openTelegram = (userID, tab) => {
     const site = 'https://telegram.me/' + userID
-    if (!!tab) tab.location.href = site
+    tab && (tab.location.href = site)
   }
   useEffect(() => {
     dispatch(SetIsLoading(true))

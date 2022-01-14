@@ -200,7 +200,7 @@ export default function ViewFacility() {
 
   const openTelegram = (userID, tab) => {
     const site = 'https://telegram.me/' + userID
-    if (!!tab) tab.location.href = site
+    tab && (tab.location.href = site)
   }
 
   const MyBookingIcon = (
