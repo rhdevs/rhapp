@@ -179,6 +179,7 @@ export default function ViewFacility() {
   }, [])
 
   const fetchTelegram = async (booking) => {
+    const newTab = window.open()
     try {
       fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
         method: 'GET',
@@ -186,10 +187,10 @@ export default function ViewFacility() {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          if (data.data === '' || data.data === undefined) {
             console.log(data.err)
           } else {
-            openTelegram(data.telegramHandle)
+            openTelegram(data.data, newTab)
           }
         })
     } catch (err) {
@@ -197,9 +198,9 @@ export default function ViewFacility() {
     }
   }
 
-  const openTelegram = (userID) => {
+  const openTelegram = (userID, tab) => {
     const site = 'https://telegram.me/' + userID
-    window.open(site)
+    if (!!tab) tab.location.href = site
   }
 
   const MyBookingIcon = (
