@@ -28,6 +28,7 @@ import {
   setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
+import ConflictAlert from '../../../components/ConflictAlert'
 import { PATHS } from '../../Routes'
 
 const Background = styled.div`
@@ -309,6 +310,7 @@ export default function CreateBooking() {
             setValue={setDescription}
             textarea
           />
+          <ConflictAlert />
         </Background>
       )}
     </div>
