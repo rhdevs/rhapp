@@ -11,6 +11,7 @@ import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SetIsJcrc } from '../../../store/facilityBooking/action'
+import { Switch } from '../../../components/Switch'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
@@ -159,6 +160,7 @@ export default function Login() {
     }
   }
 
+  const [value, setValue] = useState(false)
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
@@ -178,6 +180,7 @@ export default function Login() {
               }}
             />
           </StyledUsernameInput>
+
           <br />
           <InputTextLabel>Password: </InputTextLabel>
           <StyledPasswordInput>
