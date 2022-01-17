@@ -160,7 +160,6 @@ export default function Login() {
     }
   }
 
-  const [value, setValue] = useState(false)
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}

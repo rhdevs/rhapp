@@ -49,12 +49,12 @@ export const Switch = ({
   isOn,
   handleToggle,
   onColor,
-  SwitchSize,
+  switchSize,
 }: {
   isOn: boolean
   handleToggle: React.ChangeEventHandler<HTMLInputElement>
   onColor: any
-  SwitchSize?: number
+  switchSize?: number
 }) => {
   return (
     <>
