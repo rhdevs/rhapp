@@ -16,6 +16,7 @@ import {
   SetIsLoading,
   setSelectedFacility,
   SetBlockOutIsOpen,
+  resetNewBooking,
 } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
 import AlumniRoom from '../../assets/facilitiesLogos/AlumniRoom.svg'
@@ -157,6 +158,7 @@ export default function FacilityBooking() {
     <img
       src={bookingsIcon}
       onClick={() => {
+        dispatch(resetNewBooking())
         history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
       }}
     />
