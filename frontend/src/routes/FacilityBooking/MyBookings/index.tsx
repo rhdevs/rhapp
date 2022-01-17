@@ -12,6 +12,7 @@ import {
   deleteMyBooking,
   editMyBooking,
   SetIsLoading,
+  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -213,6 +214,7 @@ export default function ViewMyBookings() {
                         <ActionButton
                           src={editIcon}
                           onClick={() => {
+                            dispatch(resetNewBooking())
                             dispatch(editMyBooking(booking))
                             history.push(PATHS.CREATE_FACILITY_BOOKING)
                           }}
