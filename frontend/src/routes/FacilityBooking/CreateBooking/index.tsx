@@ -32,21 +32,13 @@ import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
 
 const Background = styled.div`
-  background-color: #fafaf4;
+  background-color: #ffffff;
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 20px;
-`
-const StyledInput = styled(Input)`
-  &.ant-input {
-  width: 100%;
-  border-radius: 30px;
-  border: 1px solid #d9d9d9;
-    padding: 5px 10px;
-  margin: 0px 0px 20px 0px;
+  padding: 0px 36px;
 `
 
 const StyledDateInput = styled(Input)`
@@ -300,7 +292,7 @@ export default function CreateBooking() {
               allowClear
             />
           </CCAPickerRow>
-          <InputRow
+          <InputField
             title="Description"
             placeholder="Tell us what your booking is for!"
             value={newBookingDescription}

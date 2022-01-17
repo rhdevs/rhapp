@@ -12,15 +12,37 @@ const Container = styled.div`
 
 const StyledInput = styled(Input)<{ haserror?: boolean }>`
   &.ant-input {
+    background: #f3f3f9;
     width: 100%;
     border-radius: 30px;
-    border: 1px solid ${(props) => (props.haserror ? 'red' : '#d9d9d9')};
+    border: 1px solid ${(props) => (props.haserror ? 'red' : '#f3f3f9')};
     padding: 5px 10px;
     margin: 0px 0px 0px 0px;
     ${(props) => props.haserror && `background: #ffd1d1;`}
   }
   &.ant-input::placeholder {
-    color: #7d7d7d;
+    color: #bfbfbf;
+    font-size: 0.8rem;
+    padding-left: 5px;
+  }
+`
+
+const { TextArea } = Input
+const StyledTextArea = styled(TextArea)<{ haserror?: boolean }>`
+  &.ant-input {
+    background: #f3f3f9;
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid ${(props) => (props.haserror ? 'red' : '#f3f3f9')};
+    padding: 5px 10px;
+    margin: 0px 0px 0px 0px;
+    resize: none;
+    ${(props) => props.haserror && `background: #ffd1d1;`}
+  }
+  &.ant-input::placeholder {
+    color: #bfbfbf;
+    padding: 4px;
+    font-size: 0.8rem;
   }
 `
 
@@ -34,27 +56,38 @@ const StyledTitle = styled.text`
   white-space: nowrap;
 `
 
-type InputFieldProps = {
+type InputRowProps = {
   title?: string
   placeholder: string
   value?: string
   setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
+  textarea?: boolean
   haserror?: boolean
   onChange?: () => void
 }
 
-export default function InputField({ title, placeholder, value, setValue, onChange, haserror }: InputFieldProps) {
+export default function InputRow({ title, placeholder, value, setValue, textarea, onChange, haserror }: InputRowProps) {
   const [inputValue, setInputValue] = useState('')
 
   return (
     <Container>
       {title && <StyledTitle>{title}</StyledTitle>}
-      <StyledInput
-        haserror={haserror}
-        placeholder={placeholder}
-        value={value ?? inputValue}
-        onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
-      />
+      {textarea ? (
+        <StyledTextArea
+          haserror={haserror}
+          placeholder={placeholder}
+          value={value ?? inputValue}
+          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
+          rows={4}
+        />
+      ) : (
+        <StyledInput
+          haserror={haserror}
+          placeholder={placeholder}
+          value={value ?? inputValue}
+          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
+        />
+      )}
     </Container>
   )
 }
