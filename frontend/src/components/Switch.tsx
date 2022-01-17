@@ -58,9 +58,9 @@ export const Switch = ({
 }) => {
   return (
     <>
-      <SwitchLabel style={{ background: isOn && onColor }} width={SwitchSize}>
-        <SwitchCheckbox checked={isOn} onChange={handleToggle} width={SwitchSize}></SwitchCheckbox>
-        <SwitchButton width={SwitchSize} />
+      <SwitchLabel style={{ background: isOn && onColor }} width={switchSize}>
+        <SwitchCheckbox checked={isOn} onChange={handleToggle} width={switchSize}></SwitchCheckbox>
+        <SwitchButton width={switchSize} />
       </SwitchLabel>
     </>
   )
