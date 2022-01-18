@@ -20,7 +20,6 @@ There are 2 branches, **main** and **development**, the development branch is us
 
 The current Project Structure is : <br/>
 -/main.py <br/> 
-&emsp;|-/Laundry/LaundryAPI.py <br/>
 &emsp;|-/FacilityBooking/FacilityAPI.py <br/>
 &emsp;|-/Social/SocialAPI.py <br/>
 &emsp;|-/Scheduling/SchedulingAPI.py <br/>
@@ -45,7 +44,7 @@ Response for successful message should have the keys => "status" : "sucesssful",
 Response for failed message should have the keys => "status" : "failed", "err" : "<error message>"<br/>
 Return the response type as specific as possible
 5. Use **make_response** and **jsonify** from flask to return
-6. For other files except the main.py, use blueprint (please refer to existing file such as LaundryAPI.py)
+6. For other files except the main.py, use blueprint (please refer to existing file such as FacilityAPI.py)
 7. To make the endpoints more specific, use /<int:sth>, but for parameters, use URL Arguments using ?= such as token, startTime, etc
    
 **Return Format** Example
