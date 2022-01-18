@@ -32,7 +32,7 @@ import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
 
 const Background = styled.div`
-  background-color: #ffffff;
+  background-color: #fff;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -297,7 +297,7 @@ export default function CreateBooking() {
             placeholder="Tell us what your booking is for!"
             value={newBookingDescription}
             setValue={setDescription}
-            textarea
+            textArea
           />
         </Background>
       )}
