@@ -310,7 +310,6 @@ export default function CreateBooking() {
             setValue={setDescription}
             textarea
           />
-          <ConflictAlert />
         </Background>
       )}
     </div>

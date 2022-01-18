@@ -21,7 +21,7 @@ const WarningText = styled.span`
   color: #fffef4;
 `
 
-const ViewText = styled.span`
+const ViewText = styled.a`
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
@@ -30,14 +30,16 @@ const ViewText = styled.span`
   padding: 10px;
   text-decoration-line: underline;
   color: #4d6daa;
-  cursor: pointer;
 `
+function navigateConflicts() {
+  //To navigate to conflicts page, fill code below
+}
 
 export default function ConflictAlert() {
   return (
     <AlertBox>
       <WarningText> There are conflicts in your booking! </WarningText>
-      <ViewText> View Conflicts </ViewText>
+      <ViewText onClick={navigateConflicts}> View Conflicts </ViewText>
     </AlertBox>
   )
 }
