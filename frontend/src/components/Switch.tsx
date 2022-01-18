@@ -9,13 +9,15 @@ const SwitchButton = styled.span<{
   position: absolute;
   left: ${(props) => (props.width ? '-' + props.width * 0.015 + 'px' : '-1.5px')};
   border-radius: 45px;
-  border: ${(props) => (props.width ? +props.width * 0.02 + 'px solid lightgray' : '2px solid gray')};
+  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid lightgray' : '3px solid gray')};
   transition: 0.2s;
   background: #fff;
 `
 
 const SwitchLabel = styled.label<{
   width?: number | undefined
+  isOn?: boolean | undefined
+  onColor?: string | undefined
 }>`
   display: flex;
   align-items: center;
@@ -24,12 +26,13 @@ const SwitchLabel = styled.label<{
   width: ${(props) => (props.width ? props.width + 'px' : '100px')};
   height: ${(props) => (props.width ? props.width * 0.5 + 'px' : '50px')};
   background: lightgray;
+  background: ${(props) => (props.isOn ? (props.onColor ? props.onColor : '#468751') : 'lightgray')};
   border-radius: 100px;
-  border: ${(props) => (props.width ? +props.width * 0.03 + 'px solid lightgray' : '2px solid gray')};
+  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid lightgray' : '3px solid gray')};
   position: relative;
   transition: background-color 0.2s;
   &:active ${SwitchButton} {
-    width: ${(props) => (props.width ? props.width * 0.6 + 'px' : '100px')};
+    width: ${(props) => (props.width ? props.width * 0.6 + 'px' : '60px')};
   }
 `
 
@@ -40,7 +43,7 @@ const SwitchCheckbox = styled.input.attrs({ type: 'checkbox' })<{
   width: 0;
   visibility: hidden;
   &:checked + ${SwitchButton} {
-    left: calc(100% + ${(props) => (props.width ? +props.width * 0.015 + 'px' : '1.5px')});
+    left: calc(100% + ${(props) => (props.width ? props.width * 0.015 + 'px' : '1.5px')});
     transform: translateX(-100%);
   }
 `
@@ -48,20 +51,16 @@ const SwitchCheckbox = styled.input.attrs({ type: 'checkbox' })<{
 export const Switch = ({
   isOn,
   handleToggle,
-  onColor,
   switchSize,
 }: {
   isOn: boolean
   handleToggle: React.ChangeEventHandler<HTMLInputElement>
-  onColor: any
   switchSize?: number
 }) => {
   return (
-    <>
-      <SwitchLabel style={{ background: isOn && onColor }} width={switchSize}>
-        <SwitchCheckbox checked={isOn} onChange={handleToggle} width={switchSize}></SwitchCheckbox>
-        <SwitchButton width={switchSize} />
-      </SwitchLabel>
-    </>
+    <SwitchLabel isOn={isOn} width={switchSize}>
+      <SwitchCheckbox checked={isOn} onChange={handleToggle} width={switchSize} />
+      <SwitchButton width={switchSize} />
+    </SwitchLabel>
   )
 }
