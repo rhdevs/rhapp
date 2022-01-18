@@ -158,11 +158,14 @@ export default function Login() {
       setError({ message: 'Missing Username or Password!' })
     }
   }
+<<<<<<< HEAD
 
   function test() {
     console.log('haha')
   }
 
+=======
+>>>>>>> ece523e5f... changes added
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
