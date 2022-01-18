@@ -28,7 +28,6 @@ import {
   setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
-import ConflictAlert from '../../../components/ConflictAlert'
 import { PATHS } from '../../Routes'
 
 const Background = styled.div`
