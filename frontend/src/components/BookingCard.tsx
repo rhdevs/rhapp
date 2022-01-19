@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import messageIcon from '../assets/messageIcon.svg'
-import adminIcon from '../assets/adminIcon.svg'
-
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { RootState } from '../store/types'
 import { PATHS } from '../routes/Routes'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { months, days } from '../common/dates'
 
-const BookingGroup = styled.div``
+import messageIcon from '../assets/messageIcon.svg'
+import adminIcon from '../assets/adminIcon.svg'
+
 const BookingContainer = styled.div`
   position: relative;
   cursor: pointer;
@@ -23,13 +21,13 @@ const BookingContainer = styled.div`
   display: flex;
   padding: 15px;
 `
+
 const BookingLeftDisplay = styled.div`
   align-self: center;
   width: 80%;
 `
 
 const DateLabel = styled.div`
-  margin-bottom: 0em;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -39,13 +37,13 @@ const DateLabel = styled.div`
 
 const TimeLabel = styled.div`
   font-style: normal;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 14px;
   line-height: 14px;
 `
 const BookingCCAName = styled.div`
   font-style: normal;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 14px;
   line-height: 14px;
 `
@@ -62,6 +60,7 @@ const BookingRightDisplay = styled.div`
 const Icon = styled.img`
   padding: 20px;
 `
+
 export default function BookingCard() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -123,7 +122,7 @@ export default function BookingCard() {
   }
 
   return (
-    <BookingGroup>
+    <>
       {facilityBookings?.map((event) => (
         <BookingContainer
           key={event.bookingID}
@@ -134,19 +133,13 @@ export default function BookingCard() {
           {/* <EventAvatar src={dummyAvatar} /> */}
           <BookingLeftDisplay>
             <DateLabel>
-              <b>
-                {days[ViewStartDate.getDay()]}{' '}
-                {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()] + ' ' + ViewStartDate.getFullYear()}
-              </b>
+              {days[ViewStartDate.getDay()]}{' '}
+              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()] + ' ' + ViewStartDate.getFullYear()}
             </DateLabel>
             <TimeLabel>
-              <b>
-                {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
-              </b>
+              {getHumanReadableTime(event.startTime)} to {getHumanReadableTime(event.endTime)}
             </TimeLabel>
-            <BookingCCAName>
-              <b>{event.ccaName ? event.ccaName : 'Personal'}</b>
-            </BookingCCAName>
+            <BookingCCAName>{event.ccaName ? event.ccaName : 'Personal'}</BookingCCAName>
           </BookingLeftDisplay>
           <BookingRightDisplay>
             {event.userID === localStorage.getItem('userID') ? (
@@ -163,6 +156,6 @@ export default function BookingCard() {
         </BookingContainer>
       ))}
       {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
-    </BookingGroup>
+    </>
   )
 }

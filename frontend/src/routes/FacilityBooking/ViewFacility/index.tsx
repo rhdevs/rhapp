@@ -31,7 +31,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
 import Calendar from 'react-calendar'
 import './calendar.css'
-import BookingCard from '../../../components/BookingCard'
 
 const MainContainer = styled.div`
   width: 100%;
