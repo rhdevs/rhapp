@@ -328,7 +328,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
   } else {
     const { newBooking } = getState().facilityBooking
     const TokenId = localStorage.getItem('token')
-    requestBody.facilityID = newBooking?.facilityID ? newBooking?.facilityID : requestBody.facilityID
+    requestBody.facilityID = newBooking?.facilityID ?? requestBody.facilityID
     const response = await put(
       ENDPOINTS.BOOKING,
       DOMAINS.FACILITY,
