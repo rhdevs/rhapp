@@ -1,5 +1,5 @@
 from boto3 import client, resource
-from credentials import ACCESS_KEY, SECRET_ACCESS_KEY
+from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY
 
 bucketLocation = 'rhapp-picture-bucket'
 
