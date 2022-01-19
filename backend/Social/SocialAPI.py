@@ -1,5 +1,6 @@
 from db import *
 from S3.app import *
+from pic_uri_converter.app import *
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
@@ -44,10 +45,13 @@ def profiles():
 
         elif request.method == 'PUT':
             data = request.get_json()
-            newKey = data["key"]
+            imgString = data["image_uri"]
+            studentId = data["userID"]
+            imgFile = convertImage(imgString, studentId)
             newFileLocation = data["fileLocation"]
-            newImageKey = create(newKey, newFileLocation)
-
+            oldImageKey = db.Profiles.find({"userID": {'$in': imageKey}}, {"_id": 0})
+            newImageKey = update(oldImageKey, newImageKey, newFileLocation)
+            
             if newImageKey in data:
                 data["imageKey"] = data.pop("imageKey")
 
