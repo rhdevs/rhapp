@@ -207,7 +207,6 @@ export default function ViewFacility() {
     <img
       src={bookingsIcon}
       onClick={() => {
-        // dispatch(resetNewBooking())
         history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
       }}
     />
