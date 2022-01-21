@@ -229,7 +229,6 @@ export default function ViewBooking() {
                   <Icon
                     src={editIcon}
                     onClick={() => {
-                      // dispatch(resetNewBooking())
                       dispatch(editMyBooking(selectedBooking))
                       history.push(PATHS.CREATE_FACILITY_BOOKING)
                     }}
