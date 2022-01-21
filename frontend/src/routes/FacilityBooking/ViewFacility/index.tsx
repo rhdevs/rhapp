@@ -22,6 +22,7 @@ import {
   SetIsLoading,
   setViewDates,
   setSelectedFacility,
+  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -264,6 +265,7 @@ export default function ViewFacility() {
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
+                  dispatch(resetNewBooking())
                   dispatch(
                     createNewBookingFromFacility(
                       ViewStartDate,
