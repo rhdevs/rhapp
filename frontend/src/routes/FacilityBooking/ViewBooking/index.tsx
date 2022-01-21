@@ -12,7 +12,6 @@ import {
   editMyBooking,
   fetchSelectedFacility,
   setIsDeleteMyBooking,
-  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { format } from 'date-fns'
