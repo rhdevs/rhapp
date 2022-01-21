@@ -23,7 +23,7 @@ export const unixTo12HourTime = (unixDate?: number) => {
     hours = '12'
   }
 
-  const formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + letters
+  const formattedTime = hours.substring(-2) + ':' + minutes.substring(-2) + letters
 
   return formattedTime
 }
