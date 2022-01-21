@@ -12,7 +12,6 @@ import {
   deleteMyBooking,
   editMyBooking,
   SetIsLoading,
-  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'

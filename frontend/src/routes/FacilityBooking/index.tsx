@@ -16,7 +16,6 @@ import {
   SetIsLoading,
   setSelectedFacility,
   SetBlockOutIsOpen,
-  resetNewBooking,
 } from '../../store/facilityBooking/action'
 import LoadingSpin from '../../components/LoadingSpin'
 import AlumniRoom from '../../assets/facilitiesLogos/AlumniRoom.svg'
