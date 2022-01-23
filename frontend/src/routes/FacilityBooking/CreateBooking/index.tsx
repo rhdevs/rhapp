@@ -293,7 +293,7 @@ export default function CreateBooking() {
                 value: cca.ccaName,
               }))}
               value={newBookingCCA}
-              placeholder="Select 'Personal' if NA"
+              placeholder="CCA"
               onChange={(value) => setCca(value)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
