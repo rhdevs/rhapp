@@ -6,23 +6,29 @@ const Border = styled.button<{ state: string }>`
   width: 10vw;
   border: transparent;
   border-radius: 2rem;
-  padding-left: 0.05rem;
-  padding-right: 0.055rem;
-  background: ${(props) =>
-    props.state === 'primary' || props.state === 'secondary'
-      ? `linear-gradient(to left, #72BA75, #58B994)`
-      : '#BFBFBF'};
+  padding-left: 0rem;
+  padding-right: 0rem;
+  background: linear-gradient(to left, #72ba75, #58b994);
+
+  &:active {
+    background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
+  }
 `
-const Inner = styled.div<{ state: string }>`
-  height: 100%;
-  width: 100%;
+const Inner = styled.button<{ state: string }>`
+  height: 98%;
+  width: 98%;
   border-radius: 2rem;
-  padding-top: 0.35rem;
+  border: transparent;
   background: ${(props) => (props.state === 'primary' ? `linear-gradient(to left, #72BA75, #58B994)` : 'white')};
-  color: ${(props) => (props.state === 'primary' ? `white` : props.state === 'secondary' ? `#58B994` : '#BFBFBF')};
+  color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
+
+  &:active {
+    background: #d8e6df;
+    color: #8b8b8b;
+  }
 `
 type Props = {
-  state: 'disabled' | 'primary' | 'secondary'
+  state: 'primary' | 'secondary'
   text: string
   onClick: () => void
 }
