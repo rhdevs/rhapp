@@ -159,6 +159,10 @@ export default function Login() {
     }
   }
 
+  function test() {
+    console.log('haha')
+  }
+
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
