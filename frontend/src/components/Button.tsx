@@ -24,11 +24,12 @@ const Inner = styled.div<{ state: string }>`
 type Props = {
   state: 'disabled' | 'primary' | 'secondary'
   text: string
+  onClick: () => void
 }
 
 function ButtonComponent(prop: Props) {
   return (
-    <Border state={prop.state}>
+    <Border onClick={() => prop.onClick()} state={prop.state}>
       <Inner state={prop.state}>{prop.text}</Inner>
     </Border>
   )

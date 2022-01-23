@@ -11,6 +11,7 @@ import logo from '../../../assets/devsLogo.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { SetIsJcrc } from '../../../store/facilityBooking/action'
+import ButtonComponent from '../../../components/Button'
 
 const LoginContainer = styled.div`
   height: 100vh !important;
@@ -159,6 +160,10 @@ export default function Login() {
     }
   }
 
+  function test() {
+    console.log('haha')
+  }
+
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
       {isLoading && <LoadingSpin />}
@@ -232,6 +237,7 @@ export default function Login() {
               </Button>
             </PostButton>
           </StyledButtonContainer>
+          <ButtonComponent text="sagsdfs" state="primary" onClick={() => test()} />
         </LoginContainer>
       )}
     </div>
