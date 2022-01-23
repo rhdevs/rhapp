@@ -1,7 +1,7 @@
 /**
  *
  * @param eventStartTime date time number
- * @returns fomatted time in form of HH:MM:SS  (eg, 19:00:00 or 12:10:20)
+ * @returns fomatted time in form of HHMM (eg, 1900 or 1210)
  */
 
 export const get24Hourtime = (eventStartTime: number) => {
