@@ -63,11 +63,8 @@ def profiles():
                 }
                 return make_response(response, 204)
     except Exception as e:
-        response = {
-            "status": "failed",
-            "err": str(e)
-        }
-        return make_response(response, 400)
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/profile")
@@ -82,12 +79,8 @@ def users():
         }
         return make_response(response, 400)
     except Exception as e:
-        response = {
-            "status": "failed",
-            "err": str(e)
-        }
         print(e)
-
+        return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response, 200)
 
 
@@ -101,12 +94,8 @@ def getUserProfile(userID):
             "status": "success"
         }
     except Exception as e:
-        response = {
-            "status": "failed",
-            "err": str(e)
-        }
         print(e)
-        return make_response(response, 400)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response, 200)
 
@@ -161,7 +150,8 @@ def user():
             return make_response({"message": body, "status": "success"}, 200)
 
     except Exception as e:
-        return {"err": str(e)}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/user/<userID>")
@@ -206,7 +196,8 @@ def getUserDetails(userID):
             }, 200)
 
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(
         {
@@ -403,7 +394,8 @@ def posts():
             else:
                 return Response(status=204)
     except Exception as e:
-        return {"err": str(e), "status": "failed"}, 400
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/posts/<userID>", methods=['GET'])
@@ -421,7 +413,7 @@ def getPostById(userID):
         return make_response(response, 200)
     except Exception as e:
         print(e)
-        return make_response({"err": str(e), "status": "failed"}, 400)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 def FriendsHelper(userID):
@@ -476,7 +468,8 @@ def getFriendsPostById():
             200)
 
     except Exception as e:
-        return make_response({"err": str(e), "status": "failed"}, 400)
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/posts/official", methods=['GET'])
@@ -509,7 +502,7 @@ def getOfficialPosts():
             200)
     except Exception as e:
         print(e)
-        return {"err": str(e), "status": "failed"}, 400
+        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 '''
@@ -537,4 +530,5 @@ def getAllFriends(userID):
             200)
 
     except Exception as e:
-        return make_response({"err": str(e), "status": "failed"}, 400)
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
