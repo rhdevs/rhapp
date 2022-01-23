@@ -1,6 +1,7 @@
 from db import *
 from S3.app import *
-from pic_uri_converter.app import *
+from datauri import DataURI
+from pathlib import Path, PurePath
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 import pymongo
@@ -47,13 +48,25 @@ def profiles():
             data = request.get_json()
             imgString = data["image_uri"]
             studentId = data["userID"]
-            imgFile = convertImage(imgString, studentId)
-            newFileLocation = data["fileLocation"]
-            oldImageKey = db.Profiles.find({"userID": {'$in': imageKey}}, {"_id": 0})
-            newImageKey = update(oldImageKey, newImageKey, newFileLocation)
+            imgFile = DataURI('data:image/jpeg;charset=utf-8;base64,imgString')
+            mimetype = imgFile.mimetype
+            imgFileBinary = imgFile.data
+            imgFileLocation = PurePath(imgFileBinary)
+            imgKey = str(studentId) + "/profile_pic." + str(mimetype)[str(mimetype).find("/")+1:]
+
+            if imgString in data:
+                try:
+                    create(imgKey, imgFileLocation)
+                    return jsonify({"status": "success", "message": "Profile picture uploaded"}), 200
             
-            if newImageKey in data:
-                data["imageKey"] = data.pop("imageKey")
+                except FileExistsError:
+                    oldImgKey = db.Profiles.find({"userID": {'$in': imageKey}}, {"_id": 0})
+                    update(oldImgKey, imgKey, imgFileLocation)
+                    return jsonify({"status": "success", "message": "Original image exists, profile picture updated"}), 200
+
+                except datauri.DataURIError:
+                    return jsonify({"status": "failed", "message": "Invalid data URI"}), 400 
+
 
             result = db.Profiles.update_one(
                 {"userID": data["userID"]}, {'$set': newKey}, upsert=True)
@@ -91,26 +104,6 @@ def users():
 
     return make_response(response, 200)
 
-
-@social_api.route("/profile/picture/<string:userID>", methods=['GET'])
-@cross_origin(supports_credentials=True)
-def getUserPicture(userID):
-    IMG_KEY = db.Profiles.find({"imageKey": 1})
-    response = {}
-    defaultProfilePictureUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-    try:
-        image = db.Profiles.find_one(
-            {"userID": userID}, {"imageKey": 1})
-        response['status'] = "success"
-        response['data'] = {
-            'image': S3.app.read('IMG_KEY')
-        }
-
-        return make_response(response, 200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/profile/<string:userID>")
@@ -352,8 +345,8 @@ def posts():
                     profile = profileDict.get(item["userID"])
                     item['name'] = profile.get(
                         'displayName') if profile != None else None
-                    item['profilePictureURI'] = profile.get(
-                        'profilePictureUrl') if profile != None else None
+                    item['imageKey'] = profile.get(
+                        'imageKey') if profile != None else None
                     item = renamePost(item)
                     response.append(item)
 
@@ -527,8 +520,8 @@ def getOfficialPosts():
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
-            item['profilePictureURI'] = profile.get(
-                'profilePictureUrl') if profile != None else None
+            item['imageKey'] = profile.get(
+                'imageKey') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
