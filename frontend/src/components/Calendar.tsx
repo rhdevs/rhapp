@@ -21,56 +21,104 @@ const DatesContainer = styled.div`
   grid-template-rows: 40px 40px 40px 40px 40px 40px;
 `
 
-const Day = styled.div`
+const DayContainer = styled.div`
   font-weight: 600;
   font-size: 13px;
   text-align: center;
 `
 
-const Date = styled.div`
+const DateContainer = styled.div`
   font-size: 13px;
   text-align: center;
 `
 
-export const Calendar = () => {
-  const MonthRow = () => {
-    return (
-      <>
-        <Day>Mon</Day>
-        <Day>Tue</Day>
-        <Day>Wed</Day>
-        <Day>Thu</Day>
-        <Day>Fri</Day>
-        <Day>Sat</Day>
-        <Day>Sun</Day>
-      </>
-    )
-  }
-  const DateRow = () => {
-    return (
-      <>
-        <Date>1</Date>
-        <Date>1</Date>
-        <Date>1</Date>
-        <Date>1</Date>
-        <Date>1</Date>
-        <Date>1</Date>
-        <Date>1</Date>
-      </>
-    )
-  }
+const MonthRow = () => {
+  return (
+    <>
+      <DayContainer>Mon</DayContainer>
+      <DayContainer>Tue</DayContainer>
+      <DayContainer>Wed</DayContainer>
+      <DayContainer>Thu</DayContainer>
+      <DayContainer>Fri</DayContainer>
+      <DayContainer>Sat</DayContainer>
+      <DayContainer>Sun</DayContainer>
+    </>
+  )
+}
+
+const MiddleDateRows = (firstDate: number) => {
+  return (
+    <>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+      <DateContainer>{firstDate++}</DateContainer>
+    </>
+  )
+}
+const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: number) => {
+  let newMonthDate = 1
+  let firstDateToPut = lastDateOfPreviousMonth - firstDayOfThisMonth + 2
 
   return (
+    <>
+      <DateContainer>{firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+    </>
+  )
+}
+const MakeCurrentMonth = () => {
+  const today = new Date()
+  const firstDateOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDate()
+  const firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDay()
+  const lastDateOfThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()
+  const firstDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1).getDay()
+  const lastDateOfPreviousMonth = new Date(today.getFullYear(), today.getMonth(), 0).getDate()
+  return (
+    <>
+      {FirstLastDateRow(firstDayOfThisMonth, lastDateOfPreviousMonth)}
+      {MiddleDateRows(firstDateOfThisMonth)}
+      {FirstLastDateRow(firstDayOfNextMonth, lastDateOfThisMonth)}
+    </>
+  )
+}
+
+export const Calendar = () => {
+  return (
     <CalenderContainer>
-      <MonthsContainer>April 2021</MonthsContainer>
+      <MonthsContainer>Jan 2021</MonthsContainer>
       <DatesContainer>
         <MonthRow />
-        <DateRow />
-        <DateRow />
-        <DateRow />
-        <DateRow />
-        <DateRow />
-        <DateRow />
+        {MakeCurrentMonth()}
       </DatesContainer>
     </CalenderContainer>
   )
