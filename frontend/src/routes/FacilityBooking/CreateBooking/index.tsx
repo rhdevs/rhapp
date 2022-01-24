@@ -79,7 +79,15 @@ const CCAPickerRow = styled.div`
   margin: 10px 0px;
   color: #666666;
 `
-
+const CCAInput = styled(AutoComplete)`
+  width: 100%;
+  color: #bfbfbf;
+  &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-radius: 30px !important;
+    border: 0;
+    background-color: #f3f3f9;
+  }
+`
 const RepeatWeeklyPickerRow = styled.div`
   width: 100%;
   display: flex;
@@ -277,13 +285,12 @@ export default function CreateBooking() {
           )}
           <CCAPickerRow>
             <StyledTitle>CCA</StyledTitle>
-            <AutoComplete
-              style={{ width: '70vw', borderRadius: '30px !important' }}
+            <CCAInput
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
               value={newBookingCCA}
-              placeholder="Select 'Personal' if NA"
+              placeholder="CCA"
               onChange={(value) => setCca(value)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
