@@ -12,9 +12,10 @@ export const OverlayContainer = styled.div<{ overlayBackground: string; isModalO
   bottom: 0;
   background-color: ${(props) => (props.overlayBackground ? props.overlayBackground : 'rgba(0, 0, 0, 0.3)')};
   z-index: 999;
+  ${(props) => !props.isModalOpen && `display: none;`}
 `
 
-export const MainContainer = styled.div`
+export const MainContainer = styled.div<{ isModalOpen: boolean }>`
   position: fixed;
   background-color: #fff;
   width: 90vw;
@@ -26,6 +27,7 @@ export const MainContainer = styled.div`
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  ${(props) => !props.isModalOpen && `display: none;`}
 `
 
 export const TitleContainer = styled.div<{ flex?: boolean }>`

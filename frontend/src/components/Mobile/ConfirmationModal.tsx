@@ -15,17 +15,23 @@ import 'antd/dist/antd.css'
 type Props = {
   title: string
   description?: string | JSX.Element
+  // Left Button Props
   hasLeftButton?: boolean
   leftButtonText: string
   leftButtonTextColor?: string
   leftButtonColor?: string
   onLeftButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  // Right Button Props
   rightButtonText: string
   rightButtonTextColor?: string
   rightButtonColor?: string
   onRightButtonClick: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  // Overlay Props
+  // Pass function to do something when the overlay around the modal is clicked
   onOverlayClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void
+  // Pass a style for custom overlay
   overlayBackground?: string
+  // Custom styles
   top?: number | string
   bottom?: number | string
   right?: number
@@ -33,10 +39,14 @@ type Props = {
   flex?: boolean
   style?: React.CSSProperties
   rightButtonHtmlType?: 'button' | 'submit' | 'reset' | undefined
+  // Pass this into Modal to render/unrender the modal
   isModalOpen?: boolean
+  // Use this to toggle overlay
+  setModalOpen?: () => void
 }
 
 export function ConfirmationModal(props: Props) {
+  // Checks for custom buttom styles, otherwise uses default
   const defaultLeftButtonColor = props.leftButtonColor ?? '#DE5F4C'
   const defaultLeftButtonTextColor = props.leftButtonTextColor ?? '#FFFFFF'
   const defaultRightButtonColor = props.rightButtonColor ?? '#FAFAF4'
@@ -51,6 +61,7 @@ export function ConfirmationModal(props: Props) {
         isModalOpen={props.isModalOpen ?? true}
       />
       <MainContainer
+        isModalOpen={props.isModalOpen ?? true}
         style={{
           ...props.style,
           bottom: props.bottom ?? '50%',
