@@ -33,6 +33,19 @@ const Date = styled.div`
 `
 
 export const Calendar = () => {
+  const MonthRow = () => {
+    return (
+      <>
+        <Day>Mon</Day>
+        <Day>Tue</Day>
+        <Day>Wed</Day>
+        <Day>Thu</Day>
+        <Day>Fri</Day>
+        <Day>Sat</Day>
+        <Day>Sun</Day>
+      </>
+    )
+  }
   const DateRow = () => {
     return (
       <>
@@ -51,13 +64,7 @@ export const Calendar = () => {
     <CalenderContainer>
       <MonthsContainer>April 2021</MonthsContainer>
       <DatesContainer>
-        <Day>Mon</Day>
-        <Day>Tue</Day>
-        <Day>Wed</Day>
-        <Day>Thu</Day>
-        <Day>Fri</Day>
-        <Day>Sat</Day>
-        <Day>Sun</Day>
+        <MonthRow />
         <DateRow />
         <DateRow />
         <DateRow />
