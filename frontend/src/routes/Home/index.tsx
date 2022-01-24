@@ -18,6 +18,7 @@ import calendar_icon from '../../assets/calenderIconSelected.svg'
 import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
+import { Calendar } from '../../components/Calendar'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -146,6 +147,7 @@ export default function Home() {
 
   return (
     <MainContainer>
+      <Calendar />
       <PullToRefresh onRefresh={onRefresh}>
         <TopBar>
           <Greetings>
