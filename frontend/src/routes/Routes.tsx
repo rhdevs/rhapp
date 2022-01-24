@@ -41,6 +41,7 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
+  CALENDAR = '/facility/calender',
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_MACHINE = '/facility/laundry/view',
@@ -118,6 +119,7 @@ const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" 
 const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
 )
+const Calendar = React.lazy(() => import(/* webpackChunckName: "Calendar" */ './FacilityBooking/Calendar'))
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
 const ViewWashingMachine = React.lazy(
@@ -185,6 +187,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.CALENDAR} component={Calendar} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />
             <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ComingSoon} />
