@@ -31,7 +31,7 @@ const DayContainer = styled.div`
 const DateContainer = styled.div<{ blurred?: boolean }>`
   font-size: 13px;
   text-align: center;
-  color: ${(prop) => (prop.blurred ? '#19181a' : '')};
+  color: ${(prop) => (prop.blurred ? 'grey' : '')};
 `
 
 const MonthRow = () => {
@@ -122,12 +122,36 @@ const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: 
   ) : (
     <>
       <DateContainer>{firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
-      <DateContainer>{firstDateToPut > lastDateOfPreviousMonth ? newMonthDate++ : firstDateToPut++}</DateContainer>
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
+      {firstDateToPut > lastDateOfPreviousMonth ? (
+        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+      ) : (
+        <DateContainer>{firstDateToPut++}</DateContainer>
+      )}
     </>
   )
 }
