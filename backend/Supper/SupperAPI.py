@@ -221,7 +221,7 @@ def create_supper_group():
             },
             {
                 '$lookup': {
-                    'from': 'Profiles',
+                    'from': 'User',
                     'localField': 'ownerId',
                     'foreignField': 'userID',
                     'as': 'ownerList'
@@ -307,7 +307,7 @@ def supper_group(supperGroupId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': 'userIdList',
                         'foreignField': 'userID',
                         'as': 'userList'
@@ -463,7 +463,7 @@ def get_order(orderId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'user'
@@ -811,7 +811,7 @@ def user_order_history(userID):
             },
             # {
             #     '$lookup': {
-            #         'from': 'Profiles',
+            #         'from': 'User',
             #         'localField': 'userID',
             #         'foreignField': 'userID',
             #         'as': 'userList'
@@ -1231,7 +1231,7 @@ def user_order(supperGroupId, userID):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': userID,
                         'foreignField': 'userID',
                         'as': 'user'

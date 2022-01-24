@@ -36,7 +36,7 @@ def profiles():
     try:
         '''
         if request.method == 'GET':
-            data = db.Profiles.find()
+            data = db.User.find()
             response = {
                 "status": "success",
                 "data": json.dumps(list(data), default=lambda o: str(o))
@@ -48,7 +48,7 @@ def profiles():
             if "profilePictureURI" in data:
                 data["profilePictureUrl"] = data.pop("profilePictureURI")
 
-            result = db.Profiles.update_one(
+            result = db.User.update_one(
                 {"userID": data["userID"]}, {'$set': data}, upsert=True)
 
             if int(result.matched_count) > 0:
@@ -72,7 +72,7 @@ def profiles():
 def users():
     userIdList = request.args.getlist('userID')
     try:
-        data = db.Profiles.find({"userID": {'$in': userIdList}}, {"_id": 0})
+        data = db.User.find({"userID": {'$in': userIdList}}, {"_id": 0})
         response = {
             "data": list(data),
             "status": "success"
@@ -88,7 +88,7 @@ def users():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.Profiles.find({"userID": userID}, {"_id": 0})
+        data = db.User.find({"userID": userID}, {"_id": 0})
         response = {
             "data": list(data),
             "status": "success"
@@ -164,7 +164,7 @@ def getUserDetails(userID):
             }
             },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -210,7 +210,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.Profiles.find_one({"userID": userID})
+    profile = db.User.find_one({"userID": userID})
     name = profile.get('displayName') if profile else None
     return name
 
@@ -227,7 +227,7 @@ def posts():
                 if postID:
                     # TODO use mongoDB lookup to join the data instead
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
-                    name = db.Profiles.find_one(
+                    name = db.User.find_one(
                         {"userID": str(data.get("userID"))}).get('displayName')
 
                     if data != None:
@@ -277,7 +277,7 @@ def posts():
                 #     {'limit': 5},
                 #     {
                 #         '$lookup': {
-                #             'from': 'Profiles',
+                #             'from': 'User',
                 #             'localField': 'userID',
                 #             'foreignField': 'userID',
                 #             'as': 'profile'
@@ -300,7 +300,7 @@ def posts():
                 response = []
 
                 userIDList = [x["userID"] for x in data]
-                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}))
+                profiles = list(db.User.find({"userID": {"$in": userIDList}}))
                 profileDict = {}
                 for x in profiles:
                     profileDict[x["userID"]] = x
@@ -485,7 +485,7 @@ def getOfficialPosts():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
-            profile = db.Profiles.find_one({'userID': item.get('userID')})
+            profile = db.User.find_one({'userID': item.get('userID')})
             item['profilePictureURI'] = profile.get(
                 'profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
@@ -518,7 +518,7 @@ def getAllFriends(userID):
         result = []
 
         for friendID in friends:
-            entry = db.Profiles.find_one({"userID": friendID})
+            entry = db.User.find_one({"userID": friendID})
             if entry != None:
                 result.append(entry)
 

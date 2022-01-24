@@ -308,7 +308,7 @@ def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
         donors = [pair["donor"] for pair in data]
-        results = db.Profiles.find({"userID": {"$in": donors}})
+        results = db.User.find({"userID": {"$in": donors}})
         response = [{info: profile[info] for info in profile.keys()
                      & {'userID', 'displayName'}} for profile in results]
         response = {"status": "success", "data": list(response)}
