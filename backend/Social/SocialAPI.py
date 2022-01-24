@@ -48,7 +48,7 @@ def profiles():
             data = request.get_json()
             imgString = data["image_uri"]
             studentId = data["userID"]
-            imgFile = DataURI('data:image/jpeg;charset=utf-8;base64,imgString')
+            imgFile = DataURI(imgString)
             mimetype = imgFile.mimetype
             imgFileBinary = imgFile.data
             imgFileLocation = PurePath(imgFileBinary)
