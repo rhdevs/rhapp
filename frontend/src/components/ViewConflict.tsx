@@ -9,7 +9,6 @@ import { months, days } from '../common/dates'
 import { get24Hourtime } from '../common/get24HourTime'
 import { openUserTelegram } from '../common/telegramMethods'
 import { onRefresh } from '../common/reloadPage'
-import TopNavBar from './Mobile/TopNavBar'
 import BookingCard from './BookingCard'
 import PullToRefresh from 'pull-to-refresh-react'
 import LoadingSpin from './LoadingSpin'
@@ -21,11 +20,12 @@ import {
   setViewDates,
   setSelectedFacility,
 } from '../store/facilityBooking/action'
+import TopNavBarRevamp from './TopNavBarRevamp'
 
 const MainContainer = styled.div`
   width: 100%;
   height: 95vh;
-  background-color: #fafaf4;
+  background-color: #ffffff;
   position: fixed;
   top: 70px;
   overflow: scroll;
@@ -60,7 +60,7 @@ export default function ViewConflict() {
 
   return (
     <>
-      <TopNavBar title={'View Conflicts'} />
+      <TopNavBarRevamp title={'View Conflicts'} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           {!isLoading && <BookingCard></BookingCard>}
