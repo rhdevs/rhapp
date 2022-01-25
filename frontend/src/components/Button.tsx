@@ -12,6 +12,7 @@ const Border = styled.button<{ state: string }>`
 
   &:active {
     background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
+    transform: scale(0.95);
   }
 `
 const Inner = styled.button<{ state: string }>`
