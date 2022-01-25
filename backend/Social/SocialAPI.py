@@ -32,10 +32,12 @@ def hello():
     return "Welcome the Raffles Hall Social server"
 
 
-@social_api.route('/profiles', methods=['GET', 'PUT'])
+#@social_api.route('/profiles', methods=['GET', 'PUT'])
+@social_api.route('/profiles', methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def profiles():
     try:
+        '''
         if request.method == 'GET':
             data = db.Profiles.find()
             response = {
@@ -43,8 +45,8 @@ def profiles():
                 "data": json.dumps(list(data), default=lambda o: str(o))
             }
             return make_response(response, 200)
-
-        elif request.method == 'PUT':
+        '''
+        if request.method == 'PUT':
             data = request.get_json()
             imgString = data["image_uri"]
             studentId = data["userID"]
@@ -64,7 +66,7 @@ def profiles():
                     update(oldImgKey, imgKey, imgFileLocation)
                     return jsonify({"status": "success", "message": "Original image exists, profile picture updated"}), 200
 
-                except datauri.DataURIError:
+                except DataURIError:
                     return jsonify({"status": "failed", "message": "Invalid data URI"}), 400 
 
 
@@ -101,9 +103,7 @@ def users():
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-
     return make_response(response, 200)
-
 
 
 @social_api.route("/profile/<string:userID>")
@@ -122,7 +122,7 @@ def getUserProfile(userID):
     return make_response(response, 200)
 
 
-@social_api.route("/user", methods=['PUT', 'DELETE', 'POST'])
+@social_api.route("/user", methods=['PUT', 'POST'])
 @cross_origin(supports_credentials=True)
 def user():
     try:
@@ -153,17 +153,6 @@ def user():
                 }
                 return make_response(response, 204)
 
-        elif request.method == 'DELETE':
-            userID = request.args.get('userID')
-            result = db.User.delete_one({"userID": userID})
-            if result.deleted_count == 0:
-                response = {
-                    "status": "failed",
-                    "error": "User not found"
-                }
-                return make_response(response, 404)
-
-            return make_response({"status": "success"}, 200)
         elif request.method == 'POST':
             data = request.get_json()
             userID = str(data.get('userID'))
@@ -321,7 +310,7 @@ def posts():
                 #     },
                 #     {
                 #         '$addFields': {
-                #             'profilePictureURI': "$profile.profilePictureUrl",
+                #             'imageKey': "$profile.imageKey",
                 #             'name': '$profile.displayName'
                 #         }
                 #     },
@@ -333,8 +322,7 @@ def posts():
                 response = []
 
                 userIDList = [x["userID"] for x in data]
-                profiles = list(db.Profiles.find(
-                    {"userID": {"$in": userIDList}}))
+                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}))
                 profileDict = {}
                 for x in profiles:
                     profileDict[x["userID"]] = x
@@ -543,66 +531,6 @@ def getOfficialPosts():
 Friends API 
 '''
 
-
-@social_api.route("/friend", methods=['DELETE', 'POST'])
-@cross_origin(supports_credentials=True)
-def createDeleteFriend():
-    try:
-        data = request.get_json()
-        # we store the data as a bidirectional edge
-        userOne = str(data.get('userIDOne'))
-        userTwo = str(data.get('userIDTwo'))
-        if request.method == "POST":
-            body = {
-                "userIDOne": userOne,
-                "userIDTwo": userTwo
-            }
-
-            query = {
-                "$or": [
-                    {"userIDOne": userOne,
-                     "userIDTwo": userTwo
-                     },
-                    {"userIDOne": userTwo,
-                     "userIDTwo": userOne
-                     }
-                ]
-            }
-
-            result = db.Friends.find_one(query)
-
-            if(result == None):
-                db.Friends.insert_one(body)
-
-                return make_response({"message": "Insert Succesful", "status": "success"}, 200)
-            else:
-                return make_response({"message": "Friendship exists", "status": "failed"}, 400)
-
-        elif request.method == "DELETE":
-            data = request.get_json()
-            userOne = str(data.get)
-
-            query = {
-                "$or": [
-                    {
-                        "userIDOne": userOne,
-                        "userIDTwo": userTwo
-                    },
-                    {
-                        "userIDOne": userTwo,
-                        "userIDTwo": userOne
-                    }]
-            }
-
-            db.Friends.delete_one(query)
-
-            return make_response({"message": "Delete Successful", "status": "success"}, 200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-
-
 @social_api.route("/friend/<userID>", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def getAllFriends(userID):
@@ -622,125 +550,6 @@ def getAllFriends(userID):
                 "status": "success"
             },
             200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-
-
-# Unused route
-# TODO verb here think of what might be better
-@social_api.route("/friend/check", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def checkFriend():
-    userOne = request.args.get('userIDOne')
-    userTwo = request.args.get('userIDTwo')
-
-    query = {
-        "$or": [{
-            "userIDOne": userOne,
-            "userIDTwo": userTwo
-        },
-            {
-            "userIDOne": userTwo,
-            "userIDTwo": userOne
-        }]
-    }
-
-    result = db.Friends.find_one(query)
-
-    if(result != None):
-        response = {
-            "message": "friendship exists",
-            "status": "success"
-        }
-        return make_response(response, 200)
-    else:
-        response = {
-            "message": "friendship doesnt exist",
-            "status": "success"
-        }
-        return make_response(response, 200)
-
-
-@social_api.route("/search", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def search():
-    # a function to search all events, facilities and profiles
-    try:
-        term = str(request.args.get('term'))
-        regex = {
-            '$regex': '^.*[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*(?i){}[-!$%^&*()_+|~=`\[\]:";<>?,.\'\/]*.*$'.format(term)}
-
-        # should have done this earlier
-        profiles = db.Profiles.find({"displayName": regex}, {'_id': False})
-        events = db.Events.find({"eventName": regex}, {'_id': False})
-        facilities = db.Facilities.find(
-            {"facilityName": regex}, {'_id': False})
-
-        response = {
-            "profiles": list(profiles),
-            "events": list(events),
-            "facilities": list(facilities),
-            "status": "success"
-        }
-
-        return make_response(response, 200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-
-
-# Unused route
-@social_api.route("/image/<string:imageName>", methods=['GET', 'PUT', 'DELETE', 'POST'])
-@cross_origin(supports_credentials=True)
-def images(imageName):
-    try:
-        if request.method == "GET":
-            # get last 5 most recent
-            response = db.Images.find({'imageName': imageName})
-            return make_response(json.dumps(response, default=lambda o: str(o)), 200)
-
-        elif request.method == "POST":
-            data = request.get_json()
-            imageUrl = str(data.get('imageUrl'))
-            imageName = str(data.get('imageName'))
-
-            body = {
-                "imageName": imageName,
-                "imageUrl": imageUrl,
-            }
-
-            receipt = db.Images.insert_one(body)
-            body["_id"] = str(receipt.inserted_id)
-
-            return make_response({"message": body, "status": "success"}, 200)
-
-        elif request.method == "PUT":
-            data = request.get_json()
-            imageUrl = str(data.get('imageUrl'))
-            imageName = str(data.get('imageName'))
-
-            body = {
-                "imageName": imageName,
-                "imageUrl": imageUrl,
-            }
-
-            db.Images.update_one({"imageName": imageName}, {
-                '$set': body}, upsert=True)
-
-            return make_response({'message': "Event changed", "status": "success"}, 200)
-
-        elif request.method == "DELETE":
-            imageName = request.args.get('imageName')
-            db.Images.delete_one({"imageName": imageName})
-            return make_response(
-                {
-                    "message": "deleted sucessfully",
-                    "status": "success"
-                },
-                200)
 
     except Exception as e:
         print(e)
