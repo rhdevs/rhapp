@@ -30,6 +30,31 @@ export const TabContainer = styled.div<{ isSelected?: boolean }>`
   line-height: 17px;
 `
 
+export const GymTabContainer = styled.div<{ isSelected?: boolean }>`
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+  background-color: #fff;
+  color: ${(props) => (props.isSelected ? '#59ba95' : 'rgba(0, 0, 0, 0.55)')};
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 30px;
+  ${(props) =>
+    props.isSelected
+      ? `background-position: 50% 2em;
+    background-image: linear-gradient(
+      to bottom,
+      #59ba95,
+      #73bb75
+    );
+    background-repeat: no-repeat;
+    background-size: 90% 2px;`
+      : ``}
+`
+
 export const Separator = styled.div`
   width: 1px;
   background-color: rgba(0, 0, 0, 0.5);

@@ -11,6 +11,7 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
+import GymNavBar from './components/GymTabs'
 
 class App extends React.Component {
   render() {
@@ -23,6 +24,7 @@ class App extends React.Component {
         <BrowserRouter>
           <OfflineStatus />
           <NotificationBar />
+          <GymNavBar />
           <Routes />
         </BrowserRouter>
       </Provider>
