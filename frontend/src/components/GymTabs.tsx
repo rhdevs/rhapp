@@ -1,81 +1,41 @@
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Tabs } from 'antd'
-import { NavBar, Icon } from 'antd-mobile'
+import { Icon } from 'antd-mobile'
 import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
-import { Separator, GymTabContainer } from './Tabs'
+import { GymTabContainer } from './Tabs'
 
-const CustomTabs = styled(Tabs)`
-  justify-content: space-between;
-  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #59ba95 !important;
-    font-weight: 500;
-  }
-  .ant-tabs-ink-bar {
-    // antd does not support linear-gradient
-    border-bottom: 2px solid #59ba95;
-  }
-`
-const NewNavBar = styled(NavBar)`
-  &.am-navbar {
-    height: 70px;
-    background-color: #ffffff; !important
-  }
-  padding: 15px;
-  max-width:100%;
-  position: sticky;
-  top:0;
-`
-
-const StyledNavBar = styled(NavBar)`
-  &.am-navbar {
-    height: 70px;
-    background-color: #ffffff; !important
-  }
-  padding: 15px;
-  max-width:100%;
-  position: sticky;
-  top:0;
-  z-index:200;
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: center;
-`
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
-  padding-right: 11px;
-  width: 40px;
-  height: 40px;
+  margin-left: 0.5rem;
+  width: 30px;
+  height: 30px;
 `
 
-const { TabPane } = Tabs
+const GymBarContainer = styled.div`
+  position: sticky;
+  display: flex;
+  background-color: #fff;
+  align-items: center;
+  top: 0;
+`
 
-function GymNavBar({
-  title,
-  leftIcon,
-  leftIconComponent,
-  rightComponent,
-  centerComponent,
-  onLeftClick,
-}: {
-  title?: string
-  leftIcon?: boolean
-  leftIconComponent?: ReactElement
-  rightComponent?: ReactElement | undefined
-  centerComponent?: ReactElement
-  onLeftClick?: () => void
-}) {
+function GymNavBar({ onLeftClick }: { onLeftClick?: () => void }) {
   const [currentTab, setCurrentTab] = useState<number>(1)
   const sections = ['Gym', 'History']
   const history = useHistory()
   return (
     <>
-      <div style={{ display: 'flex' }}>
+      <GymBarContainer>
+        <NavBarIcons
+          type="left"
+          onClick={() => {
+            onLeftClick ? onLeftClick() : history.goBack()
+          }}
+        />
         {sections.map((section, index) => {
           const isSelected = sections.indexOf(section) === currentTab - 1
           return (
@@ -86,89 +46,8 @@ function GymNavBar({
             </>
           )
         })}
-      </div>
-      <GymTabs />
-      <StyledNavBar
-        mode="light"
-        icon={
-          <>
-            {leftIcon && leftIconComponent}
-            {!leftIcon && (
-              <NavBarIcons
-                type="left"
-                onClick={() => {
-                  onLeftClick ? onLeftClick() : history.goBack()
-                }}
-                color="#002642"
-              />
-            )}
-          </>
-        }
-        rightContent={rightComponent}
-      >
-        <CustomTabs defaultActiveKey="1" centered>
-          <TabPane tab="Activities" key="1" />
-          <TabPane tab="Details" key="2" />
-        </CustomTabs>
-      </StyledNavBar>
-      <TabPane tab="Activities" key="1">
-        Tab 1 content
-      </TabPane>
-      <TabPane tab="Details" key="2">
-        Tab 2 content
-      </TabPane>
+      </GymBarContainer>
     </>
-  )
-}
-
-function GymTabs({
-  title,
-  leftIcon,
-  leftIconComponent,
-  rightComponent,
-  centerComponent,
-  onLeftClick,
-}: {
-  title?: string
-  leftIcon?: boolean
-  leftIconComponent?: ReactElement
-  rightComponent?: ReactElement | undefined
-  centerComponent?: ReactElement
-  onLeftClick?: () => void
-}) {
-  const history = useHistory()
-  return (
-    <div style={{ display: 'flex', flexDirection: 'row', justifyItems: 'center' }}>
-      <div style={{ justifyContent: 'left' }}>
-        <NavBar
-          mode="light"
-          icon={
-            <>
-              {leftIcon && leftIconComponent}
-              {!leftIcon && (
-                <NavBarIcons
-                  type="left"
-                  onClick={() => {
-                    onLeftClick ? onLeftClick() : history.goBack()
-                  }}
-                  color="#002642"
-                />
-              )}
-            </>
-          }
-        ></NavBar>
-      </div>
-      <div style={{ justifyContent: 'center' }}>
-        <CustomTabs defaultActiveKey="1" centered tabBarGutter={50}>
-          <TabPane tab="Activities" key="1">
-            Tab 1 content
-          </TabPane>
-          <TabPane tab="Details" key="2">
-            Tab 2 content
-          </TabPane>
-        </CustomTabs>
-      </div>
-    </div>
   )
 }
 

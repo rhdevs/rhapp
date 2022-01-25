@@ -24,7 +24,6 @@ class App extends React.Component {
         <BrowserRouter>
           <OfflineStatus />
           <NotificationBar />
-          <GymNavBar />
           <Routes />
         </BrowserRouter>
       </Provider>

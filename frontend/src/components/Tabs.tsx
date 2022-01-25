@@ -37,14 +37,15 @@ export const GymTabContainer = styled.div<{ isSelected?: boolean }>`
   align-items: center;
   margin-bottom: 5px;
   background-color: #fff;
-  color: ${(props) => (props.isSelected ? '#59ba95' : 'rgba(0, 0, 0, 0.55)')};
+  color: #191919;
   font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 30px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 45px;
   ${(props) =>
     props.isSelected
-      ? `background-position: 50% 2em;
+      ? `color: #59ba95;
+    background-position: 50% 2.5em;
     background-image: linear-gradient(
       to bottom,
       #59ba95,
