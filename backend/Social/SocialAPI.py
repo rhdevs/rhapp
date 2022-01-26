@@ -414,7 +414,7 @@ def getPostById(userID):
         if len(data) > 0: # OR if db.Profiles.find_one({"userID": userID}) != None:
             return make_response(response, 200)
         
-        elif len(data) = 0: # OR if db.Profiles.find_one({"userID": userID}) == None:
+        elif len(data) == 0: # OR if db.Profiles.find_one({"userID": userID}) == None:
             return make_response({"status": "failed", "message": "userID does not exist"}), 400   
     except TypeError:
         return make_response({"status": "failed", "message": "Expected a string input"}), 400
