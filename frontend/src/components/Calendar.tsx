@@ -1,5 +1,5 @@
 import { type } from 'os'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 const CalenderContainer = styled.div`
@@ -28,11 +28,28 @@ const DayContainer = styled.div`
   text-align: center;
 `
 
-const DateContainer = styled.div<{ blurred?: boolean }>`
+const DateContainer = styled.div<{ blurred?: boolean; selected?: boolean }>`
   font-size: 13px;
   text-align: center;
   color: ${(prop) => (prop.blurred ? 'grey' : '')};
+  border: 5px solid white;
+  border-radius: 50%;
+  background-color: ${(prop) => (prop.selected ? 'white' : ' #468751')};
 `
+
+const ClickableDateContainer = (date: number, isBlurred: boolean) => {
+  const [dateSelected, isDateSelected] = useState(false)
+  const DateContainerClickHandler = () => {
+    isDateSelected(true)
+    console.log('Date selected. Need to change color.')
+  }
+
+  return (
+    <DateContainer onClick={DateContainerClickHandler} blurred={isBlurred} selected={dateSelected}>
+      {date}
+    </DateContainer>
+  )
+}
 
 const MonthRow = () => {
   return (
@@ -51,8 +68,10 @@ const MonthRow = () => {
 const MiddleDateRows = (firstDate: number) => {
   return (
     <>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
+      {ClickableDateContainer(firstDate++, false)}
+      {/* <DateContainer>{firstDate++}</DateContainer> */}
+      {ClickableDateContainer(firstDate++, false)}
+      {/* <DateContainer>{firstDate++}</DateContainer> */}
       <DateContainer>{firstDate++}</DateContainer>
       <DateContainer>{firstDate++}</DateContainer>
       <DateContainer>{firstDate++}</DateContainer>
