@@ -2,6 +2,8 @@ import { type } from 'os'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { DayHeaders } from './DayHeaders'
+
 const CalenderContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -67,20 +69,6 @@ const ClickableDateContainer = (date: number, isBlurred: boolean) => {
       <EventIndicator selected={dateSelected} />
       {date}
     </DateContainer>
-  )
-}
-
-const MonthRow = () => {
-  return (
-    <>
-      <DayContainer>Mon</DayContainer>
-      <DayContainer>Tue</DayContainer>
-      <DayContainer>Wed</DayContainer>
-      <DayContainer>Thu</DayContainer>
-      <DayContainer>Fri</DayContainer>
-      <DayContainer>Sat</DayContainer>
-      <DayContainer>Sun</DayContainer>
-    </>
   )
 }
 
@@ -215,7 +203,7 @@ export const Calendar = () => {
     <CalenderContainer>
       <MonthsContainer>Jan 2021</MonthsContainer>
       <DatesContainer>
-        <MonthRow />
+        <DayHeaders />
         {MakeCurrentMonth()}
       </DatesContainer>
     </CalenderContainer>
