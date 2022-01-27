@@ -47,32 +47,6 @@ const DateContainer = styled.div<{ blurred?: boolean; selected?: boolean }>`
   flex-direction: column;
 `
 
-// const EventIndicator = styled.div<{ selected?: boolean }>`
-//   position: absolute;
-//   align-self: center;
-//   margin-top: -24px;
-//   height: 7px;
-//   width: 7px;
-//   border-radius: 50%;
-//   background-color: ${(prop) => (prop.selected ? 'white' : '#468751')};
-// `
-
-// const ClickableDateContainer = (date: number, isBlurred: boolean) => {
-//   const [dateSelected, isDateSelected] = useState(false)
-//   const DateContainerClickHandler = () => {
-//     isDateSelected(!dateSelected)
-//     console.log('Date selected. Need to change color.')
-//   }
-
-//   return (
-//     // <DateContainer onClick={() => DateContainerClickHandler()} blurred={isBlurred} selected={dateSelected}>
-//     <DateContainer onClick={DateContainerClickHandler} blurred={isBlurred} selected={dateSelected}>
-//       <EventIndicator selected={dateSelected} />
-//       {date}
-//     </DateContainer>
-//   )
-// }
-
 const MiddleDateRows = (firstDate: number) => {
   return (
     <>
