@@ -97,15 +97,6 @@ const MiddleDateRows = (firstDate: number) => {
       <ClickableDateContainer date={firstDate++} isBlurred={false} />
       <ClickableDateContainer date={firstDate++} isBlurred={false} />
       <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
     </>
   )
 }
@@ -115,71 +106,70 @@ const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: 
   let firstDateToPut = lastDateOfPreviousMonth - firstDayOfThisMonth + 2
   return firstRow ? (
     <>
-      {/* <DateContainer blurred={true}>{firstDateToPut++}</DateContainer> */}
       <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       {firstDateToPut > lastDateOfPreviousMonth ? (
         <DateContainer>{newMonthDate++}</DateContainer>
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       ) : (
-        <DateContainer blurred={true}>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
     </>
   ) : (
     <>
-      <DateContainer>{firstDateToPut++}</DateContainer>
+      <ClickableDateContainer date={firstDateToPut++} />
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <DateContainer blurred={true}>{newMonthDate++}</DateContainer>
+        <ClickableDateContainer date={newMonthDate++} isBlurred={true} />
       ) : (
-        <DateContainer>{firstDateToPut++}</DateContainer>
+        <ClickableDateContainer date={firstDateToPut++} />
       )}
     </>
   )
@@ -204,6 +194,16 @@ export const Calendar = () => {
   return (
     <CalenderContainer>
       <MonthsContainer>Jan 2021</MonthsContainer>
+      <DatesContainer>
+        <DayHeaders />
+        <MakeCurrentMonth />
+      </DatesContainer>
+      <MonthsContainer>Feb</MonthsContainer>
+      <DatesContainer>
+        <DayHeaders />
+        <MakeCurrentMonth />
+      </DatesContainer>
+      <MonthsContainer>Mar</MonthsContainer>
       <DatesContainer>
         <DayHeaders />
         <MakeCurrentMonth />

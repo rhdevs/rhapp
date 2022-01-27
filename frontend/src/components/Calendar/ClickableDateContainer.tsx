@@ -27,7 +27,7 @@ const EventIndicator = styled.div<{ selected?: boolean }>`
   background-color: ${(prop) => (prop.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: { date: number; isBlurred: boolean }) => {
+export const ClickableDateContainer = (props: { date: number; isBlurred?: boolean }) => {
   const [dateSelected, isDateSelected] = useState(false)
   const DateContainerClickHandler = () => {
     isDateSelected(!dateSelected)
