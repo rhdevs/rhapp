@@ -1,7 +1,7 @@
 from db import *
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
-import pymongo
+from pymongo import *
 import json
 import os
 import time
@@ -418,9 +418,15 @@ def getPostById(userID):
             return make_response({"status": "failed", "message": "userID does not exist"}), 400   
     except TypeError:
         return make_response({"status": "failed", "message": "Expected a string input"}), 400
+    except ConnectionRefusedError as e:
+        print(e)
+        return make_response({"status": "failed", "message": "Connection refused"}), 408
+    except pymongo.errors.ServerSelectionTimeoutError as e:
+        print(e)
+        return make_response({"status": "failed", "message": "Database connection refused"}), 408
     except Exception as e:
         print(e)
-        return jsonify({"err": "An error has occured", "status": "failed"}), 500
+        return make_response({"err": "An error has occured", "status": "failed"}), 500
 
 def FriendsHelper(userID):
     query = {
