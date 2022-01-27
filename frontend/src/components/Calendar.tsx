@@ -29,23 +29,40 @@ const DayContainer = styled.div`
 `
 
 const DateContainer = styled.div<{ blurred?: boolean; selected?: boolean }>`
-  font-size: 13px;
+  font-size: 12px;
+  padding-top: 6px;
   text-align: center;
-  color: ${(prop) => (prop.blurred ? 'grey' : '')};
+  height: 40px;
+  width: 47.14px;
+  color: ${(prop) => (prop.blurred ? '#d4d4d4' : prop.selected ? 'white' : '')};
   border: 5px solid white;
-  border-radius: 50%;
-  background-color: ${(prop) => (prop.selected ? 'white' : ' #468751')};
+  border-radius: 40px;
+  background-color: ${(prop) => (prop.selected ? '#468751' : ' white')};
 `
+
+const EventIndicator = styled.div<{ selected?: boolean }>`
+  position: absolute;
+  margin-left: 15px;
+  margin-top: -4px;
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  background-color: ${(prop) => (prop.selected ? 'white' : 'black')};
+`
+
+const DateContainerDate = styled.text<{ selected?: boolean }>``
 
 const ClickableDateContainer = (date: number, isBlurred: boolean) => {
   const [dateSelected, isDateSelected] = useState(false)
   const DateContainerClickHandler = () => {
-    isDateSelected(true)
+    isDateSelected(!dateSelected)
     console.log('Date selected. Need to change color.')
   }
 
   return (
+    // <DateContainer onClick={() => DateContainerClickHandler()} blurred={isBlurred} selected={dateSelected}>
     <DateContainer onClick={DateContainerClickHandler} blurred={isBlurred} selected={dateSelected}>
+      <EventIndicator selected={dateSelected} />
       {date}
     </DateContainer>
   )
@@ -69,38 +86,39 @@ const MiddleDateRows = (firstDate: number) => {
   return (
     <>
       {ClickableDateContainer(firstDate++, false)}
-      {/* <DateContainer>{firstDate++}</DateContainer> */}
       {ClickableDateContainer(firstDate++, false)}
-      {/* <DateContainer>{firstDate++}</DateContainer> */}
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
-      <DateContainer>{firstDate++}</DateContainer>
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
+      {ClickableDateContainer(firstDate++, false)}
     </>
   )
 }
+
 const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: number, firstRow: boolean) => {
   let newMonthDate = 1
   let firstDateToPut = lastDateOfPreviousMonth - firstDayOfThisMonth + 2
