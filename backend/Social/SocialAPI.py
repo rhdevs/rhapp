@@ -96,9 +96,11 @@ def getUserProfile(userID):
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-
-    return make_response(response, 200)
-
+    if response["data"] == []:
+        return make_response({"err": "userID does not exist", "status":"failed"}), 400
+    else:
+        return make_response(response, 200)
+        
 
 @social_api.route("/user", methods=['PUT', 'POST'])
 @cross_origin(supports_credentials=True)
