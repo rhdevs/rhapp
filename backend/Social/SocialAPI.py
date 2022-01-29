@@ -410,20 +410,13 @@ def getPostById(userID):
             "status": "success",
             "data": json.dumps(list(data), default=lambda o: str(o))
         }
-
-        if db.Profiles.find_one({"userID": userID}) != None:
-            return make_response(response, 200)
         
         if db.Profiles.find_one({"userID": userID}) == None:
             return make_response({"status": "failed", "message": "userID does not exist"}), 400   
+        else:
+            return make_response(response, 200)
     except TypeError:
         return make_response({"status": "failed", "message": "Expected a string input"}), 400
-    except ConnectionRefusedError as e:
-        print(e)
-        return make_response({"status": "failed", "message": "Connection refused"}), 408
-    except pymongo.errors.ServerSelectionTimeoutError as e:
-        print(e)
-        return make_response({"status": "failed", "message": "Database connection refused"}), 408
     except Exception as e:
         print(e)
         return make_response({"err": "An error has occured", "status": "failed"}), 500
