@@ -5,12 +5,14 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 `
+
 const Ellipse = styled.div<{ isOpen: boolean }>`
   background: ${(props) => (props.isOpen ? `rgba(88, 185, 148, 1)` : `rgba(243, 117, 98, 1)`)};
   height: 16px;
   width: 16px;
   border-radius: 50%;
 `
+
 const Status = styled.div<{ isOpen: boolean }>`
   font-family: Lato;
   font-style: normal;
