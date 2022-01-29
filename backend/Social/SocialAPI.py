@@ -412,7 +412,7 @@ def getPostById(userID):
         }
         
         if db.Profiles.find_one({"userID": userID}) == None:
-            return make_response({"status": "failed", "message": "userID does not exist"}), 400   
+            return make_response({"status": "failed", "message": "User does not exist"}), 404 
         else:
             return make_response(response, 200)
     except TypeError:
