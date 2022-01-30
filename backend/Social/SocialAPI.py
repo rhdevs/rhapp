@@ -1,15 +1,16 @@
 from db import *
 from S3.app import *
 from datauri import DataURI
-from pathlib import Path, PurePath
+from binascii import a2b_base64
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
-import pymongo
+from pymongo import *
 import json
 import os
 import time
 import jwt
 import sys
+import urllib.request
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from flask import Blueprint
@@ -48,30 +49,63 @@ def profiles():
         '''
         if request.method == 'PUT':
             data = request.get_json()
-            imgString = data["image_uri"]
-            studentId = data["userID"]
-            imgFile = DataURI(imgString)
-            mimetype = imgFile.mimetype
-            imgFileBinary = imgFile.data
-            imgFileLocation = PurePath(imgFileBinary)
-            imgKey = str(studentId) + "/profile_pic." + str(mimetype)[str(mimetype).find("/")+1:]
-
+            imgString = str(data["image_uri"]) # get image URI/URL/base64 from JSON request
+            userID = data["userID"] # get userID from JSON request
+            # PROFILE PICTURE GENERATION 
+            if imgString[:5] == "data:":   # given image string is in URI form         
+                imgType = DataURI(imgString).mimetype # get FILE_FORMAT (mimetype) of image URI
+                imgBinary = DataURI(imgString).data
+                imgFileName = "profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name image to be generated as "profile_pic.<FILE_FORMAT>"
+                fd = open(imgFileName, 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[:4] == "/9j/": # given image string is in base64 form and in JPG/JPEG format
+                imgBinary = a2b_base64(imgString)
+                fd = open('profile_pic.jpg', 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[:6] == "iVBORw": # given image string is in base64 form and in PNG format
+                imgBinary = a2b_base64(imgString)
+                fd = open('profile_pic.png', 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[:6] == "R0lGOD": # given image string is in base64 form and in GIF format
+                imgBinary = a2b_base64(imgString)
+                fd = open('profile_pic.gif', 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[0] == "U": # given image string is in base64 form and in WEBP format
+                imgBinary = a2b_base64(imgString)
+                fd = open('profile_pic.webp', 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[:4] == "SUkq": # given image string is in base64 form and in TIFF format
+                imgBinary = a2b_base64(imgString)
+                fd = open('profile_pic.tiff', 'wb')
+                fd.write(imgBinary)
+                fd.close()
+            elif imgString[:4] == "http": # given image string is in URL form
+                response = urllib.request.urlopen(imgString)
+                fd = open('profile_pic.jpg','wb')
+                fd.write(response.read())
+                fd.close()
+                
+            imgFileLocation = os.getcwd() # get location of generated image file
+            imgKey = str(userID) + "/profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name of ImageKey for generated image file
             if imgString in data:
                 try:
                     create(imgKey, imgFileLocation)
-                    return jsonify({"status": "success", "message": "Profile picture uploaded"}), 200
+                    return make_response({"status": "success", "message": "Profile picture uploaded"}), 200
             
                 except FileExistsError:
-                    oldImgKey = db.Profiles.find({"userID": {'$in': imageKey}}, {"_id": 0})
+                    oldImgKey = jsonify(db.Profiles.find({"userID": userID}, {"_id": 0})).get("imageKey")
                     update(oldImgKey, imgKey, imgFileLocation)
-                    return jsonify({"status": "success", "message": "Original image exists, profile picture updated"}), 200
+                    return make_response({"status": "success", "message": "Profile picture already exists, new event updated"}), 200
 
-                except DataURIError:
-                    return jsonify({"status": "failed", "message": "Invalid data URI"}), 400 
+                except DataURI.DataURIError:
+                    return make_response({"status": "failed", "message": "Invalid data URI"}), 400 
 
-
-            result = db.Profiles.update_one(
-                {"userID": data["userID"]}, {'$set': newKey}, upsert=True)
+            result = db.Profiles.update_one({"userID": data["userID"]}, {'$set': {"imageKey": imgKey}}, upsert=True)
 
             if int(result.matched_count) > 0:
                 response = {
