@@ -10,7 +10,6 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import { format } from 'date-fns'
 import {
   clearErrors,
   editBookingCCA,
@@ -43,7 +42,7 @@ const Background = styled.div`
 const StyledInput = styled(Input)`
   &.ant-input {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 30px;
     border: 1px solid #d9d9d9;
     padding: 5px 10px;
     margin: 0px 0px 20px 0px;
@@ -55,8 +54,8 @@ const StyledInput = styled(Input)`
 
 const StyledDateInput = styled(Input)`
   &.ant-input {
-    width: 100%;
-    border-radius: 15px;
+    width: 70vw;
+    border-radius: 30px;
     border: 1px solid #d9d9d9;
     padding: 5px 10px;
     margin: 0px 0px 20px 0px;
@@ -67,13 +66,11 @@ const StyledDateInput = styled(Input)`
 `
 const StyledTitle = styled.text`
   font-family: Inter;
-  padding: 5px 10px;
   color: black;
-  width: 100%;
-  text-align: left;
   font-size: 15px;
   font-weight: bold;
   line-height: 30px;
+  margin-right: 20px;
   white-space: nowrap;
 `
 
@@ -199,7 +196,7 @@ export default function CreateBooking() {
   const setDescription = (description: string) => {
     dispatch(editBookingDescription(description))
   }
-  // if dont have this setFacility then when the page is refreshed, it cannot keep its facility
+
   const setFacility = (newFacilityName: string) => {
     dispatch(setNewBookingFacilityName(newFacilityName))
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
@@ -227,11 +224,7 @@ export default function CreateBooking() {
   return (
     <div>
       <TopNavBar
-        title={
-          newBooking?.bookingID
-            ? `Edit Booking for ` + newBookingFacilityName
-            : `New Booking for ` + newBookingFacilityName
-        }
+        title={newBooking?.bookingID ? `Edit Booking` : `New Booking`}
         rightComponent={CheckIcon(createBookingError)}
       />
       {isLoading && <LoadingSpin />}
@@ -261,24 +254,22 @@ export default function CreateBooking() {
             notFoundContent="No Matching Facility"
             allowClear
           />
-          <StyledTitle>Event Name</StyledTitle>
           <StyledInput
             placeholder="Event Name"
             value={newBookingName}
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
           <div style={{ width: '100%' }}>
-            <StyledTitle>Start</StyledTitle>
-            {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
             <DatePickerRow>
+              <StyledTitle>From</StyledTitle>
               <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingFromDate)}
                 onChange={(event) => handleFromDateChange(event.target.value)}
               />
             </DatePickerRow>
-            <StyledTitle>End</StyledTitle>
             <DatePickerRow>
+              <StyledTitle>To</StyledTitle>
               <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingToDate)}
@@ -291,11 +282,16 @@ export default function CreateBooking() {
               .diff(dayjs(newBookingFromDate), 'hour', true)
               .toFixed(1)} hours`}</div>
           </div>
-          <StyledTitle>CCA</StyledTitle>
-          {/* THIS CCA PICKER ANTD CANNOT MAKE IT THE SAME BORDERRADIUS */}
+          {!newBooking?.bookingID && (
+            <RepeatWeeklyPickerRow>
+              <StyledTitle>Number of Weeks</StyledTitle>
+              <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
+            </RepeatWeeklyPickerRow>
+          )}
           <CCAPickerRow>
+            <StyledTitle>CCA</StyledTitle>
             <AutoComplete
-              style={{ width: '100%', borderRadius: '15px' }}
+              style={{ width: '70vw', borderRadius: '30px !important' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
@@ -316,13 +312,6 @@ export default function CreateBooking() {
             setValue={setDescription}
             textarea
           />
-          {/* TODO this newbooking repeatweekly picker only comes out after toggle button is activated */}
-          {!newBooking?.bookingID && (
-            <RepeatWeeklyPickerRow>
-              <StyledTitle>Number of Weeks</StyledTitle>
-              <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
-            </RepeatWeeklyPickerRow>
-          )}
         </Background>
       )}
     </div>
