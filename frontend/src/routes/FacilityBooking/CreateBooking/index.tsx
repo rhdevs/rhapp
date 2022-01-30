@@ -39,9 +39,6 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-<<<<<<< HEAD
-  padding: 0px 36px;
-=======
   padding: 0px 20px;
 `
 const StyledInput = styled(Input)`
@@ -55,7 +52,6 @@ const StyledInput = styled(Input)`
   &.ant-input::placeholder {
     color: #d9d9d9;
   }
->>>>>>> 97ff207df... did some minor changes to the UI
 `
 
 const StyledDateInput = styled(Input)`
@@ -276,16 +272,12 @@ export default function CreateBooking() {
             notFoundContent="No Matching Facility"
             allowClear
           />
-<<<<<<< HEAD
-          <InputField title="Event Name" placeholder="Event Name" value={newBookingName} setValue={setBookingName} />
-=======
           <StyledTitle>Event Name</StyledTitle>
           <StyledInput
             placeholder="Event Name"
             value={newBookingName}
             onChange={(e) => dispatch(editBookingName(e.target.value))}
           />
->>>>>>> 97ff207df... did some minor changes to the UI
           <div style={{ width: '100%' }}>
             <StyledTitle>Start</StyledTitle>
             {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
@@ -313,13 +305,8 @@ export default function CreateBooking() {
           <StyledTitle>CCA</StyledTitle>
           {/* THIS CCA PICKER ANTD CANNOT MAKE IT THE SAME BORDERRADIUS */}
           <CCAPickerRow>
-<<<<<<< HEAD
-            <StyledTitle>CCA</StyledTitle>
-            <CCAInput
-=======
             <AutoComplete
               style={{ width: '100%', borderRadius: '15px' }}
->>>>>>> 97ff207df... did some minor changes to the UI
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}

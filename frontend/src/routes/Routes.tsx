@@ -116,7 +116,7 @@ const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
 const CreateBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking/oldindex'),
 )
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
