@@ -52,7 +52,7 @@ export const GymTabContainer = styled.div<{ isSelected?: boolean }>`
       #73bb75
     );
     background-repeat: no-repeat;
-    background-size: 90% 2px;`
+    background-size: 100% 2px;`
       : ``}
 `
 
