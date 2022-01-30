@@ -109,7 +109,6 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const passwordHash = sha256(password).toString()
-  const [isOn, setIsOn] = useState(false)
 
   const [error, setError] = useState({ message: '' })
 
