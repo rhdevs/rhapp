@@ -466,11 +466,16 @@ def getPostById(userID):
             "status": "success",
             "data": json.dumps(list(data), default=lambda o: str(o))
         }
-        return make_response(response, 200)
+        
+        if db.Profiles.find_one({"userID": userID}) == None:
+            return make_response({"status": "failed", "message": "User does not exist"}), 404 
+        else:
+            return make_response(response, 200)
+    except TypeError:
+        return make_response({"status": "failed", "message": "Expected a string input"}), 400
     except Exception as e:
         print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-
+        return make_response({"err": "An error has occured", "status": "failed"}), 500
 
 def FriendsHelper(userID):
     query = {
