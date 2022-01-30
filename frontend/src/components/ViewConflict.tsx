@@ -50,7 +50,7 @@ export default function ViewConflict() {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
-    if (selectedFacilityId == 0) {
+    if (selectedFacilityId === 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
     }
     return () => {
@@ -62,10 +62,7 @@ export default function ViewConflict() {
     <>
       <TopNavBarRevamp title={'View Conflicts'} />
       <PullToRefresh onRefresh={onRefresh}>
-        <MainContainer>
-          {!isLoading && <BookingCard></BookingCard>}
-          {isLoading && <LoadingSpin />}
-        </MainContainer>
+        <MainContainer>{isLoading ? <LoadingSpin /> : <BookingCard />}</MainContainer>
       </PullToRefresh>
     </>
   )
