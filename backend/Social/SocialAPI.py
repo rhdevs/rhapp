@@ -51,7 +51,7 @@ def profiles():
             data = request.get_json()
             imgString = str(data["image_uri"]) # get image URI/URL/base64 from JSON request
             userID = data["userID"] # get userID from JSON request
-            # PROFILE PICTURE GENERATION 
+            # START OF PROFILE PICTURE GENERATION CODE
             if imgString[:5] == "data:":   # given image string is in URI form         
                 imgType = DataURI(imgString).mimetype # get FILE_FORMAT (mimetype) of image URI
                 imgBinary = DataURI(imgString).data
@@ -84,12 +84,12 @@ def profiles():
                 fd = open('profile_pic.tiff', 'wb')
                 fd.write(imgBinary)
                 fd.close()
-            elif imgString[:4] == "http": # given image string is in URL form
+            elif imgString[:4] == "http": # given image string is in URL form (assuming all images stored online are in JPEG format)
                 response = urllib.request.urlopen(imgString)
                 fd = open('profile_pic.jpg','wb')
                 fd.write(response.read())
                 fd.close()
-                
+            # END OF PROFILE PICTURE GENERATION CODE    
             imgFileLocation = os.getcwd() # get location of generated image file
             imgKey = str(userID) + "/profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name of ImageKey for generated image file
             if imgString in data:
