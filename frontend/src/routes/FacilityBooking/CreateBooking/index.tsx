@@ -74,7 +74,7 @@ const StyledDateName = styled.text`
   margin-top: 5px;
   margin-left: 8px;
   color: #666666;
-  width: 30%;
+  width: 70%;
   height: 25px;
   text-align: left;
   font-size: 15px;
