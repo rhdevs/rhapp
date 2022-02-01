@@ -6,6 +6,10 @@ import { ClickableDateContainer } from './ClickableDateContainer'
 export const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: number, firstRow: boolean) => {
   let newMonthDate = 1
   let firstDateToPut = lastDateOfPreviousMonth - firstDayOfThisMonth + 2
+  if (firstDayOfThisMonth == 0) {
+    firstDateToPut = lastDateOfPreviousMonth - 5
+  }
+
   return firstRow ? (
     <>
       <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
@@ -20,22 +24,22 @@ export const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPrevious
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={firstDateToPut++} />
+        <ClickableDateContainer date={newMonthDate++} />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={firstDateToPut++} />
+        <ClickableDateContainer date={newMonthDate++} />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={firstDateToPut++} />
+        <ClickableDateContainer date={newMonthDate++} />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={firstDateToPut++} />
+        <ClickableDateContainer date={newMonthDate++} />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
