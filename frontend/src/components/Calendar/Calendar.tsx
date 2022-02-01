@@ -26,12 +26,12 @@ const DatesGridContainer = styled.div`
 `
 
 export const Calendar = () => {
-  const eventDays: number[] = [1643715693, 1643888493, 1646307693, 1648986093]
-  const processedDates: number[] = []
+  // event dates are stored as UNIX format
+  const eventDays: number[] = [1644072529, 1646491729, 1648565329, 1648910929]
+  const processedDates: number[] = [301, 303, 331, 131]
 
   const convertDates = (unprocessedDate: number) => {
-    const month = new Date(unprocessedDate * 1000).getMonth()
-    console.log(month)
+    const month = new Date(unprocessedDate * 1000).getMonth() + 1
     const day = new Date(unprocessedDate * 1000).getDate()
     const processedDate = month * 100 + day
     processedDates.push(processedDate)
@@ -39,6 +39,7 @@ export const Calendar = () => {
   }
 
   eventDays.forEach((date) => convertDates(date))
+  console.log(processedDates)
 
   const today = new Date()
   const currentYear = today.getFullYear()

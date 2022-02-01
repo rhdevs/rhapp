@@ -21,7 +21,7 @@ export const FirstLastDateRow = (
       <ClickableDateContainer
         date={firstDateToPut++}
         isBlurred={true}
-        assignedMonth={assignedMonth}
+        assignedMonth={assignedMonth - 1}
         eventDates={eventDates}
       />
       {firstDateToPut > lastDateOfPreviousMonth ? (
@@ -30,7 +30,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -40,7 +40,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -50,7 +50,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -60,7 +60,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -70,7 +70,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -80,7 +80,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={firstDateToPut++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth - 1}
           eventDates={eventDates}
         />
       )}
@@ -92,7 +92,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
@@ -102,7 +102,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
@@ -112,7 +112,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
@@ -122,7 +122,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
@@ -132,7 +132,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
@@ -142,7 +142,7 @@ export const FirstLastDateRow = (
         <ClickableDateContainer
           date={newMonthDate++}
           isBlurred={true}
-          assignedMonth={assignedMonth}
+          assignedMonth={assignedMonth + 1}
           eventDates={eventDates}
         />
       ) : (
