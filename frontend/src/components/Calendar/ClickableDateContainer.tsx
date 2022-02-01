@@ -39,11 +39,7 @@ export const ClickableDateContainer = (props: {
   const DateContainerClickHandler = () => {
     isDateSelected(!dateSelected)
     console.log('Date selected. Need to change color.')
-    console.log(props.date)
-    console.log(props.assignedMonth)
     const assignedDateMonth = props.assignedMonth * 100 + props.date
-    console.log(assignedDateMonth)
-    console.log(props.eventDates)
   }
 
   const checkEventPresence = () => {
@@ -54,7 +50,6 @@ export const ClickableDateContainer = (props: {
   }
 
   return (
-    // <DateContainer onClick={() => DateContainerClickHandler()} blurred={isBlurred} selected={dateSelected}>
     <DateContainer onClick={DateContainerClickHandler} blurred={props.isBlurred} selected={dateSelected}>
       <EventIndicator selected={dateSelected} eventPresent={checkEventPresence()} />
       {props.date}

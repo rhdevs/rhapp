@@ -7,7 +7,7 @@ import { MiddleDateRows } from './MiddleDateRows'
 export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[] }) => {
   const today = new Date()
   const firstDateOfThisMonth = new Date(today.getFullYear(), today.getMonth() + props.nthMonth, 1).getDate()
-  //console.log('===================')
+  //console.log('To remove before merging PR, used for debugging')
   //console.log(today.getMonth() + props.nthMonth + 1)
   const assignedMonth = today.getMonth() + props.nthMonth + 1
   //console.log('First Date of this month ' + firstDateOfThisMonth)
