@@ -61,10 +61,26 @@ const StyledDateInput = styled(Input)`
     border: 1px solid #d9d9d9;
     padding: 5px 10px;
     margin: 0px 0px 20px 0px;
+    font-size: 1;
+    color: white;
   }
   &.ant-input::placeholder {
     color: #d9d9d9;
   }
+`
+const StyledDateName = styled.text`
+  font-family: Inter;
+  z-index: 1;
+  margin-top: 5px;
+  margin-left: 8px;
+  color: #666666;
+  width: 30%;
+  height: 25px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: bold;
+  position: absolute;
+  background: white;
 `
 const StyledTitle = styled.text`
   font-family: Inter;
@@ -81,7 +97,9 @@ const StyledTitle = styled.text`
 const DatePickerRow = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-content: center;
   margin: 10px 0px;
   color: #666666;
 `
@@ -200,6 +218,8 @@ export default function CreateBooking() {
 
   const convertLocalTime = (date: Date) => {
     const newDate = new Date(date.getTime() + 28800000)
+    console.log(newDate)
+    format(newDate, 'dd/MM/yyyy, hh:mm:ss')
     return newDate.toISOString().slice(0, -8)
   }
 
@@ -210,7 +230,6 @@ export default function CreateBooking() {
   const setDescription = (description: string) => {
     dispatch(editBookingDescription(description))
   }
-  // if dont have this setFacility then when the page is refreshed, it cannot keep its facility
   const setFacility = (newFacilityName: string) => {
     dispatch(setNewBookingFacilityName(newFacilityName))
     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
@@ -262,16 +281,23 @@ export default function CreateBooking() {
             />
           )}
           {createBookingError === '' && <div style={{ margin: '20px' }} />}
-          <AutoComplete
-            style={{ width: '50%', marginBottom: '23px' }}
-            options={locationOptions}
-            value={newBookingFacilityName}
-            placeholder="Location"
-            onChange={(newFacilityName) => setFacility(newFacilityName)}
-            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-            notFoundContent="No Matching Facility"
-            allowClear
-          />
+          {!newBookingFacilityName && (
+            <div style={{ width: '100%' }}>
+              <StyledTitle>Event Name</StyledTitle>
+              <CCAInput
+                style={{ width: '100%', marginBottom: '23px' }}
+                options={locationOptions}
+                value={newBookingFacilityName}
+                placeholder="Location"
+                onChange={(newFacilityName) => setFacility(newFacilityName)}
+                filterOption={(inputValue, option) =>
+                  option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                }
+                notFoundContent="No Matching Facility"
+                allowClear
+              />
+            </div>
+          )}
           <StyledTitle>Event Name</StyledTitle>
           <StyledInput
             placeholder="Event Name"
@@ -282,19 +308,25 @@ export default function CreateBooking() {
             <StyledTitle>Start</StyledTitle>
             {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
             <DatePickerRow>
+              <StyledDateName>
+                {format(newBookingFromDate, 'd MMMM yyyy') + ' at ' + format(newBookingFromDate, 'HHmm')}
+              </StyledDateName>
               <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingFromDate)}
                 onChange={(event) => handleFromDateChange(event.target.value)}
-              />
+              ></StyledDateInput>
             </DatePickerRow>
             <StyledTitle>End</StyledTitle>
             <DatePickerRow>
+              <StyledDateName>
+                {format(newBookingToDate, 'd MMMM yyyy') + ' at ' + format(newBookingToDate, 'HHmm')}
+              </StyledDateName>
               <StyledDateInput
                 type="datetime-local"
                 value={convertLocalTime(newBookingToDate)}
                 onChange={(event) => handleToDateChange(event.target.value)}
-              />
+              ></StyledDateInput>
             </DatePickerRow>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
               newBookingToDate,
@@ -305,7 +337,7 @@ export default function CreateBooking() {
           <StyledTitle>CCA</StyledTitle>
           {/* THIS CCA PICKER ANTD CANNOT MAKE IT THE SAME BORDERRADIUS */}
           <CCAPickerRow>
-            <AutoComplete
+            <CCAInput
               style={{ width: '100%', borderRadius: '15px' }}
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
