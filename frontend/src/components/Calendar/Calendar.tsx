@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { DayHeaders } from './DayHeaders'
-import { MonthlyContainer } from './MontlyContainer'
+import { MonthlyContainer } from './MonthlyContainer'
 
 const CalenderContainer = styled.div`
   display: flex;
