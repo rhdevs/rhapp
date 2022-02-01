@@ -56,7 +56,6 @@ export const ClickableDateContainer = (props: {
     const day = new Date(today).getDate()
     const processedDate = month * 100 + day
     if (processedDate === assignedDateMonth) {
-      console.log('current date')
       return true
     }
   }
