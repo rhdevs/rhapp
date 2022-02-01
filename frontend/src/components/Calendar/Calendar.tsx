@@ -12,9 +12,9 @@ const CalenderContainer = styled.div`
 `
 
 const MonthsHeaderContainer = styled.div`
-  height: 40px;
   width: 93px;
   color: #58b994;
+  margin-top: 10px;
   margin-left: 10px;
   font-weight: 600;
 `
