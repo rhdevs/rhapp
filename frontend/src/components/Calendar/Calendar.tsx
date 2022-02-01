@@ -148,7 +148,7 @@ const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: 
     </>
   )
 }
-const MakeCurrentMonth = () => {
+const MonthlyContainer = () => {
   const today = new Date()
   const firstDateOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDate()
   const firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDay()
@@ -170,17 +170,17 @@ export const Calendar = () => {
       <MonthsHeaderContainer>Jan 2021</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
-        <MakeCurrentMonth />
+        <MonthlyContainer />
       </DatesContainer>
       <MonthsHeaderContainer>Feb</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
-        <MakeCurrentMonth />
+        <MonthlyContainer />
       </DatesContainer>
       <MonthsHeaderContainer>Mar</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
-        <MakeCurrentMonth />
+        <MonthlyContainer />
       </DatesContainer>
     </CalenderContainer>
   )
