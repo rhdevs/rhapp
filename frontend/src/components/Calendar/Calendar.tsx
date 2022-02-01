@@ -11,7 +11,7 @@ const CalenderContainer = styled.div`
   flex-direction: column;
 `
 
-const MonthsContainer = styled.div`
+const MonthsHeaderContainer = styled.div`
   height: 40px;
   width: 93px;
   color: #58b994;
@@ -87,7 +87,7 @@ const FirstLastDateRow = (firstDayOfThisMonth: number, lastDateOfPreviousMonth: 
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={firstDateToPut++} />
+        <ClickableDateContainer date={newMonthDate++} />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} isBlurred={true} />
       )}
@@ -167,17 +167,17 @@ const MakeCurrentMonth = () => {
 export const Calendar = () => {
   return (
     <CalenderContainer>
-      <MonthsContainer>Jan 2021</MonthsContainer>
+      <MonthsHeaderContainer>Jan 2021</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
         <MakeCurrentMonth />
       </DatesContainer>
-      <MonthsContainer>Feb</MonthsContainer>
+      <MonthsHeaderContainer>Feb</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
         <MakeCurrentMonth />
       </DatesContainer>
-      <MonthsContainer>Mar</MonthsContainer>
+      <MonthsHeaderContainer>Mar</MonthsHeaderContainer>
       <DatesContainer>
         <DayHeaders />
         <MakeCurrentMonth />
