@@ -26,6 +26,20 @@ const DatesGridContainer = styled.div`
 `
 
 export const Calendar = () => {
+  const eventDays: number[] = [1643715693, 1643888493, 1646307693, 1648986093]
+  const processedDates: number[] = []
+
+  const convertDates = (unprocessedDate: number) => {
+    const month = new Date(unprocessedDate * 1000).getMonth()
+    console.log(month)
+    const day = new Date(unprocessedDate * 1000).getDate()
+    const processedDate = month * 100 + day
+    processedDates.push(processedDate)
+    return processedDate
+  }
+
+  eventDays.forEach((date) => convertDates(date))
+
   const today = new Date()
   const currentYear = today.getFullYear()
   const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1).toDateString().slice(4, -7)
@@ -41,27 +55,27 @@ export const Calendar = () => {
       </MonthsHeaderContainer>
       <DatesGridContainer>
         <DayHeaders />
-        <MonthlyContainer nthMonth={0} />
+        <MonthlyContainer nthMonth={0} eventDates={processedDates} />
       </DatesGridContainer>
       <MonthsHeaderContainer>{secondMonth}</MonthsHeaderContainer>
       <DatesGridContainer>
         <DayHeaders />
-        <MonthlyContainer nthMonth={1} />
+        <MonthlyContainer nthMonth={1} eventDates={processedDates} />
       </DatesGridContainer>
       <MonthsHeaderContainer>{thirdMonth}</MonthsHeaderContainer>
       <DatesGridContainer>
         <DayHeaders />
-        <MonthlyContainer nthMonth={2} />
+        <MonthlyContainer nthMonth={2} eventDates={processedDates} />
       </DatesGridContainer>
       <MonthsHeaderContainer>{fourthMonth}</MonthsHeaderContainer>
       <DatesGridContainer>
         <DayHeaders />
-        <MonthlyContainer nthMonth={3} />
+        <MonthlyContainer nthMonth={3} eventDates={processedDates} />
       </DatesGridContainer>
       <MonthsHeaderContainer>{fifthMonth}</MonthsHeaderContainer>
       <DatesGridContainer>
         <DayHeaders />
-        <MonthlyContainer nthMonth={4} />
+        <MonthlyContainer nthMonth={4} eventDates={processedDates} />
       </DatesGridContainer>
     </CalenderContainer>
   )

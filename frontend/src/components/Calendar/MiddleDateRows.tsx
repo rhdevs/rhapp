@@ -8,30 +8,135 @@ const DayContainer = styled.div`
   text-align: center;
 `
 
-export const MiddleDateRows = (firstDate: number) => {
+export const MiddleDateRows = (firstDate: number, assignedMonth: number, eventDates: number[]) => {
   return (
     <>
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
-      <ClickableDateContainer date={firstDate++} isBlurred={false} />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
+      <ClickableDateContainer
+        date={firstDate++}
+        isBlurred={false}
+        assignedMonth={assignedMonth}
+        eventDates={eventDates}
+      />
     </>
   )
 }

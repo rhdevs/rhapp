@@ -17,7 +17,8 @@ const DateContainer = styled.div<{ blurred?: boolean; selected?: boolean }>`
   flex-direction: column;
 `
 
-const EventIndicator = styled.div<{ selected?: boolean }>`
+const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
+  display: ${(prop) => (prop.eventPresent ? 'block' : 'none')};
   position: absolute;
   align-self: center;
   margin-top: -24px;
@@ -27,17 +28,35 @@ const EventIndicator = styled.div<{ selected?: boolean }>`
   background-color: ${(prop) => (prop.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: { date: number; isBlurred?: boolean }) => {
+export const ClickableDateContainer = (props: {
+  date: number
+  isBlurred?: boolean
+  eventPresent?: boolean
+  assignedMonth: number
+  eventDates: number[]
+}) => {
   const [dateSelected, isDateSelected] = useState(false)
   const DateContainerClickHandler = () => {
     isDateSelected(!dateSelected)
     console.log('Date selected. Need to change color.')
+    console.log(props.date)
+    console.log(props.assignedMonth)
+    const assignedDateMonth = props.assignedMonth * 100 + props.date
+    console.log(assignedDateMonth)
+    console.log(props.eventDates)
+  }
+
+  const checkEventPresence = () => {
+    const assignedDateMonth = props.assignedMonth * 100 + props.date
+    if (props.eventDates.find((date) => date === assignedDateMonth)) {
+      return true
+    }
   }
 
   return (
     // <DateContainer onClick={() => DateContainerClickHandler()} blurred={isBlurred} selected={dateSelected}>
     <DateContainer onClick={DateContainerClickHandler} blurred={props.isBlurred} selected={dateSelected}>
-      <EventIndicator selected={dateSelected} />
+      <EventIndicator selected={dateSelected} eventPresent={checkEventPresence()} />
       {props.date}
     </DateContainer>
   )
