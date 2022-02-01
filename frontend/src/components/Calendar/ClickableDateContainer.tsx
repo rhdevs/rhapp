@@ -67,7 +67,7 @@ export const ClickableDateContainer = (props: {
       onClick={DateContainerClickHandler}
       blurred={props.isBlurred}
       selected={dateSelected}
-      currentDate={checkCurrentDate()}
+      currentDate={checkCurrentDate() && !props.isBlurred}
     >
       <EventIndicator selected={dateSelected} eventPresent={checkEventPresence()} />
       {props.date}
