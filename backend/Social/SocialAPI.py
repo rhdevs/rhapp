@@ -106,18 +106,6 @@ def profiles():
                     return make_response({"status": "failed", "message": "Invalid data URI"}), 400 
 
             result = db.Profiles.update_one({"userID": data["userID"]}, {'$set': {"imageKey": imgKey}}, upsert=True)
-
-            if int(result.matched_count) > 0:
-                response = {
-                    "status": "success",
-                    "message": "Event changed"
-                }
-                return make_response(response, 200)
-            else:
-                response = {
-                    "status": "failed",
-                }
-                return make_response(response, 204)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -254,13 +242,6 @@ def getUserDetails(userID):
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-
-    return make_response(
-        {
-            "data": json.dumps(response, default=lambda o: str(o)),
-            "status": "success"
-        },
-        200)
 
 
 def userIDtoName(userID):
