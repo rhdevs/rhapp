@@ -50,7 +50,7 @@ def profiles():
             data = request.get_json()
             imgString = str(data["profilePictureUrl"]) # get image URI/URL/base64 from JSON request
             userID = data["userID"] # get userID from JSON request
-            # START OF PROFILE PICTURE GENERATION CODE
+
             def imgGeneration(imgString):
                 if imgString[:5] == "data:":   # given image string is in URI form         
                     imgType = DataURI(imgString).mimetype # get FILE_FORMAT from mimetype of image URI
@@ -138,6 +138,7 @@ def profiles():
                         fd.write(imgBinary)
                         fd.close()
                     return imgKey, imgFileLocation
+                    
             try:
                 imgKey, imgFileLocation = imgGeneration(str(imgString))
                 create(imgKey, imgFileLocation)
