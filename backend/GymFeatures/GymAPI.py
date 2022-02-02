@@ -39,7 +39,7 @@ def get_statuses():
         data = list(db.Gym.find({}, {"_id": 0, "gymStatus": 1, "keyStatus": 1}).sort("requesttime", -1))
         response = {"data": data[0], "status": "success"}
     except:
-        return {"message": "An error has occurred", "status": "failed"}, 500
+        return {"err": "An error has occurred", "status": "failed"}, 500
     return make_response(response)
 
 @gym_api.route("/gymstatus", methods=['POST'])
@@ -49,5 +49,5 @@ def add_gymStatus():
         response = {"status": "success"}
         db.Gym.insert_one(data)
     except:
-        return {"message": "An error has occurred", "failed": f"{data}"}, 500
+        return {"err": "An error has occurred", "status": "failed"}, 500
     return make_response(response)
