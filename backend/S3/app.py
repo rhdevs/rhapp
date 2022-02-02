@@ -39,27 +39,31 @@ def create(key, fileLocation):
 
 
 def read(key):
-    if not fileExist(key):
-        raise FileNotFoundError
     PresignedUrl = user.generate_presigned_url(
         'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-    return PresignedUrl
+    if not fileExist(key):
+        raise FileNotFoundError
+    else:
+        return PresignedUrl
 
 # update
 
 
 def update(oldKey, newKey, fileLocation=''):
-    if not fileExist(oldKey):
-        raise FileNotFoundError
-    if fileExist(newKey):
-        raise FileExistsError
-    if fileLocation == '':
-        newObj = bucket.Object(newKey)
-        newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
-        delete(oldKey)
-    else:
-        delete(oldKey)
-        create(newKey, fileLocation)
+    try:
+        if not fileExist(oldKey):
+            raise FileNotFoundError
+        if fileExist(newKey):
+            raise FileExistsError
+        if fileLocation == '':
+            newObj = bucket.Object(newKey)
+            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+            delete(oldKey)
+        else:
+            delete(oldKey)
+            create(newKey, fileLocation)
+    except Exception as e:
+        print(e)
 
 
 # delete

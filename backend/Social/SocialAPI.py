@@ -10,7 +10,6 @@ import os
 import time
 import jwt
 import sys
-import urllib.request
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from flask import Blueprint
@@ -49,63 +48,127 @@ def profiles():
         '''
         if request.method == 'PUT':
             data = request.get_json()
-            imgString = str(data["image_uri"]) # get image URI/URL/base64 from JSON request
+            imgString = str(data["profilePictureUrl"]) # get image URI/URL/base64 from JSON request
             userID = data["userID"] # get userID from JSON request
             # START OF PROFILE PICTURE GENERATION CODE
-            if imgString[:5] == "data:":   # given image string is in URI form         
-                imgType = DataURI(imgString).mimetype # get FILE_FORMAT (mimetype) of image URI
-                imgBinary = DataURI(imgString).data
-                imgFileName = "profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name image to be generated as "profile_pic.<FILE_FORMAT>"
-                fd = open(imgFileName, 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[:4] == "/9j/": # given image string is in base64 form and in JPG/JPEG format
-                imgBinary = a2b_base64(imgString)
-                fd = open('profile_pic.jpg', 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[:6] == "iVBORw": # given image string is in base64 form and in PNG format
-                imgBinary = a2b_base64(imgString)
-                fd = open('profile_pic.png', 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[:6] == "R0lGOD": # given image string is in base64 form and in GIF format
-                imgBinary = a2b_base64(imgString)
-                fd = open('profile_pic.gif', 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[0] == "U": # given image string is in base64 form and in WEBP format
-                imgBinary = a2b_base64(imgString)
-                fd = open('profile_pic.webp', 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[:4] == "SUkq": # given image string is in base64 form and in TIFF format
-                imgBinary = a2b_base64(imgString)
-                fd = open('profile_pic.tiff', 'wb')
-                fd.write(imgBinary)
-                fd.close()
-            elif imgString[:4] == "http": # given image string is in URL form (assuming all images stored online are in JPEG format)
-                response = urllib.request.urlopen(imgString)
-                fd = open('profile_pic.jpg','wb')
-                fd.write(response.read())
-                fd.close()
-            # END OF PROFILE PICTURE GENERATION CODE    
-            imgFileLocation = os.getcwd() # get location of generated image file
-            imgKey = str(userID) + "/profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name of ImageKey for generated image file
-            if imgString in data:
-                try:
-                    create(imgKey, imgFileLocation)
-                    return make_response({"status": "success", "message": "Profile picture uploaded"}), 200
+            def imgGeneration(imgString):
+                if imgString[:5] == "data:":   # given image string is in URI form         
+                    imgType = DataURI(imgString).mimetype # get FILE_FORMAT from mimetype of image URI
+                    imgBinary = DataURI(imgString).data
+                    imgFileName = "profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name image to be generated as "profile_pic.<FILE_FORMAT>"
+                    imgKey = str(userID) + "/profile_pic." + str(imgType)[str(imgType).find("/")+1:] # image key for the generated image file
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic." + str(imgType)[str(imgType).find("/")+1:] # path/location of the generated image file (image is generated in the working directory of the local machine where the main API code is run)
+                    if os.path.exists(imgFileName) == True: # check if there is another image file with the same name as the one to be generated
+                        os.remove(imgFileName) # delete the existing file
+                        fd = open(imgFileName, 'wb')
+                        fd.write(imgBinary)
+                        fd.close()  
+                    else: # if file with same name does not exist
+                        fd = open(imgFileName, 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+                elif imgString[:4] == "/9j/": # given image string is in base64 form and in JPG/JPEG format
+                    imgBinary = a2b_base64(imgString)
+                    imgKey = str(userID) + "/profile_pic.jpg"
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic.jpg"
+                    if os.path.exists('profile_pic.jpg') == True:
+                        os.remove('profile_pic.jpg')
+                        fd = open('profile_pic.jpg', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    else:
+                        fd = open('profile_pic.jpg', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+                elif imgString[:6] == "iVBORw": # given image string is in base64 form and in PNG format
+                    imgBinary = a2b_base64(imgString)
+                    imgKey = str(userID) + "/profile_pic.png"
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic.png"
+                    if os.path.exists('profile_pic.png') == True:
+                        os.remove('profile_pic.png')
+                        fd = open('profile_pic.png', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    else:
+                        fd = open('profile_pic.png', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+                elif imgString[:6] == "R0lGOD": # given image string is in base64 form and in GIF format
+                    imgBinary = a2b_base64(imgString)
+                    imgKey = str(userID) + "/profile_pic.gif"
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic.gif"
+                    if os.path.exists('profile_pic.gif') == True:
+                        os.remove('profile_pic.gif')
+                        fd = open('profile_pic.gif', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    else:
+                        fd = open('profile_pic.gif', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+                elif imgString[0] == "U": # given image string is in base64 form and in WEBP format
+                    imgBinary = a2b_base64(imgString)
+                    imgKey = str(userID) + "/profile_pic.webp"
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic.webp"
+                    if os.path.exists('profile_pic.webp') == True:
+                        os.remove('profile_pic.webp')
+                        fd = open('profile_pic.webp', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    else:
+                        fd = open('profile_pic.webp', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+                elif imgString[:4] == "SUkq": # given image string is in base64 form and in TIFF format
+                    imgBinary = a2b_base64(imgString)
+                    imgKey = str(userID) + "/profile_pic.tiff"
+                    imgFileLocation = str(os.getcwd()) + "/profile_pic.tiff"
+                    if os.path.exists('profile_pic.tiff') == True:
+                        os.remove('profile_pic.tiff')
+                        fd = open('profile_pic.tiff', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    else:
+                        fd = open('profile_pic.tiff', 'wb')
+                        fd.write(imgBinary)
+                        fd.close()
+                    return imgKey, imgFileLocation
+            try:
+                imgKey, imgFileLocation = imgGeneration(str(imgString))
+                create(imgKey, imgFileLocation)
+                result = db.Profiles.update_one({"userID": userID}, {'$set': {"imageKey": imgKey}}, upsert=True)
+                if int(result.matched_count) > 0:
+                    response = {
+                        "status": "success",
+                        "message": "Profile picture uploaded"
+                    }
+                    return make_response(response, 200)
+                else:
+                    response = {
+                        "status": "failed",
+                    }
+                    return make_response(response, 204)
             
-                except FileExistsError:
-                    oldImgKey = jsonify(db.Profiles.find({"userID": userID}, {"_id": 0})).get("imageKey")
-                    update(oldImgKey, imgKey, imgFileLocation)
-                    return make_response({"status": "success", "message": "Profile picture already exists, new event updated"}), 200
-
-                except DataURI.DataURIError:
-                    return make_response({"status": "failed", "message": "Invalid data URI"}), 400 
-
-            result = db.Profiles.update_one({"userID": data["userID"]}, {'$set': {"imageKey": imgKey}}, upsert=True)
+            except FileExistsError:
+                oldImgKey = str(db.Profiles.find_one({"userID": userID}).get("imageKey")) # OR str(list(db.Profiles.distinct("imageKey", {"userID": userID}))[0]) , see: https://docs.mongodb.com/manual/reference/method/db.collection.distinct/
+                update(oldImgKey, imgKey, imgFileLocation)
+                result = db.Profiles.update_one({"userID": userID}, {'$set': {"imageKey": imgKey}}, upsert=True)
+                if int(result.matched_count) > 0:
+                    response = {
+                        "status": "success",
+                        "message": "Profile picture updated"
+                    }
+                    return make_response(response, 200)
+                else:
+                    response = {
+                        "status": "failed",
+                    }
+                    return make_response(response, 204)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -266,10 +329,17 @@ def posts():
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
                     name = db.Profiles.find_one(
                         {"userID": str(data.get("userID"))}).get('displayName')
+                    profilePicSignedUrl = read(db.Profiles.find_one(
+                        {"userID": str(data.get("userID"))}).get('imageKey'))
+                    try:
+                       profilePicSignedUrl
+                    except FileNotFoundError:
+                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
 
                     if data != None:
                         data = renamePost(data)
                         data['name'] = name
+                        data['profilePicSignedUrl'] = profilePicSignedUrl
                         response = {
                             "status": "success",
                             "data": json.dumps(data, default=lambda o: str(o))
@@ -280,9 +350,16 @@ def posts():
 
                 elif userID:
                     data = db.Posts.find({"userID": str(userID)})
+                    profilePicSignedUrl = read(db.Profiles.find_one(
+                        {"userID": userID}).get('imageKey'))
+                    try:
+                       profilePicSignedUrl
+                    except FileNotFoundError:
+                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
                     response = []
                     for item in data:
                         item['name'] = userIDtoName(item.get('userID'))
+                        item['profilePicSignedUrl'] = profilePicSignedUrl
                         item = renamePost(item)
                         response.append(item)
 
@@ -348,8 +425,11 @@ def posts():
                     profile = profileDict.get(item["userID"])
                     item['name'] = profile.get(
                         'displayName') if profile != None else None
-                    item['imageKey'] = profile.get(
-                        'imageKey') if profile != None else None
+                    try:
+                        item['profilePicSignedUrl'] = read(profile.get(
+                        'imageKey')) if profile != None else None
+                    except FileNotFoundError:
+                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
                     item = renamePost(item)
                     response.append(item)
 
@@ -443,16 +523,26 @@ def getPostById(userID):
 
         data = db.Posts.find({"userID": str(userID)}, sort=[
                              ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
+        profilePicSignedUrl = read(db.Profiles.find_one(
+                        {"userID": userID}).get('imageKey'))
+        profilePicSignedUrlDict = {}
+        profilePicSignedUrlDict["profilePicSignedUrl"] = str(profilePicSignedUrl)
+        list_combined = list(data) + list(profilePicSignedUrlDict.items())
+        try:
+            profilePicSignedUrl
+        except FileNotFoundError:
+            return make_response({"status": "failed", "message": "Profile picture not found"}), 404
         response = {
             "status": "success",
-            "data": json.dumps(list(data), default=lambda o: str(o))
+            "data": json.dumps(list_combined, default=lambda o: str(o))
         }
         
         if db.Profiles.find_one({"userID": userID}) == None:
             return make_response({"status": "failed", "message": "User does not exist"}), 404 
         else:
             return make_response(response, 200)
-    except TypeError:
+    except TypeError as e:
+        print(e)
         return make_response({"status": "failed", "message": "Expected a string input"}), 400
     except Exception as e:
         print(e)
@@ -528,8 +618,11 @@ def getOfficialPosts():
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
-            item['imageKey'] = profile.get(
-                'imageKey') if profile != None else None
+            try:
+                item['profilePicSignedUrl'] = read(profile.get(
+                'imageKey')) if profile != None else None
+            except FileNotFoundError:
+                return make_response({"status": "failed", "message": "Profile picture not found"}), 404
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
