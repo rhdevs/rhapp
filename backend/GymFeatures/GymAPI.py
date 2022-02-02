@@ -9,7 +9,7 @@ sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
 
-@gym_api.route("/")
+@gym_api.route("/", methods = ['GET'])
 def get_all_history():
     unix3days = 259200
     try:
