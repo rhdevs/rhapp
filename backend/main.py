@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 import os
 import pymongo
 from Social.SocialAPI import social_api
@@ -9,10 +9,10 @@ from Supper.SupperAPI import supper_api
 from Authentication.AuthenticationAPI import authentication_api
 from GymFeatures.GymAPI import gym_api
 from db import *
-from gevent.pywsgi import WSGIServer
+#from gevent.pywsgi import WSGIServer
 
 app = Flask(__name__)
-cors = CORS(app)
+#cors = CORS(app)
 app.config['CORS_HEADERS'] = "Content-Type"
 app.config['SECRET_KEY'] = AUTH_SECRET_KEY
 app.config['PASSWORD_RESET_SECRET'] = AUTH_PASSWORD_RESET_SECRET
@@ -30,6 +30,6 @@ def hello():
 
 
 if __name__ == "__main__":
-    #app.run("0.0.0.0", port=8080)
-    http_server = WSGIServer(('', 8080), app)
-    http_server.serve_forever()
+    app.run("0.0.0.0", port=8080)
+    #http_server = WSGIServer(('', 8080), app)
+    #http_server.serve_forever()

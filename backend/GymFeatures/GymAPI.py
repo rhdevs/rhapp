@@ -1,5 +1,5 @@
 from db import *
-from flask import Blueprint, make_response
+from flask import Blueprint, request, make_response
 import pymongo
 import sys
 from datetime import datetime
@@ -31,4 +31,23 @@ def get_all_history():
         return {"err":"An error has occured", "status":"failed"}, 500
 
     
+    return make_response(response)
+
+@gym_api.route("/status", methods=['GET'])
+def get_statuses():
+    try:
+        data = list(db.Gym.find({}, {"_id": 0, "gymStatus": 1, "keyStatus": 1}).sort("requesttime", -1))
+        response = {"data": data[0], "status": "success"}
+    except:
+        return {"message": "An error has occurred", "status": "failed"}, 500
+    return make_response(response)
+
+@gym_api.route("/gymstatus", methods=['POST'])
+def add_gymStatus():
+    try:
+        data = request.get_json(force=True)
+        response = {"status": "success"}
+        db.Gym.insert_one(data)
+    except:
+        return {"message": "An error has occurred", "failed": f"{data}"}, 500
     return make_response(response)
