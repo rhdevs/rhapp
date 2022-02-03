@@ -16,6 +16,7 @@ const MonthsHeaderContainer = styled.div`
   color: #58b994;
   margin-top: 10px;
   margin-left: 10px;
+  padding-bottom: 10px;
   font-weight: 600;
 `
 
