@@ -11,6 +11,10 @@ const CalenderContainer = styled.div`
   flex-direction: column;
 `
 
+const MonthContainer = styled.div`
+  padding-bottom: 40px;
+`
+
 const MonthsHeaderContainer = styled.div`
   width: 93px;
   color: #58b994;
@@ -56,33 +60,43 @@ export const Calendar = () => {
 
   return (
     <CalenderContainer>
-      <MonthsHeaderContainer>
-        {firstMonth} {currentYear}
-      </MonthsHeaderContainer>
-      <DatesGridContainer>
-        <DayHeaders />
-        <MonthlyContainer nthMonth={0} eventDates={processedDates} />
-      </DatesGridContainer>
-      <MonthsHeaderContainer>{secondMonth}</MonthsHeaderContainer>
-      <DatesGridContainer>
-        <DayHeaders />
-        <MonthlyContainer nthMonth={1} eventDates={processedDates} />
-      </DatesGridContainer>
-      <MonthsHeaderContainer>{thirdMonth}</MonthsHeaderContainer>
-      <DatesGridContainer>
-        <DayHeaders />
-        <MonthlyContainer nthMonth={2} eventDates={processedDates} />
-      </DatesGridContainer>
-      <MonthsHeaderContainer>{fourthMonth}</MonthsHeaderContainer>
-      <DatesGridContainer>
-        <DayHeaders />
-        <MonthlyContainer nthMonth={3} eventDates={processedDates} />
-      </DatesGridContainer>
-      <MonthsHeaderContainer>{fifthMonth}</MonthsHeaderContainer>
-      <DatesGridContainer>
-        <DayHeaders />
-        <MonthlyContainer nthMonth={4} eventDates={processedDates} />
-      </DatesGridContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>
+          {firstMonth} {currentYear}
+        </MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={0} eventDates={processedDates} />
+        </DatesGridContainer>
+      </MonthContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{secondMonth}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={1} eventDates={processedDates} />
+        </DatesGridContainer>
+      </MonthContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{thirdMonth}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={2} eventDates={processedDates} />
+        </DatesGridContainer>
+      </MonthContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{fourthMonth}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={3} eventDates={processedDates} />
+        </DatesGridContainer>
+      </MonthContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{fifthMonth}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={4} eventDates={processedDates} />
+        </DatesGridContainer>
+      </MonthContainer>
     </CalenderContainer>
   )
 }
