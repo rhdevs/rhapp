@@ -25,7 +25,7 @@ const MainContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   padding: 15px;
-  box-shadow: 0 2px 5px 1px #888888;
+  box-shadow: 0px 2px 5px 1px #888888;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -36,6 +36,7 @@ const TitleContainer = styled.div<{ flex?: boolean }>`
 `
 
 const TitleText = styled.text`
+  font-family: Inter;
   font-size: 16px;
   font-weight: 400;
 `
