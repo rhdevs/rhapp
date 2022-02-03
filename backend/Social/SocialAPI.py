@@ -80,9 +80,8 @@ def users():
        
         if len(userIdList) == 0:
             return make_response({"err": "userID is not specified", "status": "failed"}), 400 # throws error if userID is not specified in argument
-        for userID in userIdList:
-            if db.Profiles.find_one({"userID": userID}) == None:
-                return make_response({"err": "userID does not exist", "status": "failed"}), 400 # throws error if at least one userID entry in argument does not exist 
+        elif db.Profiles.count_documents({"userID": {'$in': userIdList}}) == 0:
+            return make_response({"err": "User does not exist", "status": "failed"}), 404 # throws error if all userID entries in argument do not exist 
         else:
             return make_response(response, 200)
     except Exception as e:
