@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
 
-const DateContainer = styled.div<{ blurred?: boolean; selected?: boolean; currentDate?: boolean }>`
+const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   font-size: 12px;
   padding-top: auto;
   padding-bottom: auto;
   text-align: center;
   height: 40px;
   width: 47.14px;
-  color: ${(prop) =>
-    prop.blurred && !prop.currentDate ? '#d4d4d4' : prop.selected ? 'white' : prop.currentDate ? '#58B994' : ''};
+  color: ${(prop) => (prop.selected ? 'white' : prop.currentDate ? '#58B994' : '')};
   border-radius: 40px;
   background-color: ${(prop) => (prop.selected ? '#468751' : !prop.selected && prop.currentDate ? '#D8E6DF' : '')};
   display: flex;
@@ -30,7 +29,6 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
 
 export const ClickableDateContainer = (props: {
   date: number
-  isBlurred?: boolean
   eventPresent?: boolean
   assignedMonth: number
   eventDates: number[]
@@ -60,15 +58,8 @@ export const ClickableDateContainer = (props: {
 
   checkCurrentDate()
 
-  return props.isBlurred ? (
-    <DateContainer />
-  ) : (
-    <DateContainer
-      onClick={DateContainerClickHandler}
-      blurred={props.isBlurred}
-      selected={dateSelected}
-      currentDate={checkCurrentDate() && !props.isBlurred}
-    >
+  return (
+    <DateContainer onClick={DateContainerClickHandler} selected={dateSelected} currentDate={checkCurrentDate()}>
       <EventIndicator selected={dateSelected} eventPresent={checkEventPresence()} />
       {props.date}
     </DateContainer>
