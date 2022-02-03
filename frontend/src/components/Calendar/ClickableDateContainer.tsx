@@ -60,7 +60,9 @@ export const ClickableDateContainer = (props: {
 
   checkCurrentDate()
 
-  return (
+  return props.isBlurred ? (
+    <DateContainer />
+  ) : (
     <DateContainer
       onClick={DateContainerClickHandler}
       blurred={props.isBlurred}

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import React from 'react'
 
 import { ClickableDateContainer } from './ClickableDateContainer'
+import { EmptyDateContainer } from './EmptyDateContainer'
 
 export const FirstLastDateRow = (
   firstDayOfThisMonth: number,
@@ -18,133 +19,76 @@ export const FirstLastDateRow = (
 
   return firstRow ? (
     <>
-      <ClickableDateContainer
-        date={firstDateToPut++}
-        isBlurred={true}
-        assignedMonth={assignedMonth - 1}
-        eventDates={eventDates}
-      />
-      {firstDateToPut > lastDateOfPreviousMonth ? (
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
         <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
       ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
+        <EmptyDateContainer />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      ) : (
+        <EmptyDateContainer />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      ) : (
+        <EmptyDateContainer />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      ) : (
+        <EmptyDateContainer />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      ) : (
+        <EmptyDateContainer />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      ) : (
+        <EmptyDateContainer />
       )}
       {firstDateToPut > lastDateOfPreviousMonth ? (
         <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
       ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
-      )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
-      ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
-      )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
-      ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
-      )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
-      ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
-      )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer date={newMonthDate++} assignedMonth={assignedMonth} eventDates={eventDates} />
-      ) : (
-        <ClickableDateContainer
-          date={firstDateToPut++}
-          isBlurred={true}
-          assignedMonth={assignedMonth - 1}
-          eventDates={eventDates}
-        />
+        <EmptyDateContainer />
       )}
     </>
   ) : (
     <>
-      <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut > lastDateOfPreviousMonth ? (
-        <ClickableDateContainer
-          date={newMonthDate++}
-          isBlurred={true}
-          assignedMonth={assignedMonth + 1}
-          eventDates={eventDates}
-        />
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
+      ) : (
+        <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
+      )}
+      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+        <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
