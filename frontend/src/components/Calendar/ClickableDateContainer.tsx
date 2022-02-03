@@ -24,7 +24,7 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   height: 7px;
   width: 7px;
   border-radius: 50%;
-  background-color: ${(prop) => (prop.selected ? '' : '#468751')};
+  background-color: ${(prop) => (prop.selected ? 'white' : '#468751')};
 `
 
 export const ClickableDateContainer = (props: {
