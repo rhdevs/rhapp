@@ -93,7 +93,6 @@ def getUserProfile(userID):
             "data": list(data),
             "status": "success"
         }
-        print(list(data))
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
