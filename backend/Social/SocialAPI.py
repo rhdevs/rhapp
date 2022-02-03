@@ -93,11 +93,12 @@ def getUserProfile(userID):
             "data": list(data),
             "status": "success"
         }
+        print(list(data))
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-    if response["data"] == []:
-        return make_response({"err": "userID does not exist", "status":"failed"}), 400
+    if db.Profiles.count_documents({"userID": userID}) == 0:
+        return make_response({"err": "User does not exist", "status":"failed"}), 404
     else:
         return make_response(response, 200)
         
