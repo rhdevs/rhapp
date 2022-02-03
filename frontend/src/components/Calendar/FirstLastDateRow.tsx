@@ -57,37 +57,37 @@ export const FirstLastDateRow = (
     </>
   ) : (
     <>
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
       )}
-      {firstDateToPut++ > lastDateOfPreviousMonth ? (
+      {firstDateToPut > lastDateOfPreviousMonth ? (
         <EmptyDateContainer />
       ) : (
         <ClickableDateContainer date={firstDateToPut++} assignedMonth={assignedMonth} eventDates={eventDates} />
