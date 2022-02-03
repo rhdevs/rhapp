@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'antd'
+import Button from '../Button'
 import styled from 'styled-components'
 
 import 'antd/dist/antd.css'
@@ -39,6 +39,7 @@ const TitleContainer = styled.div<{ flex?: boolean }>`
 `
 
 const TitleText = styled.h1`
+  font-family: Lato;
   font-size: 16px;
   font-weight: 400;
 `
@@ -53,38 +54,21 @@ const DescriptionText = styled.p`
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-evenly;
+  width: 100%;
   margin-top: 10px;
-`
-
-const StyledButton = styled(Button)<{ defaultRightButtonColor: string; defaultRightButtonTextColor: string }>`
-  background: ${(props) => props.defaultRightButtonColor};
-  color: ${(props) => props.defaultRightButtonTextColor};
-  border-radius: 5px;
-  margin-left: 10px;
-
-  &.ant-btn:hover,
-  &.ant-btn:focus {
-    color: ${(props) => (props.defaultRightButtonTextColor ? props.defaultRightButtonTextColor : 'black')};
-    border-color: #d9d9d9;
-    ${(props) => props.defaultRightButtonColor && `background: ${props.defaultRightButtonColor};`}
-  }
 `
 
 type Props = {
   title: string
   description?: string | JSX.Element
   // Left Button Props
-  hasLeftButton?: boolean
+  leftButtonType: 'primary' | 'secondary'
   leftButtonText: string
-  leftButtonTextColor?: string
-  leftButtonColor?: string
   onLeftButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Right Button Props
+  rightButtonType: 'primary' | 'secondary'
   rightButtonText: string
-  rightButtonTextColor?: string
-  rightButtonColor?: string
   onRightButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Overlay Props
   // Pass function to do something when the overlay around the modal is clicked
@@ -107,10 +91,6 @@ type Props = {
 
 export function ConfirmationModal(props: Props) {
   // Checks for custom buttom styles, otherwise uses default
-  const defaultLeftButtonColor = props.leftButtonColor ?? '#DE5F4C'
-  const defaultLeftButtonTextColor = props.leftButtonTextColor ?? '#FFFFFF'
-  const defaultRightButtonColor = props.rightButtonColor ?? '#FAFAF4'
-  const defaultRightButtonTextColor = props.rightButtonTextColor ?? '#000000'
   const defaultOverlayBackground = props.overlayBackground ?? 'rgba(0, 0, 0, 0.3)'
 
   return (
@@ -135,27 +115,8 @@ export function ConfirmationModal(props: Props) {
         </TitleContainer>
         <DescriptionText>{props.description}</DescriptionText>
         <ButtonContainer>
-          {props.hasLeftButton && (
-            <Button
-              style={{
-                background: defaultLeftButtonColor,
-                color: defaultLeftButtonTextColor,
-                borderRadius: '5px',
-                border: defaultLeftButtonColor,
-              }}
-              onClick={props.onLeftButtonClick}
-            >
-              {props.leftButtonText}
-            </Button>
-          )}
-          <StyledButton
-            defaultRightButtonColor={defaultRightButtonColor}
-            defaultRightButtonTextColor={defaultRightButtonTextColor}
-            onClick={props.onRightButtonClick}
-            htmlType={props.rightButtonHtmlType}
-          >
-            {props.rightButtonText}
-          </StyledButton>
+          <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
+          <Button state={props.rightButtonType} onClick={props.onRightButtonClick} text={props.rightButtonText} />
         </ButtonContainer>
       </MainContainer>
     </>

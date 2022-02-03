@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 const Border = styled.button<{ state: string }>`
   height: 2.2rem;
-  width: 10vw;
+  width: 10rem;
   border: transparent;
   border-radius: 2rem;
-  padding-left: 0rem;
-  padding-right: 0rem;
+  padding-left: 0;
+  padding-right: 0;
   background: linear-gradient(to left, #72ba75, #58b994);
 
   &:active {
@@ -31,12 +31,12 @@ const Inner = styled.button<{ state: string }>`
 type Props = {
   state: 'primary' | 'secondary'
   text: string
-  onClick: () => void
+  onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function ButtonComponent(prop: Props) {
   return (
-    <Border onClick={() => prop.onClick()} state={prop.state}>
+    <Border onClick={prop.onClick} state={prop.state}>
       <Inner state={prop.state}>{prop.text}</Inner>
     </Border>
   )
