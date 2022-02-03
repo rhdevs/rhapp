@@ -11,6 +11,14 @@ const CalenderContainer = styled.div`
   flex-direction: column;
 `
 
+const YearContainer = styled.div`
+  width: calc(47.14px * 7);
+  font-weight: 600;
+  color: #58b994;
+  text-align: center;
+  padding-top: 10px;
+`
+
 const MonthContainer = styled.div`
   padding-bottom: 5px;
 `
@@ -60,10 +68,9 @@ export const Calendar = () => {
 
   return (
     <CalenderContainer>
+      <YearContainer>{currentYear}</YearContainer>
       <MonthContainer>
-        <MonthsHeaderContainer>
-          {firstMonth} {currentYear}
-        </MonthsHeaderContainer>
+        <MonthsHeaderContainer>{firstMonth}</MonthsHeaderContainer>
         <DatesGridContainer>
           <DayHeaders />
           <MonthlyContainer nthMonth={0} eventDates={processedDates} />
