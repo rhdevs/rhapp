@@ -12,7 +12,7 @@ const CalenderContainer = styled.div`
 `
 
 const MonthContainer = styled.div`
-  padding-bottom: 40px;
+  padding-bottom: 5px;
 `
 
 const MonthsHeaderContainer = styled.div`
@@ -20,7 +20,7 @@ const MonthsHeaderContainer = styled.div`
   color: #58b994;
   margin-top: 10px;
   margin-left: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   font-weight: 600;
 `
 
