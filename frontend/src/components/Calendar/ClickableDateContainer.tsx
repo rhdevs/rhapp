@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   font-size: 12px;
-  padding-top: auto;
+  padding-top: 0px;
   padding-bottom: auto;
   text-align: center;
   height: 40px;
@@ -14,13 +14,14 @@ const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  z-index: 0;
 `
 
 const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
   display: ${(prop) => (prop.eventPresent ? 'block' : 'none')};
-  position: absolute;
   align-self: center;
-  margin-top: -24px;
+  margin-top: -6px;
+  margin-bottom: -1px;
   height: 7px;
   width: 7px;
   border-radius: 50%;
