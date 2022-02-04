@@ -17,7 +17,7 @@ def get_all_history():
     unix3days = 259200
     try:
         pipeline1 = [{"$addFields":{'date_diff': {"$subtract" : [int(time.time()), '$requesttime']}}},
-            {"$project":{"_id":0,'userID': 1, 'telegramHandle':1, 'requesttime':1, 'keyStatus':1, 'gymStatus':1, 'lte3days': {"$toString":{"$lte" : ["$date_diff",unix3days]}}}},
+            {"$project":{"_id":0,'userID': 1, 'telegramHandle':1, 'requesttime':1, 'keyStatus':1, 'gymIsOpen':1, 'lte3days': {"$toString":{"$lte" : ["$date_diff",unix3days]}}}},
             {"$match":{'lte3days':"true"}},
             {"$project":{'lte3days':0}}]
 
@@ -36,7 +36,7 @@ def get_all_history():
 @gym_api.route("/status", methods=['GET'])
 def get_statuses():
     try:
-        data = list(db.Gym.find({}, {"_id": 0, "gymStatus": 1, "keyStatus": 1}).sort("requesttime", -1))
+        data = list(db.Gym.find({}, {"_id": 0, "gymIsOpen": 1, "keyStatus": 1}).sort("requesttime", -1))
         response = {"data": data[0], "status": "success"}
     except:
         return {"err": "An error has occurred", "status": "failed"}, 500
@@ -48,7 +48,7 @@ def move_key():
         formData = request.get_json()
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
-        insert_data["gymStatus"] = data["gymStatus"]
+        insert_data["gymIsOpen"] = data["gymIsOpen"]
         insert_data["keyStatus"] = formData["keyStatus"]
         insert_data["telegramHandle"] = formData["telegramHandle"]
         insert_data["userID"] = formData["userID"]
@@ -66,7 +66,7 @@ def toggle_gym():
         formData = request.get_json()
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
-        insert_data["gymStatus"] = not data["gymStatus"]
+        insert_data["gymIsOpen"] = not data["gymIsOpen"]
         insert_data["keyStatus"] = formData["telegramHandle"]
         insert_data["telegramHandle"] = formData["telegramHandle"]
         insert_data["userID"] = formData["userID"]
@@ -78,8 +78,8 @@ def toggle_gym():
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
-@gym_api.route("/gymstatus", methods=['POST'])
-def add_gymStatus():
+@gym_api.route("/gymIsOpen", methods=['POST'])
+def add_gymIsOpen():
     try:
         data = request.get_json(force=True)
         response = {"status": "success"}
