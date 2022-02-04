@@ -66,7 +66,7 @@ def toggle_gym():
         formData = request.get_json()
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
-        insert_data["gymIsOpen"] = not data["gymIsOpen"]
+        insert_data["gymIsOpen"] = not formData["gymIsOpen"]
         insert_data["keyStatus"] = formData["telegramHandle"]
         insert_data["telegramHandle"] = formData["telegramHandle"]
         insert_data["userID"] = formData["userID"]
