@@ -45,7 +45,7 @@ export const Calendar = () => {
   const eventDays: number[] = [1644072529, 1646491729, 1648565329, 1648910929]
 
   // dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
-  const processedDates: number[] = [301, 303, 331, 131]
+  const processedDates: number[] = [204, 301, 303, 331, 131]
 
   // conert unix dates into component friendly format
   const convertDates = (unprocessedDate: number) => {
@@ -60,6 +60,7 @@ export const Calendar = () => {
 
   const today = new Date()
   const currentYear = today.getFullYear()
+  const Jan = new Date('January 1, 2000 01:00:00').toDateString().slice(4, -7)
   const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1).toDateString().slice(4, -7)
   const secondMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1).toDateString().slice(4, -7)
   const thirdMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1).toDateString().slice(4, -7)
@@ -76,6 +77,7 @@ export const Calendar = () => {
           <MonthlyContainer nthMonth={0} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
+      {secondMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
       <MonthContainer>
         <MonthsHeaderContainer>{secondMonth}</MonthsHeaderContainer>
         <DatesGridContainer>
@@ -83,6 +85,7 @@ export const Calendar = () => {
           <MonthlyContainer nthMonth={1} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
+      {thirdMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
       <MonthContainer>
         <MonthsHeaderContainer>{thirdMonth}</MonthsHeaderContainer>
         <DatesGridContainer>
@@ -90,6 +93,7 @@ export const Calendar = () => {
           <MonthlyContainer nthMonth={2} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
+      {fourthMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
       <MonthContainer>
         <MonthsHeaderContainer>{fourthMonth}</MonthsHeaderContainer>
         <DatesGridContainer>
@@ -97,6 +101,7 @@ export const Calendar = () => {
           <MonthlyContainer nthMonth={3} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
+      {fifthMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
       <MonthContainer>
         <MonthsHeaderContainer>{fifthMonth}</MonthsHeaderContainer>
         <DatesGridContainer>
