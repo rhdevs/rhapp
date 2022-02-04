@@ -18,7 +18,6 @@ import calendar_icon from '../../assets/calenderIconSelected.svg'
 import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
-import GymNavBar from '../../components/GymNavBar'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -178,7 +177,6 @@ export default function Home() {
             </ActionButton>
           ))}
         </ButtonGroup>
-        <GymNavBar />
         <SocialSection />
         <BottomNavBar />
       </PullToRefresh>
