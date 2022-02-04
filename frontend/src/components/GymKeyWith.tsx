@@ -35,6 +35,11 @@ const Container = styled.div`
   padding-top: 20px;
 `
 
+const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 interface Props {
   name?: string
   handle?: string
@@ -45,7 +50,9 @@ function GymKeyWith(props: Props) {
   return (
     <>
       <Header>Key With</Header>
-      <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="25%" />
+      <ImageContainer>
+        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="25%" />
+      </ImageContainer>
       <Container>
         <InfoArea> {props.name ?? 'Andy'} </InfoArea>
         <InfoArea> {props.handle ?? '@andy333'} </InfoArea>
