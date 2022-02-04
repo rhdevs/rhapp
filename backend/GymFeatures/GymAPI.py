@@ -59,6 +59,24 @@ def move_key():
     except Exception as e:
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
+    
+@gym_api.route("/returnkey", methods = ["POST"])
+def return_key():
+    try:
+        formData = request.get_json()
+        data = db.Gym.find().sort('_id',-1).limit(1).next()
+        insert_data = {}
+        insert_data["gymIsOpen"] = data["gymIsOpen"]
+        insert_data["keyStatus"] = DEFAULT_KEY_LOC
+        insert_data["telegramHandle"] = formData["telegramHandle"]
+        insert_data["userID"] = formData["userID"]
+        insert_data["requesttime"] = int(time.time())
+        db.Gym.insert_one(insert_data)
+        response = {"status":"success"}
+        return make_response(response)
+    except Exception as e:
+        print(e)
+        return {"err":"An error has occured", "status":"failed"}, 500
 
 @gym_api.route("/togglegym", methods = ["POST"])
 def toggle_gym():
