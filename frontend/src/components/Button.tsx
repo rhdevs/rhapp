@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Border = styled.button<{ state: string }>`
+const Border = styled.button<{ state: 'primary' | 'secondary' }>`
   height: 2.2rem;
   width: 10rem;
   border: transparent;
   border-radius: 2rem;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
   background: linear-gradient(to left, #72ba75, #58b994);
 
   &:active {
@@ -15,7 +14,8 @@ const Border = styled.button<{ state: string }>`
     transform: scale(0.95);
   }
 `
-const Inner = styled.button<{ state: string }>`
+
+const Inner = styled.button<{ state: 'primary' | 'secondary' }>`
   height: 98%;
   width: 98%;
   border-radius: 2rem;
@@ -28,6 +28,7 @@ const Inner = styled.button<{ state: string }>`
     color: #8b8b8b;
   }
 `
+
 type Props = {
   state: 'primary' | 'secondary'
   text: string
