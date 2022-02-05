@@ -12,9 +12,12 @@ export const FirstLastDateRow = (
 ) => {
   let newMonthDate = 1
   let firstDateToPut = lastDateOfPreviousMonth - firstDayOfThisMonth + 2
+  console.log(firstDayOfThisMonth)
   if (firstDayOfThisMonth == 0) {
     firstDateToPut = lastDateOfPreviousMonth - 5
   }
+
+  const days: number[] = [1, 2, 4, 5, 6, 7]
 
   return firstRow ? (
     <>

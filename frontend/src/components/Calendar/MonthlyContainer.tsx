@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import React from 'react'
 
-import { FirstLastDateRow } from './FirstLastDateRow'
 import { MiddleDateRows } from './MiddleDateRows'
 
 export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[] }) => {
@@ -10,14 +9,28 @@ export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[]
   const assignedMonth = today.getMonth() + props.nthMonth + 1
   const firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth() + props.nthMonth, 1).getDay()
   const lastDateOfThisMonth = new Date(today.getFullYear(), today.getMonth() + 1 + props.nthMonth, 0).getDate()
-  const firstDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1 + props.nthMonth, 1).getDay()
-  const lastDateOfPreviousMonth = new Date(today.getFullYear(), today.getMonth() + props.nthMonth, 0).getDate()
-  const startingDateForMiddleRow = firstDateOfThisMonth + 8 - firstDayOfThisMonth
+  const bufferDates: number[] = []
+
+  if (firstDayOfThisMonth === 0) {
+    for (let i = 1; i < 7; i++) {
+      bufferDates.push(0)
+    }
+  } else {
+    for (let i = 1; i < firstDayOfThisMonth; i++) {
+      bufferDates.push(0)
+    }
+  }
+
   return (
     <>
-      {FirstLastDateRow(firstDayOfThisMonth, lastDateOfPreviousMonth, true, assignedMonth, props.eventDates)}
-      {MiddleDateRows(startingDateForMiddleRow, assignedMonth, props.eventDates)}
-      {FirstLastDateRow(firstDayOfNextMonth, lastDateOfThisMonth, false, assignedMonth, props.eventDates)}
+      {MiddleDateRows(
+        firstDateOfThisMonth,
+        assignedMonth,
+        props.eventDates,
+        firstDayOfThisMonth,
+        lastDateOfThisMonth,
+        bufferDates,
+      )}
     </>
   )
 }

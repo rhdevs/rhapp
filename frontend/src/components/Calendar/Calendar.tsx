@@ -58,56 +58,53 @@ export const Calendar = () => {
   eventDays.forEach((date) => convertDates(date))
 
   const today = new Date()
+  let startingMonth = 0
   const currentYear = today.getFullYear()
-  const Jan = new Date('January 1, 2000 01:00:00').toDateString().slice(4, -7)
-  const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1).toDateString().slice(4, -7)
-  const secondMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1).toDateString().slice(4, -7)
-  const thirdMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1).toDateString().slice(4, -7)
-  const fourthMonth = new Date(today.getFullYear(), today.getMonth() + 3, 1).toDateString().slice(4, -7)
-  const fifthMonth = new Date(today.getFullYear(), today.getMonth() + 4, 1).toDateString().slice(4, -7)
+  const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  const secondMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
+  const thirdMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1)
+  const fourthMonth = new Date(today.getFullYear(), today.getMonth() + 3, 1)
+  const fifthMonth = new Date(today.getFullYear(), today.getMonth() + 4, 1)
+  const monthLists: Date[] = [secondMonth, thirdMonth, fourthMonth, fifthMonth]
 
   return (
     <CalenderContainer>
       <YearContainer>{currentYear}</YearContainer>
       <MonthContainer>
-        <MonthsHeaderContainer>{firstMonth}</MonthsHeaderContainer>
+        <MonthsHeaderContainer>{firstMonth.toDateString().slice(4, -7)}</MonthsHeaderContainer>
         <DatesGridContainer>
           <DayHeaders />
-          <MonthlyContainer nthMonth={0} eventDates={processedDates} />
+          <MonthlyContainer nthMonth={startingMonth++} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
-      {secondMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
-      <MonthContainer>
-        <MonthsHeaderContainer>{secondMonth}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <MonthlyContainer nthMonth={1} eventDates={processedDates} />
-        </DatesGridContainer>
-      </MonthContainer>
-      {thirdMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
-      <MonthContainer>
-        <MonthsHeaderContainer>{thirdMonth}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <MonthlyContainer nthMonth={2} eventDates={processedDates} />
-        </DatesGridContainer>
-      </MonthContainer>
-      {fourthMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
-      <MonthContainer>
-        <MonthsHeaderContainer>{fourthMonth}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <MonthlyContainer nthMonth={3} eventDates={processedDates} />
-        </DatesGridContainer>
-      </MonthContainer>
-      {fifthMonth === Jan && <>{<YearContainer>{currentYear + 1}</YearContainer>}</>}
-      <MonthContainer>
-        <MonthsHeaderContainer>{fifthMonth}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <MonthlyContainer nthMonth={4} eventDates={processedDates} />
-        </DatesGridContainer>
-      </MonthContainer>
+      <>
+        {monthLists.map((month) => {
+          if (month.getMonth() === 0) {
+            // Note: 0 stands for Jan
+            return (
+              <>
+                <YearContainer>{currentYear + 1}</YearContainer>
+                <MonthContainer key={startingMonth++}>
+                  <MonthsHeaderContainer>{month.toDateString().slice(4, -7)}</MonthsHeaderContainer>
+                  <DatesGridContainer>
+                    <DayHeaders />
+                    <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
+                  </DatesGridContainer>
+                </MonthContainer>
+              </>
+            )
+          }
+          return (
+            <MonthContainer key={startingMonth++}>
+              <MonthsHeaderContainer>{month.toDateString().slice(4, -7)}</MonthsHeaderContainer>
+              <DatesGridContainer>
+                <DayHeaders />
+                <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
+              </DatesGridContainer>
+            </MonthContainer>
+          )
+        })}
+      </>
     </CalenderContainer>
   )
 }
