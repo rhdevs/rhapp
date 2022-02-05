@@ -56,8 +56,6 @@ export const ClickableDateContainer = (props: {
     }
   }
 
-  checkCurrentDate()
-
   return (
     <DateContainer onClick={DateContainerClickHandler} selected={dateSelected} currentDate={checkCurrentDate()}>
       <EventIndicator selected={dateSelected} eventPresent={checkEventPresence()} />
