@@ -8,15 +8,13 @@ const DayContainer = styled.div`
 `
 
 export const DayHeaders = () => {
+  const Days: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
   return (
     <>
-      <DayContainer>Mon</DayContainer>
-      <DayContainer>Tue</DayContainer>
-      <DayContainer>Wed</DayContainer>
-      <DayContainer>Thu</DayContainer>
-      <DayContainer>Fri</DayContainer>
-      <DayContainer>Sat</DayContainer>
-      <DayContainer>Sun</DayContainer>
+      {Days.map((day) => {
+        return <DayContainer key={day}>{day}</DayContainer>
+      })}
     </>
   )
 }
