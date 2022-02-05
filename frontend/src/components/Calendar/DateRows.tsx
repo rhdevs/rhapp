@@ -2,11 +2,10 @@ import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
 
-export const MiddleDateRows = (
+export const dateRows = (
   firstDate: number,
   assignedMonth: number,
   eventDates: number[],
-  firstDayOfThisMonth: number,
   lastDateOfThisMonth: number,
   bufferDates: number[],
 ) => {

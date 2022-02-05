@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
 
-import { MiddleDateRows } from './MiddleDateRows'
+import { dateRows } from './DateRows'
 
 export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[] }) => {
   const today = new Date()
@@ -21,16 +21,5 @@ export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[]
     }
   }
 
-  return (
-    <>
-      {MiddleDateRows(
-        firstDateOfThisMonth,
-        assignedMonth,
-        props.eventDates,
-        firstDayOfThisMonth,
-        lastDateOfThisMonth,
-        bufferDates,
-      )}
-    </>
-  )
+  return <>{dateRows(firstDateOfThisMonth, assignedMonth, props.eventDates, lastDateOfThisMonth, bufferDates)}</>
 }
