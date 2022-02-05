@@ -12,28 +12,43 @@ sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
 DEFAULT_KEY_LOC = "5-409"
+DEFAULT_DISPLAY_NAME = "smchead"
 
 @gym_api.route("/", methods = ['GET'])
 def get_all_history():
     try:
-        data = list(db.Gym.find({},{"_id":0}).sort("requettime",1))
+        data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
         data = pd.DataFrame(data)
-        checktelegramHandle = (data["telegramHandle"] == data["telegramHandle"].shift(-1))
+        checkuserID = (data["userID"] == data["userID"].shift(-1))
         checkrequesttime = data['requesttime'].shift(-1) - data['requesttime'] <= 60
-        data = data[~((checktelegramHandle) & (checkrequesttime))].tail(10)
+        data = data[~((checkuserID) & (checkrequesttime))].tail(10)
+        data = data.drop('userID', axis = 1)
         data = data.to_dict('records')
+        
         response = {"status":"success","data":data}
 
     except Exception as e:
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
+    
     return make_response(response)
 
 @gym_api.route("/status", methods=['GET'])
 def get_statuses():
     try:
-        data = list(db.Gym.find({}, {"_id": 0, "gymIsOpen": 1, "keyStatus": 1}).sort("requesttime", -1))
-        response = {"data": data[0], "status": "success"}
+        data = list(db.Gym.find({}, {"_id": 0, "requesttime": 0}).sort("requesttime", -1))[0]
+        if data['keyStatus'] == DEFAULT_KEY_LOC:
+            data.pop('userID')
+            data['displayName'] = DEFAULT_KEY_LOC
+            data['keyStatus'] = DEFAULT_DISPLAY_NAME
+
+        else:
+            lastLoc = data['keyStatus']
+            userDetails = list(db.User.find({"telegramHandle":lastLoc}))
+            data.pop('userID')
+            data['displayName'] = userDetails[0]['displayName']
+        data = [data]
+        response = {"data": data, "status": "success"}
     except:
         return {"err": "An error has occurred", "status": "failed"}, 500
     return make_response(response)
