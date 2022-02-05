@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/types'
-import { PATHS } from '../routes/Routes'
-import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
-import { months, days } from '../common/dates'
-import { get24Hourtime } from '../common/get24HourTime'
-import { openUserTelegram } from '../common/telegramMethods'
 import { onRefresh } from '../common/reloadPage'
 import BookingCard from './BookingCard'
 import PullToRefresh from 'pull-to-refresh-react'
 import LoadingSpin from './LoadingSpin'
 import {
-  createNewBookingFromFacility,
   fetchFacilityNameFromID,
   getAllBookingsForFacility,
   SetIsLoading,
@@ -34,18 +28,10 @@ const MainContainer = styled.div`
 
 export default function ViewConflict() {
   const dispatch = useDispatch()
-  const history = useHistory()
   const params = useParams<{ facilityID: string }>()
-  const {
-    ViewStartDate,
-    ViewEndDate,
-    createSuccess,
-    createFailure,
-    isLoading,
-    facilityBookings,
-    selectedFacilityName,
-    selectedFacilityId,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const { ViewStartDate, ViewEndDate, isLoading, selectedFacilityId } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
   useEffect(() => {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))

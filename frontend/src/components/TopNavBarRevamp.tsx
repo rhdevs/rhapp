@@ -22,9 +22,9 @@ const StyledNavBar = styled(NavBar)`
     height: 70px;
     background-color: #ffffff; !important
   }
-  max-width:100%;
+  max-width: 100%;
   position: sticky;
-  top:0;
+  top: 0;
   z-index: 200;
   display: flex;
   flex-direction: row;
