@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
+import { eventDays, processedDates } from './../../store/stubs'
 
 const CalenderContainer = styled.div`
   display: flex;
@@ -39,13 +40,6 @@ const DatesGridContainer = styled.div`
 
 // this component takes in an array of events or an array of dates that has events
 export const Calendar = () => {
-  // event dates are stored as UNIX format
-  // dummy dates with events : 5th Feb, 5th Mar, 29th Mar, 2nd Apr
-  const eventDays: number[] = [1644072529, 1646491729, 1648565329, 1648910929]
-
-  // dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
-  const processedDates: number[] = [204, 301, 303, 331, 131]
-
   // conert unix dates into component friendly format
   const convertDates = (unprocessedDate: number) => {
     const month = new Date(unprocessedDate * 1000).getMonth() + 1
