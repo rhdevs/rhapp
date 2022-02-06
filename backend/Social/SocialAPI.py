@@ -100,9 +100,11 @@ def getUserProfile(userID):
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-
-    return make_response(response, 200)
-
+    if db.Profiles.count_documents({"userID": userID}) == 0:
+        return make_response({"err": "User does not exist", "status":"failed"}), 404
+    else:
+        return make_response(response, 200)
+        
 
 @social_api.route("/user", methods=['PUT', 'POST'])
 @cross_origin(supports_credentials=True)
