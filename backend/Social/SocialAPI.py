@@ -74,15 +74,19 @@ def users():
     try:
         data = db.Profiles.find({"userID": {'$in': userIdList}}, {"_id": 0})
         response = {
-            "data": list(data),
-            "status": "success"
-        }
-        return make_response(response, 400)
+                 "data": list(data),
+                 "status": "success"
+             }
+        print(userIdList)
+        if len(userIdList) == 1 and userIdList[0] == "":
+            return make_response({"err": "userID is not specified", "status": "failed"}), 400 # throws error if userID is not specified in argument
+        elif db.Profiles.count_documents({"userID": {'$in': userIdList}}) == 0:
+            return make_response({"err": "User does not exist", "status": "failed"}), 404 # throws error if all userID entries in argument do not exist 
+        else:
+            return make_response(response, 200)
     except Exception as e:
         print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response, 200)
-
+        return {"err": "An error has occurred", "status": "failed"}, 500
 
 @social_api.route("/profile/<string:userID>")
 @cross_origin(supports_credentials=True)
