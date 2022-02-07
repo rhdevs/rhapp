@@ -422,7 +422,7 @@ def delete_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_telegram(userID):
     try:
-        profile = db.User.find_one({"userID": userID})
+        profile = db.User.find_one({"userID": userID}, {"passwordHash": 0})
         telegramHandle = profile.get(
             'telegramHandle') if profile else "No User Found"
 

@@ -36,7 +36,7 @@ def profiles():
     try:
         '''
         if request.method == 'GET':
-            data = db.User.find()
+            data = db.User.find()   # note that this code returns passwordHash of the user.
             response = {
                 "status": "success",
                 "data": json.dumps(list(data), default=lambda o: str(o))
@@ -72,7 +72,7 @@ def profiles():
 def users():
     userIdList = request.args.getlist('userID')
     try:
-        data = db.User.find({"userID": {'$in': userIdList}}, {"_id": 0})
+        data = db.User.find({"userID": {'$in': userIdList}}, {"_id": 0, "passwordHash": 0})
         response = {
             "data": list(data),
             "status": "success"
@@ -88,7 +88,7 @@ def users():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.User.find({"userID": userID}, {"_id": 0})
+        data = db.User.find({"userID": userID}, {"_id": 0, "passwordHash": 0})
         response = {
             "data": list(data),
             "status": "success"
@@ -181,7 +181,7 @@ def getUserDetails(userID):
                         'as': 'positions'
             }
             },
-            {'$project': {'positions.category': 0, 'positions._id': 0, 'position': 0}}
+            {'$project': {'positions.category': 0, 'positions._id': 0, 'position': 0, 'passwordHash': 0}}
         ]
 
         data = db.User.aggregate(pipeline)
@@ -210,7 +210,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.User.find_one({"userID": userID})
+    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0})
     name = profile.get('displayName') if profile else None
     return name
 
@@ -228,7 +228,7 @@ def posts():
                     # TODO use mongoDB lookup to join the data instead
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
                     name = db.User.find_one(
-                        {"userID": str(data.get("userID"))}).get('displayName')
+                        {"userID": str(data.get("userID"))}, {'passwordHash': 0}).get('displayName')
 
                     if data != None:
                         data = renamePost(data)
@@ -292,7 +292,7 @@ def posts():
                 #             'name': '$profile.displayName'
                 #         }
                 #     },
-                #     {'$project': {'profile': 0}}
+                #     {'$project': {'profile': 0} }
                 # ]
 
                 # data = db.Posts.aggregate(pipeline)
@@ -300,7 +300,7 @@ def posts():
                 response = []
 
                 userIDList = [x["userID"] for x in data]
-                profiles = list(db.User.find({"userID": {"$in": userIDList}}))
+                profiles = list(db.User.find({"userID": {"$in": userIDList}}, {'passwordHash': 0}))
                 profileDict = {}
                 for x in profiles:
                     profileDict[x["userID"]] = x
@@ -490,7 +490,7 @@ def getOfficialPosts():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
-            profile = db.User.find_one({'userID': item.get('userID')})
+            profile = db.User.find_one({'userID': item.get('userID')}, {'passwordHash': 0})
             item['profilePictureURI'] = profile.get(
                 'profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
@@ -523,7 +523,7 @@ def getAllFriends(userID):
         result = []
 
         for friendID in friends:
-            entry = db.User.find_one({"userID": friendID})
+            entry = db.User.find_one({"userID": friendID}, {'passwordHash': 0})
             if entry != None:
                 result.append(entry)
 
