@@ -40,7 +40,7 @@ const DatesGridContainer = styled.div`
 
 // this component takes in an array of events or an array of dates that has events
 export const Calendar = () => {
-  // conert unix dates into component friendly format
+  // conert unix dates into component friendly format; 302 for 2nd of March, 1105 for 5th Nov
   const convertDates = (unprocessedDate: number) => {
     const month = new Date(unprocessedDate * 1000).getMonth() + 1
     const day = new Date(unprocessedDate * 1000).getDate()
@@ -54,32 +54,28 @@ export const Calendar = () => {
   const today = new Date()
   let startingMonth = 0
   const currentYear = today.getFullYear()
-  const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-  const secondMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
-  const thirdMonth = new Date(today.getFullYear(), today.getMonth() + 2, 1)
-  const fourthMonth = new Date(today.getFullYear(), today.getMonth() + 3, 1)
-  const fifthMonth = new Date(today.getFullYear(), today.getMonth() + 4, 1)
-  const monthLists: Date[] = [secondMonth, thirdMonth, fourthMonth, fifthMonth]
+
+  const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
 
   return (
     <CalenderContainer>
       <YearContainer>{currentYear}</YearContainer>
       <MonthContainer>
-        <MonthsHeaderContainer>{firstMonth.toDateString().slice(4, -7)}</MonthsHeaderContainer>
+        <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
         <DatesGridContainer>
           <DayHeaders />
           <MonthlyContainer nthMonth={startingMonth++} eventDates={processedDates} />
         </DatesGridContainer>
       </MonthContainer>
       <>
-        {monthLists.map((month) => {
+        {monthList.slice(1).map((month) => {
           if (month.getMonth() === 0) {
             // Note: 0 stands for Jan
             return (
               <>
                 <YearContainer>{currentYear + 1}</YearContainer>
                 <MonthContainer key={startingMonth++}>
-                  <MonthsHeaderContainer>{month.toDateString().slice(4, -7)}</MonthsHeaderContainer>
+                  <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
                   <DatesGridContainer>
                     <DayHeaders />
                     <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
@@ -90,7 +86,7 @@ export const Calendar = () => {
           }
           return (
             <MonthContainer key={startingMonth++}>
-              <MonthsHeaderContainer>{month.toDateString().slice(4, -7)}</MonthsHeaderContainer>
+              <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
               <DatesGridContainer>
                 <DayHeaders />
                 <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
