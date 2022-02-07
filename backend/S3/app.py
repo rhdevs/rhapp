@@ -1,4 +1,5 @@
 from boto3 import client, resource
+import botocore # for S3-related error handling, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/error-handling.html
 from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY
 
 bucketLocation = 'rhapp-picture-bucket'
@@ -39,31 +40,34 @@ def create(key, fileLocation):
 
 
 def read(key):
-    PresignedUrl = user.generate_presigned_url(
-        'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-    if not fileExist(key):
-        raise FileNotFoundError
-    else:
-        return PresignedUrl
+    try:
+        if not fileExist(key):
+            raise FileNotFoundError
+        else:
+            PresignedUrl = user.generate_presigned_url(
+            'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+            return PresignedUrl
+ #   except botocore.exceptions.ClientError as e:
+  #      print(e)
+    except Exception as e:
+        print(e)
+
 
 # update
 
 
 def update(oldKey, newKey, fileLocation=''):
-    try:
-        if not fileExist(oldKey):
-            raise FileNotFoundError
-        if fileExist(newKey):
-            raise FileExistsError
-        if fileLocation == '':
-            newObj = bucket.Object(newKey)
-            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
-            delete(oldKey)
-        else:
-            delete(oldKey)
-            create(newKey, fileLocation)
-    except Exception as e:
-        print(e)
+    if not fileExist(oldKey):
+        raise FileNotFoundError
+    if fileExist(newKey):
+        raise FileExistsError
+    if fileLocation == '':
+        newObj = bucket.Object(newKey)
+        newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+        delete(oldKey)
+    else:
+        delete(oldKey)
+        create(newKey, fileLocation)
 
 
 # delete

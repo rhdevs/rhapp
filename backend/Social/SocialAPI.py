@@ -48,7 +48,7 @@ def profiles():
         '''
         if request.method == 'PUT':
             data = request.get_json()
-            imgString = str(data["profilePictureUrl"]) # get image URI/URL/base64 from JSON request
+            imgString = str(data["profilePictureUrl"]) # get image URI/base64 from JSON request
             userID = data["userID"] # get userID from JSON request
 
             def imgGeneration(imgString):
@@ -142,11 +142,11 @@ def profiles():
             try:
                 imgKey, imgFileLocation = imgGeneration(str(imgString))
                 create(imgKey, imgFileLocation)
-                result = db.Profiles.update_one({"userID": userID}, {'$set': {"imageKey": imgKey}}, upsert=True)
+                result = db.Profiles.update_one({"userID": userID}, {'$set': data}, upsert=True)
                 if int(result.matched_count) > 0:
                     response = {
                         "status": "success",
-                        "message": "Profile picture uploaded"
+                        "message": "Profile uploaded"
                     }
                     return make_response(response, 200)
                 else:
@@ -158,11 +158,11 @@ def profiles():
             except FileExistsError:
                 oldImgKey = str(db.Profiles.find_one({"userID": userID}).get("imageKey")) # OR str(list(db.Profiles.distinct("imageKey", {"userID": userID}))[0]) , see: https://docs.mongodb.com/manual/reference/method/db.collection.distinct/
                 update(oldImgKey, imgKey, imgFileLocation)
-                result = db.Profiles.update_one({"userID": userID}, {'$set': {"imageKey": imgKey}}, upsert=True)
+                result = db.Profiles.update_one({"userID": userID}, {'$set': data}, upsert=True)
                 if int(result.matched_count) > 0:
                     response = {
                         "status": "success",
-                        "message": "Profile picture updated"
+                        "message": "Profile updated"
                     }
                     return make_response(response, 200)
                 else:
@@ -179,15 +179,27 @@ def profiles():
 @cross_origin(supports_credentials=True)
 def users():
     userIdList = request.args.getlist('userID')
-    try:
+    body = []
+               
+    try:  
         data = db.Profiles.find({"userID": {'$in': userIdList}}, {"_id": 0})
+        profileDict = {}
+        for profile in data:
+            profileDict[profile["userID"]] = profile 
+        for profile in profileDict.values():
+            imageKey = profile.get('imageKey') if profile != None else None
+            if imageKey != None:
+                profile['profilePicSignedUrl'] = read(imageKey)
+            elif FileNotFoundError:
+                profile['profilePicSignedUrl'] = "null"
+            body.append(profile)
+        
         response = {
-                 "data": list(data),
+                 "data": json.dumps(body, default=lambda o: str(o)),
                  "status": "success"
-             }
-        print(userIdList)
+         }
         if len(userIdList) == 1 and userIdList[0] == "":
-            return make_response({"err": "userID is not specified", "status": "failed"}), 400 # throws error if userID is not specified in argument
+            return make_response({"err": " No userID specified", "status": "failed"}), 400 # throws error if userID is not specified in argument
         elif db.Profiles.count_documents({"userID": {'$in': userIdList}}) == 0:
             return make_response({"err": "User does not exist", "status": "failed"}), 404 # throws error if all userID entries in argument do not exist 
         else:
@@ -201,8 +213,20 @@ def users():
 def getUserProfile(userID):
     try:
         data = db.Profiles.find({"userID": userID}, {"_id": 0})
+        body = []
+        profileDict = {}
+        for profile in data:
+            profileDict[profile["userID"]] = profile
+        for profile in profileDict.values():
+            imageKey = profile.get('imageKey') if profile != None else None
+            if imageKey != None:
+                profile['profilePicSignedUrl'] = read(imageKey)
+            elif FileNotFoundError:
+                profile['profilePicSignedUrl'] = "null"
+            body.append(profile)
+        
         response = {
-            "data": list(data),
+            "data": json.dumps(body, default=lambda o: str(o)),
             "status": "success"
         }
     except Exception as e:
@@ -336,17 +360,17 @@ def posts():
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
                     name = db.Profiles.find_one(
                         {"userID": str(data.get("userID"))}).get('displayName')
-                    profilePicSignedUrl = read(db.Profiles.find_one(
-                        {"userID": str(data.get("userID"))}).get('imageKey'))
-                    try:
-                       profilePicSignedUrl
-                    except FileNotFoundError:
-                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
+                    imageKey = db.Profiles.find_one(
+                        {"userID": str(data.get("userID"))}).get('imageKey')
+                    profilePicSignedUrl = read(imageKey)
 
                     if data != None:
                         data = renamePost(data)
                         data['name'] = name
-                        data['profilePicSignedUrl'] = profilePicSignedUrl
+                        if imageKey != None:
+                            data['profilePicSignedUrl'] = profilePicSignedUrl
+                        elif FileNotFoundError:
+                            data['profilePicSignedUrl'] = "null"
                         response = {
                             "status": "success",
                             "data": json.dumps(data, default=lambda o: str(o))
@@ -357,16 +381,15 @@ def posts():
 
                 elif userID:
                     data = db.Posts.find({"userID": str(userID)})
-                    profilePicSignedUrl = read(db.Profiles.find_one(
-                        {"userID": userID}).get('imageKey'))
-                    try:
-                       profilePicSignedUrl
-                    except FileNotFoundError:
-                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
+                    imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
+                    profilePicSignedUrl = read(imageKey)
                     response = []
                     for item in data:
                         item['name'] = userIDtoName(item.get('userID'))
-                        item['profilePicSignedUrl'] = profilePicSignedUrl
+                        if imageKey != None:
+                            item['profilePicSignedUrl'] = profilePicSignedUrl
+                        elif FileNotFoundError:
+                            item['profilePicSignedUrl'] = "null"                  
                         item = renamePost(item)
                         response.append(item)
 
@@ -420,24 +443,24 @@ def posts():
 
                 response = []
 
-                userIDList = [x["userID"] for x in data]
-                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}))
+                userIDList = [post["userID"] for post in data]
+                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}, {"_id": 0}))
                 profileDict = {}
-                for x in profiles:
-                    profileDict[x["userID"]] = x
+                for profile in profiles:
+                    profileDict[profile["userID"]] = profile
 
                 # for item in data:
                 #     response.append(item)
                 for item in data:
                     profile = profileDict.get(item["userID"])
+                    imageKey = profile.get('imageKey') if profile != None else None
                     item['name'] = profile.get(
                         'displayName') if profile != None else None
-                    try:
-                        item['profilePicSignedUrl'] = read(profile.get(
-                        'imageKey')) if profile != None else None
-                    except FileNotFoundError:
-                        return make_response({"status": "failed", "message": "Profile picture not found"}), 404
-                    item = renamePost(item)
+                    if imageKey != None:
+                        item['profilePicSignedUrl'] = read(imageKey)
+                    elif FileNotFoundError:
+                        item['profilePicSignedUrl'] = "null"
+                    item = renamePost(item)                
                     response.append(item)
 
                 return make_response(
@@ -528,20 +551,25 @@ def getPostById(userID):
     try:
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
+        body = []
+
         data = db.Posts.find({"userID": str(userID)}, sort=[
                              ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
-        profilePicSignedUrl = read(db.Profiles.find_one(
-                        {"userID": userID}).get('imageKey'))
-        profilePicSignedUrlDict = {}
-        profilePicSignedUrlDict["profilePicSignedUrl"] = str(profilePicSignedUrl)
-        list_combined = list(data) + list(profilePicSignedUrlDict.items())
-        try:
-            profilePicSignedUrl
-        except FileNotFoundError:
-            return make_response({"status": "failed", "message": "Profile picture not found"}), 404
+        
+        for item in data:
+            item['name'] = userIDtoName(item.get('userID'))
+            imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
+            profilePicSignedUrl = read(imageKey)
+            if imageKey != None:
+                item['profilePicSignedUrl'] = profilePicSignedUrl
+            elif FileNotFoundError:
+                item['profilePicSignedUrl'] = "null"
+            
+            item = renamePost(item)
+            body.append(item)
         response = {
             "status": "success",
-            "data": json.dumps(list_combined, default=lambda o: str(o))
+            "data": json.dumps(body, default=lambda o: str(o))
         }
         
         if db.Profiles.find_one({"userID": userID}) == None:
@@ -590,25 +618,35 @@ def getFriendsPostById():
         }
 
         response = []
-
+      
         result = db.Posts.find(query, sort=[
             ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
 
         for item in result:
             item['name'] = userIDtoName(item.get('userID'))
+            imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
+            profilePicSignedUrl = read(imageKey)
+            if imageKey != None:
+                item['profilePicSignedUrl'] = profilePicSignedUrl
+            elif FileNotFoundError:
+                item['profilePicSignedUrl'] = "null"
+            
             item = renamePost(item)
             response.append(item)
-
-        return make_response(
-            {
-                "data": json.dumps(response, default=lambda o: str(o)),
-                "status": "success"
-            },
-            200)
-
+        
+        if userID == "":
+            return make_response({"status": "failed", "message": "No userID specified"}), 400
+        else:
+            return make_response(
+                {
+                    "data": json.dumps(response, default=lambda o: str(o)),
+                    "status": "success"
+                },
+                200)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
+
 
 
 @social_api.route("/posts/official", methods=['GET'])
@@ -625,11 +663,12 @@ def getOfficialPosts():
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
-            try:
-                item['profilePicSignedUrl'] = read(profile.get(
-                'imageKey')) if profile != None else None
-            except FileNotFoundError:
-                return make_response({"status": "failed", "message": "Profile picture not found"}), 404
+            imageKey = profile.get('imageKey')
+            profilePicSignedUrl = read(imageKey)
+            if imageKey != None:
+                item['profilePicSignedUrl'] = profilePicSignedUrl
+            elif FileNotFoundError:
+                item['profilePicSignedUrl'] = "null" 
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
