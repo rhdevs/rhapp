@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { days } from '../../common/dates'
+
 const DayContainer = styled.div`
   font-weight: 600;
   font-size: 13px;
@@ -8,12 +10,10 @@ const DayContainer = styled.div`
 `
 
 export const DayHeaders = () => {
-  const Days: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-
   return (
     <>
-      {Days.map((day) => {
-        return <DayContainer key={day}>{day}</DayContainer>
+      {days.slice(1).map((day) => {
+        return <DayContainer key={1}>{day.slice(0, 3)}</DayContainer>
       })}
     </>
   )
