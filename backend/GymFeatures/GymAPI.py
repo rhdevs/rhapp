@@ -13,7 +13,7 @@ sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
 DEFAULT_KEY_LOC = "5-409"
-DEFAULT_TELEGRAM_NAME = "smchead"
+DEFAULT_TELEGRAM_HANDLE = "smchead"
 
 @gym_api.route("/", methods = ['GET'])
 def get_all_history():
