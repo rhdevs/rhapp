@@ -1,5 +1,6 @@
 from operator import is_
 from numpy import sort
+from sympy import Q
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response, Blueprint
 from flask_cors import cross_origin
@@ -12,7 +13,7 @@ sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
 DEFAULT_KEY_LOC = "5-409"
-DEFAULT_DISPLAY_NAME = "smchead"
+DEFAULT_TELEGRAM_NAME = "smchead"
 
 @gym_api.route("/", methods = ['GET'])
 def get_all_history():
@@ -21,11 +22,24 @@ def get_all_history():
         data = pd.DataFrame(data)
         checkuserID = (data["userID"] == data["userID"].shift(-1))
         checkrequesttime = data['requesttime'].shift(-1) - data['requesttime'] <= 60
-        data = data[~((checkuserID) & (checkrequesttime))].tail(10)
-        data = data.drop('userID', axis = 1)
+        checkgymIsOpen = data['gymIsOpen'].shift(-1) == data['gymIsOpen']
+        data = data[~((checkuserID) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
         data = data.to_dict('records')
         
-        response = {"status":"success","data":data}
+        data_list = []
+
+        for i in data:
+            temp_data = {}
+            if i['keyIsReturned']:
+                temp_data['userDetails'] = DEFAULT_KEY_LOC
+            else:
+                temp_data['userDetails'] = i['keyHolder']['telegramHandle']
+
+            temp_data['requesttime'] = i['requesttime']
+            temp_data['gymIsOpen'] = i['gymIsOpen']
+            data_list.append(temp_data)
+
+        response = {"status":"success","data":data_list}
 
     except Exception as e:
         print(e)
@@ -37,20 +51,17 @@ def get_all_history():
 def get_statuses():
     try:
         data = list(db.Gym.find({}, {"_id": 0, "requesttime": 0}).sort("requesttime", -1))[0]
-        if data['keyStatus'] == DEFAULT_KEY_LOC:
-            data.pop('userID')
-            data['displayName'] = DEFAULT_KEY_LOC
-            data['keyStatus'] = DEFAULT_DISPLAY_NAME
-
+        formData = request.get_json()
+        if formData['userID'] == data['userID'] and not data['keyIsReturned']:
+            data['keyWithCurrentUser'] = True
         else:
-            lastLoc = data['keyStatus']
-            userDetails = list(db.User.find({"telegramHandle":lastLoc}))
-            data.pop('userID')
-            data['displayName'] = userDetails[0]['displayName']
-        data = [data]
+            data['keyWithCurrentUser'] = False
+        del data['userID']
         response = {"data": data, "status": "success"}
+
     except:
         return {"err": "An error has occurred", "status": "failed"}, 500
+
     return make_response(response)
 
 @gym_api.route("/movekey", methods = ["POST"])
