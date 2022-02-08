@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import generateCalendar from 'antd/es/calendar/generateCalendar'
 
@@ -8,7 +8,6 @@ export const DailyContainer = styled.div`
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.25);
   padding: 2px;
 `
-
 export const Bookings_container = styled.div`
   margin: 0;
   height: 100%;
@@ -18,11 +17,12 @@ export const Bookings_container = styled.div`
   border-radius: 5px;
   white-space: nowrap;
 `
+
 export const IndividualBookings = styled.div<{ background?: string }>`
   margin: 15px 2%;
   border-radius: 5px;
   padding: 15px 15px;
-  color: #ffffff;
+  color: #000000;
   display: flex;
   align-items: center;
   ${(props) =>
@@ -30,28 +30,27 @@ export const IndividualBookings = styled.div<{ background?: string }>`
       ? colours.occupied
       : props.background === 'empty'
       ? colours.empty
-      : colours.others}
+      : colours.altempty}
   white-space: nowrap;
   min-height: 100px;
 `
+
 const colours = {
   occupied: `background: #fd0000;`,
-  empty: `background: #22ff00;`,
-  others: `background: #CE5C08;`,
+  empty: `background: #F1F3F7;`,
+  altempty: `background: #F6F6F6;`,
 }
 
 export const TextContainer = styled.div`
   margin-left: 15px;
 `
-export const Availability = styled.h3<{ fontSize?: string }>`
+export const Availability = styled.h3`
   color: inherit;
-  ${(props) => props.fontSize && `font-size: ${props.fontSize}`}
   font-weight: 350;
 `
 
-export const TimeText = styled.h3<{ fontSize?: string }>`
+export const TimeText = styled.h3`
   color: inherit;
-  ${(props) => props.fontSize && `font-size: ${props.fontSize}`}
   font-weight: 350;
 `
 export const EventCard = styled.div`
@@ -82,42 +81,36 @@ export const Time_container = styled.div`
 
 const mockValues = [
   { id: 1, event: 'Empty', location: 'UL', type: 'empty', time: { start: '0800', end: '0900' } },
-  { id: 2, event: 'Empty', location: 'UL', type: 'empty', time: { start: '0900', end: '1000' } },
+  { id: 2, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '0900', end: '1000' } },
   { id: 3, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1000', end: '1100' } },
-  { id: 4, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1100', end: '1200' } },
+  { id: 4, event: 'Empty', location: 'UL', type: 'occupied', time: { start: '1100', end: '1200' } },
   { id: 5, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1200', end: '1300' } },
-  { id: 6, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1300', end: '1400' } },
+  { id: 6, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '1300', end: '1400' } },
   { id: 7, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1400', end: '1500' } },
-  { id: 8, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1500', end: '1600' } },
+  { id: 8, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '1500', end: '1600' } },
   { id: 9, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1600', end: '1700' } },
-  { id: 10, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1700', end: '1800' } },
+  { id: 10, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '1700', end: '1800' } },
   { id: 11, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1800', end: '1900' } },
-  { id: 12, event: 'Empty', location: 'UL', type: 'empty', time: { start: '1900', end: '2000' } },
+  { id: 12, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '1900', end: '2000' } },
   { id: 13, event: 'Empty', location: 'UL', type: 'empty', time: { start: '2000', end: '2100' } },
-  { id: 14, event: 'Empty', location: 'UL', type: 'empty', time: { start: '2100', end: '2200' } },
+  { id: 14, event: 'Empty', location: 'UL', type: 'altempty', time: { start: '2100', end: '2200' } },
   { id: 15, event: 'Empty', location: 'UL', type: 'empty', time: { start: '2200', end: '2300' } },
-  { id: 16, event: 'Empty', location: 'UL', type: 'empty', time: { start: '2300', end: '0000' } },
+  { id: 16, event: 'Empty', location: 'UL', type: 'occupied', time: { start: '2300', end: '0000' } },
 ]
 
-const renderDailySchedule = () => (
-  <DailyContainer>
-    {mockValues.map((e) => (
-      <IndividualBookings background={e.type} key={e.id}>
-        <TextContainer>
-          <Availability>{e.type}</Availability>
-          <TimeText>{`${e.time.start} - ${e.time.end}`}</TimeText>
-        </TextContainer>
-      </IndividualBookings>
-    ))}
-  </DailyContainer>
-)
+export default function renderDailySchedule() {
+  const [occupy, setOccupy] = useState(true)
 
-const ScheduleBlock = () => {
   return (
-    <>
-      <Bookings_container>{renderDailySchedule()}</Bookings_container>
-    </>
+    <DailyContainer>
+      {mockValues.map((e) => (
+        <IndividualBookings onClick={() => setOccupy(!occupy)} background={occupy ? e.type : 'occupied'} key={e.id}>
+          <TextContainer>
+            <Availability>{occupy ? e.type : 'occupied'}</Availability>
+            <TimeText>{`${e.time.start} - ${e.time.end}`}</TimeText>
+          </TextContainer>
+        </IndividualBookings>
+      ))}
+    </DailyContainer>
   )
 }
-
-export default ScheduleBlock
