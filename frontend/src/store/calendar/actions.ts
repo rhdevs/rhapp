@@ -12,7 +12,7 @@ export const SetIsClicked = (newClickedDate: number) => async (dispatch: Dispatc
         newIsClicked: false,
         newClickedDate: 0,
       })
-      console.log('Disabling click now.')
+      return
     }
   }
   dispatch({

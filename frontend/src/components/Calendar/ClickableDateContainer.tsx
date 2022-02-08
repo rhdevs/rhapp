@@ -36,10 +36,9 @@ export const ClickableDateContainer = (props: {
   assignedMonth: number
   eventDates: number[]
 }) => {
+  const dispatch = useDispatch()
   const { isClicked, clickedDate } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
-
-  const dispatch = useDispatch()
 
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(SetIsClicked(newClickedDate))
