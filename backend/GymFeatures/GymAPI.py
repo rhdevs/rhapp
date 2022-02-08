@@ -20,10 +20,10 @@ def get_all_history():
     try:
         data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
         data = pd.DataFrame(data)
-        checkuserID = (data["userID"] == data["userID"].shift(-1))
+        checkkeyHolder = data['keyHolder'].shift(-1) == data['keyHolder']
         checkrequesttime = data['requesttime'].shift(-1) - data['requesttime'] <= 60
-        checkgymIsOpen = data['gymIsOpen'].shift(-1) == data['gymIsOpen']
-        data = data[~((checkuserID) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
+        checkgymIsOpen = (data['gymIsOpen'] == False) & (data['gymIsOpen'].shift(-1) == True)
+        data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
         data = data.to_dict('records')
         
         data_list = []
@@ -50,13 +50,7 @@ def get_all_history():
 @gym_api.route("/status", methods=['GET'])
 def get_statuses():
     try:
-        data = list(db.Gym.find({}, {"_id": 0, "requesttime": 0}).sort("requesttime", -1))[0]
-        formData = request.get_json()
-        if formData['userID'] == data['userID'] and not data['keyIsReturned']:
-            data['keyWithCurrentUser'] = True
-        else:
-            data['keyWithCurrentUser'] = False
-        del data['userID']
+        data = list(db.Gym.find({}, {"_id": 0, "userID": 0, "requesttime": 0}).sort("requesttime", -1))[0]
         response = {"data": data, "status": "success"}
 
     except:
