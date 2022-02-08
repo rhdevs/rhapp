@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { SetIsClicked } from '../../store/calendar/actions'
+import { RootState } from '../../store/types'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   font-size: 12px;
@@ -33,11 +36,13 @@ export const ClickableDateContainer = (props: {
   assignedMonth: number
   eventDates: number[]
 }) => {
+  const { isClicked, clickedDate } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
-  const [dateSelected, isDateSelected] = useState(false)
-  const DateContainerClickHandler = () => {
-    isDateSelected(!dateSelected)
-    console.log('Date ' + assignedDateMonth + ' selected. Need to change color.')
+
+  const dispatch = useDispatch()
+
+  const DateContainerClickHandler = (newClickedDate: number) => {
+    dispatch(SetIsClicked(newClickedDate))
   }
 
   const hasEvent = () => {
@@ -52,9 +57,17 @@ export const ClickableDateContainer = (props: {
     return processedDate === assignedDateMonth
   }
 
+  const isCurrentDateClicked = () => {
+    return isClicked && clickedDate === assignedDateMonth
+  }
+
   return (
-    <DateContainer onClick={DateContainerClickHandler} selected={dateSelected} currentDate={isCurrentDate()}>
-      <EventIndicator selected={dateSelected} eventPresent={hasEvent()} />
+    <DateContainer
+      onClick={() => DateContainerClickHandler(assignedDateMonth)}
+      selected={isCurrentDateClicked()}
+      currentDate={isCurrentDate()}
+    >
+      <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
       {props.date}
     </DateContainer>
   )

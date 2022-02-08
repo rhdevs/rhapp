@@ -3,10 +3,12 @@ import { ActionTypes, CALENDAR_ACTIONS } from './types'
 
 const initialState = {
   isClicked: false,
+  clickedDate: 0,
 }
 
 type State = {
   isClicked: boolean
+  clickedDate: number
 }
 
 export const calendar: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -15,7 +17,10 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
       return {
         ...state,
         isClicked: action.newIsClicked,
+        clickedDate: action.newClickedDate,
       }
     }
+    default:
+      return state
   }
 }
