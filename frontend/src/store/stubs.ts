@@ -14,6 +14,7 @@ import {
   Food,
   UserDetails,
 } from './supper/types'
+import { GymStatus, HistoryEntry } from './gym/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -22,6 +23,7 @@ import {
  * 3. Washing Machines
  * 4. Search Results
  * 5. dummyUserId
+ * 6. Gym Features
  */
 
 export const facilityListStub: Facility[] = [
@@ -549,3 +551,25 @@ export const initSupperGroup: SupperGroup = {
   totalPrice: 0,
   closingTime: undefined,
 }
+
+export const gymStatus: GymStatus = {
+  keyStatus: 'bufflord',
+  gymStatus: true,
+}
+
+export const gymHistory: HistoryEntry[] = [
+  {
+    gymStatus: true,
+    keyStatus: 'cooltelegram',
+    requesttime: 1643388954,
+    telegramHandle: 'cooltelegram',
+    userID: 'A0123456Z',
+  },
+  {
+    gymStatus: true,
+    keyStatus: 'anothernewdude',
+    requesttime: 1643389801,
+    telegramHandle: 'anothernewdude',
+    userID: 'A0234567M',
+  },
+]
