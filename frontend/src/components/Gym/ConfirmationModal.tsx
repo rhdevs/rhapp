@@ -26,14 +26,11 @@ const MainContainer = styled.div`
   flex-direction: column;
 `
 
-const TitleContainer = styled.div`
-  text-align: center;
-`
-
 const TitleText = styled.h1`
   font-family: Lato;
   font-size: 16px;
   font-weight: 400;
+  text-align: center;
 `
 
 const DescriptionText = styled.p`
@@ -55,8 +52,9 @@ type Props = {
   title: string
   description?: string | JSX.Element
   // Left Button Props
-  leftButtonType: 'primary' | 'secondary'
-  leftButtonText: string
+  hasLeftButton?: boolean
+  leftButtonType?: 'primary' | 'secondary'
+  leftButtonText?: string
   onLeftButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Right Button Props
   rightButtonType: 'primary' | 'secondary'
@@ -97,12 +95,15 @@ export function ConfirmationModal(props: Props) {
           top: props.top,
         }}
       >
-        <TitleContainer>
-          <TitleText>{props.title}</TitleText>
-        </TitleContainer>
+        <TitleText>{props.title}</TitleText>
         <DescriptionText>{props.description}</DescriptionText>
         <ButtonContainer>
-          <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
+          {props.hasLeftButton && (
+            // Suppresses ts error due to it adding undefined to optional prop types
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
+          )}
           <Button state={props.rightButtonType} onClick={props.onRightButtonClick} text={props.rightButtonText} />
         </ButtonContainer>
       </MainContainer>
@@ -110,4 +111,10 @@ export function ConfirmationModal(props: Props) {
   ) : (
     <></>
   )
+}
+
+ConfirmationModal.defaultProps = {
+  hasLeftButton: false,
+  leftButtonType: 'secondary',
+  leftButtonText: 'Cancel',
 }
