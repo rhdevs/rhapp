@@ -9,6 +9,9 @@ const CalenderContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  width: min-content;
+  margin-right: auto;
+  margin-left: auto;
 `
 
 const YearContainer = styled.div`
