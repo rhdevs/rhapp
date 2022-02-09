@@ -2,23 +2,26 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 
-export const SetIsClicked = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { dateAlreadyClicked, clickedDate } = getState().calendar
-  if (dateAlreadyClicked) {
+export const SetClickedDate = (newClickedDate: number) => async (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { isThereADateClicked, clickedDate } = getState().calendar
+  if (isThereADateClicked) {
     if (newClickedDate !== clickedDate) {
       return
     } else {
       dispatch({
-        type: CALENDAR_ACTIONS.SET_IS_CLICKED,
-        newDateAlreadyClicked: false,
+        type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
+        newIsThereADateClicked: false,
         newClickedDate: 0,
       })
       return
     }
   }
   dispatch({
-    type: CALENDAR_ACTIONS.SET_IS_CLICKED,
-    newDateAlreadyClicked: true,
+    type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
+    newIsThereADateClicked: true,
     newClickedDate: newClickedDate,
   })
 }

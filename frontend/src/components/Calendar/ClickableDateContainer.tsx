@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetIsClicked } from '../../store/calendar/actions'
+import { SetClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
@@ -32,11 +32,11 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
 
 export const ClickableDateContainer = (props: { date: number; eventPresent?: boolean; assignedMonth: number }) => {
   const dispatch = useDispatch()
-  const { dateAlreadyClicked, clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
+  const { isThereADateClicked, clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
 
   const DateContainerClickHandler = (newClickedDate: number) => {
-    dispatch(SetIsClicked(newClickedDate))
+    dispatch(SetClickedDate(newClickedDate))
   }
 
   const hasEvent = () => {
@@ -52,7 +52,7 @@ export const ClickableDateContainer = (props: { date: number; eventPresent?: boo
   }
 
   const isCurrentDateClicked = () => {
-    return dateAlreadyClicked && clickedDate === assignedDateMonth
+    return isThereADateClicked && clickedDate === assignedDateMonth
   }
 
   return (
