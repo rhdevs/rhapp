@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
 import { eventDays, processedDates } from './../../store/stubs'
+import { getAllBookingsForFacility } from '../../store/calendar/actions'
 
 const CalenderContainer = styled.div`
   display: flex;
@@ -42,7 +45,15 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = () => {
+export const Calendar = (props: { selectedFacilityId: number }) => {
+  const dispatch = useDispatch()
+  const { CalendarViewFacilityStartDate, facilityBookings } = useSelector((state: RootState) => state.calendar)
+
+  useEffect(() => {
+    // set to 1 for easier debugging
+    dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
+  }, [])
+
   // conert unix dates into component friendly format; 302 for 2nd of March, 1105 for 5th Nov
   const convertDates = (unprocessedDate: number) => {
     const month = new Date(unprocessedDate * 1000).getMonth() + 1
@@ -52,7 +63,7 @@ export const Calendar = () => {
     return processedDate
   }
 
-  eventDays.forEach((date) => convertDates(date))
+  facilityBookings.forEach((booking) => convertDates(booking.startTime))
 
   const today = new Date()
   let startingMonth = 0

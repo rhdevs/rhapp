@@ -1,14 +1,20 @@
 import { Reducer } from 'redux'
-import { ActionTypes, CALENDAR_ACTIONS } from './types'
+import { ActionTypes, Booking, CALENDAR_ACTIONS } from './types'
 
 const initialState = {
   isClicked: false,
   clickedDate: 0,
+  isLoading: false,
+  CalendarViewFacilityStartDate: new Date(),
+  facilityBookings: [],
 }
 
 type State = {
   isClicked: boolean
   clickedDate: number
+  isLoading: boolean
+  CalendarViewFacilityStartDate: Date
+  facilityBookings: Booking[]
 }
 
 export const calendar: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -20,6 +26,27 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
         clickedDate: action.newClickedDate,
       }
     }
+
+    case CALENDAR_ACTIONS.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      }
+    }
+    case CALENDAR_ACTIONS.SET_CALENDAR_VIEW_FACILITY_START_DATE: {
+      return {
+        ...state,
+        CalendarViewFacilityStartDate: action.CalendarViewFacilityStartDate,
+      }
+    }
+
+    case CALENDAR_ACTIONS.SET_FACILITY_BOOKINGS: {
+      return {
+        ...state,
+        facilityBookings: action.facilityBookings,
+      }
+    }
+
     default:
       return state
   }

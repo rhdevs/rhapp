@@ -20,7 +20,7 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        <Calendar />
+        <Calendar selectedFacilityId={1} />
         <GlobalStyle />
         <BrowserRouter>
           <OfflineStatus />
