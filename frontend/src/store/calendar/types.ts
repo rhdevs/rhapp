@@ -23,7 +23,8 @@ export enum CALENDAR_ACTIONS {
   SET_IS_CLICKED = 'CALENDAR_ACTIONS.SET_IS_CLICKED',
   SET_IS_LOADING = 'CALENDAR_ACTIONS.SET_IS_LOADING',
   SET_CALENDAR_VIEW_FACILITY_START_DATE = 'CALENDAR_ACTIONS.SET_CALENDAR_VIEW_FACILITY_START_DATE',
-  SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
+  SET_FACILITY_BOOKINGS = 'CALENDAR_ACTION.SET_FACILITY_BOOKINGS',
+  SET_PROCESSED_DATES = 'CALENDAR_ACTION.SET_PROCESSED_DATES',
 }
 
 type SetIsClicked = {
@@ -47,4 +48,14 @@ type SetFacilityBookings = {
   facilityBookings: Booking[]
 }
 
-export type ActionTypes = SetIsClicked | SetIsLoading | SetCalendarViewFacilityStartDate | SetFacilityBookings
+type SetProcessedDates = {
+  type: typeof CALENDAR_ACTIONS.SET_PROCESSED_DATES
+  processedDates: number[]
+}
+
+export type ActionTypes =
+  | SetIsClicked
+  | SetIsLoading
+  | SetCalendarViewFacilityStartDate
+  | SetFacilityBookings
+  | SetProcessedDates

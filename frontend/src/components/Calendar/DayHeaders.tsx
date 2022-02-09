@@ -13,7 +13,7 @@ export const DayHeaders = () => {
   return (
     <>
       {days.slice(1).map((day) => {
-        return <DayContainer key={1}>{day.slice(0, 3)}</DayContainer>
+        return <DayContainer key={day}>{day.slice(0, 3)}</DayContainer>
       })}
     </>
   )

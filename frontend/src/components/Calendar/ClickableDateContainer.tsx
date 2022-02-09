@@ -30,14 +30,9 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   background-color: ${(props) => (props.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: {
-  date: number
-  eventPresent?: boolean
-  assignedMonth: number
-  eventDates: number[]
-}) => {
+export const ClickableDateContainer = (props: { date: number; eventPresent?: boolean; assignedMonth: number }) => {
   const dispatch = useDispatch()
-  const { isClicked, clickedDate } = useSelector((state: RootState) => state.calendar)
+  const { isClicked, clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
 
   const DateContainerClickHandler = (newClickedDate: number) => {
@@ -45,7 +40,7 @@ export const ClickableDateContainer = (props: {
   }
 
   const hasEvent = () => {
-    return props.eventDates.find((date) => date === assignedDateMonth) !== undefined
+    return processedDates.find((date) => date === assignedDateMonth) !== undefined
   }
 
   const isCurrentDate = () => {

@@ -2,29 +2,27 @@ import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
 
-export const dateRows = (
-  firstDate: number,
-  assignedMonth: number,
-  eventDates: number[],
-  lastDateOfThisMonth: number,
-  bufferDates: number[],
-) => {
-  for (let i = firstDate; i < lastDateOfThisMonth + 1; i++) {
-    bufferDates.push(i)
+export const DateRows = (props: {
+  firstDate: number
+  assignedMonth: number
+  lastDateOfThisMonth: number
+  bufferDates: number[]
+}) => {
+  for (let i = props.firstDate; i < props.lastDateOfThisMonth + 1; i++) {
+    props.bufferDates.push(i)
   }
 
   return (
     <>
-      {bufferDates.map((day) => {
+      {props.bufferDates.map((day) => {
         if (day === 0) {
           return <EmptyDateContainer />
         } else {
           return (
             <ClickableDateContainer
-              key={day}
-              date={firstDate++}
-              assignedMonth={assignedMonth}
-              eventDates={eventDates}
+              key={day + props.assignedMonth * 100}
+              date={day}
+              assignedMonth={props.assignedMonth}
             />
           )
         }

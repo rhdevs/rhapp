@@ -1,8 +1,9 @@
+import { last } from 'lodash'
 import React from 'react'
 
-import { dateRows } from './DateRows'
+import { DateRows } from './DateRows'
 
-export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[] }) => {
+export const MonthlyContainer = (props: { nthMonth: number }) => {
   const today = new Date()
   const firstDateOfThisMonth = new Date(today.getFullYear(), today.getMonth() + props.nthMonth, 1).getDate()
   const assignedMonth = today.getMonth() + props.nthMonth + 1
@@ -20,5 +21,12 @@ export const MonthlyContainer = (props: { nthMonth: number; eventDates: number[]
     }
   }
 
-  return <>{dateRows(firstDateOfThisMonth, assignedMonth, props.eventDates, lastDateOfThisMonth, bufferDates)}</>
+  return (
+    <DateRows
+      firstDate={firstDateOfThisMonth}
+      assignedMonth={assignedMonth}
+      lastDateOfThisMonth={lastDateOfThisMonth}
+      bufferDates={bufferDates}
+    />
+  )
 }

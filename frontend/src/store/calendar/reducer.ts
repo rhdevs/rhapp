@@ -7,6 +7,7 @@ const initialState = {
   isLoading: false,
   CalendarViewFacilityStartDate: new Date(),
   facilityBookings: [],
+  processedDates: [],
 }
 
 type State = {
@@ -15,6 +16,7 @@ type State = {
   isLoading: boolean
   CalendarViewFacilityStartDate: Date
   facilityBookings: Booking[]
+  processedDates: number[]
 }
 
 export const calendar: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -44,6 +46,13 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
       return {
         ...state,
         facilityBookings: action.facilityBookings,
+      }
+    }
+
+    case CALENDAR_ACTIONS.SET_PROCESSED_DATES: {
+      return {
+        ...state,
+        processedDates: action.processedDates,
       }
     }
 

@@ -53,17 +53,35 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityI
     .then(async (res) => {
       updatedFB = res.data
     })
-  console.log(updatedFB)
 
   dispatch({
     type: CALENDAR_ACTIONS.SET_FACILITY_BOOKINGS,
     facilityBookings: updatedFB,
   })
+  dispatch(UpdateProcessedDates(updatedFB))
   dispatch(SetIsLoading(false))
 }
 
 export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: CALENDAR_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
+}
+
+export const UpdateProcessedDates = (rawBookingsDetails: Booking[]) => async (dispatch: Dispatch<ActionTypes>) => {
+  const newProcessedDates: number[] = []
+  const convertDates = (unprocessedDate: number) => {
+    const month = new Date(unprocessedDate * 1000).getMonth() + 1
+    const day = new Date(unprocessedDate * 1000).getDate()
+    const processedDate = month * 100 + day
+    newProcessedDates.push(processedDate)
+    return
+  }
+
+  rawBookingsDetails.forEach((booking) => convertDates(booking.startTime))
+  rawBookingsDetails.forEach((booking) => convertDates(booking.endTime))
+  dispatch({
+    type: CALENDAR_ACTIONS.SET_PROCESSED_DATES,
+    processedDates: newProcessedDates,
+  })
 }
 
 export const setViewDates = (newDate: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {

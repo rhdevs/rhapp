@@ -6,7 +6,8 @@ import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
 import { eventDays, processedDates } from './../../store/stubs'
-import { getAllBookingsForFacility } from '../../store/calendar/actions'
+import { getAllBookingsForFacility, SetIsLoading } from '../../store/calendar/actions'
+import LoadingSpin from '../LoadingSpin'
 
 const CalenderContainer = styled.div`
   display: flex;
@@ -47,10 +48,13 @@ const DatesGridContainer = styled.div`
 // this component takes in an array of events or an array of dates that has events
 export const Calendar = (props: { selectedFacilityId: number }) => {
   const dispatch = useDispatch()
-  const { CalendarViewFacilityStartDate, facilityBookings } = useSelector((state: RootState) => state.calendar)
+  const { CalendarViewFacilityStartDate, facilityBookings, processedDates, isLoading } = useSelector(
+    (state: RootState) => state.calendar,
+  )
 
   useEffect(() => {
-    // set to 1 for easier debugging
+    // set to 1 for easier debugging. 1 for UL Main Area
+    dispatch(SetIsLoading(true))
     dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
   }, [])
 
@@ -72,43 +76,50 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
 
   return (
-    <CalenderContainer>
-      <YearContainer>{currentYear}</YearContainer>
-      <MonthContainer>
-        <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <MonthlyContainer nthMonth={startingMonth++} eventDates={processedDates} />
-        </DatesGridContainer>
-      </MonthContainer>
-      <>
-        {monthList.slice(1).map((month) => {
-          if (month.getMonth() === 0) {
-            // Note: 0 stands for Jan
-            return (
-              <>
-                <YearContainer>{currentYear + 1}</YearContainer>
+    <>
+      {!isLoading && (
+        <CalenderContainer>
+          <YearContainer>{currentYear}</YearContainer>
+          <MonthContainer>
+            <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+            <DatesGridContainer>
+              <DayHeaders />
+              <MonthlyContainer nthMonth={startingMonth++} />
+            </DatesGridContainer>
+          </MonthContainer>
+          <>
+            {monthList.slice(1).map((month) => {
+              if (month.getMonth() === 0) {
+                // Note: 0 stands for Jan
+                return (
+                  <>
+                    <YearContainer>{currentYear + 1}</YearContainer>
+                    <MonthContainer key={startingMonth++}>
+                      <MonthsHeaderContainer>
+                        {month.toLocaleString('default', { month: 'long' })}
+                      </MonthsHeaderContainer>
+                      <DatesGridContainer>
+                        <DayHeaders />
+                        <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
+                      </DatesGridContainer>
+                    </MonthContainer>
+                  </>
+                )
+              }
+              return (
                 <MonthContainer key={startingMonth++}>
                   <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
                   <DatesGridContainer>
                     <DayHeaders />
-                    <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
+                    <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
                   </DatesGridContainer>
                 </MonthContainer>
-              </>
-            )
-          }
-          return (
-            <MonthContainer key={startingMonth++}>
-              <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-              <DatesGridContainer>
-                <DayHeaders />
-                <MonthlyContainer nthMonth={startingMonth} eventDates={processedDates} />
-              </DatesGridContainer>
-            </MonthContainer>
-          )
-        })}
-      </>
-    </CalenderContainer>
+              )
+            })}
+          </>
+        </CalenderContainer>
+      )}
+      ){isLoading && <LoadingSpin />}
+    </>
   )
 }
