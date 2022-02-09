@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 import os
 import pymongo
-from Laundry.LaundryAPI import laundry_api
 from Social.SocialAPI import social_api
 from FacilityBooking.FacilitiesAPI import facilities_api
 from Scheduling.SchedulingAPI import scheduling_api
@@ -17,7 +16,6 @@ app.config['CORS_HEADERS'] = "Content-Type"
 app.config['SECRET_KEY'] = AUTH_SECRET_KEY
 app.config['PASSWORD_RESET_SECRET'] = AUTH_PASSWORD_RESET_SECRET
 
-app.register_blueprint(laundry_api, url_prefix="/laundry")
 app.register_blueprint(social_api, url_prefix="/social")
 app.register_blueprint(facilities_api, url_prefix="/facilities")
 app.register_blueprint(scheduling_api, url_prefix="/scheduling")

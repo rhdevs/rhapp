@@ -59,16 +59,16 @@ def check_for_token(func):
             data = jwt.decode(
                 token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
             currentUser = db.User.find_one(
-                {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-            currentUsername = currentUser['userID']
+                {'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')})
+            currentUsername = currentUser.get('userID')
         except Exception as e:
             # print(e)
             return jsonify({'message': 'Token is invalid'}), 403
 
         # check if token has expired (compare time now with createdAt field in document + timedelta)
         originalToken = db.Session.find_one(
-            {'userID': data['userID'], 'passwordHash': data['passwordHash']})
-        oldTime = originalToken['createdAt']
+            {'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')})
+        oldTime = originalToken.get('createdAt')
         # print(datetime.datetime.now())
         # print(oldTime)
         if datetime.datetime.now() > oldTime + datetime.timedelta(weeks=2):
@@ -77,7 +77,7 @@ def check_for_token(func):
             # recreate session (with createdAt updated to now)
             #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
             #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
+            db.Session.update({'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')}, {
                               '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
 
         return func(currentUser, *args, **kwargs)
@@ -146,7 +146,8 @@ def register():
                                 "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
                                 })
     except Exception as e:
-        return jsonify({'message': e}), 500
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return jsonify({'message': 'User successfully created!'}), 200
 
 
@@ -160,6 +161,9 @@ If true, create session, return JWT to client, else return 500.
 @authentication_api.route('/login', methods=['POST'])
 def login():
     req = request.get_json()
+    if not req.get('userID') or not req.get('passwordHash'):
+        return {"err": "No username or password provided", "status": "failed"}, 400
+
     userID = req['userID']
     passwordHash = req['passwordHash']
     # authenticate the credentials
@@ -201,8 +205,9 @@ def logout():
     userID = request.args.get('userID')
     try:
         db.Session.remove({"userID": userID})
-    except:
-        return jsonify({'message': 'An error occurred'}), 500
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
     return jsonify({'message': 'You have been successfully logged out'}), 200
 
 
