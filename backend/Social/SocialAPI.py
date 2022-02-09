@@ -210,7 +210,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0})
+    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0, 'displayName': 1})
     name = profile.get('displayName') if profile else None
     return name
 
