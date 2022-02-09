@@ -1,6 +1,6 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
-import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
+import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 
 export const SetClickedDate = (newClickedDate: number) => async (
   dispatch: Dispatch<ActionTypes>,
