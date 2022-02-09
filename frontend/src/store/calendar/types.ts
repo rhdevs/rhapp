@@ -29,7 +29,6 @@ export enum CALENDAR_ACTIONS {
 
 type SetIsClicked = {
   type: typeof CALENDAR_ACTIONS.SET_CLICKED_DATE
-  newIsThereADateClicked: boolean
   newClickedDate: number
 }
 

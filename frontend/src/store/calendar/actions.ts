@@ -8,7 +8,6 @@ export const SetClickedDate = (newClickedDate: number) => async (
 ) => {
   dispatch({
     type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
-    newIsThereADateClicked: true,
     newClickedDate: newClickedDate,
   })
 }
