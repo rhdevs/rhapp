@@ -15,17 +15,15 @@ export const DateRows = (props: {
   return (
     <>
       {props.bufferDates.map((day) => {
-        if (day === 0) {
-          return <EmptyDateContainer />
-        } else {
-          return (
-            <ClickableDateContainer
-              key={day + props.assignedMonth * 100}
-              date={day}
-              assignedMonth={props.assignedMonth}
-            />
-          )
-        }
+        return day === 0 ? (
+          <EmptyDateContainer />
+        ) : (
+          <ClickableDateContainer
+            key={day + props.assignedMonth * 100}
+            date={day}
+            assignedMonth={props.assignedMonth}
+          />
+        )
       })}
     </>
   )
