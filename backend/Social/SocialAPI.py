@@ -346,7 +346,6 @@ def posts():
                     }
                     return make_response(response, 200)
             except InvalidId as e:
-                print(e)
                 return make_response({"status": "failed", "message": "Invalid postID"}), 400
 
         elif request.method == 'POST':
