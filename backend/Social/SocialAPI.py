@@ -36,7 +36,7 @@ def profiles():
     try:
         '''
         if request.method == 'GET':
-            data = db.Profiles.find()
+            data = db.User.find()   # note that this code returns passwordHash of the user.
             response = {
                 "status": "success",
                 "data": json.dumps(list(data), default=lambda o: str(o))
@@ -48,7 +48,7 @@ def profiles():
             if "profilePictureURI" in data:
                 data["profilePictureUrl"] = data.pop("profilePictureURI")
 
-            result = db.Profiles.update_one(
+            result = db.User.update_one(
                 {"userID": data["userID"]}, {'$set': data}, upsert=True)
 
             if int(result.matched_count) > 0:
@@ -72,7 +72,7 @@ def profiles():
 def users():
     userIdList = request.args.getlist('userID')
     try:
-        data = db.Profiles.find({"userID": {'$in': userIdList}}, {"_id": 0})
+        data = db.User.find({"userID": {'$in': userIdList}}, {"_id": 0, "passwordHash": 0})
         response = {
                  "data": list(data),
                  "status": "success"
@@ -92,7 +92,7 @@ def users():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.Profiles.find({"userID": userID}, {"_id": 0})
+        data = db.User.find({"userID": userID}, {"_id": 0, "passwordHash": 0})
         response = {
             "data": list(data),
             "status": "success"
@@ -170,7 +170,7 @@ def getUserDetails(userID):
             }
             },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -187,7 +187,7 @@ def getUserDetails(userID):
                         'as': 'positions'
             }
             },
-            {'$project': {'positions.category': 0, 'positions._id': 0, 'position': 0}}
+            {'$project': {'positions.category': 0, 'positions._id': 0, 'position': 0, 'passwordHash': 0}}
         ]
 
         data = db.User.aggregate(pipeline)
@@ -216,7 +216,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.Profiles.find_one({"userID": userID})
+    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0, 'displayName': 1})
     name = profile.get('displayName') if profile else None
     return name
 
@@ -233,8 +233,8 @@ def posts():
                 if postID:
                     # TODO use mongoDB lookup to join the data instead
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
-                    name = db.Profiles.find_one(
-                        {"userID": str(data.get("userID"))}).get('displayName')
+                    name = db.User.find_one(
+                        {"userID": str(data.get("userID"))}, {'passwordHash': 0}).get('displayName')
 
                     if data != None:
                         data = renamePost(data)
@@ -283,7 +283,7 @@ def posts():
                 #     {'limit': 5},
                 #     {
                 #         '$lookup': {
-                #             'from': 'Profiles',
+                #             'from': 'User',
                 #             'localField': 'userID',
                 #             'foreignField': 'userID',
                 #             'as': 'profile'
@@ -298,7 +298,7 @@ def posts():
                 #             'name': '$profile.displayName'
                 #         }
                 #     },
-                #     {'$project': {'profile': 0}}
+                #     {'$project': {'profile': 0} }
                 # ]
 
                 # data = db.Posts.aggregate(pipeline)
@@ -306,7 +306,7 @@ def posts():
                 response = []
 
                 userIDList = [x["userID"] for x in data]
-                profiles = list(db.Profiles.find({"userID": {"$in": userIDList}}))
+                profiles = list(db.User.find({"userID": {"$in": userIDList}}, {'passwordHash': 0}))
                 profileDict = {}
                 for x in profiles:
                     profileDict[x["userID"]] = x
@@ -496,7 +496,7 @@ def getOfficialPosts():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
-            profile = db.Profiles.find_one({'userID': item.get('userID')})
+            profile = db.User.find_one({'userID': item.get('userID')}, {'passwordHash': 0})
             item['profilePictureURI'] = profile.get(
                 'profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
@@ -529,7 +529,7 @@ def getAllFriends(userID):
         result = []
 
         for friendID in friends:
-            entry = db.Profiles.find_one({"userID": friendID})
+            entry = db.User.find_one({"userID": friendID}, {'passwordHash': 0})
             if entry != None:
                 result.append(entry)
 
@@ -543,3 +543,65 @@ def getAllFriends(userID):
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
+
+@social_api.route('/cca/<int:ccaID>', methods=["GET"])
+@cross_origin()
+def getCCADetails(ccaID):
+    try:
+        data = list(db.CCA.find({"ccaID": ccaID}, {'_id': 0}))
+        response = {"status": "success", "data": data}
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return make_response(response)
+
+
+@social_api.route("/user_CCA/<string:userID>", methods=['GET'])
+@cross_origin()
+def getUserCCAs(userID):
+    try:
+        CCAofUserID = db.UserCCA.find({"userID": userID})
+        entries = [w["ccaID"] for w in CCAofUserID]
+        data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
+        response = {"status": "success", "data": data}
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return make_response(response, 200)
+
+@social_api.route("/user_CCA", methods=['POST', 'DELETE'])
+@cross_origin()
+def editUserCCA():
+    try:
+        data = request.get_json()
+        ccaID = data.get('ccaID')
+        userID = data.get('userID')
+
+        if request.method == "POST":
+            db.UserCCA.delete_many({"userID": userID})
+            if len(ccaID) > 0:
+                documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
+                upserts = [pymongo.UpdateOne(
+                    doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
+                db.UserCCA.bulk_write(upserts)
+
+        elif request.method == "DELETE":
+            db.UserCCA.delete_many(body)
+
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return {"status": "success"}, 200
+
+
+@social_api.route("/user_CCA/", methods=["GET"])
+@cross_origin()
+def getCCAMembersName():
+    try:
+        ccaName = str(request.args.get('ccaName'))
+        response = db.UserCCA.find({"ccaName": ccaName})
+        response = {"status": "success", "data": list(response)}
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return make_response(response)

@@ -137,14 +137,12 @@ def register():
                             "passwordHash": passwordHash,
                             "email": email,
                             # "position": position
+                            "displayName": displayName,
+                            "bio": bio,
+                            "block": block,
+                            "telegramHandle": telegramHandle,
+                            "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
                             })
-        db.Profiles.insert_one({"userID": userID,
-                                "displayName": displayName,
-                                "bio": bio,
-                                "block": block,
-                                "telegramHandle": telegramHandle,
-                                "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
-                                })
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
