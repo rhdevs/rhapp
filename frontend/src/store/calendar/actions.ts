@@ -3,14 +3,14 @@ import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 
 export const SetIsClicked = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { isClicked, clickedDate } = getState().calendar
-  if (isClicked) {
+  const { dateAlreadyClicked, clickedDate } = getState().calendar
+  if (dateAlreadyClicked) {
     if (newClickedDate !== clickedDate) {
       return
     } else {
       dispatch({
         type: CALENDAR_ACTIONS.SET_IS_CLICKED,
-        newIsClicked: false,
+        newDateAlreadyClicked: false,
         newClickedDate: 0,
       })
       return
@@ -18,7 +18,7 @@ export const SetIsClicked = (newClickedDate: number) => async (dispatch: Dispatc
   }
   dispatch({
     type: CALENDAR_ACTIONS.SET_IS_CLICKED,
-    newIsClicked: true,
+    newDateAlreadyClicked: true,
     newClickedDate: newClickedDate,
   })
 }

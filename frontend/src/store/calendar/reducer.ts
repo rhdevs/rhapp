@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 import { ActionTypes, Booking, CALENDAR_ACTIONS } from './types'
 
 const initialState = {
-  isClicked: false,
+  dateAlreadyClicked: false,
   clickedDate: 0,
   isLoading: false,
   CalendarViewFacilityStartDate: new Date(),
@@ -11,7 +11,7 @@ const initialState = {
 }
 
 type State = {
-  isClicked: boolean
+  dateAlreadyClicked: boolean
   clickedDate: number
   isLoading: boolean
   CalendarViewFacilityStartDate: Date
@@ -24,7 +24,7 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
     case CALENDAR_ACTIONS.SET_IS_CLICKED: {
       return {
         ...state,
-        isClicked: action.newIsClicked,
+        dateAlreadyClicked: action.newDateAlreadyClicked,
         clickedDate: action.newClickedDate,
       }
     }

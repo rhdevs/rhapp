@@ -29,7 +29,7 @@ export enum CALENDAR_ACTIONS {
 
 type SetIsClicked = {
   type: typeof CALENDAR_ACTIONS.SET_IS_CLICKED
-  newIsClicked: boolean
+  newDateAlreadyClicked: boolean
   newClickedDate: number
 }
 
