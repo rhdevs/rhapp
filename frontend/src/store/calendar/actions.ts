@@ -6,19 +6,6 @@ export const SetClickedDate = (newClickedDate: number) => async (
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  const { isThereADateClicked, clickedDate } = getState().calendar
-  if (isThereADateClicked) {
-    if (newClickedDate !== clickedDate) {
-      return
-    } else {
-      dispatch({
-        type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
-        newIsThereADateClicked: false,
-        newClickedDate: 0,
-      })
-      return
-    }
-  }
   dispatch({
     type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
     newIsThereADateClicked: true,
