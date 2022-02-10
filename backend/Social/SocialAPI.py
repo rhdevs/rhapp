@@ -1,7 +1,9 @@
+from email.errors import InvalidBase64CharactersDefect
+from http.client import InvalidURL
 from db import *
 from S3.app import *
 from datauri import DataURI
-from binascii import a2b_base64
+import binascii
 from flask import Flask, request, jsonify, Response, make_response
 from flask_cors import CORS, cross_origin
 from pymongo import *
@@ -52,7 +54,44 @@ def profiles():
             userID = data["userID"] # get userID from JSON request
 
             def imgGeneration(imgString):
-                if imgString[:5] == "data:":   # given image string is in URI form         
+
+                def isURI(imgString):
+                    if imgString[:5] == "data:":
+                        return True
+                    else:
+                        return False
+
+                def isJPEG(imgString):
+                    if imgString[:4] == "/9j/":
+                        return True
+                    else:
+                        return False
+
+                def isPNG(imgString):
+                    if imgString[:6] == "iVBORw":
+                        return True
+                    else:
+                        return False
+
+                def isGIF(imgString):
+                    if imgString[:6] == "R0lGOD":
+                        return True
+                    else:
+                        return False
+
+                def isWEBP(imgString):
+                    if imgString[0] == "U":
+                        return True
+                    else:
+                        return False
+
+                def isTIFF(imgString):
+                    if imgString[:4] == "SUkq":
+                        return True
+                    else:
+                        return False
+
+                if isURI(imgString) == True:           
                     imgType = DataURI(imgString).mimetype # get FILE_FORMAT from mimetype of image URI
                     imgBinary = DataURI(imgString).data
                     imgFileName = "profile_pic." + str(imgType)[str(imgType).find("/")+1:] # name image to be generated as "profile_pic.<FILE_FORMAT>"
@@ -68,76 +107,75 @@ def profiles():
                         fd.write(imgBinary)
                         fd.close()
                     return imgKey, imgFileLocation
-                elif imgString[:4] == "/9j/": # given image string is in base64 form and in JPG/JPEG format
-                    imgBinary = a2b_base64(imgString)
-                    imgKey = str(userID) + "/profile_pic.jpg"
-                    imgFileLocation = str(os.getcwd()) + "/profile_pic.jpg"
-                    if os.path.exists('profile_pic.jpg') == True:
-                        os.remove('profile_pic.jpg')
-                        fd = open('profile_pic.jpg', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
+                else:
+                    imgBinary = binascii.a2b_base64(imgString)
+                    if isJPEG(imgString) == True:
+                        imgKey = str(userID) + "/profile_pic.jpg"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.jpg"
+                        if os.path.exists('profile_pic.jpg') == True:
+                            os.remove('profile_pic.jpg')
+                            fd = open('profile_pic.jpg', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        else:
+                            fd = open('profile_pic.jpg', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        return imgKey, imgFileLocation
+                    elif isPNG(imgString) == True: 
+                        imgKey = str(userID) + "/profile_pic.png"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.png"
+                        if os.path.exists('profile_pic.png') == True:
+                            os.remove('profile_pic.png')
+                            fd = open('profile_pic.png', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        else:
+                            fd = open('profile_pic.png', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        return imgKey, imgFileLocation
+                    elif isGIF(imgString) == True: 
+                        imgKey = str(userID) + "/profile_pic.gif"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.gif"
+                        if os.path.exists('profile_pic.gif') == True:
+                            os.remove('profile_pic.gif')
+                            fd = open('profile_pic.gif', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        else:
+                            fd = open('profile_pic.gif', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        return imgKey, imgFileLocation
+                    elif isWEBP(imgString) == True: 
+                        imgKey = str(userID) + "/profile_pic.webp"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.webp"
+                        if os.path.exists('profile_pic.webp') == True:
+                            os.remove('profile_pic.webp')
+                            fd = open('profile_pic.webp', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        else:
+                            fd = open('profile_pic.webp', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        return imgKey, imgFileLocation
+                    elif isTIFF(imgString) == True: 
+                        imgKey = str(userID) + "/profile_pic.tiff"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.tiff"
+                        if os.path.exists('profile_pic.tiff') == True:
+                            os.remove('profile_pic.tiff')
+                            fd = open('profile_pic.tiff', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        else:
+                            fd = open('profile_pic.tiff', 'wb')
+                            fd.write(imgBinary)
+                            fd.close()
+                        return imgKey, imgFileLocation
                     else:
-                        fd = open('profile_pic.jpg', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    return imgKey, imgFileLocation
-                elif imgString[:6] == "iVBORw": # given image string is in base64 form and in PNG format
-                    imgBinary = a2b_base64(imgString)
-                    imgKey = str(userID) + "/profile_pic.png"
-                    imgFileLocation = str(os.getcwd()) + "/profile_pic.png"
-                    if os.path.exists('profile_pic.png') == True:
-                        os.remove('profile_pic.png')
-                        fd = open('profile_pic.png', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    else:
-                        fd = open('profile_pic.png', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    return imgKey, imgFileLocation
-                elif imgString[:6] == "R0lGOD": # given image string is in base64 form and in GIF format
-                    imgBinary = a2b_base64(imgString)
-                    imgKey = str(userID) + "/profile_pic.gif"
-                    imgFileLocation = str(os.getcwd()) + "/profile_pic.gif"
-                    if os.path.exists('profile_pic.gif') == True:
-                        os.remove('profile_pic.gif')
-                        fd = open('profile_pic.gif', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    else:
-                        fd = open('profile_pic.gif', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    return imgKey, imgFileLocation
-                elif imgString[0] == "U": # given image string is in base64 form and in WEBP format
-                    imgBinary = a2b_base64(imgString)
-                    imgKey = str(userID) + "/profile_pic.webp"
-                    imgFileLocation = str(os.getcwd()) + "/profile_pic.webp"
-                    if os.path.exists('profile_pic.webp') == True:
-                        os.remove('profile_pic.webp')
-                        fd = open('profile_pic.webp', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    else:
-                        fd = open('profile_pic.webp', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    return imgKey, imgFileLocation
-                elif imgString[:4] == "SUkq": # given image string is in base64 form and in TIFF format
-                    imgBinary = a2b_base64(imgString)
-                    imgKey = str(userID) + "/profile_pic.tiff"
-                    imgFileLocation = str(os.getcwd()) + "/profile_pic.tiff"
-                    if os.path.exists('profile_pic.tiff') == True:
-                        os.remove('profile_pic.tiff')
-                        fd = open('profile_pic.tiff', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    else:
-                        fd = open('profile_pic.tiff', 'wb')
-                        fd.write(imgBinary)
-                        fd.close()
-                    return imgKey, imgFileLocation
+                        raise TypeError
                     
             try:
                 imgKey, imgFileLocation = imgGeneration(str(imgString))
@@ -170,6 +208,8 @@ def profiles():
                         "status": "failed",
                     }
                     return make_response(response, 204)
+    except TypeError and binascii.Error:
+        return {"err": "Invalid data", "status": "failed"}, 400
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500

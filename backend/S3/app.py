@@ -32,10 +32,13 @@ def fileExist(key):
 
 
 def create(key, fileLocation):
-    if fileExist(key):
-        raise FileExistsError
-    user.upload_file(fileLocation, bucketLocation, key)
-
+    try:
+        if fileExist(key):
+            raise FileExistsError
+        user.upload_file(fileLocation, bucketLocation, key)
+    except Exception as e:
+        print(e)
+        
 # read
 
 
@@ -57,18 +60,20 @@ def read(key):
 
 
 def update(oldKey, newKey, fileLocation=''):
-    if not fileExist(oldKey):
-        raise FileNotFoundError
-    if fileExist(newKey):
-        raise FileExistsError
-    if fileLocation == '':
-        newObj = bucket.Object(newKey)
-        newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
-        delete(oldKey)
-    else:
-        delete(oldKey)
-        create(newKey, fileLocation)
-
+    try:    
+        if not fileExist(oldKey):
+            raise FileNotFoundError
+        if fileExist(newKey):
+            raise FileExistsError
+        if fileLocation == '':
+            newObj = bucket.Object(newKey)
+            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+            delete(oldKey)
+        else:
+            delete(oldKey)
+            create(newKey, fileLocation)
+    except Exception as e:
+        print(e)
 
 # delete
 def delete(key):
