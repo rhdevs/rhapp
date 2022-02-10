@@ -8,6 +8,7 @@ import { RootState } from '../../store/types'
 import styled from 'styled-components'
 import { GymTabContainer } from '../../components/Tabs'
 import { Icon } from 'antd-mobile'
+import ButtonComponent from '../../components/Button'
 
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -106,6 +107,11 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         <>
           <GymStatus isOpen />
           <GymKeyWith />
+          <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <ButtonComponent state="primary" text="Key with me" onClick={() => undefined} />
+            <ButtonComponent state="primary" text="Return key" onClick={() => undefined} />
+            <ButtonComponent state="primary" text="Close Gym" onClick={() => undefined} />
+          </div>
         </>
       ) : (
         <>

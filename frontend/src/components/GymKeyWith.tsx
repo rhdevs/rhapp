@@ -38,6 +38,7 @@ const Container = styled.div`
 const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
 `
 
 interface Props {
@@ -51,7 +52,7 @@ function GymKeyWith(props: Props) {
     <>
       <Header>Key With</Header>
       <ImageContainer>
-        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="25%" />
+        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="20%" />
       </ImageContainer>
       <Container>
         <InfoArea> {props.name ?? 'Andy'} </InfoArea>
