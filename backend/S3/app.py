@@ -32,28 +32,18 @@ def fileExist(key):
 
 
 def create(key, fileLocation):
-    try:
-        if fileExist(key):
-            raise FileExistsError
-        user.upload_file(fileLocation, bucketLocation, key)
-    except Exception as e:
-        print(e)
+    user.upload_file(fileLocation, bucketLocation, key)
         
 # read
 
 
 def read(key):
-    try:
-        if not fileExist(key):
-            raise FileNotFoundError
-        else:
-            PresignedUrl = user.generate_presigned_url(
-            'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-            return PresignedUrl
- #   except botocore.exceptions.ClientError as e:
-  #      print(e)
-    except Exception as e:
-        print(e)
+    if not fileExist(key):
+        raise FileNotFoundError
+    else:
+        PresignedUrl = user.generate_presigned_url(
+        'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+        return PresignedUrl
 
 
 # update
@@ -63,8 +53,6 @@ def update(oldKey, newKey, fileLocation=''):
     try:    
         if not fileExist(oldKey):
             raise FileNotFoundError
-        if fileExist(newKey):
-            raise FileExistsError
         if fileLocation == '':
             newObj = bucket.Object(newKey)
             newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
@@ -72,7 +60,7 @@ def update(oldKey, newKey, fileLocation=''):
         else:
             delete(oldKey)
             create(newKey, fileLocation)
-    except Exception as e:
+    except botocore.exceptions.ClientError as e:
         print(e)
 
 # delete

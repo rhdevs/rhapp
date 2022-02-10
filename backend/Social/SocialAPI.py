@@ -110,15 +110,15 @@ def profiles():
                 else:
                     imgBinary = binascii.a2b_base64(imgString)
                     if isJPEG(imgString) == True:
-                        imgKey = str(userID) + "/profile_pic.jpg"
-                        imgFileLocation = str(os.getcwd()) + "/profile_pic.jpg"
-                        if os.path.exists('profile_pic.jpg') == True:
-                            os.remove('profile_pic.jpg')
-                            fd = open('profile_pic.jpg', 'wb')
+                        imgKey = str(userID) + "/profile_pic.jpeg"
+                        imgFileLocation = str(os.getcwd()) + "/profile_pic.jpeg"
+                        if os.path.exists('profile_pic.jpeg') == True:
+                            os.remove('profile_pic.jpeg')
+                            fd = open('profile_pic.jpeg', 'wb')
                             fd.write(imgBinary)
                             fd.close()
                         else:
-                            fd = open('profile_pic.jpg', 'wb')
+                            fd = open('profile_pic.jpeg', 'wb')
                             fd.write(imgBinary)
                             fd.close()
                         return imgKey, imgFileLocation
@@ -177,37 +177,30 @@ def profiles():
                     else:
                         raise TypeError
                     
-            try:
-                imgKey, imgFileLocation = imgGeneration(str(imgString))
+
+            imgKey, imgFileLocation = imgGeneration(str(imgString))
+            oldImgKey = db.Profiles.find_one({"userID": userID}).get("imageKey")
+            if oldImgKey != imgKey:
+                delete(oldImgKey)
                 create(imgKey, imgFileLocation)
-                result = db.Profiles.update_one({"userID": userID}, {'$set': data}, upsert=True)
-                if int(result.matched_count) > 0:
-                    response = {
-                        "status": "success",
-                        "message": "Profile uploaded"
-                    }
-                    return make_response(response, 200)
-                else:
-                    response = {
-                        "status": "failed",
-                    }
-                    return make_response(response, 204)
+            else:
+                create(imgKey, imgFileLocation)            
             
-            except FileExistsError:
-                oldImgKey = str(db.Profiles.find_one({"userID": userID}).get("imageKey")) # OR str(list(db.Profiles.distinct("imageKey", {"userID": userID}))[0]) , see: https://docs.mongodb.com/manual/reference/method/db.collection.distinct/
-                update(oldImgKey, imgKey, imgFileLocation)
-                result = db.Profiles.update_one({"userID": userID}, {'$set': data}, upsert=True)
-                if int(result.matched_count) > 0:
-                    response = {
-                        "status": "success",
-                        "message": "Profile updated"
-                    }
-                    return make_response(response, 200)
-                else:
-                    response = {
-                        "status": "failed",
-                    }
-                    return make_response(response, 204)
+            del data["profilePictureUrl"]
+            data["imageKey"] = imgKey
+            result = db.Profiles.update_one({"userID": userID}, {'$set': data}, upsert=True)
+            if int(result.matched_count) > 0:
+                response = {
+                    "status": "success",
+                    "message": "Profile uploaded"
+                }
+                return make_response(response, 200)
+            else:
+                response = {
+                    "status": "failed",
+                }
+                return make_response(response, 204)
+            
     except TypeError and binascii.Error:
         return {"err": "Invalid data", "status": "failed"}, 400
     except Exception as e:
