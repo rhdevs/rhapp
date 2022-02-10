@@ -67,8 +67,6 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
     return processedDate
   }
 
-  facilityBookings.forEach((booking) => convertDates(booking.startTime))
-
   const today = new Date()
   let startingMonth = 0
   const currentYear = today.getFullYear()

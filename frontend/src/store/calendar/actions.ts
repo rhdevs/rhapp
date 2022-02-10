@@ -1,6 +1,7 @@
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
+import { unixToCalendarFormat } from '../../common/unixToCalendarFormat'
 
 export const SetClickedDate = (newClickedDate: number) => async (
   dispatch: Dispatch<ActionTypes>,
@@ -57,27 +58,11 @@ export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
 
 export const UpdateProcessedDates = (rawBookingsDetails: Booking[]) => async (dispatch: Dispatch<ActionTypes>) => {
   const newProcessedDates: number[] = []
-  const convertDates = (unprocessedDate: number) => {
-    const month = new Date(unprocessedDate * 1000).getMonth() + 1
-    const day = new Date(unprocessedDate * 1000).getDate()
-    const processedDate = month * 100 + day
-    newProcessedDates.push(processedDate)
-    return
-  }
 
-  rawBookingsDetails.forEach((booking) => convertDates(booking.startTime))
-  rawBookingsDetails.forEach((booking) => convertDates(booking.endTime))
+  rawBookingsDetails.forEach((booking) => unixToCalendarFormat(booking.startTime, newProcessedDates))
+  rawBookingsDetails.forEach((booking) => unixToCalendarFormat(booking.endTime, newProcessedDates))
   dispatch({
     type: CALENDAR_ACTIONS.SET_PROCESSED_DATES,
     processedDates: newProcessedDates,
   })
-}
-
-export const setViewDates = (newDate: any, selectedFacilityId: number) => (dispatch: Dispatch<ActionTypes>) => {
-  const startDate = newDate
-  const endDate = newDate
-
-  // dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: startDate })
-  // dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })
-  // dispatch(getAllBookingsForFacility(startDate, endDate, selectedFacilityId))
 }
