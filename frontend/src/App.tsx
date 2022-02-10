@@ -12,6 +12,7 @@ import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
 import ScheduleBlock from './components/ScheduleBlock/ScheduleBlock'
+import CCABooking from './components/ScheduleBlock/CCABooking'
 
 class App extends React.Component {
   render() {
@@ -20,6 +21,7 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
+        <CCABooking />
         <ScheduleBlock />
         <GlobalStyle />
         <BrowserRouter>
