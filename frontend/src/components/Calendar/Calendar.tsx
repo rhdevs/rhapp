@@ -58,15 +58,6 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
     dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
   }, [])
 
-  // conert unix dates into component friendly format; 302 for 2nd of March, 1105 for 5th Nov
-  const convertDates = (unprocessedDate: number) => {
-    const month = new Date(unprocessedDate * 1000).getMonth() + 1
-    const day = new Date(unprocessedDate * 1000).getDate()
-    const processedDate = month * 100 + day
-    processedDates.push(processedDate)
-    return processedDate
-  }
-
   const today = new Date()
   let startingMonth = 0
   const currentYear = today.getFullYear()
