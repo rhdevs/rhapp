@@ -80,9 +80,40 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   ]
 
   const [currentTab, setCurrentTab] = useState<number>(1)
+  const [currentGymTab, setCurrentGymTab] = useState<string>('Gym')
   const sections = ['Gym', 'History']
   const gymTelegram = gymHistory.map((gym: any) => gym.telegramHandle)
   const history = useHistory()
+
+  function TabPage(tabID: number) {
+    switch (tabID) {
+      case 1:
+        return (
+          <>
+            <GymStatus isOpen />
+            <GymKeyWith />
+            <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <ButtonComponent state="primary" text="Key with me" onClick={() => undefined} />
+              <ButtonComponent state="primary" text="Return key" onClick={() => undefined} />
+              <ButtonComponent state="primary" text="Close Gym" onClick={() => undefined} />
+            </div>
+          </>
+        )
+      case 2:
+        return (
+          <>
+            {gymHistory.map((gymGroup, index) => {
+              return (
+                <DummyHistoryRow key={index}>
+                  {gymGroup.telegramHandle}
+                  {gymGroup.userID}
+                </DummyHistoryRow>
+              )
+            })}
+          </>
+        )
+    }
+  }
   return (
     <>
       <GymBarContainer>
@@ -103,6 +134,8 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
           )
         })}
       </GymBarContainer>
+      {TabPage(currentTab)}
+      {/*
       {currentTab === 1 ? (
         <>
           <GymStatus isOpen />
@@ -124,7 +157,8 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
             )
           })}
         </>
-      )}
+        )}
+        */}
     </>
   )
 }
