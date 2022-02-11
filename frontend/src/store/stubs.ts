@@ -22,6 +22,7 @@ import {
  * 3. Washing Machines
  * 4. Search Results
  * 5. dummyUserId
+ * 6. Calendar event dates
  */
 
 export const facilityListStub: Facility[] = [
@@ -549,3 +550,10 @@ export const initSupperGroup: SupperGroup = {
   totalPrice: 0,
   closingTime: undefined,
 }
+
+// event dates are stored as UNIX format
+// dummy dates with events : 5th Feb, 5th Mar, 29th Mar, 2nd Apr
+export const eventDays: number[] = [1644072529, 1646491729, 1648565329, 1648910929]
+
+// dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
+export const processedDates: number[] = [204, 301, 303, 331, 131]

@@ -11,6 +11,7 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
+import { Calendar } from './components/Calendar/Calendar'
 
 class App extends React.Component {
   render() {
@@ -19,6 +20,7 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
+        <Calendar selectedFacilityId={1} />
         <GlobalStyle />
         <BrowserRouter>
           <OfflineStatus />
