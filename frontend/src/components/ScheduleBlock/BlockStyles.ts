@@ -8,7 +8,7 @@ export const DailyContainer = styled.div`
 `
 
 // Styles for Booking Block (Occupied, Available, Selected and Not Available)
-export const BookingBlock = styled.div<{ occupied?: boolean; selected?: boolean; id: number }>`
+export const BookingBlock = styled.div<{ occupied?: boolean; selected?: boolean; ccaId: number }>`
   margin: 15px 2%;
   border-radius: 5px;
   padding: 15px 15px;
@@ -17,11 +17,18 @@ export const BookingBlock = styled.div<{ occupied?: boolean; selected?: boolean;
   align-items: center;
   white-space: nowrap;
   min-height: 100px;
-  ${(props) => (props.occupied ? colours.occupied : props.selected ? colours.selected : props.id % 2 == 0 ? colours.empty : colours.altempty)}
+  ${(props) =>
+    props.occupied
+      ? colours.occupied
+      : props.selected
+      ? colours.selected
+      : props.ccaId % 2 == 0
+      ? colours.empty
+      : colours.altempty}
 `
 
 // Styling for View Only Blocks (Occupied, Not Occupied)
-export const ViewBookings = styled.div<{ occupied?: boolean; type: number }>`
+export const ViewBookings = styled.div<{ isOccupied: boolean; ccaId: number }>`
   margin: 15px 2%;
   border-radius: 5px;
   padding: 15px 15px;
@@ -30,7 +37,7 @@ export const ViewBookings = styled.div<{ occupied?: boolean; type: number }>`
   align-items: center;
   white-space: nowrap;
   min-height: 100px;
-  ${(props) => (props.occupied? colours.occupied : props.type % 2 == 0 ? colours.empty : colours.altempty)}
+  ${(props) => (props.isOccupied ? colours.occupied : props.ccaId % 2 == 0 ? colours.empty : colours.altempty)}
 `
 
 export const TextContainer = styled.div`
