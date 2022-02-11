@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { DailyContainer } from ''
 
 export const DailyContainer = styled.div`
   margin: 15px 2%;
