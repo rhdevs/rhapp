@@ -5,6 +5,7 @@ import { RootState } from '../store/types'
 import BookingCard from './BookingCard'
 import LoadingSpin from './LoadingSpin'
 import TopNavBarRevamp from './TopNavBarRevamp'
+import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -17,7 +18,11 @@ const MainContainer = styled.div`
 `
 
 export default function ViewConflict() {
+  const history = useHistory()
   const { isLoading, conflictBookings } = useSelector((state: RootState) => state.facilityBooking)
+  if (conflictBookings.length === 0) {
+    history.goBack()
+  }
 
   return (
     <>
