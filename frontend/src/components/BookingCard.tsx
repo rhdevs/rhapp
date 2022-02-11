@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import styled, { css } from 'styled-components'
-import { useParams, useHistory } from 'react-router-dom'
+import React from 'react'
+import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/types'
 import { PATHS } from '../routes/Routes'
@@ -11,6 +11,7 @@ import { openUserTelegram } from '../common/telegramMethods'
 
 import messageIcon from '../assets/messageIcon.svg'
 import adminIcon from '../assets/adminIcon.svg'
+import { Booking } from '../store/facilityBooking/types'
 
 const BookingContainer = styled.div`
   position: relative;
@@ -64,20 +65,10 @@ const Icon = styled.img`
   padding: 20px;
 `
 
-export default function BookingCard() {
+export default function BookingCard({ bookings }: { bookings: Booking[] }) {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityID: string }>()
-  const {
-    ViewStartDate,
-    ViewEndDate,
-    createSuccess,
-    createFailure,
-    isLoading,
-    facilityBookings,
-    selectedFacilityName,
-    selectedFacilityId,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const { ViewStartDate, facilityBookings } = useSelector((state: RootState) => state.facilityBooking)
 
   const fetchTelegram = async (booking) => {
     try {
@@ -100,7 +91,7 @@ export default function BookingCard() {
 
   return (
     <>
-      {facilityBookings?.map((event) => (
+      {bookings?.map((event) => (
         <BookingContainer
           key={event.bookingID}
           onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)}
