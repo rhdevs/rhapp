@@ -8,7 +8,10 @@ export const DailyContainer = styled.div`
 `
 
 // Styles for Booking Block (Occupied, Available, Selected and Not Available)
-export const BookingBlock = styled.div<{ occupied?: boolean; selected?: boolean; ccaId: number }>`
+export const StyledBookingBlock = styled.div<{
+  type: 'available' | 'occupied' | 'selected' | 'unavailable'
+  ccaId: number
+}>`
   margin: 15px 2%;
   border-radius: 5px;
   padding: 15px 15px;
@@ -17,18 +20,20 @@ export const BookingBlock = styled.div<{ occupied?: boolean; selected?: boolean;
   align-items: center;
   white-space: nowrap;
   min-height: 100px;
-  ${(props) =>
-    props.occupied
-      ? colours.occupied
-      : props.selected
-      ? colours.selected
+  background: ${(props) =>
+    props.type === 'occupied'
+      ? palette.occupied
+      : props.type === 'available'
+      ? palette.available
+      : props.type === 'selected'
+      ? palette.selected
       : props.ccaId % 2 == 0
-      ? colours.empty
-      : colours.altempty}
+      ? palette.unavailable1
+      : palette.unavailable2};
 `
 
 // Styling for View Only Blocks (Occupied, Not Occupied)
-export const ViewBookings = styled.div<{ isOccupied: boolean; ccaId: number }>`
+export const StyledViewBooking = styled.div<{ isOccupied: boolean; ccaId: number }>`
   margin: 15px 2%;
   border-radius: 5px;
   padding: 15px 15px;
@@ -37,7 +42,8 @@ export const ViewBookings = styled.div<{ isOccupied: boolean; ccaId: number }>`
   align-items: center;
   white-space: nowrap;
   min-height: 100px;
-  ${(props) => (props.isOccupied ? colours.occupied : props.ccaId % 2 == 0 ? colours.empty : colours.altempty)}
+  background: ${(props) =>
+    props.isOccupied ? palette.occupied : props.ccaId % 2 == 0 ? palette.unavailable1 : palette.unavailable2};
 `
 
 export const TextContainer = styled.div`
@@ -52,10 +58,10 @@ export const TimeText = styled.h3`
   font-weight: 350;
 `
 
-const colours = {
-  occupied: `background: #fd0000;`,
-  empty: `background: #F1F3F7;`,
-  altempty: `background: #F6F6F6;`,
-  selected: `background: #72DA75;`,
-  notselected: `background: #D8E6DF;`,
+const palette = {
+  available: '#F1F3F7',
+  unavailable1: '#F1F3F7',
+  unavailable2: '#F6F6F6',
+  selected: '#72DA75',
+  occupied: '#fd0000',
 }

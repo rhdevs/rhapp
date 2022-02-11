@@ -13,6 +13,7 @@ import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
 import { ViewBookingEntry } from './store/facilityBooking/types'
 import ViewBlock from './components/ScheduleBlock/ViewBlock'
+import BookingBlock from './components/ScheduleBlock/BookingBlock'
 
 const mockValues: ViewBookingEntry[] = [
   { id: 1, ccaName: 'Devs', eventName: 'CCA Trg', occupied: true },
@@ -30,8 +31,11 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        {mockValues.map((value, index) => {
+        {/* {mockValues.map((value, index) => {
           return <ViewBlock bookingEntry={value} key={index} />
+        })} */}
+        {mockValues.map((value, index) => {
+          return <BookingBlock bookingEntry={value} key={index} />
         })}
         <GlobalStyle />
         <BrowserRouter>
