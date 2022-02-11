@@ -120,7 +120,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
           </BookingRightDisplay>
         </BookingContainer>
       ))}
-      {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
+      {bookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
     </>
   )
 }

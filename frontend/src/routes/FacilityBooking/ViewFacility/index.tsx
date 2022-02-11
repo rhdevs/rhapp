@@ -296,8 +296,7 @@ export default function ViewFacility() {
               </div> */}
             </ActionButtonGroup>
             <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
-            {!isLoading && <BookingCard></BookingCard>}
-            {isLoading && <LoadingSpin />}
+            {isLoading ? <LoadingSpin /> : <BookingCard bookings={facilityBookings} />}
             <BottomNavBar />
           </>
         </MainContainer>

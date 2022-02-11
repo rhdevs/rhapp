@@ -37,7 +37,7 @@ export enum PATHS {
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityID',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
-  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityID',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
