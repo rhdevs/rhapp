@@ -48,12 +48,9 @@ const DatesGridContainer = styled.div`
 // this component takes in an array of events or an array of dates that has events
 export const Calendar = (props: { selectedFacilityId: number }) => {
   const dispatch = useDispatch()
-  const { CalendarViewFacilityStartDate, facilityBookings, processedDates, isLoading } = useSelector(
-    (state: RootState) => state.calendar,
-  )
+  const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
   useEffect(() => {
-    // set to 1 for easier debugging. 1 for UL Main Area
     dispatch(SetIsLoading(true))
     dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
   }, [])
