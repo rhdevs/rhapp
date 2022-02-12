@@ -75,31 +75,18 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
           </MonthContainer>
           <>
             {monthList.slice(1).map((month) => {
-              if (month.getMonth() === 0) {
-                // Note: 0 stands for Jan
-                return (
-                  <>
-                    <YearContainer>{currentYear + 1}</YearContainer>
-                    <MonthContainer key={startingMonth++}>
-                      <MonthsHeaderContainer>
-                        {month.toLocaleString('default', { month: 'long' })}
-                      </MonthsHeaderContainer>
-                      <DatesGridContainer>
-                        <DayHeaders />
-                        <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
-                      </DatesGridContainer>
-                    </MonthContainer>
-                  </>
-                )
-              }
+              // Note: 0 stands for Jan
               return (
-                <MonthContainer key={startingMonth++}>
-                  <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-                  <DatesGridContainer>
-                    <DayHeaders />
-                    <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
-                  </DatesGridContainer>
-                </MonthContainer>
+                <>
+                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+                  <MonthContainer key={startingMonth++}>
+                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+                    <DatesGridContainer>
+                      <DayHeaders />
+                      <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
+                    </DatesGridContainer>
+                  </MonthContainer>
+                </>
               )
             })}
           </>
