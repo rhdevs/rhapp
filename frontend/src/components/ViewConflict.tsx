@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store/types'
@@ -20,9 +20,11 @@ const MainContainer = styled.div`
 export default function ViewConflict() {
   const history = useHistory()
   const { isLoading, conflictBookings } = useSelector((state: RootState) => state.facilityBooking)
-  if (conflictBookings.length === 0) {
-    history.goBack()
-  }
+  useEffect(() => {
+    if (conflictBookings.length === 0) {
+      history.goBack()
+    }
+  })
 
   return (
     <>

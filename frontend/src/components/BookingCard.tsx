@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/types'
 import { PATHS } from '../routes/Routes'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { months, days } from '../common/dates'
@@ -66,10 +64,7 @@ const Icon = styled.img`
 `
 
 export default function BookingCard({ bookings }: { bookings: Booking[] }) {
-  const dispatch = useDispatch()
   const history = useHistory()
-  const { ViewStartDate, facilityBookings } = useSelector((state: RootState) => state.facilityBooking)
-
   const fetchTelegram = async (booking) => {
     try {
       fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
@@ -88,39 +83,45 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
       console.log(err)
     }
   }
-
   return (
     <>
-      {bookings?.map((event) => (
-        <BookingContainer
-          key={event.bookingID}
-          onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)}
-        >
-          <BookingLeftDisplay>
-            <DateComponent>
-              {days[ViewStartDate.getDay()]}{' '}
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()] + ' ' + ViewStartDate.getFullYear()}
-            </DateComponent>
-            <TimeComponent>
-              {get24Hourtime(event.startTime)} to {get24Hourtime(event.endTime)}
-            </TimeComponent>
-            <BookingCCAName>{event.ccaName ? event.ccaName : 'Personal'}</BookingCCAName>
-          </BookingLeftDisplay>
-          <BookingRightDisplay>
-            {event.userID === localStorage.getItem('userID') ? (
-              <Icon src={adminIcon} />
-            ) : (
-              <Icon
-                onClick={() => {
-                  fetchTelegram(event)
-                }}
-                src={messageIcon}
-              />
-            )}
-          </BookingRightDisplay>
-        </BookingContainer>
-      ))}
-      {bookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
+      {bookings?.length ? (
+        bookings.map((booking) => (
+          <BookingContainer
+            key={booking.bookingID}
+            onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + booking.bookingID)}
+          >
+            <BookingLeftDisplay>
+              <DateComponent>
+                {days[new Date(booking.startTime * 1000).getDay()]}{' '}
+                {new Date(booking.startTime * 1000).getDate() +
+                  ' ' +
+                  months[new Date(booking.startTime * 1000).getMonth()] +
+                  ' ' +
+                  new Date(booking.startTime * 1000).getFullYear()}
+              </DateComponent>
+              <TimeComponent>
+                {get24Hourtime(booking.startTime)} to {get24Hourtime(booking.endTime)}
+              </TimeComponent>
+              <BookingCCAName>{booking.ccaName ? booking.ccaName : 'Personal'}</BookingCCAName>
+            </BookingLeftDisplay>
+            <BookingRightDisplay>
+              {booking.userID === localStorage.getItem('userID') ? (
+                <Icon src={adminIcon} />
+              ) : (
+                <Icon
+                  onClick={() => {
+                    fetchTelegram(booking)
+                  }}
+                  src={messageIcon}
+                />
+              )}
+            </BookingRightDisplay>
+          </BookingContainer>
+        ))
+      ) : (
+        <p style={{ padding: '23px' }}>There are no bookings on this day!</p>
+      )}
     </>
   )
 }
