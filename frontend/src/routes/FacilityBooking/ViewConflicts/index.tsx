@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { RootState } from '../store/types'
-import BookingCard from './BookingCard'
-import LoadingSpin from './LoadingSpin'
-import TopNavBarRevamp from './TopNavBarRevamp'
+import { RootState } from '../../../store/types'
+import BookingCard from '../../../components/BookingCard'
+import LoadingSpin from '../../../components/LoadingSpin'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`

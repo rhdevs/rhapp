@@ -32,6 +32,7 @@ import dayjs from 'dayjs'
 import Calendar from 'react-calendar'
 import './calendar.css'
 import BookingCard from '../../../components/BookingCard'
+import ConflictAlert from '../../../components/ConflictAlert'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -261,6 +262,7 @@ export default function ViewFacility() {
               />
             </DateSelectorGroup>
             <InstructionText>Select a date to view the day’s events.</InstructionText>
+            <ConflictAlert></ConflictAlert>
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
