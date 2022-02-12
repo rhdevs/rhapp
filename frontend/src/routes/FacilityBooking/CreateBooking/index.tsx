@@ -205,14 +205,10 @@ export default function CreateBooking() {
           />
           {errors.eventName && <p>{errors.eventName?.message}</p>}
           <div style={{ width: '100%' }}>
+            {/* TODO: make a component that is a clickable Start/End Date */}
             <StyledTitle>Start</StyledTitle>
-            {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
             <DatePickerRow>
               <StyledDateName>
-                {/* 
-                TODO: create dd month yyyy (eg 27 April 2022) method in common folder
-                format(new Date(booking?.startTime), 'd MMMM yyyy')
-                */}
                 {bookingStartTime && unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
               </StyledDateName>
             </DatePickerRow>
@@ -223,6 +219,7 @@ export default function CreateBooking() {
               </StyledDateName>
             </DatePickerRow>
           </div>
+          {/* TODO: Someone to update the CCA style to make the words have correct font color + add the Title to it */}
           <StyledTitle>CCA</StyledTitle>
           <CCAInput
             options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
@@ -256,10 +253,11 @@ export default function CreateBooking() {
           {isWeeklyOn && (
             <RepeatWeeklyPickerRow>
               <StyledTitle>End</StyledTitle>
-              {/* TODO: add weekly recurrence button row */}
+              {/* TODO: add weekly recurrence row which is clickable element similar to START/END Date */}
             </RepeatWeeklyPickerRow>
           )}
           {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert />}
+          {/* TODO: Improve the green button with disabled state to be able to use properly */}
           <div>
             <button type="submit">Confirm</button>
           </div>
