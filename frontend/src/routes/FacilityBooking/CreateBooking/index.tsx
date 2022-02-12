@@ -1,77 +1,50 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { Controller, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import dayjs from 'dayjs'
-import { useHistory } from 'react-router-dom'
+
+import { AutoComplete } from 'antd'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import InputRow from '../../../components/Mobile/InputRow'
-import { Alert, AutoComplete, Input, InputNumber } from 'antd'
-import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { format } from 'date-fns'
 import {
-  clearErrors,
-  editBookingCCA,
-  editBookingDescription,
-  editBookingFromDate,
-  editBookingName,
-  editBookingToDate,
   fetchAllCCAs,
   getFacilityList,
-  handleCreateBooking,
-  resetCreateBookingSuccessFailure,
-  resetNewBooking,
   SetIsLoading,
-  setNewBookingFacilityName,
-  setSelectedFacility,
-  setBookingRepeat,
+  resetBooking,
+  handleCreateNewBooking,
+  setBookingStartTime,
+  setBookingEndTime,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
 import { Switch } from '../../../components/Switch'
-import ButtonComponent from '../../../components/Button'
+import { get24Hourtime } from '../../../common/get24HourTime'
+import { BookingStatus } from '../../../store/facilityBooking/types'
+import ConflictAlert from '../../../components/ConflictAlert'
+import { unixToFullDate } from '../../../common/unixToFullDate'
 
 const Background = styled.div`
   background-color: #fff;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
+`
+
+const Form = styled.form`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0px 20px;
 `
-const StyledInput = styled(Input)`
-  &.ant-input {
-    width: 100%;
-    border-radius: 15px;
-    border: 1px solid #d9d9d9;
-    padding: 5px 10px;
-    margin: 0px 0px 20px 0px;
-  }
-  &.ant-input::placeholder {
-    color: #d9d9d9;
-  }
-`
 
-const StyledDateInput = styled(Input)`
-  &.ant-input {
-    width: 100%;
-    border-radius: 15px;
-    border: 1px solid #d9d9d9;
-    padding: 5px 10px;
-    margin: 0px 0px 20px 0px;
-    font-size: 1;
-    color: white;
-    background: #f3f3f9;
-  }
-  &.ant-input::placeholder {
-    color: #d9d9d9;
-  }
-`
-const StyledDateName = styled.text`
+const StyledDateName = styled.label`
   font-family: Inter;
   z-index: 1;
   margin-top: 8px;
@@ -86,6 +59,7 @@ const StyledDateName = styled.text`
   background: #f3f3f9;
   pointer-events: none;
 `
+
 const StyledTitle = styled.text`
   font-family: Inter;
   padding: 5px 10px;
@@ -104,8 +78,9 @@ const DatePickerRow = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-content: center;
-  margin: 10px 0px;
-  color: #666666;
+  margin: 10px 0;
+  color: #666;
+  height: 34px;
 `
 
 const WeeklyRecurrenceRow = styled.div`
@@ -113,18 +88,21 @@ const WeeklyRecurrenceRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 10px 0px;
-  color: #666666;
+  margin: 10px 0;
+  color: #666;
+  align-items: center;
 `
+
 const CCAInput = styled(AutoComplete)`
   width: 100%;
   color: #bfbfbf;
   &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    border-radius: 30px !important;
+    border-radius: 10px !important;
     border: 0;
     background-color: #f3f3f9;
   }
 `
+
 const RepeatWeeklyPickerRow = styled.div`
   width: 100%;
   display: flex;
@@ -136,126 +114,25 @@ const RepeatWeeklyPickerRow = styled.div`
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const {
-    newBooking,
-    newBookingName,
-    newBookingFromDate,
-    newBookingToDate,
-    newBookingCCA,
-    newBookingDescription,
-    newBookingFacilityName,
-    facilityList,
-    isLoading,
-    ccaList,
-    createBookingError,
-    createSuccess,
-    createFailure,
-    newBookingFacilityId,
-    numRepeatWeekly,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const params = useParams<{ facilityId: string }>()
+  const { register, handleSubmit, errors, control } = useForm()
+  const [isWeeklyOn, setIsWeeklyOn] = useState(false)
+  const [ccaName, setCcaName] = useState<string>('')
+  const { facilityList, isLoading, ccaList, booking, bookingStatus, bookingStartTime, bookingEndTime } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
-    if (newBooking) {
-      dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
-      dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
-      dispatch(editBookingDescription(newBooking.description))
-      dispatch(editBookingName(newBooking.eventName))
-      dispatch(editBookingCCA(newBooking.ccaName ? newBooking.ccaName : ''))
-    } else {
-      dispatch(resetNewBooking())
-    }
+    dispatch(resetBooking())
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
       dispatch(getFacilityList())
     }
   }, [dispatch])
 
-  useEffect(() => {
-    if (createSuccess === true && createFailure === false) {
-      history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      if (newBookingFacilityId) {
-        history.push('/facility/view/' + newBookingFacilityId)
-      } else {
-        history.push('/facility/view/1')
-      }
-      dispatch(resetCreateBookingSuccessFailure(true, true))
-      setTimeout(() => dispatch(resetCreateBookingSuccessFailure(false, false)), 5000)
-    }
-  }, [createSuccess, createFailure])
-
-  const [isWeeklyOn, setIsWeeklyOn] = useState(false)
-
-  const WeeklyOn = () => {
-    setIsWeeklyOn(!isWeeklyOn)
-    setRepeat(1)
-  }
-
-  const CheckIcon = (createBookingError: string) => {
-    if (
-      createBookingError === '' &&
-      newBookingCCA !== '' &&
-      newBookingDescription !== '' &&
-      newBookingFacilityName !== ''
-    ) {
-      return (
-        <ButtonComponent
-          state={'primary'}
-          text={'Book'}
-          onClick={() => {
-            dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
-          }}
-        ></ButtonComponent>
-      )
-    } else {
-      return (
-        <ButtonComponent
-          state={'secondary'}
-          text={'Book'}
-          onClick={function (): void {
-            console.log('nothing')
-          }}
-        ></ButtonComponent>
-      )
-    }
-  }
-
-  const setBookingName = (newEvent: string) => {
-    dispatch(editBookingName(newEvent))
-  }
-
-  const handleFromDateChange = (newDate: string) => {
-    if (!isNaN(Date.parse(newDate))) dispatch(editBookingFromDate(new Date(newDate)))
-  }
-
-  const handleToDateChange = (newDate: string) => {
-    if (!isNaN(Date.parse(newDate))) dispatch(editBookingToDate(new Date(newDate)))
-  }
-
-  const convertLocalTime = (date: Date) => {
-    const newDate = new Date(date.getTime() + 28800000)
-    console.log(newDate)
-    format(newDate, 'dd/MM/yyyy, hh:mm:ss')
-    return newDate.toISOString().slice(0, -8)
-  }
-
-  const setCca = (newCCA: string) => {
-    dispatch(editBookingCCA(newCCA))
-  }
-
-  const setDescription = (description: string) => {
-    dispatch(editBookingDescription(description))
-  }
-  const setFacility = (newFacilityName: string) => {
-    dispatch(setNewBookingFacilityName(newFacilityName))
-    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newFacilityName)?.facilityID
-    if (newSelectedFacilityId) {
-      dispatch(setSelectedFacility(newSelectedFacilityId))
-    }
-  }
-
-  const setRepeat = (numRepeatWeekly: number) => {
-    if (numRepeatWeekly) dispatch(setBookingRepeat(numRepeatWeekly))
+  const getFacilityName = () => {
+    return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
   }
 
   /* 
@@ -270,110 +147,124 @@ export default function CreateBooking() {
 
   locationOptions.push({ value: 'Conference Room' })
 
+  const onSubmit = (e) => {
+    e.preventDefault()
+    const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
+
+    if (!ccaId && ccaName !== 'Personal') {
+      //selected cca is not valid (error)
+    } else {
+      handleSubmit((data) => {
+        console.log(data, ccaName)
+        dispatch(
+          handleCreateNewBooking(
+            Number(params.facilityId),
+            data.eventName,
+            bookingStartTime,
+            bookingEndTime,
+            ccaId,
+            data.description,
+          ),
+        )
+      })()
+    }
+  }
+
+  useEffect(() => {
+    dispatch(setBookingStartTime(1644641028))
+    dispatch(setBookingEndTime(1644648228))
+  }, [])
+
+  useEffect(() => {
+    if (bookingStatus === BookingStatus.SUCCESS) {
+      history.replace(PATHS.FACILITY_BOOKING_MAIN)
+      history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
+    }
+  }, [bookingStatus])
+
   return (
-    <div>
-      <TopNavBar
-        title={
-          newBooking?.bookingID
-            ? `Edit Booking for ` + newBookingFacilityName
-            : `New Booking for ` + newBookingFacilityName
-        }
-      />
-      {isLoading && <LoadingSpin />}
-      {!isLoading && (
-        <Background>
-          {createBookingError !== '' && (
-            <Alert
-              message={createBookingError}
-              // description="You can book up to maximum of 4 hours!"
-              type="error"
-              style={{ margin: '23px 23px 23px 23px' }}
-              closable
-              showIcon
-              afterClose={() => {
-                dispatch(clearErrors())
-              }}
-            />
-          )}
-          {createBookingError === '' && <div style={{ margin: '20px' }} />}
-          {!newBookingFacilityName && (
-            <div style={{ width: '100%' }}>
-              <StyledTitle>Facility Name</StyledTitle>
-              <CCAInput
-                style={{ width: '100%', marginBottom: '23px' }}
-                options={locationOptions}
-                value={newBookingFacilityName}
-                placeholder="Location"
-                onChange={(newFacilityName) => setFacility(newFacilityName)}
-                filterOption={(inputValue, option) =>
-                  option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                }
-                notFoundContent="No Matching Facility"
-                allowClear
+    <Background>
+      <TopNavBar title={`Book ${getFacilityName()}`} />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
+        <Form onSubmit={onSubmit}>
+          <Controller
+            name="eventName"
+            render={({ onChange, value }) => (
+              <InputField
+                title="Event Name"
+                {...register('eventName', { required: 'Event name is required!' })}
+                placeholder="Event Name"
+                value={value}
+                onChange={onChange}
               />
-            </div>
-          )}
-          <InputField title="Event Name" placeholder="Event Name" value={newBookingName} setValue={setBookingName} />
+            )}
+            control={control}
+            defaultValue={null}
+          />
+          {errors.eventName && <p>{errors.eventName?.message}</p>}
           <div style={{ width: '100%' }}>
             <StyledTitle>Start</StyledTitle>
             {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
             <DatePickerRow>
               <StyledDateName>
-                {format(newBookingFromDate, 'd MMMM yyyy') + ' at ' + format(newBookingFromDate, 'HHmm')}
+                {/* 
+                TODO: create dd month yyyy (eg 27 April 2022) method in common folder
+                format(new Date(booking?.startTime), 'd MMMM yyyy')
+                */}
+                {bookingStartTime && unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
               </StyledDateName>
-              <StyledDateInput
-                type="datetime-local"
-                value={convertLocalTime(newBookingFromDate)}
-                onChange={(event) => handleFromDateChange(event.target.value)}
-              ></StyledDateInput>
             </DatePickerRow>
             <StyledTitle>End</StyledTitle>
             <DatePickerRow>
               <StyledDateName>
-                {format(newBookingToDate, 'd MMMM yyyy') + ' at ' + format(newBookingToDate, 'HHmm')}
+                {bookingEndTime && unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
               </StyledDateName>
-              <StyledDateInput
-                type="datetime-local"
-                value={convertLocalTime(newBookingToDate)}
-                onChange={(event) => handleToDateChange(event.target.value)}
-              ></StyledDateInput>
             </DatePickerRow>
           </div>
           <StyledTitle>CCA</StyledTitle>
-          {/* THIS CCA PICKER ANTD CANNOT MAKE IT THE SAME BORDERRADIUS */}
           <CCAInput
-            style={{ width: '100%', borderRadius: '15px' }}
             options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
               value: cca.ccaName,
             }))}
-            value={newBookingCCA}
+            value={ccaName}
             placeholder="CCA"
-            onChange={(value) => setCca(value)}
+            onChange={(value) => setCcaName(value)}
             filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
             notFoundContent="No Matching CCAs"
             allowClear
           />
-          <InputField
-            title="Description"
-            placeholder="Tell us what your booking is for!"
-            value={newBookingDescription}
-            setValue={setDescription}
-            textArea
+          <Controller
+            name="description"
+            render={({ onChange, value }) => (
+              <InputField
+                title="Description"
+                placeholder="Tell us what your booking is for!"
+                textArea
+                value={value}
+                onChange={onChange}
+              />
+            )}
+            control={control}
+            defaultValue={null}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
-            <Switch isOn={isWeeklyOn} handleToggle={() => WeeklyOn()} switchSize={80}></Switch>
+            <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
           </WeeklyRecurrenceRow>
-          {/* TODO this newbooking repeatweekly picker only comes out after toggle button is activated */}
-          {!newBooking?.bookingID && isWeeklyOn && (
+          {isWeeklyOn && (
             <RepeatWeeklyPickerRow>
-              <StyledTitle>Number of Weeks</StyledTitle>
-              <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
+              <StyledTitle>End</StyledTitle>
+              {/* TODO: add weekly recurrence button row */}
             </RepeatWeeklyPickerRow>
           )}
-          <div>{CheckIcon(createBookingError)}</div>
-        </Background>
+          {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert />}
+          <div>
+            <button type="submit">Confirm</button>
+          </div>
+        </Form>
       )}
-    </div>
+    </Background>
   )
 }
