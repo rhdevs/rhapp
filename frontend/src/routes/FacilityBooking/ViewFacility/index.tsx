@@ -262,7 +262,6 @@ export default function ViewFacility() {
               />
             </DateSelectorGroup>
             <InstructionText>Select a date to view the day’s events.</InstructionText>
-            <ConflictAlert></ConflictAlert>
             <ActionButtonGroup>
               <StyledButton
                 onButtonClick={() => {
