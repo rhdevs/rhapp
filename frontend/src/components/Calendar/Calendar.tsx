@@ -75,9 +75,9 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
           </MonthContainer>
           <>
             {monthList.slice(1).map((month) => {
-              // Note: 0 stands for Jan
               return (
                 <>
+                  {/* Note: 0 stands for Jan */}
                   {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
                   <MonthContainer key={startingMonth++}>
                     <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
