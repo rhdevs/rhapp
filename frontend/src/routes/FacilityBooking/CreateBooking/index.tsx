@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
@@ -31,6 +31,8 @@ import {
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
+import { Switch } from '../../../components/Switch'
+import ButtonComponent from '../../../components/Button'
 
 const Background = styled.div`
   background-color: #fff;
@@ -63,6 +65,7 @@ const StyledDateInput = styled(Input)`
     margin: 0px 0px 20px 0px;
     font-size: 1;
     color: white;
+    background: #f3f3f9;
   }
   &.ant-input::placeholder {
     color: #d9d9d9;
@@ -71,16 +74,17 @@ const StyledDateInput = styled(Input)`
 const StyledDateName = styled.text`
   font-family: Inter;
   z-index: 1;
-  margin-top: 5px;
+  margin-top: 8px;
   margin-left: 8px;
-  color: #666666;
+  color: black;
   width: 70%;
-  height: 25px;
+  height: 20px;
   text-align: left;
-  font-size: 15px;
+  font-size: 0.8rem;
   font-weight: bold;
   position: absolute;
-  background: white;
+  background: #f3f3f9;
+  pointer-events: none;
 `
 const StyledTitle = styled.text`
   font-family: Inter;
@@ -104,10 +108,10 @@ const DatePickerRow = styled.div`
   color: #666666;
 `
 
-const CCAPickerRow = styled.div`
+const WeeklyRecurrenceRow = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   margin: 10px 0px;
   color: #666666;
@@ -180,6 +184,13 @@ export default function CreateBooking() {
     }
   }, [createSuccess, createFailure])
 
+  const [isWeeklyOn, setIsWeeklyOn] = useState(false)
+
+  const WeeklyOn = () => {
+    setIsWeeklyOn(!isWeeklyOn)
+    setRepeat(1)
+  }
+
   const CheckIcon = (createBookingError: string) => {
     if (
       createBookingError === '' &&
@@ -188,19 +199,24 @@ export default function CreateBooking() {
       newBookingFacilityName !== ''
     ) {
       return (
-        <div
+        <ButtonComponent
+          state={'primary'}
+          text={'Book'}
           onClick={() => {
             dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
           }}
-        >
-          <CheckOutlined style={{ color: 'green' }} />
-        </div>
+        ></ButtonComponent>
       )
     } else {
-      // if (newBookingCCA !== '' || newBookingDescription !== '' || newBookingFacilityName !== '') {
-      //   dispatch(SetCreateBookingError('All fields are compulsary!'))
-      // }
-      return <CheckOutlined style={{ color: '#0000004d' }} />
+      return (
+        <ButtonComponent
+          state={'secondary'}
+          text={'Book'}
+          onClick={function (): void {
+            console.log('nothing')
+          }}
+        ></ButtonComponent>
+      )
     }
   }
 
@@ -262,7 +278,6 @@ export default function CreateBooking() {
             ? `Edit Booking for ` + newBookingFacilityName
             : `New Booking for ` + newBookingFacilityName
         }
-        rightComponent={CheckIcon(createBookingError)}
       />
       {isLoading && <LoadingSpin />}
       {!isLoading && (
@@ -283,7 +298,7 @@ export default function CreateBooking() {
           {createBookingError === '' && <div style={{ margin: '20px' }} />}
           {!newBookingFacilityName && (
             <div style={{ width: '100%' }}>
-              <StyledTitle>Event Name</StyledTitle>
+              <StyledTitle>Facility Name</StyledTitle>
               <CCAInput
                 style={{ width: '100%', marginBottom: '23px' }}
                 options={locationOptions}
@@ -298,12 +313,7 @@ export default function CreateBooking() {
               />
             </div>
           )}
-          <StyledTitle>Event Name</StyledTitle>
-          <StyledInput
-            placeholder="Event Name"
-            value={newBookingName}
-            onChange={(e) => dispatch(editBookingName(e.target.value))}
-          />
+          <InputField title="Event Name" placeholder="Event Name" value={newBookingName} setValue={setBookingName} />
           <div style={{ width: '100%' }}>
             <StyledTitle>Start</StyledTitle>
             {/* DATETIME IS FULLY INTEGRATED, AND CHANGING THE FORMAT RESULTS IN IT NOT WORKING, NEED TO DO FURTHER REVIEW */}
@@ -328,30 +338,21 @@ export default function CreateBooking() {
                 onChange={(event) => handleToDateChange(event.target.value)}
               ></StyledDateInput>
             </DatePickerRow>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
-              newBookingToDate,
-            )
-              .diff(dayjs(newBookingFromDate), 'hour', true)
-              .toFixed(1)} hours`}</div>
           </div>
           <StyledTitle>CCA</StyledTitle>
           {/* THIS CCA PICKER ANTD CANNOT MAKE IT THE SAME BORDERRADIUS */}
-          <CCAPickerRow>
-            <CCAInput
-              style={{ width: '100%', borderRadius: '15px' }}
-              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-                value: cca.ccaName,
-              }))}
-              value={newBookingCCA}
-              placeholder="CCA"
-              onChange={(value) => setCca(value)}
-              filterOption={(inputValue, option) =>
-                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-              }
-              notFoundContent="No Matching CCAs"
-              allowClear
-            />
-          </CCAPickerRow>
+          <CCAInput
+            style={{ width: '100%', borderRadius: '15px' }}
+            options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+              value: cca.ccaName,
+            }))}
+            value={newBookingCCA}
+            placeholder="CCA"
+            onChange={(value) => setCca(value)}
+            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+            notFoundContent="No Matching CCAs"
+            allowClear
+          />
           <InputField
             title="Description"
             placeholder="Tell us what your booking is for!"
@@ -359,13 +360,18 @@ export default function CreateBooking() {
             setValue={setDescription}
             textArea
           />
+          <WeeklyRecurrenceRow>
+            <StyledTitle>Weekly Recurrence</StyledTitle>
+            <Switch isOn={isWeeklyOn} handleToggle={() => WeeklyOn()} switchSize={80}></Switch>
+          </WeeklyRecurrenceRow>
           {/* TODO this newbooking repeatweekly picker only comes out after toggle button is activated */}
-          {!newBooking?.bookingID && (
+          {!newBooking?.bookingID && isWeeklyOn && (
             <RepeatWeeklyPickerRow>
               <StyledTitle>Number of Weeks</StyledTitle>
               <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
             </RepeatWeeklyPickerRow>
           )}
+          <div>{CheckIcon(createBookingError)}</div>
         </Background>
       )}
     </div>
