@@ -41,8 +41,8 @@ const MonthsHeaderContainer = styled.div`
 
 const DatesGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 47.14px 47.14px 47.14px 47.14px 47.14px 47.14px 47.14px;
-  grid-template-rows: 40px 40px 40px 40px 40px 40px;
+  grid-template-columns: repeat(7, 47.14px);
+  grid-template-rows: 40px;
 `
 
 // this component takes in an array of events or an array of dates that has events
