@@ -18,6 +18,7 @@ import calendar_icon from '../../assets/calenderIconSelected.svg'
 import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
+import GymHistory from '../../components/GymHistory'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -145,16 +146,18 @@ export default function Home() {
   ]
 
   return (
-    <MainContainer>
-      <PullToRefresh onRefresh={onRefresh}>
-        <TopBar>
-          <Greetings>
-            Good {partOfTheDay} {name}!
-          </Greetings>
-          {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
-        </TopBar>
-        <AnnouncementCarousel />
-        {/* <BannerContainer>
+    <>
+      <GymHistory />
+      <MainContainer>
+        <PullToRefresh onRefresh={onRefresh}>
+          <TopBar>
+            <Greetings>
+              Good {partOfTheDay} {name}!
+            </Greetings>
+            {/* <SearchOutlined onClick={() => history.push(PATHS.SEARCH_PAGE)} style={{ fontSize: 25, color: '#fff' }} /> */}
+          </TopBar>
+          <AnnouncementCarousel />
+          {/* <BannerContainer>
           <BannerText>App under Beta testing</BannerText>
           <StyledTelegramIcon
             onClick={() => {
@@ -164,22 +167,23 @@ export default function Home() {
             alt="Telegram Icon"
           />
         </BannerContainer> */}
-        <ButtonGroup>
-          {buttons.map((button) => (
-            // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
-            <ActionButton
-              type="primary"
-              icon={<ImageButton filter={button.filter} src={button.src} />}
-              key={button.name}
-              onClick={button.clickHandler}
-            >
-              {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
-            </ActionButton>
-          ))}
-        </ButtonGroup>
-        <SocialSection />
-        <BottomNavBar />
-      </PullToRefresh>
-    </MainContainer>
+          <ButtonGroup>
+            {buttons.map((button) => (
+              // <ActionButton src={button.src} alt={button.name} key={button.name} onClick={button.clickHandler} />
+              <ActionButton
+                type="primary"
+                icon={<ImageButton filter={button.filter} src={button.src} />}
+                key={button.name}
+                onClick={button.clickHandler}
+              >
+                {' ' + button.name.charAt(0).toUpperCase() + button.name.slice(1)}
+              </ActionButton>
+            ))}
+          </ButtonGroup>
+          <SocialSection />
+          <BottomNavBar />
+        </PullToRefresh>
+      </MainContainer>
+    </>
   )
 }
