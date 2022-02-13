@@ -1,47 +1,43 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Border = styled.button<{ state: 'primary' | 'secondary' }>`
+const Button = styled.button<{ state: 'primary' | 'secondary' }>`
   height: 2.2rem;
   width: 10rem;
-  margin: 1rem;
-  border: transparent;
-  border-radius: 2rem;
-  padding: 0;
-  background: linear-gradient(to left, #72ba75, #58b994);
-
-  &:active {
-    background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
-    transform: scale(0.95);
-  }
-`
-
-const Inner = styled.button<{ state: 'primary' | 'secondary' }>`
-  height: 98%;
-  width: 98%;
-  border-radius: 2rem;
-  border: transparent;
-  background: ${(props) => (props.state === 'primary' ? `linear-gradient(to left, #72BA75, #58B994)` : 'white')};
+  border-radius: 100rem;
+  font-size: 1rem;
+  border: solid 0.1rem transparent;
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
+    linear-gradient(to left, #72ba75, #58b994);
+  box-shadow: ${(props) => (props.state === 'primary' ? `0px` : `2px 1000px 1px #fff inset`)};
   color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
 
   &:active {
-    background: #d8e6df;
+    background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
     color: #8b8b8b;
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    color: #bfbfbf;
+    border-color: #bfbfbf;
+    background: white;
   }
 `
 
 type Props = {
   state: 'primary' | 'secondary'
   text: string
-  onClick: React.MouseEventHandler<HTMLButtonElement>
   disabled?: boolean
+  type?: 'button' | 'submit' | 'reset' | undefined
+  onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function ButtonComponent(prop: Props) {
   return (
-    <Border onClick={prop.onClick} state={prop.state} disabled={prop.disabled}>
-      <Inner state={prop.state}>{prop.text}</Inner>
-    </Border>
+    <Button onClick={() => prop.onClick()} state={prop.state} disabled={prop.disabled} type={prop.type ?? 'button'}>
+      {prop.text}
+    </Button>
   )
 }
 
