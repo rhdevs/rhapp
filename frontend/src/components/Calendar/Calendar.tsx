@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
-import { eventDays, processedDates } from './../../store/stubs'
 import { getAllBookingsForFacility, SetIsLoading } from '../../store/calendar/actions'
 import LoadingSpin from '../LoadingSpin'
 
@@ -41,19 +40,16 @@ const MonthsHeaderContainer = styled.div`
 
 const DatesGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 47.14px 47.14px 47.14px 47.14px 47.14px 47.14px 47.14px;
-  grid-template-rows: 40px 40px 40px 40px 40px 40px;
+  grid-template-columns: repeat(7, 47.14px);
+  grid-template-rows: 40px;
 `
 
 // this component takes in an array of events or an array of dates that has events
 export const Calendar = (props: { selectedFacilityId: number }) => {
   const dispatch = useDispatch()
-  const { CalendarViewFacilityStartDate, facilityBookings, processedDates, isLoading } = useSelector(
-    (state: RootState) => state.calendar,
-  )
+  const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
   useEffect(() => {
-    // set to 1 for easier debugging. 1 for UL Main Area
     dispatch(SetIsLoading(true))
     dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
   }, [])
@@ -66,7 +62,9 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
 
   return (
     <>
-      {!isLoading && (
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
         <CalenderContainer>
           <YearContainer>{currentYear}</YearContainer>
           <MonthContainer>
@@ -78,37 +76,24 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
           </MonthContainer>
           <>
             {monthList.slice(1).map((month) => {
-              if (month.getMonth() === 0) {
-                // Note: 0 stands for Jan
-                return (
-                  <>
-                    <YearContainer>{currentYear + 1}</YearContainer>
-                    <MonthContainer key={startingMonth++}>
-                      <MonthsHeaderContainer>
-                        {month.toLocaleString('default', { month: 'long' })}
-                      </MonthsHeaderContainer>
-                      <DatesGridContainer>
-                        <DayHeaders />
-                        <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
-                      </DatesGridContainer>
-                    </MonthContainer>
-                  </>
-                )
-              }
               return (
-                <MonthContainer key={startingMonth++}>
-                  <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-                  <DatesGridContainer>
-                    <DayHeaders />
-                    <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
-                  </DatesGridContainer>
-                </MonthContainer>
+                <>
+                  {/* Note: 0 stands for Jan */}
+                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+                  <MonthContainer key={startingMonth++}>
+                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+                    <DatesGridContainer>
+                      <DayHeaders />
+                      <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
+                    </DatesGridContainer>
+                  </MonthContainer>
+                </>
               )
             })}
           </>
         </CalenderContainer>
       )}
-      ){isLoading && <LoadingSpin />}
+      )
     </>
   )
 }

@@ -1,4 +1,3 @@
-import { last } from 'lodash'
 import React from 'react'
 
 import { DateRows } from './DateRows'
