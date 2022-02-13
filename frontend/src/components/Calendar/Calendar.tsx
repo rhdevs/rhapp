@@ -62,7 +62,9 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
 
   return (
     <>
-      {!isLoading && (
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
         <CalenderContainer>
           <YearContainer>{currentYear}</YearContainer>
           <MonthContainer>
@@ -91,7 +93,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
           </>
         </CalenderContainer>
       )}
-      ){isLoading && <LoadingSpin />}
+      )
     </>
   )
 }
