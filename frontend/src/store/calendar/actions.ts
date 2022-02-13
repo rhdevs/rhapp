@@ -1,4 +1,4 @@
-import { Dispatch, GetState } from '../types'
+import { Dispatch } from '../types'
 import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 import { unixToCalendarFormat } from '../../common/unixToCalendarFormat'

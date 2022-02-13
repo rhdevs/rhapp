@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
-import { eventDays, processedDates } from './../../store/stubs'
 import { getAllBookingsForFacility, SetIsLoading } from '../../store/calendar/actions'
 import LoadingSpin from '../LoadingSpin'
 
