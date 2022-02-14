@@ -58,6 +58,9 @@ const BookingRightDisplay = styled.div`
   align-items: center;
   justify-content: center;
 `
+const NoBookingsComponent = styled.div`
+  padding: 23px;
+`
 
 const Icon = styled.img`
   padding: 20px;
@@ -83,7 +86,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
       console.log(err)
     }
   }
-  // To change date month and year in <DateComponent> using unixtocalender function
+
   return (
     <>
       {bookings?.length ? (
@@ -95,6 +98,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
             <BookingLeftDisplay>
               <DateComponent>
                 {days[new Date(booking.startTime * 1000).getDay()]}{' '}
+                {/* TODO Change date month and year in <DateComponent></DateComponent> using unixtocalander function*/}
                 {new Date(booking.startTime * 1000).getDate() +
                   ' ' +
                   months[new Date(booking.startTime * 1000).getMonth()] +
@@ -121,7 +125,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
           </BookingContainer>
         ))
       ) : (
-        <p style={{ padding: '23px' }}>There are no bookings on this day!</p>
+        <NoBookingsComponent>There are no bookings on this day!</NoBookingsComponent>
       )}
     </>
   )
