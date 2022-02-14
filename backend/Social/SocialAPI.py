@@ -9,6 +9,7 @@ import jwt
 import sys
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+from bson.errors import *
 from flask import Blueprint
 import sys
 sys.path.append("../db")
@@ -329,12 +330,23 @@ def posts():
                     }, 200)
 
         elif request.method == 'DELETE':
-            postID = request.args.get('postID')
-            db.Posts.delete_one({"_id": ObjectId(postID)})
-            response = {
-                "status": "success"
-            }
-            return make_response(response, 200)
+            try:
+                postID = request.args.get('postID')
+                if db.Posts.count_documents({"_id": ObjectId(postID)}) == 0:
+                    response = {
+                        "status": "failed",
+                        "message": "The post you are trying to delete does not exist."
+                    }
+                    return make_response(response, 404)
+                else:
+                    db.Posts.delete_one({"_id": ObjectId(postID)})
+                    response = {
+                        "status": "success",
+                        "message": "Post deleted successfully"
+                    }
+                    return make_response(response, 200)
+            except InvalidId as e:
+                return make_response({"status": "failed", "message": "Invalid postID"}), 400
 
         elif request.method == 'POST':
             data = request.get_json()
