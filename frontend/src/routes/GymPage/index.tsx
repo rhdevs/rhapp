@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import GymStatus from '../../components/GymStatus'
 import GymKeyWith from '../../components/GymKeyWith'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { RootState } from '../../store/types'
 import styled from 'styled-components'
 import { GymTabContainer } from '../../components/Tabs'
 import { Icon } from 'antd-mobile'
 import ButtonComponent from '../../components/Button'
+import { getGymStatus, moveKey, returnKey, toggleGym } from '../../store/gym/action'
+import { getUserDetail } from '../../store/social/action'
+import { ButtonStates } from '../../store/gym/types'
 import GymHistory from '../../components/GymHistory'
 
 const NavBarIcons = styled(Icon)`
@@ -38,6 +43,9 @@ const GymContainer = styled.div`
 `
 
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
+  const dispatch = useDispatch()
+  const { gymStatus } = useSelector((state: RootState) => state.gym)
+  const { name } = useSelector((state: RootState) => state.social)
   const gymHistory = [
     {
       gymStatus: true,
@@ -54,10 +62,67 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
       userID: 'A0234567M',
     },
   ]
+  useEffect(() => {
+    dispatch(getGymStatus())
+    dispatch(getUserDetail())
+    // dispatch(getGymHistory())
+  }, [])
 
   const [currentTab, setCurrentTab] = useState<number>(1)
   const sections = ['Gym', 'History']
   const history = useHistory()
+  //TODO: export this
+  const buttonText = ['Key With Me', 'Return Key', 'Close Gym', 'Open Gym']
+
+  function getButtonStates(): ButtonStates {
+    if (!gymStatus.gymIsOpen) {
+      if (gymStatus.keyHolder.displayName == name) {
+        return { keyWithMe: false, returnKey: true, toggleGym: true }
+      }
+      return { keyWithMe: true, returnKey: false, toggleGym: false }
+    }
+    //Runs this if gym is open
+    if (gymStatus.keyHolder.displayName == name) {
+      return { keyWithMe: false, returnKey: false, toggleGym: true }
+    }
+    return { keyWithMe: true, returnKey: false, toggleGym: false }
+  }
+
+  function renderButton() {
+    const buttonState: ButtonStates = getButtonStates()
+    return Object.keys(buttonState).map((key, index) => (
+      <ButtonComponent
+        key={index}
+        state={buttonState[key] ? 'primary' : 'secondary'}
+        text={getButtonText(key, index)}
+        onClick={getButtonFunction(buttonText[index])}
+        disabled={!buttonState[key]}
+      />
+    ))
+  }
+
+  function getButtonText(key: string, index: number): string {
+    if (key != 'toggleGym') {
+      return buttonText[index]
+    }
+    return gymStatus.gymIsOpen ? buttonText[index] : buttonText[index + 1]
+  }
+
+  function getButtonFunction(button: string): () => unknown {
+    switch (button) {
+      case 'Key With Me': {
+        return () => dispatch(moveKey(name, Date.now()))
+      }
+      case 'Return Key': {
+        return () => dispatch(returnKey(name, Date.now()))
+      }
+      case 'Close Gym': {
+        return () => dispatch(toggleGym(name, Date.now()))
+      }
+      default:
+        return () => console.error('Invalid Button')
+    }
+  }
 
   function TabPage(tabID: number) {
     switch (tabID) {
@@ -65,19 +130,9 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         return (
           <GymContainer>
             <GymStatus isOpen />
-            <GymKeyWith />
-            <div
-              style={{
-                justifyContent: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: '20px 0',
-              }}
-            >
-              <ButtonComponent state="primary" text="Key with me" onClick={() => undefined} />
-              <ButtonComponent state="primary" text="Return key" onClick={() => undefined} />
-              <ButtonComponent state="primary" text="Close Gym" onClick={() => undefined} />
+            <GymKeyWith name={gymStatus.keyHolder.displayName} handle={gymStatus.keyHolder.telegramHandle} />
+            <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {renderButton()}
             </div>
           </GymContainer>
         )

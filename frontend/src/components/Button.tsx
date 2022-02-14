@@ -34,11 +34,12 @@ type Props = {
   state: 'primary' | 'secondary'
   text: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
+  disabled?: boolean
 }
 
 function ButtonComponent(prop: Props) {
   return (
-    <Border onClick={prop.onClick} state={prop.state}>
+    <Border onClick={prop.onClick} state={prop.state} disabled={prop.disabled || false}>
       <Inner state={prop.state}>{prop.text}</Inner>
     </Border>
   )

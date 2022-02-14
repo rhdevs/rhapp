@@ -553,8 +553,9 @@ export const initSupperGroup: SupperGroup = {
 }
 
 export const gymStatus: GymStatus = {
-  keyStatus: 'bufflord',
-  gymStatus: true,
+  gymIsOpen: false,
+  keyHolder: { displayName: '5-122', telegramHandle: 'smchead' },
+  keyIsReturned: true,
 }
 
 export const gymHistory: HistoryEntry[] = [
