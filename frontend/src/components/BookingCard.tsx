@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react'
-import styled, { css } from 'styled-components'
-import { useParams, useHistory } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../store/types'
+import React from 'react'
+import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { PATHS } from '../routes/Routes'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { months, days } from '../common/dates'
@@ -11,6 +9,7 @@ import { openUserTelegram } from '../common/telegramMethods'
 
 import messageIcon from '../assets/messageIcon.svg'
 import adminIcon from '../assets/adminIcon.svg'
+import { Booking } from '../store/facilityBooking/types'
 
 const BookingContainer = styled.div`
   position: relative;
@@ -59,26 +58,16 @@ const BookingRightDisplay = styled.div`
   align-items: center;
   justify-content: center;
 `
+const NoBookingsComponent = styled.div`
+  padding: 23px;
+`
 
 const Icon = styled.img`
   padding: 20px;
 `
 
-export default function BookingCard() {
-  const dispatch = useDispatch()
+export default function BookingCard({ bookings }: { bookings: Booking[] }) {
   const history = useHistory()
-  const params = useParams<{ facilityID: string }>()
-  const {
-    ViewStartDate,
-    ViewEndDate,
-    createSuccess,
-    createFailure,
-    isLoading,
-    facilityBookings,
-    selectedFacilityName,
-    selectedFacilityId,
-  } = useSelector((state: RootState) => state.facilityBooking)
-
   const fetchTelegram = async (booking) => {
     try {
       fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
@@ -100,36 +89,44 @@ export default function BookingCard() {
 
   return (
     <>
-      {facilityBookings?.map((event) => (
-        <BookingContainer
-          key={event.bookingID}
-          onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)}
-        >
-          <BookingLeftDisplay>
-            <DateComponent>
-              {days[ViewStartDate.getDay()]}{' '}
-              {ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()] + ' ' + ViewStartDate.getFullYear()}
-            </DateComponent>
-            <TimeComponent>
-              {get24Hourtime(event.startTime)} to {get24Hourtime(event.endTime)}
-            </TimeComponent>
-            <BookingCCAName>{event.ccaName ? event.ccaName : 'Personal'}</BookingCCAName>
-          </BookingLeftDisplay>
-          <BookingRightDisplay>
-            {event.userID === localStorage.getItem('userID') ? (
-              <Icon src={adminIcon} />
-            ) : (
-              <Icon
-                onClick={() => {
-                  fetchTelegram(event)
-                }}
-                src={messageIcon}
-              />
-            )}
-          </BookingRightDisplay>
-        </BookingContainer>
-      ))}
-      {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
+      {bookings?.length ? (
+        bookings.map((booking) => (
+          <BookingContainer
+            key={booking.bookingID}
+            onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + booking.bookingID)}
+          >
+            <BookingLeftDisplay>
+              <DateComponent>
+                {days[new Date(booking.startTime * 1000).getDay()]}{' '}
+                {/* TODO Change date month and year in <DateComponent></DateComponent> using unixtocalander function*/}
+                {new Date(booking.startTime * 1000).getDate() +
+                  ' ' +
+                  months[new Date(booking.startTime * 1000).getMonth()] +
+                  ' ' +
+                  new Date(booking.startTime * 1000).getFullYear()}
+              </DateComponent>
+              <TimeComponent>
+                {get24Hourtime(booking.startTime)} to {get24Hourtime(booking.endTime)}
+              </TimeComponent>
+              <BookingCCAName>{booking.ccaName ? booking.ccaName : 'Personal'}</BookingCCAName>
+            </BookingLeftDisplay>
+            <BookingRightDisplay>
+              {booking.userID === localStorage.getItem('userID') ? (
+                <Icon src={adminIcon} />
+              ) : (
+                <Icon
+                  onClick={() => {
+                    fetchTelegram(booking)
+                  }}
+                  src={messageIcon}
+                />
+              )}
+            </BookingRightDisplay>
+          </BookingContainer>
+        ))
+      ) : (
+        <NoBookingsComponent>There are no bookings on this day!</NoBookingsComponent>
+      )}
     </>
   )
 }
