@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import GymNavBar from '../../components/GymNavBar'
+import React, { useState } from 'react'
 import GymStatus from '../../components/GymStatus'
 import GymKeyWith from '../../components/GymKeyWith'
-import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { RootState } from '../../store/types'
 import styled from 'styled-components'
 import { GymTabContainer } from '../../components/Tabs'
 import { Icon } from 'antd-mobile'
@@ -36,32 +33,6 @@ const DummyHistoryRow = styled.div`
 `
 
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
-  // const dispatch = useDispatch()
-  // const history = useHistory()
-  // const { gymStatus, gymHistory, isLoading } = useSelector((state: RootState) => state.gym)
-  // const [currentTab, setCurrentTab] = useState<number>(1)
-  // const sections = ['Gym', 'History']
-
-  // useEffect(() => {
-  //   dispatch(getGymStatus())
-  //   dispatch(getGymHistory())
-  // }, [dispatch])
-
-  // const content = () => {
-  //   let gymGroupArr: getGymHistory[] = gymHistory
-  //   if (currentTab === 2) {
-  //     gymGroupArr = gymStatus
-  //   }
-  //   const openOrPendingSupperGroups = gymGroupArr.filter(
-  //     (gymGroup : getGymHistory) =>
-  //       gymGroup.history
-  //   )
-
-  //   const nonActiveSupperGroups = gymGroupArr.filter(
-  //     (supperGroup: getGymHistory) =>
-  //       supperGroup.status !== SupperGroupStatus.OPEN && supperGroup.status !== SupperGroupStatus.PENDING,
-  //   )
-
   const gymHistory = [
     {
       gymStatus: true,
@@ -80,9 +51,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   ]
 
   const [currentTab, setCurrentTab] = useState<number>(1)
-  const [currentGymTab, setCurrentGymTab] = useState<string>('Gym')
   const sections = ['Gym', 'History']
-  const gymTelegram = gymHistory.map((gym: any) => gym.telegramHandle)
   const history = useHistory()
 
   function TabPage(tabID: number) {
@@ -135,30 +104,6 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         })}
       </GymBarContainer>
       {TabPage(currentTab)}
-      {/*
-      {currentTab === 1 ? (
-        <>
-          <GymStatus isOpen />
-          <GymKeyWith />
-          <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <ButtonComponent state="primary" text="Key with me" onClick={() => undefined} />
-            <ButtonComponent state="primary" text="Return key" onClick={() => undefined} />
-            <ButtonComponent state="primary" text="Close Gym" onClick={() => undefined} />
-          </div>
-        </>
-      ) : (
-        <>
-          {gymHistory.map((gymGroup, index) => {
-            return (
-              <DummyHistoryRow key={index}>
-                {gymGroup.telegramHandle}
-                {gymGroup.userID}
-              </DummyHistoryRow>
-            )
-          })}
-        </>
-        )}
-        */}
     </>
   )
 }

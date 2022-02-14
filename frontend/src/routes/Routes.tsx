@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
-import GymPage from '../components/GymPage'
 
 export enum PATHS {
   // DOCUMENTATION
