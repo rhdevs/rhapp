@@ -4,6 +4,7 @@ import styled from 'styled-components'
 const Border = styled.button<{ state: 'primary' | 'secondary' }>`
   height: 2.2rem;
   width: 10rem;
+  margin: 1rem;
   border: transparent;
   border-radius: 2rem;
   padding: 0;
