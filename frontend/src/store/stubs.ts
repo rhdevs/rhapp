@@ -563,7 +563,12 @@ export const gymHistory: HistoryEntry[] = [
     users: [
       {
         gymStatus: '',
-        time: 1638413731,
+        time: 1638416070,
+        userDetails: '@John99',
+      },
+      {
+        gymStatus: '',
+        time: 1638413730,
         userDetails: '@andy333',
       },
       {
@@ -577,14 +582,29 @@ export const gymHistory: HistoryEntry[] = [
     date: 1638322891,
     users: [
       {
-        gymStatus: 'closed',
+        gymStatus: '',
         time: 1638363931,
+        userDetails: '5 - 409',
+      },
+      {
+        gymStatus: 'closed',
+        time: 1638363510,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        gymStatus: '',
+        time: 1638360330,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        gymStatus: '',
+        time: 1638355410,
         userDetails: '@xiaomingwong',
       },
       {
         gymStatus: '',
-        time: 638363511,
-        userDetails: '@richard',
+        time: 1638349170,
+        userDetails: '@bob_the_builder',
       },
     ],
   },
