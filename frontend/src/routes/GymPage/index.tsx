@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { GymTabContainer } from '../../components/Tabs'
 import { Icon } from 'antd-mobile'
 import ButtonComponent from '../../components/Button'
+import GymHistory from '../../components/GymHistory'
 
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -81,18 +82,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
           </GymContainer>
         )
       case 2:
-        return (
-          <>
-            {gymHistory.map((gymGroup, index) => {
-              return (
-                <DummyHistoryRow key={index}>
-                  {gymGroup.telegramHandle}
-                  {gymGroup.userID}
-                </DummyHistoryRow>
-              )
-            })}
-          </>
-        )
+        return <GymHistory />
     }
   }
   return (

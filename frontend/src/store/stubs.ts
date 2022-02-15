@@ -559,17 +559,53 @@ export const gymStatus: GymStatus = {
 
 export const gymHistory: HistoryEntry[] = [
   {
-    gymStatus: true,
-    keyStatus: 'cooltelegram',
-    requesttime: 1643388954,
-    telegramHandle: 'cooltelegram',
-    userID: 'A0123456Z',
+    date: 1638426691,
+    users: [
+      {
+        gymStatus: '',
+        time: 1638416070,
+        userDetails: '@John99',
+      },
+      {
+        gymStatus: '',
+        time: 1638413730,
+        userDetails: '@andy333',
+      },
+      {
+        gymStatus: 'open',
+        time: 1638409291,
+        userDetails: '@inspired_ahpau',
+      },
+    ],
   },
   {
-    gymStatus: true,
-    keyStatus: 'anothernewdude',
-    requesttime: 1643389801,
-    telegramHandle: 'anothernewdude',
-    userID: 'A0234567M',
+    date: 1638322891,
+    users: [
+      {
+        gymStatus: '',
+        time: 1638363931,
+        userDetails: '5 - 409',
+      },
+      {
+        gymStatus: 'closed',
+        time: 1638363510,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        gymStatus: '',
+        time: 1638360330,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        gymStatus: '',
+        time: 1638355410,
+        userDetails: '@xiaomingwong',
+      },
+      {
+        gymStatus: '',
+        time: 1638349170,
+        userDetails: '@bob_the_builder',
+      },
+    ],
   },
 ]

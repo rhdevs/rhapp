@@ -4,11 +4,14 @@ export type GymStatus = {
 }
 
 export type HistoryEntry = {
-  gymStatus: boolean
-  keyStatus: string
-  requesttime: number
-  telegramHandle: string
-  userID: string
+  date: number
+  users: UserEntry[]
+}
+
+export type UserEntry = {
+  gymStatus: string
+  time: number
+  userDetails: string
 }
 
 export type KeyWithArgs = {
