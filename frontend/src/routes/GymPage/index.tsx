@@ -32,6 +32,10 @@ const DummyHistoryRow = styled.div`
   padding: 0.5rem;
 `
 
+const GymContainer = styled.div`
+  padding: 50px 0;
+`
+
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   const gymHistory = [
     {
@@ -58,15 +62,23 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
     switch (tabID) {
       case 1:
         return (
-          <>
+          <GymContainer>
             <GymStatus isOpen />
             <GymKeyWith />
-            <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '20px 0',
+              }}
+            >
               <ButtonComponent state="primary" text="Key with me" onClick={() => undefined} />
               <ButtonComponent state="primary" text="Return key" onClick={() => undefined} />
               <ButtonComponent state="primary" text="Close Gym" onClick={() => undefined} />
             </div>
-          </>
+          </GymContainer>
         )
       case 2:
         return (

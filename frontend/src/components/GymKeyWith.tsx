@@ -8,12 +8,9 @@ const Header = styled.div`
   font-weight: bold;
   font-size: 22px;
   line-height: 20px;
-
   text-align: center;
-
   color: #000000;
-
-  padding-bottom: 30px;
+  padding: 30px;
 `
 
 const InfoArea = styled.div`
