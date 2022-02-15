@@ -42,7 +42,7 @@ interface ErrorMessage {
 const errorMessage: ErrorMessage = {
   CONFLICT: 'There are conflicts in your booking!',
   EMPTY_FIELD: 'Oops! There seems to be an empty field.',
-  SERVER_ERROR: 'Server is down now please try again later',
+  SERVER_ERROR: 'Server is down now please try again later.',
 }
 
 export default function ConflictAlert(props: Props) {
