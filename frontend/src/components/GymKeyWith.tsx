@@ -8,12 +8,9 @@ const Header = styled.div`
   font-weight: bold;
   font-size: 22px;
   line-height: 20px;
-
   text-align: center;
-
   color: #000000;
-
-  padding-bottom: 30px;
+  padding: 30px;
 `
 
 const InfoArea = styled.div`
@@ -38,6 +35,7 @@ const Container = styled.div`
 const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
 `
 
 interface Props {
@@ -51,7 +49,7 @@ function GymKeyWith(props: Props) {
     <>
       <Header>Key With</Header>
       <ImageContainer>
-        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="25%" />
+        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="20%" />
       </ImageContainer>
       <Container>
         <InfoArea> {props.name ?? 'Andy'} </InfoArea>
