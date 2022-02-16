@@ -24,8 +24,9 @@ def get_all_history():
         checkrequesttime = data['requesttime'].shift(-1) - data['requesttime'] <= 60
         checkgymIsOpen = (data['gymIsOpen'] == False) & (data['gymIsOpen'].shift(-1) == True)
         data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
+
+        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime).strftime('%Y-%m-%d'), axis=1)
         data = data.to_dict('records')
-        
         data_list = []
 
         for i in data:
@@ -37,9 +38,21 @@ def get_all_history():
 
             temp_data['requesttime'] = i['requesttime']
             temp_data['gymIsOpen'] = i['gymIsOpen']
+            temp_data['date'] = i['date']
             data_list.append(temp_data)
+        
+        new_data = {}
+        
+        for d in data_list:
+            d = d.copy()
+            date = d.pop('date')
+            if date not in new_data:
+                new_data[date] = {'date': date, 'details': []}
+            new_data[date]['details'].append(d)
 
-        response = {"status":"success","data":data_list}
+        allHistory = list(new_data.values())
+
+        response = {"status":"success","data":allHistory}
 
     except Exception as e:
         print(e)
@@ -50,7 +63,14 @@ def get_all_history():
 @gym_api.route("/status", methods=['GET'])
 def get_statuses():
     try:
-        data = list(db.Gym.find({}, {"_id": 0, "userID": 0, "requesttime": 0}).sort("requesttime", -1))[0]
+        data = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+        del data['requesttime']
+        del data['keyIsReturned']
+        
+        if data['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
+            data['userID'] = ''
+        else:
+            data['userID'] = db.User.find_one({"telegramHandle": data['keyHolder']['telegramHandle']})['userID']
         response = {"data": data, "status": "success"}
 
     except:
