@@ -7,6 +7,13 @@ export type Facility = {
 }
 
 export type ViewBookingEntry = {
+  id: number
+  ccaName: string
+  occupied: boolean
+  eventName: string
+}
+
+export type APIEntry = {
   bookingID: number
   ccaID: number
   description: string

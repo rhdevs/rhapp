@@ -11,20 +11,14 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
-import { ViewBookingEntry } from './store/facilityBooking/types'
-import ViewBlock from './components/ScheduleBlock/ViewBlock'
+import { APIEntry } from './store/facilityBooking/types'
 import BookingBlock from './components/ScheduleBlock/BookingBlock'
+import ViewScheduleBlock from './components/ScheduleBlock/ViewScheduleBlock'
+import ViewMyBookings from './routes/FacilityBooking/MyBookings'
 
-const mockValues: ViewBookingEntry[] = [
-  /*
-  { id: 1, ccaName: 'Devs', eventName: 'CCA Trg', occupied: true },
-  { id: 2, ccaName: 'Devs', eventName: 'CCA Trg', occupied: false },
-  { id: 3, ccaName: 'Social', eventName: 'Nil', occupied: true },
-  { id: 4, ccaName: 'Welfare', eventName: 'Nil', occupied: true },
-  { id: 5, ccaName: 'RR', eventName: 'Nil', occupied: false },
-  { id: 6, ccaName: 'RHMP', eventName: 'Nil', occupied: true }, */
+const mockValues: APIEntry[] = [
   {
-    bookingID: 1,
+    bookingID: 2,
     ccaID: 1,
     description: 'Lol',
     endTime: 1615924800,
@@ -42,9 +36,7 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        {mockValues.map((value, index) => {
-          return <ViewBlock bookingEntry={value} key={index} />
-        })}
+        {ViewScheduleBlock(mockValues)}
         <GlobalStyle />
         <BrowserRouter>
           <OfflineStatus />
