@@ -180,7 +180,7 @@ def profiles():
 
             imgKey, imgFileLocation = imgGeneration(str(imgString))
             oldImgKey = db.Profiles.find_one({"userID": userID}).get("imageKey")
-            if oldImgKey != imgKey:
+            if None != oldImgKey != imgKey:
                 delete(oldImgKey)
                 create(imgKey, imgFileLocation)
             else:
