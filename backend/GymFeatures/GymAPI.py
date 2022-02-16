@@ -39,6 +39,7 @@ def get_all_history():
             temp_data['requesttime'] = i['requesttime']
             temp_data['gymIsOpen'] = i['gymIsOpen']
             temp_data['date'] = i['date']
+            temp_data['statusChange'] = i['statusChange']
             data_list.append(temp_data)
         
         new_data = {}
@@ -46,6 +47,7 @@ def get_all_history():
         for d in data_list:
             d = d.copy()
             date = d.pop('date')
+            date = int(datetime.strptime(date, '%Y-%m-%d').timestamp())
             if date not in new_data:
                 new_data[date] = {'date': date, 'details': []}
             new_data[date]['details'].append(d)
