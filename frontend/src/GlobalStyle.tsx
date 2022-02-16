@@ -24,10 +24,6 @@ const GlobalStyle = createGlobalStyle`
     border-color: rgb(222, 95, 76) !important;
   }
 
-  .ant-input:hover {
-    border-color: rgb(222, 95, 76) !important;
-  }
-
   .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
     border-color: rgb(222, 95, 76) !important;
   }
@@ -35,6 +31,7 @@ const GlobalStyle = createGlobalStyle`
   .ant-btn-dashed:hover, .ant-btn-dashed:focus {
     color: rgb(222, 95, 76) !important;
     border-color: rgb(222, 95, 76) !important;
+  }
 `
 
 export default GlobalStyle
