@@ -1,5 +1,10 @@
 import styled from 'styled-components'
 
+export const MainContainer = styled.div`
+  length: 50%;
+  width: 100%;
+`
+
 export const DailyContainer = styled.div`
   margin: 15px 2%;
   border-radius: 5px;

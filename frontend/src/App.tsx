@@ -16,12 +16,23 @@ import ViewBlock from './components/ScheduleBlock/ViewBlock'
 import BookingBlock from './components/ScheduleBlock/BookingBlock'
 
 const mockValues: ViewBookingEntry[] = [
+  /*
   { id: 1, ccaName: 'Devs', eventName: 'CCA Trg', occupied: true },
   { id: 2, ccaName: 'Devs', eventName: 'CCA Trg', occupied: false },
   { id: 3, ccaName: 'Social', eventName: 'Nil', occupied: true },
   { id: 4, ccaName: 'Welfare', eventName: 'Nil', occupied: true },
-  { id: 5, ccaName: 'RR', eventName: 'Nil', occupied: true },
-  { id: 6, ccaName: 'RHMP', eventName: 'Nil', occupied: true },
+  { id: 5, ccaName: 'RR', eventName: 'Nil', occupied: false },
+  { id: 6, ccaName: 'RHMP', eventName: 'Nil', occupied: true }, */
+  {
+    bookingID: 1,
+    ccaID: 1,
+    description: 'Lol',
+    endTime: 1615924800,
+    eventName: 'Lol',
+    facilityID: 1,
+    startTime: 1615910400,
+    userID: 'A0165780X',
+  },
 ]
 
 class App extends React.Component {
@@ -31,11 +42,8 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        {/* {mockValues.map((value, index) => {
-          return <ViewBlock bookingEntry={value} key={index} />
-        })} */}
         {mockValues.map((value, index) => {
-          return <BookingBlock bookingEntry={value} key={index} />
+          return <ViewBlock bookingEntry={value} key={index} />
         })}
         <GlobalStyle />
         <BrowserRouter>
