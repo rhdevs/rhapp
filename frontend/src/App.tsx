@@ -18,13 +18,23 @@ import ViewMyBookings from './routes/FacilityBooking/MyBookings'
 
 const mockValues: APIEntry[] = [
   {
-    bookingID: 2,
+    bookingID: 1,
     ccaID: 1,
-    description: 'Lol',
-    endTime: 1615924800,
+    description: 'For drinking',
+    endTime: 1645102800,
     eventName: 'Lol',
     facilityID: 1,
-    startTime: 1615910400,
+    startTime: 1645099200,
+    userID: 'A0165780X',
+  },
+  {
+    bookingID: 2,
+    ccaID: 2,
+    description: 'For party',
+    endTime: 1645077600,
+    eventName: 'Bash',
+    facilityID: 1,
+    startTime: 1645070400,
     userID: 'A0165780X',
   },
 ]
@@ -33,7 +43,6 @@ class App extends React.Component {
   render() {
     dayjs.extend(CustomParseFormat)
     dayjs.extend(RelativeTime)
-
     return (
       <Provider store={store}>
         {ViewScheduleBlock(mockValues)}
