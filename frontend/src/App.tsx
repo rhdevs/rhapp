@@ -15,6 +15,7 @@ import { APIEntry } from './store/facilityBooking/types'
 import BookingBlock from './components/ScheduleBlock/BookingBlock'
 import ViewScheduleBlock from './components/ScheduleBlock/ViewScheduleBlock'
 import ViewMyBookings from './routes/FacilityBooking/MyBookings'
+import BookingScheduleBlock from './components/ScheduleBlock/BookingScheduleBlock'
 
 const mockValues: APIEntry[] = [
   {
@@ -45,7 +46,7 @@ class App extends React.Component {
     dayjs.extend(RelativeTime)
     return (
       <Provider store={store}>
-        {ViewScheduleBlock(mockValues)}
+        {BookingScheduleBlock(mockValues)}
         <GlobalStyle />
         <BrowserRouter>
           <OfflineStatus />

@@ -64,7 +64,7 @@ export const TimeText = styled.h3`
 `
 
 const palette = {
-  available: '#F1F3F7',
+  available: '#D8E6DF',
   unavailable1: '#F1F3F7',
   unavailable2: '#F6F6F6',
   selected: '#72DA75',

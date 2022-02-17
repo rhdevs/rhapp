@@ -13,6 +13,16 @@ export type ViewBookingEntry = {
   eventName: string
 }
 
+export type BookingStatusEntry = {
+  id: number
+  type: 'available' | 'occupied' | 'selected' | 'unavailable'
+}
+
+export type BookingEntry = {
+  id: number
+  occupied: boolean
+}
+
 export type APIEntry = {
   bookingID: number
   ccaID: number
