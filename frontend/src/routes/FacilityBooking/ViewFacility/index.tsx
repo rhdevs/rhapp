@@ -29,10 +29,11 @@ import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
-import Calendar from 'react-calendar'
+// import Calendar from 'react-calendar'
 import './calendar.css'
 import BookingCard from '../../../components/BookingCard'
 import ConflictAlert from '../../../components/ConflictAlert'
+import { Calendar } from '../../../components/Calendar/Calendar'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -251,53 +252,7 @@ export default function ViewFacility() {
         <MainContainer>
           <>
             {AlertSection}
-            <DateSelectorGroup>
-              <Calendar
-                onChange={(value: Date) => {
-                  dispatch(SetIsLoading(true))
-                  dispatch(setViewDates(value, parseInt(params.facilityID)))
-                }}
-                prev2Label={null}
-                next2Label={null}
-              />
-            </DateSelectorGroup>
-            <InstructionText>Select a date to view the day’s events.</InstructionText>
-            <ActionButtonGroup>
-              <StyledButton
-                onButtonClick={() => {
-                  dispatch(
-                    createNewBookingFromFacility(
-                      ViewStartDate,
-                      dayjs(ViewStartDate).add(1, 'hour').toDate(),
-                      selectedFacilityName,
-                      params.facilityID,
-                    ),
-                  )
-                  history.push('/facility/booking/create')
-                }}
-                hasSuccessMessage={false}
-                stopPropagation={false}
-                defaultButtonDescription={'Book Facility'}
-                defaultButtonColor="#DE5F4C"
-                updatedButtonColor="#DE5F4C"
-                updatedTextColor="white"
-              />
-              {/* <div onClick={() => console.log('pressed')}>
-                <StyledButton
-                  onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
-                  hasSuccessMessage={false}
-                  stopPropagation={false}
-                  defaultButtonDescription={'👓 Bookings ⌄'}
-                  defaultButtonColor="transparent"
-                  updatedButtonColor="transparent"
-                  updatedTextColor="#DE5F4C"
-                  defaultTextColor="#DE5F4C"
-                  updatedButtonDescription={'🕶 Availabilities ⌄'}
-                />
-              </div> */}
-            </ActionButtonGroup>
-            <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
-            {isLoading ? <LoadingSpin /> : <BookingCard bookings={facilityBookings} />}
+            <Calendar selectedFacilityId={parseInt(params.facilityID)} />
             <BottomNavBar />
           </>
         </MainContainer>
