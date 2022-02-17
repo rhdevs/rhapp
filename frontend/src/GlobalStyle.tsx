@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
-import Inter from './assets/Inter/Inter-VariableFont_slnt,wght.ttf'
+import Inter from './assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf'
+import LatoRegular from './assets/fonts/Lato/Lato-Regular.ttf'
 
 // TODO: Fix this error (not changed bc it will mess up our current ui since different weights are not imported)
 const GlobalStyle = createGlobalStyle`
@@ -9,6 +10,11 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 125 950;
     font-stretch: 100%;
     font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Lato";
+    src: url(${LatoRegular}) format('truetype');
   }
 
   body {
