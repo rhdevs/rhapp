@@ -9,11 +9,11 @@ import sys
 from datetime import datetime
 import time
 import pandas as pd
+from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
 sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
-DEFAULT_KEY_LOC = "5-122"
-DEFAULT_TELEGRAM_HANDLE = "smchead"
+
 
 @gym_api.route("/", methods = ['GET'])
 def get_all_history():
