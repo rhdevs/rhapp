@@ -84,76 +84,6 @@ const AlertGroup = styled.div`
   padding: 3px 23px 3px 23px;
 `
 
-const EventLabels = styled.div`
-  align-self: center;
-  width: 80%;
-`
-
-const EventBoldLabel = styled.div`
-  margin-bottom: 0em;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  overflow: hidden;
-`
-
-const EventNormalLabel = styled.div`
-  margin-left: 17px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 11px;
-  line-height: 14px;
-`
-
-const DateSelectorGroup = styled.div`
-  padding: 23px 23px 10px 23px;
-  font-family: inter;
-  display: flex;
-  place-content: center;
-  align-self: center;
-  background-color: #fafaf4;
-  border-radius: 15px !important;
-
-  .rdrDateDisplayWrapper {
-    border-radius: 9px !important;
-  }
-`
-
-const EventRightDisplay = styled.div`
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translate(-17%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const BookingSubHeaderCCAName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 14px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-
-const BookingSubHeaderEventName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 14px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-
-const InstructionText = styled.div`
-  font-size: 17px;
-  font-weight: 200;
-  text-align: center;
-  margin-bottom: 15px;
-`
-
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -163,8 +93,6 @@ export default function ViewFacility() {
     ViewEndDate,
     createSuccess,
     createFailure,
-    isLoading,
-    facilityBookings,
     selectedFacilityName,
     selectedFacilityId,
   } = useSelector((state: RootState) => state.facilityBooking)
@@ -181,30 +109,6 @@ export default function ViewFacility() {
     }
   }, [])
 
-  const fetchTelegram = async (booking) => {
-    try {
-      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-            console.log(data.err)
-          } else {
-            openTelegram(data.telegramHandle)
-          }
-        })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const openTelegram = (userID) => {
-    const site = 'https://telegram.me/' + userID
-    window.open(site)
-  }
-
   const MyBookingIcon = (
     <img
       src={bookingsIcon}
@@ -213,28 +117,6 @@ export default function ViewFacility() {
       }}
     />
   )
-
-  const getHumanReadableTime = (eventStartTime: number) => {
-    const date = new Date(eventStartTime * 1000)
-    let hour = date.getHours().toString()
-    if (hour.length == 1) {
-      hour = '0' + hour
-    }
-    let minutes = date.getMinutes().toString()
-    if (minutes.length == 1) {
-      minutes = '0' + minutes
-    }
-
-    return hour + minutes
-  }
-
-  const getHumanReadableDate = (eventTime: number) => {
-    const date = new Date((eventTime + 28800) * 1000)
-    const day = date.getUTCDate()
-    const monthInt = date.getUTCMonth() + 1
-
-    return '[' + day + '/' + monthInt + ']'
-  }
 
   const AlertSection = (
     <AlertGroup>
