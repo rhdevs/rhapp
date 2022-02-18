@@ -113,7 +113,6 @@ def getUserPicture(userID):
         profile = db.Profiles.find_one(
             {"userID": userID}
         )
-        print(profile['imageKey'])
         imageURL = s3.read(profile['imageKey'])
         response = {"imageURL": imageURL, "status": "success"}
     except:
