@@ -12,7 +12,6 @@ import { getGymStatus, moveKey, returnKey, toggleGym } from '../../store/gym/act
 import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes } from '../../store/gym/types'
 import { ConfirmationModal } from '../../components/Gym/ConfirmationModal'
-import { ButtonStates } from '../../store/gym/types'
 import GymHistory from '../../components/GymHistory'
 
 const NavBarIcons = styled(Icon)`
@@ -34,13 +33,6 @@ const GymBarContainer = styled.div`
   top: 0;
 `
 
-const DummyHistoryRow = styled.div`
-  justify-content: space-between;
-  text-align: center;
-  height: auto;
-  padding: 0.5rem;
-`
-
 const GymContainer = styled.div`
   padding: 50px 0;
 `
@@ -57,22 +49,6 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   const dispatch = useDispatch()
   const { gymStatus } = useSelector((state: RootState) => state.gym)
   const { name } = useSelector((state: RootState) => state.social)
-  const gymHistory = [
-    {
-      gymStatus: true,
-      keyStatus: 'cooltelegram',
-      requesttime: 1643388954,
-      telegramHandle: 'cooltelegram',
-      userID: 'A0123456Z',
-    },
-    {
-      gymStatus: true,
-      keyStatus: 'anothernewdude',
-      requesttime: 1643389801,
-      telegramHandle: 'anothernewdude',
-      userID: 'A0234567M',
-    },
-  ]
   useEffect(() => {
     dispatch(getGymStatus())
     dispatch(getUserDetail())
