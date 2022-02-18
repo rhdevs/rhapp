@@ -34,6 +34,7 @@ import './calendar.css'
 import BookingCard from '../../../components/BookingCard'
 import ConflictAlert from '../../../components/ConflictAlert'
 import { Calendar } from '../../../components/Calendar/Calendar'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -129,7 +130,7 @@ export default function ViewFacility() {
 
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
-      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
+      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingIcon} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           <>
