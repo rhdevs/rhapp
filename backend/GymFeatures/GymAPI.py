@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 import time
 import pandas as pd
+import S3.app as s3
 sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
@@ -104,4 +105,17 @@ def add_gymIsOpen():
         db.Gym.insert_one(data)
     except:
         return {"err": "An error has occurred", "status": "failed"}, 500
+    return make_response(response)
+
+@gym_api.route("/picture/profile/<string:userID>", methods=['GET'])
+def getUserPicture(userID):
+    try:
+        profile = db.Profiles.find_one(
+            {"userID": userID}
+        )
+        print(profile['imageKey'])
+        imageURL = s3.read(profile['imageKey'])
+        response = {"imageURL": imageURL, "status": "success"}
+    except:
+        return {"err":"An error has occured", "status":"failed"}, 500
     return make_response(response)
