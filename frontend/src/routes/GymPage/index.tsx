@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import GymStatus from '../../components/GymStatus'
 import GymKeyWith from '../../components/GymKeyWith'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,8 @@ import { Icon } from 'antd-mobile'
 import ButtonComponent from '../../components/Button'
 import { getGymStatus, moveKey, returnKey, toggleGym } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
+import { ButtonStates, ButtonTypes } from '../../store/gym/types'
+import { ConfirmationModal } from '../../components/Gym/ConfirmationModal'
 import { ButtonStates } from '../../store/gym/types'
 import GymHistory from '../../components/GymHistory'
 
@@ -18,6 +20,7 @@ const NavBarIcons = styled(Icon)`
     width: 30px;
     height: 30px;
   }
+
   margin-left: 0.5rem;
   width: 30px;
   height: 30px;
@@ -69,59 +72,131 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   }, [])
 
   const [currentTab, setCurrentTab] = useState<number>(1)
+  const [isModalOpen, setModalOpen] = useState<boolean>(false)
+  const [modalState, setModalState] = useState<ButtonTypes>()
   const sections = ['Gym', 'History']
   const history = useHistory()
-  //TODO: export this
-  const buttonText = ['Key With Me', 'Return Key', 'Close Gym', 'Open Gym']
+  const buttonMap = new Map<ButtonTypes, string>([
+    ['keyWithMe', 'Key With Me'],
+    ['returnKey', 'Return Key'],
+    ['closeGym', 'Close Gym'],
+    ['openGym', 'Open Gym'],
+  ])
+
+  const gymButtonStates = new Map<string, ButtonStates>([
+    ['gymOpen', { keyWithMe: false, returnKey: false, toggleGym: true }],
+    ['gymClosed', { keyWithMe: false, returnKey: true, toggleGym: true }],
+    ['keyWithOthers', { keyWithMe: true, returnKey: false, toggleGym: false }],
+  ])
 
   function getButtonStates(): ButtonStates {
     if (!gymStatus.gymIsOpen) {
       if (gymStatus.keyHolder.displayName == name) {
-        return { keyWithMe: false, returnKey: true, toggleGym: true }
+        return gymButtonStates.get('gymClosed')!
       }
-      return { keyWithMe: true, returnKey: false, toggleGym: false }
+      return gymButtonStates.get('keyWithOthers')!
     }
     //Runs this if gym is open
     if (gymStatus.keyHolder.displayName == name) {
-      return { keyWithMe: false, returnKey: false, toggleGym: true }
+      return gymButtonStates.get('gymOpen')!
     }
-    return { keyWithMe: true, returnKey: false, toggleGym: false }
+    return gymButtonStates.get('keyWithOthers')!
   }
 
   function renderButton() {
     const buttonState: ButtonStates = getButtonStates()
-    return Object.keys(buttonState).map((key, index) => (
+    return Object.keys(buttonState).map((key: string, index: number) => (
       <ButtonComponent
         key={index}
         state={buttonState[key] ? 'primary' : 'secondary'}
-        text={getButtonText(key, index)}
-        onClick={getButtonFunction(buttonText[index])}
-        disabled={!buttonState[key]}
+        text={getButtonText(key)}
+        onClick={() => handleModalState(key)}
       />
     ))
   }
 
-  function getButtonText(key: string, index: number): string {
-    if (key != 'toggleGym') {
-      return buttonText[index]
+  function getButtonText(key: string): string {
+    if (key === 'toggleGym') {
+      return gymStatus.gymIsOpen ? buttonMap.get('closeGym')! : buttonMap.get('openGym')!
     }
-    return gymStatus.gymIsOpen ? buttonText[index] : buttonText[index + 1]
+    return buttonMap.get(key)!
   }
 
-  function getButtonFunction(button: string): () => unknown {
-    switch (button) {
-      case 'Key With Me': {
-        return () => dispatch(moveKey(name, Date.now()))
+  function handleModalState(key: string): void {
+    setModalOpen(true)
+    if (key === 'toggleGym') {
+      if (gymStatus.gymIsOpen) {
+        setModalState('closeGym')
+        return
       }
-      case 'Return Key': {
-        return () => dispatch(returnKey(name, Date.now()))
+      setModalState('openGym')
+      return
+    }
+    setModalState(key)
+  }
+
+  function dispatchModalAction(): void {
+    switch (modalState) {
+      case 'keyWithMe': {
+        dispatch(moveKey(name, Date.now()))
+        return
       }
-      case 'Close Gym': {
-        return () => dispatch(toggleGym(name, Date.now()))
+      case 'returnKey': {
+        dispatch(returnKey(name, Date.now()))
+        return
+      }
+      case 'openGym': {
+        dispatch(toggleGym(name, Date.now()))
+        return
+      }
+      case 'closeGym': {
+        dispatch(toggleGym(name, Date.now()))
+        return
       }
       default:
-        return () => console.error('Invalid Button')
+        console.error('Invalid Action')
+        return
     }
+  }
+
+  function getTitle(): string {
+    switch (modalState) {
+      case 'keyWithMe': {
+        return 'Confirm Key With You?'
+      }
+      case 'returnKey': {
+        return 'Return the Key?'
+      }
+      case 'openGym': {
+        return 'Open the Gym?'
+      }
+      case 'closeGym': {
+        return 'Close the Gym?'
+      }
+      default:
+        return ''
+    }
+  }
+
+  function onRightClick(): void {
+    dispatchModalAction()
+    setModalOpen(false)
+  }
+
+  function renderConfirmationModal(): ReactElement {
+    return (
+      <ConfirmationModal
+        isModalOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        rightButtonType="primary"
+        rightButtonText="Confirm"
+        onRightButtonClick={onRightClick}
+        hasLeftButton
+        leftButtonType="secondary"
+        onLeftButtonClick={() => setModalOpen(false)}
+        title={getTitle()}
+      />
+    )
   }
 
   function TabPage(tabID: number) {
@@ -129,7 +204,8 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
       case 1:
         return (
           <GymContainer>
-            <GymStatus isOpen />
+            {renderConfirmationModal()}
+            <GymStatus isOpen={gymStatus.gymIsOpen} />
             <GymKeyWith name={gymStatus.keyHolder.displayName} handle={gymStatus.keyHolder.telegramHandle} />
             <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {renderButton()}
@@ -140,6 +216,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         return <GymHistory />
     }
   }
+
   return (
     <>
       <GymBarContainer>

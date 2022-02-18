@@ -39,7 +39,7 @@ type Props = {
 
 function ButtonComponent(prop: Props) {
   return (
-    <Border onClick={prop.onClick} state={prop.state} disabled={prop.disabled || false}>
+    <Border onClick={prop.onClick} state={prop.state} disabled={prop.disabled}>
       <Inner state={prop.state}>{prop.text}</Inner>
     </Border>
   )

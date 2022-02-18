@@ -10,6 +10,9 @@ export type ButtonStates = {
   toggleGym: boolean
 }
 
+// Added string type to handle some edge cases (specifically toggleGym).
+export type ButtonTypes = string | 'keyWithMe' | 'returnKey' | 'closeGym' | 'openGym'
+
 export type HistoryEntry = {
   date: number
   users: UserEntry[]
