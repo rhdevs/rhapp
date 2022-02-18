@@ -5,7 +5,6 @@ const Button = styled.button<{ state: 'primary' | 'secondary' }>`
   height: 2.2rem;
   width: 10rem;
   border-radius: 100rem;
-  font-size: 1rem;
   border: solid 0.1rem transparent;
   background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
     linear-gradient(to left, #72ba75, #58b994);
@@ -35,7 +34,7 @@ type Props = {
 
 function ButtonComponent(prop: Props) {
   return (
-    <Button onClick={() => prop.onClick()} state={prop.state} disabled={prop.disabled} type={prop.type ?? 'button'}>
+    <Button onClick={prop.onClick} state={prop.state} disabled={prop.disabled} type={prop.type ?? 'button'}>
       {prop.text}
     </Button>
   )

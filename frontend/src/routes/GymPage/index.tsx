@@ -45,6 +45,14 @@ const GymContainer = styled.div`
   padding: 50px 0;
 `
 
+const ButtonContainer = styled.div`
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`
+
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   const dispatch = useDispatch()
   const { gymStatus } = useSelector((state: RootState) => state.gym)
@@ -207,9 +215,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
             {renderConfirmationModal()}
             <GymStatus isOpen={gymStatus.gymIsOpen} />
             <GymKeyWith name={gymStatus.keyHolder.displayName} handle={gymStatus.keyHolder.telegramHandle} />
-            <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {renderButton()}
-            </div>
+            <ButtonContainer>{renderButton()}</ButtonContainer>
           </GymContainer>
         )
       case 2:
