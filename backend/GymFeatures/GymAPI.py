@@ -137,7 +137,7 @@ def toggle_gym():
         # print(data["gymIsOpen"], type(data["gymIsOpen"]))
         insert_data["gymIsOpen"] = not data["gymIsOpen"]
         if insert_data["gymIsOpen"] == True:
-            insert_data["statusChange"] = "OPEN"
+            insert_data["statusChange"] = "OPENED"
         else:
             insert_data["statusChange"] = "CLOSED"
         insert_data["keyIsReturned"] = False
