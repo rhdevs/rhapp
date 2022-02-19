@@ -1,6 +1,5 @@
 from operator import is_
 from numpy import sort
-from sympy import Q
 from db import *
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response, Blueprint
 from flask_cors import cross_origin
