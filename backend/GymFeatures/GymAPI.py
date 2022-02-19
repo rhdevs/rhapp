@@ -83,13 +83,22 @@ def get_statuses():
 def move_key():
     try:
         formData = request.get_json()
+        
+        usersData = db.Users.find_one({"userID": formData["userID"]})
+        telegramHandle = usersData['telegramHandle']
+        displayName = usersData['displayName']
+        
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
         insert_data["gymIsOpen"] = data["gymIsOpen"]
         insert_data["keyStatus"] = formData["keyStatus"]
-        insert_data["telegramHandle"] = formData["telegramHandle"]
+        insert_data["keyHolder"] = {
+            "telegramHandle": telegramHandle,
+            "displayName": displayName
+            }
         insert_data["userID"] = formData["userID"]
         insert_data["requesttime"] = int(time.time())
+        insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
         return make_response(response)
@@ -101,13 +110,22 @@ def move_key():
 def return_key():
     try:
         formData = request.get_json()
+        
+        usersData = db.Users.find_one({"userID": formData["userID"]})
+        telegramHandle = usersData['telegramHandle']
+        displayName = usersData['displayName']
+        
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
         insert_data["gymIsOpen"] = data["gymIsOpen"]
         insert_data["keyStatus"] = DEFAULT_KEY_LOC
-        insert_data["telegramHandle"] = formData["telegramHandle"]
+        insert_data["keyHolder"] = {
+            "telegramHandle": telegramHandle,
+            "displayName": displayName
+        }
         insert_data["userID"] = formData["userID"]
         insert_data["requesttime"] = int(time.time())
+        insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
         return make_response(response)
