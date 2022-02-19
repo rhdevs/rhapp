@@ -84,14 +84,14 @@ def move_key():
     try:
         formData = request.get_json()
         
-        usersData = db.Users.find_one({"userID": formData["userID"]})
+        usersData = db.User.find_one({"userID": formData["userID"]})
         telegramHandle = usersData['telegramHandle']
         displayName = usersData['displayName']
         
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
         insert_data["gymIsOpen"] = data["gymIsOpen"]
-        insert_data["keyStatus"] = formData["keyStatus"]
+        insert_data["keyIsReturned"] = False
         insert_data["keyHolder"] = {
             "telegramHandle": telegramHandle,
             "displayName": displayName
@@ -110,20 +110,15 @@ def move_key():
 def return_key():
     try:
         formData = request.get_json()
-        
-        usersData = db.Users.find_one({"userID": formData["userID"]})
-        telegramHandle = usersData['telegramHandle']
-        displayName = usersData['displayName']
-        
-        data = db.Gym.find().sort('_id',-1).limit(1).next()
+
         insert_data = {}
-        insert_data["gymIsOpen"] = data["gymIsOpen"]
-        insert_data["keyStatus"] = DEFAULT_KEY_LOC
+        insert_data["gymIsOpen"] = False
+        insert_data["keyIsReturned"] = True
         insert_data["keyHolder"] = {
-            "telegramHandle": telegramHandle,
-            "displayName": displayName
+            "telegramHandle": DEFAULT_TELEGRAM_HANDLE,
+            "displayName": DEFAULT_KEY_LOC
         }
-        insert_data["userID"] = formData["userID"]
+        insert_data["userID"] = formData['userID']
         insert_data["requesttime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
@@ -139,9 +134,14 @@ def toggle_gym():
         formData = request.get_json()
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
-        insert_data["gymIsOpen"] = not formData["gymIsOpen"]
-        insert_data["keyStatus"] = formData["telegramHandle"]
-        insert_data["telegramHandle"] = formData["telegramHandle"]
+        # print(data["gymIsOpen"], type(data["gymIsOpen"]))
+        insert_data["gymIsOpen"] = not data["gymIsOpen"]
+        if insert_data["gymIsOpen"] == True:
+            insert_data["statusChange"] = "OPEN"
+        else:
+            insert_data["statusChange"] = "CLOSED"
+        insert_data["keyIsReturned"] = False
+        insert_data["keyHolder"] =  data["keyHolder"]
         insert_data["userID"] = formData["userID"]
         insert_data["requesttime"] = int(time.time())
         db.Gym.insert_one(insert_data)
@@ -151,6 +151,7 @@ def toggle_gym():
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
+# redundant? consider deleting
 @gym_api.route("/gymIsOpen", methods=['POST'])
 def add_gymIsOpen():
     try:
