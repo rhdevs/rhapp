@@ -13,6 +13,7 @@ sys.path.append("../")
 
 gym_api = Blueprint("gym", __name__)
 DEFAULT_KEY_LOC = "5-409"
+SMCHEAD_USERID = ''
 @gym_api.route("/", methods = ['GET'])
 def get_all_history():
     unix3days = 259200
@@ -107,13 +108,18 @@ def add_gymIsOpen():
         return {"err": "An error has occurred", "status": "failed"}, 500
     return make_response(response)
 
-@gym_api.route("/picture/profile/<string:userID>", methods=['GET'])
-def getUserPicture(userID):
+@gym_api.route("/keyHolder/profilepic", methods=['GET'])
+def getUserPicture():
     try:
-        profile = db.Profiles.find_one(
-            {"userID": userID}
-        )
-        imageURL = s3.read(profile['imageKey'])
+        data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
+        if data[0]['keyIsReturned']==True:
+            imageKey = f'{SMCHEAD_USERID}/profile_pic.png'
+        else:
+            profile = db.Profiles.find_one(
+                {"userID": data[0]['userID']}
+            )
+            imageKey = profile['imageKey']
+        imageURL = s3.read(imageKey)
         response = {"imageURL": imageURL, "status": "success"}
     except:
         return {"err":"An error has occured", "status":"failed"}, 500
