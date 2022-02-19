@@ -15,7 +15,7 @@ gym_api = Blueprint("gym", __name__)
 
 
 @gym_api.route("/", methods = ['GET'])
-def get_all_history():
+def get_history():
     try:
         data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
         data = pd.DataFrame(data)
