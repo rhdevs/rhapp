@@ -9,7 +9,7 @@ from datetime import datetime
 import time
 import pandas as pd
 import S3.app as s3
-from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE, SMCHEAD_USERID
+from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
 sys.path.append("../")
 
 
@@ -169,7 +169,7 @@ def getUserPicture():
     try:
         data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
         if data[0]['keyIsReturned']==True:
-            imageKey = f'{SMCHEAD_USERID}/profile_pic.png'
+            imageKey = 'default/profile_pic.png'
         else:
             profile = db.Profiles.find_one(
                 {"userID": data[0]['userID']}
