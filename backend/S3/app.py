@@ -1,6 +1,6 @@
 from boto3 import client, resource
-import botocore # for S3-related error handling, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/error-handling.html
 from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY
+import botocore # for S3-related error handling, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/error-handling.html
 
 bucketLocation = 'rhapp-picture-bucket'
 
