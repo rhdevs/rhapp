@@ -50,7 +50,6 @@ def profiles():
         '''
         if request.method == 'PUT':
             data = request.get_json()
-            imgString = str(data["profilePictureUrl"]) # get image URI/base64 from JSON request
             userID = data["userID"] # get userID from JSON request
 
             def imgGeneration(imgString):
@@ -176,15 +175,24 @@ def profiles():
                         return imgKey, imgFileLocation
                     else:
                         raise TypeError
-                    
 
-            imgKey, imgFileLocation = imgGeneration(str(imgString))
-            oldImgKey = db.Profiles.find_one({"userID": userID}).get("imageKey")
-            if None != oldImgKey != imgKey:
-                delete(oldImgKey)
-                create(imgKey, imgFileLocation)
+            if not data.get("profilePictureUrl"):
+                data["profilePictureUrl"] = ""
             else:
-                create(imgKey, imgFileLocation)            
+                data["profilePictureUrl"] = data["profilePictureUrl"]
+
+            imgString = str(data["profilePictureUrl"]) # get image URI/base64 from JSON request
+                    
+            if imgString != "":
+                imgKey, imgFileLocation = imgGeneration(str(imgString))
+                oldImgKey = db.Profiles.find_one({"userID": userID}).get("imageKey")
+                if None != oldImgKey != imgKey:
+                    delete(oldImgKey)
+                    create(imgKey, imgFileLocation)
+                else:
+                    create(imgKey, imgFileLocation)
+            else:
+                imgKey = "default/profile_pic.png" # profilePictureUrl not given, default profile pic will be loaded            
             
             del data["profilePictureUrl"]
             data["imageKey"] = imgKey
@@ -213,8 +221,7 @@ def profiles():
 def users():
     userIdList = request.args.getlist('userID')
     body = []
-               
-    try:  
+    try:         
         data = db.Profiles.find({"userID": {'$in': userIdList}}, {"_id": 0})
         profileDict = {}
         for profile in data:
@@ -222,9 +229,10 @@ def users():
         for profile in profileDict.values():
             imageKey = profile.get('imageKey') if profile != None else None
             if imageKey != None:
-                profile['profilePicSignedUrl'] = read(imageKey)
+                imageKey = imageKey
             elif FileNotFoundError:
-                profile['profilePicSignedUrl'] = "null"
+                imageKey = "default/profile_pic.png"
+            profile['profilePicSignedUrl'] = read(imageKey)
             body.append(profile)
         
         response = {
@@ -253,9 +261,10 @@ def getUserProfile(userID):
         for profile in profileDict.values():
             imageKey = profile.get('imageKey') if profile != None else None
             if imageKey != None:
-                profile['profilePicSignedUrl'] = read(imageKey)
+                imageKey = imageKey
             elif FileNotFoundError:
-                profile['profilePicSignedUrl'] = "null"
+                imageKey = "default/profile_pic.png"
+            profile['profilePicSignedUrl'] = read(imageKey)
             body.append(profile)
         
         response = {
@@ -395,15 +404,16 @@ def posts():
                         {"userID": str(data.get("userID"))}).get('displayName')
                     imageKey = db.Profiles.find_one(
                         {"userID": str(data.get("userID"))}).get('imageKey')
+                    if imageKey != None:
+                        imageKey = imageKey
+                    elif FileNotFoundError:
+                        imageKey = "default/profile_pic.png"
                     profilePicSignedUrl = read(imageKey)
 
                     if data != None:
                         data = renamePost(data)
                         data['name'] = name
-                        if imageKey != None:
-                            data['profilePicSignedUrl'] = profilePicSignedUrl
-                        elif FileNotFoundError:
-                            data['profilePicSignedUrl'] = "null"
+                        data['profilePicSignedUrl'] = profilePicSignedUrl
                         response = {
                             "status": "success",
                             "data": json.dumps(data, default=lambda o: str(o))
@@ -415,14 +425,15 @@ def posts():
                 elif userID:
                     data = db.Posts.find({"userID": str(userID)})
                     imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
+                    if imageKey != None:
+                        imageKey = imageKey
+                    elif FileNotFoundError:
+                        imageKey = "default/profile_pic.png"
                     profilePicSignedUrl = read(imageKey)
                     response = []
                     for item in data:
                         item['name'] = userIDtoName(item.get('userID'))
-                        if imageKey != None:
-                            item['profilePicSignedUrl'] = profilePicSignedUrl
-                        elif FileNotFoundError:
-                            item['profilePicSignedUrl'] = "null"                  
+                        item['profilePicSignedUrl'] = profilePicSignedUrl                 
                         item = renamePost(item)
                         response.append(item)
 
@@ -490,9 +501,10 @@ def posts():
                     item['name'] = profile.get(
                         'displayName') if profile != None else None
                     if imageKey != None:
-                        item['profilePicSignedUrl'] = read(imageKey)
+                        imageKey = imageKey
                     elif FileNotFoundError:
-                        item['profilePicSignedUrl'] = "null"
+                        imageKey = "default/profile_pic.png"
+                    item['profilePicSignedUrl'] = read(imageKey)
                     item = renamePost(item)                
                     response.append(item)
 
@@ -592,11 +604,12 @@ def getPostById(userID):
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
-            profilePicSignedUrl = read(imageKey)
             if imageKey != None:
-                item['profilePicSignedUrl'] = profilePicSignedUrl
+                imageKey = imageKey
             elif FileNotFoundError:
-                item['profilePicSignedUrl'] = "null"
+                imageKey = "default/profile_pic.png"
+            profilePicSignedUrl = read(imageKey)
+            item['profilePicSignedUrl'] = profilePicSignedUrl
             
             item = renamePost(item)
             body.append(item)
@@ -658,11 +671,14 @@ def getFriendsPostById():
         for item in result:
             item['name'] = userIDtoName(item.get('userID'))
             imageKey = db.Profiles.find_one({"userID": userID}).get('imageKey')
-            profilePicSignedUrl = read(imageKey)
             if imageKey != None:
-                item['profilePicSignedUrl'] = profilePicSignedUrl
+                imageKey = imageKey
             elif FileNotFoundError:
-                item['profilePicSignedUrl'] = "null"
+                imageKey = "default/profile_pic.png"
+            profilePicSignedUrl = read(imageKey)
+            
+            item['profilePicSignedUrl'] = profilePicSignedUrl
+
             
             item = renamePost(item)
             response.append(item)
@@ -697,11 +713,12 @@ def getOfficialPosts():
             ccaID = int(item.get('ccaID'))
             profile = db.Profiles.find_one({'userID': item.get('userID')})
             imageKey = profile.get('imageKey')
-            profilePicSignedUrl = read(imageKey)
             if imageKey != None:
-                item['profilePicSignedUrl'] = profilePicSignedUrl
+                imageKey = imageKey
             elif FileNotFoundError:
-                item['profilePicSignedUrl'] = "null" 
+                imageKey = "default/profile_pic.png"
+            profilePicSignedUrl = read(imageKey)
+            item['profilePicSignedUrl'] = profilePicSignedUrl
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)

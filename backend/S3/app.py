@@ -38,12 +38,9 @@ def create(key, fileLocation):
 
 
 def read(key):
-    if not fileExist(key):
-        raise FileNotFoundError
-    else:
-        PresignedUrl = user.generate_presigned_url(
-        'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
-        return PresignedUrl
+     PresignedUrl = user.generate_presigned_url(
+     'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+     return PresignedUrl
 
 
 # update
