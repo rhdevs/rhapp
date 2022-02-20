@@ -384,7 +384,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0, 'displayName': 1})
+    profile = db.User.find_one({"userID": userID}, {'displayName': 1})
     name = profile.get('displayName') if profile else None
     return name
 
@@ -489,7 +489,7 @@ def posts():
                 response = []
 
                 userIDList = [post["userID"] for post in data]
-                profiles = list(db.User.find({"userID": {"$in": userIDList}}, {'passwordHash': 0}, {"_id": 0}))
+                profiles = list(db.User.find({"userID": {"$in": userIDList}}, {"passwordHash": 0, "_id": 0}))
                 profileDict = {}
                 for profile in profiles:
                     profileDict[profile["userID"]] = profile
@@ -509,7 +509,7 @@ def posts():
                     item = renamePost(item)                
                     response.append(item)
 
-                    return make_response(
+                return make_response(
                     {
                         "data": json.dumps(response, default=lambda o: str(o)),
                         "status": "success"
