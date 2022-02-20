@@ -30,12 +30,17 @@ type Props = {
   text: string
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset' | undefined
-  onClick: () => void
+  onClick?: () => void | undefined
 }
 
 function ButtonComponent(prop: Props) {
   return (
-    <Button onClick={() => prop.onClick()} state={prop.state} disabled={prop.disabled} type={prop.type ?? 'button'}>
+    <Button
+      onClick={prop.onClick ?? undefined}
+      state={prop.state}
+      disabled={prop.disabled}
+      type={prop.type ?? 'button'}
+    >
       {prop.text}
     </Button>
   )

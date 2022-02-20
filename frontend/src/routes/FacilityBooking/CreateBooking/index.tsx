@@ -22,10 +22,11 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
 import { Switch } from '../../../components/Switch'
-import { get24Hourtime } from '../../../common/get24HourTime'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictAlert from '../../../components/ConflictAlert'
 import { unixToFullDate } from '../../../common/unixToFullDate'
+import SelectableField from '../../../components/SelectableField'
+import ButtonComponent from '../../../components/Button'
 
 const Background = styled.div`
   background-color: #fff;
@@ -44,45 +45,6 @@ const Form = styled.form`
   padding: 0px 20px;
 `
 
-const StyledDateName = styled.label`
-  font-family: Inter;
-  z-index: 1;
-  margin-top: 8px;
-  margin-left: 8px;
-  color: black;
-  width: 70%;
-  height: 20px;
-  text-align: left;
-  font-size: 0.8rem;
-  font-weight: bold;
-  position: absolute;
-  background: #f3f3f9;
-  pointer-events: none;
-`
-
-const StyledTitle = styled.text`
-  font-family: Inter;
-  padding: 5px 10px;
-  color: black;
-  width: 100%;
-  text-align: left;
-  font-size: 15px;
-  font-weight: bold;
-  line-height: 30px;
-  white-space: nowrap;
-`
-
-const DatePickerRow = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-content: center;
-  margin: 10px 0;
-  color: #666;
-  height: 34px;
-`
-
 const WeeklyRecurrenceRow = styled.div`
   width: 100%;
   display: flex;
@@ -92,10 +54,25 @@ const WeeklyRecurrenceRow = styled.div`
   color: #666;
   align-items: center;
 `
-
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 10px 0px;
+`
+const StyledTitle = styled.div`
+  display: flex;
+  font-family: Lato;
+  color: black;
+  font-size: 15px;
+  line-height: 30px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-align: left;
+`
 const CCAInput = styled(AutoComplete)`
   width: 100%;
-  color: #bfbfbf;
+  color: black;
   &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 10px !important;
     border: 0;
@@ -103,28 +80,25 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
-const RepeatWeeklyPickerRow = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0px;
-  color: #666666;
-`
-
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { register, handleSubmit, errors, control } = useForm()
+  const { register, handleSubmit, errors, control, watch } = useForm()
   const [isWeeklyOn, setIsWeeklyOn] = useState(false)
   const [ccaName, setCcaName] = useState<string>('')
   const { facilityList, isLoading, ccaList, booking, bookingStatus, bookingStartTime, bookingEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
-
+  const FormData = watch()
+  const ValidForm = () => {
+    if (isWeeklyOn) {
+      return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && !'some booking end variable'
+    }
+    return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
+  }
   useEffect(() => {
     dispatch(SetIsLoading(true))
-    dispatch(resetBooking())
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
       dispatch(getFacilityList())
@@ -134,18 +108,6 @@ export default function CreateBooking() {
   const getFacilityName = () => {
     return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
   }
-
-  /* 
-  TODO: There are two places that are called conference room, 1 in kuok and 1 in UL. The name has to deconflict.
-  Used to be there are two Main Area also but since name is short, they are now Main Area (UL) and Main Area (Hall)
-  */
-  const locationOptions = facilityList
-    .filter((facility) => facility.facilityName !== 'Conference Room')
-    .map((facility) => ({
-      value: facility.facilityName,
-    }))
-
-  locationOptions.push({ value: 'Conference Room' })
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -192,46 +154,45 @@ export default function CreateBooking() {
           <Controller
             name="eventName"
             render={({ onChange, value }) => (
-              <InputField
-                title="Event Name"
-                {...register('eventName', { required: 'Event name is required!' })}
-                placeholder="Event Name"
-                value={value}
-                onChange={onChange}
-              />
+              <InputField title="Event Name" placeholder="Event Name" value={value} onChange={onChange} />
             )}
             control={control}
-            defaultValue={null}
+            defaultValue=""
           />
           {errors.eventName && <p>{errors.eventName?.message}</p>}
-          <div style={{ width: '100%' }}>
-            {/* TODO: make a component that is a clickable Start/End Date */}
-            <StyledTitle>Start</StyledTitle>
-            <DatePickerRow>
-              <StyledDateName>
-                {bookingStartTime && unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
-              </StyledDateName>
-            </DatePickerRow>
-            <StyledTitle>End</StyledTitle>
-            <DatePickerRow>
-              <StyledDateName>
-                {bookingEndTime && unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-              </StyledDateName>
-            </DatePickerRow>
-          </div>
+          <SelectableField
+            title="Start"
+            value={''}
+            isCompulsory={true}
+            onClick={function (): void {
+              throw new Error('Function not implemented.')
+            }}
+          ></SelectableField>
+          <SelectableField
+            title="End"
+            value={''}
+            isCompulsory={true}
+            onClick={function (): void {
+              throw new Error('Function not implemented.')
+            }}
+          ></SelectableField>
           {/* TODO: Someone to update the CCA style to make the words have correct font color + add the Title to it */}
-          <StyledTitle>CCA</StyledTitle>
-          <CCAInput
-            options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-              value: cca.ccaName,
-            }))}
-            value={ccaName}
-            placeholder="CCA"
-            onChange={(value) => setCcaName(value)}
-            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-            notFoundContent="No Matching CCAs"
-            allowClear
-          />
+          <Container>
+            <StyledTitle>CCA</StyledTitle>
+            <CCAInput
+              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                value: cca.ccaName,
+              }))}
+              value={ccaName}
+              placeholder="CCA"
+              onChange={(value) => setCcaName(value)}
+              filterOption={(inputValue, option) =>
+                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+              }
+              notFoundContent="No Matching CCAs"
+              allowClear
+            />
+          </Container>
           <Controller
             name="description"
             render={({ onChange, value }) => (
@@ -244,23 +205,29 @@ export default function CreateBooking() {
               />
             )}
             control={control}
-            defaultValue={null}
+            defaultValue=""
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
             <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
           </WeeklyRecurrenceRow>
           {isWeeklyOn && (
-            <RepeatWeeklyPickerRow>
-              <StyledTitle>End</StyledTitle>
-              {/* TODO: add weekly recurrence row which is clickable element similar to START/END Date */}
-            </RepeatWeeklyPickerRow>
+            <SelectableField
+              title="End Date"
+              value={''}
+              isCompulsory={true}
+              // error={true}
+              onClick={() => ValidForm()}
+            ></SelectableField>
           )}
           {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
           {/* TODO: Improve the green button with disabled state to be able to use properly */}
-          <div>
-            <button type="submit">Confirm</button>
-          </div>
+          <ButtonComponent
+            state={ValidForm() ? 'primary' : 'secondary'}
+            text="Submit"
+            type="submit"
+            disabled={!ValidForm()}
+          ></ButtonComponent>
         </Form>
       )}
     </Background>

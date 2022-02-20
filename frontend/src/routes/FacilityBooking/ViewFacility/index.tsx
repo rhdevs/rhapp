@@ -22,6 +22,7 @@ import {
   SetIsLoading,
   setViewDates,
   setSelectedFacility,
+  resetBooking,
 } from '../../../store/facilityBooking/action'
 import { months } from '../../../common/dates'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -170,6 +171,7 @@ export default function ViewFacility() {
 
   useEffect(() => {
     dispatch(SetIsLoading(true))
+    dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
     if (selectedFacilityId == 0) {
