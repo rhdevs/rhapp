@@ -256,7 +256,7 @@ export default function CreateBooking() {
               {/* TODO: add weekly recurrence row which is clickable element similar to START/END Date */}
             </RepeatWeeklyPickerRow>
           )}
-          {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert />}
+          {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
           {/* TODO: Improve the green button with disabled state to be able to use properly */}
           <div>
             <button type="submit">Confirm</button>

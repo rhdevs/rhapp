@@ -273,7 +273,7 @@ export default function ViewFacility() {
                       params.facilityID,
                     ),
                   )
-                  history.push('/facility/booking/create')
+                  history.push('/facility/booking/create' + params.facilityID)
                 }}
                 hasSuccessMessage={false}
                 stopPropagation={false}
