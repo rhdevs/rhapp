@@ -153,17 +153,6 @@ def toggle_gym():
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
-# redundant? consider deleting
-@gym_api.route("/gymIsOpen", methods=['POST'])
-def add_gymIsOpen():
-    try:
-        data = request.get_json(force=True)
-        response = {"status": "success"}
-        db.Gym.insert_one(data)
-    except:
-        return {"err": "An error has occurred", "status": "failed"}, 500
-    return make_response(response)
-
 @gym_api.route("/keyHolder/profilepic", methods=['GET'])
 def getUserPicture():
     try:
