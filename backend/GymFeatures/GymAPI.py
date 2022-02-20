@@ -8,11 +8,13 @@ import sys
 from datetime import datetime
 import time
 import pandas as pd
-from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
+import S3.app as s3
+from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE, SMCHEAD_USERID
 sys.path.append("../")
 
-gym_api = Blueprint("gym", __name__)
 
+
+gym_api = Blueprint("gym", __name__)
 
 @gym_api.route("/", methods = ['GET'])
 def get_history():
@@ -160,4 +162,21 @@ def add_gymIsOpen():
         db.Gym.insert_one(data)
     except:
         return {"err": "An error has occurred", "status": "failed"}, 500
+    return make_response(response)
+
+@gym_api.route("/keyHolder/profilepic", methods=['GET'])
+def getUserPicture():
+    try:
+        data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
+        if data[0]['keyIsReturned']==True:
+            imageKey = f'{SMCHEAD_USERID}/profile_pic.png'
+        else:
+            profile = db.Profiles.find_one(
+                {"userID": data[0]['userID']}
+            )
+            imageKey = profile['imageKey']
+        imageURL = s3.read(imageKey)
+        response = {"imageURL": imageURL, "status": "success"}
+    except:
+        return {"err":"An error has occured", "status":"failed"}, 500
     return make_response(response)
