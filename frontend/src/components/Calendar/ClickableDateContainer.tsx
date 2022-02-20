@@ -17,6 +17,7 @@ const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  cursor: pointer;
 `
 
 const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`

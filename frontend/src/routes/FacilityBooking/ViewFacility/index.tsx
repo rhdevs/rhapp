@@ -32,6 +32,7 @@ import dayjs from 'dayjs'
 import Calendar from 'react-calendar'
 import './calendar.css'
 import BookingCard from '../../../components/BookingCard'
+import ConflictAlert from '../../../components/ConflictAlert'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -296,8 +297,7 @@ export default function ViewFacility() {
               </div> */}
             </ActionButtonGroup>
             <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
-            {!isLoading && <BookingCard></BookingCard>}
-            {isLoading && <LoadingSpin />}
+            {isLoading ? <LoadingSpin /> : <BookingCard bookings={facilityBookings} />}
             <BottomNavBar />
           </>
         </MainContainer>

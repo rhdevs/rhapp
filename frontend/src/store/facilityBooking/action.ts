@@ -315,7 +315,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       if (body.err == 'End time earlier than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
       } else if (body.err == 'Conflict Booking') {
-        dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
+        dispatch(setConflictBookings(body.conflict_bookings))
       } else if (body.err == 'You must be in RH Dance to make this booking') {
         // As of this version, Dance Studio can only be booked by people who are in RH Dance.
         dispatch(SetCreateBookingError('You must be in RH Dance to make this booking'))
@@ -499,5 +499,12 @@ export const setBookingEndTime = (endTime: number) => (dispatch: Dispatch<Action
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_END_TIME,
     bookingEndTime: endTime,
+  })
+}
+
+export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS,
+    conflictBookings: conflictBookings,
   })
 }
