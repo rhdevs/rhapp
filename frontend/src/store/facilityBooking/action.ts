@@ -1,7 +1,8 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
+import { ActionTypes, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
+import { get24Hourtime } from '../../common/get24HourTime'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
