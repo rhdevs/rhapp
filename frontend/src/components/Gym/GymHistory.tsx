@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { unixToFormattedTimeNoSeconds } from '../common/unixToFormattedTimeNoSeconds'
-import { unixToFullDate } from '../common/unixToFullDate'
+import { unixToFormattedTimeNoSeconds } from '../../common/unixToFormattedTimeNoSeconds'
+import { unixToFullDate } from '../../common/unixToFullDate'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { getGymHistory } from '../store/gym/action'
-import { RootState } from '../store/types'
+import { getGymHistory } from '../../store/gym/action'
+import { RootState } from '../../store/types'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;

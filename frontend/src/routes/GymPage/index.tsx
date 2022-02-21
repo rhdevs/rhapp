@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { GymTabContainer } from '../../components/Tabs'
 import { Icon } from 'antd-mobile'
-import GymHistory from '../../components/GymHistory'
+import GymHistory from '../../components/Gym/GymHistory'
 import GymStatusTab from '../../components/Gym/GymStatusTab'
 
 const NavBarIcons = styled(Icon)`
@@ -23,6 +22,32 @@ const GymBarContainer = styled.div`
   background-color: #fff;
   align-items: center;
   top: 0;
+`
+
+const GymTabContainer = styled.div<{ isSelected?: boolean }>`
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+  background-color: #fff;
+  color: #191919;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 45px;
+  ${(props) =>
+    props.isSelected
+      ? `color: #59ba95;
+    background-position: 50% 2.5em;
+    background-image: linear-gradient(
+      to bottom,
+      #59ba95,
+      #73bb75
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 2px;`
+      : ``}
 `
 
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {

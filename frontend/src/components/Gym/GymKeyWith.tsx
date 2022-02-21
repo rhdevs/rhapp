@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Avatar from '../assets/Avatar_4x.png'
+import Avatar from '../../assets/Avatar_4x.png'
 
 const Header = styled.div`
   font-family: Lato;
