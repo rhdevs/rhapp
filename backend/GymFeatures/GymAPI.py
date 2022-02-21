@@ -17,6 +17,7 @@ sys.path.append("../")
 gym_api = Blueprint("gym", __name__)
 
 @gym_api.route("/", methods = ['GET'])
+@ cross_origin(supports_credentials=True)
 def get_history():
     try:
         data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
@@ -64,6 +65,7 @@ def get_history():
     return make_response(response)
 
 @gym_api.route("/status", methods=['GET'])
+@ cross_origin(supports_credentials=True)
 def get_statuses():
     try:
         data = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
@@ -82,6 +84,7 @@ def get_statuses():
     return make_response(response)
 
 @gym_api.route("/movekey/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
 def move_key(userID):
     try:
         usersData = db.User.find_one({"userID": userID})
@@ -107,6 +110,7 @@ def move_key(userID):
         return {"err":"An error has occured", "status":"failed"}, 500
     
 @gym_api.route("/returnkey/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
 def return_key(userID):
     try:
         insert_data = {}
@@ -127,6 +131,7 @@ def return_key(userID):
         return {"err":"An error has occured", "status":"failed"}, 500
 
 @gym_api.route("/togglegym/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
 def toggle_gym(userID):
     try:
         data = db.Gym.find().sort('_id',-1).limit(1).next()
@@ -149,6 +154,7 @@ def toggle_gym(userID):
         return {"err":"An error has occured", "status":"failed"}, 500
 
 @gym_api.route("/keyHolder/profilepic", methods=['GET'])
+@ cross_origin(supports_credentials=True)
 def getUserPicture():
     try:
         data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
