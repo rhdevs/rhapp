@@ -19,7 +19,7 @@ type State = {
 export const gym: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
     case GYM_ACTIONS.GET_GYM_STATUS: {
-      return { ...state, gymStatus: action.gymStatus }
+      return { ...state, gymStatus: { ...state.gymStatus, ...action.gymStatus } }
     }
     case GYM_ACTIONS.GET_GYM_HISTORY: {
       return { ...state, gymHistory: action.history }

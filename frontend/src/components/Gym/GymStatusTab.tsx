@@ -6,7 +6,7 @@ import GymKeyWith from '../GymKeyWith'
 import GymConfirmationModal from './GymConfirmationModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { getGymStatus } from '../../store/gym/action'
+import { getGymStatus, getProfilePic } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes } from '../../store/gym/types'
 import ButtonComponent from '../Button'
@@ -30,6 +30,7 @@ function GymStatusTab() {
   useEffect(() => {
     dispatch(getGymStatus())
     dispatch(getUserDetail())
+    dispatch(getProfilePic())
   }, [])
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
