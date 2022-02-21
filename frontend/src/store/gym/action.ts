@@ -35,7 +35,7 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err
@@ -52,7 +52,7 @@ export const moveKey = (userID: string, name: string, telegram: string) => async
 }
 
 export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.RETURN_KEY, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.RETURN_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err
@@ -69,7 +69,7 @@ export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTyp
 }
 
 export const toggleGym = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.TOGGLE_GYM, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.TOGGLE_GYM, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err
