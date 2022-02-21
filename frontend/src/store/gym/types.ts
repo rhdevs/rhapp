@@ -1,4 +1,4 @@
-export type GymStatus = {
+export type GymStatusStates = {
   gymIsOpen: boolean
   keyHolder: { displayName: string; telegramHandle: string }
   keyIsReturned: boolean
@@ -47,7 +47,7 @@ export enum GYM_ACTIONS {
 
 type getGymStatus = {
   type: typeof GYM_ACTIONS.GET_GYM_STATUS
-  gymStatus: GymStatus
+  gymStatus: GymStatusStates
 }
 
 type getGymHistory = {

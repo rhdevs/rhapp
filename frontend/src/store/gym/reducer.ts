@@ -1,5 +1,5 @@
 import { Reducer } from 'redux'
-import { ActionTypes, GYM_ACTIONS, GymStatus, HistoryEntry } from './types'
+import { ActionTypes, GYM_ACTIONS, GymStatusStates, HistoryEntry } from './types'
 import { gymStatus } from '../stubs'
 
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
 }
 
 type State = {
-  gymStatus: GymStatus
+  gymStatus: GymStatusStates
   gymHistory: HistoryEntry[]
 }
 

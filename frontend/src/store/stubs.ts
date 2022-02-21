@@ -14,7 +14,7 @@ import {
   Food,
   UserDetails,
 } from './supper/types'
-import { GymStatus, HistoryEntry } from './gym/types'
+import { GymStatusStates, HistoryEntry } from './gym/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -552,7 +552,7 @@ export const initSupperGroup: SupperGroup = {
   closingTime: undefined,
 }
 
-export const gymStatus: GymStatus = {
+export const gymStatus: GymStatusStates = {
   gymIsOpen: false,
   keyHolder: { displayName: '5-122', telegramHandle: 'smchead' },
   keyIsReturned: true,
