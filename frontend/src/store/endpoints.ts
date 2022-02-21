@@ -110,6 +110,14 @@ export enum ENDPOINTS {
   LEAVE_SUPPER_GROUP = '/supperGroup',
   GET_OWNER_EDITS = '/order',
   UPDATE_OWNER_EDITS = '/supperGroup',
+
+  // GYM
+  GET_GYM_HISTORY = '/',
+  GET_GYM_STATUS = '/status',
+  GET_PROFILE_PICTURE = '/keyHolder/profilepic',
+  MOVE_KEY = '/movekey',
+  RETURN_KEY = '/returnkey',
+  TOGGLE_GYM = '/togglegym',
 }
 
 export enum DOMAINS {
@@ -119,6 +127,7 @@ export enum DOMAINS {
   SOCIAL = 'social',
   AUTH = 'auth',
   SUPPER = 'supper',
+  GYM = 'gym',
 }
 
 export const DOMAIN_URL = {
@@ -146,6 +155,10 @@ export const DOMAIN_URL = {
     process.env.REACT_APP_MODE === 'production'
       ? '//rhapp-backend.rhdevs.repl.co/supper'
       : '//rhappmiddleware.herokuapp.com/rhappsupper',
+  GYM:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/gym'
+      : '//rhappmiddleware.herokuapp.com/rhappgym',
 }
 
 async function makeRequest(
@@ -192,6 +205,12 @@ async function makeRequest(
         process.env.REACT_APP_MODE === 'production'
           ? '//rhapp-backend.rhdevs.repl.co/supper'
           : '//rhappmiddleware.herokuapp.com/rhappsupper'
+      break
+    case DOMAINS.GYM:
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/gym'
+          : '//rhappmiddleware.herokuapp.com/rhappgym'
       break
   }
   return axios({

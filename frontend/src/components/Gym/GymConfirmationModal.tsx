@@ -6,7 +6,9 @@ import { useDispatch } from 'react-redux'
 
 function GymConfirmationModal(props: {
   gymIsOpen: boolean
+  userId: string
   name: string
+  telegramHandle: string
   isModalOpen: boolean
   setModalOpen: (value: ((prevState: boolean) => boolean) | boolean) => void
   modalState: ButtonTypes | undefined
@@ -15,19 +17,19 @@ function GymConfirmationModal(props: {
   function dispatchModalAction(): void {
     switch (props.modalState) {
       case 'keyWithMe': {
-        dispatch(moveKey(props.name, Date.now()))
+        dispatch(moveKey(props.userId, props.name, props.telegramHandle))
         return
       }
       case 'returnKey': {
-        dispatch(returnKey(props.name, Date.now()))
+        dispatch(returnKey(props.userId))
         return
       }
       case 'openGym': {
-        dispatch(toggleGym(props.name, Date.now()))
+        dispatch(toggleGym(props.userId))
         return
       }
       case 'closeGym': {
-        dispatch(toggleGym(props.name, Date.now()))
+        dispatch(toggleGym(props.userId))
         return
       }
       default:

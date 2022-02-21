@@ -1,10 +1,10 @@
 import { Reducer } from 'redux'
 import { ActionTypes, GYM_ACTIONS, GymStatusStates, HistoryEntry } from './types'
-import { gymStatus } from '../stubs'
 
 const initialState = {
   gymStatus: {
     gymIsOpen: true,
+    avatar: '',
     keyHolder: { displayName: 'Abby Tan', telegramHandle: 'oopsidonthave' },
     keyIsReturned: false,
   },
@@ -29,7 +29,7 @@ export const gym: Reducer<State, ActionTypes> = (state = initialState, action) =
         ...state,
         gymStatus: {
           ...state.gymStatus,
-          keyHolder: { ...state.gymStatus.keyHolder, displayName: action.keyArgs.userID },
+          keyHolder: { displayName: action.keyArgs.name, telegramHandle: action.keyArgs.telegram },
         },
       }
     }
@@ -38,7 +38,7 @@ export const gym: Reducer<State, ActionTypes> = (state = initialState, action) =
         ...state,
         gymStatus: {
           ...state.gymStatus,
-          keyHolder: { ...gymStatus.keyHolder },
+          keyHolder: { displayName: action.keyArgs.name, telegramHandle: action.keyArgs.telegram },
           keyIsReturned: true,
         },
       }
@@ -47,6 +47,12 @@ export const gym: Reducer<State, ActionTypes> = (state = initialState, action) =
       return {
         ...state,
         gymStatus: { ...state.gymStatus, gymIsOpen: !state.gymStatus.gymIsOpen },
+      }
+    }
+    case GYM_ACTIONS.GET_PROFILE_PIC: {
+      return {
+        ...state,
+        gymStatus: { ...state.gymStatus, avatar: action.pic },
       }
     }
     default:

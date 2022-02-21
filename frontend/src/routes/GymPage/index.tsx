@@ -51,11 +51,9 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         {sections.map((section, index) => {
           const isSelected = sections.indexOf(section) === currentTab - 1
           return (
-            <>
-              <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
-                {section}
-              </GymTabContainer>
-            </>
+            <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
+              {section}
+            </GymTabContainer>
           )
         })}
       </GymBarContainer>

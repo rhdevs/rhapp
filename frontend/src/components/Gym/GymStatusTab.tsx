@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import GymStatus from '../GymStatus'
@@ -25,11 +26,10 @@ const ButtonContainer = styled.div`
 function GymStatusTab() {
   const dispatch = useDispatch()
   const { gymStatus } = useSelector((state: RootState) => state.gym)
-  const { name } = useSelector((state: RootState) => state.social)
+  const { name, telegramHandle, userId } = useSelector((state: RootState) => state.social)
   useEffect(() => {
     dispatch(getGymStatus())
     dispatch(getUserDetail())
-    // dispatch(getGymHistory())
   }, [])
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
@@ -86,19 +86,21 @@ function GymStatusTab() {
     return (
       <GymConfirmationModal
         gymIsOpen={gymStatus.gymIsOpen}
-        name={name}
         setModalOpen={setModalOpen}
         isModalOpen={isModalOpen}
         modalState={modalState}
+        userId={userId}
+        name={name}
+        telegramHandle={telegramHandle}
       />
     )
   }
 
   function renderButton() {
-    const buttonState: ButtonStates = getButtonStates()
-    return Object.keys(buttonState).map((key: string, index: number) => (
+    const buttonState = getButtonStates()
+    return Object.keys(buttonState).map((key: string) => (
       <ButtonComponent
-        key={index}
+        key={key}
         state={buttonState[key] ? 'primary' : 'secondary'}
         text={getButtonText(key)}
         onClick={() => handleModalState(key)}
@@ -110,7 +112,11 @@ function GymStatusTab() {
     <GymContainer>
       {renderConfirmationModal()}
       <GymStatus isOpen={gymStatus.gymIsOpen} />
-      <GymKeyWith name={gymStatus.keyHolder.displayName} handle={gymStatus.keyHolder.telegramHandle} />
+      <GymKeyWith
+        name={gymStatus.keyHolder.displayName}
+        handle={gymStatus.keyHolder.telegramHandle}
+        avatar={gymStatus.avatar}
+      />
       <ButtonContainer>{renderButton()}</ButtonContainer>
     </GymContainer>
   )

@@ -1,5 +1,6 @@
 export type GymStatusStates = {
   gymIsOpen: boolean
+  avatar: string
   keyHolder: { displayName: string; telegramHandle: string }
   keyIsReturned: boolean
 }
@@ -15,12 +16,12 @@ export type ButtonTypes = string | 'keyWithMe' | 'returnKey' | 'closeGym' | 'ope
 
 export type HistoryEntry = {
   date: number
-  users: UserEntry[]
+  details: UserEntry[]
 }
 
 export type UserEntry = {
-  gymStatus: string
-  time: number
+  statusChange: string
+  requesttime: number
   userDetails: string
 }
 
@@ -32,17 +33,17 @@ export type KeyWithArgs = {
 }
 
 export type reqArgs = {
-  userID: string
-  requestTime: number
+  name: string
+  telegram: string
 }
 
 export enum GYM_ACTIONS {
   GET_GYM_STATUS = 'GYM_ACTIONS.GET_GYM_STATUS',
   GET_GYM_HISTORY = 'GYM_ACTIONS.GET_GYM_HISTORY',
-  GET_TELEGRAM = 'GYM_ACTIONS.GET_TELEGRAM',
+  GET_PROFILE_PIC = 'GYM_ACTIONS.GET_PROFILE_PIC',
   MOVE_KEY = 'GYM_ACTIONS.MOVE_KEY',
   RETURN_KEY = 'GYM_ACTIONS.RETURN_KEY',
-  TOGGLE_GYM = 'GYM_ACTIONS.TOGGLE_GYM', // TO BE CONFIRMED
+  TOGGLE_GYM = 'GYM_ACTIONS.TOGGLE_GYM',
 }
 
 type getGymStatus = {
@@ -53,11 +54,6 @@ type getGymStatus = {
 type getGymHistory = {
   type: GYM_ACTIONS.GET_GYM_HISTORY
   history: HistoryEntry[]
-}
-
-type getTelegram = {
-  type: GYM_ACTIONS.GET_TELEGRAM
-  telegram: string
 }
 
 type moveKey = {
@@ -72,7 +68,11 @@ type returnKey = {
 
 type toggleGym = {
   type: GYM_ACTIONS.TOGGLE_GYM
-  args: reqArgs
 }
 
-export type ActionTypes = getGymStatus | getGymHistory | getTelegram | moveKey | returnKey | toggleGym
+type getProfilePic = {
+  type: GYM_ACTIONS.GET_PROFILE_PIC
+  pic: string
+}
+
+export type ActionTypes = getGymStatus | getGymHistory | getProfilePic | moveKey | returnKey | toggleGym

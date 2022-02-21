@@ -23,6 +23,7 @@ export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
         avatar: data.profilePictureUrl,
         name: data.displayName,
         position: data.position,
+        telegramHandle: data.telegramHandle,
       })
     }
   })
