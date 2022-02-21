@@ -10,7 +10,7 @@ import time
 import pandas as pd
 import S3.app as s3
 from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
-sys.path.append("../")
+sys.path.append("../db")
 
 
 
