@@ -81,12 +81,10 @@ def get_statuses():
 
     return make_response(response)
 
-@gym_api.route("/movekey", methods = ["POST"])
-def move_key():
+@gym_api.route("/movekey/<userID>", methods = ["POST"])
+def move_key(userID):
     try:
-        formData = request.get_json()
-        
-        usersData = db.User.find_one({"userID": formData["userID"]})
+        usersData = db.User.find_one({"userID": userID})
         telegramHandle = usersData['telegramHandle']
         displayName = usersData['displayName']
         
@@ -98,7 +96,7 @@ def move_key():
             "telegramHandle": telegramHandle,
             "displayName": displayName
             }
-        insert_data["userID"] = formData["userID"]
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
@@ -108,11 +106,9 @@ def move_key():
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
     
-@gym_api.route("/returnkey", methods = ["POST"])
-def return_key():
+@gym_api.route("/returnkey/<userID>", methods = ["POST"])
+def return_key(userID):
     try:
-        formData = request.get_json()
-
         insert_data = {}
         insert_data["gymIsOpen"] = False
         insert_data["keyIsReturned"] = True
@@ -120,7 +116,7 @@ def return_key():
             "telegramHandle": DEFAULT_TELEGRAM_HANDLE,
             "displayName": DEFAULT_KEY_LOC
         }
-        insert_data["userID"] = formData['userID']
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
@@ -130,10 +126,9 @@ def return_key():
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
-@gym_api.route("/togglegym", methods = ["POST"])
-def toggle_gym():
+@gym_api.route("/togglegym/<userID>", methods = ["POST"])
+def toggle_gym(userID):
     try:
-        formData = request.get_json()
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
         # print(data["gymIsOpen"], type(data["gymIsOpen"]))
@@ -144,7 +139,7 @@ def toggle_gym():
             insert_data["statusChange"] = "CLOSED"
         insert_data["keyIsReturned"] = False
         insert_data["keyHolder"] =  data["keyHolder"]
-        insert_data["userID"] = formData["userID"]
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
