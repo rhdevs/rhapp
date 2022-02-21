@@ -11,7 +11,8 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
-
+import { ThemeProvider } from 'styled-components'
+import { colorTheme } from './theme'
 class App extends React.Component {
   render() {
     dayjs.extend(CustomParseFormat)
@@ -19,12 +20,14 @@ class App extends React.Component {
 
     return (
       <Provider store={store}>
-        <GlobalStyle />
-        <BrowserRouter>
-          <OfflineStatus />
-          <NotificationBar />
-          <Routes />
-        </BrowserRouter>
+        <ThemeProvider theme={colorTheme}>
+          <GlobalStyle />
+          <BrowserRouter>
+            <OfflineStatus />
+            <NotificationBar />
+            <Routes />
+          </BrowserRouter>
+        </ThemeProvider>
       </Provider>
     )
   }
