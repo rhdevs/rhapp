@@ -30,39 +30,36 @@ def hello():
     return "Welcome the Raffles Hall Social server"
 
 
-#@social_api.route('/profiles', methods=['GET', 'PUT'])
 @social_api.route('/profiles', methods=['PUT'])
 @cross_origin(supports_credentials=True)
 def profiles():
     try:
-        '''
-        if request.method == 'GET':
-            data = db.User.find()   # note that this code returns passwordHash of the user.
+        data = request.get_json()
+        if "profilePictureURI" in data:
+            data["profilePictureUrl"] = data.pop("profilePictureURI")
+
+        if not data.get("userID"):
+            return {"status":" failed", "message": "Invalid request"}, 400
+
+        if db.User.count_documents({"userID": data["userID"]}) == 0:
+            return {"status":" failed", "message": "User not found"}, 404
+
+
+        result = db.User.update_one(
+            {"userID": data["userID"]}, {'$set': data}, upsert=True)
+
+
+        if int(result.matched_count) > 0:
             response = {
                 "status": "success",
-                "data": json.dumps(list(data), default=lambda o: str(o))
+                "message": "Profile changed"
             }
             return make_response(response, 200)
-        '''
-        if request.method == 'PUT':
-            data = request.get_json()
-            if "profilePictureURI" in data:
-                data["profilePictureUrl"] = data.pop("profilePictureURI")
-
-            result = db.User.update_one(
-                {"userID": data["userID"]}, {'$set': data}, upsert=True)
-
-            if int(result.matched_count) > 0:
-                response = {
-                    "status": "success",
-                    "message": "Event changed"
-                }
-                return make_response(response, 200)
-            else:
-                response = {
-                    "status": "failed",
-                }
-                return make_response(response, 204)
+        else:
+            response = {
+                "status": "failed",
+            }
+            return make_response(response, 404)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -73,15 +70,15 @@ def profiles():
 def users():
     userIdList = request.args.getlist('userID')
     try:
-        data = db.User.find({"userID": {'$in': userIdList}}, {"_id": 0, "passwordHash": 0})
+        data = list(db.User.find({"userID": {'$in': userIdList}}, {"_id": 0, "passwordHash": 0}))
         response = {
-                 "data": list(data),
+                 "data": data,
                  "status": "success"
              }
         print(userIdList)
         if len(userIdList) == 1 and userIdList[0] == "":
             return make_response({"err": "userID is not specified", "status": "failed"}), 400 # throws error if userID is not specified in argument
-        elif db.Profiles.count_documents({"userID": {'$in': userIdList}}) == 0:
+        elif len(data) == 0:
             return make_response({"err": "User does not exist", "status": "failed"}), 404 # throws error if all userID entries in argument do not exist 
         else:
             return make_response(response, 200)
@@ -93,18 +90,22 @@ def users():
 @cross_origin(supports_credentials=True)
 def getUserProfile(userID):
     try:
-        data = db.User.find({"userID": userID}, {"_id": 0, "passwordHash": 0})
+        if (not userID):
+            return {"err": "Invalid request"}, 400
+        data = list(db.User.find({"userID": userID}, {"_id": 0, "passwordHash": 0}))
         response = {
-            "data": list(data),
+            "data": data,
             "status": "success"
         }
+
+        if len(data) == 0:
+            return make_response({"err": "User does not exist", "status":"failed"}), 404
+        else:
+            return make_response(response, 200)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-    if db.Profiles.count_documents({"userID": userID}) == 0:
-        return make_response({"err": "User does not exist", "status":"failed"}), 404
-    else:
-        return make_response(response, 200)
+    
         
 
 @social_api.route("/user", methods=['PUT', 'POST'])
@@ -128,7 +129,7 @@ def user():
 
             if int(result.matched_count) > 0:
                 response = {
-                    "message": "Event changed",
+                    "message": "Profile changed",
                     "status": "success"
                 }
                 return make_response(response, 200)
@@ -136,23 +137,26 @@ def user():
                 response = {
                     "status": "failed"
                 }
-                return make_response(response, 204)
+                return make_response(response, 400)
 
         elif request.method == 'POST':
             data = request.get_json()
-            userID = str(data.get('userID'))
-            passwordHash = str(data.get('passwordHash'))
-            email = str(data.get('email'))
-            position = []  # default to be empty, will be added manually from BE
+            userID = data.get('userID')
+            passwordHash = data.get('passwordHash')
+            email = data.get('email')
+
+            if (userID is None or passwordHash is None or email is None):
+                return {"status": "failed", "message": "Invalid request"}, 400
+
+            if db.Users.count_documents({"userID": userID}) == 0:
+                return {"status": "failed", "message": "Account already exist"}, 409
 
             body = {
                 "userID": userID,
                 "passwordHash": passwordHash,
                 "email": email,
-                "position": position
             }
-            receipt = db.User.insert_one(body)
-            body["_id"] = str(receipt.inserted_id)
+            db.User.insert_one(body)
 
             return make_response({"message": body, "status": "success"}, 200)
 
@@ -161,7 +165,7 @@ def user():
         return {"err": "An error has occured", "status": "failed"}, 500
 
 
-@social_api.route("/user/<userID>")
+@social_api.route("/user/<userID>", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def getUserDetails(userID):
     try:
@@ -180,7 +184,7 @@ def getUserDetails(userID):
             {
                 '$replaceRoot': {'newRoot': {'$mergeObjects': [{'$arrayElemAt': ["$profile", 0]}, "$$ROOT"]}}
             },
-            {'$project': {'profile': 0}},
+            {'$project': {'profile': 0, "_id": 0}},
             {'$lookup': {
                 'from': 'CCA',
                         'localField': 'position',
@@ -191,27 +195,17 @@ def getUserDetails(userID):
             {'$project': {'positions.category': 0, 'positions._id': 0, 'position': 0, 'passwordHash': 0}}
         ]
 
-        data = db.User.aggregate(pipeline)
-        response = None
-        for item in data:
-            response = item
+        data = list(db.User.aggregate(pipeline))
 
         return make_response(
             {
-                "data": json.dumps(response, default=lambda o: str(o)),
+                "data": data,
                 "status": "success"
             }, 200)
 
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
-
-    return make_response(
-        {
-            "data": json.dumps(response, default=lambda o: str(o)),
-            "status": "success"
-        },
-        200)
 
 
 def userIDtoName(userID):
@@ -359,6 +353,9 @@ def posts():
             isOfficial = bool(data.get('isOfficial'))
             tags = data.get('tags')
 
+            if (not userID or userID == ""):
+                return {"status":" failed", "message": "Invalid request"}, 400
+
             body = {
                 "userID": userID,
                 "title": title,
@@ -378,10 +375,16 @@ def posts():
         elif request.method == 'PUT':
             data = request.get_json()
             postID = data.get('postID')
-            oldPost = db.Posts.find_one({"_id": ObjectId(postID)})
+            if (data.get('postID') is None):
+                return {"status":" failed", "message": "Invalid request"}, 400
 
-            if oldPost == None:
-                return make_response("data non existent", 404)
+            try:
+                ObjectId(postID)
+            except (InvalidId):
+                return {"status":" failed", "message": "Invalid request"}, 400
+
+            if db.Posts.count_documents({"_id": ObjectId(postID)}) == 0:
+                return make_response({"status":" failed", "message": "Post does not exist"}, 404)
 
             userID = str(data.get('userID')) if data.get(
                 'userID') else oldPost.get('userID')
@@ -408,9 +411,9 @@ def posts():
             result = db.Posts.update_one(
                 {"_id": ObjectId(postID)}, {'$set': body})
             if int(result.matched_count) > 0:
-                return make_response({'message': "Event changed"}, 200)
+                return make_response({'message': "Post changed", "status": "success"}, 200)
             else:
-                return Response(status=204)
+                return Response(status=200)
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
