@@ -59,7 +59,7 @@ export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTyp
       }
       dispatch({
         type: GYM_ACTIONS.RETURN_KEY,
-        keyArgs: { name: '5-409', telegram: '@smchead' },
+        keyArgs: { name: '5-122', telegram: 'smchead' },
       })
       dispatch(getProfilePic())
     })

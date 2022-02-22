@@ -104,6 +104,7 @@ function GymStatusTab() {
         key={key}
         state={buttonState[key] ? 'primary' : 'secondary'}
         text={getButtonText(key)}
+        disabled={!buttonState[key]}
         onClick={() => handleModalState(key)}
       />
     ))
