@@ -91,7 +91,7 @@ export const getProfilePic = () => async (dispatch: Dispatch<ActionTypes>) => {
       }
       dispatch({
         type: GYM_ACTIONS.GET_PROFILE_PIC,
-        pic: res.data,
+        pic: res.imageURL,
       })
     })
     .catch((err) => {
