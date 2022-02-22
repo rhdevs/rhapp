@@ -39,8 +39,8 @@ const ImageContainer = styled.div`
 `
 
 interface Props {
-  name?: string
-  handle?: string
+  name: string
+  handle: string
   avatar?: string
 }
 
@@ -49,14 +49,18 @@ function GymKeyWith(props: Props) {
     <>
       <Header>Key With</Header>
       <ImageContainer>
-        <img src={props.avatar ?? Avatar} alt="Dummy Avatar" width="20%" />
+        <img src={props.avatar === '' ? Avatar : props.avatar} alt="Dummy Avatar" width="20%" />
       </ImageContainer>
       <Container>
-        <InfoArea> {props.name ?? 'Andy'} </InfoArea>
-        <InfoArea> {props.handle ?? '@andy333'} </InfoArea>
+        <InfoArea> {props.name} </InfoArea>
+        <InfoArea> {'@' + props.handle} </InfoArea>
       </Container>
     </>
   )
+}
+
+GymKeyWith.defaultProps = {
+  avatar: '',
 }
 
 export default GymKeyWith

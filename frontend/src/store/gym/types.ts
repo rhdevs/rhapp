@@ -1,16 +1,27 @@
-export type GymStatus = {
-  keyStatus: string
-  gymStatus: boolean
+export type GymStatusStates = {
+  gymIsOpen: boolean
+  avatar: string
+  keyHolder: { displayName: string; telegramHandle: string }
+  keyIsReturned: boolean
 }
+
+export type ButtonStates = {
+  keyWithMe: boolean
+  returnKey: boolean
+  toggleGym: boolean
+}
+
+// Added string type to handle some edge cases (specifically toggleGym).
+export type ButtonTypes = string | 'keyWithMe' | 'returnKey' | 'closeGym' | 'openGym'
 
 export type HistoryEntry = {
   date: number
-  users: UserEntry[]
+  details: UserEntry[]
 }
 
 export type UserEntry = {
-  gymStatus: string
-  time: number
+  statusChange: string
+  requesttime: number
   userDetails: string
 }
 
@@ -21,22 +32,23 @@ export type KeyWithArgs = {
   keyStatus: string
 }
 
+export type reqArgs = {
+  name: string
+  telegram: string
+}
+
 export enum GYM_ACTIONS {
   GET_GYM_STATUS = 'GYM_ACTIONS.GET_GYM_STATUS',
-  SET_KEY_WITH = 'GYM_ACTIONS.SET_KEY_WITH',
   GET_GYM_HISTORY = 'GYM_ACTIONS.GET_GYM_HISTORY',
-  GET_TELEGRAM = 'GYM_ACTIONS.GET_TELEGRAM',
-  // TOGGLE_GYM = 'GYM_ACTIONS.TOGGLE_GYM', // TO BE CONFIRMED
+  GET_PROFILE_PIC = 'GYM_ACTIONS.GET_PROFILE_PIC',
+  MOVE_KEY = 'GYM_ACTIONS.MOVE_KEY',
+  RETURN_KEY = 'GYM_ACTIONS.RETURN_KEY',
+  TOGGLE_GYM = 'GYM_ACTIONS.TOGGLE_GYM',
 }
 
 type getGymStatus = {
   type: typeof GYM_ACTIONS.GET_GYM_STATUS
-  gymStatus: GymStatus
-}
-
-type setKeyWith = {
-  type: GYM_ACTIONS.SET_KEY_WITH
-  keyWith: string
+  gymStatus: GymStatusStates
 }
 
 type getGymHistory = {
@@ -44,9 +56,23 @@ type getGymHistory = {
   history: HistoryEntry[]
 }
 
-type getTelegram = {
-  type: GYM_ACTIONS.GET_TELEGRAM
-  telegram: string
+type moveKey = {
+  type: GYM_ACTIONS.MOVE_KEY
+  keyArgs: reqArgs
 }
 
-export type ActionTypes = getGymStatus | setKeyWith | getGymHistory | getTelegram
+type returnKey = {
+  type: GYM_ACTIONS.RETURN_KEY
+  keyArgs: reqArgs
+}
+
+type toggleGym = {
+  type: GYM_ACTIONS.TOGGLE_GYM
+}
+
+type getProfilePic = {
+  type: GYM_ACTIONS.GET_PROFILE_PIC
+  pic: string
+}
+
+export type ActionTypes = getGymStatus | getGymHistory | getProfilePic | moveKey | returnKey | toggleGym

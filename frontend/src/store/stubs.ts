@@ -14,7 +14,7 @@ import {
   Food,
   UserDetails,
 } from './supper/types'
-import { GymStatus, HistoryEntry } from './gym/types'
+import { GymStatusStates, HistoryEntry } from './gym/types'
 
 /**
  * ######### STUBS LIST: #########
@@ -552,58 +552,60 @@ export const initSupperGroup: SupperGroup = {
   closingTime: undefined,
 }
 
-export const gymStatus: GymStatus = {
-  keyStatus: 'bufflord',
-  gymStatus: true,
+export const gymStatus: GymStatusStates = {
+  gymIsOpen: false,
+  avatar: '',
+  keyHolder: { displayName: '5-122', telegramHandle: 'smchead' },
+  keyIsReturned: true,
 }
 
 export const gymHistory: HistoryEntry[] = [
   {
     date: 1638426691,
-    users: [
+    details: [
       {
-        gymStatus: '',
-        time: 1638416070,
+        statusChange: '',
+        requesttime: 1638416070,
         userDetails: '@John99',
       },
       {
-        gymStatus: '',
-        time: 1638413730,
+        statusChange: '',
+        requesttime: 1638413730,
         userDetails: '@andy333',
       },
       {
-        gymStatus: 'open',
-        time: 1638409291,
+        statusChange: 'open',
+        requesttime: 1638409291,
         userDetails: '@inspired_ahpau',
       },
     ],
   },
   {
     date: 1638322891,
-    users: [
+    details: [
       {
-        gymStatus: '',
-        time: 1638363931,
+        statusChange: '',
+        requesttime: 1638363931,
         userDetails: '5 - 409',
       },
       {
-        gymStatus: 'closed',
-        time: 1638363510,
+        statusChange: 'closed',
+        requesttime: 1638363510,
         userDetails: '@inspired_ahpau',
       },
       {
-        gymStatus: '',
-        time: 1638360330,
+        statusChange: '',
+        requesttime: 1638360330,
         userDetails: '@inspired_ahpau',
       },
       {
-        gymStatus: '',
-        time: 1638355410,
+        statusChange: '',
+        requesttime: 1638355410,
         userDetails: '@xiaomingwong',
       },
       {
-        gymStatus: '',
-        time: 1638349170,
+        statusChange: '',
+        requesttime: 1638349170,
         userDetails: '@bob_the_builder',
       },
     ],

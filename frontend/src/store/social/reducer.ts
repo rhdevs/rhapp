@@ -20,6 +20,7 @@ const initialState = {
   hasNoMorePosts: false,
   name: '',
   position: [],
+  telegramHandle: '',
 }
 
 type State = {
@@ -41,6 +42,7 @@ type State = {
   hasNoMorePosts: boolean
   name: string
   position: Position[]
+  telegramHandle: string
 }
 
 export const social: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -154,6 +156,7 @@ export const social: Reducer<State, ActionTypes> = (state = initialState, action
         avatar: action.avatar,
         name: action.name,
         position: action.position,
+        telegramHandle: action.telegramHandle,
       }
     }
     default:
