@@ -65,14 +65,14 @@ const GymHistory = () => {
   return (
     <Container>
       {gymHistory !== undefined &&
-        gymHistory.map((entry) => (
+        gymHistory.reverse().map((entry) => (
           <div key={entry.date}>
             <Date>{unixToFullDate(entry.date)}</Date>
             {entry.details.map((user) => (
               <ContentRow key={user.requesttime}>
                 <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
                 <Status status={user.statusChange} />
-                <Content>{user.userDetails}</Content>
+                <Content>@{user.userDetails}</Content>
               </ContentRow>
             ))}
             <PaddingFiller />
