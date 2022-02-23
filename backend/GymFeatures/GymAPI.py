@@ -6,6 +6,7 @@ from flask_cors import cross_origin
 import pymongo
 import sys
 from datetime import datetime
+import pytz
 import time
 import pandas as pd
 import S3.app as s3
@@ -27,11 +28,12 @@ def get_history():
         checkgymIsOpen = (data['gymIsOpen'] == False) & (data['gymIsOpen'].shift(-1) == True)
         data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
 
-        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime).strftime('%Y-%m-%d'), axis=1)
+        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime, tz = pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d'), axis=1)
+        print(data)
         data = data.to_dict('records')
         data_list = []
 
-        for i in data:
+        for i in data:  
             temp_data = {}
             if i['keyIsReturned']:
                 temp_data['userDetails'] = DEFAULT_KEY_LOC
@@ -55,6 +57,13 @@ def get_history():
             new_data[date]['details'].append(d)
 
         allHistory = list(new_data.values())
+
+        allHistory = sorted(allHistory, key = lambda d: d['date'], reverse = True)
+
+        for d in allHistory:
+            newLst = sorted(d['details'], key = lambda x: x['requesttime'], reverse = True)
+            d['details'] = newLst
+
 
         response = {"status":"success","data":allHistory}
 
