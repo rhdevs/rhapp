@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputRow from '../../../components/Mobile/InputRow'
 import { Alert, AutoComplete, Input, InputNumber } from 'antd'
@@ -220,8 +221,15 @@ export default function CreateBooking() {
 
   locationOptions.push({ value: 'Conference Room' })
 
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm({ mode: 'onChange' })
+
   return (
-    <div>
+    <form>
       <TopNavBar
         title={newBooking?.bookingID ? `Edit Booking` : `New Booking`}
         rightComponent={CheckIcon(createBookingError)}
@@ -253,7 +261,15 @@ export default function CreateBooking() {
             notFoundContent="No Matching Facility"
             allowClear
           />
-          <InputField title="Event Name" placeholder="Event Name" value={newBookingName} setValue={setBookingName} />
+          <InputField
+            title="Event Name"
+            placeholder="Event Name"
+            value={newBookingName}
+            setValue={setBookingName}
+            errors={errors}
+            register={register}
+            isRequired
+          />
           <div style={{ width: '100%' }}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
@@ -305,9 +321,12 @@ export default function CreateBooking() {
             value={newBookingDescription}
             setValue={setDescription}
             textArea
+            errors={errors}
+            register={register}
+            isRequired
           />
         </Background>
       )}
-    </div>
+    </form>
   )
 }
