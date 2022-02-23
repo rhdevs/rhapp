@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { getGymHistory } from '../../store/gym/action'
 import { RootState } from '../../store/types'
+import PullToRefreshRH from '../PullToRefreshRH'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;
@@ -63,24 +64,26 @@ const GymHistory = () => {
     dispatch(getGymHistory())
   }, [])
   return (
-    <Container>
-      {gymHistory !== undefined &&
-        gymHistory.reverse().map((entry) => (
-          <div key={entry.date}>
-            <Date>{unixToFullDate(entry.date)}</Date>
-            {entry.details
-              .sort((entry1, entry2) => entry1.requesttime - entry2.requesttime)
-              .map((user) => (
-                <ContentRow key={user.requesttime}>
-                  <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
-                  <Status status={user.statusChange} />
-                  <Content>@{user.userDetails}</Content>
-                </ContentRow>
-              ))}
-            <PaddingFiller />
-          </div>
-        ))}
-    </Container>
+    <PullToRefreshRH>
+      <Container>
+        {gymHistory !== undefined &&
+          gymHistory.reverse().map((entry) => (
+            <div key={entry.date}>
+              <Date>{unixToFullDate(entry.date)}</Date>
+              {entry.details
+                .sort((entry1, entry2) => entry1.requesttime - entry2.requesttime)
+                .map((user) => (
+                  <ContentRow key={user.requesttime}>
+                    <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
+                    <Status status={user.statusChange} />
+                    <Content>@{user.userDetails}</Content>
+                  </ContentRow>
+                ))}
+              <PaddingFiller />
+            </div>
+          ))}
+      </Container>
+    </PullToRefreshRH>
   )
 }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Avatar from '../../assets/Avatar_4x.png'
+import { openUserTelegram } from '../../common/telegramMethods'
 
 const Header = styled.div`
   font-family: Lato;
@@ -53,7 +54,7 @@ function GymKeyWith(props: Props) {
       </ImageContainer>
       <Container>
         <InfoArea> {props.name} </InfoArea>
-        <InfoArea> {'@' + props.handle} </InfoArea>
+        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.handle}</InfoArea>
       </Container>
     </>
   )
