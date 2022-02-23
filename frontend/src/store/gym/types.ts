@@ -1,5 +1,5 @@
 export type GymStatusStates = {
-  gymIsOpen: boolean
+  gymIsOpen: boolean | null
   avatar: string
   keyHolder: { displayName: string; telegramHandle: string }
   keyIsReturned: boolean

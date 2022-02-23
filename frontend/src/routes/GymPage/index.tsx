@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { Icon } from 'antd-mobile'
 import GymHistory from '../../components/Gym/GymHistory'
 import GymStatusTab from '../../components/Gym/GymStatusTab'
+import PullToRefreshRH from '../../components/PullToRefreshRH'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
@@ -65,7 +67,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
   }
 
   return (
-    <>
+    <PullToRefreshRH>
       <GymBarContainer>
         <NavBarIcons
           type="left"
@@ -83,6 +85,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         })}
       </GymBarContainer>
       {TabPage(currentTab)}
-    </>
+      <BottomNavBar />
+    </PullToRefreshRH>
   )
 }

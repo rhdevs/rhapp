@@ -31,15 +31,17 @@ const Status = styled.div<{ isOpen: boolean }>`
 `
 
 interface Props {
-  isOpen: boolean
+  isOpen: boolean | null
 }
 
 function GymStatus(props: Props) {
-  return (
+  return props.isOpen !== null ? (
     <Container>
       <Ellipse isOpen={props.isOpen} />
       <Status isOpen={props.isOpen}>{props.isOpen ? 'Gym is Open' : 'Gym is Closed'}</Status>
     </Container>
+  ) : (
+    <></>
   )
 }
 

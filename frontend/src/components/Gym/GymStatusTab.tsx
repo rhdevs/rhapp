@@ -10,7 +10,6 @@ import { getGymStatus, getProfilePic } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes } from '../../store/gym/types'
 import ButtonComponent from '../Button'
-import PullToRefreshRH from '../PullToRefreshRH'
 
 const GymContainer = styled.div`
   padding: 50px 0;
@@ -112,18 +111,16 @@ function GymStatusTab() {
   }
 
   return (
-    <PullToRefreshRH>
-      <GymContainer>
-        {renderConfirmationModal()}
-        <GymStatus isOpen={gymStatus.gymIsOpen} />
-        <GymKeyWith
-          name={gymStatus.keyHolder.displayName}
-          handle={gymStatus.keyHolder.telegramHandle}
-          avatar={gymStatus.avatar}
-        />
-        <ButtonContainer>{renderButton()}</ButtonContainer>
-      </GymContainer>
-    </PullToRefreshRH>
+    <GymContainer>
+      {renderConfirmationModal()}
+      <GymStatus isOpen={gymStatus.gymIsOpen} />
+      <GymKeyWith
+        name={gymStatus.keyHolder.displayName}
+        handle={gymStatus.keyHolder.telegramHandle}
+        avatar={gymStatus.avatar}
+      />
+      <ButtonContainer>{renderButton()}</ButtonContainer>
+    </GymContainer>
   )
 }
 
