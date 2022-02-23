@@ -29,7 +29,6 @@ def get_history():
         data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
 
         data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime, tz = pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d'), axis=1)
-        print(data)
         data = data.to_dict('records')
         data_list = []
 
