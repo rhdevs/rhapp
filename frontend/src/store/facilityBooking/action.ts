@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
+import { ActionTypes, APIEntry, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 import { get24Hourtime } from '../../common/get24HourTime'
@@ -409,22 +409,24 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
   })
 }
 
-export const setTimeBlocks = (newTimeBlocks?: TimeBlock[], newSelectedBlockId?: number) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { timeBlocks, selectedBlockId } = getState().facilityBooking
+export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
-    timeBlocks: newTimeBlocks ?? timeBlocks,
-    selectedBlockId: newSelectedBlockId ?? selectedBlockId,
+    timeBlocks: newTimeBlocks,
   })
 }
 
-export const setStartEndTimeId = (startTimeId: number, endTimeId: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setStartEndTimeId = (startTimeId: number, endTimeId?: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_START_END_TIME_ID,
     startTimeId: startTimeId,
-    endTimeId: endTimeId,
+    endTimeId: endTimeId ?? -1,
+  })
+}
+
+export const setSelectedDayBookings = (selectedDayBookings: APIEntry[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
+    selectedDayBookings: selectedDayBookings,
   })
 }

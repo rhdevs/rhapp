@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DailyContainer } from './BlockStyles'
-import { APIEntry, BookingEntry, BookingStatusEntry, TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
+import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { get24Hourtime } from '../../common/get24HourTime'
 import BookingBlock from './BookingBlock'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
-import { setTimeBlocks } from '../../store/facilityBooking/action'
+import { setStartEndTimeId, setTimeBlocks } from '../../store/facilityBooking/action'
 
 const N = 24
 
@@ -16,14 +16,15 @@ const getBlockHr = (s: string) => {
 }
 
 const BookingSection = () => {
-  const { facilityBookings, timeBlocks, selectedBlockId } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedDayBookings, timeBlocks, startTimeId } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
+  const [selectedBlockId, setSelectedBlockId] = useState<number>(-1)
 
   useEffect(() => {
     const newTimeblocks = timeBlocks.map((entry) => {
-      for (let i = 0; i < facilityBookings.length; i++) {
-        const starttime = getBlockHr(get24Hourtime(facilityBookings[i].startTime))
-        const endtime = getBlockHr(get24Hourtime(facilityBookings[i].endTime))
+      for (let i = 0; i < selectedDayBookings.length; i++) {
+        const starttime = getBlockHr(get24Hourtime(selectedDayBookings[i].startTime))
+        const endtime = getBlockHr(get24Hourtime(selectedDayBookings[i].endTime))
         if (entry.id >= starttime && entry.id < endtime) {
           const updateStatus = {
             ...entry,
@@ -38,7 +39,7 @@ const BookingSection = () => {
   }, [])
 
   useEffect(() => {
-    if (selectedBlockId !== -1) {
+    if (startTimeId !== -1) {
       let flag = false
       const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
         let type = entry.type
@@ -60,16 +61,21 @@ const BookingSection = () => {
     }
   }, [selectedBlockId])
 
+  function setSelectedBlock(selectedId: number) {
+    setSelectedBlockId(selectedId)
+    if (startTimeId === -1) {
+      dispatch(setStartEndTimeId(selectedId))
+    } else {
+      dispatch(setStartEndTimeId(startTimeId, selectedId))
+      console.log('go to create booking page!')
+    }
+  }
+
   return (
     <DailyContainer>
-      {timeBlocks.map((hourblock) => {
-        console.log(timeBlocks)
+      {timeBlocks.map((hourBlock) => {
         return (
-          <BookingBlock
-            onClick={() => dispatch(setTimeBlocks(undefined, hourblock.id))}
-            key={hourblock.id}
-            bookingEntry={hourblock}
-          />
+          <BookingBlock onClick={() => setSelectedBlock(hourBlock.id)} key={hourBlock.id} bookingEntry={hourBlock} />
         )
       })}
     </DailyContainer>

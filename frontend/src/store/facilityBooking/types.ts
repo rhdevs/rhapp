@@ -111,6 +111,7 @@ export enum FACILITY_ACTIONS {
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
   SET_START_END_TIME_ID = 'FACILITY_ACTIONS.SET_START_END_TIME_ID',
+  SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
 }
 
 type SetCreateBookingError = {
@@ -278,13 +279,17 @@ type SetConflictBookings = {
 type SetTimeBlock = {
   type: typeof FACILITY_ACTIONS.SET_TIME_BLOCKS
   timeBlocks: TimeBlock[]
-  selectedBlockId: number
 }
 
 type SetStartEndTimeId = {
   type: typeof FACILITY_ACTIONS.SET_START_END_TIME_ID
   startTimeId: number
   endTimeId: number
+}
+
+type SetSelectedDayBookings = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS
+  selectedDayBookings: APIEntry[]
 }
 
 // Reverse lookup map of DAY_STRING_TO_NUMBER
@@ -323,3 +328,4 @@ export type ActionTypes =
   | SetConflictBookings
   | SetTimeBlock
   | SetStartEndTimeId
+  | SetSelectedDayBookings

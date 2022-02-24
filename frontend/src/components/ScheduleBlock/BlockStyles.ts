@@ -67,6 +67,6 @@ const palette = {
   available: '#D8E6DF',
   unavailable1: '#F1F3F7',
   unavailable2: '#F6F6F6',
-  selected: '#72DA75',
+  selected: '#72BA75',
   occupied: '#F5DBD6',
 }
