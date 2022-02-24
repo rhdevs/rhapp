@@ -8,13 +8,11 @@ type Props = {
 }
 
 const BookingBlock = (props: Props) => {
-  console.log(props)
   return (
     <StyledBookingBlock onClick={props.onClick} type={props.bookingEntry.type} ccaId={props.bookingEntry.id}>
       {props.bookingEntry.type === 'occupied' && <TextContainer>Occupied</TextContainer>}
-      {(props.bookingEntry.type === 'available' || props.bookingEntry.type === 'selected') && (
-        <TextContainer>Available</TextContainer>
-      )}
+      {props.bookingEntry.type === 'available' && <TextContainer>Available</TextContainer>}
+      {props.bookingEntry.type === 'selected' && <TextContainer>Selected as starting time</TextContainer>}
     </StyledBookingBlock>
   )
 }

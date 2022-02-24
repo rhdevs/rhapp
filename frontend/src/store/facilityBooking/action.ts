@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS } from './types'
+import { ActionTypes, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 import { get24Hourtime } from '../../common/get24HourTime'
@@ -406,5 +406,25 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
   dispatch({
     type: FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS,
     conflictBookings: conflictBookings,
+  })
+}
+
+export const setTimeBlocks = (newTimeBlocks?: TimeBlock[], newSelectedBlockId?: number) => (
+  dispatch: Dispatch<ActionTypes>,
+  getState: GetState,
+) => {
+  const { timeBlocks, selectedBlockId } = getState().facilityBooking
+  dispatch({
+    type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
+    timeBlocks: newTimeBlocks ?? timeBlocks,
+    selectedBlockId: newSelectedBlockId ?? selectedBlockId,
+  })
+}
+
+export const setStartEndTimeId = (startTimeId: number, endTimeId: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_START_END_TIME_ID,
+    startTimeId: startTimeId,
+    endTimeId: endTimeId,
   })
 }

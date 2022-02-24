@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import ViewBooking from '../../routes/FacilityBooking/ViewBooking'
+import React, { useEffect } from 'react'
 import { DailyContainer } from './BlockStyles'
-import { APIEntry, BookingEntry, BookingStatusEntry } from '../../store/facilityBooking/types'
+import { APIEntry, BookingEntry, BookingStatusEntry, TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { get24Hourtime } from '../../common/get24HourTime'
-import AbstractPicker from 'antd-mobile/lib/picker/AbstractPicker'
 import BookingBlock from './BookingBlock'
 
-import { defaultTimeBlocks } from '../../store/stubs'
-import { start } from 'repl'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
+import { setTimeBlocks } from '../../store/facilityBooking/action'
 
 const N = 24
 
@@ -18,16 +15,9 @@ const getBlockHr = (s: string) => {
   return Number(s)
 }
 
-type TimeBlock = {
-  id: number
-  type: string
-}
-
 const BookingSection = () => {
-  const [timeBlocks, setTimeblock] = useState<TimeBlock[]>(defaultTimeBlocks)
-  const [selectedId, setSelectedId] = useState(-1)
-
-  const { facilityBookings } = useSelector((state: RootState) => state.facilityBooking)
+  const { facilityBookings, timeBlocks, selectedBlockId } = useSelector((state: RootState) => state.facilityBooking)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const newTimeblocks = timeBlocks.map((entry) => {
@@ -37,44 +27,50 @@ const BookingSection = () => {
         if (entry.id >= starttime && entry.id < endtime) {
           const updateStatus = {
             ...entry,
-            type: 'occupied',
+            type: TimeBlockType.OCCUPIED,
           }
           return updateStatus
         }
       }
       return entry
     })
-    setTimeblock(newTimeblocks)
+    dispatch(setTimeBlocks(newTimeblocks))
   }, [])
 
   useEffect(() => {
-    if (selectedId !== -1) {
+    if (selectedBlockId !== -1) {
       let flag = false
       const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
         let type = entry.type
-        if (entry.id === selectedId) {
-          type = 'selected'
-        } else if (entry.id < selectedId) {
-          type = type === 'available' ? 'unavailable' : type
+        if (entry.id === selectedBlockId) {
+          type = TimeBlockType.SELECTED
+        } else if (entry.id < selectedBlockId) {
+          type = type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : type
         } else {
-          if (entry.type === 'occupied') {
+          if (entry.type === TimeBlockType.OCCUPIED) {
             flag = true
           }
           if (flag) {
-            type = type === 'available' ? 'unavailable' : type
+            type = type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : type
           }
         }
         return { ...entry, type }
       })
-      setTimeblock(newTimeblocks)
+      dispatch(setTimeBlocks(newTimeblocks))
     }
-  }, [selectedId])
+  }, [selectedBlockId])
 
   return (
     <DailyContainer>
       {timeBlocks.map((hourblock) => {
         console.log(timeBlocks)
-        return <BookingBlock onClick={() => setSelectedId(hourblock.id)} key={hourblock.id} bookingEntry={hourblock} />
+        return (
+          <BookingBlock
+            onClick={() => dispatch(setTimeBlocks(undefined, hourblock.id))}
+            key={hourblock.id}
+            bookingEntry={hourblock}
+          />
+        )
       })}
     </DailyContainer>
   )

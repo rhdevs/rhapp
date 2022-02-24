@@ -12,10 +12,6 @@ import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
 import { APIEntry } from './store/facilityBooking/types'
-import BookingBlock from './components/ScheduleBlock/BookingBlock'
-import ViewScheduleBlock from './components/ScheduleBlock/ViewSection'
-import ViewMyBookings from './routes/FacilityBooking/MyBookings'
-import BookingScheduleBlock from './components/ScheduleBlock/BookingSection'
 import BookingSection from './components/ScheduleBlock/BookingSection'
 
 const mockValues: APIEntry[] = [
@@ -47,7 +43,8 @@ class App extends React.Component {
     dayjs.extend(RelativeTime)
     return (
       <Provider store={store}>
-        <BookingSection resp={mockValues} />
+        <GlobalStyle />
+        <BookingSection />
         <BrowserRouter>
           <OfflineStatus />
           <NotificationBar />

@@ -65,6 +65,18 @@ export type Event = {
   eventOwner: string
 }
 
+export type TimeBlock = {
+  id: number
+  type: TimeBlockType
+}
+
+export enum TimeBlockType {
+  AVAILABLE = 'available',
+  OCCUPIED = 'occupied',
+  UNAVAILABLE = 'unavailable',
+  SELECTED = 'selected',
+}
+
 export enum FACILITY_ACTIONS {
   SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
@@ -97,6 +109,8 @@ export enum FACILITY_ACTIONS {
   SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR',
   SET_REPEAT_WEEKLY = 'FACILITY_ACTIONS.SET_REPEAT_WEEKLY',
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
+  SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
+  SET_START_END_TIME_ID = 'FACILITY_ACTIONS.SET_START_END_TIME_ID',
 }
 
 type SetCreateBookingError = {
@@ -260,6 +274,19 @@ type SetConflictBookings = {
   type: typeof FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS
   conflictBookings: Booking[]
 }
+
+type SetTimeBlock = {
+  type: typeof FACILITY_ACTIONS.SET_TIME_BLOCKS
+  timeBlocks: TimeBlock[]
+  selectedBlockId: number
+}
+
+type SetStartEndTimeId = {
+  type: typeof FACILITY_ACTIONS.SET_START_END_TIME_ID
+  startTimeId: number
+  endTimeId: number
+}
+
 // Reverse lookup map of DAY_STRING_TO_NUMBER
 export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
@@ -294,3 +321,5 @@ export type ActionTypes =
   | SetIsJcrc
   | SetRepeatWeekly
   | SetConflictBookings
+  | SetTimeBlock
+  | SetStartEndTimeId

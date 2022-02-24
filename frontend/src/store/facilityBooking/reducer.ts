@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { Reducer } from 'redux'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './types'
+import { defaultTimeBlocks } from '../stubs'
+import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, TimeBlock } from './types'
 
 const initialState = {
   // MAIN PAGE
@@ -36,6 +37,10 @@ const initialState = {
   selectedFacilityName: '',
   numRepeatWeekly: 1,
   conflictBookings: [],
+  timeBlocks: defaultTimeBlocks,
+  selectedBlockId: -1,
+  startTimeId: -1,
+  endTimeId: -1,
 }
 
 type State = {
@@ -68,6 +73,10 @@ type State = {
   createBookingError: string
   numRepeatWeekly: number
   conflictBookings: Booking[]
+  timeBlocks: TimeBlock[]
+  selectedBlockId: number
+  startTimeId: number
+  endTimeId: number
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -271,6 +280,20 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         conflictBookings: action.conflictBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_TIME_BLOCKS: {
+      return {
+        ...state,
+        timeBlocks: action.timeBlocks,
+        selectedBlockId: action.selectedBlockId,
+      }
+    }
+    case FACILITY_ACTIONS.SET_START_END_TIME_ID: {
+      return {
+        ...state,
+        startTimeId: action.startTimeId,
+        endTimeId: action.endTimeId,
       }
     }
     default:

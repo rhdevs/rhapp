@@ -1,4 +1,4 @@
-import { Booking, Facility } from './facilityBooking/types'
+import { Booking, Facility, TimeBlock, TimeBlockType } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
 import {
@@ -36,8 +36,8 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
-export const defaultTimeBlocks = [...Array(24).keys()].map((num) => {
-  return { id: num, type: 'available' }
+export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) => {
+  return { id: num, type: num % 3 ? TimeBlockType.AVAILABLE : TimeBlockType.OCCUPIED }
 })
 
 export const myBookingsStub: Booking[] = [
