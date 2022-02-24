@@ -1,14 +1,7 @@
 import styled from 'styled-components'
 
-export const MainContainer = styled.div`
-  length: 50%;
-  width: 100%;
-`
-
 export const DailyContainer = styled.div`
-  margin: 15px 2%;
   border-radius: 5px;
-  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.25);
   padding: 2px;
 `
 
@@ -17,14 +10,15 @@ export const StyledBookingBlock = styled.div<{
   type: 'available' | 'occupied' | 'selected' | 'unavailable'
   ccaId: number
 }>`
+  ${(props) => (props.type === 'available' || props.type === 'selected') && 'cursor: pointer;'}
   margin: 15px 2%;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 15px 15px;
   color: #000000;
   display: flex;
   align-items: center;
   white-space: nowrap;
-  min-height: 100px;
+  height: 100px;
   background: ${(props) =>
     props.type === 'occupied'
       ? palette.occupied
@@ -39,16 +33,18 @@ export const StyledBookingBlock = styled.div<{
 
 // Styling for View Only Blocks (Occupied, Not Occupied)
 export const StyledViewBooking = styled.div<{ isOccupied: boolean; ccaId: number }>`
+  ${(props) => props.isOccupied && 'cursor: pointer;'}
   margin: 15px 2%;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 15px 15px;
   color: #000000;
   display: flex;
   align-items: center;
   white-space: nowrap;
-  min-height: 100px;
+  height: 100px;
   background: ${(props) =>
-    props.isOccupied ? palette.occupied : props.ccaId % 2 == 0 ? palette.unavailable1 : palette.unavailable2};
+    // occupied is green (same colour as available)
+    props.isOccupied ? palette.available : props.ccaId % 2 == 0 ? palette.unavailable1 : palette.unavailable2};
 `
 
 export const TextContainer = styled.div`
@@ -70,3 +66,24 @@ const palette = {
   selected: '#72BA75',
   occupied: '#F5DBD6',
 }
+
+export const MainContainer = styled.div`
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+  padding: 10px 10px 10px 15px;
+`
+
+export const MainTimeContainer = styled.div`
+  border-right: 2.5px solid #a9a9a9;
+  display: grid;
+  grid-template-rows: repeat(24, 100px);
+  gap: 15px;
+`
+
+export const TimeContainer = styled.div`
+  padding: 0 10px 0 0;
+  font-size: 16px;
+  font-family: Lato;
+`

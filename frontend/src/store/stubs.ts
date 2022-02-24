@@ -48,9 +48,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2020-12-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-12-15 14:00:00').getTime() / 1000,
+    startTime: new Date('2022-02-25 12:00:00').getTime() / 1000,
+    endTime: new Date('2022-02-25 14:00:00').getTime() / 1000,
     description: 'My Backup Location',
+    ccaName: 'RHdevs',
   },
   {
     bookingID: 4,
@@ -58,9 +59,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2020-01-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-01-15 14:00:00').getTime() / 1000,
+    startTime: new Date('2022-02-25 14:00:00').getTime() / 1000,
+    endTime: new Date('2022-02-25 16:00:00').getTime() / 1000,
     description: 'Pls dont steal from me',
+    ccaName: 'some cca',
   },
   {
     bookingID: 5,
@@ -68,9 +70,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
+    startTime: new Date('2022-02-25 00:00:00').getTime() / 1000,
+    endTime: new Date('2022-02-25 02:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
+    ccaName: 'another cca',
   },
 ]
 
@@ -562,3 +565,8 @@ export const eventDays: number[] = [1644072529, 1646491729, 1648565329, 16489109
 
 // dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
 export const processedDates: number[] = [204, 301, 303, 331, 131]
+
+export const hourBlocks: string[] = [...Array(25).keys()].map((num) => {
+  const hour = '0' + num
+  return hour.substring(hour.length - 2) + '00'
+})

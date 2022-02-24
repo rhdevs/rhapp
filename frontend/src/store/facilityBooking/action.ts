@@ -1,8 +1,7 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, APIEntry, Booking, BookingStatusEntry, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
+import { ActionTypes, Booking, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
-import { get24Hourtime } from '../../common/get24HourTime'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -416,15 +415,17 @@ export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch
   })
 }
 
-export const setStartEndTimeId = (startTimeId: number, endTimeId?: number) => (dispatch: Dispatch<ActionTypes>) => {
+export const setStartEndTime = (selectedStartTime: number, selectedEndTime?: number) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch({
-    type: FACILITY_ACTIONS.SET_START_END_TIME_ID,
-    startTimeId: startTimeId,
-    endTimeId: endTimeId ?? -1,
+    type: FACILITY_ACTIONS.SET_START_END_TIME,
+    selectedStartTime: selectedStartTime,
+    selectedEndTime: selectedEndTime ?? -1,
   })
 }
 
-export const setSelectedDayBookings = (selectedDayBookings: APIEntry[]) => (dispatch: Dispatch<ActionTypes>) => {
+export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
     selectedDayBookings: selectedDayBookings,

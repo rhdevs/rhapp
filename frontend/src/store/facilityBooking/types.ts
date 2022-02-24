@@ -8,9 +8,9 @@ export type Facility = {
 
 export type ViewBookingEntry = {
   id: number
-  ccaName: string
-  occupied: boolean
-  eventName: string
+  ccaName?: string
+  isOccupied: boolean
+  eventName?: string
 }
 
 export type BookingStatusEntry = {
@@ -21,17 +21,6 @@ export type BookingStatusEntry = {
 export type BookingEntry = {
   id: number
   occupied: boolean
-}
-
-export type APIEntry = {
-  bookingID: number
-  ccaID: number
-  description: string
-  endTime: number
-  eventName: string
-  facilityID: number
-  startTime: number
-  userID: string
 }
 
 export type userCCA = {
@@ -110,7 +99,7 @@ export enum FACILITY_ACTIONS {
   SET_REPEAT_WEEKLY = 'FACILITY_ACTIONS.SET_REPEAT_WEEKLY',
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
-  SET_START_END_TIME_ID = 'FACILITY_ACTIONS.SET_START_END_TIME_ID',
+  SET_START_END_TIME = 'FACILITY_ACTIONS.SET_START_END_TIME',
   SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
 }
 
@@ -281,15 +270,15 @@ type SetTimeBlock = {
   timeBlocks: TimeBlock[]
 }
 
-type SetStartEndTimeId = {
-  type: typeof FACILITY_ACTIONS.SET_START_END_TIME_ID
-  startTimeId: number
-  endTimeId: number
+type SetStartEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_START_END_TIME
+  selectedStartTime: number
+  selectedEndTime: number
 }
 
 type SetSelectedDayBookings = {
   type: typeof FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS
-  selectedDayBookings: APIEntry[]
+  selectedDayBookings: Booking[]
 }
 
 // Reverse lookup map of DAY_STRING_TO_NUMBER
@@ -327,5 +316,5 @@ export type ActionTypes =
   | SetRepeatWeekly
   | SetConflictBookings
   | SetTimeBlock
-  | SetStartEndTimeId
+  | SetStartEndTime
   | SetSelectedDayBookings
