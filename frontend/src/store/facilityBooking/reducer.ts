@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { Reducer } from 'redux'
-import { defaultTimeBlocks } from '../stubs'
+import { defaultTimeBlocks, myBookingsStub } from '../stubs'
 import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, TimeBlock, APIEntry } from './types'
 
 const initialState = {
@@ -40,7 +40,7 @@ const initialState = {
   timeBlocks: defaultTimeBlocks,
   startTimeId: -1,
   endTimeId: -1,
-  selectedDayBookings: [],
+  selectedDayBookings: myBookingsStub,
 }
 
 type State = {

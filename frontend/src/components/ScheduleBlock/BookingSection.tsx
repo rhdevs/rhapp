@@ -21,20 +21,19 @@ const BookingSection = () => {
   const [selectedBlockId, setSelectedBlockId] = useState<number>(-1)
 
   useEffect(() => {
-    const newTimeblocks = timeBlocks.map((entry) => {
-      for (let i = 0; i < selectedDayBookings.length; i++) {
-        const starttime = getBlockHr(get24Hourtime(selectedDayBookings[i].startTime))
-        const endtime = getBlockHr(get24Hourtime(selectedDayBookings[i].endTime))
-        if (entry.id >= starttime && entry.id < endtime) {
-          const updateStatus = {
-            ...entry,
-            type: TimeBlockType.OCCUPIED,
-          }
-          return updateStatus
+    const newTimeblocks = [...timeBlocks]
+
+    selectedDayBookings.forEach((booking) => {
+      const starttime = getBlockHr(get24Hourtime(booking.startTime))
+      const endtime = getBlockHr(get24Hourtime(booking.endTime))
+      for (let hour = starttime; hour < endtime; hour++) {
+        newTimeblocks[hour] = {
+          ...timeBlocks[hour],
+          type: TimeBlockType.OCCUPIED,
         }
       }
-      return entry
     })
+
     dispatch(setTimeBlocks(newTimeblocks))
   }, [])
 
