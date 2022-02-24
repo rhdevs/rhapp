@@ -35,6 +35,7 @@ const initialState = {
   facilityBookings: [],
   selectedFacilityName: '',
   numRepeatWeekly: 1,
+  conflictBookings: [],
 }
 
 type State = {
@@ -66,6 +67,7 @@ type State = {
   selectedFacilityName: string
   createBookingError: string
   numRepeatWeekly: number
+  conflictBookings: Booking[]
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -262,6 +264,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         numRepeatWeekly: action.numRepeatWeekly,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS: {
+      return {
+        ...state,
+        conflictBookings: action.conflictBookings,
       }
     }
     default:
