@@ -36,6 +36,10 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
+export const defaultTimeBlocks = [...Array(24).keys()].map((num) => {
+  return { id: num, type: 'available' }
+})
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,

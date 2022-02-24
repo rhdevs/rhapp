@@ -6,95 +6,74 @@ import { get24Hourtime } from '../../common/get24HourTime'
 import AbstractPicker from 'antd-mobile/lib/picker/AbstractPicker'
 import BookingBlock from './BookingBlock'
 
-const N = 24
+import { defaultTimeBlocks } from '../../store/stubs'
+import { start } from 'repl'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/types'
 
+const N = 24
 
 const getBlockHr = (s: string) => {
   s = s.slice(0, 2)
-  if (s[0] === '0') {
-    return Number(s[1])
-  } else {
-    return Number(s)
-  }
+  return Number(s)
 }
 
-const BookingSection = ({ resp }: { resp: APIEntry[] }) => {
-  const [timeBlocks, setTimeblock] = React.useState([
-    { id: 0, type: 'available' }, //0000 - 0100
-    { id: 1, type: 'available' }, //0100 - 0200
-    { id: 2, type: 'available' }, //0200 - 0300
-    { id: 3, type: 'available' }, //0300 - 0400
-    { id: 4, type: 'available' }, //0400 - 0500
-    { id: 5, type: 'available' }, //0500 - 0600
-    { id: 6, type: 'available' }, //0600 - 0700
-    { id: 7, type: 'available' }, //0700 - 0800
-    { id: 8, type: 'available' }, //0800 - 0900
-    { id: 9, type: 'available' }, //0900 = 1000
-    { id: 10, type: 'available' }, //1000 - 1100
-    { id: 11, type: 'available' }, //1100 - 1200
-    { id: 12, type: 'available' }, //1200 - 1300
-    { id: 13, type: 'available' }, //1300 - 1400
-    { id: 14, type: 'available' }, //1400 - 1500
-    { id: 15, type: 'available' },
-    { id: 16, type: 'available' },
-    { id: 17, type: 'available' },
-    { id: 18, type: 'available' },
-    { id: 19, type: 'available' },
-    { id: 20, type: 'available' },
-    { id: 21, type: 'available' }, //2100 - 2200
-    { id: 22, type: 'available' }, //2200 - 2300
-    { id: 23, type: 'available' }, //2300 - 0000
-  ])
+type TimeBlock = {
+  id: number
+  type: string
+}
+
+const BookingSection = () => {
+  const [timeBlocks, setTimeblock] = useState<TimeBlock[]>(defaultTimeBlocks)
   const [selectedId, setSelectedId] = useState(-1)
+
+  const { facilityBookings } = useSelector((state: RootState) => state.facilityBooking)
+
   useEffect(() => {
-    console.log('First Render')
-    const newTimeblocks = timeBlocks.map((entry) => { 
-    for (let i = 0; i < resp.length; i++) {
-      const starttime = getBlockHr(get24Hourtime(resp[i].startTime))
-      const endtime = getBlockHr(get24Hourtime(resp[i].endTime))
-      const diff = starttime + (endtime - starttime)
-      for (let t = starttime; t < diff; t++) {
-        if (entry.id === t) {
+    const newTimeblocks = timeBlocks.map((entry) => {
+      for (let i = 0; i < facilityBookings.length; i++) {
+        const starttime = getBlockHr(get24Hourtime(facilityBookings[i].startTime))
+        const endtime = getBlockHr(get24Hourtime(facilityBookings[i].endTime))
+        if (entry.id >= starttime && entry.id < endtime) {
           const updateStatus = {
-            ...entry, type: "occupied",
-          };
-          return updateStatus;
-        } 
-        return entry;
+            ...entry,
+            type: 'occupied',
+          }
+          return updateStatus
         }
       }
-    }
-    });
-    setTimeblock(newTimeblocks);
+      return entry
+    })
+    setTimeblock(newTimeblocks)
   }, [])
+
   useEffect(() => {
-    let flag = false
-    //console.log('Subsequent Render')
     if (selectedId !== -1) {
-      for (let j = 0; j < resp.length; j++) {
-        //console.log('State Updated, Updating others as well')
-        if (flag) {
-          fixedValues[j].type = 'unavailable'
+      let flag = false
+      const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
+        let type = entry.type
+        if (entry.id === selectedId) {
+          type = 'selected'
+        } else if (entry.id < selectedId) {
+          type = type === 'available' ? 'unavailable' : type
         } else {
-          if (selectedId === fixedValues[j].id) {
-            fixedValues[j].type = 'selected'
-          } else if (fixedValues[j].id < selectedId) {
-            if (fixedValues[j].type !== 'occupied') {
-              fixedValues[j].type = 'unavailable'
-            }
-          } else {
-            if (fixedValues[j].type === 'occupied') {
-              flag = true
-            }
+          if (entry.type === 'occupied') {
+            flag = true
+          }
+          if (flag) {
+            type = type === 'available' ? 'unavailable' : type
           }
         }
-      }
+        return { ...entry, type }
+      })
+      setTimeblock(newTimeblocks)
     }
   }, [selectedId])
+
   return (
     <DailyContainer>
-      {fixedValues.map((hourblock) => {
-        console.log(fixedValues)
+      {timeBlocks.map((hourblock) => {
+        console.log(timeBlocks)
         return <BookingBlock onClick={() => setSelectedId(hourblock.id)} key={hourblock.id} bookingEntry={hourblock} />
       })}
     </DailyContainer>
