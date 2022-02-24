@@ -11,6 +11,8 @@ import time
 import pandas as pd
 import S3.app as s3
 from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
+from AuthFunction import authenticate
+
 sys.path.append("../db")
 
 
@@ -21,6 +23,7 @@ gym_api = Blueprint("gym", __name__)
 @ cross_origin(supports_credentials=True)
 def get_history():
     try:
+
         data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
         data = pd.DataFrame(data)
         checkkeyHolder = data['keyHolder'].shift(-1) == data['keyHolder']
@@ -76,6 +79,7 @@ def get_history():
 @ cross_origin(supports_credentials=True)
 def get_statuses():
     try:
+        
         data = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
         del data['requesttime']
         del data['keyIsReturned']
@@ -95,6 +99,12 @@ def get_statuses():
 @ cross_origin(supports_credentials=True)
 def move_key(userID):
     try:
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
         usersData = db.User.find_one({"userID": userID})
         telegramHandle = usersData['telegramHandle']
         displayName = usersData['displayName']
@@ -130,9 +140,13 @@ def move_key(userID):
 @ cross_origin(supports_credentials=True)
 def return_key(userID):
     try:
+
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
         
-        usersData = db.User.find_one({"userID": userID})
-        telegramHandle = usersData['telegramHandle']
         latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
 
         if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
@@ -170,6 +184,12 @@ def return_key(userID):
 def toggle_gym(userID):
     try:
 
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
         latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
 
         if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE or userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
@@ -200,6 +220,7 @@ def toggle_gym(userID):
 @ cross_origin(supports_credentials=True)
 def getUserPicture():
     try:
+
         data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
         if data[0]['keyIsReturned']==True:
             imageKey = 'default/profile_pic.png'
