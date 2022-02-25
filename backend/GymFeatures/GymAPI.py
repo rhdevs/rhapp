@@ -6,19 +6,24 @@ from flask_cors import cross_origin
 import pymongo
 import sys
 from datetime import datetime
+import pytz
 import time
 import pandas as pd
 import S3.app as s3
 from .defaultLocation import DEFAULT_KEY_LOC, DEFAULT_TELEGRAM_HANDLE
-sys.path.append("../")
+from AuthFunction import authenticate
+
+sys.path.append("../db")
 
 
 
 gym_api = Blueprint("gym", __name__)
 
 @gym_api.route("/", methods = ['GET'])
+@ cross_origin(supports_credentials=True)
 def get_history():
     try:
+
         data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
         data = pd.DataFrame(data)
         checkkeyHolder = data['keyHolder'].shift(-1) == data['keyHolder']
@@ -26,11 +31,11 @@ def get_history():
         checkgymIsOpen = (data['gymIsOpen'] == False) & (data['gymIsOpen'].shift(-1) == True)
         data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
 
-        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime).strftime('%Y-%m-%d'), axis=1)
+        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime, tz = pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d'), axis=1)
         data = data.to_dict('records')
         data_list = []
 
-        for i in data:
+        for i in data:  
             temp_data = {}
             if i['keyIsReturned']:
                 temp_data['userDetails'] = DEFAULT_KEY_LOC
@@ -55,6 +60,13 @@ def get_history():
 
         allHistory = list(new_data.values())
 
+        allHistory = sorted(allHistory, key = lambda d: d['date'], reverse = True)
+
+        for d in allHistory:
+            newLst = sorted(d['details'], key = lambda x: x['requesttime'], reverse = True)
+            d['details'] = newLst
+
+
         response = {"status":"success","data":allHistory}
 
     except Exception as e:
@@ -64,8 +76,10 @@ def get_history():
     return make_response(response)
 
 @gym_api.route("/status", methods=['GET'])
+@ cross_origin(supports_credentials=True)
 def get_statuses():
     try:
+        
         data = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
         del data['requesttime']
         del data['keyIsReturned']
@@ -81,14 +95,24 @@ def get_statuses():
 
     return make_response(response)
 
-@gym_api.route("/movekey", methods = ["POST"])
-def move_key():
+@gym_api.route("/movekey/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
+def move_key(userID):
     try:
-        formData = request.get_json()
-        
-        usersData = db.User.find_one({"userID": formData["userID"]})
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
+        usersData = db.User.find_one({"userID": userID})
         telegramHandle = usersData['telegramHandle']
         displayName = usersData['displayName']
+
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+
+        if latestData['keyHolder']['telegramHandle'] != DEFAULT_TELEGRAM_HANDLE and userID == db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID'] :
+            return make_response({"err": "You are currently holding onto the key", "status": "failed"}, 403)
         
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
@@ -98,20 +122,41 @@ def move_key():
             "telegramHandle": telegramHandle,
             "displayName": displayName
             }
-        insert_data["userID"] = formData["userID"]
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
+        
         response = {"status":"success"}
-        return make_response(response)
+        
+    
     except Exception as e:
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
+
+    return make_response(response)
     
-@gym_api.route("/returnkey", methods = ["POST"])
-def return_key():
+@gym_api.route("/returnkey/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
+def return_key(userID):
     try:
-        formData = request.get_json()
+
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+        
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+
+        if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
+            return make_response({"err": "Key has already been returned", "status": "failed"}, 403)
+        
+        elif userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
+            return make_response({"err": "You are not holding onto the key", "status": "failed"}, 403)
+
+        if userID == db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID'] and latestData['gymIsOpen'] == True:
+            return make_response({"err": "Please close the gym first", "status": "failed"}, 403)
 
         insert_data = {}
         insert_data["gymIsOpen"] = False
@@ -120,20 +165,36 @@ def return_key():
             "telegramHandle": DEFAULT_TELEGRAM_HANDLE,
             "displayName": DEFAULT_KEY_LOC
         }
-        insert_data["userID"] = formData['userID']
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
+
         db.Gym.insert_one(insert_data)
+
         response = {"status":"success"}
-        return make_response(response)
+        
     except Exception as e:
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
-@gym_api.route("/togglegym", methods = ["POST"])
-def toggle_gym():
+    return make_response(response)
+
+@gym_api.route("/togglegym/<userID>", methods = ["POST"])
+@ cross_origin(supports_credentials=True)
+def toggle_gym(userID):
     try:
-        formData = request.get_json()
+
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+
+        if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE or userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
+            return make_response({"err": "You are not holding onto the key", "status": "failed"}, 403)
+
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
         # print(data["gymIsOpen"], type(data["gymIsOpen"]))
@@ -144,18 +205,22 @@ def toggle_gym():
             insert_data["statusChange"] = "CLOSED"
         insert_data["keyIsReturned"] = False
         insert_data["keyHolder"] =  data["keyHolder"]
-        insert_data["userID"] = formData["userID"]
+        insert_data["userID"] = userID
         insert_data["requesttime"] = int(time.time())
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
-        return make_response(response)
+        
     except Exception as e:
         print(e)
         return {"err":"An error has occured", "status":"failed"}, 500
 
+    return make_response(response)
+
 @gym_api.route("/keyHolder/profilepic", methods=['GET'])
+@ cross_origin(supports_credentials=True)
 def getUserPicture():
     try:
+
         data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
         if data[0]['keyIsReturned']==True:
             imageKey = 'default/profile_pic.png'
