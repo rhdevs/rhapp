@@ -55,8 +55,9 @@ export default function ViewFacility() {
   const MyBookingButton = (
     <Button
       state="primary"
-      text="My Bookings"
+      text="Bookings"
       type="button"
+      size="small"
       onClick={() => {
         history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
       }}
