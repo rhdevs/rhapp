@@ -52,9 +52,20 @@ export default function ViewFacility() {
     />
   )
 
+  const MyBookingButton = (
+    <Button
+      state="primary"
+      text="My Bookings"
+      type="button"
+      onClick={() => {
+        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+      }}
+    />
+  )
+
   return (
     <div style={{ backgroundColor: '#fafaf4' }}>
-      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingIcon} />
+      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           <>
