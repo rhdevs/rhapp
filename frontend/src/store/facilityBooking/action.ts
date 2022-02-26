@@ -30,51 +30,6 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
-export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date, selectedFacilityId: number) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  const adjustedStart = new Date(
-    ViewStartDate.getFullYear(),
-    ViewStartDate.getMonth(),
-    ViewStartDate.getDate(),
-    0,
-    0,
-    0,
-    0,
-  )
-  const adjustedEnd = new Date(
-    ViewEndDate.getFullYear(),
-    ViewEndDate.getMonth(),
-    ViewEndDate.getDate(),
-    23,
-    59,
-    59,
-    999,
-  )
-  const querySubString =
-    selectedFacilityId +
-    '/' +
-    '?startTime=' +
-    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
-    '&endTime=' +
-    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
-  let updatedFB: Booking[] = []
-  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then(async (res) => {
-      updatedFB = res.data
-    })
-
-  dispatch({
-    type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
-    facilityBookings: updatedFB,
-  })
-  dispatch(SetIsLoading(false))
-}
-
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
@@ -185,7 +140,6 @@ export const setViewDates = (newDate: any, selectedFacilityId: number) => (dispa
 
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE, ViewStartDate: startDate })
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })
-  dispatch(getAllBookingsForFacility(startDate, endDate, selectedFacilityId))
 }
 
 // currentMode TRUE == view bookings || FALSE == view availabilities
