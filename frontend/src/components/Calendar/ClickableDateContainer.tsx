@@ -38,6 +38,7 @@ export const ClickableDateContainer = (props: { date: number; eventPresent?: boo
 
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(SetClickedDate(newClickedDate))
+    console.log('To do - to go to daily view')
   }
 
   const hasEvent = () => {
