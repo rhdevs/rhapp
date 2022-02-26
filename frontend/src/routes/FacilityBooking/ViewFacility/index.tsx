@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -42,15 +41,6 @@ export default function ViewFacility() {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
     }
   }, [])
-
-  const MyBookingIcon = (
-    <img
-      src={bookingsIcon}
-      onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
-      }}
-    />
-  )
 
   const MyBookingButton = (
     <Button
