@@ -37,7 +37,6 @@ type Props = {
 }
 
 function ButtonComponent(prop: Props) {
-  console.log(prop.setWidth)
   return (
     <Button
       onClick={() => prop.onClick()}
