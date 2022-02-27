@@ -35,7 +35,7 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err

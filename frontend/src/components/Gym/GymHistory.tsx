@@ -65,18 +65,16 @@ const GymHistory = () => {
   return (
     <Container>
       {gymHistory !== undefined &&
-        gymHistory.reverse().map((entry) => (
+        gymHistory.map((entry) => (
           <div key={entry.date}>
             <Date>{unixToFullDate(entry.date)}</Date>
-            {entry.details
-              .sort((entry1, entry2) => entry2.requesttime - entry1.requesttime)
-              .map((user) => (
-                <ContentRow key={user.requesttime}>
-                  <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
-                  <Status status={user.statusChange} />
-                  <Content>@{user.userDetails}</Content>
-                </ContentRow>
-              ))}
+            {entry.details.map((user) => (
+              <ContentRow key={user.requesttime}>
+                <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
+                <Status status={user.statusChange} />
+                <Content>@{user.userDetails}</Content>
+              </ContentRow>
+            ))}
             <PaddingFiller />
           </div>
         ))}
