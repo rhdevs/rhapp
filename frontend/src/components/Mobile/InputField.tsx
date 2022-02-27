@@ -4,22 +4,10 @@ import { FieldValues, UseFormRegister } from 'react-hook-form'
 
 import { Input } from 'antd'
 
-type InputFieldProps = {
-  title: string
-  placeholder: string
-  value?: string
-  setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
-  textArea?: boolean
-  onChange?: () => void
-  errors: { [x: string]: any }
-  isRequired?: boolean
-  register: UseFormRegister<FieldValues>
-}
-
-const RedText = styled.text`
-  color: red;
+const RedText = styled.span`
+  color: #f37562;
   padding-right: 5px;
-  font-family: Inter;
+  font-family: Lato;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -74,8 +62,21 @@ const StyledTitle = styled.div`
   white-space: nowrap;
 `
 
-export default function InputField({ title, placeholder, textArea, errors, isRequired, register }: InputFieldProps) {
+type InputFieldProps = {
+  title: string
+  placeholder: string
+  value?: string
+  setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
+  textArea?: boolean
+  onChange?: () => void
+  errors: { [x: string]: any }
+  isRequired: boolean
+  register: UseFormRegister<FieldValues>
+}
+
+export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
+  const { title, placeholder, textArea, errors, isRequired, register } = props
 
   return (
     <Container>
