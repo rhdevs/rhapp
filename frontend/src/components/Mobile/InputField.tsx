@@ -20,12 +20,12 @@ const Container = styled.div`
   margin: 10px 0px;
 `
 
-const StyledInput = styled(Input)`
+const StyledInput = styled(Input)<{ error?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
     border-radius: 10px;
-    border: 1px solid #f3f3f9;
+    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
     padding: 5px 15px;
     margin: 0;
   }
@@ -36,7 +36,7 @@ const StyledInput = styled(Input)`
 `
 
 const { TextArea } = Input
-const StyledTextArea = styled(TextArea)`
+const StyledTextArea = styled(TextArea)<{ error?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
@@ -44,6 +44,7 @@ const StyledTextArea = styled(TextArea)`
     padding: 5px 15px;
     margin: 0;
     resize: none;
+    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
   }
   &.ant-input::placeholder {
     color: #bfbfbf;
@@ -86,9 +87,14 @@ export default function InputField(props: InputFieldProps) {
         </StyledTitle>
       )}
       {textArea ? (
-        <StyledTextArea placeholder={placeholder} rows={4} {...register(title, { required: isRequired })} />
+        <StyledTextArea
+          placeholder={placeholder}
+          rows={4}
+          error={errors[title]}
+          {...register(title, { required: isRequired })}
+        />
       ) : (
-        <StyledInput placeholder={placeholder} {...register(title, { required: isRequired })} />
+        <StyledInput placeholder={placeholder} error={errors[title]} {...register(title, { required: isRequired })} />
       )}
     </Container>
   )
