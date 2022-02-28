@@ -330,10 +330,19 @@ def add_booking():
                     editedBooking["bookingID"] += i
 
                 blocked_bookings = {}
+                startTimeArray = []
 
                 for conflict_bookings in conflict:
-                    blocked_bookings[str(dict(conflict_bookings)["startTime"])] = [conflict_bookings]
+                    startTimeArray.append(int(dict(conflict_bookings)["startTime"]))
                 
+                startTimeArray = sorted((set(startTimeArray)), key=int)
+                
+                for timestamp in startTimeArray:
+                    blocked_bookings[str(timestamp)] = []
+                    for conflict_bookings in conflict:
+                        if int(timestamp) == int(dict(conflict_bookings)["startTime"]):
+                            blocked_bookings[str(timestamp)].append(dict(conflict_bookings))
+
                 if len(insertData) != 0:
                     db.Bookings.insert_many(insertData)
                     response = {"message": "Unblocked slots booked", "blocked_bookings": blocked_bookings, "status": "success"}
