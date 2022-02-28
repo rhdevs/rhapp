@@ -45,7 +45,7 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 20px;
+  padding: 0 20px;
 `
 
 const WeeklyRecurrenceRow = styled.div`
@@ -61,21 +61,20 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 10px 0px;
+  margin: 10px 0;
 `
 const StyledTitle = styled.div`
   display: flex;
   font-family: Lato;
-  color: black;
+  color: #000;
   font-size: 15px;
   line-height: 30px;
   font-weight: bold;
   white-space: nowrap;
-  text-align: left;
 `
 const CCAInput = styled(AutoComplete)`
   width: 100%;
-  color: black;
+  color: #000;
   &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 10px !important;
     border: 0;
