@@ -49,7 +49,6 @@ def get_facility_name(facilityID):
         return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
-# TODO: Change the CCA ID to CCA Name
 @ facilities_api.route('/bookings/<int:bookingID>', methods=["GET"])
 @ cross_origin(supports_credentials=True)
 def get_one_booking(bookingID):
@@ -113,11 +112,11 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
-        #if (not request.args.get("token")):
-        #    return {"err": "No token", "status": "failed"}, 401
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
 
-        #if (not authenticate(request.args.get("token"), userID)):
-        #    return {"err": "Auth Failure", "status": "failed"}, 401
+        if (not authenticate(request.args.get("token"), userID)):
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         pipeline = [
             {'$match':
@@ -240,7 +239,6 @@ def check_bookings(facilityID):
         return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
-# TODO: End of change here
 
 @ facilities_api.route('/bookings', methods=['POST'])
 @ cross_origin(supports_credentials=True)
