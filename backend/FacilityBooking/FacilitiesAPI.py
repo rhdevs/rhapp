@@ -96,9 +96,11 @@ def get_one_booking(bookingID):
         if len(data) == 0:
             return {"err": "Booking not found", "status": "failed"}, 400
 
-        if (data["ccaID"] != None):
-            data["ccaName"] = conversion(data["ccaID"])
-            del data["ccaID"]
+        if data["ccaID"] != None:
+            if data["ccaID"] != 0:
+                data["ccaName"] = conversion(data["ccaID"])
+            
+        del data["ccaID"]
 
         response = {"status": "success", "data": data}
 
