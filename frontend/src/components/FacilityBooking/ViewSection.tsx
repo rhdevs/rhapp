@@ -8,7 +8,7 @@ import { RootState } from '../../store/types'
 import { getBlockHr } from './BookingSection'
 import HourBlocks from './HourBlocks'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
-import CurrentTimeLine from './CurrentTimeLine'
+import CurrentTimeLine, { calcTop } from './CurrentTimeLine'
 
 const ViewScheduleBlock = () => {
   const { selectedDayBookings } = useSelector((state: RootState) => state.facilityBooking)
@@ -42,6 +42,7 @@ const ViewScheduleBlock = () => {
 
   return (
     <MainContainer>
+      <CurrentTimeLine width={'calc(100% - 70px)'} right={'10px'} top={calcTop()} />
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => (

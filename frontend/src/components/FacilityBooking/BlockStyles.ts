@@ -2,12 +2,14 @@ import styled, { css } from 'styled-components'
 import { TimeBlockType } from '../../store/facilityBooking/types'
 
 export const blockHeight = 100
+export const topDistance = 10
+export const blockGap = 5
 
 export const DailyContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10px 5px;
-  gap: 5px;
+  padding: ${`${topDistance}px`} 5px;
+  gap: ${`${blockGap}px`};
 `
 
 const blockStyles = css`
@@ -68,12 +70,14 @@ export const MainContainer = styled.div`
   grid-template-rows: 1fr;
   width: 100%;
   padding: 10px 10px 10px 15px;
+  position: relative;
+  z-index: 0;
 `
 
 export const MainTimeContainer = styled.div`
   border-right: 2.5px solid #a9a9a9;
   display: flex;
-  gap: 5px;
+  gap: ${`${blockGap}px`};
   flex-direction: column;
   justify-content: space-between;
 `

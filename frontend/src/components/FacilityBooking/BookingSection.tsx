@@ -8,6 +8,7 @@ import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
 import { setStartEndTime, setTimeBlocks } from '../../store/facilityBooking/action'
 import HourBlocks from './HourBlocks'
+import CurrentTimeLine, { calcTop } from './CurrentTimeLine'
 
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
@@ -74,6 +75,7 @@ const BookingSection = () => {
 
   return (
     <MainContainer>
+      <CurrentTimeLine width={'calc(100% - 70px)'} right={'10px'} top={calcTop()} />
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => (
