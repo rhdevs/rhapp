@@ -224,13 +224,18 @@ export default function CreateBooking() {
     register,
     handleSubmit,
     getValues,
+    watch,
     formState: { errors },
-  } = useForm()
+  } = useForm({ mode: 'onSubmit' })
 
   const submitForm = (data) => {
     console.log(getValues())
     console.log('create booking', data)
   }
+
+  useEffect(() => {
+    console.log('watching', watch())
+  }, [watch])
 
   return (
     <div>
@@ -273,7 +278,8 @@ export default function CreateBooking() {
               placeholder="Event Name"
               // value={newBookingName}
               // setValue={setBookingName}
-              errors={errors}
+              type="eventName"
+              errors={errors.eventName}
               register={register}
               isRequired
             />
@@ -327,10 +333,11 @@ export default function CreateBooking() {
               placeholder="Tell us what your booking is for!"
               // value={newBookingDescription}
               // setValue={setDescription}
+              type="description"
               textArea
-              errors={errors}
+              errors={errors.description}
               register={register}
-              isRequired
+              // isRequired
             />
             <input type="submit" />
           </form>

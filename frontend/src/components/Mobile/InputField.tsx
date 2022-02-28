@@ -30,7 +30,7 @@ const StyledInput = styled(Input)<{ error?: boolean }>`
     margin: 0;
   }
   &.ant-input::placeholder {
-    color: #bfbfbf;
+    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
@@ -47,7 +47,7 @@ const StyledTextArea = styled(TextArea)<{ error?: boolean }>`
     border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
   }
   &.ant-input::placeholder {
-    color: #bfbfbf;
+    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
@@ -65,17 +65,21 @@ const StyledTitle = styled.div`
 type InputFieldProps = {
   title: string
   placeholder: string
-  value?: string
-  setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
+  type: string
+  maxLength?: number
+  // value?: string
+  // setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textArea?: boolean
-  errors: { [x: string]: any }
+  errors: any
   isRequired?: boolean
   register: UseFormRegister<FieldValues>
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, placeholder, textArea, errors, isRequired, register } = props
+  const { title, placeholder, type, textArea, errors, isRequired, register } = props
+  // console.log(errors)
+  // console.log('type', errors.type)
 
   return (
     <Container>
@@ -83,18 +87,21 @@ export default function InputField(props: InputFieldProps) {
         <StyledTitle>
           {title}
           {isRequired && RedAsterisk}
-          {errors[title] && <RedText>This is required</RedText>}
         </StyledTitle>
       )}
       {textArea ? (
         <StyledTextArea
-          placeholder={placeholder}
+          placeholder={errors ? errors.message : placeholder}
           rows={4}
-          error={errors[title]}
-          {...register(title, { required: isRequired })}
+          error={!!errors}
+          {...register(type, isRequired ? { required: `${title} is required` } : {})}
         />
       ) : (
-        <StyledInput placeholder={placeholder} error={errors[title]} {...register(title, { required: isRequired })} />
+        <StyledInput
+          placeholder={errors ? errors.message : placeholder}
+          error={!!errors}
+          {...register(type, isRequired ? { required: `${title} is required` } : {})}
+        />
       )}
     </Container>
   )
