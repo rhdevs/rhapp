@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import { useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import InputRow from '../../../components/Mobile/InputRow'
 import { Alert, AutoComplete, Input, InputNumber } from 'antd'
 import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined'
 import 'antd-mobile/dist/antd-mobile.css'
@@ -54,8 +53,8 @@ const StyledDateInput = styled(Input)`
     color: #d9d9d9;
   }
 `
-const StyledTitle = styled.text`
-  font-family: Inter;
+const StyledTitle = styled.div`
+  font-family: Lato;
   color: black;
   font-size: 15px;
   font-weight: bold;
@@ -224,12 +223,15 @@ export default function CreateBooking() {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
-  } = useForm({ mode: 'onChange' })
+  } = useForm()
+
+  const submitForm = (data) => {
+    console.log('create booking', data)
+  }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(submitForm)}>
       <TopNavBar
         title={newBooking?.bookingID ? `Edit Booking` : `New Booking`}
         rightComponent={CheckIcon(createBookingError)}
@@ -327,6 +329,7 @@ export default function CreateBooking() {
           />
         </Background>
       )}
+      <input type="submit" />
     </form>
   )
 }

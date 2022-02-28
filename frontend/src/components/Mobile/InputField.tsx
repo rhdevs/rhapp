@@ -68,15 +68,14 @@ type InputFieldProps = {
   value?: string
   setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textArea?: boolean
-  onChange?: () => void
   errors: { [x: string]: any }
-  isRequired: boolean
+  isRequired?: boolean
   register: UseFormRegister<FieldValues>
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, placeholder, textArea, errors, isRequired, register } = props
+  const { title, placeholder, value, textArea, errors, isRequired, register } = props
 
   return (
     <Container>
@@ -84,8 +83,10 @@ export default function InputField(props: InputFieldProps) {
         <StyledTitle>
           {title}
           {isRequired && RedAsterisk}
+          {errors[title] && <RedText>This is required</RedText>}
         </StyledTitle>
       )}
+
       {textArea ? (
         <StyledTextArea placeholder={placeholder} rows={4} {...register(title, { required: isRequired })} />
       ) : (
