@@ -223,15 +223,17 @@ export default function CreateBooking() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm()
 
   const submitForm = (data) => {
+    console.log(getValues())
     console.log('create booking', data)
   }
 
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
+    <div>
       <TopNavBar
         title={newBooking?.bookingID ? `Edit Booking` : `New Booking`}
         rightComponent={CheckIcon(createBookingError)}
@@ -239,97 +241,101 @@ export default function CreateBooking() {
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {createBookingError !== '' && (
-            <Alert
-              message={createBookingError}
-              // description="You can book up to maximum of 4 hours!"
-              type="error"
-              style={{ margin: '23px 23px 23px 23px' }}
-              closable
-              showIcon
-              afterClose={() => {
-                dispatch(clearErrors())
-              }}
-            />
-          )}
-          {createBookingError === '' && <div style={{ margin: '20px' }} />}
-          <AutoComplete
-            style={{ width: '50%', marginBottom: '23px' }}
-            options={locationOptions}
-            value={newBookingFacilityName}
-            placeholder="Location"
-            onChange={(newFacilityName) => setFacility(newFacilityName)}
-            filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-            notFoundContent="No Matching Facility"
-            allowClear
-          />
-          <InputField
-            title="Event Name"
-            placeholder="Event Name"
-            value={newBookingName}
-            setValue={setBookingName}
-            errors={errors}
-            register={register}
-            isRequired
-          />
-          <div style={{ width: '100%' }}>
-            <DatePickerRow>
-              <StyledTitle>From</StyledTitle>
-              <StyledDateInput
-                type="datetime-local"
-                value={convertLocalTime(newBookingFromDate)}
-                onChange={(event) => handleFromDateChange(event.target.value)}
+          <form onSubmit={handleSubmit(submitForm)}>
+            {createBookingError !== '' && (
+              <Alert
+                message={createBookingError}
+                // description="You can book up to maximum of 4 hours!"
+                type="error"
+                style={{ margin: '23px 23px 23px 23px' }}
+                closable
+                showIcon
+                afterClose={() => {
+                  dispatch(clearErrors())
+                }}
               />
-            </DatePickerRow>
-            <DatePickerRow>
-              <StyledTitle>To</StyledTitle>
-              <StyledDateInput
-                type="datetime-local"
-                value={convertLocalTime(newBookingToDate)}
-                onChange={(event) => handleToDateChange(event.target.value)}
-              />
-            </DatePickerRow>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
-              newBookingToDate,
-            )
-              .diff(dayjs(newBookingFromDate), 'hour', true)
-              .toFixed(1)} hours`}</div>
-          </div>
-          {!newBooking?.bookingID && (
-            <RepeatWeeklyPickerRow>
-              <StyledTitle>Number of Weeks</StyledTitle>
-              <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
-            </RepeatWeeklyPickerRow>
-          )}
-          <CCAPickerRow>
-            <StyledTitle>CCA</StyledTitle>
-            <CCAInput
-              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-                value: cca.ccaName,
-              }))}
-              value={newBookingCCA}
-              placeholder="CCA"
-              onChange={(value) => setCca(value)}
+            )}
+            {createBookingError === '' && <div style={{ margin: '20px' }} />}
+            <AutoComplete
+              style={{ width: '50%', marginBottom: '23px' }}
+              options={locationOptions}
+              value={newBookingFacilityName}
+              placeholder="Location"
+              onChange={(newFacilityName) => setFacility(newFacilityName)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
-              notFoundContent="No Matching CCAs"
+              notFoundContent="No Matching Facility"
               allowClear
             />
-          </CCAPickerRow>
-          <InputField
-            title="Description"
-            placeholder="Tell us what your booking is for!"
-            value={newBookingDescription}
-            setValue={setDescription}
-            textArea
-            errors={errors}
-            register={register}
-            isRequired
-          />
+            <InputField
+              title="Event Name"
+              placeholder="Event Name"
+              // value={newBookingName}
+              // setValue={setBookingName}
+              errors={errors}
+              register={register}
+              isRequired
+            />
+            <div style={{ width: '100%' }}>
+              <DatePickerRow>
+                <StyledTitle>From</StyledTitle>
+                <StyledDateInput
+                  type="datetime-local"
+                  value={convertLocalTime(newBookingFromDate)}
+                  onChange={(event) => handleFromDateChange(event.target.value)}
+                />
+              </DatePickerRow>
+              <DatePickerRow>
+                <StyledTitle>To</StyledTitle>
+                <StyledDateInput
+                  type="datetime-local"
+                  value={convertLocalTime(newBookingToDate)}
+                  onChange={(event) => handleToDateChange(event.target.value)}
+                />
+              </DatePickerRow>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>{`Duration: ${dayjs(
+                newBookingToDate,
+              )
+                .diff(dayjs(newBookingFromDate), 'hour', true)
+                .toFixed(1)} hours`}</div>
+            </div>
+            {!newBooking?.bookingID && (
+              <RepeatWeeklyPickerRow>
+                <StyledTitle>Number of Weeks</StyledTitle>
+                <InputNumber defaultValue={1} min={1} max={15} value={numRepeatWeekly} onChange={setRepeat} />
+              </RepeatWeeklyPickerRow>
+            )}
+            <CCAPickerRow>
+              <StyledTitle>CCA</StyledTitle>
+              <CCAInput
+                options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                  value: cca.ccaName,
+                }))}
+                value={newBookingCCA}
+                placeholder="CCA"
+                onChange={(value) => setCca(value)}
+                filterOption={(inputValue, option) =>
+                  option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                }
+                notFoundContent="No Matching CCAs"
+                allowClear
+              />
+            </CCAPickerRow>
+            <InputField
+              title="Description"
+              placeholder="Tell us what your booking is for!"
+              // value={newBookingDescription}
+              // setValue={setDescription}
+              textArea
+              errors={errors}
+              register={register}
+              isRequired
+            />
+            <input type="submit" />
+          </form>
         </Background>
       )}
-      <input type="submit" />
-    </form>
+    </div>
   )
 }

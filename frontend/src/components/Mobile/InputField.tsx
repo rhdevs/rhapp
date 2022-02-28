@@ -41,7 +41,6 @@ const StyledTextArea = styled(TextArea)`
     background: #f3f3f9;
     width: 100%;
     border-radius: 10px;
-    border: 1px solid;
     padding: 5px 15px;
     margin: 0;
     resize: none;
@@ -75,7 +74,7 @@ type InputFieldProps = {
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, placeholder, value, textArea, errors, isRequired, register } = props
+  const { title, placeholder, textArea, errors, isRequired, register } = props
 
   return (
     <Container>
@@ -86,7 +85,6 @@ export default function InputField(props: InputFieldProps) {
           {errors[title] && <RedText>This is required</RedText>}
         </StyledTitle>
       )}
-
       {textArea ? (
         <StyledTextArea placeholder={placeholder} rows={4} {...register(title, { required: isRequired })} />
       ) : (
