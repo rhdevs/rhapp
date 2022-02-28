@@ -17,6 +17,7 @@ import {
   handleCreateNewBooking,
   setBookingStartTime,
   setBookingEndTime,
+  setBookingEndDate,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -27,6 +28,8 @@ import ConflictAlert from '../../../components/ConflictAlert'
 import { unixToFullDate } from '../../../common/unixToFullDate'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
+import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
+import { get24Hourtime } from '../../../common/get24HourTime'
 
 const Background = styled.div`
   background-color: #fff;
@@ -84,16 +87,29 @@ export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { register, handleSubmit, errors, control, watch } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+  } = useForm()
   const [isWeeklyOn, setIsWeeklyOn] = useState(false)
   const [ccaName, setCcaName] = useState<string>('')
-  const { facilityList, isLoading, ccaList, booking, bookingStatus, bookingStartTime, bookingEndTime } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
+  const {
+    facilityList,
+    isLoading,
+    ccaList,
+    booking,
+    bookingStatus,
+    bookingStartTime,
+    bookingEndTime,
+    bookingEndDate,
+  } = useSelector((state: RootState) => state.facilityBooking)
   const FormData = watch()
   const ValidForm = () => {
     if (isWeeklyOn) {
-      return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && !'some booking end variable'
+      return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && bookingEndDate !== 0
     }
     return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
   }
@@ -124,6 +140,7 @@ export default function CreateBooking() {
             data.eventName,
             bookingStartTime,
             bookingEndTime,
+            bookingEndDate,
             ccaId,
             data.description,
           ),
@@ -135,6 +152,7 @@ export default function CreateBooking() {
   useEffect(() => {
     dispatch(setBookingStartTime(1644641028))
     dispatch(setBookingEndTime(1644648228))
+    dispatch(setBookingEndDate(1644648228))
   }, [])
 
   useEffect(() => {
@@ -152,17 +170,24 @@ export default function CreateBooking() {
       ) : (
         <Form onSubmit={onSubmit}>
           <Controller
-            name="eventName"
-            render={({ onChange, value }) => (
-              <InputField title="Event Name" placeholder="Event Name" value={value} onChange={onChange} />
-            )}
             control={control}
+            render={({ onChange, value }) => (
+              <InputField
+                hasError={value === ''}
+                title="Event Name"
+                placeholder="Event Name"
+                value={value}
+                onChange={onChange}
+              />
+            )}
             defaultValue=""
+            rules={{ required: true }}
+            name="eventName"
           />
           {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
             title="Start"
-            value={''}
+            value={unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
             isCompulsory={true}
             onClick={function (): void {
               throw new Error('Function not implemented.')
@@ -170,7 +195,7 @@ export default function CreateBooking() {
           ></SelectableField>
           <SelectableField
             title="End"
-            value={''}
+            value={unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
             isCompulsory={true}
             onClick={function (): void {
               throw new Error('Function not implemented.')
@@ -204,8 +229,10 @@ export default function CreateBooking() {
                 onChange={onChange}
               />
             )}
-            control={control}
+            ref={register}
+            rules={{ required: true }}
             defaultValue=""
+            control={control}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
@@ -214,14 +241,15 @@ export default function CreateBooking() {
           {isWeeklyOn && (
             <SelectableField
               title="End Date"
-              value={''}
+              value={unixToFullDate(bookingEndTime)}
               isCompulsory={true}
               // error={true}
-              onClick={() => ValidForm()}
+              onClick={function (): void {
+                throw new Error('Function not implemented.')
+              }}
             ></SelectableField>
           )}
           {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
-          {/* TODO: Improve the green button with disabled state to be able to use properly */}
           <ButtonComponent
             state={ValidForm() ? 'primary' : 'secondary'}
             text="Submit"

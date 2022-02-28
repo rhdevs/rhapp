@@ -1,3 +1,4 @@
+import NumberInput from 'antd-mobile/lib/input-item/CustomInput'
 import { invert } from 'lodash'
 
 export type Facility = {
@@ -68,6 +69,7 @@ export enum FACILITY_ACTIONS {
   SET_BOOKING_STATUS = 'FACILITY_ACTIONS.SET_BOOKING_STATUS',
   SET_BOOKING_START_TIME = 'FACILITY_ACTIONS.SET_BOOKING_START_TIME',
   SET_BOOKING_END_TIME = 'FACILITY_ACTIONS.SET_BOOKING_END_TIME',
+  SET_BOOKING_END_DATE = 'FACILITY_ACTIONS.SET_BOOKING_END_DATE',
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.SET_FACILITY_BOOKINGS',
   SET_VIEW_FACILITY_NAME = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME',
   SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR',
@@ -234,12 +236,17 @@ type SetBookingStatus = {
 
 type SetBookingStartTime = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_START_TIME
-  bookingStartTime: number | null
+  bookingStartTime: number
 }
 
 type SetBookingEndTime = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_END_TIME
-  bookingEndTime: number | null
+  bookingEndTime: number
+}
+
+type SetBookingEndDate = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_END_DATE
+  bookingEndDate: number
 }
 
 export enum BookingStatus {
@@ -301,4 +308,5 @@ export type ActionTypes =
   | SetBookingStatus
   | SetBookingStartTime
   | SetBookingEndTime
+  | SetBookingEndDate
   | SetConflictBookings

@@ -37,8 +37,9 @@ const initialState = {
   numRepeatWeekly: 1,
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
-  bookingStartTime: null,
-  bookingEndTime: null,
+  bookingStartTime: 0,
+  bookingEndTime: 0,
+  bookingEndDate: 0,
   conflictBookings: [],
 }
 
@@ -74,8 +75,9 @@ type State = {
   booking: Booking | null
   bookingStatus: BookingStatus
   message?: string
-  bookingStartTime: number | null
-  bookingEndTime: number | null
+  bookingStartTime: number
+  bookingEndTime: number
+  bookingEndDate: number
   conflictBookings: Booking[]
 }
 
@@ -298,6 +300,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         bookingEndTime: action.bookingEndTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_END_DATE: {
+      return {
+        ...state,
+        bookingEndDate: action.bookingEndDate,
       }
     }
     case FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS: {

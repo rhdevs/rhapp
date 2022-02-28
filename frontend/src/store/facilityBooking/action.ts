@@ -428,6 +428,7 @@ export const handleCreateNewBooking = (
   eventName: string,
   startTime: number | null,
   endTime: number | null,
+  endDate: number | null,
   ccaID?: number,
   description?: string,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -438,6 +439,7 @@ export const handleCreateNewBooking = (
     ccaID: ccaID,
     startTime: startTime,
     endTime: endTime,
+    endDate: endDate,
     description: description,
     // TODO: add recurrence end date
   }
@@ -499,6 +501,12 @@ export const setBookingEndTime = (endTime: number) => (dispatch: Dispatch<Action
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_END_TIME,
     bookingEndTime: endTime,
+  })
+}
+export const setBookingEndDate = (endDate: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_END_DATE,
+    bookingEndDate: endDate,
   })
 }
 
