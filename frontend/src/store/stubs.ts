@@ -37,8 +37,7 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
 export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) => {
-  // return { id: num, type: num % 3 ? TimeBlockType.AVAILABLE : TimeBlockType.OCCUPIED }
-  return { id: num, type: TimeBlockType.AVAILABLE }
+  return { id: num, timestamp: Math.round(Date.now() / 1000), type: TimeBlockType.AVAILABLE }
 })
 
 export const myBookingsStub: Booking[] = [
@@ -565,8 +564,3 @@ export const eventDays: number[] = [1644072529, 1646491729, 1648565329, 16489109
 
 // dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
 export const processedDates: number[] = [204, 301, 303, 331, 131]
-
-export const hourBlocks: string[] = [...Array(25).keys()].map((num) => {
-  const hour = '0' + num
-  return hour.substring(hour.length - 2) + '00'
-})

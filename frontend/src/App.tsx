@@ -16,6 +16,7 @@ class App extends React.Component {
   render() {
     dayjs.extend(CustomParseFormat)
     dayjs.extend(RelativeTime)
+
     return (
       <Provider store={store}>
         <GlobalStyle />

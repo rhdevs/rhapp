@@ -6,23 +6,6 @@ export type Facility = {
   facilityLocation: string
 }
 
-export type ViewBookingEntry = {
-  id: number
-  ccaName?: string
-  isOccupied: boolean
-  eventName?: string
-}
-
-export type BookingStatusEntry = {
-  id: number
-  type: 'available' | 'occupied' | 'selected' | 'unavailable'
-}
-
-export type BookingEntry = {
-  id: number
-  occupied: boolean
-}
-
 export type userCCA = {
   ccaID: number
   ccaName: string
@@ -56,7 +39,10 @@ export type Event = {
 
 export type TimeBlock = {
   id: number
+  timestamp: number
   type: TimeBlockType
+  ccaName?: string
+  eventName?: string
 }
 
 export enum TimeBlockType {
