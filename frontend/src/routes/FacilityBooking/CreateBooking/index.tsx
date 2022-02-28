@@ -29,27 +29,16 @@ import {
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
+import InputField from '../../../components/Mobile/InputField'
 
 const Background = styled.div`
-  background-color: #fafaf4;
+  background-color: #fff;
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 20px;
-`
-const StyledInput = styled(Input)`
-  &.ant-input {
-    width: 100%;
-    border-radius: 30px;
-    border: 1px solid #d9d9d9;
-    padding: 5px 10px;
-    margin: 0px 0px 20px 0px;
-  }
-  &.ant-input::placeholder {
-    color: #d9d9d9;
-  }
+  padding: 0px 36px;
 `
 
 const StyledDateInput = styled(Input)`
@@ -85,11 +74,20 @@ const DatePickerRow = styled.div`
 const CCAPickerRow = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin: 10px 0px;
   color: #666666;
 `
-
+const CCAInput = styled(AutoComplete)`
+  width: 100%;
+  color: #bfbfbf;
+  &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-radius: 30px !important;
+    border: 0;
+    background-color: #f3f3f9;
+  }
+`
 const RepeatWeeklyPickerRow = styled.div`
   width: 100%;
   display: flex;
@@ -176,6 +174,10 @@ export default function CreateBooking() {
     }
   }
 
+  const setBookingName = (newEvent: string) => {
+    dispatch(editBookingName(newEvent))
+  }
+
   const handleFromDateChange = (newDate: string) => {
     if (!isNaN(Date.parse(newDate))) dispatch(editBookingFromDate(new Date(newDate)))
   }
@@ -254,11 +256,7 @@ export default function CreateBooking() {
             notFoundContent="No Matching Facility"
             allowClear
           />
-          <StyledInput
-            placeholder="Event Name"
-            value={newBookingName}
-            onChange={(e) => dispatch(editBookingName(e.target.value))}
-          />
+          <InputField title="Event Name" placeholder="Event Name" value={newBookingName} setValue={setBookingName} />
           <div style={{ width: '100%' }}>
             <DatePickerRow>
               <StyledTitle>From</StyledTitle>
@@ -290,13 +288,12 @@ export default function CreateBooking() {
           )}
           <CCAPickerRow>
             <StyledTitle>CCA</StyledTitle>
-            <AutoComplete
-              style={{ width: '70vw', borderRadius: '30px !important' }}
+            <CCAInput
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
               value={newBookingCCA}
-              placeholder="Select 'Personal' if NA"
+              placeholder="CCA"
               onChange={(value) => setCca(value)}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -305,12 +302,12 @@ export default function CreateBooking() {
               allowClear
             />
           </CCAPickerRow>
-          <InputRow
+          <InputField
             title="Description"
             placeholder="Tell us what your booking is for!"
             value={newBookingDescription}
             setValue={setDescription}
-            textarea
+            textArea
           />
         </Background>
       )}

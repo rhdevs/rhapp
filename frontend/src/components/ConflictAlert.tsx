@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
+import { PATHS } from '../routes/Routes'
 
 const AlertBox = styled.div`
   display: flex;
@@ -31,15 +33,33 @@ const ViewText = styled.a`
   text-decoration-line: underline;
   color: #4d6daa;
 `
-function navigateConflicts() {
-  //To navigate to conflicts page, fill code below
+type Props = {
+  errorType: 'CONFLICT' | 'EMPTY_FIELD' | 'SERVER_ERROR'
+}
+interface ErrorMessage {
+  [key: string]: string
+}
+const errorMessage: ErrorMessage = {
+  CONFLICT: 'There are conflicts in your booking!',
+  EMPTY_FIELD: 'Oops! There seems to be an empty field.',
+  SERVER_ERROR: 'Server is down now please try again later.',
 }
 
-export default function ConflictAlert() {
+export default function ConflictAlert(props: Props) {
+  const { errorType } = props
+  const history = useHistory()
   return (
     <AlertBox>
-      <WarningText> There are conflicts in your booking! </WarningText>
-      <ViewText onClick={navigateConflicts}> View Conflicts </ViewText>
+      <WarningText> {errorMessage[errorType]} </WarningText>
+      {errorType === 'CONFLICT' && (
+        <ViewText
+          onClick={() => {
+            history.push(PATHS.VIEW_FACILITY_CONFLICT)
+          }}
+        >
+          View Conflicts
+        </ViewText>
+      )}
     </AlertBox>
   )
 }

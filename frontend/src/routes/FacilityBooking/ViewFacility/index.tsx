@@ -32,6 +32,8 @@ import PullToRefresh from 'pull-to-refresh-react'
 import dayjs from 'dayjs'
 import Calendar from 'react-calendar'
 import './calendar.css'
+import BookingCard from '../../../components/BookingCard'
+import ConflictAlert from '../../../components/ConflictAlert'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -298,51 +300,7 @@ export default function ViewFacility() {
               </div> */}
             </ActionButtonGroup>
             <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
-            {!isLoading && (
-              <EventsGroup>
-                {facilityBookings?.map((event) => (
-                  <EventCard
-                    key={event.bookingID}
-                    onClick={() => {
-                      history.push(PATHS.VIEW_FACILITY_BOOKING_ID + event.bookingID)
-                    }}
-                  >
-                    {/* <EventAvatar src={dummyAvatar} /> */}
-                    <EventLabels>
-                      <EventBoldLabel>
-                        📅{' '}
-                        <b>
-                          {getHumanReadableDate(event.startTime)} {getHumanReadableTime(event.startTime)} to{' '}
-                          {getHumanReadableDate(event.endTime)} {getHumanReadableTime(event.endTime)}
-                        </b>
-                      </EventBoldLabel>
-                      <EventNormalLabel>
-                        <BookingSubHeaderCCAName>
-                          <b>{event.ccaName ? event.ccaName : 'Personal'}</b>
-                        </BookingSubHeaderCCAName>
-                        <BookingSubHeaderEventName>
-                          {event.eventName.length > 25 ? event.eventName.slice(0, 20) + '...' : event.eventName}
-                        </BookingSubHeaderEventName>
-                      </EventNormalLabel>
-                    </EventLabels>
-                    <EventRightDisplay>
-                      {event.userID === localStorage.getItem('userID') ? (
-                        <Icon src={adminIcon} />
-                      ) : (
-                        <Icon
-                          onClick={() => {
-                            fetchTelegram(event)
-                          }}
-                          src={messageIcon}
-                        />
-                      )}
-                    </EventRightDisplay>
-                  </EventCard>
-                ))}
-                {facilityBookings.length === 0 && <p style={{ padding: '23px' }}>There are no bookings on this day!</p>}
-              </EventsGroup>
-            )}
-            {isLoading && <LoadingSpin />}
+            {isLoading ? <LoadingSpin /> : <BookingCard bookings={facilityBookings} />}
             <BottomNavBar />
           </>
         </MainContainer>
