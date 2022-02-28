@@ -13,12 +13,14 @@ sys.path.append("../")
 
 facilities_api = Blueprint("facilities", __name__)
 
+# Used to convert CCA ID into CCA Name
+def conversion(ccaID):
+    return str(db.CCA.find_one({"ccaID": ccaID})["ccaName"])
 
 @facilities_api.route('/')
 @cross_origin()
 def root_route():
     return 'What up losers'
-
 
 @facilities_api.route('/facilities', methods=["GET"])
 @cross_origin(supports_credentials=True)
@@ -47,7 +49,7 @@ def get_facility_name(facilityID):
         return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
 
-
+# TODO: Change the CCA ID to CCA Name
 @ facilities_api.route('/bookings/<int:bookingID>', methods=["GET"])
 @ cross_origin(supports_credentials=True)
 def get_one_booking(bookingID):
@@ -94,6 +96,11 @@ def get_one_booking(bookingID):
             data = booking
         if len(data) == 0:
             return {"err": "Booking not found", "status": "failed"}, 400
+
+        if (data["ccaID"] != None):
+            data["ccaName"] = conversion(data["ccaID"])
+            del data["ccaID"]
+
         response = {"status": "success", "data": data}
 
     except Exception as e:
@@ -106,11 +113,11 @@ def get_one_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_bookings(userID):
     try:
-        if (not request.args.get("token")):
-            return {"err": "No token", "status": "failed"}, 401
+        #if (not request.args.get("token")):
+        #    return {"err": "No token", "status": "failed"}, 401
 
-        if (not authenticate(request.args.get("token"), userID)):
-            return {"err": "Auth Failure", "status": "failed"}, 401
+        #if (not authenticate(request.args.get("token"), userID)):
+        #    return {"err": "Auth Failure", "status": "failed"}, 401
 
         pipeline = [
             {'$match':
@@ -156,6 +163,9 @@ def user_bookings(userID):
         data.sort(
             key=lambda x: x.get('startTime'), reverse=False)
 
+        for i in data:
+            del i["ccaID"]
+                
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
@@ -221,13 +231,16 @@ def check_bookings(facilityID):
         data.sort(
             key=lambda x: x.get('startTime'), reverse=False)
 
+        for i in data:
+            del i["ccaID"]
+
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
 
     return make_response(response)
-
+# TODO: End of change here
 
 @ facilities_api.route('/bookings', methods=['POST'])
 @ cross_origin(supports_credentials=True)
