@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { SetClickedDate } from '../../store/calendar/actions'
+import { setClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
@@ -37,7 +37,7 @@ export const ClickableDateContainer = (props: { date: number; eventPresent?: boo
   const assignedDateMonth = props.assignedMonth * 100 + props.date
 
   const DateContainerClickHandler = (newClickedDate: number) => {
-    dispatch(SetClickedDate(newClickedDate))
+    dispatch(setClickedDate(newClickedDate))
     console.log('To do - to go to daily view')
   }
 
