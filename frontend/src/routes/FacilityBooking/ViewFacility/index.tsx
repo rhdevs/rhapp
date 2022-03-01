@@ -3,11 +3,8 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import 'react-date-range/dist/styles.css' // main css file
-import 'react-date-range/dist/theme/default.css' // theme css file
 import Button from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import { fetchFacilityNameFromID, SetIsLoading, setSelectedFacility } from '../../../store/facilityBooking/action'
@@ -20,12 +17,6 @@ const MainContainer = styled.div`
   width: 100%;
   height: 90vh;
   background-color: #fafaf4;
-`
-
-const StyledButton = styled(Button)`
-  .ant-btn {
-    border-radius: 25px;
-  }
 `
 
 export default function ViewFacility() {
