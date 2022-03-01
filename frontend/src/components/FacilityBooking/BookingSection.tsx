@@ -59,7 +59,7 @@ const BookingSection = () => {
 
   return (
     <MainContainer>
-      <CurrentTimeLine width={'calc(100% - 70px)'} right={'10px'} top={calcTop()} />
+      <CurrentTimeLine width={'calc(100% - 65px)'} right={'10px'} top={calcTop()} />
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => (

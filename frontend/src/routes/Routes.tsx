@@ -82,6 +82,8 @@ export enum PATHS {
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
+
+  PREVIEW = '/facility/preview',
 }
 //DOCUMENTATION
 const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
@@ -153,6 +155,8 @@ const UpdateAllItems = React.lazy(
   () => import(/* webpackChuckName: "UpdateAllItems" */ './Supper/OrderSummary/UpdateAllItems'),
 )
 const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
+
+const Preview = React.lazy(() => import(/* webpackChuckName: "Preview" */ './FacilityBooking/CreateBooking/Preview'))
 export default class Routes extends React.Component {
   render() {
     return (
@@ -216,6 +220,9 @@ export default class Routes extends React.Component {
 
             <PublicRoute exact path={PATHS.DOCS_LANDING_PAGE} component={Docs} />
             <PublicRoute exact path={PATHS.DOCS_SUPPER_BY_FILE} component={Supper_Documentation} />
+
+            {/* TODO: Remove before merging */}
+            <PublicRoute exact path={PATHS.PREVIEW} component={Preview} />
 
             <PublicRoute component={FallBack} />
           </AnimatedSwitch>

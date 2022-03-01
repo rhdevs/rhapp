@@ -148,7 +148,6 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <BookingSection />
       <PullToRefresh onRefresh={onRefresh}>
         <TopBar>
           <Greetings>
