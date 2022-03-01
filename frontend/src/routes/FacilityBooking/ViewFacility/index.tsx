@@ -40,7 +40,7 @@ export default function ViewFacility() {
       type="button"
       size="small"
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+        history.push(`${PATHS.VIEW_MY_BOOKINGS_USERID}/${localStorage.getItem('userID')}`)
       }}
     />
   )
