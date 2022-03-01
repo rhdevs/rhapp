@@ -53,7 +53,6 @@ todayMonth = ('0' + todayMonth).substring(('0' + todayMonth).length - 2)
 let todayDate = String(currentDate.getDate())
 todayDate = ('0' + todayDate).substring(('0' + todayDate).length - 2)
 
-console.log(todayMonth, todayDate)
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
