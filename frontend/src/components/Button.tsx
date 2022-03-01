@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Button = styled.button<{ state: 'primary' | 'secondary'; width: string; size: 'small' | 'regular' }>`
+const Button = styled.button<{ state: 'primary' | 'secondary'; width?: string; size: 'small' | 'regular' }>`
   min-height: 45px;
   height: auto;
-  width: ${(props) => props.width};
+  width: ${(props) => props.width ?? `max-content`};
   border-radius: 25px;
   font-size: 14px;
   border: solid 0.1rem transparent;
@@ -45,7 +45,7 @@ function ButtonComponent(prop: Props) {
       state={prop.state}
       disabled={prop.disabled}
       type={prop.type ?? 'button'}
-      width={prop.setWidth ?? 'max-content'}
+      width={prop.setWidth}
       size={prop.size ?? 'small'}
     >
       {prop.text}
