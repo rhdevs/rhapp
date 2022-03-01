@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Button = styled.button<{ state: string; width: string; size: string }>`
+const Button = styled.button<{ state: 'primary' | 'secondary'; width: string; size: 'small' | 'regular' }>`
   min-height: 45px;
   height: auto;
   width: ${(props) => props.width};
