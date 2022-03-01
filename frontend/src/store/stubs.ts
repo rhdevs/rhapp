@@ -37,7 +37,14 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
 export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) => {
-  return { id: num, timestamp: Math.round(Date.now() / 1000), type: TimeBlockType.AVAILABLE }
+  const timestamp = Math.round(new Date().setHours(0, 0, 0, 0) / 1000) + num * 3600 //might need to add 8 hours
+  const currentTimestamp = Math.round(Date.now() / 1000)
+  const prevHour = currentTimestamp - (currentTimestamp % 3600)
+  return {
+    id: num,
+    timestamp: timestamp,
+    type: prevHour > timestamp ? TimeBlockType.UNAVAILABLE : TimeBlockType.AVAILABLE,
+  }
 })
 
 export const myBookingsStub: Booking[] = [
@@ -47,8 +54,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2022-02-25 12:00:00').getTime() / 1000,
-    endTime: new Date('2022-02-25 14:00:00').getTime() / 1000,
+    startTime: new Date('2022-03-01 12:00:00').getTime() / 1000,
+    endTime: new Date('2022-03-01 14:00:00').getTime() / 1000,
     description: 'My Backup Location',
     ccaName: 'RHdevs',
   },
@@ -58,8 +65,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2022-02-25 14:00:00').getTime() / 1000,
-    endTime: new Date('2022-02-25 16:00:00').getTime() / 1000,
+    startTime: new Date('2022-03-01 14:00:00').getTime() / 1000,
+    endTime: new Date('2022-03-01 16:00:00').getTime() / 1000,
     description: 'Pls dont steal from me',
     ccaName: 'some cca',
   },
@@ -69,8 +76,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2022-02-25 00:00:00').getTime() / 1000,
-    endTime: new Date('2022-02-25 02:00:00').getTime() / 1000,
+    startTime: new Date('2022-03-01 00:00:00').getTime() / 1000,
+    endTime: new Date('2022-03-01 02:00:00').getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
     ccaName: 'another cca',
   },

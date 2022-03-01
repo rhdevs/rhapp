@@ -18,7 +18,8 @@ import calendar_icon from '../../assets/calenderIconSelected.svg'
 import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
-import ViewScheduleBlock from '../../components/FacilityBooking/ViewSection'
+import ViewSection from '../../components/FacilityBooking/ViewSection'
+import BookingSection from '../../components/FacilityBooking/BookingSection'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -147,7 +148,7 @@ export default function Home() {
 
   return (
     <MainContainer>
-      <ViewScheduleBlock />
+      <BookingSection />
       <PullToRefresh onRefresh={onRefresh}>
         <TopBar>
           <Greetings>

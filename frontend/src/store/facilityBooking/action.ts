@@ -1,7 +1,10 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, Facility, FACILITY_ACTIONS, TimeBlock } from './types'
+import { ActionTypes, Booking, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
+import { getBlockHr } from '../../components/FacilityBooking/BookingSection'
+import { get24Hourtime } from '../../common/get24HourTime'
+import { defaultTimeBlocks } from '../stubs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -429,5 +432,33 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
     selectedDayBookings: selectedDayBookings,
+  })
+}
+
+export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { selectedDayBookings } = getState().facilityBooking
+
+  const newTimeblocks = [...defaultTimeBlocks]
+  selectedDayBookings.forEach((booking) => {
+    if (
+      booking.startTime >= newTimeblocks[0].timestamp &&
+      booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
+    ) {
+      const startTime = getBlockHr(get24Hourtime(booking.startTime))
+      const endTime = getBlockHr(get24Hourtime(booking.endTime))
+      for (let hour = startTime; hour < endTime; hour++) {
+        newTimeblocks[hour] = {
+          ...defaultTimeBlocks[hour],
+          ccaName: booking.ccaName,
+          eventName: booking.eventName,
+          type: TimeBlockType.OCCUPIED,
+        }
+      }
+    }
+  })
+
+  dispatch({
+    type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
+    timeBlocks: newTimeblocks,
   })
 }

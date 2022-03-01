@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { TimeBlockType } from '../../store/facilityBooking/types'
 
-export const blockHeight = 100
+export const blockHeight = 90
 export const topDistance = 10
 export const blockGap = 5
 
@@ -13,6 +13,7 @@ export const DailyContainer = styled.div`
 `
 
 const blockStyles = css`
+  position: relative;
   border-radius: 10px;
   padding: 15px;
   color: #000;
@@ -26,6 +27,7 @@ const blockStyles = css`
 export const StyledBookingBlock = styled.div<{
   type: TimeBlockType
   blockId: number
+  hasOverlay?: boolean
 }>`
   ${(props) => (props.type === TimeBlockType.AVAILABLE || props.type === TimeBlockType.SELECTED) && 'cursor: pointer;'}
   ${blockStyles}
@@ -39,6 +41,20 @@ export const StyledBookingBlock = styled.div<{
       : props.blockId % 2 == 0
       ? palette.unavailable1
       : palette.unavailable2};
+
+  ${(props) =>
+    props.hasOverlay &&
+    css`
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.7);
+      }
+    `}
 `
 
 // Styling for View Only Blocks (Occupied, Not Occupied)
@@ -84,7 +100,7 @@ export const MainTimeContainer = styled.div`
 
 export const TimeContainer = styled.div`
   padding: 0 10px 0 0;
-  font-size: 16px;
+  font-size: 14px;
   font-family: Lato;
   line-height: 1;
 `
