@@ -47,6 +47,13 @@ export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) =>
   }
 })
 
+const currentDate = new Date()
+let todayMonth = String(currentDate.getMonth() + 1)
+todayMonth = ('0' + todayMonth).substring(('0' + todayMonth).length - 2)
+let todayDate = String(currentDate.getDate())
+todayDate = ('0' + todayDate).substring(('0' + todayDate).length - 2)
+
+console.log(todayMonth, todayDate)
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
@@ -54,8 +61,8 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2022-03-01 12:00:00').getTime() / 1000,
-    endTime: new Date('2022-03-01 14:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 12:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 14:00:00`).getTime() / 1000,
     description: 'My Backup Location',
     ccaName: 'RHdevs',
   },
@@ -65,10 +72,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2022-03-01 14:00:00').getTime() / 1000,
-    endTime: new Date('2022-03-01 16:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 14:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 16:00:00`).getTime() / 1000,
     description: 'Pls dont steal from me',
-    ccaName: 'some cca',
+    ccaName: 'Comm',
   },
   {
     bookingID: 5,
@@ -76,10 +83,21 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2022-03-01 00:00:00').getTime() / 1000,
-    endTime: new Date('2022-03-01 02:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 00:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 02:00:00`).getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
-    ccaName: 'another cca',
+    ccaName: 'JCRC',
+  },
+  {
+    bookingID: 5,
+    eventName: 'Personal Meeting',
+    facilityID: 5,
+    userID: 'A0123336Z',
+    ccaID: 1,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 22:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 23:59:00`).getTime() / 1000,
+    description: 'Dont ask',
+    ccaName: 'Personal',
   },
 ]
 

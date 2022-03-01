@@ -444,8 +444,12 @@ export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: G
       booking.startTime >= newTimeblocks[0].timestamp &&
       booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
     ) {
+      const roundedEndTime = booking.endTime + 3600 - (booking.endTime % 3600)
       const startTime = getBlockHr(get24Hourtime(booking.startTime))
-      const endTime = getBlockHr(get24Hourtime(booking.endTime))
+      let endTime = getBlockHr(get24Hourtime(roundedEndTime))
+      if (endTime === 0) {
+        endTime = 24
+      }
       for (let hour = startTime; hour < endTime; hour++) {
         newTimeblocks[hour] = {
           ...defaultTimeBlocks[hour],
