@@ -46,7 +46,7 @@ function ButtonComponent(prop: Props) {
       disabled={prop.disabled}
       type={prop.type ?? 'button'}
       width={prop.setWidth}
-      size={prop.size ?? 'small'}
+      size={prop.size ?? 'regular'}
     >
       {prop.text}
     </Button>
