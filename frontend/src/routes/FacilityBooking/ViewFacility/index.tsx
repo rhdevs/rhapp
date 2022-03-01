@@ -46,7 +46,7 @@ export default function ViewFacility() {
   )
 
   return (
-    <div style={{ backgroundColor: '#fafaf4' }}>
+    <div>
       <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
