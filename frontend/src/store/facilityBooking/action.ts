@@ -133,8 +133,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setViewDates = (newDate: any) => (dispatch: Dispatch<ActionTypes>) => {
+export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDate
   const endDate = newDate
 
