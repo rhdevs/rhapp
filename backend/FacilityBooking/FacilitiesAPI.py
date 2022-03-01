@@ -90,8 +90,8 @@ def get_one_booking(bookingID):
             {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
         ]
 
-        bookingInfo = db.Bookings.aggregate(pipeline)
-        for booking in bookingInfo:
+        data = list(db.Bookings.aggregate(pipeline))
+        for booking in data:
             data = booking
         if len(data) == 0:
             return {"err": "Booking not found", "status": "failed"}, 400
