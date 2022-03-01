@@ -100,7 +100,6 @@ def get_one_booking(bookingID):
             if data["ccaID"] != 0:
                 data["ccaName"] = conversion(data["ccaID"])
             
-        del data["ccaID"]
 
         response = {"status": "success", "data": data}
 
@@ -163,9 +162,6 @@ def user_bookings(userID):
         data = list(db.Bookings.aggregate(pipeline))
         data.sort(
             key=lambda x: x.get('startTime'), reverse=False)
-
-        for i in data:
-            del i["ccaID"]
                 
         response = {"status": "success", "data": data}
     except Exception as e:
@@ -232,9 +228,6 @@ def check_bookings(facilityID):
         data.sort(
             key=lambda x: x.get('startTime'), reverse=False)
 
-        for i in data:
-            del i["ccaID"]
-
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
@@ -275,6 +268,9 @@ def add_booking():
         
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
+
+        if not formData.get("forceBook"):
+            formData["forceBook"] = 0
 
         # Handle repeats
         condition = []
@@ -319,7 +315,10 @@ def add_booking():
 
             db.Bookings.insert_many(insertData)
 
-            response = {"status": "success"}
+            if not formData.get("bookUntil"):
+                response = {"status": "success"}
+            else:
+                response = {"status": "success", "num_of_successful_bookings": str(len(insertData))}
 
         elif (len(conflict) > 0):
             if bool(formData["forceBook"]) == False:
@@ -358,7 +357,7 @@ def add_booking():
 
                 if len(insertData) != 0:
                     db.Bookings.insert_many(insertData)
-                    response = {"message": "Unblocked slots booked", "blocked_bookings": blocked_bookings, "status": "success"}
+                    response = {"message": "Unblocked slots booked", "blocked_bookings": blocked_bookings, "num_of_successful_bookings": str(len(insertData)), "status": "success"}
                 else:
                     return make_response({"message": "All slots have been blocked.", "blocked_bookings": blocked_bookings, "status": "failed"}, 409)
                 
