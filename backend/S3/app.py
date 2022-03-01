@@ -1,7 +1,5 @@
 from boto3 import client, resource
-from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY
-
-bucketLocation = 'rhapp-picture-bucket'
+from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET_LOCATION
 
 user = client(
     's3',
@@ -17,7 +15,7 @@ res = resource(
     region_name='ap-southeast-1'
 )
 
-bucket = res.Bucket(bucketLocation)
+bucket = res.Bucket(BUCKET_LOCATION)
 
 
 def fileExist(key):
@@ -33,7 +31,7 @@ def fileExist(key):
 def create(key, fileLocation):
     if fileExist(key):
         raise FileExistsError
-    user.upload_file(fileLocation, bucketLocation, key)
+    user.upload_file(fileLocation, BUCKET_LOCATION, key)
 
 # read
 
@@ -42,7 +40,7 @@ def read(key):
     if not fileExist(key):
         raise FileNotFoundError
     PresignedUrl = user.generate_presigned_url(
-        'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+        'get_object', Params={'Bucket': BUCKET_LOCATION, 'Key': key}, ExpiresIn=3600)
     return PresignedUrl
 
 # update
@@ -55,7 +53,7 @@ def update(oldKey, newKey, fileLocation=''):
         raise FileExistsError
     if fileLocation == '':
         newObj = bucket.Object(newKey)
-        newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+        newObj.copy_from(CopySource=BUCKET_LOCATION+'/'+oldKey)
         delete(oldKey)
     else:
         delete(oldKey)
