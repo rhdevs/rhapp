@@ -50,10 +50,8 @@ export default function ViewFacility() {
       <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <>
-            <Calendar selectedFacilityId={parseInt(params.facilityID)} />
-            <BottomNavBar />
-          </>
+          <Calendar selectedFacilityId={parseInt(params.facilityID)} />
+          <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
     </div>
