@@ -148,7 +148,7 @@ def user():
             if (userID is None or passwordHash is None or email is None):
                 return {"status": "failed", "message": "Invalid request"}, 400
 
-            if db.Users.count_documents({"userID": userID}) == 0:
+            if db.User.count_documents({"userID": userID}) > 0:
                 return {"status": "failed", "message": "Account already exist"}, 409
 
             body = {
