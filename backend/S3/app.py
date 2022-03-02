@@ -30,14 +30,14 @@ def fileExist(key):
 
 
 def create(key, fileLocation):
-    user.upload_file(fileLocation, bucketLocation, key)
-        
+    user.upload_file(fileLocation, BUCKET_LOCATION, key)
+
 # read
 
 
 def read(key):
      PresignedUrl = user.generate_presigned_url(
-     'get_object', Params={'Bucket': bucketLocation, 'Key': key}, ExpiresIn=3600)
+     'get_object', Params={'Bucket': BUCKET_LOCATION, 'Key': key}, ExpiresIn=3600)
      return PresignedUrl
 
 
@@ -50,7 +50,7 @@ def update(oldKey, newKey, fileLocation=''):
             raise FileNotFoundError
         if fileLocation == '':
             newObj = bucket.Object(newKey)
-            newObj.copy_from(CopySource=bucketLocation+'/'+oldKey)
+            newObj.copy_from(CopySource=BUCKET_LOCATION+'/'+oldKey)
             delete(oldKey)
         else:
             delete(oldKey)
