@@ -176,7 +176,7 @@ def profiles():
         if imgString != "":
             imgKey, imgFileLocation = imgGeneration(str(imgString))
             oldImgKey = db.User.find_one({"userID": userID}).get("imageKey")
-            if None != oldImgKey != imgKey:
+            if (None != oldImgKey != imgKey) and (oldImgKey != "default/profile_pic.png"):
                 delete(oldImgKey)
                 create(imgKey, imgFileLocation)
             else:
@@ -187,7 +187,6 @@ def profiles():
         del data["profilePictureURI"]
         data["imageKey"] = imgKey
 
-        print(data)
         result = db.User.update_one({"userID": userID}, {'$set': data}, upsert=True)
         if int(result.matched_count) > 0:
             response = {
