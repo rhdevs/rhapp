@@ -1,8 +1,6 @@
 from boto3 import client, resource
-from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY
+from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET_LOCATION
 import botocore # for S3-related error handling, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/error-handling.html
-
-bucketLocation = 'rhapp-picture-bucket'
 
 user = client(
     's3',
@@ -18,7 +16,7 @@ res = resource(
     region_name='ap-southeast-1'
 )
 
-bucket = res.Bucket(bucketLocation)
+bucket = res.Bucket(BUCKET_LOCATION)
 
 
 def fileExist(key):
