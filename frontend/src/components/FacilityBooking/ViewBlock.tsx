@@ -21,11 +21,11 @@ const ViewBlock = (props: Props) => {
   return (
     <StyledViewBooking ref={ref} isOccupied={props.entry.type === TimeBlockType.OCCUPIED} blockId={props.entry.id}>
       {props.entry.type === TimeBlockType.OCCUPIED && (
-        <TextContainer>
+        <>
           {props.entry.ccaName}
           <br />
           {props.entry.eventName}
-        </TextContainer>
+        </>
       )}
     </StyledViewBooking>
   )

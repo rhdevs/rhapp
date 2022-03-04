@@ -1,26 +1,26 @@
 import styled, { css } from 'styled-components'
 import { TimeBlockType } from '../../store/facilityBooking/types'
 
-export const blockHeight = 90
-export const topDistance = 10
-export const blockGap = 5
+export const BLOCK_HEIGHT = 90
+export const TOP_DISTANCE = 10
+export const BLOCK_GAP = 5
 
 export const DailyContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${`${topDistance}px`} 5px;
-  gap: ${`${blockGap}px`};
+  padding: ${`${TOP_DISTANCE}px`} 5px;
+  gap: ${`${BLOCK_GAP}px`};
 `
 
 const blockStyles = css`
   position: relative;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px 15px;
   color: #000;
   display: flex;
-  align-items: center;
   white-space: nowrap;
-  height: ${`${blockHeight}px`};
+  height: ${`${BLOCK_HEIGHT}px`};
+  gap: 10px;
 `
 
 // Styles for Booking Block (Occupied, Available, Selected and Not Available)
@@ -93,7 +93,7 @@ export const MainContainer = styled.div`
 export const MainTimeContainer = styled.div`
   border-right: 2.5px solid #a9a9a9;
   display: flex;
-  gap: ${`${blockGap}px`};
+  gap: ${`${BLOCK_GAP}px`};
   flex-direction: column;
   justify-content: space-between;
 `

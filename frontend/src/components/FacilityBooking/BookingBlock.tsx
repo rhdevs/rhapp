@@ -59,7 +59,7 @@ const BookingBlock = (props: Props) => {
       blockId={props.entry.id}
       hasOverlay={hasOverlay()}
     >
-      <TextContainer>{blockText()}</TextContainer>
+      {blockText()}
     </StyledBookingBlock>
   )
 }
