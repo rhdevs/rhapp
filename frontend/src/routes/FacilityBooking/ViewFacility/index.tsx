@@ -46,7 +46,7 @@ export default function ViewFacility() {
   )
 
   return (
-    <div>
+    <>
       <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
@@ -54,6 +54,6 @@ export default function ViewFacility() {
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
-    </div>
+    </>
   )
 }

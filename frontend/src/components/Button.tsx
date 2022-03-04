@@ -14,6 +14,7 @@ const Button = styled.button<{ state: 'primary' | 'secondary'; width?: string; s
   color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
   padding: ${(props) => (props.size === 'small' ? `8px 15px` : `16px 30px`)};
   line-height: 1px;
+  white-space: nowrap;
 
   &:active {
     background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
