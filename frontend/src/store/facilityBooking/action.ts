@@ -26,7 +26,7 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
         facilityList: facilityList,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
-      dispatch(SetIsLoading(false))
+      dispatch(setIsLoading(false))
     })
 }
 
@@ -72,7 +72,7 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, ViewEndDate: Date
     type: FACILITY_ACTIONS.SET_FACILITY_BOOKINGS,
     facilityBookings: updatedFB,
   })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -85,7 +85,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
   })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 // -1 stands for closed, any others means open for that specific ID.
@@ -209,7 +209,7 @@ export const createNewBookingFromFacility = (
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: '' })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: '' })
 
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -221,7 +221,7 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
   })
 
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -357,7 +357,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
   }
 }
 
-export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
@@ -388,7 +388,7 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
     .then((resp) => resp.json())
     .then(async (booking) => {
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
-      dispatch(SetIsLoading(false))
+      dispatch(setIsLoading(false))
       return booking.data
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
