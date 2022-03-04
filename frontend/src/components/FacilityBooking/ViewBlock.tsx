@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
-import { StyledViewBooking, TextContainer } from './BlockStyles'
+import { StyledViewBooking } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
 
 type Props = {

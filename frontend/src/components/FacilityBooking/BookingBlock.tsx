@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { RootState } from '../../store/types'
-import { StyledBookingBlock, TextContainer } from './BlockStyles'
+import { StyledBookingBlock } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
 
 type Props = {

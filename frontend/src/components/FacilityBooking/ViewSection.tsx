@@ -8,25 +8,13 @@ import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { getTimeBlocks } from '../../store/facilityBooking/action'
 
-export function setDefaultTimePosition(timePosition: number, arrLen: number) {
-  let defaultTimePosition = timePosition
-  if (defaultTimePosition < 0) {
-    defaultTimePosition = 0
-  }
-  if (defaultTimePosition >= arrLen) {
-    defaultTimePosition = arrLen - 1
-  }
-  return defaultTimePosition
-}
-
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
-  let defaultTimePosition = 16 //4pm
+  const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
     dispatch(getTimeBlocks())
-    defaultTimePosition = setDefaultTimePosition(defaultTimePosition, timeBlocks.length)
   }, [])
 
   return (

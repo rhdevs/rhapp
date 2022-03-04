@@ -66,12 +66,6 @@ export const StyledViewBooking = styled.div<{ isOccupied: boolean; blockId: numb
     props.isOccupied ? palette.available : props.blockId % 2 === 0 ? palette.unavailable1 : palette.unavailable2};
 `
 
-export const TextContainer = styled.div`
-  margin-left: 15px;
-  color: inherit;
-  font-weight: 350;
-`
-
 const palette = {
   available: '#D8E6DF',
   unavailable1: '#F1F3F7',
