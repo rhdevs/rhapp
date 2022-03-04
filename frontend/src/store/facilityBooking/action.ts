@@ -1,7 +1,10 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, Facility, FACILITY_ACTIONS } from './types'
+import { ActionTypes, Booking, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
+import { getBlockHr } from '../../components/FacilityBooking/BookingSection'
+import { get24Hourtime } from '../../common/get24HourTime'
+import { defaultTimeBlocks } from '../stubs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -26,7 +29,7 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
         facilityList: facilityList,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
-      dispatch(SetIsLoading(false))
+      dispatch(setIsLoading(false))
     })
 }
 
@@ -40,7 +43,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
     type: FACILITY_ACTIONS.GET_MY_BOOKINGS,
     myBookings: newList as Booking[],
   })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 // -1 stands for closed, any others means open for that specific ID.
@@ -162,7 +165,7 @@ export const createNewBookingFromFacility = (
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: '' })
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: '' })
 
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -174,7 +177,7 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
   })
 
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -310,7 +313,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
   }
 }
 
-export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
@@ -341,7 +344,7 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
     .then((resp) => resp.json())
     .then(async (booking) => {
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
-      dispatch(SetIsLoading(false))
+      dispatch(setIsLoading(false))
       return booking.data
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
@@ -358,5 +361,61 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
   dispatch({
     type: FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS,
     conflictBookings: conflictBookings,
+  })
+}
+
+export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
+    timeBlocks: newTimeBlocks,
+  })
+}
+
+export const setStartEndTime = (selectedStartTime: number, selectedEndTime?: number) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_START_END_TIME,
+    selectedStartTime: selectedStartTime,
+    selectedEndTime: selectedEndTime ?? -1,
+  })
+}
+
+export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
+    selectedDayBookings: selectedDayBookings,
+  })
+}
+
+export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+  const { selectedDayBookings } = getState().facilityBooking
+
+  const newTimeblocks = [...defaultTimeBlocks]
+  selectedDayBookings.forEach((booking) => {
+    if (
+      booking.startTime >= newTimeblocks[0].timestamp &&
+      booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
+    ) {
+      const roundedEndTime = booking.endTime + 3600 - (booking.endTime % 3600)
+      const startTime = getBlockHr(get24Hourtime(booking.startTime))
+      let endTime = getBlockHr(get24Hourtime(roundedEndTime))
+      if (endTime === 0) {
+        endTime = 24
+      }
+      for (let hour = startTime; hour < endTime; hour++) {
+        newTimeblocks[hour] = {
+          ...defaultTimeBlocks[hour],
+          ccaName: booking.ccaName,
+          eventName: booking.eventName,
+          type: TimeBlockType.OCCUPIED,
+        }
+      }
+    }
+  })
+
+  dispatch({
+    type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
+    timeBlocks: newTimeblocks,
   })
 }

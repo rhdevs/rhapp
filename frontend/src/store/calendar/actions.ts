@@ -46,10 +46,10 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityI
     facilityBookings: updatedFB,
   })
   dispatch(UpdateProcessedDates(updatedFB))
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
-export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: CALENDAR_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
