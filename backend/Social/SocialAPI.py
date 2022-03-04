@@ -125,7 +125,7 @@ def user():
             }
 
             result = db.User.update_one(
-                {"userID": userID}, {'$set': body}, upsert=False)
+                {"userID": userID}, {'$set': body})
 
             if int(result.matched_count) > 0:
                 response = {
