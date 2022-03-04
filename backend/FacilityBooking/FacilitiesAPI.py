@@ -302,6 +302,10 @@ def add_booking():
             [('_id', pymongo.DESCENDING)]).limit(1))
         newBookingID = 1 if len(lastbookingID) == 0 else int(
             lastbookingID[0].get("bookingID")) + 1
+
+        def SpaceOneWeekApart(booking={}):
+            booking["startTime"] += 7 * 24 * 60 * 60
+            booking["endTime"] += 7 * 24 * 60 * 60
         
         if (len(conflict) == 0):
             formData["bookingID"] = newBookingID
@@ -310,8 +314,7 @@ def add_booking():
             for i in range(formData["repeat"]):
                 insertData.append(formData.copy())
                 formData["bookingID"] += 1
-                formData["startTime"] += 7 * 24 * 60 * 60
-                formData["endTime"] += 7 * 24 * 60 * 60
+                SpaceOneWeekApart(formData)
 
             db.Bookings.insert_many(insertData)
 
@@ -327,8 +330,7 @@ def add_booking():
                 insertData = []
                 for i in range(formData["repeat"]):
                     insertData.append(formData.copy())
-                    formData["startTime"] += 7 * 24 * 60 * 60
-                    formData["endTime"] += 7 * 24 * 60 * 60
+                    SpaceOneWeekApart(formData)
             
                 for booking in conflict:
                     for newBooking in insertData:
@@ -359,16 +361,13 @@ def add_booking():
                     db.Bookings.insert_many(insertData)
                     response = {"message": "Unblocked slots booked", "blocked_bookings": blocked_bookings, "num_of_successful_bookings": str(len(insertData)), "status": "success"}
                 else:
-                    return make_response({"message": "All slots have been blocked.", "blocked_bookings": blocked_bookings, "status": "failed"}, 409)
-                
+                    return make_response({"message": "All slots have been blocked.", "blocked_bookings": blocked_bookings, "status": "failed"}, 409)         
 
-        
         # Logging
         formData["action"] = "Add Booking"
         formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         db.BookingLogs.insert_one(formData)
-
-        
+     
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
