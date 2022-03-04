@@ -38,7 +38,7 @@ export const StyledBookingBlock = styled.div<{
       ? palette.available
       : props.type === TimeBlockType.SELECTED
       ? palette.selected
-      : props.blockId % 2 == 0
+      : props.blockId % 2 === 0
       ? palette.unavailable1
       : palette.unavailable2};
 
@@ -63,7 +63,7 @@ export const StyledViewBooking = styled.div<{ isOccupied: boolean; blockId: numb
   ${blockStyles}
   background: ${(props) =>
     // occupied is green (same colour as available)
-    props.isOccupied ? palette.available : props.blockId % 2 == 0 ? palette.unavailable1 : palette.unavailable2};
+    props.isOccupied ? palette.available : props.blockId % 2 === 0 ? palette.unavailable1 : palette.unavailable2};
 `
 
 export const TextContainer = styled.div`
