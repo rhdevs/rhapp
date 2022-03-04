@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef } from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import styled from 'styled-components'
@@ -25,20 +25,6 @@ type Props = {
   bottom?: string
 }
 
-export function calcTop() {
-  let top = TOP_DISTANCE
-  const today = new Date()
-  const hour = today.getHours()
-  const minutes = today.getMinutes()
-
-  if (hour > 0) {
-    // account for block gap -- each block is BLOCK_HEIGHT + BLOCK_GAP
-    top -= BLOCK_GAP / 2
-  }
-  top += (hour + minutes / 60) * BLOCK_HEIGHT + BLOCK_GAP * hour + 1.5
-  return String(top) + 'px'
-}
-
 export function isToday(inputDate: number) {
   const today = new Date()
   return today.setHours(0, 0, 0, 0) == new Date(inputDate * 1000).setHours(0, 0, 0, 0)
@@ -56,19 +42,40 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
 const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
+  const [top, setTop] = useState<number>(calcTop())
+
+  function calcTop() {
+    let top = TOP_DISTANCE
+    const today = new Date()
+    const hour = today.getHours()
+    const minutes = today.getMinutes()
+
+    if (hour > 0) {
+      // account for block gap -- each block is BLOCK_HEIGHT + BLOCK_GAP
+      top -= BLOCK_GAP / 2
+    }
+    top += (hour + minutes / 60) * BLOCK_HEIGHT + BLOCK_GAP * hour + 1.5
+    return top
+  }
 
   useEffect(() => {
-    console.log(isToday(timeBlocks[0].timestamp), timeBlocks[0].timestamp)
+    const interval = setInterval(() => {
+      setTop(calcTop())
+    }, 1000 * 60) //runs every minute
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
     scrollToView(lineRef)
   }, [lineRef.current])
 
   return isToday(timeBlocks[0].timestamp) ? (
     <StyledHr
       ref={lineRef}
-      width={props.width}
-      top={props.top}
+      width={props.width ?? 'calc(100% - 70.5px)'}
+      top={props.top ?? top + 'px'}
       left={props.left}
-      right={props.right}
+      right={props.right ?? '15px'}
       bottom={props.bottom}
     />
   ) : (

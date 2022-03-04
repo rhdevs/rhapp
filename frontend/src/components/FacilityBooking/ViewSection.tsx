@@ -5,7 +5,7 @@ import { DailyContainer, MainContainer } from './BlockStyles'
 import ViewBlock from './ViewBlock'
 import { RootState } from '../../store/types'
 import HourBlocks from './HourBlocks'
-import CurrentTimeLine, { calcTop, isToday } from './CurrentTimeLine'
+import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { getTimeBlocks } from '../../store/facilityBooking/action'
 
 export function setDefaultTimePosition(timePosition: number, arrLen: number) {
@@ -31,7 +31,7 @@ const ViewScheduleBlock = () => {
 
   return (
     <MainContainer>
-      <CurrentTimeLine width={'calc(100% - 65px)'} right={'10px'} top={calcTop()} />
+      <CurrentTimeLine />
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => (

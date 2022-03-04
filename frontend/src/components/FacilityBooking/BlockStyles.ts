@@ -99,7 +99,7 @@ export const MainTimeContainer = styled.div`
 `
 
 export const TimeContainer = styled.div`
-  padding-right: 10px;
+  padding-right: 5px;
   font-size: 14px;
   font-family: Lato;
   line-height: 1;
