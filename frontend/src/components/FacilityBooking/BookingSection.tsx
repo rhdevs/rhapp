@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import { DailyContainer, MainContainer } from './BlockStyles'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
@@ -7,9 +8,9 @@ import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
 import { getTimeBlocks, setStartEndTime, setTimeBlocks } from '../../store/facilityBooking/action'
 import HourBlocks from './HourBlocks'
-import CurrentTimeLine, { calcTop } from './CurrentTimeLine'
-import { useHistory } from 'react-router-dom'
+import CurrentTimeLine, { calcTop, isToday } from './CurrentTimeLine'
 import { PATHS } from '../../routes/Routes'
+import { setDefaultTimePosition } from './ViewSection'
 
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
@@ -18,9 +19,11 @@ const BookingSection = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
+  let defaultTimePosition = 16 //4pm
 
   useEffect(() => {
     dispatch(getTimeBlocks())
+    defaultTimePosition = setDefaultTimePosition(defaultTimePosition, timeBlocks.length)
   }, [])
 
   useEffect(() => {
@@ -63,7 +66,13 @@ const BookingSection = () => {
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => (
-          <BookingBlock key={index} onClick={() => setSelectedBlock(entry.timestamp)} entry={entry} />
+          <BookingBlock
+            key={index}
+            onClick={() => setSelectedBlock(entry.timestamp)}
+            entry={entry}
+            // if day selected is not current, scroll to defaultTimePosition
+            scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
+          />
         ))}
       </DailyContainer>
     </MainContainer>

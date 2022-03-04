@@ -37,7 +37,8 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
 export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) => {
-  const timestamp = Math.round(new Date().setHours(0, 0, 0, 0) / 1000) + num * 3600 //might need to add 8 hours
+  let timestamp = Math.round(new Date().setHours(0, 0, 0, 0) / 1000) + num * 3600 //might need to add 8 hours
+  timestamp += 3600 * 24
   const currentTimestamp = Math.round(Date.now() / 1000)
   const prevHour = currentTimestamp - (currentTimestamp % 3600)
   return {

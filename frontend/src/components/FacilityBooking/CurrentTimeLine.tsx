@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { RefObject, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import styled from 'styled-components'
+import { RootState } from '../../store/types'
 import { topDistance, blockHeight, blockGap } from './BlockStyles'
 
 const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?: string; bottom?: string }>`
@@ -36,19 +38,29 @@ export function calcTop() {
   return String(top) + 'px'
 }
 
+export function isToday(inputDate: number) {
+  const today = new Date()
+  return today.setHours(0, 0, 0, 0) == new Date(inputDate).setHours(0, 0, 0, 0)
+}
+
+export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTMLElement>, offset?: number) {
+  if (ref.current) {
+    window.scrollTo({
+      top: ref.current.offsetTop + (offset ?? -180), // adjust distance between object and top of window
+      behavior: 'smooth',
+    })
+  }
+}
+
 const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
+  const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    if (lineRef.current) {
-      window.scrollTo({
-        top: lineRef.current.offsetTop - 180, // adjust distance between hr and top of window
-        behavior: 'smooth',
-      })
-    }
+    scrollToView(lineRef)
   }, [lineRef.current])
 
-  return (
+  return isToday(timeBlocks[0].timestamp) ? (
     <StyledHr
       ref={lineRef}
       width={props.width}
@@ -57,6 +69,8 @@ const CurrentTimeLine = (props: Props) => {
       right={props.right}
       bottom={props.bottom}
     />
+  ) : (
+    <></>
   )
 }
 

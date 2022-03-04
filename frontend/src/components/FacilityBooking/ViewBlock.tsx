@@ -1,19 +1,34 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { StyledViewBooking, TextContainer } from './BlockStyles'
+import { scrollToView } from './CurrentTimeLine'
 
-const ViewBlock = ({ entry }: { entry: TimeBlock }) => {
+type Props = {
+  entry: TimeBlock
+  scrollTo?: boolean
+}
+
+const ViewBlock = (props: Props) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (props.scrollTo) {
+      scrollToView(ref)
+    }
+  }, [ref.current])
+
   return (
-    <StyledViewBooking isOccupied={entry.type === TimeBlockType.OCCUPIED} blockId={entry.id}>
-      {entry.type === TimeBlockType.OCCUPIED && (
+    <StyledViewBooking ref={ref} isOccupied={props.entry.type === TimeBlockType.OCCUPIED} blockId={props.entry.id}>
+      {props.entry.type === TimeBlockType.OCCUPIED && (
         <TextContainer>
-          {entry.ccaName}
+          {props.entry.ccaName}
           <br />
-          {entry.eventName}
+          {props.entry.eventName}
         </TextContainer>
       )}
     </StyledViewBooking>
   )
 }
+
 export default ViewBlock
