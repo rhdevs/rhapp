@@ -1,4 +1,4 @@
-import { Booking, Facility } from './facilityBooking/types'
+import { Booking, Facility, TimeBlock, TimeBlockType } from './facilityBooking/types'
 import { User } from './profile/types'
 import { SearchResult } from './home/types'
 import {
@@ -36,6 +36,23 @@ export const getHallEventTypesStub: string[] = ['Hall Event', 'Block Event', 'Tr
 
 export const targetAudienceListStub: string[] = ['Blk 7', 'Blk 7 comm']
 
+export const defaultTimeBlocks: TimeBlock[] = [...Array(24).keys()].map((num) => {
+  const timestamp = Math.round(new Date().setHours(0, 0, 0, 0) / 1000) + num * 3600 //might need to add 8 hours
+  const currentTimestamp = Math.round(Date.now() / 1000)
+  const prevHour = currentTimestamp - (currentTimestamp % 3600)
+  return {
+    id: num,
+    timestamp: timestamp,
+    type: prevHour > timestamp ? TimeBlockType.UNAVAILABLE : TimeBlockType.AVAILABLE,
+  }
+})
+
+const currentDate = new Date()
+let todayMonth = String(currentDate.getMonth() + 1)
+todayMonth = ('0' + todayMonth).substring(('0' + todayMonth).length - 2)
+let todayDate = String(currentDate.getDate())
+todayDate = ('0' + todayDate).substring(('0' + todayDate).length - 2)
+
 export const myBookingsStub: Booking[] = [
   {
     bookingID: 3,
@@ -43,9 +60,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123456Z',
     ccaID: 4,
-    startTime: new Date('2020-12-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-12-15 14:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 12:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 14:00:00`).getTime() / 1000,
     description: 'My Backup Location',
+    ccaName: 'RHdevs',
   },
   {
     bookingID: 4,
@@ -53,9 +71,10 @@ export const myBookingsStub: Booking[] = [
     facilityID: 3,
     userID: 'A0123422Z',
     ccaID: 4,
-    startTime: new Date('2020-01-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-01-15 14:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 14:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 16:00:00`).getTime() / 1000,
     description: 'Pls dont steal from me',
+    ccaName: 'Comm',
   },
   {
     bookingID: 5,
@@ -63,9 +82,21 @@ export const myBookingsStub: Booking[] = [
     facilityID: 5,
     userID: 'A0123336Z',
     ccaID: 1,
-    startTime: new Date('2020-02-15 12:00:00').getTime() / 1000,
-    endTime: new Date('2020-02-15 14:00:00').getTime() / 1000,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 00:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 02:00:00`).getTime() / 1000,
     description: 'Steal from me i kick u out of hall',
+    ccaName: 'JCRC',
+  },
+  {
+    bookingID: 5,
+    eventName: 'Personal Meeting',
+    facilityID: 5,
+    userID: 'A0123336Z',
+    ccaID: 1,
+    startTime: new Date(`2022-${todayMonth}-${todayDate} 22:00:00`).getTime() / 1000,
+    endTime: new Date(`2022-${todayMonth}-${todayDate} 23:59:00`).getTime() / 1000,
+    description: 'Dont ask',
+    ccaName: 'Personal',
   },
 ]
 
