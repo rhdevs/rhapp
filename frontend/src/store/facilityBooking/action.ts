@@ -428,7 +428,7 @@ export const handleCreateNewBooking = (
   eventName: string,
   startTime: number | null,
   endTime: number | null,
-  endDate: number | null,
+  endDate?: number | null,
   ccaID?: number,
   description?: string,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -441,7 +441,6 @@ export const handleCreateNewBooking = (
     endTime: endTime,
     endDate: endDate,
     description: description,
-    // TODO: add recurrence end date
   }
 
   if (startTime === null || endTime === null) {

@@ -22,6 +22,7 @@ import {
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import InputField from '../../../components/Mobile/InputField'
+// TODO, change the way how InputField works?
 import { Switch } from '../../../components/Switch'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictAlert from '../../../components/ConflictAlert'
@@ -93,7 +94,7 @@ export default function CreateBooking() {
     control,
     watch,
   } = useForm()
-  const [isWeeklyOn, setIsWeeklyOn] = useState(false)
+  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
   const [ccaName, setCcaName] = useState<string>('')
   const {
     facilityList,
@@ -149,12 +150,6 @@ export default function CreateBooking() {
   }
 
   useEffect(() => {
-    dispatch(setBookingStartTime(1644641028))
-    dispatch(setBookingEndTime(1644648228))
-    dispatch(setBookingEndDate(1644648228))
-  }, [])
-
-  useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
       history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
@@ -188,19 +183,16 @@ export default function CreateBooking() {
             title="Start"
             value={unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
             isCompulsory={true}
-            onClick={function (): void {
-              throw new Error('Function not implemented.')
-            }}
+            onClick={() => dispatch(setBookingStartTime(1644641028))}
+            // TODO, Redirect to choose timing page
           ></SelectableField>
           <SelectableField
             title="End"
             value={unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
             isCompulsory={true}
-            onClick={function (): void {
-              throw new Error('Function not implemented.')
-            }}
+            onClick={() => dispatch(setBookingEndTime(1644648228))}
+            // TODO, Redirect to choose timing page
           ></SelectableField>
-          {/* TODO: Someone to update the CCA style to make the words have correct font color + add the Title to it */}
           <Container>
             <StyledTitle>CCA</StyledTitle>
             <CCAInput
@@ -242,10 +234,8 @@ export default function CreateBooking() {
               title="End Date"
               value={unixToFullDate(bookingEndTime)}
               isCompulsory={true}
-              // error={true}
-              onClick={function (): void {
-                throw new Error('Function not implemented.')
-              }}
+              onClick={() => dispatch(setBookingEndTime(1644648228))}
+              // TODO, Redirect to choose date calender page
             ></SelectableField>
           )}
           {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
