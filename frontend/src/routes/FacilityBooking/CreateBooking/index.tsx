@@ -266,6 +266,15 @@ export default function CreateBooking() {
                 onChange={(event) => handleFromDateChange(event.target.value)}
               />
             </DatePickerRow>
+
+            <button
+              onClick={() => {
+                history.push('/facility/booking/create/dayview')
+              }}
+            >
+              go select {newBookingFacilityName}
+            </button>
+
             <DatePickerRow>
               <StyledTitle>To</StyledTitle>
               <StyledDateInput
