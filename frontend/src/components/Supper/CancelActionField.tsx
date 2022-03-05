@@ -23,7 +23,7 @@ const CancelActionContainer = styled.div`
 `
 
 type Props = {
-  cancelActionError: FieldError | undefined
+  cancelActionError: FieldError | FieldError[]
   register
   clearErrors: (name?: string | string[]) => void
   setValue

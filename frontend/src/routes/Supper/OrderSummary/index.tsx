@@ -85,13 +85,13 @@ const OrderSummary = () => {
   const {
     register,
     handleSubmit,
-    errors,
+
     watch,
     control,
     setValue,
     setError,
     clearErrors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<FormValues>({
     shouldUnregister: false,
   })
@@ -116,7 +116,7 @@ const OrderSummary = () => {
   }, [selectedSupperGroupStatus, supperGroup])
 
   const onLeftClick = () => {
-    Object.values(touched).length ? setHasChangedModal(true) : history.goBack()
+    Object.values(touchedFields).length ? setHasChangedModal(true) : history.goBack()
   }
 
   const onChange = (time, timeString) => {
@@ -196,7 +196,7 @@ const OrderSummary = () => {
                   })}
                 />
               )}
-              defaultValue={null}
+              defaultValue={undefined}
             />
             <ErrorContainer>
               {errors.estArrivalTime?.type === 'required' && <ErrorText>Estimated Arrival Time required!</ErrorText>}
@@ -207,8 +207,7 @@ const OrderSummary = () => {
             <InputText
               type="text"
               placeholder="Enter Location"
-              name="location"
-              ref={register({
+              {...register('location', {
                 required: true,
                 ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
               })}

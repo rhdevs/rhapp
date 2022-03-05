@@ -73,9 +73,9 @@ const Payment = () => {
     handleSubmit,
     watch,
     setValue,
-    errors,
+
     clearErrors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<FormValues>()
   const { selectedPaymentMethod } = useSelector((state: RootState) => state.supper)
   const errorStyling = {
@@ -93,7 +93,7 @@ const Payment = () => {
   }, [watch('paymentMethod'), selectedPaymentMethod])
 
   const onLeftClick = () => {
-    Object.values(touched).length || selectedPaymentMethod.length ? setHasChangedModal(true) : history.goBack()
+    Object.values(touchedFields).length || selectedPaymentMethod.length ? setHasChangedModal(true) : history.goBack()
   }
 
   const onSubmit = (e) => {
@@ -131,8 +131,7 @@ const Payment = () => {
             type="number"
             defaultValue={''}
             placeholder="Phone Number"
-            name="phoneNumber"
-            ref={register({
+            {...register('phoneNumber', {
               required: true,
               valueAsNumber: true,
             })}

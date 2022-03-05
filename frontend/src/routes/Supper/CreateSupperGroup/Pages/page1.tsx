@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
@@ -58,7 +58,16 @@ type FormValues = {
 export const CreateOrderPageOne = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { register, handleSubmit, setValue, setError, control, errors, clearErrors, reset } = useForm<FormValues>()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    control,
+    formState: { errors },
+    clearErrors,
+    reset,
+  } = useForm<FormValues>()
   const { supperGroup, priceLimit, selectedRestaurant, isLoading } = useSelector((state: RootState) => state.supper)
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const [hasMaxPrice, setHasMaxPrice] = useState<boolean>(supperGroup?.costLimit ? true : false)
@@ -119,12 +128,12 @@ export const CreateOrderPageOne = () => {
 
   const onSubmit = () => {
     let updatedSPInfo: SupperGroup = { ...(supperGroup ?? initSupperGroup) }
-    setValue('restaurant', selectedRestaurant)
+    setValue('restaurant', selectedRestaurant as Restaurants)
     if (updatedSPInfo.closingTime) {
       clearErrors('closingTime')
     }
 
-    handleSubmit((data: FormValues) => {
+    handleSubmit((data) => {
       updatedSPInfo = {
         ...updatedSPInfo,
         supperGroupName: data.supperGroupName,
@@ -165,8 +174,7 @@ export const CreateOrderPageOne = () => {
               type="text"
               defaultValue={supperGroup?.supperGroupName ?? ''}
               placeholder="Group name"
-              name="supperGroupName"
-              ref={register({
+              {...register('supperGroupName', {
                 required: true,
                 validate: (input) => input.trim().length !== 0,
                 maxLength: 50,
@@ -181,7 +189,7 @@ export const CreateOrderPageOne = () => {
               control={control}
               name="restaurant"
               rules={{ required: true }}
-              defaultValue={null}
+              defaultValue={undefined}
               render={() => (
                 <RestaurantBubbles defaultRestaurant={supperGroup?.restaurantName} restaurantList={restaurantList} />
               )}
@@ -203,7 +211,7 @@ export const CreateOrderPageOne = () => {
                   })}
                 />
               )}
-              defaultValue={null}
+              defaultValue={undefined}
             />
             {errors.closingTime?.type === 'required' && <ErrorText>Closing Time required!</ErrorText>}
             <FormHeader topMargin headerName="Max Price" />

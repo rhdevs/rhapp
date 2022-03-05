@@ -57,7 +57,7 @@ const StyledTitle = styled.text`
 type InputRowProps = {
   title?: string
   placeholder: string
-  value?: string
+  value?: string | string[]
   setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textarea?: boolean
   haserror?: boolean

@@ -118,8 +118,7 @@ const DeliveryDetails = () => {
     reset,
     watch,
     control,
-    errors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<FormValues>({
     shouldUnregister: false,
   })
@@ -234,7 +233,7 @@ const DeliveryDetails = () => {
     : 20
 
   const onLeftClick = () => {
-    Object.values(touched).length ? setHasChangedModal(true) : history.goBack()
+    Object.values(touchedFields).length ? setHasChangedModal(true) : history.goBack()
   }
 
   const onCancelModalConfirmClick = () => {
@@ -283,21 +282,21 @@ const DeliveryDetails = () => {
                   <CancellationInputBox>
                     <Controller
                       name="cancelReason"
-                      render={({ onChange, value }) => (
+                      render={({ field: { onChange, value } }) => (
                         <InputRow
                           placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
                           textarea
                           value={value}
                           onChange={onChange}
-                          {...register('cancelReason', {
-                            ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
-                            ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
-                          })}
+                          // {...register('cancelReason', {
+                          //   ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
+                          //   ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
+                          // })}
                           haserror={errors.cancelReason ? true : false}
                         />
                       )}
                       control={control}
-                      defaultValue={null}
+                      defaultValue={undefined}
                     />
                     {errors.cancelReason?.type === 'required' && (
                       <ErrorText>Reason for cancellation required!</ErrorText>
@@ -322,8 +321,7 @@ const DeliveryDetails = () => {
                     <InputText
                       type="text"
                       placeholder="Enter Location"
-                      name="location"
-                      ref={register({
+                      {...register('location', {
                         required: true,
                         ...(watch('location') && { validate: (input) => input.trim().length !== 0 }),
                       })}

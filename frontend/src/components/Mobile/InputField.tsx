@@ -65,7 +65,7 @@ const StyledTitle = styled.div`
 type InputFieldProps = {
   title: string
   placeholder: string
-  type: string
+  name: string
   maxLength?: number
   // value?: string
   // setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
@@ -77,9 +77,9 @@ type InputFieldProps = {
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, placeholder, type, textArea, errors, isRequired, register } = props
+  const { title, placeholder, name, textArea, errors, isRequired, register } = props
   // console.log(errors)
-  // console.log('type', errors.type)
+  // console.log('name', errors.name)
 
   return (
     <Container>
@@ -94,13 +94,13 @@ export default function InputField(props: InputFieldProps) {
           placeholder={errors ? errors.message : placeholder}
           rows={4}
           error={!!errors}
-          {...register(type, isRequired ? { required: `${title} is required` } : {})}
+          // {...register(name, isRequired ? { required: `${title} is required` } : {})}
         />
       ) : (
         <StyledInput
           placeholder={errors ? errors.message : placeholder}
           error={!!errors}
-          {...register(type, isRequired ? { required: `${title} is required` } : {})}
+          // {...register(name, isRequired ? { required: `${title} is required` } : {})}
         />
       )}
     </Container>

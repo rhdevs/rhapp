@@ -151,8 +151,7 @@ const EditSupperGroup = () => {
     setError,
     reset,
     control,
-    errors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<FormData, PaymentInfoData>({
     mode: 'all',
     shouldUnregister: false,
@@ -185,8 +184,7 @@ const EditSupperGroup = () => {
           type="text"
           defaultValue={supperGroup?.supperGroupName ?? ''}
           placeholder="Group name"
-          name="supperGroupName"
-          ref={register({
+          {...register('supperGroupName', {
             required: true,
             validate: (input) => input.trim().length !== 0,
             maxLength: 50,
@@ -243,11 +241,10 @@ const EditSupperGroup = () => {
           <DeliveryFeeInput
             type="number"
             placeholder="$$$"
-            name="estDeliveryFee"
             defaultValue={supperGroup?.additionalCost ?? ''}
-            ref={register({
+            {...register('estDeliveryFee', {
               required: true,
-              validate: (input) => input.trim().length !== 0,
+              validate: (input) => input.toString().trim().length !== 0,
               valueAsNumber: true,
               min: 0,
             })}
@@ -293,10 +290,9 @@ const EditSupperGroup = () => {
                 <Input
                   flex
                   type="text"
-                  name={pm}
-                  ref={register({
+                  {...register(pm, {
                     required: true,
-                    validate: (input) => input.trim().length !== 0,
+                    validate: (input) => input?.toString().trim().length !== 0,
                   })}
                   style={{
                     borderColor: errors[`${pm}`] && 'red',
@@ -324,8 +320,7 @@ const EditSupperGroup = () => {
           type="number"
           defaultValue={supperGroup?.phoneNumber ?? ''}
           placeholder="Phone Number"
-          name="phoneNumber"
-          ref={register({
+          {...register('phoneNumber', {
             required: true,
             valueAsNumber: true,
           })}
@@ -338,7 +333,7 @@ const EditSupperGroup = () => {
 
   useEffect(() => {
     if (selectedPaymentMethod.length === 0 || pmError !== 0) {
-      setValue('paymentMethod', undefined)
+      setValue('paymentMethod', 0)
       setError('paymentMethod', { type: 'required' })
     } else {
       pmError = 0
@@ -470,7 +465,7 @@ const EditSupperGroup = () => {
       <TopNavBar
         title="Edit Group"
         onLeftClick={() => {
-          Object.values(touched).length ? setModalIsOpen(true) : history.goBack()
+          Object.values(touchedFields).length ? setModalIsOpen(true) : history.goBack()
         }}
         rightComponent={<RefreshIcon />}
       />

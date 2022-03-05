@@ -54,9 +54,8 @@ const AddFoodItem = () => {
     handleSubmit,
     watch,
     clearErrors,
-    errors,
     control,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<CustomData>({
     mode: 'all',
     reValidateMode: 'onChange',
@@ -72,7 +71,7 @@ const AddFoodItem = () => {
   }, [dispatch])
 
   const onLeftClick = () => {
-    touched ? setIsDiscardChangesModalOpen(true) : history.goBack()
+    touchedFields ? setIsDiscardChangesModalOpen(true) : history.goBack()
   }
 
   const isOverSupperGroupLimit = () => {
@@ -185,17 +184,17 @@ const AddFoodItem = () => {
           />
           <Controller
             name="comments"
-            render={({ onChange, value }) => (
+            render={({ field: { onChange, value } }) => (
               <InputRow
                 placeholder="Additional comments / Alternative orders e.g. BBQ Sauce"
                 textarea
                 value={value}
                 onChange={onChange}
-                {...register('comments')}
+                // {...register('comments')}
               />
             )}
             control={control}
-            defaultValue={null}
+            defaultValue={undefined}
           />
           <QuantityTracker margin="0.7rem 0" center min={1} default={1} />
           <AddUpdateCartButton

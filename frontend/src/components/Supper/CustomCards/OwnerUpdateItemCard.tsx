@@ -63,8 +63,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
     setValue,
     watch,
     reset,
-    errors,
-    formState: { touched },
+    formState: { errors, touchedFields },
   } = useForm<FormData>({
     shouldUnregister: false,
   })
@@ -88,8 +87,8 @@ export const OwnerUpdateItemCard = (props: Props) => {
   }, [reset, props.food, props.supperGroup])
 
   useEffect(() => {
-    props.hasTouchedSetter(Object.values(touched).length ? true : false)
-  }, [touched, watch()])
+    props.hasTouchedSetter(Object.values(touchedFields).length ? true : false)
+  }, [touchedFields, watch()])
 
   const onUpdateItemClick = () => {
     handleSubmit((data) => {
@@ -150,18 +149,14 @@ export const OwnerUpdateItemCard = (props: Props) => {
                 type="text"
                 defaultValue={''}
                 placeholder="List changes here"
-                name="changes"
-                ref={register({
-                  required: false,
-                })}
+                {...register('changes', { required: false })}
               />
               <FormHeader headerName="New Price (per quantity)" topMargin />
               <Input
                 type="number"
                 placeholder="Indicate new price"
-                name="newPrice"
                 defaultValue={''}
-                ref={register({
+                {...register('newPrice', {
                   required: false,
                   valueAsNumber: true,
                   min: 0,
@@ -183,8 +178,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
               <TextArea
                 defaultValue={''}
                 placeholder="e.g. Price different on app, sides unavailable, etc.."
-                name="editReason"
-                ref={register({
+                {...register('editReason', {
                   required: false,
                   ...(props.foodItem && { validate: (input) => input.trim().length !== 0 }),
                 })}
@@ -219,11 +213,10 @@ export const OwnerUpdateItemCard = (props: Props) => {
               <Input
                 type="number"
                 placeholder="Indicate new delivery fee"
-                name="newDeliveryFee"
                 defaultValue={''}
-                ref={register({
+                {...register('newDeliveryFee', {
                   required: true,
-                  ...(props.deliveryFee && { validate: (input) => input.trim().length !== 0 }),
+                  ...(props.deliveryFee && { validate: (input) => input.toString().trim().length !== 0 }),
                   valueAsNumber: true,
                   min: 0,
                 })}

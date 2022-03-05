@@ -53,7 +53,11 @@ type FormData = {
 export const TwoStepCancelGroupModal = (props: Props, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
   const dispatch = useDispatch()
   const [modalNum, setModalNum] = useState<number>(1)
-  const { register, handleSubmit, errors } = useForm<FormData>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>()
 
   const onDoneClick = () => {
     handleSubmit((data) => {
@@ -93,8 +97,7 @@ export const TwoStepCancelGroupModal = (props: Props, e: React.MouseEvent<HTMLEl
               <TextArea
                 defaultValue={''}
                 placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
-                name="cancelReason"
-                ref={register({
+                {...register('cancelReason', {
                   required: false,
                   validate: (input) => input.trim().length !== 0,
                 })}

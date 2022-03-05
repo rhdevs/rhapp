@@ -233,10 +233,6 @@ export default function CreateBooking() {
     console.log('create booking', data)
   }
 
-  useEffect(() => {
-    console.log('watching', watch())
-  }, [watch])
-
   return (
     <div>
       <TopNavBar
@@ -278,7 +274,7 @@ export default function CreateBooking() {
               placeholder="Event Name"
               // value={newBookingName}
               // setValue={setBookingName}
-              type="eventName"
+              name="eventName"
               errors={errors.eventName}
               register={register}
               isRequired
@@ -333,7 +329,7 @@ export default function CreateBooking() {
               placeholder="Tell us what your booking is for!"
               // value={newBookingDescription}
               // setValue={setDescription}
-              type="description"
+              name="description"
               textArea
               errors={errors.description}
               register={register}

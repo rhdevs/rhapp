@@ -114,7 +114,13 @@ const StyledSelect = styled(Select)<{ border: string; color: string }>`
 export default function CreateEvent() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { register, handleSubmit, errors, control, watch } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+  } = useForm()
 
   const [selectColor, setSelectColor] = useState('')
   const [selectBorder, setSelectBorder] = useState('#d9d9d9')
@@ -217,12 +223,7 @@ export default function CreateEvent() {
     }
   }
 
-  const onSubmit = (data: {
-    eventName: string
-    eventTargetAudience: string
-    eventLocation: string
-    eventDescription: string
-  }) => {
+  const onSubmit = (data) => {
     if (
       !errors.length &&
       watch('eventTargetAudience') !== 'Select' &&
@@ -255,8 +256,7 @@ export default function CreateEvent() {
             <EventInput
               type="text"
               placeholder="Event Name"
-              name="eventName"
-              ref={register({ required: true, validate: (input) => input.trim().length !== 0 })}
+              {...register('eventName', { required: true, validate: (input) => input.trim().length !== 0 })}
               style={{
                 border: errors.eventName ? '1px solid red' : '1px solid #d9d9d9',
                 background: errors.eventName && '#ffd1d1',
@@ -297,8 +297,7 @@ export default function CreateEvent() {
             <EventInput
               type="text"
               placeholder="Event Location"
-              name="eventLocation"
-              ref={register({ required: true, validate: (input) => input.trim().length !== 0 })}
+              {...register('eventLocation', { required: true, validate: (input) => input.trim().length !== 0 })}
               style={{
                 border: errors.eventLocation ? '1px solid red' : '1px solid #d9d9d9',
                 background: errors.eventLocation && '#ffd1d1',
@@ -313,7 +312,7 @@ export default function CreateEvent() {
           <Row>
             <StyledTitle>For who{RedAsterisk}</StyledTitle>
             <Controller
-              as={
+              render={() => (
                 <StyledSelect border={selectBorder} color={selectColor}>
                   <Option key={1} value={'Personal'}>
                     Personal
@@ -324,7 +323,7 @@ export default function CreateEvent() {
                     </Option>
                   ))}
                 </StyledSelect>
-              }
+              )}
               name="eventTargetAudience"
               control={control}
               defaultValue="Select"
@@ -334,7 +333,7 @@ export default function CreateEvent() {
           <Controller
             name="eventDescription"
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field: { onChange, value } }) => (
               <InputRow
                 title="Description"
                 placeholder="Tell us what your event is about!"

@@ -34,7 +34,15 @@ type FormValues = {
 export const CreateOrderPageTwo = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { register, handleSubmit, setValue, setError, clearErrors, reset, errors } = useForm<FormValues>()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>()
   const { supperGroup, isLoading } = useSelector((state: RootState) => state.supper)
 
   useEffect(() => {
@@ -84,11 +92,10 @@ export const CreateOrderPageTwo = () => {
               <DeliveryFeeInput
                 type="number"
                 placeholder="$$$"
-                name="estDeliveryFee"
                 defaultValue={supperGroup?.additionalCost ?? ''}
-                ref={register({
+                {...register('estDeliveryFee', {
                   required: true,
-                  validate: (input) => input.trim().length !== 0,
+                  validate: (input) => input.toString().trim().length !== 0,
                   valueAsNumber: true,
                   min: 0,
                 })}

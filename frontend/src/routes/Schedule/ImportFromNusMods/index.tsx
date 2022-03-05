@@ -80,7 +80,12 @@ export default function ImportFromNusMods() {
   //   } else return false
   // }
 
-  const { handleSubmit, register, errors, watch } = useForm()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+  } = useForm()
   const onSubmit = () => {
     if (!errors.length) {
       setModal(!modal)
@@ -117,8 +122,7 @@ export default function ImportFromNusMods() {
           <Input
             type="text"
             placeholder="Enter link here..."
-            name="nusmodsLink"
-            ref={register({
+            {...register('nusmodsLink', {
               required: true,
               validate: (input) =>
                 input.trim().length !== 0 && input.trim().indexOf('https://nusmods.com/timetable/') !== -1,
