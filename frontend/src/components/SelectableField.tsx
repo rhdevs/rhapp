@@ -55,7 +55,7 @@ function SelectableField(prop: Props) {
         {prop.error
           ? 'This is a required field'
           : prop.isCompulsory && prop.value === ''
-          ? 'Choose an End Date'
+          ? 'Choose a Date'
           : prop.value}
       </StyledTextArea>
     </Container>

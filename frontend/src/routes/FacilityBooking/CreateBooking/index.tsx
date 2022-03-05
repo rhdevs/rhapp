@@ -187,14 +187,16 @@ export default function CreateBooking() {
           {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
             title="Start"
-            value={unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)}
+            value={
+              bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
+            }
             isCompulsory={true}
             onClick={() => dispatch(setBookingStartTime(1644641028))}
             // TODO, Redirect to choose timing page
           ></SelectableField>
           <SelectableField
             title="End"
-            value={unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
+            value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
             isCompulsory={true}
             onClick={() => dispatch(setBookingEndTime(1644648228))}
             // TODO, Redirect to choose timing page
@@ -238,9 +240,9 @@ export default function CreateBooking() {
           {isWeeklyOn && (
             <SelectableField
               title="End Date"
-              value={unixToFullDate(bookingEndTime)}
+              value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
               isCompulsory={true}
-              onClick={() => dispatch(setBookingEndTime(1644648228))}
+              onClick={() => dispatch(setBookingEndDate(1644648228))}
               // TODO, Redirect to choose date calender page
             ></SelectableField>
           )}
