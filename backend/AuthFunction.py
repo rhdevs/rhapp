@@ -29,6 +29,8 @@ def authenticate(token, username):
     # check if token has expired (compare time now with createdAt field in document + timedelta)
     originalToken = db.Session.find_one(
         {'userID': data['userID'], 'passwordHash': data['passwordHash']})
+    if (not originalToken):
+        return False
     oldTime = originalToken['createdAt']
     # print(datetime.datetime.now())
     # print(oldTime)

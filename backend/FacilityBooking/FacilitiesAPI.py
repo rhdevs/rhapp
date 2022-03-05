@@ -57,7 +57,7 @@ def get_one_booking(bookingID):
                 'bookingID': bookingID
             }},
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -120,7 +120,7 @@ def user_bookings(userID):
                 ]}
              },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -167,6 +167,9 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
+        if (request.args.get('endTime') < request.args.get('startTime')):
+            return {"err": "Invalid start and end time", "status": "failed"}, 400
+        
         condition = {
             "$and": [
                 {'facilityID': int(facilityID)},
@@ -185,7 +188,7 @@ def check_bookings(facilityID):
                 condition
              },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -422,7 +425,7 @@ def delete_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_telegram(userID):
     try:
-        profile = db.Profiles.find_one({"userID": userID})
+        profile = db.User.find_one({"userID": userID}, {"passwordHash": 0})
         telegramHandle = profile.get(
             'telegramHandle') if profile else "No User Found"
 
