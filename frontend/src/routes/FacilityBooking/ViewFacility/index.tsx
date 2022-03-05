@@ -19,7 +19,7 @@ import {
   createNewBookingFromFacility,
   fetchFacilityNameFromID,
   getAllBookingsForFacility,
-  SetIsLoading,
+  setIsLoading,
   setViewDates,
   setSelectedFacility,
   resetNewBooking,
@@ -170,7 +170,7 @@ export default function ViewFacility() {
   } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
     if (selectedFacilityId == 0) {
@@ -256,7 +256,7 @@ export default function ViewFacility() {
             <DateSelectorGroup>
               <Calendar
                 onChange={(value: Date) => {
-                  dispatch(SetIsLoading(true))
+                  dispatch(setIsLoading(true))
                   dispatch(setViewDates(value, parseInt(params.facilityID)))
                 }}
                 prev2Label={null}

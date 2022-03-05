@@ -13,7 +13,7 @@ import 'antd/dist/antd.css'
 import {
   changeTab,
   getFacilityList,
-  SetIsLoading,
+  setIsLoading,
   setSelectedFacility,
   SetBlockOutIsOpen,
 } from '../../store/facilityBooking/action'
@@ -146,7 +146,7 @@ export default function FacilityBooking() {
   )
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(getFacilityList())
     return () => {
       dispatch(changeTab('All'))
