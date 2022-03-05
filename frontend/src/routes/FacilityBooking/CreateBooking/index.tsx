@@ -12,12 +12,18 @@ import { RootState } from '../../../store/types'
 import {
   fetchAllCCAs,
   getFacilityList,
-  SetIsLoading,
+  setIsLoading,
   resetBooking,
   handleCreateNewBooking,
   setBookingStartTime,
   setBookingEndTime,
   setBookingEndDate,
+  handleCreateBooking,
+  resetCreateBookingSuccessFailure,
+  resetNewBooking,
+  setNewBookingFacilityName,
+  setSelectedFacility,
+  setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -114,7 +120,17 @@ export default function CreateBooking() {
     return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
   }
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
+    dispatch(setIsLoading(true))
+    if (newBooking) {
+      dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
+      dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
+      dispatch(editBookingDescription(newBooking.description))
+      dispatch(editBookingName(newBooking.eventName))
+      dispatch(editBookingCCA(newBooking.ccaName ? newBooking.ccaName : ''))
+    } else {
+      dispatch(resetNewBooking())
+    }
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
       dispatch(getFacilityList())

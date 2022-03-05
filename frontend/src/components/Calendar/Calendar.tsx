@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
 import { MonthlyContainer } from './MonthlyContainer'
-import { getAllBookingsForFacility, SetIsLoading } from '../../store/calendar/actions'
+import { getAllBookingsForFacility, setIsLoading } from '../../store/calendar/actions'
 import LoadingSpin from '../LoadingSpin'
 
 const CalenderContainer = styled.div`
@@ -50,7 +50,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
   const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
   }, [])
 

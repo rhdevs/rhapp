@@ -86,6 +86,7 @@ export enum PATHS {
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
 }
+
 //DOCUMENTATION
 const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
 const Supper_Documentation = React.lazy(() => import(/* webpackChunckName: "Supper_Documentation" */ '../docs/supper'))
@@ -156,6 +157,7 @@ const UpdateAllItems = React.lazy(
   () => import(/* webpackChuckName: "UpdateAllItems" */ './Supper/OrderSummary/UpdateAllItems'),
 )
 const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
+
 export default class Routes extends React.Component {
   render() {
     return (

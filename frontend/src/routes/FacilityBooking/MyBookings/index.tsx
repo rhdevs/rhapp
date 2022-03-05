@@ -11,7 +11,7 @@ import {
   setIsDeleteMyBooking,
   deleteMyBooking,
   editMyBooking,
-  SetIsLoading,
+  setIsLoading,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import { PATHS } from '../../Routes'
@@ -166,7 +166,7 @@ export default function ViewMyBookings() {
   const userIdFromPath = location.pathname.split('/').slice(-1)[0]
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(getMyBookings(userIdFromPath))
   }, [dispatch])
 
