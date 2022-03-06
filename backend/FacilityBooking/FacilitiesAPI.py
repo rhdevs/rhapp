@@ -179,6 +179,10 @@ def check_bookings(facilityID):
                 {'facilityID': int(facilityID)},
             ]
         }
+
+        if (request.args.get("endTime") <= request.args.get("startTime")):
+            return {"Err" : "Invalid end time."}
+
         if (request.args.get('endTime') != None):
             condition['$and'].append({'startTime': {'$lt': int(
                 request.args.get('endTime'))}})
