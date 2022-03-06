@@ -269,10 +269,9 @@ def add_booking():
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
-        if not formData.get("forceBook"):
-            formData["forceBook"] = 0
+        if not formData.get("forceBooking"):
+            formData["forceBooking"] = False
 
-        # Handle repeats
         condition = []
 
         for i in range(formData["repeat"]):
@@ -324,7 +323,7 @@ def add_booking():
                 response = {"status": "success", "num_of_successful_bookings": str(len(insertData))}
 
         elif (len(conflict) > 0):
-            if bool(formData["forceBook"]) == False:
+            if formData["forceBooking"] == False:
                 return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
             else:
                 insertData = []
