@@ -1,9 +1,8 @@
 import React from 'react'
-import Button from './Button'
+
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
-import { PATHS } from '../routes/Routes'
-import { JsxElement } from 'typescript'
+import Button from './Button'
+import ModalLink from './ModalLink'
 
 const OverlayContainer = styled.div<{ overlayBackgroundColor: string }>`
   position: fixed;
@@ -20,6 +19,7 @@ const MainContainer = styled.div`
   position: fixed;
   background-color: #fff;
   width: 90vw;
+  max-width: 90vw;
   border-radius: 15px;
   margin: auto;
   padding: 15px;
@@ -32,17 +32,15 @@ const MainContainer = styled.div`
 const TitleText = styled.h1`
   font-family: Lato;
   font-size: 22px;
-  font-weight: 400;
   text-align: center;
-  font-style: normal;
 `
 
 const DescriptionText = styled.p`
   font-family: Lato;
-  font-size: 14spx;
-  font-weight: 40;
+  font-size: 14px;
   text-align: center;
-  font-style: normal;
+  position: relative;
+  top: -10px;
 `
 
 const ButtonContainer = styled.div`
@@ -50,31 +48,21 @@ const ButtonContainer = styled.div`
   justify-content: space-evenly;
   width: 100%;
   margin-top: 10px;
-`
-
-const Conflictlink = styled.a`
-  font-family: Lato;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 16.8px;
-  text-decoration-line: underline;
-  color: #4d6daa;
-  text-align: center;
-  padding-bottom: 10px;
+  position: relative;
+  top: -10px;
 `
 
 type Props = {
   link?: string
+  onlinkClick: React.MouseEventHandler<HTMLElement>
   title: string
   description?: string | JSX.Element
   // Left Button Props
   hasLeftButton?: boolean
-  leftButtonType?: 'primary' | 'secondary'
+  leftButtonType: 'primary' | 'secondary'
   leftButtonText?: string
   onLeftButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Right Button Props
-  rightButtonType: 'primary' | 'secondary'
   rightButtonText: string
   onRightButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Overlay Props
@@ -97,7 +85,6 @@ type Props = {
 export function ConfirmationModal(props: Props) {
   // Checks for custom buttom styles, otherwise uses default
   const defaultOverlayBackground = props.overlayBackgroundColor ?? 'rgba(0, 0, 0, 0.3)'
-  const history = useHistory()
 
   return props.isModalOpen ? (
     <>
@@ -113,21 +100,12 @@ export function ConfirmationModal(props: Props) {
       >
         <TitleText>{props.title}</TitleText>
         <DescriptionText>{props.description}</DescriptionText>
-        <Conflictlink>{props.link}</Conflictlink>
+        <ModalLink text={props.link} onClick={props.onlinkClick} />
         <ButtonContainer>
-          {props.hasLeftButton && (
-            // Suppresses ts error due to it adding undefined to optional prop types
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
+          {props.hasLeftButton && props.hasLeftButton && props.leftButtonText && (
             <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
           )}
-          <Button
-            state={props.rightButtonType}
-            onClick={() => {
-              props.onRightButtonClick
-            }}
-            text={props.rightButtonText}
-          />
+          <Button state={'primary'} onClick={props.onRightButtonClick} text={props.rightButtonText} />
         </ButtonContainer>
       </MainContainer>
     </>

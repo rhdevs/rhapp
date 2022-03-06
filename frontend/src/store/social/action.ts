@@ -16,13 +16,12 @@ export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
     if (response.data === '' || response.data === undefined) {
       console.log(response.err)
     } else {
-      const data = JSON.parse(response.data)
       dispatch({
         type: SOCIAL_ACTIONS.GET_USER_DETAIL,
-        userId: data.userID,
-        avatar: data.profilePictureUrl,
-        name: data.displayName,
-        position: data.position,
+        userId: response.userID,
+        avatar: response.profilePictureUrl,
+        name: response.displayName,
+        position: response.position,
       })
     }
   })
