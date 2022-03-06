@@ -7,40 +7,35 @@ import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  editBookingCCA,
-  editBookingDescription,
-  editBookingFromDate,
-  editBookingName,
-  editBookingToDate,
-  fetchAllCCAs,
-  getFacilityList,
-  handleCreateBooking,
-  resetCreateBookingSuccessFailure,
-  resetNewBooking,
-  setIsLoading,
-  setNewBookingFacilityName,
-  setSelectedFacility,
-  setBookingRepeat,
-} from '../../../store/facilityBooking/action'
+import { handleCreateBooking } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
+import { DateRows } from '../../../components/Calendar/DateRows'
+import TimetableRow from '../../../components/timetable/TimetableRow'
+
+const HEADER_HEIGHT = '70px'
 
 const Background = styled.div`
   background-color: #fff;
-  height: 100vh;
-  width: 100vw;
+  height: calc(100vh - ${HEADER_HEIGHT});
+  width: (100vw);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0px 36px;
+  overflow: hidden;
 `
 
 const BookingSectionDiv = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export default function CreateBookingDailyView() {
@@ -52,47 +47,10 @@ export default function CreateBookingDailyView() {
     newBookingDescription,
     newBookingFacilityName,
     newBookingFromDate,
-    newBookingToDate,
     facilityList,
     isLoading,
     createBookingError,
-    createSuccess,
-    createFailure,
-    newBookingFacilityId,
   } = useSelector((state: RootState) => state.facilityBooking)
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    if (newBooking) {
-      dispatch(editBookingFromDate(new Date(newBooking.startTime * 1000)))
-      dispatch(editBookingToDate(new Date(newBooking.endTime * 1000)))
-      dispatch(editBookingDescription(newBooking.description))
-      dispatch(editBookingName(newBooking.eventName))
-      dispatch(editBookingCCA(newBooking.ccaName ? newBooking.ccaName : ''))
-    } else {
-      dispatch(resetNewBooking())
-    }
-    dispatch(fetchAllCCAs())
-    if (facilityList.length === 0) {
-      dispatch(getFacilityList())
-    }
-    return () => {
-      dispatch(resetNewBooking)
-    }
-  }, [dispatch])
-
-  useEffect(() => {
-    if (createSuccess === true && createFailure === false) {
-      history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      if (newBookingFacilityId) {
-        history.push('/facility/view/' + newBookingFacilityId)
-      } else {
-        history.push('/facility/view/1')
-      }
-      dispatch(resetCreateBookingSuccessFailure(true, true))
-      setTimeout(() => dispatch(resetCreateBookingSuccessFailure(false, false)), 5000)
-    }
-  }, [createSuccess, createFailure])
 
   const CheckIcon = (createBookingError: string) => {
     if (
