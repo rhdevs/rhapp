@@ -180,9 +180,6 @@ def check_bookings(facilityID):
             ]
         }
 
-        if (request.args.get("endTime") <= request.args.get("startTime")):
-            return {"Err" : "Invalid end time."}
-
         if (request.args.get('endTime') != None):
             condition['$and'].append({'startTime': {'$lt': int(
                 request.args.get('endTime'))}})
@@ -190,6 +187,11 @@ def check_bookings(facilityID):
         if (request.args.get('startTime') != None):
             condition['$and'].append({'endTime': {'$gt': int(
                 request.args.get('startTime'))}})
+
+        # BUG 622 Fix: If startTime and endTime are provided, checks if endTime is valid.
+        if (request.args.get("startTime") != None and request.args.get("endTime") != None):
+                    if (request.args.get("endTime") <= request.args.get("startTime")):
+                        return {"Err" : "Invalid end time."}, 403
 
         pipeline = [
             {'$match':
