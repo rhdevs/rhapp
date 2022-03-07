@@ -41,15 +41,14 @@ const DatesContainer = styled.div`
 `
 
 export default function CreateBookingDailyView(props: { startDate: number; month: number }) {
-  const dispatch = useDispatch()
   const history = useHistory()
   const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   function Dates(date: number, month: number) {
     const year = new Date().getFullYear()
     const maxDate = new Date(year, month, 0).getDate()
-    const startDate = date - 1
-    console.log(maxDate)
+    const day = new Date(year, month, date).getDay()
+    const startDate = date - day < 0 ? maxDate - (day - date) : date - day
     if (startDate + 6 > maxDate) {
       return (
         <DatesContainer>
@@ -70,7 +69,7 @@ export default function CreateBookingDailyView(props: { startDate: number; month
     } else {
       return (
         <DatesContainer>
-          <DateRows firstDate={startDate} assignedMonth={month} lastDateOfThisMonth={startDate + 5} bufferDates={[]} />
+          <DateRows firstDate={startDate} assignedMonth={month} lastDateOfThisMonth={startDate + 6} bufferDates={[]} />
         </DatesContainer>
       )
     }
@@ -80,12 +79,14 @@ export default function CreateBookingDailyView(props: { startDate: number; month
     <div>
       <TopNavBarRevamp
         centerComponent={<TitleText>Calendar</TitleText>}
-        rightComponent={<ButtonComponent state="primary" text="Book Facility" onClick={() => 'hehe'} size="small" />}
+        rightComponent={
+          <ButtonComponent state="primary" text="Book Facility" onClick={() => 'link to booking page'} size="small" />
+        }
       />
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {Dates(29, 3)}
+          {Dates(props.startDate, props.month)}
           <BookingSectionDiv>
             <ViewSection />
           </BookingSectionDiv>
