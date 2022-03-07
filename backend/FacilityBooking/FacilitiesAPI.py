@@ -330,10 +330,7 @@ def add_booking():
 
             db.Bookings.insert_many(insertData)
 
-            if not formData.get("bookUntil"):
-                response = {"status": "success"}
-            else:
-                response = {"status": "success", "num_of_successful_bookings": str(len(insertData))}
+            response = {"status": "success", "num_of_successful_bookings": str(len(insertData))}
 
         elif (len(conflict) > 0):
             if formData["forceBooking"] == False:
