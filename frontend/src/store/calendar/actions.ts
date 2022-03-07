@@ -3,7 +3,7 @@ import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 import { unixToCalendarFormat } from '../../common/unixToCalendarFormat'
 
-export const SetClickedDate = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const setClickedDate = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
     newClickedDate: newClickedDate,

@@ -252,6 +252,7 @@ export default function CreateBooking() {
             text="Submit"
             type="submit"
             disabled={!ValidForm()}
+            onClick={() => console.log('submitted')}
           ></ButtonComponent>
         </Form>
       )}
