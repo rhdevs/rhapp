@@ -75,7 +75,7 @@ def check_for_token(func):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
-            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+            #db.Session.delete_one({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
             #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
             db.Session.update_many({'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')}, {
                               '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
@@ -202,7 +202,7 @@ Delete the session entry
 def logout():
     userID = request.args.get('userID')
     try:
-        db.Session.remove({"userID": userID})
+        db.Session.delete_many({"userID": userID})
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500

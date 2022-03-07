@@ -38,7 +38,7 @@ def authenticate(token, username):
         return False
 
     # recreate session (with createdAt updated to now)
-    #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+    #db.Session.delete_one({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
     #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
     db.Session.update_many({'userID': data['userID'], 'passwordHash': data['passwordHash']}, {
         '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
