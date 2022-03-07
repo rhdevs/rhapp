@@ -133,7 +133,7 @@ def user():
             }
 
             result = db.User.update_one(
-                {"userID": userID}, {'$set': body}, upsert=True)
+                {"userID": userID}, {'$set': body})
 
             if int(result.matched_count) > 0:
                 response = {
@@ -143,9 +143,10 @@ def user():
                 return make_response(response, 200)
             else:
                 response = {
+                    "err": "User does not exist",
                     "status": "failed"
                 }
-                return make_response(response, 400)
+                return make_response(response, 404)
 
         elif request.method == 'POST':
             data = request.get_json()

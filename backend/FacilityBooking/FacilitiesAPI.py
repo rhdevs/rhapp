@@ -174,6 +174,9 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
+        if (request.args.get('endTime') < request.args.get('startTime')):
+            return {"err": "Invalid start and end time", "status": "failed"}, 400
+        
         condition = {
             "$and": [
                 {'facilityID': int(facilityID)},
