@@ -268,12 +268,16 @@ def add_booking():
         if (formData["endTime"] <= formData["startTime"]):
             return {"err": "End time earlier than start time", "status": "failed"}, 400
 
-        if not formData.get("bookUntil"):
+        if not (formData.get("bookUntil") or formData.get("repeat")):
             formData["repeat"] = 1
-        else:
+        elif formData.get("bookUntil") and not formData.get("repeat"):
             formData["repeat"] = int(((int(formData["bookUntil"]) - int(formData["startTime"])) / (7 * 24 * 60 * 60)) + 1)
             if int(formData.get("bookUntil")) < int(formData.get("endTime")):
                 return make_response({"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400)
+        elif not formData.get("bookUntil") and formData.get("repeat"):
+            formData["repeat"] = int(formData.get("repeat"))
+        else:
+            return make_response({"status": "failed", "message": "Not allowed to have bookUntil and repeat at the same time."}, 400)
         
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
