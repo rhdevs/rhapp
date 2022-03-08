@@ -10,7 +10,7 @@ const SwitchButton = styled.span<{
   left: ${(props) => (props.width ? '-' + props.width * 0.015 + 'px' : '-1.5px')};
   border-radius: 45px;
   box-shadow: 4px 0px 10px -4px;
-  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid lightgray' : '3px solid gray')};
+  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid #D3D3D3' : '3px solid #808080')};
   transition: 0.2s;
   background: #fff;
 `
