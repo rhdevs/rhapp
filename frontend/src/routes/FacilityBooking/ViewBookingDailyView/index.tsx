@@ -11,6 +11,8 @@ import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
+import { ENDPOINTS, DOMAIN_URL } from '../../../store/endpoints'
+import { setSelectedDayBookings } from '../../../store/facilityBooking/action'
 
 const HEADER_HEIGHT = '70px'
 
@@ -28,6 +30,7 @@ const BookingSectionDiv = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+
   scrollbar-width: none;
   ::-webkit-scrollbar {
     display: none;
@@ -46,27 +49,47 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-export default function CreateBookingDailyView(props: { startDate: number; month: number }) {
+export default function CreateBookingDailyView(props: { date: Date; facilityId: number }) {
   const history = useHistory()
+  const dispatch = useDispatch()
   const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
-  function Dates(date: number, month: number) {
-    const year = new Date().getFullYear()
-    const maxDate = new Date(year, month, 0).getDate()
-    const day = new Date(year, month, date).getDay()
-    const startDate = date - day < 0 ? maxDate - (day - date) : date - day
+  const adjustedStart = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), 0, 0, 0, 0)
+  const adjustedEnd = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), 23, 59, 59, 999)
+  const querySubString =
+    props.facilityId +
+    '/' +
+    '?startTime=' +
+    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
+    '&endTime=' +
+    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
+
+  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then(async (res) => {
+      dispatch(setSelectedDayBookings(res.data))
+    })
+
+  function Dates(date: Date) {
+    const year = date.getFullYear()
+    const maxDate = new Date(year, date.getMonth(), 0).getDate()
+    const day = date.getDay()
+    const startDate = date.getDate() - day < 0 ? maxDate - (day - date.getDate()) : date.getDate() - day
     if (startDate + 6 > maxDate) {
       return (
         <DatesContainer>
           <DateRows
             firstDate={startDate}
-            assignedMonth={month}
+            assignedMonth={date.getMonth()}
             lastDateOfThisMonth={startDate + maxDate - startDate}
             bufferDates={[]}
           />
           <DateRows
             firstDate={1}
-            assignedMonth={month}
+            assignedMonth={date.getMonth()}
             lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
             bufferDates={[]}
           />
@@ -75,7 +98,12 @@ export default function CreateBookingDailyView(props: { startDate: number; month
     } else {
       return (
         <DatesContainer>
-          <DateRows firstDate={startDate} assignedMonth={month} lastDateOfThisMonth={startDate + 6} bufferDates={[]} />
+          <DateRows
+            firstDate={startDate}
+            assignedMonth={date.getMonth()}
+            lastDateOfThisMonth={startDate + 6}
+            bufferDates={[]}
+          />
         </DatesContainer>
       )
     }
@@ -92,7 +120,7 @@ export default function CreateBookingDailyView(props: { startDate: number; month
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {Dates(props.startDate, props.month)}
+          {Dates(props.date)}
           <BookingSectionDiv>
             <ViewSection />
           </BookingSectionDiv>
