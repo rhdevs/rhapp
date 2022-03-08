@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
@@ -49,15 +49,23 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-export default function CreateBookingDailyView(props: { date: Date; facilityId: number }) {
+type State = {
+  date: Date
+  facilityId: number
+}
+
+export default function CreateBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
+  const location = useLocation<State>()
   const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const selectedFacilityId = location.state.facilityId
+  const date = location.state.date
 
-  const adjustedStart = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), 0, 0, 0, 0)
-  const adjustedEnd = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate(), 23, 59, 59, 999)
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
   const querySubString =
-    props.facilityId +
+    selectedFacilityId +
     '/' +
     '?startTime=' +
     parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
@@ -86,12 +94,14 @@ export default function CreateBookingDailyView(props: { date: Date; facilityId: 
             assignedMonth={date.getMonth()}
             lastDateOfThisMonth={startDate + maxDate - startDate}
             bufferDates={[]}
+            facilityId={selectedFacilityId}
           />
           <DateRows
             firstDate={1}
             assignedMonth={date.getMonth()}
             lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
             bufferDates={[]}
+            facilityId={selectedFacilityId}
           />
         </DatesContainer>
       )
@@ -103,6 +113,7 @@ export default function CreateBookingDailyView(props: { date: Date; facilityId: 
             assignedMonth={date.getMonth()}
             lastDateOfThisMonth={startDate + 6}
             bufferDates={[]}
+            facilityId={selectedFacilityId}
           />
         </DatesContainer>
       )
@@ -120,7 +131,7 @@ export default function CreateBookingDailyView(props: { date: Date; facilityId: 
       {isLoading && <LoadingSpin />}
       {!isLoading && (
         <Background>
-          {Dates(props.date)}
+          {Dates(date)}
           <BookingSectionDiv>
             <ViewSection />
           </BookingSectionDiv>

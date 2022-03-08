@@ -1,8 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { setClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
+import { PATHS } from '../../routes/Routes'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   font-size: 12px;
@@ -31,14 +33,26 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   background-color: ${(props) => (props.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: { date: number; eventPresent?: boolean; assignedMonth: number }) => {
+export const ClickableDateContainer = (props: {
+  date: number
+  eventPresent?: boolean
+  assignedMonth: number
+  facilityId: number
+}) => {
   const dispatch = useDispatch()
+  const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
 
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(setClickedDate(newClickedDate))
-    console.log('To do - to go to daily view')
+    history.push({
+      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+      state: {
+        facilityId: props.facilityId,
+        date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
+      },
+    })
   }
 
   const hasEvent = () => {
