@@ -91,15 +91,21 @@ export default function CreateBookingDailyView() {
         updatedFB = res.data
         console.log(res.data)
         for (let i = 0; i < updatedFB.length; i++) {
-          const hour = new Date(updatedFB[i].startTime * 1000).getHours()
-          const t: TimeBlock = {
-            id: hour,
-            timestamp: updatedFB[i].startTime,
-            type: TimeBlockType.OCCUPIED,
-            ccaName: updatedFB[i].ccaName,
-            eventName: updatedFB[i].description,
+          const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
+          const endhour =
+            new Date(updatedFB[i].endTime * 1000).getHours() < starthour
+              ? 23
+              : new Date(updatedFB[i].endTime * 1000).getHours()
+          for (let hour = starthour; hour < endhour + 1; hour++) {
+            const t: TimeBlock = {
+              id: hour,
+              timestamp: updatedFB[i].startTime,
+              type: TimeBlockType.OCCUPIED,
+              ccaName: updatedFB[i].ccaName,
+              eventName: updatedFB[i].description,
+            }
+            updatedTB[hour] = t
           }
-          updatedTB[hour] = t
         }
         dispatch(setSelectedDayBookings(updatedFB))
         dispatch(setTimeBlocks(defaultTimeBlocks))
