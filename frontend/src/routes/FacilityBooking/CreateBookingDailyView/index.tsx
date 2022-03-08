@@ -1,18 +1,23 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
 import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
+
 import { RootState } from '../../../store/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { handleCreateBooking } from '../../../store/facilityBooking/action'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
+import {
+  editBookingFromDate,
+  editBookingToDate,
+  handleCreateBooking,
+  setStartEndTime,
+} from '../../../store/facilityBooking/action'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
+import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { DateRows } from '../../../components/Calendar/DateRows'
-import TimetableRow from '../../../components/timetable/TimetableRow'
 
 const HEADER_HEIGHT = '70px'
 
@@ -42,51 +47,32 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const {
-    newBooking,
-    newBookingCCA,
-    newBookingDescription,
     newBookingFacilityName,
     newBookingFromDate,
-    facilityList,
     isLoading,
     createBookingError,
+    selectedStartTime,
+    selectedEndTime,
   } = useSelector((state: RootState) => state.facilityBooking)
 
   const CheckIcon = (createBookingError: string) => {
-    if (
-      createBookingError === '' &&
-      newBookingCCA !== '' &&
-      newBookingDescription !== '' &&
-      newBookingFacilityName !== ''
-    ) {
+    if (selectedStartTime != -1 && selectedEndTime != -1) {
       return (
         <div
           onClick={() => {
-            dispatch(handleCreateBooking(newBooking?.bookingID ? true : false))
+            dispatch(editBookingFromDate(new Date(selectedStartTime * 1000)))
+            dispatch(editBookingToDate(new Date(selectedEndTime * 1000)))
+            setStartEndTime(-1, -1)
+            history.goBack()
           }}
         >
           <CheckOutlined style={{ color: 'green' }} />
         </div>
       )
     } else {
-      // if (newBookingCCA !== '' || newBookingDescription !== '' || newBookingFacilityName !== '') {
-      //   dispatch(SetCreateBookingError('All fields are compulsary!'))
-      // }
       return <CheckOutlined style={{ color: '#0000004d' }} />
     }
   }
-
-  /* 
-  TODO: There are two places that are called conference room, 1 in kuok and 1 in UL. The name has to deconflict.
-  Used to be there are two Main Area also but since name is short, they are now Main Area (UL) and Main Area (Hall)
-  */
-  const locationOptions = facilityList
-    .filter((facility) => facility.facilityName !== 'Conference Room')
-    .map((facility) => ({
-      value: facility.facilityName,
-    }))
-
-  locationOptions.push({ value: 'Conference Room' })
 
   return (
     <div>
@@ -96,10 +82,14 @@ export default function CreateBookingDailyView() {
         <Background>
           <h2>Choose starting time slot</h2>
           <em>&lt;Date Selector here&gt;</em>
+          <h1>
+            Start: {unixTo12HourTime(selectedStartTime)} End: {unixTo12HourTime(selectedEndTime)}
+          </h1>
           <h2>
             The Date: Day {newBookingFromDate.getDate()} of Month {newBookingFromDate.getMonth() + 1} of Year&nbsp;
             {newBookingFromDate.getFullYear()}
           </h2>
+          <DateRows firstDate={0} assignedMonth={0} lastDateOfThisMonth={10} bufferDates={[]} />
           <BookingSectionDiv>
             <BookingSection />
           </BookingSectionDiv>

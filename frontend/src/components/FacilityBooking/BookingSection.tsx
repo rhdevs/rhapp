@@ -54,7 +54,7 @@ const BookingSection = () => {
     } else {
       //Add 1 hour to selected block as end time
       dispatch(setStartEndTime(selectedStartTime, selectedTimestamp + 3600))
-      history.push(PATHS.CREATE_FACILITY_BOOKING)
+      // history.push(PATHS.CREATE_FACILITY_BOOKING)
     }
   }
 
