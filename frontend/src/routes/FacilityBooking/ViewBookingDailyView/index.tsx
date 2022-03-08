@@ -12,7 +12,10 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
 import { ENDPOINTS, DOMAIN_URL } from '../../../store/endpoints'
-import { fetchSelectedFacility, getTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBooking/action'
+import { getTimeBlocks, setTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBooking/action'
+import { Booking } from '../../../store/calendar/types'
+import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
+import { defaultTimeBlocks } from '../../../store/stubs'
 
 const HEADER_HEIGHT = '70px'
 
@@ -61,6 +64,12 @@ export default function CreateBookingDailyView() {
   const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
+  let updatedFB: Booking[] = []
+  const updatedTB: TimeBlock[] = defaultTimeBlocks
+
+  const state = useSelector((state: RootState) => state.facilityBooking)
+  console.log(state.selectedDayBookings)
+  console.log(state.timeBlocks)
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
@@ -79,8 +88,22 @@ export default function CreateBookingDailyView() {
     })
       .then((resp) => resp.json())
       .then(async (res) => {
-        dispatch(setSelectedDayBookings(res.data))
-        console.log(isLoading)
+        updatedFB = res.data
+        console.log(res.data)
+        for (let i = 0; i < updatedFB.length; i++) {
+          const hour = new Date(updatedFB[i].startTime * 1000).getHours()
+          const t: TimeBlock = {
+            id: hour,
+            timestamp: updatedFB[i].startTime,
+            type: TimeBlockType.OCCUPIED,
+            ccaName: updatedFB[i].ccaName,
+            eventName: updatedFB[i].description,
+          }
+          updatedTB[hour] = t
+        }
+        dispatch(setSelectedDayBookings(updatedFB))
+        dispatch(setTimeBlocks(defaultTimeBlocks))
+        dispatch(setTimeBlocks(updatedTB))
       })
   }, [])
 
@@ -91,7 +114,6 @@ export default function CreateBookingDailyView() {
     const maxDate = new Date(year, month, 0).getDate()
     const day = new Date(year, month, dates).getDay()
     const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
-    console.log(date)
 
     if (startDate + 6 > maxDate) {
       return (
