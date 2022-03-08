@@ -21,7 +21,7 @@ const NavBarIcons = styled(Icon)`
 const GymBarContainer = styled.div`
   position: sticky;
   display: flex;
-  background-color: #fff;
+  background-color: #fafaf4;
   align-items: center;
   top: 0;
 `
@@ -32,7 +32,7 @@ const GymTabContainer = styled.div<{ isSelected?: boolean }>`
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
-  background-color: #fff;
+  background-color: #fafaf4;
   color: #191919;
   font-style: normal;
   font-weight: 400;
