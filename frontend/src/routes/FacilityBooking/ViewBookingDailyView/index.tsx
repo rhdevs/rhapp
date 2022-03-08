@@ -12,10 +12,12 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
 
+const HEADER_HEIGHT = '70px'
+
 const Background = styled.div`
   background-color: #fff;
-  height: 100vh;
-  width: 100vw;
+  height: calc(100vh - ${HEADER_HEIGHT});
+  width: (100vw);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,7 +27,11 @@ const Background = styled.div`
 const BookingSectionDiv = styled.div`
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 const TitleText = styled.h2`
   font-family: lato;
