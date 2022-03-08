@@ -12,7 +12,7 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
 import { ENDPOINTS, DOMAIN_URL } from '../../../store/endpoints'
-import { setSelectedDayBookings } from '../../../store/facilityBooking/action'
+import { fetchSelectedFacility, getTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBooking/action'
 
 const HEADER_HEIGHT = '70px'
 
@@ -72,36 +72,45 @@ export default function CreateBookingDailyView() {
     '&endTime=' +
     parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
 
-  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
-    method: 'GET',
-    mode: 'cors',
-  })
-    .then((resp) => resp.json())
-    .then(async (res) => {
-      dispatch(setSelectedDayBookings(res.data))
+  useEffect(() => {
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
+      method: 'GET',
+      mode: 'cors',
     })
+      .then((resp) => resp.json())
+      .then(async (res) => {
+        dispatch(setSelectedDayBookings(res.data))
+        console.log(isLoading)
+      })
+  }, [])
 
   function Dates(date: Date) {
     const year = date.getFullYear()
-    const maxDate = new Date(year, date.getMonth(), 0).getDate()
-    const day = date.getDay()
-    const startDate = date.getDate() - day < 0 ? maxDate - (day - date.getDate()) : date.getDate() - day
+    const month = date.getMonth()
+    const dates = date.getDate()
+    const maxDate = new Date(year, month, 0).getDate()
+    const day = new Date(year, month, dates).getDay()
+    const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
+    console.log(date)
+
     if (startDate + 6 > maxDate) {
       return (
         <DatesContainer>
           <DateRows
             firstDate={startDate}
-            assignedMonth={date.getMonth()}
+            assignedMonth={month}
             lastDateOfThisMonth={startDate + maxDate - startDate}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            selectedDate={dates}
           />
           <DateRows
             firstDate={1}
-            assignedMonth={date.getMonth()}
+            assignedMonth={month}
             lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            selectedDate={dates}
           />
         </DatesContainer>
       )
@@ -110,10 +119,11 @@ export default function CreateBookingDailyView() {
         <DatesContainer>
           <DateRows
             firstDate={startDate}
-            assignedMonth={date.getMonth()}
+            assignedMonth={month}
             lastDateOfThisMonth={startDate + 6}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            selectedDate={dates}
           />
         </DatesContainer>
       )

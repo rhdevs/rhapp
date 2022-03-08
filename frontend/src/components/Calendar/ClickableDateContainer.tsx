@@ -38,6 +38,7 @@ export const ClickableDateContainer = (props: {
   eventPresent?: boolean
   assignedMonth: number
   facilityId: number
+  selectedDate?: boolean
 }) => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -61,7 +62,7 @@ export const ClickableDateContainer = (props: {
 
   const isCurrentDate = () => {
     const today = new Date()
-    const month = new Date(today).getMonth() + 1
+    const month = new Date(today).getMonth()
     const day = new Date(today).getDate()
     const processedDate = month * 100 + day
     return processedDate === assignedDateMonth
@@ -74,7 +75,7 @@ export const ClickableDateContainer = (props: {
   return (
     <DateContainer
       onClick={() => DateContainerClickHandler(assignedDateMonth)}
-      selected={isCurrentDateClicked()}
+      selected={isCurrentDateClicked() || props.selectedDate}
       currentDate={isCurrentDate()}
     >
       <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />

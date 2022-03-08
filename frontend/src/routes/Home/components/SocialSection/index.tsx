@@ -106,7 +106,7 @@ export default function SocialSection() {
     <>
       <Sticky>
         <Header>
-          <Calendar selectedFacilityId={0} />
+          <Calendar selectedFacilityId={7} />
           <span>{`What's happening....`}</span>
           <PlusCircleFilled
             style={{ color: '#EB5757', fontSize: '30px', paddingRight: '7px' }}
