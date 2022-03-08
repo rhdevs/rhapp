@@ -12,7 +12,7 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
 import { ENDPOINTS, DOMAIN_URL } from '../../../store/endpoints'
-import { getTimeBlocks, setTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBooking/action'
+import { setTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBooking/action'
 import { Booking } from '../../../store/calendar/types'
 import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
 import { defaultTimeBlocks } from '../../../store/stubs'
@@ -66,10 +66,6 @@ export default function CreateBookingDailyView() {
   const date = location.state.date
   let updatedFB: Booking[] = []
   const updatedTB: TimeBlock[] = defaultTimeBlocks
-
-  const state = useSelector((state: RootState) => state.facilityBooking)
-  console.log(state.selectedDayBookings)
-  console.log(state.timeBlocks)
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
