@@ -252,29 +252,24 @@ def check_bookings(facilityID):
 @ cross_origin(supports_credentials=True)
 def add_booking():
     try:
-        # NOTE 1: Set force to be True because sometimes the data cannot be read in.
         formData = request.get_json()
 
         if (formData == None):
             return {"err": "Error reading form"}, 400
 
-        # NOTE 2: Checking for errors
         if (not request.args.get("token")):
             return {"err": "No token", "status": "failed"}, 401
-
         if (not authenticate(request.args.get("token"), formData.get("userID"))):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
         if (formData["endTime"] <= formData["startTime"]):
             return {"err": "End time earlier than start time", "status": "failed"}, 400
-
         if formData.get("bookUntil") != None and (int(formData.get("bookUntil")) < int(formData.get("endTime"))):
             return {"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400
 
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
-        # NOTE 3: Reading in the form values
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
         formData["facilityID"] = int(formData["facilityID"])
@@ -297,8 +292,7 @@ def add_booking():
         if not formData.get("forceBook"):
             formData["forceBook"] = False
 
-        # NOTE 4: Finding the existing bookings
-        def SpaceOneWeekApart(booking: dict):
+        def SpaceOneWeekApart():
             booking["startTime"] += 7 * 24 * 60 * 60
             booking["endTime"] += 7 * 24 * 60 * 60
 
@@ -343,8 +337,7 @@ def add_booking():
             
             bookings_made_list = copy.deepcopy(insertData) # See: https://docs.python.org/3/library/copy.html (insertData.copy() does not work)
             db.Bookings.insert_many(insertData)
-            response = {"status": "success", "bookings_made": bookings_made_list, "number_of_bookings_made": str(
-                len(insertData))}, 200
+            response = {"status": "success", "bookings_made": bookings_made_list, "number_of_bookings_made": str(len(insertData))}, 200
 
         elif (len(conflictedBookings) > 0):
             if formData["forceBook"] == False:
