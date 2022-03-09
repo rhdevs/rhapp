@@ -25,7 +25,6 @@ export enum CALENDAR_ACTIONS {
   SET_CALENDAR_VIEW_FACILITY_START_DATE = 'CALENDAR_ACTIONS.SET_CALENDAR_VIEW_FACILITY_START_DATE',
   SET_FACILITY_BOOKINGS = 'CALENDAR_ACTION.SET_FACILITY_BOOKINGS',
   SET_PROCESSED_DATES = 'CALENDAR_ACTION.SET_PROCESSED_DATES',
-  GET_DAILY_VIEW = 'CALENDAR_ACTION.GET_DAILY_VIEW',
 }
 
 type SetIsClicked = {
@@ -53,14 +52,9 @@ type SetProcessedDates = {
   processedDates: number[]
 }
 
-type GetDailyView = {
-  type: typeof CALENDAR_ACTIONS.GET_DAILY_VIEW
-}
-
 export type ActionTypes =
   | SetIsClicked
   | SetIsLoading
   | SetCalendarViewFacilityStartDate
   | SetFacilityBookings
   | SetProcessedDates
-  | GetDailyView
