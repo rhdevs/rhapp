@@ -88,7 +88,6 @@ export default function CreateBookingDailyView() {
       .then((resp) => resp.json())
       .then(async (res) => {
         updatedFB = res.data
-        console.log(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString)
         console.log(res.data)
         for (let i = 0; i < updatedFB.length; i++) {
           const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
