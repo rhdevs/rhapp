@@ -113,6 +113,7 @@ export default function CreateBookingDailyView() {
   return (
     <div>
       <TopNavBarRevamp
+        onLeftClick={() => 'link to calendar page'}
         centerComponent={<TitleText>Calendar</TitleText>}
         rightComponent={
           <ButtonComponent state="primary" text="Book Facility" onClick={() => 'link to booking page'} size="small" />

@@ -11,7 +11,6 @@ import { POSTS_FILTER } from '../../../../store/social/types'
 import { RootState } from '../../../../store/types'
 import dayjs from 'dayjs'
 import LoadingSpin from '../../../../components/LoadingSpin'
-import { Calendar } from '../../../../components/Calendar/Calendar'
 
 type TabProps = {
   active: boolean
@@ -106,7 +105,6 @@ export default function SocialSection() {
     <>
       <Sticky>
         <Header>
-          <Calendar selectedFacilityId={7} />
           <span>{`What's happening....`}</span>
           <PlusCircleFilled
             style={{ color: '#EB5757', fontSize: '30px', paddingRight: '7px' }}
