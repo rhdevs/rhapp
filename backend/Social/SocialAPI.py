@@ -21,7 +21,7 @@ social_api = Blueprint("social", __name__)
 
 
 def renamePost(post):
-    post['postID'] = post.pop('_id')
+    post['postID'] = str(post.pop('_id'))
     return post
 
 
@@ -220,7 +220,7 @@ def getUserDetails(userID):
 def userIDtoName(userID):
     # TODO use mongoDB lookup instead of this disgusting code
     # helper function
-    profile = db.User.find_one({"userID": userID}, {'passwordHash': 0, 'displayName': 1})
+    profile = db.User.find_one({"userID": userID}, {'displayName': 1})
     name = profile.get('displayName') if profile else None
     return name
 
@@ -236,16 +236,21 @@ def posts():
 
                 if postID:
                     # TODO use mongoDB lookup to join the data instead
+                    try:
+                        ObjectId(postID)
+                    except TypeError:
+                        return make_response({"message": "Invalid Post ID", "status": "failed"}, 400)
+
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
                     name = db.User.find_one(
-                        {"userID": str(data.get("userID"))}, {'passwordHash': 0}).get('displayName')
+                        {"userID": str(data.get("userID"))}, {'passwordHash': 0, "_id": 0}).get('displayName')
 
                     if data != None:
                         data = renamePost(data)
                         data['name'] = name
                         response = {
                             "status": "success",
-                            "data": json.dumps(data, default=lambda o: str(o))
+                            "data": data
                         }
                         return make_response(response, 200)
                     else:
@@ -261,7 +266,7 @@ def posts():
 
                     return make_response(
                         {
-                            "data": json.dumps(response, default=lambda o: str(o)),
+                            "data": response,
                             "status": "success"
                         },
                         200)
@@ -328,7 +333,7 @@ def posts():
 
                 return make_response(
                     {
-                        "data": json.dumps(response, default=lambda o: str(o)),
+                        "data": response,
                         "status": "success"
                     }, 200)
 
@@ -434,77 +439,23 @@ def getPostById(userID):
     try:
         N = int(request.args.get('N')) if request.args.get('N') else 0
 
-        data = db.Posts.find({"userID": str(userID)}, sort=[
-                             ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
+        data = list(db.Posts.find({"userID": str(userID)}, sort=[
+                             ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5))
+        for i in data:
+            renamePost(i)
+            
         response = {
             "status": "success",
-            "data": json.dumps(list(data), default=lambda o: str(o))
+            "data": data
         }
         
-        if db.Profiles.find_one({"userID": userID}) == None:
+        if db.User.find_one({"userID": userID}) == None:
             return make_response({"status": "failed", "message": "User does not exist"}), 404 
         else:
             return make_response(response, 200)
-    except TypeError:
-        return make_response({"status": "failed", "message": "Expected a string input"}), 400
     except Exception as e:
         print(e)
         return make_response({"err": "An error has occured", "status": "failed"}), 500
-
-def FriendsHelper(userID):
-    query = {
-        "$or": [{"userIDOne": userID}, {"userIDTwo": userID}]
-    }
-
-    result = db.Friends.find(query)
-
-    response = {'friendList': []}
-
-    for friend in result:
-        userOne = friend.get("userIDOne")
-        userTwo = friend.get("userIDTwo")
-
-        if(userID == userOne):
-            response['friendList'].append(userTwo)
-        else:
-            response['friendList'].append(userOne)
-
-    return response
-
-
-@social_api.route("/posts/friend", methods=['GET'])
-@cross_origin(supports_credentials=True)
-def getFriendsPostById():
-    try:
-        userID = str(request.args.get("userID"))
-        N = int(request.args.get('N')) if request.args.get('N') else 0
-
-        friends = FriendsHelper(userID).get('friendList')
-
-        query = {
-            "userID": {"$in": friends}
-        }
-
-        response = []
-
-        result = db.Posts.find(query, sort=[
-            ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
-
-        for item in result:
-            item['name'] = userIDtoName(item.get('userID'))
-            item = renamePost(item)
-            response.append(item)
-
-        return make_response(
-            {
-                "data": json.dumps(response, default=lambda o: str(o)),
-                "status": "success"
-            },
-            200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
 
 
 @social_api.route("/posts/official", methods=['GET'])
@@ -520,18 +471,19 @@ def getOfficialPosts():
         for item in data:
             item['name'] = userIDtoName(item.get('userID'))
             ccaID = int(item.get('ccaID'))
-            profile = db.User.find_one({'userID': item.get('userID')}, {'passwordHash': 0})
+            profile = db.User.find_one({'userID': item.get('userID')}, {'passwordHash': 0, '_id': 0})
             item['profilePictureURI'] = profile.get(
                 'profilePictureUrl') if profile != None else None
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
-            item['postID'] = item.get('_id')
+            item['postID'] = str(item.get('_id'))
             del item['_id']
 
+        print(response)
         return make_response(
             {
-                "data": json.dumps(response, default=lambda o: str(o)),
+                "data": response,
                 "status": "success"
             },
             200)
@@ -539,34 +491,6 @@ def getOfficialPosts():
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
 
-
-'''
-Friends API 
-'''
-
-@social_api.route("/friend/<userID>", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def getAllFriends(userID):
-    try:
-        response = FriendsHelper(userID)
-        friends = response["friendList"]
-        result = []
-
-        for friendID in friends:
-            entry = db.User.find_one({"userID": friendID}, {'passwordHash': 0})
-            if entry != None:
-                result.append(entry)
-
-        return make_response(
-            {
-                "data": json.dumps(result, default=lambda o: str(o)),
-                "status": "success"
-            },
-            200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
 
 @social_api.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
