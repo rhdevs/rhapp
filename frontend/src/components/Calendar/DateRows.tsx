@@ -25,7 +25,6 @@ export const DateRows = (props: {
             date={day}
             assignedMonth={props.assignedMonth}
             facilityId={props.facilityId}
-            selectedDate={day === props.selectedDate}
           />
         )
       })}
