@@ -16,6 +16,8 @@ import { setTimeBlocks, setSelectedDayBookings } from '../../../store/facilityBo
 import { Booking } from '../../../store/calendar/types'
 import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
 import { defaultTimeBlocks } from '../../../store/stubs'
+import { unixToCalendarFormat } from '../../../common/unixToCalendarFormat'
+import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 
 const HEADER_HEIGHT = '70px'
 
@@ -173,8 +175,9 @@ export default function CreateBookingDailyView() {
           <ButtonComponent state="primary" text="Book Facility" onClick={() => 'link to booking page'} size="small" />
         }
       />
-      {isLoading && <LoadingSpin />}
-      {!isLoading && (
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
         <Background>
           {Dates(date)}
           <BookingSectionDiv>
