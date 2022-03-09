@@ -8,7 +8,6 @@ export const DateRows = (props: {
   lastDateOfThisMonth: number
   bufferDates: number[]
   facilityId: number
-  selectedDate?: number
 }) => {
   for (let i = props.firstDate; i < props.lastDateOfThisMonth + 1; i++) {
     props.bufferDates.push(i)
