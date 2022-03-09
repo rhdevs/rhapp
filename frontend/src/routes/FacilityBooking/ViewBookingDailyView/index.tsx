@@ -108,7 +108,6 @@ export default function CreateBookingDailyView() {
           }
         }
         dispatch(setSelectedDayBookings(updatedFB))
-        dispatch(setTimeBlocks(defaultTimeBlocks))
         dispatch(setTimeBlocks(updatedTB))
       })
   }, [date])
