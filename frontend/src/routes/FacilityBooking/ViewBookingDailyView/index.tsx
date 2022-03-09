@@ -67,8 +67,6 @@ export default function CreateBookingDailyView() {
   let updatedFB: Booking[] = []
   const updatedTB: TimeBlock[] = defaultTimeBlocks
 
-  const state = useSelector((state: RootState) => state.facilityBooking)
-
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
   const querySubString =
