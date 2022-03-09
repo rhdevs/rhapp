@@ -1,26 +1,29 @@
 from AuthFunction import authenticate
 from db import *
-from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import jsonify, request, make_response
 from AuthFunction import authenticate
-import os
 from datetime import datetime
-import time
 from flask_cors import cross_origin
 from flask import Blueprint
 import pymongo
 import sys
+
 sys.path.append("../")
 
 facilities_api = Blueprint("facilities", __name__)
 
 # Used to convert CCA ID into CCA Name
+
+
 def conversion(ccaID):
     return str(db.CCA.find_one({"ccaID": ccaID})["ccaName"])
+
 
 @facilities_api.route('/')
 @cross_origin()
 def root_route():
     return 'What up losers'
+
 
 @facilities_api.route('/facilities', methods=["GET"])
 @cross_origin(supports_credentials=True)
@@ -48,6 +51,7 @@ def get_facility_name(facilityID):
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
+
 
 @ facilities_api.route('/bookings/<int:bookingID>', methods=["GET"])
 @ cross_origin(supports_credentials=True)
@@ -99,7 +103,6 @@ def get_one_booking(bookingID):
         if data["ccaID"] != None:
             if data["ccaID"] != 0:
                 data["ccaName"] = conversion(data["ccaID"])
-            
 
         response = {"status": "success", "data": data}
 
@@ -162,7 +165,7 @@ def user_bookings(userID):
         data = list(db.Bookings.aggregate(pipeline))
         data.sort(
             key=lambda x: x.get('startTime'), reverse=False)
-                
+
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
@@ -176,7 +179,7 @@ def check_bookings(facilityID):
     try:
         if (request.args.get('endTime') < request.args.get('startTime')):
             return {"err": "Invalid start and end time", "status": "failed"}, 400
-        
+
         condition = {
             "$and": [
                 {'facilityID': int(facilityID)},
@@ -193,8 +196,8 @@ def check_bookings(facilityID):
 
         # BUG 622 Fix: If startTime and endTime are provided, checks if endTime is valid.
         if (request.args.get("startTime") != None and request.args.get("endTime") != None):
-                    if (request.args.get("endTime") <= request.args.get("startTime")):
-                        return {"Err" : "Invalid end time."}, 403
+            if (request.args.get("endTime") <= request.args.get("startTime")):
+                return {"Err": "Invalid end time."}, 403
 
         pipeline = [
             {'$match':
@@ -244,46 +247,66 @@ def check_bookings(facilityID):
 
     return make_response(response)
 
+
 @ facilities_api.route('/bookings', methods=['POST'])
 @ cross_origin(supports_credentials=True)
 def add_booking():
     try:
-        formData = request.get_json()
+        # NOTE 1: Set force to be True because sometimes the data cannot be read in.
+        formData = request.get_json(force=True)
 
+        if (formData == None):
+            return {"err": "Error reading form"}, 500
+
+        # NOTE 2: Checking for errors
         if (not request.args.get("token")):
             return {"err": "No token", "status": "failed"}, 401
 
         if (not authenticate(request.args.get("token"), formData.get("userID"))):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
+        if (formData["endTime"] <= formData["startTime"]):
+            return {"err": "End time earlier than start time", "status": "failed"}, 400
+
+        if int(formData.get("bookUntil")) < int(formData.get("endTime")):
+            return {"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400
+
+        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
+            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
+
+        # NOTE 3: Reading in the form values
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
-
         formData["facilityID"] = int(formData["facilityID"])
+
         if not formData.get("ccaID"):
             formData["ccaID"] = int(0)
         else:
             formData["ccaID"] = int(formData["ccaID"])
 
-        if (formData["endTime"] <= formData["startTime"]):
-            return {"err": "End time earlier than start time", "status": "failed"}, 400
-
         if not (formData.get("bookUntil") or formData.get("repeat")):
             formData["repeat"] = 1
         elif formData.get("bookUntil") and not formData.get("repeat"):
-            formData["repeat"] = int(((int(formData["bookUntil"]) - int(formData["startTime"])) / (7 * 24 * 60 * 60)) + 1)
-            if int(formData.get("bookUntil")) < int(formData.get("endTime")):
-                return make_response({"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400)
+            formData["repeat"] = int(
+                ((int(formData["bookUntil"]) - int(formData["startTime"])) / (7 * 24 * 60 * 60)) + 1)
         elif not formData.get("bookUntil") and formData.get("repeat"):
             formData["repeat"] = int(formData.get("repeat"))
         else:
-            return make_response({"status": "failed", "message": "Not allowed to have bookUntil and repeat at the same time."}, 400)
-        
-        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
-            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
+            repeatFromRepeat = int(formData.get("repeat"))
+            repeatFromBookUntil = int(
+                ((int(formData["bookUntil"]) - int(formData["startTime"])) / (7 * 24 * 60 * 60)) + 1)
+            if repeatFromRepeat != repeatFromBookUntil:
+                return {"err": "Timings do not match, endTime earlier than startTime"}, 403
+            else:
+                formData["repeat"] = repeatFromRepeat
 
-        if not formData.get("forceBooking"):
-            formData["forceBooking"] = False
+        if not formData.get("forceBook"):
+            formData["forceBook"] = False
+
+        # NOTE 4: Finding the existing bookings
+        def SpaceOneWeekApart(booking={}):
+            booking["startTime"] += 7 * 24 * 60 * 60
+            booking["endTime"] += 7 * 24 * 60 * 60
 
         condition = []
 
@@ -301,7 +324,7 @@ def add_booking():
                 }
             ]})
 
-        conflict = list(db.Bookings.find(
+        conflictedBookings = list(db.Bookings.find(
             {
                 "facilityID": formData.get("facilityID"),
                 "$or": condition
@@ -315,11 +338,7 @@ def add_booking():
         newBookingID = 1 if len(lastbookingID) == 0 else int(
             lastbookingID[0].get("bookingID")) + 1
 
-        def SpaceOneWeekApart(booking={}):
-            booking["startTime"] += 7 * 24 * 60 * 60
-            booking["endTime"] += 7 * 24 * 60 * 60
-        
-        if (len(conflict) == 0):
+        if (len(conflictedBookings) == 0):
             formData["bookingID"] = newBookingID
 
             insertData = []
@@ -328,58 +347,65 @@ def add_booking():
                 formData["bookingID"] += 1
                 SpaceOneWeekApart(formData)
 
-            db.Bookings.insert_many(insertData)
+            response = jsonify({"status": "success", "number_of_bookings_made": str(
+                len(insertData)), "bookings_made": insertData}), 200
 
-            response = {"status": "success", "num_of_successful_bookings": str(len(insertData))}
-
-        elif (len(conflict) > 0):
-            if formData["forceBooking"] == False:
-                return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
-            else:
+        elif (len(conflictedBookings) > 0):
+            if formData["forceBook"] == False:
+                return make_response(jsonify({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflictedBookings, "status": "failed"}), 409)
+            elif formData["forceBook"] == True:
                 insertData = []
+                blocking_bookings = {}
+                successful_bookings = {}
+                startTimeArray = []
+
                 for i in range(formData["repeat"]):
                     insertData.append(formData.copy())
                     SpaceOneWeekApart(formData)
-            
-                for booking in conflict:
+
+                for booking in conflictedBookings:
                     for newBooking in insertData:
-                        if ((newBooking["endTime"] > dict(booking)["startTime"]) and (newBooking["startTime"] < dict(booking)["endTime"])):  
+                        if ((newBooking["endTime"] > dict(booking)["startTime"]) and (newBooking["startTime"] < dict(booking)["endTime"])):
                             insertData.remove(newBooking)
 
                 for editedBooking in insertData:
                     editedBooking["bookingID"] = newBookingID
-                
-                for i in range(len(insertData)):
-                    editedBooking["bookingID"] += i
+                    newBookingID += 1
 
-                blocked_bookings = {}
-                startTimeArray = []
-
-                for conflict_bookings in conflict:
-                    startTimeArray.append(int(dict(conflict_bookings)["startTime"]))
+                for conflict_bookings in conflictedBookings:
+                    startTimeArray.append(
+                        int(dict(conflict_bookings)["startTime"]))
+                for successful_bookings in insertData:
+                    startTimeArray.append(
+                        int(dict(successful_bookings)["startTime"]))
                 
                 startTimeArray = sorted((set(startTimeArray)), key=int)
-                
+
                 for timestamp in startTimeArray:
-                    blocked_bookings[str(timestamp)] = []
-                    for conflict_bookings in conflict:
-                        if int(timestamp) == int(dict(conflict_bookings)["startTime"]):
-                            blocked_bookings[str(timestamp)].append(dict(conflict_bookings))
+                    for conflict_bookings in conflictedBookings:
+                        for successful_bookings in insertData:
+                            if int(timestamp) == int(dict(conflict_bookings)["startTime"]):
+                                blocking_bookings[str(timestamp)] = []
+                                blocking_bookings[str(timestamp)].append(dict(conflict_bookings))
+                            elif int(timestamp) == int(dict(successful_bookings)["startTime"]):
+                                successful_bookings[str(timestamp)] = []
+                                successful_bookings[str(timestamp)].append(dict(successful_bookings))
+
 
                 if len(insertData) != 0:
                     db.Bookings.insert_many(insertData)
-                    response = {"message": "Unblocked slots booked", "blocked_bookings": blocked_bookings, "num_of_successful_bookings": str(len(insertData)), "status": "success"}
+                    response = jsonify({"message": "Unblocked slots booked", "blocking_bookings": blocking_bookings,
+                                        "number_of_bookings_made": str(len(insertData)), "bookings_made": successful_bookings, "status": "success"}), 200
                 else:
-                    return make_response({"message": "All slots have been blocked.", "blocked_bookings": blocked_bookings, "status": "failed"}, 409)         
+                    return make_response(jsonify({"message": "All slots have been blocked.", "blocking_bookings": blocking_bookings, "status": "failed"}), 409)
 
         # Logging
         formData["action"] = "Add Booking"
         formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         db.BookingLogs.insert_one(formData)
-     
+
     except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
+        return {"err": e, "status": "failed"}, 500
 
     return make_response(response)
 
