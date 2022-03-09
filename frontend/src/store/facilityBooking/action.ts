@@ -13,7 +13,7 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
-export const getDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   let updatedFB: Booking[] = []
   const updatedTB: TimeBlock[] = defaultTimeBlocks
 

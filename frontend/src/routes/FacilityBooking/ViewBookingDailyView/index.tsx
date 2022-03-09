@@ -11,11 +11,7 @@ import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
-import { ENDPOINTS, DOMAIN_URL } from '../../../store/endpoints'
-import { setTimeBlocks, setSelectedDayBookings, getDailyView } from '../../../store/facilityBooking/action'
-import { Booking } from '../../../store/calendar/types'
-import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
-import { defaultTimeBlocks } from '../../../store/stubs'
+import { updateDailyView } from '../../../store/facilityBooking/action'
 
 const HEADER_HEIGHT = '70px'
 
@@ -66,63 +62,8 @@ export default function CreateBookingDailyView() {
   const date = location.state.date
 
   useEffect(() => {
-    dispatch(getDailyView(date, selectedFacilityId))
+    dispatch(updateDailyView(date, selectedFacilityId))
   }, [date])
-
-  // let updatedFB: Booking[] = []
-  // const updatedTB: TimeBlock[] = defaultTimeBlocks
-
-  // const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-  // const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
-  // const querySubString =
-  //   selectedFacilityId +
-  //   '/' +
-  //   '?startTime=' +
-  //   parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
-  //   '&endTime=' +
-  //   parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
-
-  // useEffect(() => {
-  //   resetTB()
-  //   fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
-  //     method: 'GET',
-  //     mode: 'cors',
-  //   })
-  //     .then((resp) => resp.json())
-  //     .then(async (res) => {
-  //       updatedFB = res.data
-  //       console.log(res.data)
-  //       for (let i = 0; i < updatedFB.length; i++) {
-  //         const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
-  //         const endhour =
-  //           new Date(updatedFB[i].endTime * 1000).getHours() < starthour
-  //             ? 23
-  //             : new Date(updatedFB[i].endTime * 1000).getHours()
-  //         for (let hour = starthour; hour < endhour + 1; hour++) {
-  //           const t: TimeBlock = {
-  //             id: hour,
-  //             timestamp: updatedFB[i].startTime,
-  //             type: TimeBlockType.OCCUPIED,
-  //             ccaName: updatedFB[i].ccaName,
-  //             eventName: updatedFB[i].description,
-  //           }
-  //           updatedTB[hour] = t
-  //         }
-  //       }
-  //       dispatch(setSelectedDayBookings(updatedFB))
-  //       dispatch(setTimeBlocks(updatedTB))
-  //     })
-  // }, [date])
-
-  // function resetTB() {
-  //   for (let i = 0; i < 24; i++) {
-  //     updatedTB[i] = {
-  //       id: i,
-  //       timestamp: 0,
-  //       type: TimeBlockType.AVAILABLE,
-  //     }
-  //   }
-  // }
 
   function Dates(date: Date) {
     const year = date.getFullYear()
