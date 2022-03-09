@@ -35,9 +35,6 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     .then((resp) => resp.json())
     .then(async (res) => {
       updatedFB = res.data
-      console.log(adjustedStart)
-      console.log(adjustedStart)
-      console.log(res.data)
       for (let i = 0; i < updatedFB.length; i++) {
         const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
         const endhour =
