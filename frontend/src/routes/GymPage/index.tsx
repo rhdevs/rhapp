@@ -24,6 +24,9 @@ const GymBarContainer = styled.div`
   background-color: #fafaf4;
   align-items: center;
   top: 0;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 `
 
 const GymTabContainer = styled.div<{ isSelected?: boolean }>`
