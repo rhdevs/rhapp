@@ -115,7 +115,7 @@ export default function Home() {
       src: facilities_icon,
       filter: 'invert(1)',
       clickHandler: () => {
-        history.push(PATHS.FACILITY_BOOKING_MAIN)
+        history.push(PATHS.GYM_MAIN)
       },
     },
     {
