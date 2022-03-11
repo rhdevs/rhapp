@@ -12,6 +12,7 @@ from bson.objectid import ObjectId
 from bson.errors import *
 from flask import Blueprint
 import sys
+from AuthFunction import authenticate
 sys.path.append("../db")
 
 social_api = Blueprint("social", __name__)
@@ -35,6 +36,14 @@ def hello():
 def profiles():
     try:
         data = request.get_json()
+
+        # BUG 570 Fix: Added authentication to check token before updating profile
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), data.get("userID"))):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
         if "profilePictureURI" in data:
             data["profilePictureUrl"] = data.pop("profilePictureURI")
 
@@ -43,7 +52,6 @@ def profiles():
 
         if db.User.count_documents({"userID": data["userID"]}) == 0:
             return {"status":" failed", "message": "User not found"}, 404
-
 
         result = db.User.update_one(
             {"userID": data["userID"]}, {'$set': data}, upsert=True)
