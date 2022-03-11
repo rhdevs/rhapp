@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
@@ -18,6 +18,7 @@ import {
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { DateRows } from '../../../components/Calendar/DateRows'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
 const HEADER_HEIGHT = '70px'
 
@@ -43,9 +44,28 @@ const BookingSectionDiv = styled.div`
   }
 `
 
+const TitleText = styled.h2`
+  font-family: lato;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 22px;
+  margin-top: 0.7rem;
+`
+
+const DatesContainer = styled.div`
+  display: flex;
+  margin: auto;
+`
+
+// type State = {
+//   date: Date
+//   facilityId: number
+// }
+
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
+  // const location = useLocation<State>()
   const {
     newBookingFacilityName,
     newBookingFromDate,
@@ -53,43 +73,76 @@ export default function CreateBookingDailyView() {
     createBookingError,
     selectedStartTime,
     selectedEndTime,
+    selectedFacilityId,
+    ViewStartDate,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const CheckIcon = (createBookingError: string) => {
-    if (selectedStartTime != -1 && selectedEndTime != -1) {
+  // const selectedFacilityId = location.state.facilityId
+  // const date = location.state.date
+
+  const date = ViewStartDate
+
+  function Dates(date: Date) {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const dates = date.getDate()
+    const maxDate = new Date(year, month, 0).getDate()
+    const day = new Date(year, month, dates).getDay()
+    const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
+
+    if (startDate + 6 > maxDate) {
       return (
-        <div
-          onClick={() => {
-            dispatch(editBookingFromDate(new Date(selectedStartTime * 1000)))
-            dispatch(editBookingToDate(new Date(selectedEndTime * 1000)))
-            setStartEndTime(-1, -1)
-            history.goBack()
-          }}
-        >
-          <CheckOutlined style={{ color: 'green' }} />
-        </div>
+        <DatesContainer>
+          <DateRows
+            firstDate={startDate}
+            assignedMonth={month}
+            lastDateOfThisMonth={startDate + maxDate - startDate}
+            bufferDates={[]}
+            facilityId={selectedFacilityId}
+          />
+          <DateRows
+            firstDate={1}
+            assignedMonth={month}
+            lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
+            bufferDates={[]}
+            facilityId={selectedFacilityId}
+          />
+        </DatesContainer>
       )
     } else {
-      return <CheckOutlined style={{ color: '#0000004d' }} />
+      return (
+        <DatesContainer>
+          <DateRows
+            firstDate={startDate}
+            assignedMonth={month}
+            lastDateOfThisMonth={startDate + 6}
+            bufferDates={[]}
+            facilityId={selectedFacilityId}
+          />
+        </DatesContainer>
+      )
     }
   }
 
   return (
     <div>
-      <TopNavBar title={`Book ${newBookingFacilityName}`} rightComponent={CheckIcon(createBookingError)} />
-      {isLoading && <LoadingSpin />}
-      {!isLoading && (
+      <TopNavBarRevamp
+        onLeftClick={() => history.goBack()}
+        centerComponent={<TitleText>Book {newBookingFacilityName}</TitleText>}
+      />
+      {isLoading ? (
+        <LoadingSpin />
+      ) : (
         <Background>
           <h2>Choose starting time slot</h2>
-          <em>&lt;Date Selector here&gt;</em>
-          <h1>
-            Start: {unixTo12HourTime(selectedStartTime)} End: {unixTo12HourTime(selectedEndTime)}
-          </h1>
           <h2>
-            The Date: Day {newBookingFromDate.getDate()} of Month {newBookingFromDate.getMonth() + 1} of Year&nbsp;
-            {newBookingFromDate.getFullYear()}
+            Start: {unixTo12HourTime(selectedStartTime)} End: {unixTo12HourTime(selectedEndTime)}
           </h2>
-          <DateRows firstDate={0} assignedMonth={0} lastDateOfThisMonth={10} bufferDates={[]} facilityId={0} />
+          <h3>
+            The Date: {newBookingFromDate.getDate()}/{newBookingFromDate.getMonth() + 1}/
+            {newBookingFromDate.getFullYear()}
+          </h3>
+          {Dates(date)}
           <BookingSectionDiv>
             <BookingSection />
           </BookingSectionDiv>

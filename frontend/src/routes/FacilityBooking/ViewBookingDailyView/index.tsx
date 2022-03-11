@@ -23,6 +23,7 @@ const Background = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0px 36px;
+  overflow: hidden;
 `
 
 const BookingSectionDiv = styled.div`
@@ -110,7 +111,7 @@ export default function ViewBookingDailyView() {
   return (
     <div>
       <TopNavBarRevamp
-        onLeftClick={() => 'link to calendar page'}
+        onLeftClick={() => history.goBack()}
         centerComponent={<TitleText>Calendar</TitleText>}
         rightComponent={
           <ButtonComponent
