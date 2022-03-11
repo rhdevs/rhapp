@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
-import 'antd-mobile/dist/antd-mobile.css'
-import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -53,7 +51,7 @@ type State = {
   facilityId: number
 }
 
-export default function CreateBookingDailyView() {
+export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const location = useLocation<State>()
