@@ -79,6 +79,11 @@ export enum FACILITY_ACTIONS {
   SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
+  SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
+  SET_BOOKING_STATUS = 'FACILITY_ACTIONS.SET_BOOKING_STATUS',
+  SET_BOOKING_START_TIME = 'FACILITY_ACTIONS.SET_BOOKING_START_TIME',
+  SET_BOOKING_END_TIME = 'FACILITY_ACTIONS.SET_BOOKING_END_TIME',
+  SET_BOOKING_END_DATE = 'FACILITY_ACTIONS.SET_BOOKING_END_DATE',
   SET_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.SET_FACILITY_BOOKINGS',
   SET_VIEW_FACILITY_NAME = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME',
   SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR',
@@ -235,6 +240,39 @@ type SetRepeatWeekly = {
   numRepeatWeekly: number
 }
 
+type SetBooking = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING
+  booking: Booking | null
+}
+
+type SetBookingStatus = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_STATUS
+  bookingStatus: BookingStatus
+  message?: string
+}
+
+type SetBookingStartTime = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_START_TIME
+  bookingStartTime: number
+}
+
+type SetBookingEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_END_TIME
+  bookingEndTime: number
+}
+
+type SetBookingEndDate = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_END_DATE
+  bookingEndDate: number
+}
+
+export enum BookingStatus {
+  SUCCESS = 'success',
+  FAILURE = 'failure',
+  CONFLICT = 'conflict',
+  INITIAL = 'initial',
+}
+
 type dayNumber = { [dayString: string]: number }
 export const DAY_STRING_TO_NUMBER: dayNumber = {
   Sunday: 0,
@@ -300,6 +338,11 @@ export type ActionTypes =
   | SetBookingFacilityId
   | SetIsJcrc
   | SetRepeatWeekly
+  | SetBooking
+  | SetBookingStatus
+  | SetBookingStartTime
+  | SetBookingEndTime
+  | SetBookingEndDate
   | SetConflictBookings
   | SetTimeBlock
   | SetStartEndTime
