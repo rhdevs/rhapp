@@ -254,22 +254,27 @@ def add_booking():
     try:
         formData = request.get_json()
 
+        # Check for valid input
         if (formData == None):
             return {"err": "Error reading form"}, 400
 
+        # Authenticate
         if (not request.args.get("token")):
             return {"err": "No token", "status": "failed"}, 401
         if (not authenticate(request.args.get("token"), formData.get("userID"))):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
+        # Check for valid dates
         if (formData["endTime"] <= formData["startTime"]):
             return {"err": "End time earlier than start time", "status": "failed"}, 400
         if formData.get("bookUntil") != None and (int(formData.get("bookUntil")) < int(formData.get("endTime"))):
             return {"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400
 
+        # Check for dance
         if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
             return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
+        # Convert
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
         formData["facilityID"] = int(formData["facilityID"])
@@ -279,6 +284,7 @@ def add_booking():
         else:
             formData["ccaID"] = int(formData["ccaID"])
 
+        # Handle repeat bookings
         if not (formData.get("bookUntil") or formData.get("repeat")):
             formData["repeat"] = 1
         elif formData.get("bookUntil") and not formData.get("repeat"):
@@ -292,12 +298,12 @@ def add_booking():
         if not formData.get("forceBook"):
             formData["forceBook"] = False
 
-        def SpaceOneWeekApart():
+        def SpaceOneWeekApart(booking):
             booking["startTime"] += 7 * 24 * 60 * 60
             booking["endTime"] += 7 * 24 * 60 * 60
 
         condition = []
-
+        # Conflict checks
         for i in range(formData["repeat"]):
             condition.append({'$and': [
                 {
@@ -321,11 +327,13 @@ def add_booking():
             }
         ))
 
+        # Get next booking ID
         lastbookingID = list(db.Bookings.find().sort(
-            [('_id', pymongo.DESCENDING)]).limit(1))
+            [('bookingID', pymongo.DESCENDING)]).limit(1))
         newBookingID = 1 if len(lastbookingID) == 0 else int(
             lastbookingID[0].get("bookingID")) + 1
 
+        # Book direct if no conflicts
         if (len(conflictedBookings) == 0):
             formData["bookingID"] = newBookingID
 
@@ -335,68 +343,58 @@ def add_booking():
                 formData["bookingID"] += 1
                 SpaceOneWeekApart(formData)
             
-            bookings_made_list = copy.deepcopy(insertData) # See: https://docs.python.org/3/library/copy.html (insertData.copy() does not work)
+            bookingsMadeList = copy.deepcopy(insertData) # See: https://docs.python.org/3/library/copy.html (insertData.copy() does not work)
             db.Bookings.insert_many(insertData)
-            response = {"status": "success", "bookings_made": bookings_made_list, "number_of_bookings_made": str(len(insertData))}, 200
+            response = {"status": "success", "bookings_made": bookingsMadeList, "number_of_bookings_made": len(insertData)}, 200
+
 
         elif (len(conflictedBookings) > 0):
             if formData["forceBook"] == False:
                 return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflictedBookings, "status": "failed"}), 409
             elif formData["forceBook"] == True:
                 insertData = []
-                blocking_bookings = {}
-                successful_bookings = {}
-                startTimeArray = []
 
+                # Create the full data
                 for i in range(formData["repeat"]):
                     insertData.append(formData.copy())
                     SpaceOneWeekApart(formData)
 
+                # Filter out bookings that are conflicted
+                def isConflicted(booking, newBooking):
+                    return not (newBooking["endTime"] < booking["startTime"]  or newBooking["startTime"] > booking["endTime"])
+                    
                 for booking in conflictedBookings:
                     for newBooking in insertData:
-                        if ((newBooking["endTime"] > dict(booking)["startTime"]) and (newBooking["startTime"] < dict(booking)["endTime"])):
+                        if (isConflicted(booking, newBooking)):
                             insertData.remove(newBooking)
 
+                # Increment bookingIDs
                 for editedBooking in insertData:
                     editedBooking["bookingID"] = newBookingID
                     newBookingID += 1
 
-                for conflict_bookings in conflictedBookings:
-                    startTimeArray.append(
-                        int(dict(conflict_bookings)["startTime"]))
-                for pending_bookings in insertData:
-                    startTimeArray.append(
-                        int(dict(pending_bookings)["startTime"]))
                 
-                startTimeArray = sorted((set(startTimeArray)), key=int)
-
-                for timestamp in startTimeArray:
-                    for conflict_bookings in conflictedBookings:
-                        if int(timestamp) == int(dict(conflict_bookings)["startTime"]):
-                            blocking_bookings[str(timestamp)] = []
-                            blocking_bookings[str(timestamp)].append(dict(conflict_bookings))
-                    for pending_bookings in insertData:
-                        if int(timestamp) == int(dict(pending_bookings)["startTime"]):
-                            successful_bookings[str(timestamp)] = []
-                            successful_bookings[str(timestamp)].append(dict(pending_bookings))
-
                 if len(insertData) != 0:
                     db.Bookings.insert_many(insertData)
-                    response = {"message": "Unblocked slots booked", "blocking_bookings": blocking_bookings, "successful_bookings": successful_bookings,
+                    for entry in insertData:
+                        del entry["_id"]
+
+                    response = {"message": "Unblocked slots booked", "conflict_bookings": conflictedBookings, "bookings_made": insertData,
                                         "number_of_bookings_made": str(len(insertData)), "status": "success"}, 200
                 else:
-                    return make_response({"message": "All slots have been blocked.", "blocking_bookings": blocking_bookings, "status": "failed"}), 409
+                    return make_response({"message": "All slots have been blocked.", "conflict_bookings": conflictedBookings, "status": "failed"}), 409
 
         # Logging
         formData["action"] = "Add Booking"
         formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         db.BookingLogs.insert_one(formData)
 
+        return make_response(response)
     except Exception as e:
         print(e)
         return {"err": "An error occurred", "status": "failed"}, 500
 
-    return make_response(response)
+    
 
 
 @ facilities_api.route('/bookings/<bookingID>', methods=['PUT'])
