@@ -1,4 +1,3 @@
-import NumberInput from 'antd-mobile/lib/input-item/CustomInput'
 import { invert } from 'lodash'
 
 export type Facility = {
