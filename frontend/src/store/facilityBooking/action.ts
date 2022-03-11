@@ -40,7 +40,7 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     mode: 'cors',
   })
     .then((resp) => resp.json())
-    .then(async (res) => {
+    .then((res) => {
       updatedFB = res.data
       for (let i = 0; i < updatedFB.length; i++) {
         const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
@@ -49,14 +49,13 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
             ? 23
             : new Date(updatedFB[i].endTime * 1000).getHours()
         for (let hour = starthour; hour < endhour + 1; hour++) {
-          const t: TimeBlock = {
+          updatedTB[hour] = {
             id: hour,
             timestamp: updatedFB[i].startTime,
             type: TimeBlockType.OCCUPIED,
             ccaName: updatedFB[i].ccaName,
             eventName: updatedFB[i].description,
           }
-          updatedTB[hour] = t
         }
       }
       dispatch(setSelectedDayBookings(updatedFB))
