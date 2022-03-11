@@ -10,6 +10,7 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { DateRows } from '../../../components/Calendar/DateRows'
 import { updateDailyView } from '../../../store/facilityBooking/action'
+import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 
 const HEADER_HEIGHT = '70px'
 
@@ -63,48 +64,6 @@ export default function ViewBookingDailyView() {
     dispatch(updateDailyView(date, selectedFacilityId))
   }, [date])
 
-  function Dates(date: Date) {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const dates = date.getDate()
-    const maxDate = new Date(year, month, 0).getDate()
-    const day = new Date(year, month, dates).getDay()
-    const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
-
-    if (startDate + 6 > maxDate) {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + maxDate - startDate}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-          />
-          <DateRows
-            firstDate={1}
-            assignedMonth={month}
-            lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-          />
-        </DatesContainer>
-      )
-    } else {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + 6}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-          />
-        </DatesContainer>
-      )
-    }
-  }
-
   return (
     <div>
       <TopNavBarRevamp
@@ -118,7 +77,7 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          {Dates(date)}
+          <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
           <BookingSectionDiv>
             <ViewSection />
           </BookingSectionDiv>
