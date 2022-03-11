@@ -37,7 +37,9 @@ export enum PATHS {
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityID',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
@@ -82,6 +84,7 @@ export enum PATHS {
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
 }
+
 //DOCUMENTATION
 const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
 const Supper_Documentation = React.lazy(() => import(/* webpackChunckName: "Supper_Documentation" */ '../docs/supper'))
@@ -115,9 +118,14 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityB
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
+const ViewBookingDailyView = React.lazy(
+  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/ViewBookingDailyView'),
+)
+const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
 const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
 )
+
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
 const ViewWashingMachine = React.lazy(
@@ -150,6 +158,7 @@ const UpdateAllItems = React.lazy(
   () => import(/* webpackChuckName: "UpdateAllItems" */ './Supper/OrderSummary/UpdateAllItems'),
 )
 const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
+
 export default class Routes extends React.Component {
   render() {
     return (
@@ -184,7 +193,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW} component={ViewBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />
             <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ComingSoon} />
