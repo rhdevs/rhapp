@@ -8,9 +8,9 @@ import { PATHS } from '../../Routes'
 import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { DateRows } from '../../../components/Calendar/DateRows'
 import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
 
 const HEADER_HEIGHT = '70px'
 
@@ -40,6 +40,8 @@ const TitleText = styled.h2`
   font-weight: 700;
   font-size: 22px;
   margin-top: 0.7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const DatesContainer = styled.div`
@@ -59,16 +61,21 @@ export default function ViewBookingDailyView() {
   const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
+  const { selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(updateDailyView(date, selectedFacilityId))
+    dispatch(fetchFacilityNameFromID(selectedFacilityId))
+    if (selectedFacilityId == 0) {
+      dispatch(setSelectedFacility(selectedFacilityId))
+    }
   }, [date])
 
   return (
     <div>
       <TopNavBarRevamp
         onLeftClick={() => 'link to calendar page'}
-        centerComponent={<TitleText>Calendar</TitleText>}
+        centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={
           <ButtonComponent state="primary" text="Book Facility" onClick={() => 'link to booking page'} size="small" />
         }
