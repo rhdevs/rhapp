@@ -17,11 +17,9 @@ const HEADER_HEIGHT = '70px'
 const Background = styled.div`
   background-color: #fff;
   height: calc(100vh - ${HEADER_HEIGHT});
-  width: (100vw);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 36px;
 `
 
 const BookingSectionDiv = styled.div`
@@ -42,11 +40,6 @@ const TitleText = styled.h2`
   margin-top: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
-`
-
-const DatesContainer = styled.div`
-  display: flex;
-  margin: auto;
 `
 
 type State = {
