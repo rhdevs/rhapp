@@ -18,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
 
   html {
     --antd-wave-shadow-color: rgb(222, 95, 76) !important;
+    scroll-behavior: smooth;
   }
 
   .ant-select-selector {

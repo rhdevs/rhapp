@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { Reducer } from 'redux'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './types'
+import { defaultTimeBlocks, myBookingsStub } from '../stubs'
+import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, BookingStatus, TimeBlock } from './types'
 
 const initialState = {
   // MAIN PAGE
@@ -35,6 +36,16 @@ const initialState = {
   facilityBookings: [],
   selectedFacilityName: '',
   numRepeatWeekly: 1,
+  booking: null,
+  bookingStatus: BookingStatus.INITIAL,
+  bookingStartTime: 0,
+  bookingEndTime: 0,
+  bookingEndDate: 0,
+  conflictBookings: [],
+  timeBlocks: defaultTimeBlocks,
+  selectedStartTime: -1,
+  selectedEndTime: -1,
+  selectedDayBookings: myBookingsStub,
 }
 
 type State = {
@@ -66,6 +77,17 @@ type State = {
   selectedFacilityName: string
   createBookingError: string
   numRepeatWeekly: number
+  booking: Booking | null
+  bookingStatus: BookingStatus
+  message?: string
+  bookingStartTime: number
+  bookingEndTime: number
+  bookingEndDate: number
+  conflictBookings: Booking[]
+  timeBlocks: TimeBlock[]
+  selectedStartTime: number
+  selectedEndTime: number
+  selectedDayBookings: Booking[]
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -262,6 +284,62 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         numRepeatWeekly: action.numRepeatWeekly,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING: {
+      return {
+        ...state,
+        booking: action.booking,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatus: action.bookingStatus,
+        message: action.message,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_START_TIME: {
+      return {
+        ...state,
+        bookingStartTime: action.bookingStartTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_END_TIME: {
+      return {
+        ...state,
+        bookingEndTime: action.bookingEndTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_END_DATE: {
+      return {
+        ...state,
+        bookingEndDate: action.bookingEndDate,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS: {
+      return {
+        ...state,
+        conflictBookings: action.conflictBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_TIME_BLOCKS: {
+      return {
+        ...state,
+        timeBlocks: action.timeBlocks,
+      }
+    }
+    case FACILITY_ACTIONS.SET_START_END_TIME: {
+      return {
+        ...state,
+        selectedStartTime: action.selectedStartTime,
+        selectedEndTime: action.selectedEndTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS: {
+      return {
+        ...state,
+        selectedDayBookings: action.selectedDayBookings,
       }
     }
     default:

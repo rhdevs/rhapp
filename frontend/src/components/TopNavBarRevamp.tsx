@@ -5,81 +5,77 @@ import styled from 'styled-components'
 
 import 'antd-mobile/dist/antd-mobile.css'
 
-const TitleText = styled.text`
-  font-family: Inter;
+const TitleText = styled.h1`
+  font-family: lato;
   font-style: normal;
-  font-weight: 500;
-  font-size: 30px;
-  width: 100%;
-  line-height: 14px;
-  color: #002642;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 20px;
+  color: #000000;
   align-self: center;
   white-space: nowrap;
-  text-overflow: ellipsis;
+  padding-left: 70px;
 `
+
 const StyledNavBar = styled(NavBar)`
   &.am-navbar {
     height: 70px;
-    background-color: #fafaf4; !important
+    background-color: #ffffff; !important
   }
-  padding: 15px;
-  max-width:100%;
+  max-width: 100%;
   position: sticky;
-  top:0;
-  z-index:200;
+  top: 0;
+  z-index: 200;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: right;
 `
+
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
+    align-self: center;
   }
   padding-right: 11px;
   width: 40px;
   height: 40px;
 `
-// UNDONE, feel free to complete
-function TopNavBar({
-  title,
-  leftIcon,
-  leftIconComponent,
-  rightComponent,
-  centerComponent,
-  onLeftClick,
-}: {
+
+type NavProps = {
   title?: string
   leftIcon?: boolean
   leftIconComponent?: ReactElement
   rightComponent?: ReactElement | undefined
   centerComponent?: ReactElement
   onLeftClick?: () => void
-}) {
+}
+
+function TopNavBarRevamp(props: NavProps) {
   const history = useHistory()
   return (
     <StyledNavBar
       mode="light"
       icon={
         <>
-          {leftIcon && leftIconComponent}
-          {!leftIcon && (
+          {props.leftIcon && props.leftIconComponent}
+          {!props.leftIcon && (
             <NavBarIcons
               type="left"
               onClick={() => {
-                onLeftClick ? onLeftClick() : history.goBack()
+                props.onLeftClick ? props.onLeftClick() : history.goBack()
               }}
               color="#002642"
             />
           )}
-          <TitleText>{title}</TitleText>
+          <TitleText>{props.title}</TitleText>
         </>
       }
-      rightContent={rightComponent}
+      rightContent={props.rightComponent}
     >
-      {centerComponent}
+      {props.centerComponent}
     </StyledNavBar>
   )
 }
 
-export default TopNavBar
+export default TopNavBarRevamp

@@ -26,6 +26,7 @@
     "bcrypt": "^5.0.0",
     "crypto-js": "^4.0.0",
     "customize-cra": "^1.0.0",
+    "date-fns": "^2.28.0",
     "dayjs": "^1.9.7",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^7.0.1",
