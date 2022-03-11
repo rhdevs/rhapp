@@ -27,7 +27,14 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     '&endTime=' +
     parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
 
-  resetTB()
+  //reset all elements in TB to default
+  for (let i = 0; i < 24; i++) {
+    updatedTB[i] = {
+      id: i,
+      timestamp: 0,
+      type: TimeBlockType.AVAILABLE,
+    }
+  }
   fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
     mode: 'cors',
@@ -56,16 +63,6 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
       dispatch(setTimeBlocks(updatedTB))
       dispatch(setIsLoading(false))
     })
-
-  function resetTB() {
-    for (let i = 0; i < 24; i++) {
-      updatedTB[i] = {
-        id: i,
-        timestamp: 0,
-        type: TimeBlockType.AVAILABLE,
-      }
-    }
-  }
 }
 
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
