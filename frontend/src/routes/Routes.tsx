@@ -37,6 +37,7 @@ export enum PATHS {
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view/:facilityID',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create',
   VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
@@ -125,6 +126,9 @@ const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict
 const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
 )
+const CreateBookingDailyView = React.lazy(
+  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
+)
 
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
@@ -195,6 +199,7 @@ export default class Routes extends React.Component {
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW} component={ViewBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW} component={CreateBookingDailyView} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />

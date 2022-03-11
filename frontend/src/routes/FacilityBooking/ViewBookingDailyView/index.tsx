@@ -53,7 +53,7 @@ type State = {
   facilityId: number
 }
 
-export default function CreateBookingDailyView() {
+export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const location = useLocation<State>()
@@ -113,7 +113,12 @@ export default function CreateBookingDailyView() {
         onLeftClick={() => 'link to calendar page'}
         centerComponent={<TitleText>Calendar</TitleText>}
         rightComponent={
-          <ButtonComponent state="primary" text="Book Facility" onClick={() => 'link to booking page'} size="small" />
+          <ButtonComponent
+            state="primary"
+            text="Book Facility"
+            onClick={() => history.push(PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW)}
+            size="small"
+          />
         }
       />
       {isLoading ? (
