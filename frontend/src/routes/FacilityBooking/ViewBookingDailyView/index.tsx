@@ -50,11 +50,10 @@ type State = {
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
   const location = useLocation<State>()
-  const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
-  const { selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(updateDailyView(date, selectedFacilityId))
