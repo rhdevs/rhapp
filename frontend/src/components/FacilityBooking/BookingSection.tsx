@@ -25,10 +25,15 @@ const BookingSection = () => {
   }, [])
 
   useEffect(() => {
+    updateTimeBlocks()
+  }, [selectedBlockTimestamp])
+
+  function updateTimeBlocks() {
     if (selectedStartTime !== -1) {
       let isAfterOccupied = false
       const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
         let type = entry.type
+
         if (entry.timestamp === selectedBlockTimestamp) {
           type = TimeBlockType.SELECTED
         } else if (entry.timestamp < selectedBlockTimestamp) {
@@ -41,16 +46,19 @@ const BookingSection = () => {
             type = type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : type
           }
         }
+
         return { ...entry, type }
       })
+
       dispatch(setTimeBlocks(newTimeblocks))
     }
-  }, [selectedBlockTimestamp])
+  }
 
   function setSelectedBlock(selectedTimestamp: number) {
     setSelectedBlockTimestamp(selectedTimestamp)
     if (selectedStartTime === -1) {
       dispatch(setStartEndTime(selectedTimestamp))
+      console.log(selectedTimestamp)
     } else {
       //Add 1 hour to selected block as end time
       dispatch(setStartEndTime(selectedStartTime, selectedTimestamp + 3600))

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -12,8 +12,11 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import {
   editBookingFromDate,
   editBookingToDate,
+  getTimeBlocks,
   handleCreateBooking,
+  setIsLoading,
   setStartEndTime,
+  updateDailyView,
 } from '../../../store/facilityBooking/action'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
@@ -81,6 +84,11 @@ export default function CreateBookingDailyView() {
   // const date = location.state.date
 
   const date = ViewStartDate
+
+  useEffect(() => {
+    dispatch(setIsLoading(true))
+    dispatch(updateDailyView(date, selectedFacilityId)) // TODO TimeBlocks have no timestamp how come
+  }, [])
 
   function Dates(date: Date) {
     const year = date.getFullYear()
