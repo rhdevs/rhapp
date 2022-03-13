@@ -15,7 +15,7 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
 
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   let updatedFB: Booking[] = []
-  const updatedTB: TimeBlock[] = defaultTimeBlocks
+  const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
