@@ -18,7 +18,7 @@ const BookingSection = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
-  const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
+  const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
     dispatch(getTimeBlocks())
@@ -28,42 +28,31 @@ const BookingSection = () => {
     updateTimeBlocks()
   }, [selectedBlockTimestamp])
 
+  function assignType(entry: TimeBlock): TimeBlockType {
+    if (entry.timestamp === selectedBlockTimestamp) return TimeBlockType.SELECTED
+    if (entry.timestamp < selectedBlockTimestamp)
+      return entry.type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : entry.type
+    return entry.type
+  }
+
   function updateTimeBlocks() {
-    if (selectedStartTime !== -1) {
-      let isAfterOccupied = false
-      const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
-        let type = entry.type
-
-        if (entry.timestamp === selectedBlockTimestamp) {
-          type = TimeBlockType.SELECTED
-        } else if (entry.timestamp < selectedBlockTimestamp) {
-          type = type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : type
-        } else {
-          if (entry.type === TimeBlockType.OCCUPIED) {
-            isAfterOccupied = true
-          }
-          if (isAfterOccupied) {
-            type = type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : type
-          }
-        }
-
-        return { ...entry, type }
-      })
-
-      dispatch(setTimeBlocks(newTimeblocks))
-    }
+    if (selectedStartTime === -1) return
+    const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
+      const type = assignType(entry)
+      return { ...entry, type }
+    })
+    dispatch(setTimeBlocks(newTimeblocks))
   }
 
   function setSelectedBlock(selectedTimestamp: number) {
     setSelectedBlockTimestamp(selectedTimestamp)
     if (selectedStartTime === -1) {
       dispatch(setStartEndTime(selectedTimestamp))
-      console.log(selectedTimestamp)
-    } else {
-      //Add 1 hour to selected block as end time
-      dispatch(setStartEndTime(selectedStartTime, selectedTimestamp + 3600))
-      history.push(PATHS.CREATE_FACILITY_BOOKING)
+      return
     }
+    // Add 1 hour to selected block as end time
+    dispatch(setStartEndTime(selectedStartTime, selectedTimestamp + 3600))
+    history.push(PATHS.CREATE_FACILITY_BOOKING)
   }
 
   return (
