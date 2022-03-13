@@ -37,10 +37,10 @@ const GymTabContainer = styled.div<{ isSelected?: boolean }>`
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
-  line-height: 45px;
+  height: 45px;
   ${(props) =>
-    props.isSelected
-      ? `color: #59ba95;
+    props.isSelected &&
+    `color: #59ba95;
     background-position: 50% 2.5em;
     background-image: linear-gradient(
       to bottom,
@@ -48,8 +48,7 @@ const GymTabContainer = styled.div<{ isSelected?: boolean }>`
       #73bb75
     );
     background-repeat: no-repeat;
-    background-size: 100% 2px;`
-      : ``}
+    background-size: 100% 2px;`}
 `
 
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
