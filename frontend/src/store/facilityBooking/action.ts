@@ -427,16 +427,6 @@ export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch
   })
 }
 
-export const setStartEndTime = (selectedStartTime: number, selectedEndTime?: number) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_START_END_TIME,
-    selectedStartTime: selectedStartTime,
-    selectedEndTime: selectedEndTime ?? -1,
-  })
-}
-
 export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,

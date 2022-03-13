@@ -6,7 +6,12 @@ import { DailyContainer, MainContainer } from './BlockStyles'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
-import { getTimeBlocks, setStartEndTime, setTimeBlocks } from '../../store/facilityBooking/action'
+import {
+  editBookingFromDate,
+  editBookingToDate,
+  getTimeBlocks,
+  setTimeBlocks,
+} from '../../store/facilityBooking/action'
 import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { PATHS } from '../../routes/Routes'
@@ -14,11 +19,13 @@ import { PATHS } from '../../routes/Routes'
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
 const BookingSection = () => {
-  const { timeBlocks, selectedStartTime } = useSelector((state: RootState) => state.facilityBooking)
+  const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const history = useHistory()
   const dispatch = useDispatch()
   const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
+
+  const [selectedStartTime, setSelectedStartTime] = useState(-1)
 
   useEffect(() => {
     dispatch(getTimeBlocks())
@@ -46,12 +53,18 @@ const BookingSection = () => {
 
   function setSelectedBlock(selectedTimestamp: number) {
     setSelectedBlockTimestamp(selectedTimestamp)
+
     if (selectedStartTime === -1) {
-      dispatch(setStartEndTime(selectedTimestamp))
+      setSelectedStartTime(selectedTimestamp)
       return
     }
-    // Add 1 hour to selected block as end time
-    dispatch(setStartEndTime(selectedStartTime, selectedTimestamp + 3600))
+    const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
+    const bookingFromDate = new Date(selectedStartTime * 1000)
+    const bookingToDate = new Date(selectedEndTime * 1000)
+
+    dispatch(editBookingFromDate(bookingFromDate))
+    dispatch(editBookingToDate(bookingToDate))
+
     history.push(PATHS.CREATE_FACILITY_BOOKING)
   }
 
@@ -63,6 +76,7 @@ const BookingSection = () => {
         {timeBlocks.map((entry, index) => (
           <BookingBlock
             key={index}
+            selectedStartTime={selectedStartTime}
             onClick={() => setSelectedBlock(entry.timestamp)}
             entry={entry}
             // if day selected is not current, scroll to defaultTimePosition

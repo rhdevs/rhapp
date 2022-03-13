@@ -15,7 +15,6 @@ import {
   getTimeBlocks,
   handleCreateBooking,
   setIsLoading,
-  setStartEndTime,
   updateDailyView,
 } from '../../../store/facilityBooking/action'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
@@ -60,34 +59,25 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-// type State = {
-//   date: Date
-//   facilityId: number
-// }
+type State = {
+  date: Date
+  facilityId: number
+}
 
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
-  // const location = useLocation<State>()
-  const {
-    newBookingFacilityName,
-    newBookingFromDate,
-    isLoading,
-    createBookingError,
-    selectedStartTime,
-    selectedEndTime,
-    selectedFacilityId,
-    ViewStartDate,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const location = useLocation<State>()
+  const { newBookingFacilityName, newBookingFromDate, isLoading } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
-  // const selectedFacilityId = location.state.facilityId
-  // const date = location.state.date
-
-  const date = ViewStartDate
+  const selectedFacilityId = location.state.facilityId
+  const date = location.state.date
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(updateDailyView(date, selectedFacilityId)) // TODO TimeBlocks have no timestamp how come
+    dispatch(updateDailyView(date, selectedFacilityId))
   }, [])
 
   function Dates(date: Date) {
@@ -143,9 +133,6 @@ export default function CreateBookingDailyView() {
       ) : (
         <Background>
           <h2>Choose starting time slot</h2>
-          <h2>
-            Start: {unixTo12HourTime(selectedStartTime)} End: {unixTo12HourTime(selectedEndTime)}
-          </h2>
           <h3>
             The Date: {newBookingFromDate.getDate()}/{newBookingFromDate.getMonth() + 1}/
             {newBookingFromDate.getFullYear()}

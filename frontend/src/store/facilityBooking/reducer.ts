@@ -38,8 +38,6 @@ const initialState = {
   numRepeatWeekly: 1,
   conflictBookings: [],
   timeBlocks: defaultTimeBlocks,
-  selectedStartTime: -1,
-  selectedEndTime: -1,
   selectedDayBookings: myBookingsStub,
 }
 
@@ -74,8 +72,6 @@ type State = {
   numRepeatWeekly: number
   conflictBookings: Booking[]
   timeBlocks: TimeBlock[]
-  selectedStartTime: number
-  selectedEndTime: number
   selectedDayBookings: Booking[]
 }
 
@@ -286,13 +282,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         timeBlocks: action.timeBlocks,
-      }
-    }
-    case FACILITY_ACTIONS.SET_START_END_TIME: {
-      return {
-        ...state,
-        selectedStartTime: action.selectedStartTime,
-        selectedEndTime: action.selectedEndTime,
       }
     }
     case FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS: {

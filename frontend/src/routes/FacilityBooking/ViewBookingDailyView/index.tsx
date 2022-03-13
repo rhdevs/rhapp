@@ -26,7 +26,7 @@ const Background = styled.div`
   overflow: hidden;
 `
 
-const BookingSectionDiv = styled.div`
+const ViewSectionDiv = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -117,7 +117,15 @@ export default function ViewBookingDailyView() {
           <ButtonComponent
             state="primary"
             text="Book Facility"
-            onClick={() => history.push(PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW)}
+            onClick={() =>
+              history.push({
+                pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
+                state: {
+                  facilityId: selectedFacilityId,
+                  date: date,
+                },
+              })
+            }
             size="small"
           />
         }
@@ -127,9 +135,9 @@ export default function ViewBookingDailyView() {
       ) : (
         <Background>
           {Dates(date)}
-          <BookingSectionDiv>
+          <ViewSectionDiv>
             <ViewSection />
-          </BookingSectionDiv>
+          </ViewSectionDiv>
         </Background>
       )}
     </div>

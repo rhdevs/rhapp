@@ -85,7 +85,6 @@ export enum FACILITY_ACTIONS {
   SET_REPEAT_WEEKLY = 'FACILITY_ACTIONS.SET_REPEAT_WEEKLY',
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
-  SET_START_END_TIME = 'FACILITY_ACTIONS.SET_START_END_TIME',
   SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
 }
 
@@ -256,12 +255,6 @@ type SetTimeBlock = {
   timeBlocks: TimeBlock[]
 }
 
-type SetStartEndTime = {
-  type: typeof FACILITY_ACTIONS.SET_START_END_TIME
-  selectedStartTime: number
-  selectedEndTime: number
-}
-
 type SetSelectedDayBookings = {
   type: typeof FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS
   selectedDayBookings: Booking[]
@@ -302,5 +295,4 @@ export type ActionTypes =
   | SetRepeatWeekly
   | SetConflictBookings
   | SetTimeBlock
-  | SetStartEndTime
   | SetSelectedDayBookings

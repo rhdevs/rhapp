@@ -60,44 +60,33 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
 
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
 
-  return (
-    <>
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <CalenderContainer>
-          <YearContainer>{currentYear}</YearContainer>
-          <MonthContainer>
-            <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-            <DatesGridContainer>
-              <DayHeaders />
-              <MonthlyContainer nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
-            </DatesGridContainer>
-          </MonthContainer>
+  return isLoading ? (
+    <LoadingSpin />
+  ) : (
+    <CalenderContainer>
+      <YearContainer>{currentYear}</YearContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <MonthlyContainer nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
+        </DatesGridContainer>
+      </MonthContainer>
+      {monthList.slice(1).map((month) => {
+        return (
           <>
-            {monthList.slice(1).map((month) => {
-              return (
-                <>
-                  {/* Note: 0 stands for Jan */}
-                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
-                  <MonthContainer key={startingMonth++}>
-                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-                    <DatesGridContainer>
-                      <DayHeaders />
-                      <MonthlyContainer
-                        key={startingMonth}
-                        nthMonth={startingMonth}
-                        facilityId={props.selectedFacilityId}
-                      />
-                    </DatesGridContainer>
-                  </MonthContainer>
-                </>
-              )
-            })}
+            {/* Note: 0 stands for Jan */}
+            {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+            <MonthContainer key={startingMonth++}>
+              <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+              <DatesGridContainer>
+                <DayHeaders />
+                <MonthlyContainer key={startingMonth} nthMonth={startingMonth} facilityId={props.selectedFacilityId} />
+              </DatesGridContainer>
+            </MonthContainer>
           </>
-        </CalenderContainer>
-      )}
-      )
-    </>
+        )
+      })}
+    </CalenderContainer>
   )
 }
