@@ -5,7 +5,7 @@ import { Booking } from '../../../store/facilityBooking/types'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../Routes'
 
-export default function ConflictBookingModal(props: { booking: Booking | undefined }) {
+export default function ConflictBookingModal(booking: { booking: Booking | undefined }) {
   const history = useHistory()
   const [modalIsOpen, setmodalIsOpen] = useState<boolean>(true)
   /* TODO implement function to toggle state to true */
@@ -15,7 +15,7 @@ export default function ConflictBookingModal(props: { booking: Booking | undefin
   function onRightClick() {
     /*TODO to update createbooking function in store instead*/
     toggleStatus()
-    handleCreateBooking(props.booking?.bookingID ? true : false)
+    handleCreateBooking(booking.booking?.bookingID ? true : false)
   }
   function toLink() {
     history.push(PATHS.VIEW_FACILITY_CONFLICT)
@@ -31,7 +31,7 @@ export default function ConflictBookingModal(props: { booking: Booking | undefin
       leftButtonText="Cancel"
       hasLeftButton
       description="Do you still want to continue with the conflicting bookings?"
-      onlinkClick={toLink}
+      onLinkClick={toLink}
       link="View Conflicts"
     />
   )

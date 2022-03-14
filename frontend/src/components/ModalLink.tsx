@@ -1,7 +1,5 @@
 import React from 'react'
-import Button from './Button'
 import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
 
 const Directinglink = styled.a`
   font-family: Lato;

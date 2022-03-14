@@ -19,7 +19,7 @@ const MainContainer = styled.div`
   position: fixed;
   background-color: #fff;
   width: 90vw;
-  max-width: 90vw;
+  max-width: 26em;
   border-radius: 15px;
   margin: auto;
   padding: 15px;
@@ -54,12 +54,12 @@ const ButtonContainer = styled.div`
 
 type Props = {
   link?: string
-  onlinkClick: React.MouseEventHandler<HTMLElement>
+  onLinkClick: React.MouseEventHandler<HTMLElement>
   title: string
   description?: string | JSX.Element
   // Left Button Props
   hasLeftButton?: boolean
-  leftButtonType: 'primary' | 'secondary'
+  leftButtonType: 'secondary'
   leftButtonText?: string
   onLeftButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Right Button Props
@@ -100,9 +100,9 @@ export function ConfirmationModal(props: Props) {
       >
         <TitleText>{props.title}</TitleText>
         <DescriptionText>{props.description}</DescriptionText>
-        <ModalLink text={props.link} onClick={props.onlinkClick} />
+        <ModalLink text={props.link} onClick={props.onLinkClick} />
         <ButtonContainer>
-          {props.hasLeftButton && props.hasLeftButton && props.leftButtonText && (
+          {props.hasLeftButton && props.leftButtonText && (
             <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
           )}
           <Button state={'primary'} onClick={props.onRightButtonClick} text={props.rightButtonText} />
