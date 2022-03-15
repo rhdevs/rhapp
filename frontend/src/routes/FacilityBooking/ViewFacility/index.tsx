@@ -12,6 +12,7 @@ import {
   resetBooking,
   setIsLoading,
   setSelectedFacility,
+  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'

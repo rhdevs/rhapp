@@ -125,6 +125,9 @@ export default function CreateBooking() {
     if (facilityList.length === 0) {
       dispatch(getFacilityList())
     }
+    return () => {
+      dispatch(resetNewBooking)
+    }
   }, [dispatch])
 
   const getFacilityName = () => {
