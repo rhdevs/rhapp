@@ -7,7 +7,7 @@ import editIcon from '../../../assets/editIcon.svg'
 import messageIcon from '../../../assets/messageIcon.svg'
 import { RootState } from '../../../store/types'
 import {
-  SetIsLoading,
+  setIsLoading,
   deleteMyBooking,
   editMyBooking,
   fetchSelectedFacility,
@@ -158,7 +158,7 @@ export default function ViewBooking() {
     window.open(site)
   }
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
   }, [dispatch])
 

@@ -1,37 +1,22 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import bookingsIcon from '../../../assets/bookingsIcon.svg'
-import messageIcon from '../../../assets/messageIcon.svg'
-import adminIcon from '../../../assets/adminIcon.svg'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import 'react-date-range/dist/styles.css' // main css file
-import 'react-date-range/dist/theme/default.css' // theme css file
-import Button from '../../../components/Mobile/Button'
+import Button from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { Alert } from 'antd'
-import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import {
-  createNewBookingFromFacility,
   fetchFacilityNameFromID,
-  getAllBookingsForFacility,
-  SetIsLoading,
-  setViewDates,
+  resetBooking,
+  setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
-import { months } from '../../../common/dates'
-import LoadingSpin from '../../../components/LoadingSpin'
-import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
-import dayjs from 'dayjs'
-import Calendar from 'react-calendar'
-import './calendar.css'
-import BookingCard from '../../../components/BookingCard'
+import { Calendar } from '../../../components/Calendar/Calendar'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -39,269 +24,42 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
-const StyledButton = styled(Button)`
-  .ant-btn {
-    border-radius: 25px;
-  }
-`
-
-const DateDisplayText = styled.div`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 26px;
-  text-align: left;
-  padding: 10px 0px 0px 23px;
-`
-
-const Icon = styled.img`
-  padding: 20px;
-`
-
-const ActionButtonGroup = styled.div`
-  justify-content: space-between;
-  display: flex;
-  padding: 16px 23px 0px 23px;
-  float: right;
-`
-
-const EventsGroup = styled.div``
-
-const EventCard = styled.div`
-  position: relative;
-  cursor: pointer;
-  background-color: #ffffff;
-  margin: 23px;
-  min-height: 70px;
-  border-radius: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  display: flex;
-  padding: 15px;
-`
-
-const AlertGroup = styled.div`
-  padding: 3px 23px 3px 23px;
-`
-
-const EventLabels = styled.div`
-  align-self: center;
-  width: 80%;
-`
-
-const EventBoldLabel = styled.div`
-  margin-bottom: 0em;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  overflow: hidden;
-`
-
-const EventNormalLabel = styled.div`
-  margin-left: 17px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 11px;
-  line-height: 14px;
-`
-
-const DateSelectorGroup = styled.div`
-  padding: 23px 23px 10px 23px;
-  font-family: inter;
-  display: flex;
-  place-content: center;
-  align-self: center;
-  background-color: #fafaf4;
-  border-radius: 15px !important;
-
-  .rdrDateDisplayWrapper {
-    border-radius: 9px !important;
-  }
-`
-
-const EventRightDisplay = styled.div`
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translate(-17%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const BookingSubHeaderCCAName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 14px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-
-const BookingSubHeaderEventName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 14px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-
-const InstructionText = styled.div`
-  font-size: 17px;
-  font-weight: 200;
-  text-align: center;
-  margin-bottom: 15px;
-`
-
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityID: string }>()
-  const {
-    ViewStartDate,
-    ViewEndDate,
-    createSuccess,
-    createFailure,
-    isLoading,
-    facilityBookings,
-    selectedFacilityName,
-    selectedFacilityId,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityName, selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
+    dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
-    dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
     if (selectedFacilityId == 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
     }
-    return () => {
-      dispatch(setViewDates(new Date(), parseInt(params.facilityID)))
-    }
   }, [])
 
-  const fetchTelegram = async (booking) => {
-    try {
-      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + booking.userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
-            console.log(data.err)
-          } else {
-            openTelegram(data.telegramHandle)
-          }
-        })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const openTelegram = (userID) => {
-    const site = 'https://telegram.me/' + userID
-    window.open(site)
-  }
-
-  const MyBookingIcon = (
-    <img
-      src={bookingsIcon}
+  const MyBookingButton = (
+    <Button
+      state="primary"
+      text="Bookings"
+      type="button"
+      size="small"
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+        history.push(`${PATHS.VIEW_MY_BOOKINGS_USERID}/${localStorage.getItem('userID')}`)
       }}
     />
   )
 
-  const getHumanReadableTime = (eventStartTime: number) => {
-    const date = new Date(eventStartTime * 1000)
-    let hour = date.getHours().toString()
-    if (hour.length == 1) {
-      hour = '0' + hour
-    }
-    let minutes = date.getMinutes().toString()
-    if (minutes.length == 1) {
-      minutes = '0' + minutes
-    }
-
-    return hour + minutes
-  }
-
-  const getHumanReadableDate = (eventTime: number) => {
-    const date = new Date((eventTime + 28800) * 1000)
-    const day = date.getUTCDate()
-    const monthInt = date.getUTCMonth() + 1
-
-    return '[' + day + '/' + monthInt + ']'
-  }
-
-  const AlertSection = (
-    <AlertGroup>
-      {createSuccess && createFailure && (
-        <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
-      )}
-      {createFailure && !createSuccess && <Alert message="Not Successful Boohoo :-(" type="error" closable showIcon />}
-    </AlertGroup>
-  )
-
   return (
-    <div style={{ backgroundColor: '#fafaf4' }}>
-      <TopNavBar title={selectedFacilityName} rightComponent={MyBookingIcon} />
+    <>
+      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <>
-            {AlertSection}
-            <DateSelectorGroup>
-              <Calendar
-                onChange={(value: Date) => {
-                  dispatch(SetIsLoading(true))
-                  dispatch(setViewDates(value, parseInt(params.facilityID)))
-                }}
-                prev2Label={null}
-                next2Label={null}
-              />
-            </DateSelectorGroup>
-            <InstructionText>Select a date to view the day’s events.</InstructionText>
-            <ActionButtonGroup>
-              <StyledButton
-                onButtonClick={() => {
-                  dispatch(
-                    createNewBookingFromFacility(
-                      ViewStartDate,
-                      dayjs(ViewStartDate).add(1, 'hour').toDate(),
-                      selectedFacilityName,
-                      params.facilityID,
-                    ),
-                  )
-                  history.push('/facility/booking/create')
-                }}
-                hasSuccessMessage={false}
-                stopPropagation={false}
-                defaultButtonDescription={'Book Facility'}
-                defaultButtonColor="#DE5F4C"
-                updatedButtonColor="#DE5F4C"
-                updatedTextColor="white"
-              />
-              {/* <div onClick={() => console.log('pressed')}>
-                <StyledButton
-                  onButtonClick={(buttonIsPressed) => dispatch(setViewFacilityMode(buttonIsPressed))}
-                  hasSuccessMessage={false}
-                  stopPropagation={false}
-                  defaultButtonDescription={'👓 Bookings ⌄'}
-                  defaultButtonColor="transparent"
-                  updatedButtonColor="transparent"
-                  updatedTextColor="#DE5F4C"
-                  defaultTextColor="#DE5F4C"
-                  updatedButtonDescription={'🕶 Availabilities ⌄'}
-                />
-              </div> */}
-            </ActionButtonGroup>
-            <DateDisplayText>{ViewStartDate.getDate() + ' ' + months[ViewStartDate.getMonth()]}</DateDisplayText>
-
-            {isLoading ? <LoadingSpin /> : <BookingCard bookings={facilityBookings} />}
-            <BottomNavBar />
-          </>
+          <Calendar selectedFacilityId={parseInt(params.facilityID)} />
+          <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
-    </div>
+    </>
   )
 }

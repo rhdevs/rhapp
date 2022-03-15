@@ -3,7 +3,7 @@ import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 import { unixToCalendarFormat } from '../../common/unixToCalendarFormat'
 
-export const SetClickedDate = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const setClickedDate = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
     newClickedDate: newClickedDate,
@@ -46,10 +46,10 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityI
     facilityBookings: updatedFB,
   })
   dispatch(UpdateProcessedDates(updatedFB))
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
-export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: CALENDAR_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 

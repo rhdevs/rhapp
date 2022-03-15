@@ -1,7 +1,7 @@
 /**
  *
  * @param unixDate epoch/unix date time number
- * @returns formatted time in for of (MMDD) (eg, 302 for Mar 2nd)
+ * @returns formatted time in the form of (MMDD) (eg, 302 for Mar 2nd)
  */
 
 export const unixToCalendarFormat = (unprocessedDate: number, processedDates: number[]) => {
