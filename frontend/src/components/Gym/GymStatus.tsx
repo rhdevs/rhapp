@@ -35,13 +35,14 @@ interface Props {
 }
 
 function GymStatus(props: Props) {
-  return props.isOpen !== null ? (
+  if (props.isOpen == null) {
+    return <></>
+  }
+  return (
     <Container>
       <Ellipse isOpen={props.isOpen} />
       <Status isOpen={props.isOpen}>{props.isOpen ? 'Gym is Open' : 'Gym is Closed'}</Status>
     </Container>
-  ) : (
-    <></>
   )
 }
 

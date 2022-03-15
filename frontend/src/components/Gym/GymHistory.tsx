@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { unixToFormattedTimeNoSeconds } from '../../common/unixToFormattedTimeNoSeconds'
-import { unixToFullDate } from '../../common/unixToFullDate'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { getGymHistory } from '../../store/gym/action'
@@ -8,6 +7,7 @@ import { RootState } from '../../store/types'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;
+  background: #fff;
 `
 
 const Date = styled.div`
@@ -67,7 +67,7 @@ const GymHistory = () => {
       {gymHistory !== undefined &&
         gymHistory.map((entry) => (
           <div key={entry.date}>
-            <Date>{unixToFullDate(entry.date)}</Date>
+            <Date>{entry.date}</Date>
             {entry.details.map((user) => (
               <ContentRow key={user.requesttime}>
                 <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>

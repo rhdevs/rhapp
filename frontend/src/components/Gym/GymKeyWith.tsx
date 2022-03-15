@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Avatar from '../../assets/Avatar_4x.png'
 import { openUserTelegram } from '../../common/telegramMethods'
+import { LAPTOP_VIEW } from '../../common/breakpoints'
 
 const Header = styled.div`
   font-family: Lato;
@@ -25,18 +26,24 @@ const InfoArea = styled.div`
   align-items: center;
   text-align: center;
   letter-spacing: -0.015em;
-
   color: #191919;
 `
 
 const Container = styled.div`
   padding-top: 20px;
+  margin-bottom: 20px;
 `
 
 const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
+  ${LAPTOP_VIEW} {
+    img {
+      width: 120px;
+    }
+  }
 `
 
 interface Props {

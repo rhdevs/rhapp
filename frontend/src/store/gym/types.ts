@@ -15,7 +15,7 @@ export type ButtonStates = {
 export type ButtonTypes = string | 'keyWithMe' | 'returnKey' | 'closeGym' | 'openGym'
 
 export type HistoryEntry = {
-  date: number
+  date: string
   details: UserEntry[]
 }
 

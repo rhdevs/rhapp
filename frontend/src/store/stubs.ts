@@ -15,6 +15,7 @@ import {
   UserDetails,
 } from './supper/types'
 import { GymStatusStates, HistoryEntry } from './gym/types'
+import { unixToFullDate } from '../common/unixToFullDate'
 
 /**
  * ######### STUBS LIST: #########
@@ -561,7 +562,7 @@ export const gymStatus: GymStatusStates = {
 
 export const gymHistory: HistoryEntry[] = [
   {
-    date: 1638426691,
+    date: unixToFullDate(1638426691),
     details: [
       {
         statusChange: '',
@@ -581,7 +582,7 @@ export const gymHistory: HistoryEntry[] = [
     ],
   },
   {
-    date: 1638322891,
+    date: unixToFullDate(1638322891),
     details: [
       {
         statusChange: '',
