@@ -89,17 +89,21 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
+type FormValues = {
+  eventName: string
+  description: string
+}
+
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
   const {
-    register,
     handleSubmit,
     formState: { errors },
     control,
     watch,
-  } = useForm()
+  } = useForm<FormValues>()
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
   const [ccaName, setCcaName] = useState<string>('')
   const {
@@ -173,19 +177,20 @@ export default function CreateBooking() {
       ) : (
         <Form onSubmit={onSubmit}>
           <Controller
+            name="eventName"
             control={control}
-            render={({ onChange, value }) => (
+            render={({ onChange, value, name }) => (
               <InputField
-                hasError={value === ''}
+                name={name}
+                hasError={!!errors.eventName}
                 title="Event Name"
                 placeholder="Event Name"
-                value={value}
                 onChange={onChange}
+                required={true}
               />
             )}
             defaultValue=""
             rules={{ required: true }}
-            name="eventName"
           />
           {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
@@ -222,16 +227,17 @@ export default function CreateBooking() {
           </Container>
           <Controller
             name="description"
-            render={({ onChange, value }) => (
+            render={({ onChange, name }) => (
               <InputField
+                name={name}
+                hasError={!!errors.description}
                 title="Description"
                 placeholder="Tell us what your booking is for!"
                 textArea
-                value={value}
                 onChange={onChange}
+                required={true}
               />
             )}
-            ref={register}
             rules={{ required: true }}
             defaultValue=""
             control={control}

@@ -1,7 +1,18 @@
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import styled from 'styled-components'
+// import {} from 'react-hook-form'
 
 import { Input } from 'antd'
+import { register } from '../../serviceWorkerRegistration'
+
+const RedText = styled.span`
+  color: #f37562;
+  padding-right: 5px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+`
 
 const Container = styled.div`
   display: flex;
@@ -10,36 +21,34 @@ const Container = styled.div`
   margin: 10px 0px;
 `
 
-const StyledInput = styled(Input)<{ hasError?: boolean }>`
+const StyledInput = styled(Input)<{ error?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
-    border-radius: 30px;
-    border: 1px solid ${(props) => (props.hasError ? 'red' : '#f3f3f9')};
+    border-radius: 10px;
+    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
     padding: 5px 15px;
     margin: 0;
-    ${(props) => props.hasError && `background: #ffd1d1;`}
   }
   &.ant-input::placeholder {
-    color: #bfbfbf;
+    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
 
 const { TextArea } = Input
-const StyledTextArea = styled(TextArea)<{ hasError?: boolean }>`
+const StyledTextArea = styled(TextArea)<{ error?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
-    border-radius: 20px;
-    border: 1px solid ${(props) => (props.hasError ? 'red' : '#f3f3f9')};
+    border-radius: 10px;
     padding: 5px 15px;
     margin: 0;
     resize: none;
-    ${(props) => props.hasError && `background: #ffd1d1;`}
+    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
   }
   &.ant-input::placeholder {
-    color: #bfbfbf;
+    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
@@ -55,43 +64,39 @@ const StyledTitle = styled.div`
 `
 
 type InputFieldProps = {
-  title?: string
+  name: string
+  title: string
   placeholder: string
-  value?: string
-  setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textArea?: boolean
+  required?: boolean
   hasError?: boolean
-  onChange?: () => void
+  onChange: any
 }
 
-export default function InputField({
-  title,
-  placeholder,
-  value,
-  setValue,
-  textArea,
-  onChange,
-  hasError,
-}: InputFieldProps) {
-  const [inputValue, setInputValue] = useState('')
+export default function InputField(props: InputFieldProps) {
+  const RedAsterisk = <RedText>*</RedText>
+  const { title, placeholder, textArea, required, onChange, hasError } = props
 
   return (
     <Container>
-      {title && <StyledTitle>{title}</StyledTitle>}
+      {title && (
+        <StyledTitle>
+          {title}
+          {required && RedAsterisk}
+        </StyledTitle>
+      )}
       {textArea ? (
         <StyledTextArea
-          hasError={hasError}
-          placeholder={placeholder}
-          value={value ?? inputValue}
-          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
+          placeholder={hasError ? `${title} is required` : placeholder}
           rows={4}
+          onChange={onChange}
+          error={hasError}
         />
       ) : (
         <StyledInput
-          hasError={hasError}
-          placeholder={placeholder}
-          value={value ?? inputValue}
-          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
+          placeholder={hasError ? `${title} is required` : placeholder}
+          onChange={onChange}
+          error={hasError}
         />
       )}
     </Container>
