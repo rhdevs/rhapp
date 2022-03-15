@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { unixToFormattedTimeNoSeconds } from '../common/unixToFormattedTimeNoSeconds'
-import { unixToFullDate } from '../common/unixToFullDate'
+import { unixToFormattedTimeNoSeconds } from '../../common/unixToFormattedTimeNoSeconds'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { getGymHistory } from '../store/gym/action'
-import { RootState } from '../store/types'
+import { getGymHistory } from '../../store/gym/action'
+import { RootState } from '../../store/types'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;
+  background: #fff;
 `
 
 const Date = styled.div`
@@ -65,18 +65,16 @@ const GymHistory = () => {
   return (
     <Container>
       {gymHistory !== undefined &&
-        gymHistory.reverse().map((entry) => (
+        gymHistory.map((entry) => (
           <div key={entry.date}>
-            <Date>{unixToFullDate(entry.date)}</Date>
-            {entry.details
-              .sort((entry1, entry2) => entry1.requesttime - entry2.requesttime)
-              .map((user) => (
-                <ContentRow key={user.requesttime}>
-                  <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
-                  <Status status={user.statusChange} />
-                  <Content>@{user.userDetails}</Content>
-                </ContentRow>
-              ))}
+            <Date>{entry.date}</Date>
+            {entry.details.map((user) => (
+              <ContentRow key={user.requesttime}>
+                <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
+                <Status status={user.statusChange} />
+                <Content>@{user.userDetails}</Content>
+              </ContentRow>
+            ))}
             <PaddingFiller />
           </div>
         ))}

@@ -3,9 +3,9 @@ import { ActionTypes, GYM_ACTIONS, GymStatusStates, HistoryEntry } from './types
 
 const initialState = {
   gymStatus: {
-    gymIsOpen: true,
+    gymIsOpen: null,
     avatar: '',
-    keyHolder: { displayName: 'Abby Tan', telegramHandle: 'oopsidonthave' },
+    keyHolder: { displayName: '', telegramHandle: '' },
     keyIsReturned: false,
   },
   gymHistory: [],

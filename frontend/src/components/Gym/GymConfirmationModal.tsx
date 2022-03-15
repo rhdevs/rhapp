@@ -5,7 +5,7 @@ import { ButtonTypes } from '../../store/gym/types'
 import { useDispatch } from 'react-redux'
 
 function GymConfirmationModal(props: {
-  gymIsOpen: boolean
+  gymIsOpen: boolean | null
   userId: string
   name: string
   telegramHandle: string

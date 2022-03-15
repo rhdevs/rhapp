@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Avatar from '../assets/Avatar_4x.png'
-import { LAPTOP_VIEW } from '../common/breakpoints'
+import Avatar from '../../assets/Avatar_4x.png'
+import { openUserTelegram } from '../../common/telegramMethods'
+import { LAPTOP_VIEW } from '../../common/breakpoints'
 
 const Header = styled.div`
   font-family: Lato;
@@ -54,16 +55,14 @@ interface Props {
 function GymKeyWith(props: Props) {
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-        <Header>Key With</Header>
-        <ImageContainer>
-          <img src={props.avatar === '' ? Avatar : props.avatar} alt="Dummy Avatar" width="20%" />
-        </ImageContainer>
-        <Container>
-          <InfoArea> {props.name} </InfoArea>
-          <InfoArea> {'@' + props.handle} </InfoArea>
-        </Container>
-      </div>
+      <Header>Key With</Header>
+      <ImageContainer>
+        <img src={props.avatar === '' ? Avatar : props.avatar} alt="Dummy Avatar" width="20%" />
+      </ImageContainer>
+      <Container>
+        <InfoArea> {props.name} </InfoArea>
+        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.handle}</InfoArea>
+      </Container>
     </>
   )
 }

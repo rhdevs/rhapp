@@ -1,5 +1,5 @@
 export type GymStatusStates = {
-  gymIsOpen: boolean
+  gymIsOpen: boolean | null
   avatar: string
   keyHolder: { displayName: string; telegramHandle: string }
   keyIsReturned: boolean
@@ -15,7 +15,7 @@ export type ButtonStates = {
 export type ButtonTypes = string | 'keyWithMe' | 'returnKey' | 'closeGym' | 'openGym'
 
 export type HistoryEntry = {
-  date: number
+  date: string
   details: UserEntry[]
 }
 

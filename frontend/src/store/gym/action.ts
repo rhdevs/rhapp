@@ -1,6 +1,7 @@
 import { DOMAINS, ENDPOINTS, get, post } from '../endpoints'
 import { Dispatch } from '../types'
 import { ActionTypes, GYM_ACTIONS } from './types'
+import { unixToFullDate } from '../../common/unixToFullDate'
 
 export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_GYM_STATUS, DOMAINS.GYM)
@@ -24,6 +25,7 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
       if (res.status === 'failed') {
         throw res.err
       }
+      res.data.map((entry) => (entry.date = unixToFullDate(entry.date)))
       dispatch({
         type: GYM_ACTIONS.GET_GYM_HISTORY,
         history: res.data,
@@ -35,7 +37,7 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err
@@ -52,7 +54,7 @@ export const moveKey = (userID: string, name: string, telegram: string) => async
 }
 
 export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.RETURN_KEY, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.RETURN_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err
@@ -69,7 +71,7 @@ export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTyp
 }
 
 export const toggleGym = (userID: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  await post(ENDPOINTS.TOGGLE_GYM, DOMAINS.GYM, {}, {}, `/${userID}`)
+  await post(ENDPOINTS.TOGGLE_GYM, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
       if (res.status === 'failed') {
         throw res.err

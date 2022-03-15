@@ -1,8 +1,8 @@
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import React, { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import GymStatus from '../GymStatus'
-import GymKeyWith from '../GymKeyWith'
+import GymStatus from './GymStatus'
+import GymKeyWith from './GymKeyWith'
 import GymConfirmationModal from './GymConfirmationModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
@@ -12,6 +12,7 @@ import { ButtonStates, ButtonTypes } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
 const GymContainer = styled.div`
+  background: #fff;
   padding: 50px 0;
 `
 
@@ -123,4 +124,5 @@ function GymStatusTab() {
     </GymContainer>
   )
 }
+
 export default GymStatusTab
