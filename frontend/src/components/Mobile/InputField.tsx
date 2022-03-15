@@ -1,9 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-// import {} from 'react-hook-form'
-
 import { Input } from 'antd'
-import { register } from '../../serviceWorkerRegistration'
 
 const RedText = styled.span`
   color: #f37562;
