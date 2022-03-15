@@ -75,9 +75,9 @@ def check_for_token(func):
             return jsonify({'message': 'Token has expired'}), 403
         else:
             # recreate session (with createdAt updated to now)
-            #db.Session.remove({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
+            #db.Session.delete_one({'userID': { "$in": data['username']}, 'passwordHash': {"$in": data['passwordHash']}})
             #db.Session.insert_one({'userID': data['username'], 'passwordHash': data['passwordHash'], 'createdAt': datetime.datetime.now()})
-            db.Session.update({'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')}, {
+            db.Session.update_many({'userID': data.get('userID'), 'passwordHash': data.get('passwordHash')}, {
                               '$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
 
         return func(currentUser, *args, **kwargs)
@@ -137,14 +137,12 @@ def register():
                             "passwordHash": passwordHash,
                             "email": email,
                             # "position": position
+                            "displayName": displayName,
+                            "bio": bio,
+                            "block": block,
+                            "telegramHandle": telegramHandle,
+                            "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
                             })
-        db.Profiles.insert_one({"userID": userID,
-                                "displayName": displayName,
-                                "bio": bio,
-                                "block": block,
-                                "telegramHandle": telegramHandle,
-                                "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
-                                })
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -171,7 +169,7 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 403
     # insert new session into Session table
     #db.Session.createIndex({'createdAt': 1}, { expireAfterSeconds: 120 })
-    db.Session.update({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
+    db.Session.update_many({'userID': userID, 'passwordHash': passwordHash}, {'$set': {
                       'userID': userID, 'passwordHash': passwordHash, 'createdAt': datetime.datetime.now()}}, upsert=True)
     #db.Session.update({'userID': username, 'passwordHash': passwordHash}, {'$set': {'createdAt': datetime.datetime.now()}}, upsert=True)
     # generate JWT (note need to install PyJWT https://stackoverflow.com/questions/33198428/jwt-module-object-has-no-attribute-encode)
@@ -204,7 +202,7 @@ Delete the session entry
 def logout():
     userID = request.args.get('userID')
     try:
-        db.Session.remove({"userID": userID})
+        db.Session.delete_many({"userID": userID})
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -301,7 +299,7 @@ def update_token(token):
         if not db.User.find_one({'userID': associatedUserID}):
             return jsonify({'status': 'failed', 'message': 'Invalid credentials'}), 403
         else:
-            db.User.update(
+            db.User.update_many(
                 {'userID': associatedUserID},
                 {'$set': {'passwordHash': newPasswordHash}
                  }

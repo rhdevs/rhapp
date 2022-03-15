@@ -1,17 +1,22 @@
 from AuthFunction import authenticate
 from db import *
-from flask import Flask, render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import jsonify, request, make_response
 from AuthFunction import authenticate
-import os
 from datetime import datetime
-import time
 from flask_cors import cross_origin
 from flask import Blueprint
 import pymongo
-import sys
+import sys, copy
+
 sys.path.append("../")
 
 facilities_api = Blueprint("facilities", __name__)
+
+# Used to convert CCA ID into CCA Name
+
+
+def conversion(ccaID):
+    return str(db.CCA.find_one({"ccaID": ccaID})["ccaName"])
 
 
 @facilities_api.route('/')
@@ -57,7 +62,7 @@ def get_one_booking(bookingID):
                 'bookingID': bookingID
             }},
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -89,11 +94,16 @@ def get_one_booking(bookingID):
             {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
         ]
 
-        bookingInfo = db.Bookings.aggregate(pipeline)
-        for booking in bookingInfo:
+        data = list(db.Bookings.aggregate(pipeline))
+        for booking in data:
             data = booking
         if len(data) == 0:
             return {"err": "Booking not found", "status": "failed"}, 400
+
+        if data["ccaID"] != None:
+            if data["ccaID"] != 0:
+                data["ccaName"] = conversion(data["ccaID"])
+
         response = {"status": "success", "data": data}
 
     except Exception as e:
@@ -120,7 +130,7 @@ def user_bookings(userID):
                 ]}
              },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -167,11 +177,15 @@ def user_bookings(userID):
 @ cross_origin(supports_credentials=True)
 def check_bookings(facilityID):
     try:
+        if (request.args.get('endTime') < request.args.get('startTime')):
+            return {"err": "Invalid start and end time", "status": "failed"}, 400
+
         condition = {
             "$and": [
                 {'facilityID': int(facilityID)},
             ]
         }
+
         if (request.args.get('endTime') != None):
             condition['$and'].append({'startTime': {'$lt': int(
                 request.args.get('endTime'))}})
@@ -180,12 +194,17 @@ def check_bookings(facilityID):
             condition['$and'].append({'endTime': {'$gt': int(
                 request.args.get('startTime'))}})
 
+        # BUG 622 Fix: If startTime and endTime are provided, checks if endTime is valid.
+        if (request.args.get("startTime") != None and request.args.get("endTime") != None):
+            if (request.args.get("endTime") <= request.args.get("startTime")):
+                return {"Err": "Invalid end time."}, 403
+
         pipeline = [
             {'$match':
                 condition
              },
             {'$lookup': {
-                'from': 'Profiles',
+                'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'profile'
@@ -235,30 +254,56 @@ def add_booking():
     try:
         formData = request.get_json()
 
+        # Check for valid input
+        if (formData == None):
+            return {"err": "Error reading form"}, 400
+
+        # Authenticate
         if (not request.args.get("token")):
             return {"err": "No token", "status": "failed"}, 401
-
         if (not authenticate(request.args.get("token"), formData.get("userID"))):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
+        # Check for valid dates
+        if (formData["endTime"] <= formData["startTime"]):
+            return {"err": "End time earlier than start time", "status": "failed"}, 400
+        if formData.get("bookUntil") != None and (int(formData.get("bookUntil")) < int(formData.get("endTime"))):
+            return {"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400
+
+        # Check for dance
+        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
+            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
+
+        # Convert
         formData["startTime"] = int(formData["startTime"])
         formData["endTime"] = int(formData["endTime"])
-
         formData["facilityID"] = int(formData["facilityID"])
+
         if not formData.get("ccaID"):
             formData["ccaID"] = int(0)
         else:
             formData["ccaID"] = int(formData["ccaID"])
 
-        if (formData["endTime"] <= formData["startTime"]):
-            return {"err": "End time earlier than start time", "status": "failed"}, 400
-
-        if (not formData.get("repeat")):
+        # Handle repeat bookings
+        if not (formData.get("bookUntil") or formData.get("repeat")):
             formData["repeat"] = 1
+        elif formData.get("bookUntil") and not formData.get("repeat"):
+            formData["repeat"] = int(((int(formData["bookUntil"]) - int(formData["startTime"])) / (7 * 24 * 60 * 60)) + 1)
+        elif not formData.get("bookUntil") and formData.get("repeat"):
+            formData["repeat"] = int(formData.get("repeat"))
+        else:
+            del formData["bookUntil"]
+            formData["repeat"] = int(formData.get("repeat"))
 
-        # Handle repeats
+        if not formData.get("forceBook"):
+            formData["forceBook"] = False
+
+        def SpaceOneWeekApart(booking):
+            booking["startTime"] += 7 * 24 * 60 * 60
+            booking["endTime"] += 7 * 24 * 60 * 60
+
         condition = []
-
+        # Conflict checks
         for i in range(formData["repeat"]):
             condition.append({'$and': [
                 {
@@ -273,7 +318,7 @@ def add_booking():
                 }
             ]})
 
-        conflict = list(db.Bookings.find(
+        conflictedBookings = list(db.Bookings.find(
             {
                 "facilityID": formData.get("facilityID"),
                 "$or": condition
@@ -282,39 +327,74 @@ def add_booking():
             }
         ))
 
-        if (len(conflict) > 0):
-            return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflict, "status": "failed"}, 409)
-
-        if formData['facilityID'] == 15 and not db.UserCCA.find_one({'userID': formData['userID'], 'ccaID': 3}):
-            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
-
+        # Get next booking ID
         lastbookingID = list(db.Bookings.find().sort(
-            [('_id', pymongo.DESCENDING)]).limit(1))
+            [('bookingID', pymongo.DESCENDING)]).limit(1))
         newBookingID = 1 if len(lastbookingID) == 0 else int(
             lastbookingID[0].get("bookingID")) + 1
 
-        formData["bookingID"] = newBookingID
+        # Book direct if no conflicts
+        if (len(conflictedBookings) == 0):
+            formData["bookingID"] = newBookingID
 
-        insertData = []
-        for i in range(formData["repeat"]):
-            insertData.append(formData.copy())
-            formData["bookingID"] += 1
-            formData["startTime"] += 7 * 24 * 60 * 60
-            formData["endTime"] += 7 * 24 * 60 * 60
+            insertData = []
+            for i in range(formData["repeat"]):
+                insertData.append(formData.copy())
+                formData["bookingID"] += 1
+                SpaceOneWeekApart(formData)
+            
+            bookingsMadeList = copy.deepcopy(insertData) # See: https://docs.python.org/3/library/copy.html (insertData.copy() does not work)
+            db.Bookings.insert_many(insertData)
+            response = {"status": "success", "bookings_made": bookingsMadeList, "number_of_bookings_made": len(insertData)}, 200
 
-        db.Bookings.insert(insertData)
 
-        response = {"status": "success"}
+        elif (len(conflictedBookings) > 0):
+            if formData["forceBook"] == False:
+                return make_response({"err": "Conflicted booking with previous bookings.", "conflict_bookings": conflictedBookings, "status": "failed"}), 409
+            elif formData["forceBook"] == True:
+                insertData = []
+
+                # Create the full data
+                for i in range(formData["repeat"]):
+                    insertData.append(formData.copy())
+                    SpaceOneWeekApart(formData)
+
+                # Filter out bookings that are conflicted
+                def isConflicted(booking, newBooking):
+                    return not (newBooking["endTime"] < booking["startTime"]  or newBooking["startTime"] > booking["endTime"])
+                    
+                for booking in conflictedBookings:
+                    for newBooking in insertData:
+                        if (isConflicted(booking, newBooking)):
+                            insertData.remove(newBooking)
+
+                # Increment bookingIDs
+                for editedBooking in insertData:
+                    editedBooking["bookingID"] = newBookingID
+                    newBookingID += 1
+
+                
+                if len(insertData) != 0:
+                    db.Bookings.insert_many(insertData)
+                    for entry in insertData:
+                        del entry["_id"]
+
+                    response = {"message": "Unblocked slots booked", "conflict_bookings": conflictedBookings, "bookings_made": insertData,
+                                        "number_of_bookings_made": str(len(insertData)), "status": "success"}, 200
+                else:
+                    return make_response({"message": "All slots have been blocked.", "conflict_bookings": conflictedBookings, "status": "failed"}), 409
 
         # Logging
         formData["action"] = "Add Booking"
         formData["timeStamp"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         db.BookingLogs.insert_one(formData)
+
+        return make_response(response)
     except Exception as e:
         print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
+        return {"err": "An error occurred", "status": "failed"}, 500
 
-    return make_response(response)
+    
 
 
 @ facilities_api.route('/bookings/<bookingID>', methods=['PUT'])
@@ -422,7 +502,7 @@ def delete_booking(bookingID):
 @ cross_origin(supports_credentials=True)
 def user_telegram(userID):
     try:
-        profile = db.Profiles.find_one({"userID": userID})
+        profile = db.User.find_one({"userID": userID}, {"passwordHash": 0})
         telegramHandle = profile.get(
             'telegramHandle') if profile else "No User Found"
 
