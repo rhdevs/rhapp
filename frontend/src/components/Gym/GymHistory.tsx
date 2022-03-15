@@ -7,7 +7,7 @@ import { RootState } from '../../store/types'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;
-  background: #fafaf4;
+  background: #fff;
 `
 
 const Date = styled.div`

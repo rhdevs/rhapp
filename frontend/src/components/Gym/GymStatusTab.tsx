@@ -12,7 +12,7 @@ import { ButtonStates, ButtonTypes } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
 const GymContainer = styled.div`
-  background: #fafaf4;
+  background: #fff;
   padding: 50px 0;
 `
 
