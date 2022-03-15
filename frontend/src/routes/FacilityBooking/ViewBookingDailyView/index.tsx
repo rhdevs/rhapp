@@ -66,7 +66,7 @@ export default function ViewBookingDailyView() {
   return (
     <div>
       <TopNavBarRevamp
-        onLeftClick={() => console.log('link to calendar page')}
+        onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY_FACILITYID}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={
           <ButtonComponent

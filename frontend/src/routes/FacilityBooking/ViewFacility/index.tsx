@@ -47,7 +47,11 @@ export default function ViewFacility() {
 
   return (
     <>
-      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
+      <TopNavBarRevamp
+        title={selectedFacilityName}
+        rightComponent={MyBookingButton}
+        onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
+      />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityID)} />
