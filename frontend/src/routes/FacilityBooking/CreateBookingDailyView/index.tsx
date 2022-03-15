@@ -68,7 +68,7 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation<State>()
-  const { newBookingFacilityName, newBookingFromDate, isLoading } = useSelector(
+  const { selectedFacilityName, newBookingFromDate, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -97,6 +97,7 @@ export default function CreateBookingDailyView() {
             lastDateOfThisMonth={startDate + maxDate - startDate}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
           <DateRows
             firstDate={1}
@@ -104,6 +105,7 @@ export default function CreateBookingDailyView() {
             lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
         </DatesContainer>
       )
@@ -116,6 +118,7 @@ export default function CreateBookingDailyView() {
             lastDateOfThisMonth={startDate + 6}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
         </DatesContainer>
       )
@@ -126,7 +129,7 @@ export default function CreateBookingDailyView() {
     <div>
       <TopNavBarRevamp
         onLeftClick={() => history.goBack()}
-        centerComponent={<TitleText>Book {newBookingFacilityName}</TitleText>}
+        centerComponent={<TitleText>Book {selectedFacilityName}</TitleText>}
       />
       {isLoading ? (
         <LoadingSpin />

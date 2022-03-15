@@ -8,6 +8,7 @@ export const DateRows = (props: {
   lastDateOfThisMonth: number
   bufferDates: number[]
   facilityId: number
+  noRedirect?: boolean
 }) => {
   for (let i = props.firstDate; i < props.lastDateOfThisMonth + 1; i++) {
     props.bufferDates.push(i)
@@ -24,6 +25,7 @@ export const DateRows = (props: {
             date={day}
             assignedMonth={props.assignedMonth}
             facilityId={props.facilityId}
+            noRedirect={props.noRedirect}
           />
         )
       })}

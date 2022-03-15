@@ -83,6 +83,7 @@ export default function ViewBookingDailyView() {
             lastDateOfThisMonth={startDate + maxDate - startDate}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
           <DateRows
             firstDate={1}
@@ -90,6 +91,7 @@ export default function ViewBookingDailyView() {
             lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
         </DatesContainer>
       )
@@ -102,6 +104,7 @@ export default function ViewBookingDailyView() {
             lastDateOfThisMonth={startDate + 6}
             bufferDates={[]}
             facilityId={selectedFacilityId}
+            noRedirect
           />
         </DatesContainer>
       )

@@ -45,7 +45,7 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { selectedFacilityId: number }) => {
+export const Calendar = (props: { selectedFacilityId: number; noRedirect?: boolean }) => {
   const dispatch = useDispatch()
   const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
@@ -81,7 +81,12 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
               <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
               <DatesGridContainer>
                 <DayHeaders />
-                <MonthlyContainer key={startingMonth} nthMonth={startingMonth} facilityId={props.selectedFacilityId} />
+                <MonthlyContainer
+                  key={startingMonth}
+                  nthMonth={startingMonth}
+                  facilityId={props.selectedFacilityId}
+                  noRedirect={props.noRedirect}
+                />
               </DatesGridContainer>
             </MonthContainer>
           </>

@@ -36,6 +36,7 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
 export const ClickableDateContainer = (props: {
   date: number
   eventPresent?: boolean
+  noRedirect?: boolean
   assignedMonth: number
   facilityId: number
 }) => {
@@ -46,13 +47,16 @@ export const ClickableDateContainer = (props: {
 
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(setClickedDate(newClickedDate))
-    history.push({
-      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
-      state: {
-        facilityId: props.facilityId,
-        date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
-      },
-    })
+
+    // by default, click redirects to facility booking daily view page
+    !props.noRedirect &&
+      history.push({
+        pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+        state: {
+          facilityId: props.facilityId,
+          date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
+        },
+      })
   }
 
   const hasEvent = () => {
