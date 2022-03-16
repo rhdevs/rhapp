@@ -348,4 +348,3 @@ export type ActionTypes =
   | SetTimeBlock
   | SetStartEndTime
   | SetSelectedDayBookings
-  | SetConflictBooking
