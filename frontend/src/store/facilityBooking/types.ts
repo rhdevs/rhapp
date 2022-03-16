@@ -246,11 +246,6 @@ type SetBooking = {
   booking: Booking | null
 }
 
-type SetConflictBooking = {
-  type: typeof FACILITY_ACTIONS.SET_CONFLICT_BOOKING
-  booking: Booking | null
-}
-
 type SetBookingStatus = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_STATUS
   bookingStatus: BookingStatus
