@@ -66,13 +66,14 @@ type InputFieldProps = {
   placeholder: string
   textArea?: boolean
   required?: boolean
-  hasError?: boolean
-  onChange: () => void
+  register
+  setValue
+  errors
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, placeholder, textArea, required, onChange, hasError } = props
+  const { name, title, placeholder, textArea, required, register, setValue, errors } = props
 
   return (
     <Container>
@@ -84,16 +85,20 @@ export default function InputField(props: InputFieldProps) {
       )}
       {textArea ? (
         <StyledTextArea
-          placeholder={hasError ? `${title} is required` : placeholder}
+          placeholder={errors.name ? `${title} is required` : placeholder}
           rows={4}
-          onChange={onChange}
-          hasError={hasError}
+          onChange={(e) => setValue(name, e.target.value)}
+          hasError={!!errors.name}
+          defaultValue={''}
+          ref={register(name, { required: true })}
         />
       ) : (
         <StyledInput
-          placeholder={hasError ? `${title} is required` : placeholder}
-          onChange={onChange}
-          hasError={hasError}
+          placeholder={errors.name ? `${title} is required` : placeholder}
+          onChange={(e) => setValue(name, e.target.value)}
+          hasError={!!errors.name}
+          defaultValue={''}
+          ref={register(name, { required: true })}
         />
       )}
     </Container>
