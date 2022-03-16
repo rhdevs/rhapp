@@ -186,7 +186,7 @@ export default function CreateBooking() {
                 title="Event Name"
                 placeholder="Event Name"
                 onChange={onChange}
-                required={true}
+                required
               />
             )}
             defaultValue=""
@@ -235,7 +235,7 @@ export default function CreateBooking() {
                 placeholder="Tell us what your booking is for!"
                 textArea
                 onChange={onChange}
-                required={true}
+                required
               />
             )}
             rules={{ required: true }}

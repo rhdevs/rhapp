@@ -18,23 +18,23 @@ const Container = styled.div`
   margin: 10px 0px;
 `
 
-const StyledInput = styled(Input)<{ error?: boolean }>`
+const StyledInput = styled(Input)<{ hasError?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
     border-radius: 10px;
-    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
+    border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
     padding: 5px 15px;
     margin: 0;
   }
   &.ant-input::placeholder {
-    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
+    color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
 
 const { TextArea } = Input
-const StyledTextArea = styled(TextArea)<{ error?: boolean }>`
+const StyledTextArea = styled(TextArea)<{ hasError?: boolean }>`
   &.ant-input {
     background: #f3f3f9;
     width: 100%;
@@ -42,10 +42,10 @@ const StyledTextArea = styled(TextArea)<{ error?: boolean }>`
     padding: 5px 15px;
     margin: 0;
     resize: none;
-    border: 1px solid ${(props) => (props.error ? '#f37562' : '#f3f3f9')};
+    border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
   }
   &.ant-input::placeholder {
-    color: ${(props) => (props.error ? '#f37562' : '#bfbfbf')};
+    color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
     font-size: 0.8rem;
   }
 `
@@ -87,13 +87,13 @@ export default function InputField(props: InputFieldProps) {
           placeholder={hasError ? `${title} is required` : placeholder}
           rows={4}
           onChange={onChange}
-          error={hasError}
+          hasError={hasError}
         />
       ) : (
         <StyledInput
           placeholder={hasError ? `${title} is required` : placeholder}
           onChange={onChange}
-          error={hasError}
+          hasError={hasError}
         />
       )}
     </Container>
