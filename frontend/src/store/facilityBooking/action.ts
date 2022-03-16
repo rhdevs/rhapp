@@ -13,6 +13,57 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
+export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  let updatedFB: Booking[] = []
+  const updatedTB: TimeBlock[] = defaultTimeBlocks
+
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
+  const querySubString =
+    selectedFacilityId +
+    '/' +
+    '?startTime=' +
+    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
+    '&endTime=' +
+    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
+
+  //reset all elements in TB to default
+  for (let i = 0; i < 24; i++) {
+    updatedTB[i] = {
+      id: i,
+      timestamp: 0,
+      type: TimeBlockType.AVAILABLE,
+    }
+  }
+  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((res) => {
+      updatedFB = res.data
+      for (let i = 0; i < updatedFB.length; i++) {
+        const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
+        const endhour =
+          new Date(updatedFB[i].endTime * 1000).getHours() < starthour
+            ? 23
+            : new Date(updatedFB[i].endTime * 1000).getHours()
+        for (let hour = starthour; hour < endhour + 1; hour++) {
+          updatedTB[hour] = {
+            id: hour,
+            timestamp: updatedFB[i].startTime,
+            type: TimeBlockType.OCCUPIED,
+            ccaName: updatedFB[i].ccaName,
+            eventName: updatedFB[i].description,
+          }
+        }
+      }
+      dispatch(setSelectedDayBookings(updatedFB))
+      dispatch(setTimeBlocks(updatedTB))
+      dispatch(setIsLoading(false))
+    })
+}
+
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
     method: 'GET',

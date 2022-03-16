@@ -42,6 +42,7 @@ export enum PATHS {
   EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
   VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityID',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
@@ -120,6 +121,9 @@ const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityB
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
+const ViewBookingDailyView = React.lazy(
+  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/ViewBookingDailyView'),
+)
 const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
 const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking/index'),
@@ -192,6 +196,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW} component={ViewBookingDailyView} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
