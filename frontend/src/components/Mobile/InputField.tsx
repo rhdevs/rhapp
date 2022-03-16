@@ -67,7 +67,7 @@ type InputFieldProps = {
   textArea?: boolean
   required?: boolean
   hasError?: boolean
-  onChange: any
+  onChange: () => void
 }
 
 export default function InputField(props: InputFieldProps) {
