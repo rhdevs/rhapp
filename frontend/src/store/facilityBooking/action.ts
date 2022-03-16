@@ -393,24 +393,13 @@ export const handleCreateNewBooking = (
   description?: string,
   forceBook?: boolean,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
-  // const requestBody = {
-  //   facilityID: facilityID,
-  //   eventName: eventName,
-  //   userID: localStorage.getItem('userID'),
-  //   ccaID: ccaID,
-  //   startTime: startTime,
-  //   endTime: endTime,
-  //   endDate: endDate,
-  //   description: description,
-  //   forceBook: forceBook,
-  // }
   const requestBody = {
     facilityID: facilityID,
     eventName: eventName,
     userID: localStorage.getItem('userID'),
     ccaID: ccaID,
-    startTime: 1647349200,
-    endTime: 1647367200,
+    startTime: startTime,
+    endTime: endTime,
     endDate: endDate,
     description: description,
     forceBook: forceBook,

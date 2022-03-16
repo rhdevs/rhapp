@@ -19,7 +19,6 @@ export default function ConflictBookingModal(props: Props) {
     props.setModalOpen(!open)
   }
   function onRightClick() {
-    /*TODO to update createbooking function in store instead*/
     dispatch(
       handleCreateNewBooking(
         booking?.facilityID,
