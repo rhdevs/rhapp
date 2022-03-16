@@ -13,17 +13,12 @@ export const setClickedDate = (newClickedDate: number) => async (dispatch: Dispa
 export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  const adjustedStart = new Date(
-    ViewStartDate.getFullYear(),
-    ViewStartDate.getMonth(),
-    ViewStartDate.getDate(),
-    0,
-    0,
-    0,
-    0,
-  )
+  const adjustedStart = new Date(ViewStartDate.getFullYear(), ViewStartDate.getMonth(), 0, 0, 0, 0, 0)
   // need to adjust this to set it as 5 months away from starting date
   const adjustedEnd = new Date(ViewStartDate.getFullYear(), ViewStartDate.getMonth() + 5, 0, 23, 59, 59, 999)
+  //const querySubString = '7/?startTime=1646755200&endTime=1646841600'
+  console.log('Start date in Calendar ' + adjustedStart)
+  console.log('End date in Calendar ' + adjustedEnd)
   const querySubString =
     selectedFacilityId +
     '/' +
@@ -31,6 +26,7 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityI
     parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
     '&endTime=' +
     parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
+  console.log('QuertSubString used in calendar' + querySubString)
   let updatedFB: Booking[] = []
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
     method: 'GET',
@@ -39,6 +35,8 @@ export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityI
     .then((resp) => resp.json())
     .then(async (res) => {
       updatedFB = res.data
+      console.log(res.data)
+      console.log(updatedFB)
     })
 
   dispatch({
