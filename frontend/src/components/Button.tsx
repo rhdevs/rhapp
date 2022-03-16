@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactEventHandler } from 'react'
 import styled from 'styled-components'
 
 const Button = styled.button<{ state: 'primary' | 'secondary'; width?: string; size: 'small' | 'regular' }>`
@@ -34,7 +34,7 @@ type Props = {
   text: string
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset' | undefined
-  onClick: () => void
+  onClick: React.MouseEventHandler<HTMLButtonElement>
   setWidth?: string | undefined
   size?: 'small' | 'regular' | undefined
 }
@@ -42,7 +42,7 @@ type Props = {
 function ButtonComponent(prop: Props) {
   return (
     <Button
-      onClick={() => prop.onClick()}
+      onClick={prop.onClick}
       state={prop.state}
       disabled={prop.disabled}
       type={prop.type ?? 'button'}

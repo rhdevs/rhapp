@@ -98,20 +98,24 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
 }
 
 // -1 stands for closed, any others means open for that specific ID.
-export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (isDeleteMyBooking !== undefined) {
+    dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+  }
 }
 
-export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
-  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
-    const { myBookings } = getState().facilityBooking
-    dispatch({
-      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+  if (bookingId !== undefined) {
+    await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
+      const { myBookings } = getState().facilityBooking
+      dispatch({
+        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+      })
+      dispatch(setIsDeleteMyBooking(-1))
     })
-    dispatch(setIsDeleteMyBooking(-1))
-  })
+  }
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
@@ -432,13 +436,14 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const handleCreateNewBooking = (
-  facilityID: number,
-  eventName: string,
+  facilityID: number | undefined,
+  eventName: string | undefined,
   startTime: number | null,
   endTime: number | null,
-  endDate?: number | null,
+  endDate?: number,
   ccaID?: number,
   description?: string,
+  forceBook?: boolean,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = {
     facilityID: facilityID,
@@ -449,8 +454,20 @@ export const handleCreateNewBooking = (
     endTime: endTime,
     endDate: endDate,
     description: description,
+    forceBook: forceBook,
   }
-
+  dispatch(
+    setBooking({
+      eventName: eventName ?? '',
+      facilityID: facilityID ?? -1,
+      userID: localStorage.getItem('userID') ?? '',
+      ccaID: ccaID ?? -1,
+      startTime: startTime ?? Math.round(Date.now() / 1000),
+      endTime: endTime ?? Math.round(Date.now() / 1000),
+      description: description ?? '',
+      endDate: endDate,
+    }),
+  )
   if (startTime === null || endTime === null) {
     dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
   } else {
@@ -467,6 +484,9 @@ export const handleCreateNewBooking = (
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
         dispatch(setBookingStatus(BookingStatus.CONFLICT))
+        resp.json().then((body) => {
+          dispatch(setConflictBookings(body.conflict_bookings))
+        })
       } else {
         resp.json().then((body) => {
           if (body.err == 'End time earlier than start time') {
