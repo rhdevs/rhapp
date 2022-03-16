@@ -1,5 +1,5 @@
 import { Dispatch, GetState } from '../types'
-import { ActionTypes, Booking, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
+import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
 import { getBlockHr } from '../../components/FacilityBooking/BookingSection'
@@ -129,6 +129,7 @@ export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) =
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
 }
 
+//TODO: Remove when edit booking is completed
 export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
@@ -165,6 +166,7 @@ export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch
   })
 }
 
+//TODO: Remove when edit booking is completed
 export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
@@ -179,10 +181,12 @@ export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
+//TODO: Remove when edit booking is completed
 export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: newBookingCCA })
 }
 
+//TODO: Remove when edit booking is completed
 export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
@@ -219,6 +223,7 @@ export const createNewBookingFromFacility = (
   dispatch(setIsLoading(false))
 }
 
+// TODO: Remove when edit booking is done
 export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
 }
@@ -335,6 +340,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
   } else {
     const { newBooking } = getState().facilityBooking
     const TokenId = localStorage.getItem('token')
+    requestBody.facilityID = newBooking?.facilityID ?? requestBody.facilityID
     const response = await put(
       ENDPOINTS.BOOKING,
       DOMAINS.FACILITY,
@@ -376,10 +382,12 @@ export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
+//TODO: Remove when edit booking is done
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
 }
 
+//TODO: Remove when edit booking is done
 export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
@@ -401,10 +409,111 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
 
+//TODO: Remove when edit booking is done
 export const setBookingRepeat = (numRepeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
     numRepeatWeekly: numRepeatWeekly,
+  })
+}
+
+export const setBooking = (booking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING,
+    booking: booking,
+  })
+}
+
+export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING,
+    booking: null,
+  })
+}
+
+export const handleCreateNewBooking = (
+  facilityID: number,
+  eventName: string,
+  startTime: number | null,
+  endTime: number | null,
+  endDate?: number | null,
+  ccaID?: number,
+  description?: string,
+) => async (dispatch: Dispatch<ActionTypes>) => {
+  const requestBody = {
+    facilityID: facilityID,
+    eventName: eventName,
+    userID: localStorage.getItem('userID'),
+    ccaID: ccaID,
+    startTime: startTime,
+    endTime: endTime,
+    endDate: endDate,
+    description: description,
+  }
+
+  if (startTime === null || endTime === null) {
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
+  } else {
+    const tokenId = localStorage.getItem('token')
+    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + tokenId + '&userID=' + localStorage.getItem('userID'), {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    }).then((resp) => {
+      if (resp.status === 200) {
+        dispatch(setBookingStatus(BookingStatus.SUCCESS))
+      } else if (resp.status === 409) {
+        dispatch(setBookingStatus(BookingStatus.CONFLICT))
+      } else {
+        resp.json().then((body) => {
+          if (body.err == 'End time earlier than start time') {
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
+          } else if (body.err == 'Conflict Booking') {
+            dispatch(
+              setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
+            )
+          } else if (body.err == 'You must be in RH Dance to make this booking') {
+            // As of this version, Dance Studio can only be booked by people who are in RH Dance.
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
+          } else {
+            dispatch(
+              setBookingStatus(BookingStatus.FAILURE, 'Check your fields again! All fields should be filled up!'),
+            )
+          }
+        })
+      }
+    })
+  }
+}
+
+const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
+    bookingStatus: bookingStatus,
+    message: message,
+  })
+}
+
+export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_START_TIME,
+    bookingStartTime: startTime,
+  })
+}
+
+export const setBookingEndTime = (endTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_END_TIME,
+    bookingEndTime: endTime,
+  })
+}
+export const setBookingEndDate = (endDate: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_END_DATE,
+    bookingEndDate: endDate,
   })
 }
 

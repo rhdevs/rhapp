@@ -9,7 +9,8 @@ const SwitchButton = styled.span<{
   position: absolute;
   left: ${(props) => (props.width ? '-' + props.width * 0.015 + 'px' : '-1.5px')};
   border-radius: 45px;
-  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid lightgray' : '3px solid gray')};
+  box-shadow: 4px 0px 10px -4px;
+  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid #D3D3D3' : '3px solid #808080')};
   transition: 0.2s;
   background: #fff;
 `
@@ -25,10 +26,9 @@ const SwitchLabel = styled.label<{
   cursor: pointer;
   width: ${(props) => (props.width ? props.width + 'px' : '100px')};
   height: ${(props) => (props.width ? props.width * 0.5 + 'px' : '50px')};
-  background: lightgray;
-  background: ${(props) => (props.isOn ? (props.onColor ? props.onColor : '#468751') : 'lightgray')};
+  background: ${(props) => (props.isOn ? (props.onColor ? props.onColor : '#468751') : '#F5F5F5')};
   border-radius: 100px;
-  border: ${(props) => (props.width ? props.width * 0.03 + 'px solid lightgray' : '3px solid gray')};
+  border: ${(props) => (props.width ? props.width * 0.04 + 'px solid #D3D3D3' : '4px solid #808080')};
   position: relative;
   transition: background-color 0.2s;
   &:active ${SwitchButton} {
@@ -45,6 +45,7 @@ const SwitchCheckbox = styled.input.attrs({ type: 'checkbox' })<{
   &:checked + ${SwitchButton} {
     left: calc(100% + ${(props) => (props.width ? props.width * 0.015 + 'px' : '1.5px')});
     transform: translateX(-100%);
+    box-shadow: -4px 0px 10px -4px;
   }
 `
 

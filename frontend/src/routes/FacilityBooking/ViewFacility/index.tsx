@@ -7,7 +7,13 @@ import Button from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { fetchFacilityNameFromID, setIsLoading, setSelectedFacility } from '../../../store/facilityBooking/action'
+import {
+  fetchFacilityNameFromID,
+  resetBooking,
+  setIsLoading,
+  setSelectedFacility,
+  resetNewBooking,
+} from '../../../store/facilityBooking/action'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import { Calendar } from '../../../components/Calendar/Calendar'
@@ -27,6 +33,7 @@ export default function ViewFacility() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
+    dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     if (selectedFacilityId == 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
