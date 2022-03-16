@@ -59,7 +59,7 @@ type Props = {
   description?: string | JSX.Element
   // Left Button Props
   hasLeftButton?: boolean
-  leftButtonType: 'secondary'
+  leftButtonType?: 'primary' | 'secondary'
   leftButtonText?: string
   onLeftButtonClick: React.MouseEventHandler<HTMLButtonElement>
   // Right Button Props
@@ -103,7 +103,11 @@ export function ConfirmationModal(props: Props) {
         <ModalLink text={props.link} onClick={props.onLinkClick} />
         <ButtonContainer>
           {props.hasLeftButton && props.leftButtonText && (
-            <Button state={props.leftButtonType} onClick={props.onLeftButtonClick} text={props.leftButtonText} />
+            <Button
+              state={props.leftButtonType ?? 'secondary'}
+              onClick={props.onLeftButtonClick}
+              text={props.leftButtonText}
+            />
           )}
           <Button state={'primary'} onClick={props.onRightButtonClick} text={props.rightButtonText} />
         </ButtonContainer>

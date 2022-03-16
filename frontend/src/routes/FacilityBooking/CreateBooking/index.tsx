@@ -107,7 +107,7 @@ export default function CreateBooking() {
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
   const FormData = watch()
-  const ValidForm = () => {
+  const formIsValid = () => {
     if (isWeeklyOn) {
       return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && bookingEndDate !== 0
     }
@@ -252,10 +252,10 @@ export default function CreateBooking() {
           )}
           <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
           <ButtonComponent
-            state={ValidForm() ? 'primary' : 'secondary'}
+            state={'primary'}
             text="Submit"
             type="submit"
-            disabled={!ValidForm()}
+            disabled={!formIsValid()}
             onClick={() => console.log('submitted')}
           ></ButtonComponent>
         </Form>
