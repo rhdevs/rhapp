@@ -16,6 +16,7 @@ export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
     if (response.data === '' || response.data === undefined) {
       console.log(response.err)
     } else {
+      const data = response.data
       dispatch({
         type: SOCIAL_ACTIONS.GET_USER_DETAIL,
         userId: response.userID,
@@ -226,7 +227,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
 
   get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
     if (response.data.length > 0) {
-      const transformedPost = JSON.parse(cloneDeep(response.data)).map((post) => {
+      const transformedPost = cloneDeep(response.data).map((post) => {
         post.date = post.createdAt
         post.postId = post.postID
         post.ccaId = post.ccaID
@@ -302,7 +303,7 @@ export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) =
 
 export const GetSpecificPost = (postId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   const response = await axios.get(`${DOMAIN_URL.SOCIAL}${ENDPOINTS.SPECIFIC_POST}?postID=${postId}`)
-  const specificPost = JSON.parse(response.data.data)
+  const specificPost = response.data.data
 
   const { postID, title, createdAt, ccaID, isOfficial, description, postPics, name, userID, profilePic } = specificPost
   const newPost = {

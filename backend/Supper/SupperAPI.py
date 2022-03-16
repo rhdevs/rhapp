@@ -221,7 +221,7 @@ def create_supper_group():
             },
             {
                 '$lookup': {
-                    'from': 'Profiles',
+                    'from': 'User',
                     'localField': 'ownerId',
                     'foreignField': 'userID',
                     'as': 'ownerList'
@@ -242,7 +242,7 @@ def create_supper_group():
                 }
             },
             {
-                '$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0}
+                '$project': {'_id': 0, 'restaurant': 0, 'ownerList': 0, 'passwordHash': 0}
             }
         ]
 
@@ -307,14 +307,14 @@ def supper_group(supperGroupId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': 'userIdList',
                         'foreignField': 'userID',
                         'as': 'userList'
                     }
                 },
                 {'$project': {'_id': 0, 'foodList.foodMenuId': 0, 'foodList.restaurantId': 0,
-                              'userList.profilePictureUrl': 0}
+                              'userList.profilePictureUrl': 0, 'passwordHash': 0}
                  }
             ]
 
@@ -463,13 +463,13 @@ def get_order(orderId):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': 'userID',
                         'foreignField': 'userID',
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0, 'passwordHash': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)
@@ -811,7 +811,7 @@ def user_order_history(userID):
             },
             # {
             #     '$lookup': {
-            #         'from': 'Profiles',
+            #         'from': 'User',   # If this code is uncommented, note 'project' should exlude passwordHash.
             #         'localField': 'userID',
             #         'foreignField': 'userID',
             #         'as': 'userList'
@@ -1231,13 +1231,13 @@ def user_order(supperGroupId, userID):
                 },
                 {
                     '$lookup': {
-                        'from': 'Profiles',
+                        'from': 'User',
                         'localField': userID,
                         'foreignField': 'userID',
                         'as': 'user'
                     }
                 },
-                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0}}
+                {'$project': {'foodIds': 0, 'user.profilePictureUrl': 0, 'passwordHash': 0}}
             ]
 
             temp = db.Order.aggregate(pipeline)

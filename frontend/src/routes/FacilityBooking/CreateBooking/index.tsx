@@ -18,6 +18,7 @@ import {
   setBookingStartTime,
   setBookingEndTime,
   setBookingEndDate,
+  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -117,6 +118,9 @@ export default function CreateBooking() {
     dispatch(fetchAllCCAs())
     if (facilityList.length === 0) {
       dispatch(getFacilityList())
+    }
+    return () => {
+      dispatch(resetNewBooking)
     }
   }, [dispatch])
 

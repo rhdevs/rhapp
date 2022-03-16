@@ -7,6 +7,7 @@ export const DateRows = (props: {
   assignedMonth: number
   lastDateOfThisMonth: number
   bufferDates: number[]
+  facilityId: number
 }) => {
   for (let i = props.firstDate; i < props.lastDateOfThisMonth + 1; i++) {
     props.bufferDates.push(i)
@@ -22,6 +23,7 @@ export const DateRows = (props: {
             key={day + props.assignedMonth * 100}
             date={day}
             assignedMonth={props.assignedMonth}
+            facilityId={props.facilityId}
           />
         )
       })}

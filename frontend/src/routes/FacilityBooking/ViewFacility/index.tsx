@@ -12,6 +12,7 @@ import {
   resetBooking,
   setIsLoading,
   setSelectedFacility,
+  resetNewBooking,
 } from '../../../store/facilityBooking/action'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
@@ -53,7 +54,11 @@ export default function ViewFacility() {
 
   return (
     <>
-      <TopNavBarRevamp title={selectedFacilityName} rightComponent={MyBookingButton} />
+      <TopNavBarRevamp
+        title={selectedFacilityName}
+        rightComponent={MyBookingButton}
+        onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
+      />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityID)} />
