@@ -20,6 +20,7 @@ export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
 const BookingSection = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const history = useHistory()
   const dispatch = useDispatch()
   const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)

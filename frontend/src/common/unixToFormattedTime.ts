@@ -1,7 +1,7 @@
 /**
  *
  * @param unixDate epoch/unix date time number
- * @returns fomatted time in form of HH:MM:SS  (eg, 19:00:00 or 12:10:20)
+ * @returns fomatted time in the form of HH:MM:SS  (eg, 19:00:00 or 12:10:20)
  */
 
 export const unixToFormattedTime = (unixDate?: number) => {

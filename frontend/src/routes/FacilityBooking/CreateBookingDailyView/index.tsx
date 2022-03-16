@@ -71,14 +71,16 @@ export default function CreateBookingDailyView() {
   const { selectedFacilityName, newBookingFromDate, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
 
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    dispatch(updateDailyView(date, selectedFacilityId))
-  }, [])
+  // useEffect(() => {
+  //   console.log(date)
+  //   dispatch(setIsLoading(true))
+  //   dispatch(updateDailyView(date, selectedFacilityId))
+  // }, [])
 
   function Dates(date: Date) {
     const year = date.getFullYear()

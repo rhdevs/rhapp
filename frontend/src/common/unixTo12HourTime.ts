@@ -1,7 +1,7 @@
 /**
  *
  * @param unixDate epoch/unix date time number
- * @returns fomatted time in form of HH:MM AM/PM (eg, 01:00AM or 12:10PM)
+ * @returns fomatted time in the form of HH:MM AM/PM (eg, 01:00AM or 12:10PM)
  */
 
 export const unixTo12HourTime = (unixDate?: number) => {

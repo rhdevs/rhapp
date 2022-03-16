@@ -4,6 +4,7 @@ import styled from 'styled-components'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin: 10px 0px;
 `
 
@@ -54,7 +55,7 @@ function SelectableField(prop: Props) {
         {prop.error
           ? 'This is a required field'
           : prop.isCompulsory && prop.value === ''
-          ? 'Choose an End Date'
+          ? 'Choose a Date'
           : prop.value}
       </StyledTextArea>
     </Container>

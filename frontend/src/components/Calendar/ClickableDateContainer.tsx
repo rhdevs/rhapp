@@ -49,6 +49,9 @@ export const ClickableDateContainer = (props: {
     dispatch(setClickedDate(newClickedDate))
 
     // by default, click redirects to facility booking daily view page
+    // TODO known bug, tried to use param redirectToDailyView instead of noRedirect, but
+    // when trying to pass redirectToDailyView from ViewFacility, this component registered
+    // the value as undefined for the first calendar
     !props.noRedirect &&
       history.push({
         pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,

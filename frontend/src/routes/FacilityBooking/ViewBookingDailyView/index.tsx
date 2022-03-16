@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
-import 'antd-mobile/dist/antd-mobile.css'
-import 'antd/dist/antd.css'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -10,15 +8,15 @@ import { PATHS } from '../../Routes'
 import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { DateRows } from '../../../components/Calendar/DateRows'
 import { updateDailyView } from '../../../store/facilityBooking/action'
+import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
 
 const HEADER_HEIGHT = '70px'
 
 const Background = styled.div`
   background-color: #fff;
   height: calc(100vh - ${HEADER_HEIGHT});
-  width: (100vw);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,11 +40,8 @@ const TitleText = styled.h2`
   font-weight: 700;
   font-size: 22px;
   margin-top: 0.7rem;
-`
-
-const DatesContainer = styled.div`
-  display: flex;
-  margin: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 type State = {
@@ -57,65 +52,24 @@ type State = {
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
+  const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
   const location = useLocation<State>()
-  const { isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
 
   useEffect(() => {
     dispatch(updateDailyView(date, selectedFacilityId))
-  }, [date])
-
-  function Dates(date: Date) {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const dates = date.getDate()
-    const maxDate = new Date(year, month, 0).getDate()
-    const day = new Date(year, month, dates).getDay()
-    const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
-
-    if (startDate + 6 > maxDate) {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + maxDate - startDate}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-          <DateRows
-            firstDate={1}
-            assignedMonth={month}
-            lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-        </DatesContainer>
-      )
-    } else {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + 6}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-        </DatesContainer>
-      )
+    dispatch(fetchFacilityNameFromID(selectedFacilityId))
+    if (selectedFacilityId == 0) {
+      dispatch(setSelectedFacility(selectedFacilityId))
     }
-  }
+  }, [date])
 
   return (
     <div>
       <TopNavBarRevamp
-        onLeftClick={() => history.goBack()}
-        centerComponent={<TitleText>Calendar</TitleText>}
+        onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
+        centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={
           <ButtonComponent
             state="primary"
@@ -137,8 +91,8 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          {Dates(date)}
           <ViewSectionDiv>
+            <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
             <ViewSection />
           </ViewSectionDiv>
         </Background>
