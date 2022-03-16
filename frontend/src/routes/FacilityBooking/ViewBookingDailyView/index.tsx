@@ -8,7 +8,7 @@ import { PATHS } from '../../Routes'
 import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { updateDailyView } from '../../../store/facilityBooking/action'
+import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
 
@@ -58,15 +58,20 @@ export default function ViewBookingDailyView() {
   const date = location.state.date
 
   useEffect(() => {
+    dispatch(setIsLoading(true))
     dispatch(updateDailyView(date, selectedFacilityId))
-    dispatch(fetchFacilityNameFromID(selectedFacilityId))
-    if (selectedFacilityId == 0) {
-      dispatch(setSelectedFacility(selectedFacilityId))
-    }
+  }, [])
+
+  useEffect(() => {
+    dispatch(updateDailyView(date, selectedFacilityId))
+    // dispatch(fetchFacilityNameFromID(selectedFacilityId))
+    // if (selectedFacilityId == 0) {
+    //   dispatch(setSelectedFacility(selectedFacilityId))
+    // }
   }, [date])
 
   return (
-    <div>
+    <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
@@ -91,12 +96,16 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
+          <DailyViewDatesRow
+            date={date}
+            selectedFacilityId={selectedFacilityId}
+            redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}
+          />
           <ViewSectionDiv>
-            <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
             <ViewSection />
           </ViewSectionDiv>
         </Background>
       )}
-    </div>
+    </>
   )
 }

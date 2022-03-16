@@ -33,12 +33,14 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   background-color: ${(props) => (props.selected ? 'white' : '#468751')};
 `
 
+export type RedirectRoutes = PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW | PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW
+
 export const ClickableDateContainer = (props: {
   date: number
   eventPresent?: boolean
-  noRedirect?: boolean
   assignedMonth: number
   facilityId: number
+  redirectTo?: RedirectRoutes
 }) => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -47,19 +49,13 @@ export const ClickableDateContainer = (props: {
 
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(setClickedDate(newClickedDate))
-
-    // by default, click redirects to facility booking daily view page
-    // TODO known bug, tried to use param redirectToDailyView instead of noRedirect, but
-    // when trying to pass redirectToDailyView from ViewFacility, this component registered
-    // the value as undefined for the first calendar
-    !props.noRedirect &&
-      history.push({
-        pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
-        state: {
-          facilityId: props.facilityId,
-          date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
-        },
-      })
+    history.push({
+      pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+      state: {
+        facilityId: props.facilityId,
+        date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
+      },
+    })
   }
 
   const hasEvent = () => {

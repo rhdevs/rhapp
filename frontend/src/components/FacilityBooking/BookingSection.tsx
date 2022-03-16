@@ -29,11 +29,12 @@ const BookingSection = () => {
   const [selectedStartTime, setSelectedStartTime] = useState(-1)
 
   useEffect(() => {
-    dispatch(getTimeBlocks())
+    dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
   }, [])
 
   useEffect(() => {
     updateTimeBlocks()
+    console.log('select')
   }, [selectedBlockTimestamp])
 
   function assignType(entry: TimeBlock): TimeBlockType {
@@ -74,16 +75,21 @@ const BookingSection = () => {
       <CurrentTimeLine />
       <HourBlocks />
       <DailyContainer>
-        {timeBlocks.map((entry, index) => (
-          <BookingBlock
-            key={index}
-            selectedStartTime={selectedStartTime}
-            onClick={() => setSelectedBlock(entry.timestamp)}
-            entry={entry}
-            // if day selected is not current, scroll to defaultTimePosition
-            scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
-          />
-        ))}
+        {timeBlocks.map((entry, index) => {
+          {
+            // console.log(`timeBlocks ${index}`, timeBlocks)
+          }
+          return (
+            <BookingBlock
+              key={index}
+              selectedStartTime={selectedStartTime}
+              onClick={() => setSelectedBlock(entry.timestamp)}
+              entry={entry}
+              // if day selected is not current, scroll to defaultTimePosition
+              scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
+            />
+          )
+        })}
       </DailyContainer>
     </MainContainer>
   )

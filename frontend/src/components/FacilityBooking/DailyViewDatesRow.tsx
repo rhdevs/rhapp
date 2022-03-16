@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { DateRows } from '../../components/Calendar/DateRows'
+import { RedirectRoutes } from '../Calendar/ClickableDateContainer'
 
 const DatesContainer = styled.div`
   display: flex;
   margin: auto;
 `
 
-const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) => {
+const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number; redirectTo?: RedirectRoutes }) => {
   const year = props.date.getFullYear()
   const month = props.date.getMonth()
   const dates = props.date.getDate()
@@ -24,6 +25,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
           lastDateOfThisMonth={startDate + maxDate - startDate}
           bufferDates={[]}
           facilityId={props.selectedFacilityId}
+          redirectTo={props.redirectTo}
         />
         <DateRows
           firstDate={1}
@@ -31,6 +33,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
           lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
           bufferDates={[]}
           facilityId={props.selectedFacilityId}
+          redirectTo={props.redirectTo}
         />
       </DatesContainer>
     )
@@ -43,6 +46,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
           lastDateOfThisMonth={startDate + 6}
           bufferDates={[]}
           facilityId={props.selectedFacilityId}
+          redirectTo={props.redirectTo}
         />
       </DatesContainer>
     )

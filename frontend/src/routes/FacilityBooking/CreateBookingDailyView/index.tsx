@@ -12,15 +12,19 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import {
   editBookingFromDate,
   editBookingToDate,
+  fetchFacilityNameFromID,
   getTimeBlocks,
   handleCreateBooking,
   setIsLoading,
+  setSelectedFacility,
   updateDailyView,
 } from '../../../store/facilityBooking/action'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
 import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
 import { DateRows } from '../../../components/Calendar/DateRows'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
 
@@ -75,62 +79,31 @@ export default function CreateBookingDailyView() {
 
   const selectedFacilityId = location.state.facilityId
   const date = location.state.date
-
+  //TODO saturday date row is limit
   // useEffect(() => {
-  //   console.log(date)
-  //   dispatch(setIsLoading(true))
+  //   // dispatch(setIsLoading(true))
+  //   console.log('update dv onload')
   //   dispatch(updateDailyView(date, selectedFacilityId))
   // }, [])
 
-  function Dates(date: Date) {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const dates = date.getDate()
-    const maxDate = new Date(year, month, 0).getDate()
-    const day = new Date(year, month, dates).getDay()
-    const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
-
-    if (startDate + 6 > maxDate) {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + maxDate - startDate}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-          <DateRows
-            firstDate={1}
-            assignedMonth={month}
-            lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-        </DatesContainer>
-      )
-    } else {
-      return (
-        <DatesContainer>
-          <DateRows
-            firstDate={startDate}
-            assignedMonth={month}
-            lastDateOfThisMonth={startDate + 6}
-            bufferDates={[]}
-            facilityId={selectedFacilityId}
-            noRedirect
-          />
-        </DatesContainer>
-      )
-    }
-  }
+  useEffect(() => {
+    dispatch(setIsLoading(true))
+    console.log('update dv')
+    dispatch(updateDailyView(date, selectedFacilityId))
+  }, [date])
 
   return (
-    <div>
+    <>
       <TopNavBarRevamp
-        onLeftClick={() => history.goBack()}
+        onLeftClick={() =>
+          history.push({
+            pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+            state: {
+              facilityId: selectedFacilityId,
+              date: date,
+            },
+          })
+        }
         centerComponent={<TitleText>Book {selectedFacilityName}</TitleText>}
       />
       {isLoading ? (
@@ -138,16 +111,16 @@ export default function CreateBookingDailyView() {
       ) : (
         <Background>
           <h2>Choose starting time slot</h2>
-          <h3>
-            The Date: {newBookingFromDate.getDate()}/{newBookingFromDate.getMonth() + 1}/
-            {newBookingFromDate.getFullYear()}
-          </h3>
-          {Dates(date)}
+          <DailyViewDatesRow
+            date={date}
+            selectedFacilityId={selectedFacilityId}
+            redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}
+          />
           <BookingSectionDiv>
             <BookingSection />
           </BookingSectionDiv>
         </Background>
       )}
-    </div>
+    </>
   )
 }

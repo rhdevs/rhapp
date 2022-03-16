@@ -14,7 +14,6 @@ type Props = {
 }
 
 const BookingBlock = (props: Props) => {
-  // const { selectedStartTime } = useSelector((state: RootState) => state.facilityBooking)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,21 +23,16 @@ const BookingBlock = (props: Props) => {
   }, [ref.current])
 
   function blockText() {
-    let text = ''
     switch (props.entry.type) {
       case TimeBlockType.OCCUPIED:
-        text = 'Occupied'
-        break
+        return 'Occupied'
       case TimeBlockType.AVAILABLE:
-        text = 'Available'
-        break
+        return 'Available'
       case TimeBlockType.SELECTED:
-        text = 'Selected as starting time'
-        break
+        return 'Selected as starting time'
       default:
-        break
+        return ''
     }
-    return text
   }
 
   function hasOverlay() {

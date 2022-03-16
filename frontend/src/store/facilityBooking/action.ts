@@ -27,11 +27,11 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     '&endTime=' +
     parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
 
-  //reset all elements in TB to default
+  //set all elements in TB to available
   for (let i = 0; i < 24; i++) {
     updatedTB[i] = {
       id: i,
-      timestamp: 0,
+      timestamp: adjustedStart.getTime() / 1000 + i * 3600,
       type: TimeBlockType.AVAILABLE,
     }
   }
@@ -525,6 +525,7 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
 }
 
 export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch<ActionTypes>) => {
+  console.log('set tb', newTimeBlocks)
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
     timeBlocks: newTimeBlocks,
@@ -538,11 +539,24 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   })
 }
 
-export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const getTimeBlocks = (date: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { selectedDayBookings } = getState().facilityBooking
-
   const newTimeblocks = [...defaultTimeBlocks]
-  selectedDayBookings.forEach((booking) => {
+
+  const currentTime = Date.now() / 1000
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+
+  //set all type in newTimeblocks according to its time relative to now
+  for (let i = 0; i < 24; i++) {
+    const timestamp = adjustedStart.getTime() / 1000 + i * 3600
+    newTimeblocks[i] = {
+      id: i,
+      timestamp: timestamp,
+      type: timestamp > currentTime ? TimeBlockType.AVAILABLE : TimeBlockType.UNAVAILABLE,
+    }
+  }
+
+  selectedDayBookings.forEach((booking, i) => {
     if (
       booking.startTime >= newTimeblocks[0].timestamp &&
       booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
@@ -563,7 +577,7 @@ export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: G
       }
     }
   })
-
+  console.log('gettimeblocks', newTimeblocks)
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
     timeBlocks: newTimeblocks,
