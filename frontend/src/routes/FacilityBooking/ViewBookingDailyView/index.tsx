@@ -7,10 +7,10 @@ import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import ButtonComponent from '../../../components/Button'
 import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
+import BookFacilityIcon from '../../../assets/BookFacilityIcon.svg'
 
 const HEADER_HEIGHT = '70px'
 
@@ -63,19 +63,14 @@ export default function ViewBookingDailyView() {
     }
   }, [date])
 
+  const bookingFacilityIcon = <img src={BookFacilityIcon} onClick={() => console.log('link to booking page')} />
+
   return (
     <div>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
-        rightComponent={
-          <ButtonComponent
-            state="primary"
-            text="Book Facility"
-            onClick={() => console.log('link to booking page')}
-            size="small"
-          />
-        }
+        rightComponent={bookingFacilityIcon}
       />
       {isLoading ? (
         <LoadingSpin />
