@@ -179,7 +179,7 @@ export default function CreateBooking() {
           <Controller
             name="eventName"
             control={control}
-            render={({ onChange, value, name }) => (
+            render={({ onChange, name }) => (
               <InputField
                 name={name}
                 hasError={!!errors.eventName}
