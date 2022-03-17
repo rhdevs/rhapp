@@ -508,8 +508,13 @@ def getCCADetails(ccaID):
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        CCAofUserID = db.UserCCA.find({"userID": userID})
-        entries = [w["ccaID"] for w in CCAofUserID]
+        pipeline = [
+            {'$match': {'userID': userID}},
+            {'$project': {'userID': 1, 'userCCA': 1}},
+            {'$unwind' : '$userCCA'}
+        ]
+        CCAofUserID = db.User.aggregate(pipeline)
+        entries = [w["userCCA"] for w in CCAofUserID]
         data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
@@ -522,34 +527,16 @@ def getUserCCAs(userID):
 def editUserCCA():
     try:
         data = request.get_json()
-        ccaID = data.get('ccaID')
+        ccaIDArray = data.get('ccaID')
         userID = data.get('userID')
 
         if request.method == "POST":
-            db.UserCCA.delete_many({"userID": userID})
-            if len(ccaID) > 0:
-                documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
-                upserts = [pymongo.UpdateOne(
-                    doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
-                db.UserCCA.bulk_write(upserts)
+            db.User.update_one({"userID": userID}, {"$set": {"userCCA" : ccaIDArray}})
 
         elif request.method == "DELETE":
-            db.UserCCA.delete_many(body)
+            db.User.update_one({"userID": userID}, {"$unset": {"userCCA" : ccaIDArray}})
 
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
-
-
-@social_api.route("/user_CCA/", methods=["GET"])
-@cross_origin()
-def getCCAMembersName():
-    try:
-        ccaName = str(request.args.get('ccaName'))
-        response = db.UserCCA.find({"ccaName": ccaName})
-        response = {"status": "success", "data": list(response)}
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response)
