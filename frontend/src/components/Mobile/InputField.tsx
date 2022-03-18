@@ -23,12 +23,12 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
   width: 100%;
   border-radius: 10px;
   border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
-  padding: 5px 15px;
+  padding: 5px 16px;
   margin: 0;
 
   ::placeholder {
     color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
-    font-size: 0.8rem;
+    font-size: 12px;
   }
 `
 
@@ -36,14 +36,15 @@ const StyledTextArea = styled.textarea<{ hasError?: boolean }>`
   background: #f3f3f9;
   width: 100%;
   border-radius: 10px;
-  padding: 5px 15px;
+  padding: 10px 16px;
   margin: 0;
   resize: none;
   border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
 
   ::placeholder {
     color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
-    font-size: 0.8rem;
+    font-size: 12px;
+    line-height: 20px;
   }
 `
 
@@ -84,7 +85,7 @@ export default function InputField(props: InputFieldProps) {
       {textArea ? (
         <StyledTextArea
           placeholder={errors ? `${title} is required` : placeholder}
-          rows={4}
+          rows={5}
           onChange={(e) => setValue(name, e.target.value)}
           hasError={!!errors}
           defaultValue={defaultValue}
