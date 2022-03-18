@@ -92,6 +92,7 @@ const CCAInput = styled(AutoComplete)`
 type FormValues = {
   eventName: string
   description: string
+  descriptionRegister: string
 }
 
 export default function CreateBooking() {
@@ -101,8 +102,9 @@ export default function CreateBooking() {
   const {
     handleSubmit,
     formState: { errors },
-    control,
     watch,
+    register,
+    setValue,
   } = useForm<FormValues>()
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
   const [ccaName, setCcaName] = useState<string>('')
@@ -176,21 +178,14 @@ export default function CreateBooking() {
         <LoadingSpin />
       ) : (
         <Form onSubmit={onSubmit}>
-          <Controller
-            name="eventName"
-            control={control}
-            render={({ onChange, name }) => (
-              <InputField
-                name={name}
-                hasError={!!errors.eventName}
-                title="Event Name"
-                placeholder="Event Name"
-                onChange={onChange}
-                required
-              />
-            )}
-            defaultValue=""
-            rules={{ required: true }}
+          <InputField
+            name={'eventName'}
+            title="Event Name"
+            placeholder="Event Name"
+            required
+            register={register}
+            setValue={setValue}
+            errors={errors.eventName}
           />
           {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
@@ -225,21 +220,14 @@ export default function CreateBooking() {
               allowClear
             />
           </Container>
-          <Controller
-            name="description"
-            render={({ onChange, name }) => (
-              <InputField
-                name={name}
-                hasError={!!errors.description}
-                title="Description"
-                placeholder="Tell us what your booking is for!"
-                textArea
-                onChange={onChange}
-              />
-            )}
-            rules={{ required: true }}
-            defaultValue=""
-            control={control}
+          <InputField
+            name={'description'}
+            title="Description"
+            placeholder="Tell us what your booking is for!"
+            textArea
+            register={register}
+            setValue={setValue}
+            errors={errors.description}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
