@@ -17,7 +17,6 @@ import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import MyBookingsIcon from '../../../assets/MyBookingsIcon.svg'
 import { FormOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div`

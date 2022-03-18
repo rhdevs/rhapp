@@ -10,7 +10,6 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
-import BookFacilityIcon from '../../../assets/BookFacilityIcon.svg'
 import { UnorderedListOutlined } from '@ant-design/icons'
 
 const HEADER_HEIGHT = '70px'
