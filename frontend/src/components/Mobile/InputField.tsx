@@ -28,7 +28,6 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
 
   ::placeholder {
     color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
-    font-size: 12px;
   }
 `
 
@@ -43,8 +42,6 @@ const StyledTextArea = styled.textarea<{ hasError?: boolean }>`
 
   ::placeholder {
     color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
-    font-size: 12px;
-    line-height: 20px;
   }
 `
 
