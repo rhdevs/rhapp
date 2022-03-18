@@ -271,8 +271,11 @@ def add_booking():
             return {"err": "Terminating time of recurring booking earlier than end time of first booking", "status": "failed"}, 400
 
         # Check for dance
-        if formData['facilityID'] == 15 and not db.User.find_one({'userID': formData['userID'], 'userCCA': [3] }):
-            return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
+        if formData['facilityID'] == 15:
+            ccaArray = db.User.find_one({'userID': formData['userID']}).get("userCCA")
+            print(ccaArray)
+            if not "3" in ccaArray:
+                return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
         # Convert
         formData["startTime"] = int(formData["startTime"])
