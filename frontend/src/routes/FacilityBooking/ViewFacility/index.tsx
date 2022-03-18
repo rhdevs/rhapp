@@ -44,7 +44,7 @@ export default function ViewFacility() {
     <FormOutlined
       style={{ color: 'black', fontSize: '150%' }}
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+        history.push(`${PATHS.VIEW_MY_BOOKINGS_USERID}/${localStorage.getItem('userID')}`)
       }}
     />
   )
