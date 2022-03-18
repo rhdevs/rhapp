@@ -25,6 +25,7 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
   border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
   padding: 5px 16px;
   margin: 0;
+  height: 2rem;
 
   ::placeholder {
     color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
