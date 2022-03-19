@@ -59,7 +59,7 @@ const StyledTitle = styled.div`
 type InputFieldProps = {
   name: string
   title: string
-  placeholder: string
+  placeholder?: string
   textArea?: boolean
   required?: boolean
   defaultValue?: string
