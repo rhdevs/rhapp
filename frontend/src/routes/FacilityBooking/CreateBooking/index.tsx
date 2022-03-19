@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -83,18 +83,23 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
+type FormValues = {
+  eventName: string
+  description: string
+}
+
 export default function CreateBooking() {
   const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
   const {
-    register,
     handleSubmit,
     formState: { errors },
-    control,
     watch,
-  } = useForm()
+    register,
+    setValue,
+  } = useForm<FormValues>()
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
   const [ccaName, setCcaName] = useState<string>('')
   const {
@@ -106,12 +111,12 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
-  const FormData = watch()
+
   const formIsValid = () => {
     if (isWeeklyOn) {
-      return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && bookingEndDate !== 0
+      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
     }
-    return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
+    return watch('eventName') !== '' && ccaName !== ''
   }
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -173,22 +178,15 @@ export default function CreateBooking() {
         <LoadingSpin />
       ) : (
         <Form onSubmit={onSubmit}>
-          <Controller
-            control={control}
-            render={({ onChange, value }) => (
-              <InputField
-                hasError={value === ''}
-                title="Event Name"
-                placeholder="Event Name"
-                value={value}
-                onChange={onChange}
-              />
-            )}
-            defaultValue=""
-            rules={{ required: true }}
-            name="eventName"
+          <InputField
+            name={'eventName'}
+            title="Event Name"
+            placeholder="Event Name"
+            required
+            register={register}
+            setValue={setValue}
+            errors={errors.eventName}
           />
-          {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
             title="Start"
             value={
@@ -221,21 +219,14 @@ export default function CreateBooking() {
               allowClear
             />
           </Container>
-          <Controller
-            name="description"
-            render={({ onChange, value }) => (
-              <InputField
-                title="Description"
-                placeholder="Tell us what your booking is for!"
-                textArea
-                value={value}
-                onChange={onChange}
-              />
-            )}
-            ref={register}
-            rules={{ required: true }}
-            defaultValue=""
-            control={control}
+          <InputField
+            name={'description'}
+            title="Description"
+            placeholder="Tell us what your booking is for!"
+            textArea
+            register={register}
+            setValue={setValue}
+            errors={errors.description}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
