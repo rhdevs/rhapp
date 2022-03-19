@@ -13,6 +13,57 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
+export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  let updatedFB: Booking[] = []
+  const updatedTB: TimeBlock[] = defaultTimeBlocks
+
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
+  const querySubString =
+    selectedFacilityId +
+    '/' +
+    '?startTime=' +
+    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
+    '&endTime=' +
+    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
+
+  //reset all elements in TB to default
+  for (let i = 0; i < 24; i++) {
+    updatedTB[i] = {
+      id: i,
+      timestamp: 0,
+      type: TimeBlockType.AVAILABLE,
+    }
+  }
+  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then((res) => {
+      updatedFB = res.data
+      for (let i = 0; i < updatedFB.length; i++) {
+        const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
+        const endhour =
+          new Date(updatedFB[i].endTime * 1000).getHours() < starthour
+            ? 23
+            : new Date(updatedFB[i].endTime * 1000).getHours()
+        for (let hour = starthour; hour < endhour + 1; hour++) {
+          updatedTB[hour] = {
+            id: hour,
+            timestamp: updatedFB[i].startTime,
+            type: TimeBlockType.OCCUPIED,
+            ccaName: updatedFB[i].ccaName,
+            eventName: updatedFB[i].description,
+          }
+        }
+      }
+      dispatch(setSelectedDayBookings(updatedFB))
+      dispatch(setTimeBlocks(updatedTB))
+      dispatch(setIsLoading(false))
+    })
+}
+
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
     method: 'GET',
@@ -47,20 +98,24 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
 }
 
 // -1 stands for closed, any others means open for that specific ID.
-export const setIsDeleteMyBooking = (isDeleteMyBooking: number) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (isDeleteMyBooking !== undefined) {
+    dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+  }
 }
 
-export const deleteMyBooking = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
-  await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
-    const { myBookings } = getState().facilityBooking
-    dispatch({
-      type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
-      myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+  if (bookingId !== undefined) {
+    await del(ENDPOINTS.BOOKING, DOMAINS.FACILITY, {}, `/${bookingId.toString()}?token=${TokenId}`).then(() => {
+      const { myBookings } = getState().facilityBooking
+      dispatch({
+        type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
+        myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
+      })
+      dispatch(setIsDeleteMyBooking(-1))
     })
-    dispatch(setIsDeleteMyBooking(-1))
-  })
+  }
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
@@ -381,13 +436,14 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
 }
 
 export const handleCreateNewBooking = (
-  facilityID: number,
-  eventName: string,
+  facilityID: number | undefined,
+  eventName: string | undefined,
   startTime: number | null,
   endTime: number | null,
-  endDate?: number | null,
+  endDate?: number,
   ccaID?: number,
   description?: string,
+  forceBook?: boolean,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = {
     facilityID: facilityID,
@@ -398,8 +454,20 @@ export const handleCreateNewBooking = (
     endTime: endTime,
     endDate: endDate,
     description: description,
+    forceBook: forceBook,
   }
-
+  dispatch(
+    setBooking({
+      eventName: eventName ?? '',
+      facilityID: facilityID ?? -1,
+      userID: localStorage.getItem('userID') ?? '',
+      ccaID: ccaID ?? -1,
+      startTime: startTime ?? Math.round(Date.now() / 1000),
+      endTime: endTime ?? Math.round(Date.now() / 1000),
+      description: description ?? '',
+      endDate: endDate,
+    }),
+  )
   if (startTime === null || endTime === null) {
     dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
   } else {
@@ -416,6 +484,9 @@ export const handleCreateNewBooking = (
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
         dispatch(setBookingStatus(BookingStatus.CONFLICT))
+        resp.json().then((body) => {
+          dispatch(setConflictBookings(body.conflict_bookings))
+        })
       } else {
         resp.json().then((body) => {
           if (body.err == 'End time earlier than start time') {

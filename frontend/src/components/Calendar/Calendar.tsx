@@ -71,7 +71,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
             <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
             <DatesGridContainer>
               <DayHeaders />
-              <MonthlyContainer nthMonth={startingMonth++} />
+              <MonthlyContainer nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
             </DatesGridContainer>
           </MonthContainer>
           <>
@@ -84,7 +84,11 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
                     <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
                     <DatesGridContainer>
                       <DayHeaders />
-                      <MonthlyContainer key={startingMonth} nthMonth={startingMonth} />
+                      <MonthlyContainer
+                        key={startingMonth}
+                        nthMonth={startingMonth}
+                        facilityId={props.selectedFacilityId}
+                      />
                     </DatesGridContainer>
                   </MonthContainer>
                 </>

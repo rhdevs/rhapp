@@ -5,7 +5,7 @@
  */
 
 export const unixToCalendarFormat = (unprocessedDate: number, processedDates: number[]) => {
-  const month = new Date(unprocessedDate * 1000).getMonth() + 1
+  const month = new Date(unprocessedDate * 1000).getMonth()
   const day = new Date(unprocessedDate * 1000).getDate()
   const processedDate = month * 100 + day
   processedDates.push(processedDate)
