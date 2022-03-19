@@ -92,7 +92,6 @@ const CCAInput = styled(AutoComplete)`
 type FormValues = {
   eventName: string
   description: string
-  descriptionRegister: string
 }
 
 export default function CreateBooking() {
@@ -162,11 +161,6 @@ export default function CreateBooking() {
       })()
     }
   }
-
-  useEffect(() => {
-    console.log(watch())
-    console.log(errors)
-  })
 
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
