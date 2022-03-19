@@ -118,7 +118,6 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
-  const FormData = watch()
   const ValidForm = () => {
     if (isWeeklyOn) {
       return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
