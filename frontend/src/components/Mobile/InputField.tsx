@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FieldError } from 'react-hook-form'
+import { FieldError, UseFormMethods } from 'react-hook-form'
 
 const RedText = styled.span`
   color: #f37562;
@@ -63,8 +63,8 @@ type InputFieldProps = {
   textArea?: boolean
   required?: boolean
   defaultValue?: string
-  register
-  setValue
+  register: UseFormMethods['register']
+  setValue: UseFormMethods['setValue']
   errors?: FieldError
 }
 

@@ -121,9 +121,9 @@ export default function CreateBooking() {
   const FormData = watch()
   const ValidForm = () => {
     if (isWeeklyOn) {
-      return FormData.eventName !== '' && ccaName !== '' && bookingEndDate !== 0
+      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
     }
-    return FormData.eventName !== '' && ccaName !== ''
+    return watch('eventName') !== '' && ccaName !== ''
   }
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -165,6 +165,11 @@ export default function CreateBooking() {
   }
 
   useEffect(() => {
+    console.log(watch())
+    console.log(errors)
+  })
+
+  useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
       history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
@@ -187,7 +192,6 @@ export default function CreateBooking() {
             setValue={setValue}
             errors={errors.eventName}
           />
-          {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
             title="Start"
             value={
