@@ -8,8 +8,7 @@ import homeIconSelected from '../../assets/homeIconSelected.svg'
 import homeIconUnselected from '../../assets/homeIconUnselected.svg'
 import facilitiesIconSelected from '../../assets/facilitiesIconSelected.svg'
 import facilitiesIconUnselected from '../../assets/facilitiesIconUnselected.svg'
-import calenderIconSelected from '../../assets/calenderIconSelected.svg'
-import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
+import gymIcon from '../../assets/gymIconNav.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
 import supperIconSelected from '../../assets/supper/supperIconSelected.png'
@@ -85,14 +84,14 @@ function BottomNavBar() {
             }}
           ></TabBar.Item> */}
           <TabBar.Item
-            key="Supper"
-            title="Supper"
-            icon={<StyledButton src={supperIconUnselected} />}
-            selectedIcon={<StyledButton src={supperIconSelected} />}
+            key="Gym"
+            title="Gym"
+            icon={<StyledButton src={gymIcon} />}
+            selectedIcon={<StyledButton src={gymIcon} />}
             selected={activeTabIndex() === 3}
             // badge={'test'}
             onPress={() => {
-              history.push(PATHS.SUPPER_HOME)
+              history.push(PATHS.GYM_MAIN)
             }}
           ></TabBar.Item>
           <TabBar.Item
