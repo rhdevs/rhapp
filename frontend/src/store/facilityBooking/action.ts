@@ -18,9 +18,7 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
   const updatedTB: TimeBlock[] = defaultTimeBlocks
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-  console.log('Start date in daily views' + adjustedStart)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
-  console.log('End date in daily views' + adjustedEnd)
   const querySubString =
     selectedFacilityId +
     '/' +
@@ -43,8 +41,6 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
   })
     .then((resp) => resp.json())
     .then((res) => {
-      console.log(querySubString)
-      console.log(res.data)
       updatedFB = res.data
       for (let i = 0; i < updatedFB.length; i++) {
         const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
