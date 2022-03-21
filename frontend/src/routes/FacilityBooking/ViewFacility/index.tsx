@@ -40,7 +40,7 @@ export default function ViewFacility() {
     }
   }, [])
 
-  const myBookingsIcon = (
+  const MyBookingsIcon = (
     <FormOutlined
       style={{ color: 'black', fontSize: '150%' }}
       onClick={() => {
@@ -53,7 +53,7 @@ export default function ViewFacility() {
     <>
       <TopNavBarRevamp
         title={selectedFacilityName}
-        rightComponent={myBookingsIcon}
+        rightComponent={MyBookingsIcon}
         onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>

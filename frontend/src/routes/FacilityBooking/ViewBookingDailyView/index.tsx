@@ -63,7 +63,7 @@ export default function ViewBookingDailyView() {
     }
   }, [date])
 
-  const bookingFacilityIcon = (
+  const BookingFacilityIcon = (
     <UnorderedListOutlined
       style={{ color: 'black', fontSize: '150%' }}
       onClick={() => console.log('link to booking page')}
@@ -75,7 +75,7 @@ export default function ViewBookingDailyView() {
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
-        rightComponent={bookingFacilityIcon}
+        rightComponent={BookingFacilityIcon}
       />
       {isLoading ? (
         <LoadingSpin />
