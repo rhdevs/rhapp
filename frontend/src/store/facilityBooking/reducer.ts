@@ -20,8 +20,6 @@ const initialState = {
   newBookingName: '',
   newBookingFacilityName: '',
   newBookingFacilityId: '',
-  newBookingFromDate: new Date(),
-  newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
   newBookingCCA: '',
   newBookingDescription: '',
   createSuccess: false,
@@ -61,8 +59,6 @@ type State = {
   newBookingFacilityName: string
   newBookingFacilityId: string
   newBookingName: string
-  newBookingFromDate: Date
-  newBookingToDate: Date
   newBookingCCA: string
   newBookingDescription: string
   createSuccess: boolean
@@ -151,18 +147,18 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
-    case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
-      return {
-        ...state,
-        newBookingFromDate: action.newBookingFromDate,
-      }
-    }
-    case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
-      return {
-        ...state,
-        newBookingToDate: action.newBookingToDate,
-      }
-    }
+    // case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
+    //   return {
+    //     ...state,
+    //     newBookingFromDate: action.newBookingFromDate,
+    //   }
+    // }
+    // case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
+    //   return {
+    //     ...state,
+    //     newBookingToDate: action.newBookingToDate,
+    //   }
+    // }
     case FACILITY_ACTIONS.SET_BOOKING_CCA: {
       return {
         ...state,

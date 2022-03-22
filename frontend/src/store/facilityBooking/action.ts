@@ -134,20 +134,20 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
-export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
-  const { newBookingFromDate } = getState().facilityBooking
-  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
-}
+// export const editBookingToDate = (newBookingToDate: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: newBookingToDate })
+//   const { newBookingFromDate } = getState().facilityBooking
+//   dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
+// }
 
-export const editBookingFromDate = (newBookingFromDate: Date) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
-  const { newBookingToDate } = getState().facilityBooking
-  dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
-}
+// export const editBookingFromDate = (newBookingFromDate: Date) => (
+//   dispatch: Dispatch<ActionTypes>,
+//   getState: GetState,
+// ) => {
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: newBookingFromDate })
+//   const { newBookingToDate } = getState().facilityBooking
+//   dispatch(checkForDurationError(newBookingToDate, newBookingFromDate))
+// }
 
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
@@ -205,23 +205,23 @@ export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
 }
 
-export const createNewBookingFromFacility = (
-  startDate: Date,
-  endDate: Date,
-  facilityName: string,
-  facilityId: string,
-) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: facilityId })
+// export const createNewBookingFromFacility = (
+//   startDate: Date,
+//   endDate: Date,
+//   facilityName: string,
+//   facilityId: string,
+// ) => (dispatch: Dispatch<ActionTypes>) => {
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FROM_DATE, newBookingFromDate: startDate })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_TO_DATE, newBookingToDate: endDate })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: facilityName })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: facilityId })
 
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: '' })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: '' })
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: '' })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: '' })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: '' })
+//   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: '' })
 
-  dispatch(setIsLoading(false))
-}
+//   dispatch(setIsLoading(false))
+// }
 
 // TODO: Remove when edit booking is done
 export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
@@ -261,114 +261,114 @@ export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, succes
   })
 }
 
-export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const {
-    newBookingName,
-    selectedFacilityId,
-    newBookingFromDate,
-    newBookingToDate,
-    newBookingCCA,
-    newBookingDescription,
-    newBookingFacilityName,
-    facilityList,
-    ccaList,
-    numRepeatWeekly,
-  } = getState().facilityBooking
+// export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+//   const {
+//     newBookingName,
+//     selectedFacilityId,
+//     newBookingFromDate,
+//     newBookingToDate,
+//     newBookingCCA,
+//     newBookingDescription,
+//     newBookingFacilityName,
+//     facilityList,
+//     ccaList,
+//     numRepeatWeekly,
+//   } = getState().facilityBooking
 
-  const requestBody = {
-    facilityID: selectedFacilityId,
-    eventName: newBookingName,
-    userID: localStorage.getItem('userID'),
-    ccaID: ccaList.find((cca) => cca.ccaName === newBookingCCA)?.ccaID,
-    startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
-    endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
-    description: newBookingDescription,
-    repeat: numRepeatWeekly,
-  }
-  if (selectedFacilityId === 0) {
-    //validate if selected facility id is zero
-    const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
-      ?.facilityID
-    if (newSelectedFacilityId) {
-      dispatch(setSelectedFacility(newSelectedFacilityId))
-    } else {
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      dispatch(SetCreateBookingError('Try reentering facility name!'))
-      return
-    }
-  }
-  if (new Date().getTime() > newBookingFromDate.getTime()) {
-    //Creating a booking in the past
-    dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-    dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
-    return
-  }
-  if (!isEdit) {
-    const TokenId = localStorage.getItem('token')
-    const response = await fetch(
-      DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + TokenId + '&userID=' + localStorage.getItem('userID'),
-      {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      },
-    )
-    if (response.status >= 400) {
-      const body = await response.json()
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      if (body.err == 'End time earlier than start time') {
-        dispatch(SetCreateBookingError('End time is earlier than start time!'))
-      } else if (body.err == 'Conflict Booking') {
-        dispatch(setConflictBookings(body.conflict_bookings))
-      } else if (body.err == 'You must be in RH Dance to make this booking') {
-        // As of this version, Dance Studio can only be booked by people who are in RH Dance.
-        dispatch(SetCreateBookingError('You must be in RH Dance to make this booking'))
-      } else {
-        dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
-      }
-    } else {
-      dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-      dispatch({
-        type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-        newBooking: undefined,
-      })
-    }
-  } else {
-    const { newBooking } = getState().facilityBooking
-    const TokenId = localStorage.getItem('token')
-    requestBody.facilityID = newBooking?.facilityID ?? requestBody.facilityID
-    const response = await put(
-      ENDPOINTS.BOOKING,
-      DOMAINS.FACILITY,
-      requestBody,
-      {},
-      `/${newBooking?.bookingID}?token=${TokenId}`,
-    )
+//   const requestBody = {
+//     facilityID: selectedFacilityId,
+//     eventName: newBookingName,
+//     userID: localStorage.getItem('userID'),
+//     ccaID: ccaList.find((cca) => cca.ccaName === newBookingCCA)?.ccaID,
+//     startTime: parseInt((newBookingFromDate.getTime() / 1000).toFixed(0)),
+//     endTime: parseInt((newBookingToDate.getTime() / 1000).toFixed(0)),
+//     description: newBookingDescription,
+//     repeat: numRepeatWeekly,
+//   }
+//   if (selectedFacilityId === 0) {
+//     //validate if selected facility id is zero
+//     const newSelectedFacilityId = facilityList.find((facility) => facility.facilityName === newBookingFacilityName)
+//       ?.facilityID
+//     if (newSelectedFacilityId) {
+//       dispatch(setSelectedFacility(newSelectedFacilityId))
+//     } else {
+//       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+//       dispatch(SetCreateBookingError('Try reentering facility name!'))
+//       return
+//     }
+//   }
+//   if (new Date().getTime() > newBookingFromDate.getTime()) {
+//     //Creating a booking in the past
+//     dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+//     dispatch(SetCreateBookingError('You cannot create a booking on a date that has already past.'))
+//     return
+//   }
+//   if (!isEdit) {
+//     const TokenId = localStorage.getItem('token')
+//     const response = await fetch(
+//       DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + TokenId + '&userID=' + localStorage.getItem('userID'),
+//       {
+//         method: 'POST',
+//         mode: 'cors',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(requestBody),
+//       },
+//     )
+//     if (response.status >= 400) {
+//       const body = await response.json()
+//       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+//       if (body.err == 'End time earlier than start time') {
+//         dispatch(SetCreateBookingError('End time is earlier than start time!'))
+//       } else if (body.err == 'Conflict Booking') {
+//         dispatch(setConflictBookings(body.conflict_bookings))
+//       } else if (body.err == 'You must be in RH Dance to make this booking') {
+//         // As of this version, Dance Studio can only be booked by people who are in RH Dance.
+//         dispatch(SetCreateBookingError('You must be in RH Dance to make this booking'))
+//       } else {
+//         dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
+//       }
+//     } else {
+//       dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
+//       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+//       dispatch({
+//         type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+//         newBooking: undefined,
+//       })
+//     }
+//   } else {
+//     const { newBooking } = getState().facilityBooking
+//     const TokenId = localStorage.getItem('token')
+//     requestBody.facilityID = newBooking?.facilityID ?? requestBody.facilityID
+//     const response = await put(
+//       ENDPOINTS.BOOKING,
+//       DOMAINS.FACILITY,
+//       requestBody,
+//       {},
+//       `/${newBooking?.bookingID}?token=${TokenId}`,
+//     )
 
-    if (response.status >= 400) {
-      const body = await response.json()
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      if (body.err == 'End time eariler than start time') {
-        dispatch(SetCreateBookingError('End time is earlier than start time!'))
-      } else if (body.err == 'Conflict Booking') {
-        dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
-      } else {
-        dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
-      }
-    } else {
-      dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
-      dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
-      dispatch({
-        type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-        newBooking: undefined,
-      })
-    }
-  }
-}
+//     if (response.status >= 400) {
+//       const body = await response.json()
+//       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
+//       if (body.err == 'End time eariler than start time') {
+//         dispatch(SetCreateBookingError('End time is earlier than start time!'))
+//       } else if (body.err == 'Conflict Booking') {
+//         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
+//       } else {
+//         dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
+//       }
+//     } else {
+//       dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID, newBookingFacilityId: selectedFacilityId.toString() })
+//       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: false, createSuccess: true })
+//       dispatch({
+//         type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+//         newBooking: undefined,
+//       })
+//     }
+//   }
+// }
 
 export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
@@ -577,7 +577,6 @@ export const getTimeBlocks = (date: Date) => (dispatch: Dispatch<ActionTypes>, g
       }
     }
   })
-  console.log('gettimeblocks', newTimeblocks)
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
     timeBlocks: newTimeblocks,
