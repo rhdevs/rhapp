@@ -9,12 +9,15 @@ import { scrollToView } from './CurrentTimeLine'
 type Props = {
   entry: TimeBlock
   onClick: React.MouseEventHandler<HTMLDivElement>
-  selectedStartTime: number
   scrollTo?: boolean
 }
 
 const BookingBlock = (props: Props) => {
   const ref = useRef<HTMLDivElement>(null)
+
+  const { selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   useEffect(() => {
     if (props.scrollTo) {
@@ -38,9 +41,12 @@ const BookingBlock = (props: Props) => {
   function hasOverlay() {
     const currentTimestamp = Math.round(Date.now() / 1000)
     const currentStartHour = currentTimestamp - (currentTimestamp % 3600)
-    const cutoff =
-      props.selectedStartTime === -1 ? currentStartHour : Math.max(currentStartHour, props.selectedStartTime)
-    return (props.entry.type === TimeBlockType.OCCUPIED && cutoff >= props.entry.timestamp) as boolean
+
+    const cutoffStart = selectedStartTime === 0 ? currentStartHour : Math.max(currentStartHour, selectedStartTime)
+    const cutoffEnd = selectedEndTime === 0 ? Infinity : selectedEndTime
+
+    return ((props.entry.type === TimeBlockType.OCCUPIED && cutoffStart >= props.entry.timestamp) ||
+      cutoffEnd <= props.entry.timestamp) as boolean
   }
 
   return (

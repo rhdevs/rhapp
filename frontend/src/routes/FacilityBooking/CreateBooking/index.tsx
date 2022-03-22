@@ -173,41 +173,34 @@ export default function CreateBooking() {
     }
   }, [bookingStatus])
 
-  const onLeftClick = () => {
-    // when go back, reset user's time selections
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
-
+  const goBackToTimeSelectionPage = () => {
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
       state: {
         date: date,
       },
     })
+  }
+
+  const onLeftClick = () => {
+    // when go back, reset user's time selections
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    dispatch(setSelectedEndTime(0))
+    goBackToTimeSelectionPage()
   }
 
   const startDateFieldOnClick = () => {
     // reselect start date only
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
-    history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
-      state: {
-        date: date,
-      },
-    })
+    goBackToTimeSelectionPage()
   }
 
   const endDateFieldOnClick = () => {
     // reselect end date only
     dispatch(setSelectedEndTime(0))
-    history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
-      state: {
-        date: date,
-      },
-    })
+    goBackToTimeSelectionPage()
   }
 
   return (

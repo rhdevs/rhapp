@@ -63,43 +63,43 @@ export default function BookingSection({ facilityId, date }: Props) {
     dispatch(setTimeBlocks(newTimeblocks))
   }
 
+  function goToBookingPage() {
+    history.push({
+      pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
+      state: {
+        date: date,
+      },
+    })
+  }
+
   function setSelectedBlock(selectedTimestamp: number) {
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
 
     if (selectedStartTime === 0) {
       if (selectedEndTime === 0) {
-        // if seleccting start time
+        // selecting start time first before selecting end time
         dispatch(setSelectedStartTime(selectedTimestamp))
       } else {
-        // if reselecting start time only
+        // reselecting start time only, then go back to booking page
+        if (selectedTimestamp > selectedEndTime) {
+          return alert('start time should be earlier than end time!')
+        }
         dispatch(setSelectedStartTime(selectedTimestamp))
         dispatch(setBookingStartTime(selectedTimestamp))
-
-        history.push({
-          pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
-          state: {
-            date: date,
-          },
-        })
+        goToBookingPage()
       }
     } else {
       if (selectedEndTime === 0) {
-        // if selecting end time
+        // select end time (after start time is selected), then go to booking page
         const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
 
         dispatch(setSelectedEndTime(selectedTimestamp))
         dispatch(setBookingStartTime(selectedStartTime))
         dispatch(setBookingEndTime(selectedEndTime))
-
-        history.push({
-          pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
-          state: {
-            date: date,
-          },
-        })
+        goToBookingPage()
       } else {
-        // if reselecting
-        dispatch(setSelectedStartTime(selectedTimestamp))
+        // disallowed case
+        return
       }
     }
   }
@@ -113,7 +113,6 @@ export default function BookingSection({ facilityId, date }: Props) {
           return (
             <BookingBlock
               key={index}
-              selectedStartTime={selectedStartTime}
               onClick={() => setSelectedBlock(entry.timestamp)}
               entry={entry}
               // if day selected is not current, scroll to defaultTimePosition TODO doesn't work
