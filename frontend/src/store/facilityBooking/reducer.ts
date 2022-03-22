@@ -36,6 +36,10 @@ const initialState = {
   numRepeatWeekly: 1,
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
+
+  selectedBlockTimestamp: 0,
+  selectedStartTime: 0,
+
   bookingStartTime: 0,
   bookingEndTime: 0,
   bookingEndDate: 0,
@@ -74,6 +78,10 @@ type State = {
   booking: Booking | null
   bookingStatus: BookingStatus
   message?: string
+
+  selectedBlockTimestamp: number
+  selectedStartTime: number
+
   bookingStartTime: number
   bookingEndTime: number
   bookingEndDate: number
@@ -279,6 +287,20 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         message: action.message,
       }
     }
+
+    case FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP: {
+      return {
+        ...state,
+        selectedBlockTimestamp: action.selectedBlockTimestamp,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_START_TIME: {
+      return {
+        ...state,
+        selectedStartTime: action.selectedStartTime,
+      }
+    }
+
     case FACILITY_ACTIONS.SET_BOOKING_START_TIME: {
       return {
         ...state,

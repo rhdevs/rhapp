@@ -10,6 +10,8 @@ import {
   getTimeBlocks,
   setBookingEndTime,
   setBookingStartTime,
+  setSelectedBlockTimestamp,
+  setSelectedStartTime,
   setTimeBlocks,
 } from '../../store/facilityBooking/action'
 import HourBlocks from './HourBlocks'
@@ -25,14 +27,17 @@ type Props = {
 }
 
 export default function BookingSection({ redirectPath, facilityId, date }: Props) {
-  const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const history = useHistory()
   const dispatch = useDispatch()
-  const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
-  const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
+  const { timeBlocks, selectedBlockTimestamp, selectedStartTime } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
-  const [selectedStartTime, setSelectedStartTime] = useState(-1)
+  // const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
+  // const [selectedStartTime, setSelectedStartTime] = useState(-1)
+
+  const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
     dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
@@ -50,7 +55,7 @@ export default function BookingSection({ redirectPath, facilityId, date }: Props
   }
 
   function updateTimeBlocks() {
-    if (selectedStartTime === -1) return
+    if (selectedStartTime === 0) return
     const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
       const type = assignType(entry)
       return { ...entry, type }
@@ -59,18 +64,13 @@ export default function BookingSection({ redirectPath, facilityId, date }: Props
   }
 
   function setSelectedBlock(selectedTimestamp: number) {
-    setSelectedBlockTimestamp(selectedTimestamp)
+    dispatch(setSelectedBlockTimestamp(selectedTimestamp))
 
-    if (selectedStartTime === -1) {
-      setSelectedStartTime(selectedTimestamp)
+    if (selectedStartTime === 0) {
+      dispatch(setSelectedStartTime(selectedTimestamp))
       return
     }
     const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-    // const bookingFromDate = new Date(selectedStartTime * 1000)
-    // const bookingToDate = new Date(selectedEndTime * 1000)
-
-    // dispatch(editBookingFromDate(bookingFromDate))
-    // dispatch(editBookingToDate(bookingToDate))
 
     dispatch(setBookingStartTime(selectedStartTime))
     dispatch(setBookingEndTime(selectedEndTime))
@@ -96,7 +96,7 @@ export default function BookingSection({ redirectPath, facilityId, date }: Props
               selectedStartTime={selectedStartTime}
               onClick={() => setSelectedBlock(entry.timestamp)}
               entry={entry}
-              // if day selected is not current, scroll to defaultTimePosition
+              // if day selected is not current, scroll to defaultTimePosition TODO doesn't work
               scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
             />
           )

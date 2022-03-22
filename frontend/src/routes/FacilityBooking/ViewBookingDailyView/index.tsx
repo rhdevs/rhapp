@@ -101,7 +101,7 @@ export default function ViewBookingDailyView() {
           <DailyViewDatesRow
             date={date}
             selectedFacilityId={selectedFacilityId}
-            redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}
+            redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
           />
           <ViewSectionDiv>
             <ViewSection />

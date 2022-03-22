@@ -8,7 +8,7 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number; redirectTo?: RedirectRoutes }) => {
+const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number; redirectTo?: string }) => {
   const year = props.date.getFullYear()
   const month = props.date.getMonth()
   const dates = props.date.getDate()

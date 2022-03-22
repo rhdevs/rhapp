@@ -8,7 +8,7 @@ export const DateRows = (props: {
   lastDateOfThisMonth: number
   bufferDates: number[]
   facilityId: number
-  redirectTo?: RedirectRoutes
+  redirectTo?: string
 }) => {
   for (let i = props.firstDate; i < props.lastDateOfThisMonth + 1; i++) {
     props.bufferDates.push(i)

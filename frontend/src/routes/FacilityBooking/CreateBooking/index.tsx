@@ -16,6 +16,8 @@ import {
   handleCreateNewBooking,
   setBookingEndDate,
   resetNewBooking,
+  setSelectedBlockTimestamp,
+  setSelectedStartTime,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -168,19 +170,43 @@ export default function CreateBooking() {
     }
   }, [bookingStatus])
 
-  const dateFieldsOnClick = () =>
+  const onLeftClick = () => {
+    // when go back, reset user's time selections
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
     history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
+      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
       state: {
-        facilityId: selectedFacilityId,
         date: date,
       },
     })
+  }
+
+  const startDateFieldOnClick = () => {
+    // when reselect start date, reset user's time selections
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    history.push({
+      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      state: {
+        date: date,
+      },
+    })
+  }
+
+  const endDateFieldOnClick = () => {
+    history.push({
+      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      state: {
+        date: date,
+      },
+    })
+  }
 
   return (
     <Background>
       <h1>{bookingEndDate}</h1>
-      <TopNavBar title={`Book ${getFacilityName()}`} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -206,13 +232,13 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            onClick={dateFieldsOnClick}
+            onClick={startDateFieldOnClick}
             isCompulsory
           />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            onClick={dateFieldsOnClick}
+            onClick={endDateFieldOnClick}
             isCompulsory
           />
           <Container>

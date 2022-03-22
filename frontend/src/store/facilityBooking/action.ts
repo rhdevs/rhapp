@@ -355,6 +355,20 @@ const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (di
   })
 }
 
+export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP,
+    selectedBlockTimestamp: timeStamp,
+  })
+}
+
+export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SELECTED_START_TIME,
+    selectedStartTime: startTime,
+  })
+}
+
 export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_START_TIME,

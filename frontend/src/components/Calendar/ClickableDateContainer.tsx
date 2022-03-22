@@ -40,7 +40,7 @@ export const ClickableDateContainer = (props: {
   eventPresent?: boolean
   assignedMonth: number
   facilityId: number
-  redirectTo?: RedirectRoutes
+  redirectTo?: string
 }) => {
   const dispatch = useDispatch()
   const history = useHistory()
