@@ -11,6 +11,7 @@ import {
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
+  setSelectedEndTime,
   setSelectedStartTime,
   setTimeBlocks,
 } from '../../store/facilityBooking/action'
@@ -21,15 +22,14 @@ import { PATHS } from '../../routes/Routes'
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
 type Props = {
-  redirectPath: PATHS
   facilityId: number
   date: Date
 }
 
-export default function BookingSection({ redirectPath, facilityId, date }: Props) {
+export default function BookingSection({ facilityId, date }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const { timeBlocks, selectedBlockTimestamp, selectedStartTime } = useSelector(
+  const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
@@ -67,21 +67,41 @@ export default function BookingSection({ redirectPath, facilityId, date }: Props
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
 
     if (selectedStartTime === 0) {
-      dispatch(setSelectedStartTime(selectedTimestamp))
-      return
+      if (selectedEndTime === 0) {
+        // if seleccting start time
+        dispatch(setSelectedStartTime(selectedTimestamp))
+      } else {
+        // if reselecting start time only
+        dispatch(setSelectedStartTime(selectedTimestamp))
+        dispatch(setBookingStartTime(selectedTimestamp))
+
+        history.push({
+          pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
+          state: {
+            date: date,
+          },
+        })
+      }
+    } else {
+      if (selectedEndTime === 0) {
+        // if selecting end time
+        const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
+
+        dispatch(setSelectedEndTime(selectedTimestamp))
+        dispatch(setBookingStartTime(selectedStartTime))
+        dispatch(setBookingEndTime(selectedEndTime))
+
+        history.push({
+          pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
+          state: {
+            date: date,
+          },
+        })
+      } else {
+        // if reselecting
+        dispatch(setSelectedStartTime(selectedTimestamp))
+      }
     }
-    const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-
-    dispatch(setBookingStartTime(selectedStartTime))
-    dispatch(setBookingEndTime(selectedEndTime))
-
-    history.push({
-      pathname: redirectPath ?? PATHS.CREATE_FACILITY_BOOKING,
-      state: {
-        facilityId: facilityId,
-        date: date,
-      },
-    })
   }
 
   return (

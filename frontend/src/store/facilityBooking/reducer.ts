@@ -39,6 +39,7 @@ const initialState = {
 
   selectedBlockTimestamp: 0,
   selectedStartTime: 0,
+  selectedEndTime: 0,
 
   bookingStartTime: 0,
   bookingEndTime: 0,
@@ -81,6 +82,7 @@ type State = {
 
   selectedBlockTimestamp: number
   selectedStartTime: number
+  selectedEndTime: number
 
   bookingStartTime: number
   bookingEndTime: number
@@ -298,6 +300,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         selectedStartTime: action.selectedStartTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_END_TIME: {
+      return {
+        ...state,
+        selectedEndTime: action.selectedEndTime,
       }
     }
 

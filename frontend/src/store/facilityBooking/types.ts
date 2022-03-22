@@ -84,6 +84,7 @@ export enum FACILITY_ACTIONS {
 
   SET_SELECTED_BLOCK_TIMESTAMP = 'FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP',
   SET_SELECTED_START_TIME = 'FACILITY_ACTIONS.SET_SELECTED_START_TIME',
+  SET_SELECTED_END_TIME = 'FACILITY_ACTIONS.SET_SELECTED_END_TIME',
 
   SET_BOOKING_START_TIME = 'FACILITY_ACTIONS.SET_BOOKING_START_TIME',
   SET_BOOKING_END_TIME = 'FACILITY_ACTIONS.SET_BOOKING_END_TIME',
@@ -254,6 +255,11 @@ type SetSelectedStartTime = {
   selectedStartTime: number
 }
 
+type SetSelectedEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_END_TIME
+  selectedEndTime: number
+}
+
 type SetBookingStartTime = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_START_TIME
   bookingStartTime: number
@@ -337,6 +343,7 @@ export type ActionTypes =
   | SetBookingStatus
   | SetSelectedBlockTimestamp
   | SetSelectedStartTime
+  | SetSelectedEndTime
   | SetBookingStartTime
   | SetBookingEndTime
   | SetBookingEndDate

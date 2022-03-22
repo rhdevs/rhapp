@@ -18,6 +18,7 @@ import {
   resetNewBooking,
   setSelectedBlockTimestamp,
   setSelectedStartTime,
+  setSelectedEndTime,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -121,7 +122,9 @@ export default function CreateBooking() {
   }
 
   const location = useLocation<State>()
-  const selectedFacilityId = location.state.facilityId
+  const params = useParams<{ facilityID: string }>()
+
+  const selectedFacilityId = parseInt(params.facilityID)
   const date = location.state.date
 
   useEffect(() => {
@@ -166,7 +169,7 @@ export default function CreateBooking() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
+      history.push(`${PATHS.VIEW_FACILITY}${selectedFacilityId}`)
     }
   }, [bookingStatus])
 
@@ -174,6 +177,8 @@ export default function CreateBooking() {
     // when go back, reset user's time selections
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
+    dispatch(setSelectedEndTime(0))
+
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
       state: {
@@ -183,7 +188,7 @@ export default function CreateBooking() {
   }
 
   const startDateFieldOnClick = () => {
-    // when reselect start date, reset user's time selections
+    // reselect start date only
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     history.push({
@@ -195,6 +200,8 @@ export default function CreateBooking() {
   }
 
   const endDateFieldOnClick = () => {
+    // reselect end date only
+    dispatch(setSelectedEndTime(0))
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
       state: {

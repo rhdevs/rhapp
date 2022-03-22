@@ -369,6 +369,13 @@ export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<A
   })
 }
 
+export const setSelectedEndTime = (endTime: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SELECTED_END_TIME,
+    selectedEndTime: endTime,
+  })
+}
+
 export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_START_TIME,

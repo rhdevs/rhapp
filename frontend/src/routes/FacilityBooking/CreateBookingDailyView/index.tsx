@@ -101,7 +101,7 @@ export default function CreateBookingDailyView() {
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
           />
           <BookingSectionDiv>
-            <BookingSection redirectPath={PATHS.CREATE_FACILITY_BOOKING} facilityId={selectedFacilityId} date={date} />
+            <BookingSection facilityId={selectedFacilityId} date={date} />
           </BookingSectionDiv>
         </Background>
       )}
