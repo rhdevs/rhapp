@@ -7,7 +7,7 @@ import { months } from './dates'
  */
 export const unixToFullDate = (unixDate: number) => {
   const date = new Date(unixDate * 1000)
-  const month = date.getMonth() + 1
+  const month = date.getMonth()
   const day = date.getDate()
   const year = date.getFullYear()
 
