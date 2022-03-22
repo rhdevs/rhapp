@@ -168,6 +168,15 @@ export default function CreateBooking() {
     }
   }, [bookingStatus])
 
+  const dateFieldsOnClick = () =>
+    history.push({
+      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
+      state: {
+        facilityId: selectedFacilityId,
+        date: date,
+      },
+    })
+
   return (
     <Background>
       <h1>{bookingEndDate}</h1>
@@ -197,31 +206,13 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            onClick={() =>
-              history.push({
-                pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
-                state: {
-                  facilityId: selectedFacilityId,
-                  date: date,
-                },
-              })
-            }
+            onClick={dateFieldsOnClick}
             isCompulsory
           />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            onClick={() =>
-              dispatch(
-                history.push({
-                  pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
-                  state: {
-                    facilityId: selectedFacilityId,
-                    date: date,
-                  },
-                }),
-              )
-            }
+            onClick={dateFieldsOnClick}
             isCompulsory
           />
           <Container>
@@ -267,7 +258,7 @@ export default function CreateBooking() {
               isCompulsory={true}
               onClick={() => dispatch(setBookingEndDate(1644648228))}
               // TODO, Redirect to choose date calender page
-            ></SelectableField>
+            />
           )}
           {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
           <ButtonComponent
@@ -276,7 +267,7 @@ export default function CreateBooking() {
             type="submit"
             disabled={!ValidForm()}
             onClick={() => console.log('submitted')}
-          ></ButtonComponent>
+          />
         </Form>
       )}
     </Background>

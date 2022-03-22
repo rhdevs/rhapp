@@ -148,16 +148,6 @@ type SetFacilityName = {
   newBookingFacilityName: string
 }
 
-// type SetBookingFromDate = {
-//   type: typeof FACILITY_ACTIONS.SET_BOOKING_FROM_DATE
-//   newBookingFromDate: Date
-// }
-
-// type SetBookingToDate = {
-//   type: typeof FACILITY_ACTIONS.SET_BOOKING_TO_DATE
-//   newBookingToDate: Date
-// }
-
 type SetBookingCCA = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_CCA
   newBookingCCA: string
@@ -309,8 +299,6 @@ export type ActionTypes =
   | DeleteMyBooking
   | EditMyBooking
   | SetBookingName
-  // | SetBookingFromDate
-  // | SetBookingToDate
   | SetBookingCCA
   | SetBookingDescription
   | SetViewFacilityStartDate

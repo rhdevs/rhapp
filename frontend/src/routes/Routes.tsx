@@ -35,15 +35,17 @@ export enum PATHS {
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/view',
+  VIEW_FACILITY = '/facility/view/',
   VIEW_FACILITY_ID = '/facility/view/:facilityID',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create/',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/create/:facilityID',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
   VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityID',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/:facilityID',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
@@ -200,9 +202,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW} component={ViewBookingDailyView} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW_ID} component={ViewBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW} component={CreateBookingDailyView} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 

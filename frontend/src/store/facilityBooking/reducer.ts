@@ -147,18 +147,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
-    // case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
-    //   return {
-    //     ...state,
-    //     newBookingFromDate: action.newBookingFromDate,
-    //   }
-    // }
-    // case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
-    //   return {
-    //     ...state,
-    //     newBookingToDate: action.newBookingToDate,
-    //   }
-    // }
     case FACILITY_ACTIONS.SET_BOOKING_CCA: {
       return {
         ...state,

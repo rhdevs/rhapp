@@ -50,9 +50,8 @@ export const ClickableDateContainer = (props: {
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(setClickedDate(newClickedDate))
     history.push({
-      pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+      pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + props.facilityId,
       state: {
-        facilityId: props.facilityId,
         date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
       },
     })

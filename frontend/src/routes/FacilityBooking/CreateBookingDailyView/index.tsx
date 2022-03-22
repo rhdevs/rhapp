@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory, useLocation } from 'react-router-dom'
-import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 
-import { RootState } from '../../../store/types'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
-import {
-  fetchFacilityNameFromID,
-  getTimeBlocks,
-  setIsLoading,
-  setSelectedFacility,
-  updateDailyView,
-} from '../../../store/facilityBooking/action'
 import BookingSection from '../../../components/FacilityBooking/BookingSection'
-import { unixTo12HourTime } from '../../../common/unixTo12HourTime'
-import { DateRows } from '../../../components/Calendar/DateRows'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import { RootState } from '../../../store/types'
+import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
@@ -71,8 +61,9 @@ export default function CreateBookingDailyView() {
   const location = useLocation<State>()
   const { selectedFacilityName, isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const params = useParams<{ facilityID: string }>()
 
-  const selectedFacilityId = location.state.facilityId
+  const selectedFacilityId = parseInt(params.facilityID)
   const date = location.state.date
   //TODO saturday date row is limit
   // useEffect(() => {
@@ -91,9 +82,8 @@ export default function CreateBookingDailyView() {
       <TopNavBarRevamp
         onLeftClick={() =>
           history.push({
-            pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
+            pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
             state: {
-              facilityId: selectedFacilityId,
               date: date,
             },
           })
