@@ -180,85 +180,84 @@ export default function EditBooking() {
 
   return (
     <Background>
-      <TopNavBar title={`Edit Booking for reference bookingid - ${selectedBooking?.bookingID}`} />
-      {isLoading ? (
+      {!isLoading && !selectedBooking ? (
         <LoadingSpin />
       ) : (
-        <Form onSubmit={onSubmit}>
-          <InputField
-            name={'eventName'}
-            title="Event Name"
-            placeholder="Event Name"
-            required
-            register={register}
-            defaultValue={selectedBooking?.eventName}
-            setValue={setValue}
-            errors={errors.eventName}
-          />
-          <SelectableField
-            title="Start"
-            value={
-              bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
-            }
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingStartTime(1644641028))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
-          <SelectableField
-            title="End"
-            value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingEndTime(1644648228))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
-          <Container>
-            <StyledTitle>CCA</StyledTitle>
-            <CCAInput
-              options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-                value: cca.ccaName,
-              }))}
-              value={selectedBooking?.ccaName}
-              placeholder="CCA"
-              onChange={(value) => setCcaName(value)}
-              filterOption={(inputValue, option) =>
-                option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-              }
-              notFoundContent="No Matching CCAs"
-              allowClear
+        <>
+          <TopNavBar title={`Edit Booking for ${selectedBooking?.facilityName}`} />
+          <Form onSubmit={onSubmit}>
+            <InputField
+              name={'eventName'}
+              title="Event Name"
+              placeholder="Event Name"
+              required
+              register={register}
+              defaultValue={selectedBooking?.eventName}
+              setValue={setValue}
+              errors={errors.eventName}
             />
-          </Container>
-          <InputField
-            name={'description'}
-            title="Description"
-            placeholder="Tell us what your booking is for!"
-            textArea
-            defaultValue={selectedBooking?.description}
-            register={register}
-            setValue={setValue}
-            errors={errors.description}
-          />
-          <WeeklyRecurrenceRow>
-            <StyledTitle>Weekly Recurrence</StyledTitle>
-            <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
-          </WeeklyRecurrenceRow>
-          {isWeeklyOn && (
             <SelectableField
-              title="End Date"
-              value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
+              title="Start"
+              value={
+                bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
+              }
               isCompulsory={true}
-              onClick={() => dispatch(setBookingEndDate(1644648228))}
-              // TODO, Redirect to choose date calender page
+              onClick={() => dispatch(setBookingStartTime(1644641028))}
             ></SelectableField>
-          )}
-          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
-          <ButtonComponent
-            state={'primary'}
-            text="Submit"
-            type="submit"
-            disabled={!formIsValid()}
-            onClick={() => console.log('submitted')}
-          ></ButtonComponent>
-        </Form>
+            <SelectableField
+              title="End"
+              value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
+              isCompulsory={true}
+              onClick={() => dispatch(setBookingEndTime(1644648228))}
+            ></SelectableField>
+            <Container>
+              <StyledTitle>CCA</StyledTitle>
+              <CCAInput
+                options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
+                  value: cca.ccaName,
+                }))}
+                value={selectedBooking?.ccaName}
+                placeholder="CCA"
+                onChange={(value) => setCcaName(value)}
+                filterOption={(inputValue, option) =>
+                  option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                }
+                notFoundContent="No Matching CCAs"
+                allowClear
+              />
+            </Container>
+            <InputField
+              name={'description'}
+              title="Description"
+              placeholder="Tell us what your booking is for!"
+              textArea
+              defaultValue={selectedBooking?.description}
+              register={register}
+              setValue={setValue}
+              errors={errors.description}
+            />
+            <WeeklyRecurrenceRow>
+              <StyledTitle>Weekly Recurrence</StyledTitle>
+              <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
+            </WeeklyRecurrenceRow>
+            {isWeeklyOn && (
+              <SelectableField
+                title="End Date"
+                value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
+                isCompulsory={true}
+                onClick={() => dispatch(setBookingEndDate(1644648228))}
+              ></SelectableField>
+            )}
+            <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
+            <ButtonComponent
+              state={'primary'}
+              text="Submit"
+              type="submit"
+              disabled={!formIsValid()}
+              onClick={() => console.log('submitted')}
+            ></ButtonComponent>
+          </Form>
+        </>
       )}
     </Background>
   )
