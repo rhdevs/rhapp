@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -13,17 +13,9 @@ import {
   fetchAllCCAs,
   getFacilityList,
   setIsLoading,
-  resetBooking,
   handleCreateNewBooking,
-  setBookingStartTime,
-  setBookingEndTime,
   setBookingEndDate,
-  handleCreateBooking,
-  resetCreateBookingSuccessFailure,
   resetNewBooking,
-  setNewBookingFacilityName,
-  setSelectedFacility,
-  setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -89,10 +81,15 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
+type State = {
+  date: Date
+  facilityId: number
+}
+
 export default function CreateBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
+  // const params = useParams<{ facilityId: string }>()
   const {
     register,
     handleSubmit,
@@ -112,6 +109,7 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
+
   const FormData = watch()
   const ValidForm = () => {
     if (isWeeklyOn) {
@@ -119,6 +117,11 @@ export default function CreateBooking() {
     }
     return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
   }
+
+  const location = useLocation<State>()
+  const selectedFacilityId = location.state.facilityId
+  const date = location.state.date
+
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchAllCCAs())
@@ -131,7 +134,7 @@ export default function CreateBooking() {
   }, [dispatch])
 
   const getFacilityName = () => {
-    return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
+    return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
 
   const onSubmit = (e) => {
@@ -145,7 +148,7 @@ export default function CreateBooking() {
         console.log(data, ccaName)
         dispatch(
           handleCreateNewBooking(
-            Number(params.facilityId),
+            Number(selectedFacilityId),
             data.eventName,
             bookingStartTime,
             bookingEndTime,
@@ -161,12 +164,13 @@ export default function CreateBooking() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
+      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
     }
   }, [bookingStatus])
 
   return (
     <Background>
+      <h1>{bookingEndDate}</h1>
       <TopNavBar title={`Book ${getFacilityName()}`} />
       {isLoading ? (
         <LoadingSpin />
@@ -193,17 +197,33 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingStartTime(1644641028))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
+            onClick={() =>
+              history.push({
+                pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
+                state: {
+                  facilityId: selectedFacilityId,
+                  date: date,
+                },
+              })
+            }
+            isCompulsory
+          />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingEndTime(1644648228))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
+            onClick={() =>
+              dispatch(
+                history.push({
+                  pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW,
+                  state: {
+                    facilityId: selectedFacilityId,
+                    date: date,
+                  },
+                }),
+              )
+            }
+            isCompulsory
+          />
           <Container>
             <StyledTitle>CCA</StyledTitle>
             <CCAInput

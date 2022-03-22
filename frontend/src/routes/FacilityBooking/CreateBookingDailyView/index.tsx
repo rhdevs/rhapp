@@ -10,11 +10,8 @@ import { RootState } from '../../../store/types'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import {
-  editBookingFromDate,
-  editBookingToDate,
   fetchFacilityNameFromID,
   getTimeBlocks,
-  handleCreateBooking,
   setIsLoading,
   setSelectedFacility,
   updateDailyView,
@@ -72,9 +69,7 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation<State>()
-  const { selectedFacilityName, newBookingFromDate, isLoading } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
+  const { selectedFacilityName, isLoading } = useSelector((state: RootState) => state.facilityBooking)
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const selectedFacilityId = location.state.facilityId
@@ -88,7 +83,6 @@ export default function CreateBookingDailyView() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    console.log('update dv')
     dispatch(updateDailyView(date, selectedFacilityId))
   }, [date])
 
@@ -117,7 +111,7 @@ export default function CreateBookingDailyView() {
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}
           />
           <BookingSectionDiv>
-            <BookingSection />
+            <BookingSection redirectPath={PATHS.CREATE_FACILITY_BOOKING} facilityId={selectedFacilityId} date={date} />
           </BookingSectionDiv>
         </Background>
       )}

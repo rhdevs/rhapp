@@ -7,9 +7,9 @@ import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
 import {
-  editBookingFromDate,
-  editBookingToDate,
   getTimeBlocks,
+  setBookingEndTime,
+  setBookingStartTime,
   setTimeBlocks,
 } from '../../store/facilityBooking/action'
 import HourBlocks from './HourBlocks'
@@ -18,7 +18,13 @@ import { PATHS } from '../../routes/Routes'
 
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
-const BookingSection = () => {
+type Props = {
+  redirectPath: PATHS
+  facilityId: number
+  date: Date
+}
+
+export default function BookingSection({ redirectPath, facilityId, date }: Props) {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const history = useHistory()
@@ -34,7 +40,6 @@ const BookingSection = () => {
 
   useEffect(() => {
     updateTimeBlocks()
-    console.log('select')
   }, [selectedBlockTimestamp])
 
   function assignType(entry: TimeBlock): TimeBlockType {
@@ -61,13 +66,22 @@ const BookingSection = () => {
       return
     }
     const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-    const bookingFromDate = new Date(selectedStartTime * 1000)
-    const bookingToDate = new Date(selectedEndTime * 1000)
+    // const bookingFromDate = new Date(selectedStartTime * 1000)
+    // const bookingToDate = new Date(selectedEndTime * 1000)
 
-    dispatch(editBookingFromDate(bookingFromDate))
-    dispatch(editBookingToDate(bookingToDate))
+    // dispatch(editBookingFromDate(bookingFromDate))
+    // dispatch(editBookingToDate(bookingToDate))
 
-    history.push(PATHS.CREATE_FACILITY_BOOKING)
+    dispatch(setBookingStartTime(selectedStartTime))
+    dispatch(setBookingEndTime(selectedEndTime))
+
+    history.push({
+      pathname: redirectPath ?? PATHS.CREATE_FACILITY_BOOKING,
+      state: {
+        facilityId: facilityId,
+        date: date,
+      },
+    })
   }
 
   return (
@@ -76,9 +90,6 @@ const BookingSection = () => {
       <HourBlocks />
       <DailyContainer>
         {timeBlocks.map((entry, index) => {
-          {
-            // console.log(`timeBlocks ${index}`, timeBlocks)
-          }
           return (
             <BookingBlock
               key={index}
@@ -94,4 +105,3 @@ const BookingSection = () => {
     </MainContainer>
   )
 }
-export default BookingSection
