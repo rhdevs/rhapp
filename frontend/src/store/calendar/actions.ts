@@ -13,15 +13,7 @@ export const setClickedDate = (newClickedDate: number) => async (dispatch: Dispa
 export const getAllBookingsForFacility = (ViewStartDate: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  const adjustedStart = new Date(
-    ViewStartDate.getFullYear(),
-    ViewStartDate.getMonth(),
-    ViewStartDate.getDate(),
-    0,
-    0,
-    0,
-    0,
-  )
+  const adjustedStart = new Date(ViewStartDate.getFullYear(), ViewStartDate.getMonth(), 0, 0, 0, 0, 0)
   // need to adjust this to set it as 5 months away from starting date
   const adjustedEnd = new Date(ViewStartDate.getFullYear(), ViewStartDate.getMonth() + 5, 0, 23, 59, 59, 999)
   const querySubString =
