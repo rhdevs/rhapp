@@ -1,5 +1,6 @@
 from boto3 import client, resource
 from S3.credentials import ACCESS_KEY, SECRET_ACCESS_KEY, BUCKET_LOCATION
+import botocore # for S3-related error handling, see: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/error-handling.html
 
 user = client(
     's3',
@@ -29,36 +30,33 @@ def fileExist(key):
 
 
 def create(key, fileLocation):
-    if fileExist(key):
-        raise FileExistsError
     user.upload_file(fileLocation, BUCKET_LOCATION, key)
 
 # read
 
 
 def read(key):
-    if not fileExist(key):
-        raise FileNotFoundError
-    PresignedUrl = user.generate_presigned_url(
-        'get_object', Params={'Bucket': BUCKET_LOCATION, 'Key': key}, ExpiresIn=3600)
-    return PresignedUrl
+     PresignedUrl = user.generate_presigned_url(
+     'get_object', Params={'Bucket': BUCKET_LOCATION, 'Key': key}, ExpiresIn=3600)
+     return PresignedUrl
+
 
 # update
 
 
 def update(oldKey, newKey, fileLocation=''):
-    if not fileExist(oldKey):
-        raise FileNotFoundError
-    if fileExist(newKey):
-        raise FileExistsError
-    if fileLocation == '':
-        newObj = bucket.Object(newKey)
-        newObj.copy_from(CopySource=BUCKET_LOCATION+'/'+oldKey)
-        delete(oldKey)
-    else:
-        delete(oldKey)
-        create(newKey, fileLocation)
-
+    try:    
+        if not fileExist(oldKey):
+            raise FileNotFoundError
+        if fileLocation == '':
+            newObj = bucket.Object(newKey)
+            newObj.copy_from(CopySource=BUCKET_LOCATION+'/'+oldKey)
+            delete(oldKey)
+        else:
+            delete(oldKey)
+            create(newKey, fileLocation)
+    except botocore.exceptions.ClientError as e:
+        print(e)
 
 # delete
 def delete(key):
