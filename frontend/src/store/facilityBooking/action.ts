@@ -344,6 +344,11 @@ export const handleCreateNewBooking = (
         })
       }
     })
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    dispatch(setSelectedEndTime(0))
+    dispatch(setBookingStartTime(0))
+    dispatch(setBookingEndTime(0))
   }
 }
 
