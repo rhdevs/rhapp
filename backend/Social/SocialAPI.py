@@ -17,6 +17,7 @@ from bson.objectid import ObjectId
 from bson.errors import *
 from flask import Blueprint
 import sys
+from AuthFunction import authenticate
 sys.path.append("../db")
 
 social_api = Blueprint("social", __name__)
@@ -25,7 +26,7 @@ social_api = Blueprint("social", __name__)
 
 
 def renamePost(post):
-    post['postID'] = post.pop('_id')
+    post['postID'] = str(post.pop('_id'))
     return post
 
 
@@ -40,7 +41,16 @@ def hello():
 def profiles():
     try:
         data = request.get_json()
-        userID = data["userID"] # get userID from JSON request
+
+        # BUG 570 Fix: Added authentication to check token before updating profile
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
+
+        if (not authenticate(request.args.get("token"), data.get("userID"))):
+            return {"err": "Auth Failure", "status": "failed"}, 401
+
+        if "profilePictureURI" in data:
+            data["profilePictureUrl"] = data.pop("profilePictureURI")
 
         def imgGeneration(imgString):
 
@@ -290,7 +300,7 @@ def user():
             }
 
             result = db.User.update_one(
-                {"userID": userID}, {'$set': body}, upsert=True)
+                {"userID": userID}, {'$set': body})
 
             if int(result.matched_count) > 0:
                 response = {
@@ -300,9 +310,10 @@ def user():
                 return make_response(response, 200)
             else:
                 response = {
+                    "err": "User does not exist",
                     "status": "failed"
                 }
-                return make_response(response, 400)
+                return make_response(response, 404)
 
         elif request.method == 'POST':
             data = request.get_json()
@@ -392,6 +403,11 @@ def posts():
 
                 if postID:
                     # TODO use mongoDB lookup to join the data instead
+                    try:
+                        ObjectId(postID)
+                    except TypeError:
+                        return make_response({"message": "Invalid Post ID", "status": "failed"}, 400)
+
                     data = db.Posts.find_one({"_id": ObjectId(postID)})
                     name = db.User.find_one(
                         {"userID": str(data.get("userID"))}).get('displayName')
@@ -409,7 +425,7 @@ def posts():
                         data['profilePicSignedUrl'] = profilePicSignedUrl
                         response = {
                             "status": "success",
-                            "data": json.dumps(data, default=lambda o: str(o))
+                            "data": data
                         }
                         return make_response(response, 200)
                     else:
@@ -432,7 +448,7 @@ def posts():
 
                     return make_response(
                         {
-                            "data": json.dumps(response, default=lambda o: str(o)),
+                            "data": response,
                             "status": "success"
                         },
                         200)
@@ -503,7 +519,7 @@ def posts():
 
                 return make_response(
                     {
-                        "data": json.dumps(response, default=lambda o: str(o)),
+                        "data": response,
                         "status": "success"
                     }, 200)
 
@@ -642,73 +658,6 @@ def getPostById(userID):
         print(e)
         return make_response({"err": "An error has occured", "status": "failed"}), 500
 
-def FriendsHelper(userID):
-    query = {
-        "$or": [{"userIDOne": userID}, {"userIDTwo": userID}]
-    }
-
-    result = db.Friends.find(query)
-
-    response = {'friendList': []}
-
-    for friend in result:
-        userOne = friend.get("userIDOne")
-        userTwo = friend.get("userIDTwo")
-
-        if(userID == userOne):
-            response['friendList'].append(userTwo)
-        else:
-            response['friendList'].append(userOne)
-
-    return response
-
-
-@social_api.route("/posts/friend", methods=['GET'])
-@cross_origin(supports_credentials=True)
-def getFriendsPostById():
-    try:
-        userID = str(request.args.get("userID"))
-        N = int(request.args.get('N')) if request.args.get('N') else 0
-
-        friends = FriendsHelper(userID).get('friendList')
-
-        query = {
-            "userID": {"$in": friends}
-        }
-
-        response = []
-      
-        result = db.Posts.find(query, sort=[
-            ('createdAt', pymongo.DESCENDING)]).skip(N*5).limit(5)
-
-        for item in result:
-            item['name'] = userIDtoName(item.get('userID'))
-            imageKey = db.User.find_one({"userID": userID}).get('imageKey')
-            if imageKey != None:
-                imageKey = imageKey
-            elif FileNotFoundError:
-                imageKey = "default/profile_pic.png"
-            profilePicSignedUrl = read(imageKey)
-            
-            item['profilePicSignedUrl'] = profilePicSignedUrl
-
-            
-            item = renamePost(item)
-            response.append(item)
-        
-        if userID == "":
-            return make_response({"status": "failed", "message": "No userID specified"}), 400
-        else:
-            return make_response(
-                {
-                    "data": json.dumps(response, default=lambda o: str(o)),
-                    "status": "success"
-                },
-                200)
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-
 
 
 @social_api.route("/posts/official", methods=['GET'])
@@ -735,12 +684,13 @@ def getOfficialPosts():
             item['ccaName'] = db.CCA.find_one({'ccaID': ccaID}).get(
                 'ccaName') if ccaID != -1 else None
             response.append(item)
-            item['postID'] = item.get('_id')
+            item['postID'] = str(item.get('_id'))
             del item['_id']
 
+        print(response)
         return make_response(
             {
-                "data": json.dumps(response, default=lambda o: str(o)),
+                "data": response,
                 "status": "success"
             },
             200)
@@ -748,34 +698,6 @@ def getOfficialPosts():
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
 
-
-'''
-Friends API 
-'''
-
-@social_api.route("/friend/<userID>", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def getAllFriends(userID):
-    try:
-        response = FriendsHelper(userID)
-        friends = response["friendList"]
-        result = []
-
-        for friendID in friends:
-            entry = db.User.find_one({"userID": friendID}, {'passwordHash': 0})
-            if entry != None:
-                result.append(entry)
-
-        return make_response(
-            {
-                "data": json.dumps(result, default=lambda o: str(o)),
-                "status": "success"
-            },
-            200)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
 
 @social_api.route('/cca/<int:ccaID>', methods=["GET"])
 @cross_origin()
@@ -783,57 +705,6 @@ def getCCADetails(ccaID):
     try:
         data = list(db.CCA.find({"ccaID": ccaID}, {'_id': 0}))
         response = {"status": "success", "data": data}
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response)
-
-
-@social_api.route("/user_CCA/<string:userID>", methods=['GET'])
-@cross_origin()
-def getUserCCAs(userID):
-    try:
-        CCAofUserID = db.UserCCA.find({"userID": userID})
-        entries = [w["ccaID"] for w in CCAofUserID]
-        data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
-        response = {"status": "success", "data": data}
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response, 200)
-
-@social_api.route("/user_CCA", methods=['POST', 'DELETE'])
-@cross_origin()
-def editUserCCA():
-    try:
-        data = request.get_json()
-        ccaID = data.get('ccaID')
-        userID = data.get('userID')
-
-        if request.method == "POST":
-            db.UserCCA.delete_many({"userID": userID})
-            if len(ccaID) > 0:
-                documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
-                upserts = [pymongo.UpdateOne(
-                    doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
-                db.UserCCA.bulk_write(upserts)
-
-        elif request.method == "DELETE":
-            db.UserCCA.delete_many(body)
-
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return {"status": "success"}, 200
-
-
-@social_api.route("/user_CCA/", methods=["GET"])
-@cross_origin()
-def getCCAMembersName():
-    try:
-        ccaName = str(request.args.get('ccaName'))
-        response = db.UserCCA.find({"ccaName": ccaName})
-        response = {"status": "success", "data": list(response)}
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
