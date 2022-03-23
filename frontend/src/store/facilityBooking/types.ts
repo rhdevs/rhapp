@@ -82,6 +82,7 @@ export enum FACILITY_ACTIONS {
   SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
   SET_BOOKING_STATUS = 'FACILITY_ACTIONS.SET_BOOKING_STATUS',
 
+  SET_DAILY_VIEW_DATES_ROW_START_DATE = 'FACILITY_ACTIONS.SET_DAILY_VIEW_DATES_ROW_START_DATE',
   SET_SELECTED_BLOCK_TIMESTAMP = 'FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP',
   SET_SELECTED_START_TIME = 'FACILITY_ACTIONS.SET_SELECTED_START_TIME',
   SET_SELECTED_END_TIME = 'FACILITY_ACTIONS.SET_SELECTED_END_TIME',
@@ -245,6 +246,11 @@ type SetBookingStatus = {
   message?: string
 }
 
+type SetDailyViewDatesRowStartDate = {
+  type: typeof FACILITY_ACTIONS.SET_DAILY_VIEW_DATES_ROW_START_DATE
+  dailyViewDatesRowStartDate: number
+}
+
 type SetSelectedBlockTimestamp = {
   type: typeof FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP
   selectedBlockTimestamp: number
@@ -341,6 +347,7 @@ export type ActionTypes =
   | SetRepeatWeekly
   | SetBooking
   | SetBookingStatus
+  | SetDailyViewDatesRowStartDate
   | SetSelectedBlockTimestamp
   | SetSelectedStartTime
   | SetSelectedEndTime

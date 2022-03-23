@@ -360,6 +360,13 @@ const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (di
   })
 }
 
+export const setDailyViewDatesRowStartDate = (newStartDate: number) => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_DAILY_VIEW_DATES_ROW_START_DATE,
+    dailyViewDatesRowStartDate: newStartDate,
+  })
+}
+
 export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP,

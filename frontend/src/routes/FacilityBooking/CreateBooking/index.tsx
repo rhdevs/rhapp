@@ -19,6 +19,8 @@ import {
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
+  setBookingStartTime,
+  setBookingEndTime,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -86,7 +88,6 @@ const CCAInput = styled(AutoComplete)`
 
 type State = {
   date: Date
-  facilityId: number
 }
 
 export default function CreateBooking() {

@@ -37,6 +37,7 @@ const initialState = {
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
 
+  dailyViewDatesRowStartDate: 0,
   selectedBlockTimestamp: 0,
   selectedStartTime: 0,
   selectedEndTime: 0,
@@ -80,6 +81,7 @@ type State = {
   bookingStatus: BookingStatus
   message?: string
 
+  dailyViewDatesRowStartDate: number
   selectedBlockTimestamp: number
   selectedStartTime: number
   selectedEndTime: number

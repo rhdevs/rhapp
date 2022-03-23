@@ -51,8 +51,7 @@ const DatesContainer = styled.div`
 `
 
 type State = {
-  date: Date
-  facilityId: number
+  dateRowStartDate: number
 }
 
 export default function CreateBookingDailyView() {
@@ -64,18 +63,23 @@ export default function CreateBookingDailyView() {
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  const date = location.state.date
+  // const date = location.state.date
   //TODO saturday date row is limit
-  // useEffect(() => {
-  //   // dispatch(setIsLoading(true))
-  //   console.log('update dv onload')
-  //   dispatch(updateDailyView(date, selectedFacilityId))
-  // }, [])
+
+  const dateRowStartDate = location.state.dateRowStartDate
+
+  const clickedDateToDateObject = (clickedDate: number) => {
+    const month = Math.floor(clickedDate / 100)
+    const day = clickedDate % 100
+    return new Date(new Date().getFullYear(), month, day)
+  }
+
+  const date = clickedDateToDateObject(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(updateDailyView(date, selectedFacilityId))
-  }, [date])
+  }, [clickedDate])
 
   return (
     <>
@@ -84,7 +88,7 @@ export default function CreateBookingDailyView() {
           history.push({
             pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
             state: {
-              date: date,
+              dateRowStartDate: dateRowStartDate,
             },
           })
         }
@@ -94,11 +98,12 @@ export default function CreateBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <h2>Choose starting time slot</h2>
+          <h2>Choose starting time slot</h2> {/* TODO change display between starting/ending */}
           <DailyViewDatesRow
-            date={date}
+            selectedDate={date}
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
+            dateRowStartDate={dateRowStartDate}
           />
           <BookingSectionDiv>
             <BookingSection facilityId={selectedFacilityId} date={date} />

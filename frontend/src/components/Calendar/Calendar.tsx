@@ -45,7 +45,7 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { selectedFacilityId: number }) => {
+export const Calendar = (props: { selectedFacilityId: number; onClickDate: (date: Date) => void }) => {
   const dispatch = useDispatch()
   const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
@@ -69,7 +69,11 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
         <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
         <DatesGridContainer>
           <DayHeaders />
-          <MonthlyContainer nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
+          <MonthlyContainer
+            nthMonth={startingMonth++}
+            facilityId={props.selectedFacilityId}
+            onClickDate={props.onClickDate}
+          />
         </DatesGridContainer>
       </MonthContainer>
       {monthList.slice(1).map((month) => {
@@ -81,7 +85,12 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
               <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
               <DatesGridContainer>
                 <DayHeaders />
-                <MonthlyContainer key={startingMonth} nthMonth={startingMonth} facilityId={props.selectedFacilityId} />
+                <MonthlyContainer
+                  key={startingMonth}
+                  nthMonth={startingMonth}
+                  facilityId={props.selectedFacilityId}
+                  onClickDate={props.onClickDate}
+                />
               </DatesGridContainer>
             </MonthContainer>
           </>

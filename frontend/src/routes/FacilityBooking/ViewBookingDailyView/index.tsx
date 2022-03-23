@@ -45,20 +45,30 @@ const TitleText = styled.h2`
 `
 
 type State = {
-  date: Date
-  facilityId: number
+  dateRowStartDate: number
 }
 
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
-  const location = useLocation<State>()
+  // const location = useLocation<State>()
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
 
-  const date = location.state.date
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+
+  const location = useLocation<State>()
+  const dateRowStartDate = location.state.dateRowStartDate
+
+  const clickedDateToDateObject = (clickedDate: number) => {
+    const month = Math.floor(clickedDate / 100)
+    const day = clickedDate % 100
+    return new Date(new Date().getFullYear(), month, day)
+  }
+
+  const date = clickedDateToDateObject(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -71,7 +81,7 @@ export default function ViewBookingDailyView() {
     // if (selectedFacilityId == 0) {
     //   dispatch(setSelectedFacility(selectedFacilityId))
     // }
-  }, [date])
+  }, [clickedDate])
 
   return (
     <>
@@ -86,7 +96,7 @@ export default function ViewBookingDailyView() {
               history.push({
                 pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
                 state: {
-                  date: date,
+                  dateRowStartDate: dateRowStartDate,
                 },
               })
             }
@@ -99,9 +109,10 @@ export default function ViewBookingDailyView() {
       ) : (
         <Background>
           <DailyViewDatesRow
-            date={date}
+            selectedDate={date}
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
+            dateRowStartDate={dateRowStartDate}
           />
           <ViewSectionDiv>
             <ViewSection />

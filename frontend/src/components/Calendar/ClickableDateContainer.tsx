@@ -40,21 +40,29 @@ export const ClickableDateContainer = (props: {
   eventPresent?: boolean
   assignedMonth: number
   facilityId: number
-  redirectTo?: string
+  // redirectTo?: string
+  onClickDate: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = props.assignedMonth * 100 + props.date
 
+  const clickedDateToDateObject = (clickedDate: number) => {
+    const month = Math.floor(clickedDate / 100)
+    const day = clickedDate % 100
+    return new Date(new Date().getFullYear(), month, day)
+  }
+
   const DateContainerClickHandler = (newClickedDate: number) => {
     dispatch(setClickedDate(newClickedDate))
-    history.push({
-      pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + props.facilityId,
-      state: {
-        date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
-      },
-    })
+    props.onClickDate(clickedDateToDateObject(newClickedDate))
+    // history.push({
+    //   pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + props.facilityId,
+    //   state: {
+    //     date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
+    //   },
+    // })
   }
 
   const hasEvent = () => {
