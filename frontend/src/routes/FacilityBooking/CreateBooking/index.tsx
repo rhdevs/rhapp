@@ -248,6 +248,7 @@ export default function CreateBooking() {
             ></SelectableField>
           )}
           <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
+          <div style={{ width: '100%', height: '30px' }}></div>
           <ButtonComponent
             state={'primary'}
             text="Submit"
