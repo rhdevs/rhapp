@@ -2,7 +2,7 @@ import React from 'react'
 
 import { DateRows } from './DateRows'
 
-export const MonthlyContainer = (props: { nthMonth: number; facilityId: number }) => {
+export const MonthlyContainer = (props: { year: number; nthMonth: number; facilityId: number }) => {
   const today = new Date()
   const firstDateOfThisMonth = new Date(today.getFullYear(), today.getMonth() + props.nthMonth, 1).getDate()
   const assignedMonth = today.getMonth() + props.nthMonth
@@ -22,6 +22,7 @@ export const MonthlyContainer = (props: { nthMonth: number; facilityId: number }
 
   return (
     <DateRows
+      year={props.year}
       firstDate={firstDateOfThisMonth}
       assignedMonth={assignedMonth}
       lastDateOfThisMonth={lastDateOfThisMonth}

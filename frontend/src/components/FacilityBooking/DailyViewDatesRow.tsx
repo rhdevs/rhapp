@@ -19,6 +19,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
     return (
       <DatesContainer>
         <DateRows
+          year={year}
           firstDate={startDate}
           assignedMonth={month}
           lastDateOfThisMonth={startDate + maxDate - startDate}
@@ -26,6 +27,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
           facilityId={props.selectedFacilityId}
         />
         <DateRows
+          year={year}
           firstDate={1}
           assignedMonth={month}
           lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
@@ -38,6 +40,7 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
     return (
       <DatesContainer>
         <DateRows
+          year={year}
           firstDate={startDate}
           assignedMonth={month}
           lastDateOfThisMonth={startDate + 6}

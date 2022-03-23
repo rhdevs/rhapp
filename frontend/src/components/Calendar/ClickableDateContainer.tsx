@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { setClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
 import { PATHS } from '../../routes/Routes'
+import { setBookingEndDate } from '../../store/facilityBooking/action'
 
 const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
   font-size: 12px;
@@ -34,11 +35,13 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
 `
 
 export const ClickableDateContainer = (props: {
+  year: number
   date: number
   eventPresent?: boolean
   assignedMonth: number
   facilityId: number
 }) => {
+  const params = useParams<{ isEndDate: string; facilityID: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
@@ -53,6 +56,18 @@ export const ClickableDateContainer = (props: {
         date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
       },
     })
+  }
+  const DateContainerEndDateHandler = () => {
+    dispatch(
+      setBookingEndDate(
+        Math.floor(
+          new Date(
+            props.year.toString() + '.' + (props.assignedMonth + 1).toString() + '.' + props.date.toString(),
+          ).getTime() / 1000,
+        ),
+      ),
+    )
+    history.push(`/facility/booking/create/${params.facilityID}`)
   }
 
   const hasEvent = () => {
@@ -73,7 +88,11 @@ export const ClickableDateContainer = (props: {
 
   return (
     <DateContainer
-      onClick={() => DateContainerClickHandler(assignedDateMonth)}
+      onClick={
+        parseInt(params.isEndDate) === 0
+          ? () => DateContainerClickHandler(assignedDateMonth)
+          : () => DateContainerEndDateHandler()
+      }
       selected={isCurrentDateClicked()}
       currentDate={isCurrentDate()}
     >

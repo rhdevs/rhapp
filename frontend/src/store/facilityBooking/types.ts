@@ -24,7 +24,7 @@ export type Booking = {
   startTime: number
   endTime: number
   description: string
-  repeat?: number
+  repeat?: boolean
   endDate?: number
 }
 

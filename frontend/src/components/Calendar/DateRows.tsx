@@ -1,8 +1,10 @@
+import { PropertySafetyFilled } from '@ant-design/icons'
 import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
 
 export const DateRows = (props: {
+  year: number
   firstDate: number
   assignedMonth: number
   lastDateOfThisMonth: number
@@ -20,6 +22,7 @@ export const DateRows = (props: {
           <EmptyDateContainer />
         ) : (
           <ClickableDateContainer
+            year={props.year}
             key={day + props.assignedMonth * 100}
             date={day}
             assignedMonth={props.assignedMonth}

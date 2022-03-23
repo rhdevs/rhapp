@@ -100,7 +100,7 @@ export default function CreateBooking() {
     register,
     setValue,
   } = useForm<FormValues>()
-  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
+
   const [ccaName, setCcaName] = useState<string>('')
   const {
     facilityList,
@@ -111,7 +111,7 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
-
+  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate === 0 ? false : true)
   const formIsValid = () => {
     if (isWeeklyOn) {
       return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
@@ -133,6 +133,12 @@ export default function CreateBooking() {
     return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
   }
 
+  const handleToggleWeekly = () => {
+    setIsWeeklyOn(!isWeeklyOn)
+    if (isWeeklyOn === true) {
+      dispatch(setBookingEndDate(0))
+    }
+  }
   const onSubmit = (e) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
@@ -230,14 +236,14 @@ export default function CreateBooking() {
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
-            <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
+            <Switch isOn={isWeeklyOn} handleToggle={() => handleToggleWeekly()} switchSize={50} />
           </WeeklyRecurrenceRow>
           {isWeeklyOn && (
             <SelectableField
               title="End Date"
-              value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
+              value={bookingEndDate === 0 ? '' : unixToFullDate(bookingEndDate)}
               isCompulsory={true}
-              onClick={() => dispatch(setBookingEndDate(1644648228))}
+              onClick={() => history.push(`/facility/view/${params.facilityId}/1`)}
               // TODO, Redirect to choose date calender page
             ></SelectableField>
           )}

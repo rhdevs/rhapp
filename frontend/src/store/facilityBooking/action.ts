@@ -452,7 +452,7 @@ export const handleCreateNewBooking = (
     ccaID: ccaID,
     startTime: startTime,
     endTime: endTime,
-    endDate: endDate,
+    bookUntil: endDate,
     description: description,
     forceBook: forceBook,
   }
