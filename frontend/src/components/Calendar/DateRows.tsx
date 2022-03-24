@@ -41,12 +41,7 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
         return day === 0 ? (
           <EmptyDateContainer />
         ) : (
-          <ClickableDateContainer
-            key={day + assignedMonth * 100}
-            date={day}
-            assignedMonth={assignedMonth}
-            facilityId={props.facilityId}
-          />
+          <ClickableDateContainer date={day} assignedMonth={assignedMonth} facilityId={props.facilityId} />
         )
       })}
     </>
