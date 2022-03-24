@@ -49,8 +49,7 @@ def profiles():
         if (not authenticate(request.args.get("token"), data.get("userID"))):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
-        if "profilePictureURI" in data:
-            data["profilePictureUrl"] = data.pop("profilePictureURI")
+        userID = data.get("userID")
 
         def imgGeneration(imgString):
 
@@ -194,7 +193,6 @@ def profiles():
         else:
             imgKey = "default/profile_pic.png" # profilePictureURI not given, default profile pic will be loaded            
         
-        del data["profilePictureURI"]
         data["imageKey"] = imgKey
 
         result = db.User.update_one({"userID": userID}, {'$set': data}, upsert=True)
