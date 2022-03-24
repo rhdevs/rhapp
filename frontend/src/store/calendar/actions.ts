@@ -1,9 +1,9 @@
 import { Dispatch } from '../types'
 import { ActionTypes, CALENDAR_ACTIONS, Booking } from './types'
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
-import { unixToCalendarFormat } from '../../common/unixToCalendarFormat'
+import { unixToDateObject } from '../../common/unixToDateObject'
 
-export const setClickedDate = (newClickedDate: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const setClickedDate = (newClickedDate: Date) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: CALENDAR_ACTIONS.SET_CLICKED_DATE,
     newClickedDate: newClickedDate,
@@ -46,10 +46,10 @@ export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
 }
 
 export const UpdateProcessedDates = (rawBookingsDetails: Booking[]) => async (dispatch: Dispatch<ActionTypes>) => {
-  const newProcessedDates: number[] = []
+  const newProcessedDates: Date[] = []
 
-  rawBookingsDetails.forEach((booking) => unixToCalendarFormat(booking.startTime, newProcessedDates))
-  rawBookingsDetails.forEach((booking) => unixToCalendarFormat(booking.endTime, newProcessedDates))
+  rawBookingsDetails.forEach((booking) => unixToDateObject(booking.startTime, newProcessedDates))
+  rawBookingsDetails.forEach((booking) => unixToDateObject(booking.endTime, newProcessedDates))
   dispatch({
     type: CALENDAR_ACTIONS.SET_PROCESSED_DATES,
     processedDates: newProcessedDates,
