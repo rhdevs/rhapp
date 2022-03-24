@@ -86,7 +86,6 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
                       <DayHeaders />
                       <MonthlyContainer
                         currentDate={today}
-                        key={startingMonth}
                         nthMonth={startingMonth}
                         facilityId={props.selectedFacilityId}
                       />
