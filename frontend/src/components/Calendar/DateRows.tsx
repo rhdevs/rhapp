@@ -9,16 +9,8 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
     1,
   ).getDate()
   const assignedMonth = props.currentDate.getMonth() + props.nthMonth
-  const firstDayOfThisMonth = new Date(
-    props.currentDate.getFullYear(),
-    props.currentDate.getMonth() + props.nthMonth,
-    1,
-  ).getDay()
-  const lastDateOfThisMonth = new Date(
-    props.currentDate.getFullYear(),
-    props.currentDate.getMonth() + 1 + props.nthMonth,
-    0,
-  ).getDate()
+  const firstDayOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDay()
+  const lastDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth + 1, 0).getDate()
   const bufferDates: number[] = []
 
   if (firstDayOfThisMonth === 0) {
@@ -42,7 +34,7 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
           <EmptyDateContainer />
         ) : (
           <ClickableDateContainer
-            date={props.currentDate}
+            date={new Date(props.currentDate.getFullYear(), assignedMonth, day)}
             assignedMonth={assignedMonth}
             facilityId={props.facilityId}
           />
