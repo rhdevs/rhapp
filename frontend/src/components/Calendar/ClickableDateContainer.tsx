@@ -76,7 +76,7 @@ export const ClickableDateContainer = (props: {
       currentDate={isCurrentDate()}
     >
       <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
-      {props.date}
+      {props.date.getDate()}
     </DateContainer>
   )
 }
