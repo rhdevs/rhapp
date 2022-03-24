@@ -18,32 +18,14 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
   if (startDate + 6 > maxDate) {
     return (
       <DatesContainer>
-        <DateRows
-          firstDate={startDate}
-          assignedMonth={month}
-          lastDateOfThisMonth={startDate + maxDate - startDate}
-          bufferDates={[]}
-          facilityId={props.selectedFacilityId}
-        />
-        <DateRows
-          firstDate={1}
-          assignedMonth={month}
-          lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
-          bufferDates={[]}
-          facilityId={props.selectedFacilityId}
-        />
+        <DateRows currentDate={props.date} nthMonth={month} facilityId={props.selectedFacilityId} />
+        <DateRows currentDate={props.date} nthMonth={month} facilityId={props.selectedFacilityId} />
       </DatesContainer>
     )
   } else {
     return (
       <DatesContainer>
-        <DateRows
-          firstDate={startDate}
-          assignedMonth={month}
-          lastDateOfThisMonth={startDate + 6}
-          bufferDates={[]}
-          facilityId={props.selectedFacilityId}
-        />
+        <DateRows currentDate={props.date} nthMonth={month} facilityId={props.selectedFacilityId} />
       </DatesContainer>
     )
   }
