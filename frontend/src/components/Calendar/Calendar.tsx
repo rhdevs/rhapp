@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
-import { MonthlyContainer } from './MonthlyContainer'
 import { getAllBookingsForFacility, setIsLoading } from '../../store/calendar/actions'
 import LoadingSpin from '../LoadingSpin'
+import { DateRows } from './DateRows'
 
 const CalenderContainer = styled.div`
   display: flex;
@@ -71,7 +71,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
             <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
             <DatesGridContainer>
               <DayHeaders />
-              <MonthlyContainer currentDate={today} nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
+              <DateRows currentDate={today} nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
             </DatesGridContainer>
           </MonthContainer>
           <>
@@ -84,11 +84,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
                     <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
                     <DatesGridContainer>
                       <DayHeaders />
-                      <MonthlyContainer
-                        currentDate={today}
-                        nthMonth={startingMonth}
-                        facilityId={props.selectedFacilityId}
-                      />
+                      <DateRows currentDate={today} nthMonth={startingMonth} facilityId={props.selectedFacilityId} />
                     </DatesGridContainer>
                   </MonthContainer>
                 </>
