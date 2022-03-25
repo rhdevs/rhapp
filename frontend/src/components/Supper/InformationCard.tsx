@@ -23,7 +23,8 @@ const InformationContainer = styled.div`
   align-items: baseline;
 `
 
-const InformationText = styled.text`
+const InformationText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;

@@ -66,7 +66,7 @@ const RowDescription = styled.div`
   justify-content: flex-start;
 `
 
-const StyledTitle = styled.text`
+const StyledTitle = styled.p`
   font-family: Inter;
   color: black;
   font-size: 15px;

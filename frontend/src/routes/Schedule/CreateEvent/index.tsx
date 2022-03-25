@@ -51,7 +51,7 @@ const Row = styled.div`
   justify-content: space-between;
 `
 
-const StyledTitle = styled.text`
+const StyledTitle = styled.p`
   font-family: Inter;
   color: black;
   font-size: 15px;
@@ -97,7 +97,8 @@ const EventInput = styled.input`
   height: 35px;
 `
 
-const RedText = styled.text`
+const RedText = styled.p`
+  margin: 0;
   color: red;
 `
 

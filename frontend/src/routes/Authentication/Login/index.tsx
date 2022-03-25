@@ -19,7 +19,8 @@ const LoginContainer = styled.div`
   text-align: center;
 `
 
-const InputTextLabel = styled.text`
+const InputTextLabel = styled.p`
+  margin: 0;
   float: left;
   font-size: 17px;
   padding: 0px 0px 4px 0px;

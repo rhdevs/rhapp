@@ -48,7 +48,8 @@ const Header = styled.div`
   padding: 15px 15px;
 `
 
-const HeaderText = styled.text`
+const HeaderText = styled.p`
+  margin: 0;
   font-weight: 500;
   font-size: 21px;
   color: black;
@@ -59,7 +60,8 @@ const SubHeaderContainer = styled.div`
   padding: 2px 0px 0px 22px;
 `
 
-const SubHeaderText = styled.text`
+const SubHeaderText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -79,7 +81,8 @@ const NoResultsContainer = styled.div`
   justify-content: center;
 `
 
-const NoResultsText = styled.text`
+const NoResultsText = styled.p`
+  margin: 0;
   font-size: 14px;
   text-align: center;
 `

@@ -6,7 +6,8 @@ import { PATHS } from '../../routes/Routes'
 import { setSelectedEvent } from '../../store/scheduling/action'
 import { TimetableEvent } from '../../store/scheduling/types'
 
-const TitleText = styled.text`
+const TitleText = styled.p`
+  margin: 0;
   color: black;
   font-family: Inter;
   font-size: 14px;
@@ -20,7 +21,8 @@ const TitleText = styled.text`
   }
 `
 
-const LocationText = styled.text`
+const LocationText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 12px;

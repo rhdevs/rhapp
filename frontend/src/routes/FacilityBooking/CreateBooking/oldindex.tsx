@@ -64,7 +64,7 @@ const StyledDateInput = styled(Input)`
     color: #d9d9d9;
   }
 `
-const StyledTitle = styled.text`
+const StyledTitle = styled.p`
   font-family: Inter;
   color: black;
   font-size: 15px;

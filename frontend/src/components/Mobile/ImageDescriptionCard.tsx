@@ -20,7 +20,8 @@ const ContentContainer = styled.div`
   display: flex;
 `
 
-const TitleText = styled.text`
+const TitleText = styled.p`
+  margin: 0;
   color: black;
   font-family: Inter;
   font-size: 16px;
@@ -30,14 +31,16 @@ const TitleText = styled.text`
   text-overflow: ellipsis;
 `
 
-const ExpandTitle = styled.text`
+const ExpandTitle = styled.p`
+  margin: 0;
   color: black;
   font-family: Inter;
   font-size: 16px;
   line-height: 22px;
 `
 
-const DateTimeText = styled.text`
+const DateTimeText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 14px;
@@ -47,14 +50,16 @@ const DateTimeText = styled.text`
   text-transform: uppercase;
 `
 
-const ExpandDateTimeText = styled.text`
+const ExpandDateTimeText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 14px;
   text-transform: uppercase;
 `
 
-const DescriptionText = styled.text`
+const DescriptionText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 14px;
@@ -63,13 +68,15 @@ const DescriptionText = styled.text`
   text-overflow: ellipsis;
 `
 
-const ExpandDescriptionText = styled.text`
+const ExpandDescriptionText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 14px;
 `
 
 const TextContainer = styled.div`
+  margin: 0;
   padding: 0 10px;
   display: flex;
   flex-direction: column;
