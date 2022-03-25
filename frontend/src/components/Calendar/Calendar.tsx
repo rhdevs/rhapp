@@ -78,17 +78,15 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
               return (
                 <>
                   {/* Note: 0 stands for Jan */}
-                  {month.getMonth() === 0 && <YearContainer key={startingMonth++}>{currentYear + 1}</YearContainer>}
-                  <MonthContainer key={startingMonth++}>
-                    <MonthsHeaderContainer key={startingMonth++}>
-                      {month.toLocaleString('default', { month: 'long' })}
-                    </MonthsHeaderContainer>
-                    <DatesGridContainer key={startingMonth++}>
-                      <DayHeaders key={startingMonth++} />
+                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+                  <MonthContainer>
+                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+                    <DatesGridContainer>
+                      <DayHeaders />
                       <DateRows
                         key={startingMonth}
                         currentDate={today}
-                        nthMonth={startingMonth}
+                        nthMonth={startingMonth++}
                         facilityId={props.selectedFacilityId}
                       />
                     </DatesGridContainer>
