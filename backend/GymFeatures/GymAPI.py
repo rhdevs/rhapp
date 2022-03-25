@@ -225,10 +225,13 @@ def getUserPicture():
         if data[0]['keyIsReturned']==True:
             imageKey = 'default/profile_pic.png'
         else:
-            profile = db.Profiles.find_one(
+            profile = db.User.find_one(
                 {"userID": data[0]['userID']}
             )
-            imageKey = profile['imageKey']
+            if profile.get('imageKey') is not None:
+                imageKey = profile['imageKey']
+            else:
+                imageKey = 'default/profile_pic.png'
         imageURL = s3.read(imageKey)
         response = {"imageURL": imageURL, "status": "success"}
     except:

@@ -1,7 +1,15 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { FieldError, UseFormMethods } from 'react-hook-form'
 
-import { Input } from 'antd'
+const RedText = styled.span`
+  color: #f37562;
+  padding-right: 5px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+`
 
 const Container = styled.div`
   display: flex;
@@ -10,37 +18,31 @@ const Container = styled.div`
   margin: 10px 0px;
 `
 
-const StyledInput = styled(Input)<{ hasError?: boolean }>`
-  &.ant-input {
-    background: #f3f3f9;
-    width: 100%;
-    border-radius: 30px;
-    border: 1px solid ${(props) => (props.hasError ? 'red' : '#f3f3f9')};
-    padding: 5px 15px;
-    margin: 0;
-    ${(props) => props.hasError && `background: #ffd1d1;`}
-  }
-  &.ant-input::placeholder {
-    color: #bfbfbf;
-    font-size: 0.8rem;
+const StyledInput = styled.input<{ hasError?: boolean }>`
+  background: #f3f3f9;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
+  padding: 5px 16px;
+  margin: 0;
+  height: 2rem;
+
+  ::placeholder {
+    color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
   }
 `
 
-const { TextArea } = Input
-const StyledTextArea = styled(TextArea)<{ hasError?: boolean }>`
-  &.ant-input {
-    background: #f3f3f9;
-    width: 100%;
-    border-radius: 20px;
-    border: 1px solid ${(props) => (props.hasError ? 'red' : '#f3f3f9')};
-    padding: 5px 15px;
-    margin: 0;
-    resize: none;
-    ${(props) => props.hasError && `background: #ffd1d1;`}
-  }
-  &.ant-input::placeholder {
-    color: #bfbfbf;
-    font-size: 0.8rem;
+const StyledTextArea = styled.textarea<{ hasError?: boolean }>`
+  background: #f3f3f9;
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin: 0;
+  resize: none;
+  border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
+
+  ::placeholder {
+    color: ${(props) => (props.hasError ? '#f37562' : '#bfbfbf')};
   }
 `
 
@@ -55,43 +57,45 @@ const StyledTitle = styled.div`
 `
 
 type InputFieldProps = {
-  title?: string
+  name: string
+  title: string
   placeholder: string
-  value?: string
-  setValue?: Dispatch<SetStateAction<string>> | ((input: string) => void)
   textArea?: boolean
-  hasError?: boolean
-  onChange?: () => void
+  required?: boolean
+  defaultValue?: string
+  register: UseFormMethods['register']
+  setValue: UseFormMethods['setValue']
+  errors?: FieldError
 }
 
-export default function InputField({
-  title,
-  placeholder,
-  value,
-  setValue,
-  textArea,
-  onChange,
-  hasError,
-}: InputFieldProps) {
-  const [inputValue, setInputValue] = useState('')
+export default function InputField(props: InputFieldProps) {
+  const RedAsterisk = <RedText>*</RedText>
+  const { name, title, placeholder, textArea, required, defaultValue, register, setValue, errors } = props
 
   return (
     <Container>
-      {title && <StyledTitle>{title}</StyledTitle>}
+      {title && (
+        <StyledTitle>
+          {title}
+          {required && RedAsterisk}
+        </StyledTitle>
+      )}
       {textArea ? (
         <StyledTextArea
-          hasError={hasError}
-          placeholder={placeholder}
-          value={value ?? inputValue}
-          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
-          rows={4}
+          placeholder={errors ? `${title} is required` : placeholder}
+          rows={5}
+          onChange={(e) => setValue(name, e.target.value)}
+          hasError={!!errors}
+          defaultValue={defaultValue}
+          {...register(name, { required: required })}
         />
       ) : (
         <StyledInput
-          hasError={hasError}
-          placeholder={placeholder}
-          value={value ?? inputValue}
-          onChange={onChange ?? ((e) => (setValue ? setValue(e.target.value) : setInputValue(e.target.value)))}
+          placeholder={errors ? `${title} is required` : placeholder}
+          onChange={(e) => setValue(name, e.target.value)}
+          hasError={!!errors}
+          defaultValue={defaultValue}
+          {...register(name, { required: required })}
         />
       )}
     </Container>

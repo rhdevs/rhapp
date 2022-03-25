@@ -1,18 +1,18 @@
-import React from 'react'
+import React, { ReactEventHandler } from 'react'
 import styled from 'styled-components'
 
 const Button = styled.button<{ state: 'primary' | 'secondary'; width?: string; size: 'small' | 'regular' }>`
-  min-height: 45px;
+  min-height: 35px;
   height: auto;
   width: ${(props) => props.width ?? `max-content`};
   border-radius: 25px;
-  font-size: 14px;
+  font-size: 12px;
   border: solid 0.1rem transparent;
   background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
     linear-gradient(to left, #72ba75, #58b994);
   box-shadow: ${(props) => (props.state === 'primary' ? `0px` : `2px 1000px 1px #fff inset`)};
   color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
-  padding: ${(props) => (props.size === 'small' ? `8px 15px` : `16px 30px`)};
+  padding: ${(props) => (props.size === 'small' ? `7px 14px` : `16px 30px`)};
   line-height: 1px;
   white-space: nowrap;
 
@@ -34,7 +34,7 @@ type Props = {
   text: string
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset' | undefined
-  onClick: () => void
+  onClick: React.MouseEventHandler<HTMLButtonElement>
   setWidth?: string | undefined
   size?: 'small' | 'regular' | undefined
 }
@@ -42,7 +42,7 @@ type Props = {
 function ButtonComponent(prop: Props) {
   return (
     <Button
-      onClick={() => prop.onClick()}
+      onClick={prop.onClick}
       state={prop.state}
       disabled={prop.disabled}
       type={prop.type ?? 'button'}
