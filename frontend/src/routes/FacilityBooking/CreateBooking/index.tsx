@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -18,12 +18,7 @@ import {
   setBookingStartTime,
   setBookingEndTime,
   setBookingEndDate,
-  handleCreateBooking,
-  resetCreateBookingSuccessFailure,
   resetNewBooking,
-  setNewBookingFacilityName,
-  setSelectedFacility,
-  setBookingRepeat,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -31,12 +26,11 @@ import InputField from '../../../components/Mobile/InputField'
 // TODO, change the way how InputField works?
 import { Switch } from '../../../components/Switch'
 import { BookingStatus } from '../../../store/facilityBooking/types'
-import ConflictAlert from '../../../components/ConflictAlert'
 import { unixToFullDate } from '../../../common/unixToFullDate'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
-import { unixToFormattedTime } from '../../../common/unixToFormattedTime'
 import { get24Hourtime } from '../../../common/get24HourTime'
+import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 
 const Background = styled.div`
   background-color: #fff;
@@ -89,35 +83,40 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
+type FormValues = {
+  eventName: string
+  description: string
+}
+
 export default function CreateBooking() {
+  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
   const {
-    register,
     handleSubmit,
     formState: { errors },
-    control,
     watch,
-  } = useForm()
+    register,
+    setValue,
+  } = useForm<FormValues>()
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
   const [ccaName, setCcaName] = useState<string>('')
   const {
     facilityList,
     isLoading,
     ccaList,
-    booking,
     bookingStatus,
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
-  const FormData = watch()
-  const ValidForm = () => {
+
+  const formIsValid = () => {
     if (isWeeklyOn) {
-      return FormData.eventName !== '' && FormData.description !== '' && ccaName !== '' && bookingEndDate !== 0
+      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
     }
-    return FormData.eventName !== '' && FormData.description !== '' && ccaName !== ''
+    return watch('eventName') !== '' && ccaName !== ''
   }
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -143,17 +142,21 @@ export default function CreateBooking() {
     } else {
       handleSubmit((data) => {
         console.log(data, ccaName)
-        dispatch(
-          handleCreateNewBooking(
-            Number(params.facilityId),
-            data.eventName,
-            bookingStartTime,
-            bookingEndTime,
-            bookingEndDate,
-            ccaId,
-            data.description,
-          ),
-        )
+        if (bookingStatus === BookingStatus.CONFLICT) {
+          setmodalIsOpen(true)
+        } else {
+          dispatch(
+            handleCreateNewBooking(
+              Number(params.facilityId),
+              data.eventName,
+              bookingStartTime,
+              bookingEndTime,
+              bookingEndDate,
+              ccaId,
+              data.description,
+            ),
+          )
+        }
       })()
     }
   }
@@ -162,6 +165,9 @@ export default function CreateBooking() {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
       history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
+    }
+    if (bookingStatus === BookingStatus.CONFLICT) {
+      setmodalIsOpen(true)
     }
   }, [bookingStatus])
 
@@ -172,22 +178,15 @@ export default function CreateBooking() {
         <LoadingSpin />
       ) : (
         <Form onSubmit={onSubmit}>
-          <Controller
-            control={control}
-            render={({ onChange, value }) => (
-              <InputField
-                hasError={value === ''}
-                title="Event Name"
-                placeholder="Event Name"
-                value={value}
-                onChange={onChange}
-              />
-            )}
-            defaultValue=""
-            rules={{ required: true }}
-            name="eventName"
+          <InputField
+            name={'eventName'}
+            title="Event Name"
+            placeholder="Event Name"
+            required
+            register={register}
+            setValue={setValue}
+            errors={errors.eventName}
           />
-          {errors.eventName && <p>{errors.eventName?.message}</p>}
           <SelectableField
             title="Start"
             value={
@@ -220,21 +219,14 @@ export default function CreateBooking() {
               allowClear
             />
           </Container>
-          <Controller
-            name="description"
-            render={({ onChange, value }) => (
-              <InputField
-                title="Description"
-                placeholder="Tell us what your booking is for!"
-                textArea
-                value={value}
-                onChange={onChange}
-              />
-            )}
-            ref={register}
-            rules={{ required: true }}
-            defaultValue=""
-            control={control}
+          <InputField
+            name={'description'}
+            title="Description"
+            placeholder="Tell us what your booking is for!"
+            textArea
+            register={register}
+            setValue={setValue}
+            errors={errors.description}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
@@ -249,12 +241,12 @@ export default function CreateBooking() {
               // TODO, Redirect to choose date calender page
             ></SelectableField>
           )}
-          {bookingStatus === BookingStatus.CONFLICT && <ConflictAlert errorType={'CONFLICT'} />}
+          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
           <ButtonComponent
-            state={ValidForm() ? 'primary' : 'secondary'}
+            state={'primary'}
             text="Submit"
             type="submit"
-            disabled={!ValidForm()}
+            disabled={!formIsValid()}
             onClick={() => console.log('submitted')}
           ></ButtonComponent>
         </Form>
