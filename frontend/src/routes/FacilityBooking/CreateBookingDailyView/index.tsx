@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
@@ -58,15 +58,17 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation<State>()
-  const { selectedFacilityName, isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityName, isLoading, selectedStartTime, dailyViewDatesRowStartDate } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
   // const date = location.state.date
-  //TODO saturday date row is limit
 
   const dateRowStartDate = location.state.dateRowStartDate
+  // const dateRowStartDate = dailyViewDatesRowStartDate
 
   const clickedDateToDateObject = (clickedDate: number) => {
     const month = Math.floor(clickedDate / 100)
@@ -80,6 +82,26 @@ export default function CreateBookingDailyView() {
     dispatch(setIsLoading(true))
     dispatch(updateDailyView(date, selectedFacilityId))
   }, [clickedDate])
+
+  useEffect(() => {
+    updateOverlayDates()
+  }, [selectedStartTime])
+
+  const [overlayDates, setOverlayDates] = useState<number[]>([])
+
+  const updateOverlayDates = () => {
+    if (selectedStartTime === 0) return
+
+    const MAX_DATE = 31
+    const newOverlayDates: number[] = []
+    const startDate = new Date(selectedStartTime * 1000).getDate()
+
+    // TODO don't spam numbers, instead just add what's needed
+    for (let i = startDate + 2; i < MAX_DATE; i++) {
+      newOverlayDates.push(i)
+    }
+    setOverlayDates(newOverlayDates)
+  }
 
   return (
     <>
@@ -104,6 +126,7 @@ export default function CreateBookingDailyView() {
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
             dateRowStartDate={dateRowStartDate}
+            overlayDates={overlayDates}
           />
           <BookingSectionDiv>
             <BookingSection facilityId={selectedFacilityId} date={date} />

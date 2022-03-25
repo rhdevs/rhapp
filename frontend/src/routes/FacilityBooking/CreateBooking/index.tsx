@@ -87,7 +87,7 @@ const CCAInput = styled(AutoComplete)`
 `
 
 type State = {
-  date: Date
+  dateRowStartDate: number
 }
 
 export default function CreateBooking() {
@@ -126,7 +126,8 @@ export default function CreateBooking() {
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  const date = location.state.date
+  // const date = location.state.date
+  const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -178,7 +179,7 @@ export default function CreateBooking() {
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
       state: {
-        date: date,
+        dateRowStartDate: dateRowStartDate,
       },
     })
   }
@@ -206,7 +207,6 @@ export default function CreateBooking() {
 
   return (
     <Background>
-      <h1>{bookingEndDate}</h1>
       <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />

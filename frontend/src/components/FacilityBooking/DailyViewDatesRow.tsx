@@ -13,13 +13,13 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-// TODO if saturday put saturday in front
 // TODO overlay dates that are >1 day from the selectedStartTime date
 const DailyViewDatesRow = (props: {
   selectedDate: Date
   selectedFacilityId: number
   redirectTo: string
   dateRowStartDate: number
+  overlayDates?: number[]
 }) => {
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
@@ -56,14 +56,14 @@ const DailyViewDatesRow = (props: {
   //   dispatch(setdateRowStartDate(newRowStartDate))
   // }, [])
 
-  console.log('selectedDate', clickedDateObject)
-  console.log('year', year)
-  console.log('month', month)
-  console.log('date', date)
-  console.log('maxDatePrevMonth', maxDatePrevMonth)
-  console.log('maxDateCurMonth', maxDateCurMonth)
-  console.log('day', day)
-  console.log('dateRowStartDate', props.dateRowStartDate)
+  // console.log('selectedDate', clickedDateObject)
+  // console.log('year', year)
+  // console.log('month', month)
+  // console.log('date', date)
+  // console.log('maxDatePrevMonth', maxDatePrevMonth)
+  // console.log('maxDateCurMonth', maxDateCurMonth)
+  // console.log('day', day)
+  // console.log('dateRowStartDate', props.dateRowStartDate)
 
   const onClickDate = (date: Date) => {
     history.push({
@@ -86,6 +86,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month - 1}
             lastDateOfThisMonth={maxDatePrevMonth}
             bufferDates={[]}
+            overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
           />
@@ -94,6 +95,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDatePrevMonth}
             bufferDates={[]}
+            overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
           />
@@ -108,6 +110,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             lastDateOfThisMonth={maxDateCurMonth}
             bufferDates={[]}
+            overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
           />
@@ -116,6 +119,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month + 1}
             lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDateCurMonth}
             bufferDates={[]}
+            overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
           />
@@ -130,6 +134,7 @@ const DailyViewDatesRow = (props: {
           assignedMonth={month}
           lastDateOfThisMonth={props.dateRowStartDate + 6}
           bufferDates={[]}
+          overlayDates={props.overlayDates}
           facilityId={props.selectedFacilityId}
           onClickDate={onClickDate}
         />

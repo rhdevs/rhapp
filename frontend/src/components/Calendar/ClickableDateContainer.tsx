@@ -40,7 +40,7 @@ export const ClickableDateContainer = (props: {
   eventPresent?: boolean
   assignedMonth: number
   facilityId: number
-  // redirectTo?: string
+  overlay?: boolean
   onClickDate: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
@@ -81,7 +81,9 @@ export const ClickableDateContainer = (props: {
     return clickedDate === assignedDateMonth
   }
 
-  return (
+  return props.overlay ? (
+    <p>ov</p>
+  ) : (
     <DateContainer
       onClick={() => DateContainerClickHandler(assignedDateMonth)}
       selected={isCurrentDateClicked()}

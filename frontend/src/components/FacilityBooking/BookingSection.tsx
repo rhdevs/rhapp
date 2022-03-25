@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 import { DailyContainer, MainContainer } from './BlockStyles'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
@@ -26,6 +26,10 @@ type Props = {
   date: Date
 }
 
+type State = {
+  dateRowStartDate: number
+}
+
 export default function BookingSection({ facilityId, date }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -38,6 +42,9 @@ export default function BookingSection({ facilityId, date }: Props) {
   // const [selectedStartTime, setSelectedStartTime] = useState(-1)
 
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
+
+  const location = useLocation<State>()
+  const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
     dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
@@ -67,7 +74,7 @@ export default function BookingSection({ facilityId, date }: Props) {
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
       state: {
-        date: date,
+        dateRowStartDate: dateRowStartDate,
       },
     })
   }
@@ -115,7 +122,8 @@ export default function BookingSection({ facilityId, date }: Props) {
               key={index}
               onClick={() => setSelectedBlock(entry.timestamp)}
               entry={entry}
-              // if day selected is not current, scroll to defaultTimePosition TODO doesn't work
+              // if day selected is not current, scroll to defaultTimePosition
+              // TODO doesn't work
               scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
             />
           )

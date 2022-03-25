@@ -416,7 +416,6 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
 }
 
 export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch<ActionTypes>) => {
-  console.log('set tb', newTimeBlocks)
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
     timeBlocks: newTimeBlocks,
