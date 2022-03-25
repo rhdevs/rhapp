@@ -6,115 +6,115 @@ import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 
 import { Booking } from '../../store/facilityBooking/types'
 
+const BackgroundOverlay = styled.div`
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 3;
+  cursor: pointer;
+`
+
+const BookingContainer = styled.div`
+  position: absolute;
+  bottom: 80px;
+  top: 80px;
+  width: 85%;
+  max-width: 400px;
+  cursor: pointer;
+  background-color: #ffffff;
+  margin: 20px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  align-items: center;
+`
+
+const BookingHeader = styled.div`
+  width: 100%;
+  height: 20%;
+  cursor: pointer;
+  background-color: #f1f3f7;
+  border-radius: 20px 20px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  text-align: center;
+`
+
+const EventName = styled.div`
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+`
+
+const BookingCca = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+`
+const TelegramHandle = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+`
+
+const AdditionalNoteHeader = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  margin: 10px 0px 0px 0px;
+`
+
+const AdditionalNote = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0px 50px 20px 50px;
+  text-align: center;
+  color: #666666;
+`
+const EventDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 15px;
+`
+
+const EventTimingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const EventTimings = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  color: #666666;
+  margin: 0px;
+  line-height: 22px;
+`
+
+const EventTimingsTo = styled.div`
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  color: #191919;
+  margin: 25px;
+`
+
+const ButtonContainer = styled.img`
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+`
+
 export const ViewBookingCard = (props: { Booking: Booking }) => {
-  const BackgroundOverlay = styled.div`
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 3;
-    cursor: pointer;
-  `
-
-  const BookingContainer = styled.div`
-    position: absolute;
-    bottom: 80px;
-    top: 80px;
-    width: 85%;
-    max-width: 400px;
-    cursor: pointer;
-    background-color: #ffffff;
-    margin: 20px;
-    border-radius: 20px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    display: flex;
-    flex-direction: column;
-    z-index: 5;
-    align-items: center;
-  `
-
-  const BookingHeader = styled.div`
-    width: 100%;
-    height: 20%;
-    cursor: pointer;
-    background-color: #f1f3f7;
-    border-radius: 20px 20px 0px 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    z-index: 2;
-    text-align: center;
-  `
-
-  const EventName = styled.p`
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0;
-  `
-
-  const BookingCca = styled.p`
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0;
-  `
-  const TelegramHandle = styled.p`
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0;
-  `
-
-  const AdditionalNoteHeader = styled.p`
-    font-size: 14px;
-    font-weight: 700;
-    margin: 10px 0px 0px 0px;
-  `
-
-  const AdditionalNote = styled.p`
-    font-size: 14px;
-    font-weight: 400;
-    margin: 0px 50px 20px 50px;
-    text-align: center;
-    color: #666666;
-  `
-  const EventDetailsContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    margin: 15px;
-  `
-
-  const EventTimingContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-  `
-
-  const EventTimings = styled.p`
-    font-size: 14px;
-    font-weight: 400;
-    text-align: center;
-    color: #666666;
-    margin: 0px;
-    line-height: 22px;
-  `
-
-  const EventTimingsTo = styled.p`
-    font-size: 14px;
-    font-weight: 700;
-    text-align: center;
-    color: #191919;
-    margin: 25px;
-  `
-
-  const ButtonContainer = styled.img`
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-  `
-
   const ExitButton = () => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => console.log('Close')} />
   }
