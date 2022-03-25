@@ -59,7 +59,6 @@ export const Calendar = (props: { selectedFacilityId: number; onClickDate: (date
   const currentYear = today.getFullYear()
 
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
-
   return isLoading ? (
     <LoadingSpin />
   ) : (
