@@ -76,7 +76,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
           <>
             {monthList.slice(1).map((month) => {
               return (
-                <>
+                <div key={startingMonth}>
                   {/* Note: 0 stands for Jan */}
                   {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
                   <MonthContainer>
@@ -86,7 +86,7 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
                       <DateRows currentDate={today} nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
                     </DatesGridContainer>
                   </MonthContainer>
-                </>
+                </div>
               )
             })}
           </>
