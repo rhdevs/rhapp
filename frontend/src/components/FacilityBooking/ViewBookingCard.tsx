@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
+import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
+import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
+
 // this component takes in an array of events or an array of dates that has events
 export const ViewBookingCard = (props: { selectedFacilityId: number }) => {
   const BookingContainer = styled.div`
     position: absolute;
-    bottom: 30px;
-    top: 100px;
+    bottom: 70px;
+    top: 80px;
     width: 90%;
     max-width: 400px;
     cursor: pointer;
@@ -15,9 +18,127 @@ export const ViewBookingCard = (props: { selectedFacilityId: number }) => {
     border-radius: 20px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
-    padding: 30px;
+    flex-direction: column;
     z-index: 2;
+    align-items: center;
   `
 
-  return <BookingContainer>{'test'}</BookingContainer>
+  const BookingHeader = styled.div`
+    width: 100%;
+    height: 20%;
+    cursor: pointer;
+    background-color: #f1f3f7;
+    border-radius: 20px 20px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 2;
+    text-align: center;
+  `
+
+  const EventName = styled.p`
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  `
+
+  const BookingCca = styled.p`
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  `
+  const TelegramHandle = styled.p`
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  `
+
+  const AdditionalNoteHeader = styled.p`
+    font-size: 14px;
+    font-weight: 700;
+    margin: 30px 0px 0px 0px;
+  `
+
+  const AdditionalNote = styled.p`
+    font-size: 14px;
+    font-weight: 400;
+    margin: 10px 50px 25px 50px;
+    text-align: center;
+    color: #666666;
+  `
+  const EventDetailsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+  `
+
+  const EventTimingContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+  `
+
+  const EventTimings = styled.p`
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    color: #666666;
+    margin: 0px;
+    line-height: 22px;
+  `
+
+  const EventTimingsTo = styled.p`
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: #191919;
+    margin: 25px;
+  `
+
+  const ButtonContainer = styled.img`
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  `
+
+  const ExitButton = () => {
+    return <ButtonContainer src={ViewBookingCardButton} onClick={() => console.log('Close')} />
+  }
+
+  const TelegramButton = () => {
+    return (
+      <ButtonContainer
+        style={{ width: '39px', margin: '15px 0px 0px 0px' }}
+        src={ViewBookingCardUserIcon}
+        onClick={() => console.log('Go to telegram')}
+      />
+    )
+  }
+
+  return (
+    <BookingContainer>
+      <BookingHeader>
+        <EventName>{'Bonding Camp'}</EventName>
+        <BookingCca>{'RHMP'}</BookingCca>
+      </BookingHeader>
+      <TelegramButton />
+      <TelegramHandle>{'@Alyssa'}</TelegramHandle>
+      <EventDetailsContainer>
+        <EventTimingContainer>
+          <EventTimings>{'Thursday'}</EventTimings>
+          <EventTimings>{'17/12/21'}</EventTimings>
+          <EventTimings>{'4:00 PM'}</EventTimings>
+        </EventTimingContainer>
+        <EventTimingsTo>{'TO'}</EventTimingsTo>
+        <EventTimingContainer>
+          <EventTimings>{'Thursday'}</EventTimings>
+          <EventTimings>{'17/12/21'}</EventTimings>
+          <EventTimings>{'4:00 PM'}</EventTimings>
+        </EventTimingContainer>
+      </EventDetailsContainer>
+      <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
+      <AdditionalNote>
+        {'Will be using this place for RHMP bonding. Contact me if you have any question.'}
+      </AdditionalNote>
+      <ExitButton />
+    </BookingContainer>
+  )
 }
