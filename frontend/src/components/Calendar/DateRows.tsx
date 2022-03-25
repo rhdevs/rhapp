@@ -32,7 +32,6 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
           <ClickableDateContainer
             key={new Date(props.currentDate.getFullYear(), assignedMonth, day).toDateString()}
             date={new Date(props.currentDate.getFullYear(), assignedMonth, day)}
-            assignedMonth={assignedMonth}
             facilityId={props.facilityId}
           />
         )

@@ -23,7 +23,6 @@ export const CustomDateRows = (props: {
           <ClickableDateContainer
             key={new Date(props.firstDate.getFullYear(), props.assignedMonth, day).toDateString()}
             date={new Date(props.firstDate.getFullYear(), props.assignedMonth, day)}
-            assignedMonth={props.assignedMonth}
             facilityId={props.facilityId}
           />
         )
