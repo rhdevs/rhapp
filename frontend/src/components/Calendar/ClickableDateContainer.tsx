@@ -5,20 +5,20 @@ import { useHistory } from 'react-router-dom'
 import { setClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
 
-const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
+const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean; overlay?: boolean }>`
   font-size: 12px;
   padding-top: 0px;
   padding-bottom: auto;
   text-align: center;
   height: 40px;
   width: 47.14px;
-  color: ${(props) => (props.selected ? 'white' : props.currentDate ? '#58B994' : '')};
+  color: ${(props) => (props.selected ? 'white' : props.overlay ? '#888888' : props.currentDate ? '#58B994' : '')};
   border-radius: 40px;
   background-color: ${(props) => (props.selected ? '#468751' : props.currentDate ? '#D8E6DF' : '')};
   display: flex;
   justify-content: center;
   flex-direction: column;
-  cursor: pointer;
+  cursor: ${(props) => (props.overlay ? 'default' : 'pointer')};
 `
 
 const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
@@ -44,21 +44,9 @@ export const ClickableDateContainer = (props: {
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
 
-  // const clickedDateToDateObject = (clickedDate: number) => {
-  //   const month = Math.floor(clickedDate / 100)
-  //   const day = clickedDate % 100
-  //   return new Date(new Date().getFullYear(), month, day)
-  // }
-
   const DateContainerClickHandler = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
     props.onClickDate(newClickedDate)
-    // history.push({
-    //   pathname: props.redirectTo ?? PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + props.facilityId,
-    //   state: {
-    //     date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
-    //   },
-    // })
   }
 
   const hasEvent = () => {
@@ -74,13 +62,12 @@ export const ClickableDateContainer = (props: {
     return clickedDate.toDateString() === assignedDateMonth.toDateString()
   }
 
-  return props.overlay ? (
-    <p>ov</p>
-  ) : (
+  return (
     <DateContainer
-      onClick={() => DateContainerClickHandler(assignedDateMonth)}
+      onClick={() => !props.overlay && DateContainerClickHandler(assignedDateMonth)}
       selected={isCurrentDateClicked()}
       currentDate={isCurrentDate()}
+      overlay={props.overlay}
     >
       <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
       {props.date.getDate()}

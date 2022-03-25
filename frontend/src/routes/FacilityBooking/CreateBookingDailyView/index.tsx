@@ -10,7 +10,13 @@ import BookingSection from '../../../components/FacilityBooking/BookingSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { RootState } from '../../../store/types'
-import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
+import {
+  setIsLoading,
+  setSelectedBlockTimestamp,
+  setSelectedEndTime,
+  setSelectedStartTime,
+  updateDailyView,
+} from '../../../store/facilityBooking/action'
 import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
@@ -45,11 +51,6 @@ const TitleText = styled.h2`
   margin-top: 0.7rem;
 `
 
-const DatesContainer = styled.div`
-  display: flex;
-  margin: auto;
-`
-
 type State = {
   dateRowStartDate: number
 }
@@ -58,25 +59,16 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation<State>()
+  const params = useParams<{ facilityID: string }>()
   const { selectedFacilityName, isLoading, selectedStartTime, dailyViewDatesRowStartDate } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
-  const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  // const date = location.state.date
-
   const dateRowStartDate = location.state.dateRowStartDate
-  // const dateRowStartDate = dailyViewDatesRowStartDate
 
-  // const clickedDateToDateObject = (clickedDate: number) => {
-  //   const month = Math.floor(clickedDate / 100)
-  //   const day = clickedDate % 100
-  //   return new Date(new Date().getFullYear(), month, day)
-  // }
-
-  // const date = clickedDateToDateObject(clickedDate)
+  const [overlayDates, setOverlayDates] = useState<number[]>([])
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -87,35 +79,60 @@ export default function CreateBookingDailyView() {
     updateOverlayDates()
   }, [selectedStartTime])
 
-  const [overlayDates, setOverlayDates] = useState<number[]>([])
-
   const updateOverlayDates = () => {
     if (selectedStartTime === 0) return
 
-    const MAX_DATE = 31
     const newOverlayDates: number[] = []
-    const startDate = new Date(selectedStartTime * 1000).getDate()
 
-    // TODO don't spam numbers, instead just add what's needed
-    for (let i = startDate + 2; i < MAX_DATE; i++) {
-      newOverlayDates.push(i)
+    const year = clickedDate.getFullYear() // year e.g. 2022
+    const month = clickedDate.getMonth() // month index e.g. 2 - March
+    const selectedDate = clickedDate.getDate() // the date e.g. 23
+
+    const maxDatePrevMonth = new Date(year, month, 0).getDate() // max date of PREVIOUS month
+    const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
+
+    if (dateRowStartDate + 6 > maxDateCurMonth) {
+      // if week spans across 2 months
+      if (selectedDate < dateRowStartDate) {
+        // start date selected is from the next month
+        const cutoffDate = selectedDate + 2
+        const endDate = dateRowStartDate + 6 - maxDatePrevMonth
+        for (let i = cutoffDate; i <= endDate; i++) newOverlayDates.push(i)
+      } else {
+        // start date selected is from the previous month
+        const cutoffDate = (selectedDate + 2) % maxDateCurMonth
+        const endDate = dateRowStartDate + 6 - maxDateCurMonth
+        for (let i = cutoffDate; i <= maxDateCurMonth; i++) newOverlayDates.push(i)
+        for (let j = 1; j <= endDate; j++) newOverlayDates.push(j)
+      }
+    } else {
+      const cutoffDate = selectedDate + 2
+      const endDate = dateRowStartDate + 6
+      for (let i = cutoffDate; i <= endDate; i++) newOverlayDates.push(i)
     }
     setOverlayDates(newOverlayDates)
   }
 
+  const goBackToDailyViewPage = () => {
+    history.push({
+      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      state: {
+        dateRowStartDate: dateRowStartDate,
+      },
+    })
+  }
+
+  const onLeftClick = () => {
+    // reset user selection
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    dispatch(setSelectedEndTime(0))
+    goBackToDailyViewPage()
+  }
+
   return (
     <>
-      <TopNavBarRevamp
-        onLeftClick={() =>
-          history.push({
-            pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
-            state: {
-              dateRowStartDate: dateRowStartDate,
-            },
-          })
-        }
-        centerComponent={<TitleText>Book {selectedFacilityName}</TitleText>}
-      />
+      <TopNavBarRevamp onLeftClick={onLeftClick} centerComponent={<TitleText>Book {selectedFacilityName}</TitleText>} />
       {isLoading ? (
         <LoadingSpin />
       ) : (

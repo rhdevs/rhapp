@@ -97,7 +97,6 @@ export default function CreateBooking() {
   const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
-  // const params = useParams<{ facilityId: string }>()
   const {
     handleSubmit,
     formState: { errors },
@@ -117,19 +116,10 @@ export default function CreateBooking() {
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const FormData = watch()
-  const formIsValid = () => {
-    if (isWeeklyOn) {
-      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
-    }
-    return watch('eventName') !== '' && ccaName !== ''
-  }
-
   const location = useLocation<State>()
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  // const date = location.state.date
   const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
@@ -142,6 +132,13 @@ export default function CreateBooking() {
       dispatch(resetNewBooking)
     }
   }, [dispatch])
+
+  const formIsValid = () => {
+    if (isWeeklyOn) {
+      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
+    }
+    return watch('eventName') !== '' && ccaName !== ''
+  }
 
   const getFacilityName = () => {
     return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName

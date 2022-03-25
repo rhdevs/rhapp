@@ -10,8 +10,6 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
-import { UnorderedListOutlined } from '@ant-design/icons'
 
 const HEADER_HEIGHT = '70px'
 
@@ -52,24 +50,13 @@ type State = {
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
-  const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
-  // const location = useLocation<State>()
   const params = useParams<{ facilityID: string }>()
+  const location = useLocation<State>()
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   const selectedFacilityId = parseInt(params.facilityID)
-
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
-
-  const location = useLocation<State>()
   const dateRowStartDate = location.state.dateRowStartDate
-
-  // const clickedDateToDateObject = (clickedDate: number) => {
-  //   const month = Math.floor(clickedDate / 100)
-  //   const day = clickedDate % 100
-  //   return new Date(new Date().getFullYear(), month, day)
-  // }
-
-  // const date = clickedDateToDateObject(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -78,18 +65,7 @@ export default function ViewBookingDailyView() {
 
   useEffect(() => {
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
-    // dispatch(fetchFacilityNameFromID(selectedFacilityId))
-    // if (selectedFacilityId == 0) {
-    //   dispatch(setSelectedFacility(selectedFacilityId))
-    // }
   }, [clickedDate])
-
-  // const BookingFacilityIcon = (
-  //   <UnorderedListOutlined
-  //     style={{ color: 'black', fontSize: '150%' }}
-  //     onClick={() => console.log('link to booking page')}
-  //   />
-  // )
 
   return (
     <>

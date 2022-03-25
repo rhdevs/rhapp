@@ -11,7 +11,6 @@ import {
   resetBooking,
   setIsLoading,
   setSelectedFacility,
-  resetNewBooking,
   setDailyViewDatesRowStartDate,
 } from '../../../store/facilityBooking/action'
 import { onRefresh } from '../../../common/reloadPage'
