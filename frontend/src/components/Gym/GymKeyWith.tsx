@@ -57,7 +57,12 @@ function GymKeyWith(props: Props) {
     <>
       <Header>Key With</Header>
       <ImageContainer>
-        <img src={props.avatar === '' ? Avatar : props.avatar} alt="Dummy Avatar" width="20%" />
+        <img
+          src={props.avatar === '' ? Avatar : props.avatar}
+          style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
+          alt="Avatar"
+          width="20%"
+        />
       </ImageContainer>
       <Container>
         <InfoArea> {props.name} </InfoArea>

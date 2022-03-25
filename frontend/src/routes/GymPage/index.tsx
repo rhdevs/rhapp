@@ -9,24 +9,39 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 
 const NavBarIcons = styled(Icon)`
   &.am-icon-md {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
   }
 
   margin-left: 0.5rem;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
+  position: fixed;
+  top: 5;
+  left: 5;
 `
 
 const GymBarContainer = styled.div`
-  position: sticky;
+  position: fixed;
+  width: 100%;
   display: flex;
-  background-color: #fafaf4;
+  background-color: #fff;
   align-items: center;
   top: 0;
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+`
+
+const MainContainer = styled.div`
+  // Margin for top navigation bar
+  margin-top: 45px;
+`
+
+const TabContainer = styled.div`
+  display: flex;
+  width: 100%;
+  margin: 0 15%;
 `
 
 const GymTabContainer = styled.div<{ isSelected?: boolean }>`
@@ -77,16 +92,18 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
             onLeftClick ? onLeftClick() : history.goBack()
           }}
         />
-        {sections.map((section, index) => {
-          const isSelected = sections.indexOf(section) === currentTab - 1
-          return (
-            <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
-              {section}
-            </GymTabContainer>
-          )
-        })}
+        <TabContainer>
+          {sections.map((section, index) => {
+            const isSelected = sections.indexOf(section) === currentTab - 1
+            return (
+              <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
+                {section}
+              </GymTabContainer>
+            )
+          })}
+        </TabContainer>
       </GymBarContainer>
-      {TabPage(currentTab)}
+      <MainContainer>{TabPage(currentTab)}</MainContainer>
       <BottomNavBar />
     </PullToRefreshRH>
   )
