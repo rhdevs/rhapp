@@ -11,6 +11,7 @@ import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
+import { UnorderedListOutlined } from '@ant-design/icons'
 
 const HEADER_HEIGHT = '70px'
 
@@ -62,26 +63,33 @@ export default function ViewBookingDailyView() {
   const location = useLocation<State>()
   const dateRowStartDate = location.state.dateRowStartDate
 
-  const clickedDateToDateObject = (clickedDate: number) => {
-    const month = Math.floor(clickedDate / 100)
-    const day = clickedDate % 100
-    return new Date(new Date().getFullYear(), month, day)
-  }
+  // const clickedDateToDateObject = (clickedDate: number) => {
+  //   const month = Math.floor(clickedDate / 100)
+  //   const day = clickedDate % 100
+  //   return new Date(new Date().getFullYear(), month, day)
+  // }
 
-  const date = clickedDateToDateObject(clickedDate)
+  // const date = clickedDateToDateObject(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(updateDailyView(date, selectedFacilityId))
+    dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [])
 
   useEffect(() => {
-    dispatch(updateDailyView(date, selectedFacilityId))
+    dispatch(updateDailyView(clickedDate, selectedFacilityId))
     // dispatch(fetchFacilityNameFromID(selectedFacilityId))
     // if (selectedFacilityId == 0) {
     //   dispatch(setSelectedFacility(selectedFacilityId))
     // }
   }, [clickedDate])
+
+  // const BookingFacilityIcon = (
+  //   <UnorderedListOutlined
+  //     style={{ color: 'black', fontSize: '150%' }}
+  //     onClick={() => console.log('link to booking page')}
+  //   />
+  // )
 
   return (
     <>
@@ -109,7 +117,7 @@ export default function ViewBookingDailyView() {
       ) : (
         <Background>
           <DailyViewDatesRow
-            selectedDate={date}
+            selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
             dateRowStartDate={dateRowStartDate}

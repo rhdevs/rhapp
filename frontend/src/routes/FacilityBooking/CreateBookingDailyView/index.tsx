@@ -70,17 +70,17 @@ export default function CreateBookingDailyView() {
   const dateRowStartDate = location.state.dateRowStartDate
   // const dateRowStartDate = dailyViewDatesRowStartDate
 
-  const clickedDateToDateObject = (clickedDate: number) => {
-    const month = Math.floor(clickedDate / 100)
-    const day = clickedDate % 100
-    return new Date(new Date().getFullYear(), month, day)
-  }
+  // const clickedDateToDateObject = (clickedDate: number) => {
+  //   const month = Math.floor(clickedDate / 100)
+  //   const day = clickedDate % 100
+  //   return new Date(new Date().getFullYear(), month, day)
+  // }
 
-  const date = clickedDateToDateObject(clickedDate)
+  // const date = clickedDateToDateObject(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(updateDailyView(date, selectedFacilityId))
+    dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   useEffect(() => {
@@ -122,14 +122,14 @@ export default function CreateBookingDailyView() {
         <Background>
           <h2>Choose starting time slot</h2> {/* TODO change display between starting/ending */}
           <DailyViewDatesRow
-            selectedDate={date}
+            selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
             dateRowStartDate={dateRowStartDate}
             overlayDates={overlayDates}
           />
           <BookingSectionDiv>
-            <BookingSection facilityId={selectedFacilityId} date={date} />
+            <BookingSection facilityId={selectedFacilityId} date={clickedDate} />
           </BookingSectionDiv>
         </Background>
       )}

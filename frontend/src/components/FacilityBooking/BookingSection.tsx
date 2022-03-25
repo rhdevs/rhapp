@@ -47,7 +47,8 @@ export default function BookingSection({ facilityId, date }: Props) {
   const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
-    dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
+    // dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
+    dispatch(getTimeBlocks(clickedDate))
   }, [])
 
   useEffect(() => {

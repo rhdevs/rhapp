@@ -19,10 +19,10 @@ export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
       const data = response.data
       dispatch({
         type: SOCIAL_ACTIONS.GET_USER_DETAIL,
-        userId: data.userID,
-        avatar: data.profilePictureUrl,
-        name: data.displayName,
-        position: data.position,
+        userId: response.userID,
+        avatar: response.profilePictureUrl,
+        name: response.displayName,
+        position: response.position,
       })
     }
   })

@@ -6,7 +6,7 @@ import { DateRows } from '../../components/Calendar/DateRows'
 import { PATHS } from '../../routes/Routes'
 import { setIsLoading } from '../../store/facilityBooking/action'
 import { RootState } from '../../store/types'
-import { RedirectRoutes } from '../Calendar/ClickableDateContainer'
+import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
 
 const DatesContainer = styled.div`
   display: flex;
@@ -24,80 +24,61 @@ const DailyViewDatesRow = (props: {
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
-  const clickedDateToDateObject = (clickedDate: number) => {
-    const month = Math.floor(clickedDate / 100)
-    const day = clickedDate % 100
-    return new Date(new Date().getFullYear(), month, day)
-  }
-
-  const clickedDateObject = clickedDateToDateObject(clickedDate)
-
-  const year = clickedDateObject.getFullYear() // year e.g. 2022
-  const month = clickedDateObject.getMonth() // month index e.g. 2 - March
-  const date = clickedDateObject.getDate() // the date e.g. 23
-
-  const maxDatePrevMonth = new Date(year, month, 0).getDate() // max date of PREVIOUS month
-  const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
-  const day = clickedDateObject.getDay() // day of week
-
-  // const dispatch = useDispatch()
-  // const { dateRowStartDate } = useSelector((state: RootState) => state.facilityBooking)
-  // first day on row
-
-  // if (dateRowStartDate === 0) {
-  //   // use redux to ensure that the date row doesn't refresh when user selects date
-  //   const newRowStartDate = date - day < 0 ? maxDatePrevMonth - (day - date) : date - day
-  //   console.log('newRowStartDate', newRowStartDate)
-  //   dispatch(setdateRowStartDate(newRowStartDate))
+  // const clickedDateToDateObject = (clickedDate: number) => {
+  //   const month = Math.floor(clickedDate / 100)
+  //   const day = clickedDate % 100
+  //   return new Date(new Date().getFullYear(), month, day)
   // }
 
-  // useEffect(() => {
-  //   const newRowStartDate = date - day < 0 ? maxDatePrevMonth - (day - date) : date - day
-  //   dispatch(setdateRowStartDate(newRowStartDate))
-  // }, [])
+  // const clickedDateObject = clickedDateToDateObject(clickedDate)
 
-  // console.log('selectedDate', clickedDateObject)
-  // console.log('year', year)
-  // console.log('month', month)
-  // console.log('date', date)
-  // console.log('maxDatePrevMonth', maxDatePrevMonth)
-  // console.log('maxDateCurMonth', maxDateCurMonth)
-  // console.log('day', day)
-  // console.log('dateRowStartDate', props.dateRowStartDate)
+  const year = clickedDate.getFullYear() // year e.g. 2022
+  const month = clickedDate.getMonth() // month index e.g. 2 - March
+  const date = clickedDate.getDate() // the date e.g. 23
+
+  const maxDatePrevMonth = new Date(year, month, 0) // max date of PREVIOUS month
+  const maxDateCurMonth = new Date(year, month + 1, 0) // max date of CURRENT month
+  // const day = clickedDate.getDay() // day of week
 
   const onClickDate = (date: Date) => {
     history.push({
       pathname: props.redirectTo,
       state: {
-        date: date,
+        // date: date,
         dateRowStartDate: props.dateRowStartDate,
       },
     })
   }
 
-  if (props.dateRowStartDate + 6 > maxDateCurMonth) {
+  const dateNumberToObject = (dateNum: number) => {
+    return new Date(year, month, dateNum)
+  }
+
+  if (props.dateRowStartDate + 6 > maxDateCurMonth.getDate()) {
     // if week spans across 2 months, display accordingly
     if (date < props.dateRowStartDate) {
       // current date selected is from the next month
       return (
         <DatesContainer>
-          <DateRows
-            firstDate={props.dateRowStartDate}
+          <CustomDateRows
+            firstDate={dateNumberToObject(props.dateRowStartDate)}
             assignedMonth={month - 1}
-            lastDateOfThisMonth={maxDatePrevMonth}
-            bufferDates={[]}
+            // lastDateOfThisMonth={maxDatePrevMonth}
+            // bufferDates={[]}
             overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
+            lastDate={maxDatePrevMonth}
           />
-          <DateRows
-            firstDate={1}
+          <CustomDateRows
+            firstDate={dateNumberToObject(1)}
             assignedMonth={month}
-            lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDatePrevMonth}
-            bufferDates={[]}
+            // lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDatePrevMonth}
+            // bufferDates={[]}
             overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
+            lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDatePrevMonth.getDate())}
           />
         </DatesContainer>
       )
@@ -105,23 +86,25 @@ const DailyViewDatesRow = (props: {
       // current date selected is from the previous month
       return (
         <DatesContainer>
-          <DateRows
-            firstDate={props.dateRowStartDate}
+          <CustomDateRows
+            firstDate={dateNumberToObject(props.dateRowStartDate)}
             assignedMonth={month}
-            lastDateOfThisMonth={maxDateCurMonth}
-            bufferDates={[]}
+            // lastDateOfThisMonth={maxDateCurMonth}
+            // bufferDates={[]}
             overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
+            lastDate={maxDateCurMonth}
           />
-          <DateRows
-            firstDate={1}
+          <CustomDateRows
+            firstDate={dateNumberToObject(1)}
             assignedMonth={month + 1}
-            lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDateCurMonth}
-            bufferDates={[]}
+            // lastDateOfThisMonth={props.dateRowStartDate + 6 - maxDateCurMonth}
+            // bufferDates={[]}
             overlayDates={props.overlayDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
+            lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDateCurMonth.getDate())}
           />
         </DatesContainer>
       )
@@ -129,14 +112,15 @@ const DailyViewDatesRow = (props: {
   } else {
     return (
       <DatesContainer>
-        <DateRows
-          firstDate={props.dateRowStartDate}
+        <CustomDateRows
+          firstDate={dateNumberToObject(props.dateRowStartDate)}
           assignedMonth={month}
-          lastDateOfThisMonth={props.dateRowStartDate + 6}
-          bufferDates={[]}
+          // lastDateOfThisMonth={props.dateRowStartDate + 6}
+          // bufferDates={[]}
           overlayDates={props.overlayDates}
           facilityId={props.selectedFacilityId}
           onClickDate={onClickDate}
+          lastDate={dateNumberToObject(props.dateRowStartDate + 6)}
         />
       </DatesContainer>
     )

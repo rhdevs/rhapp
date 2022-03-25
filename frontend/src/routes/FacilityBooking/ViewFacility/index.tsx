@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import Button from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
@@ -19,6 +18,7 @@ import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import { FormOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -41,12 +41,9 @@ export default function ViewFacility() {
     }
   }, [])
 
-  const MyBookingButton = (
-    <Button
-      state="primary"
-      text="Bookings"
-      type="button"
-      size="small"
+  const MyBookingsIcon = (
+    <FormOutlined
+      style={{ color: 'black', fontSize: '150%' }}
       onClick={() => {
         history.push(`${PATHS.VIEW_MY_BOOKINGS_USERID}/${localStorage.getItem('userID')}`)
       }}
@@ -86,7 +83,7 @@ export default function ViewFacility() {
     <>
       <TopNavBarRevamp
         title={selectedFacilityName}
-        rightComponent={MyBookingButton}
+        rightComponent={MyBookingsIcon}
         onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>

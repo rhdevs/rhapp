@@ -13,7 +13,7 @@ export type userCCA = {
 }
 
 export type Booking = {
-  bookingID: number
+  bookingID?: number
   eventName: string
   facilityID: number
   facilityName?: string
@@ -25,6 +25,7 @@ export type Booking = {
   endTime: number
   description: string
   repeat?: number
+  endDate?: number
 }
 
 export type Event = {
