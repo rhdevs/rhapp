@@ -9,7 +9,7 @@ import { Booking } from '../../store/facilityBooking/types'
 export const ViewBookingCard = (props: { Booking: Booking }) => {
   const BookingContainer = styled.div`
     position: absolute;
-    bottom: 70px;
+    bottom: 80px;
     top: 80px;
     width: 90%;
     max-width: 400px;
@@ -57,19 +57,20 @@ export const ViewBookingCard = (props: { Booking: Booking }) => {
   const AdditionalNoteHeader = styled.p`
     font-size: 14px;
     font-weight: 700;
-    margin: 30px 0px 0px 0px;
+    margin: 10px 0px 0px 0px;
   `
 
   const AdditionalNote = styled.p`
     font-size: 14px;
     font-weight: 400;
-    margin: 10px 50px 25px 50px;
+    margin: 0px 50px 20px 50px;
     text-align: center;
     color: #666666;
   `
   const EventDetailsContainer = styled.div`
     display: flex;
     flex-direction: row;
+    margin: 15px;
   `
 
   const EventTimingContainer = styled.div`
