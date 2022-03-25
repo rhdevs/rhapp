@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { Controller, useForm } from 'react-hook-form'
+import { useHistory, useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,8 +19,6 @@ import {
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
-  setBookingStartTime,
-  setBookingEndTime,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -85,9 +83,9 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
-type State = {
-  dateRowStartDate: number
-}
+// type State = {
+//   dateRowStartDate: number
+// }
 type FormValues = {
   eventName: string
   description: string
@@ -114,13 +112,15 @@ export default function CreateBooking() {
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
+    dailyViewDatesRowStartDate,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const location = useLocation<State>()
+  // const location = useLocation<State>()
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  const dateRowStartDate = location.state.dateRowStartDate
+  // const dateRowStartDate = location.state.dateRowStartDate
+  const dateRowStartDate = dailyViewDatesRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -183,12 +183,7 @@ export default function CreateBooking() {
   }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
-    history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    history.push(PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId)
   }
 
   const onLeftClick = () => {

@@ -70,12 +70,7 @@ export default function ViewFacility() {
     const dateRowStartDate = getDateRowStartDate(date)
     dispatch(setDailyViewDatesRowStartDate(dateRowStartDate))
 
-    history.push({
-      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + params.facilityID,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    history.push(PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + params.facilityID)
   }
 
   return (

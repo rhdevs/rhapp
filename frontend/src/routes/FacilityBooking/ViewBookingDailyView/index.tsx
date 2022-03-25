@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -51,12 +51,13 @@ export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const params = useParams<{ facilityID: string }>()
-  const location = useLocation<State>()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
-  const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
+  const { isLoading, selectedFacilityName, dailyViewDatesRowStartDate } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   const selectedFacilityId = parseInt(params.facilityID)
-  const dateRowStartDate = location.state.dateRowStartDate
+  const dateRowStartDate = dailyViewDatesRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -76,14 +77,7 @@ export default function ViewBookingDailyView() {
           <ButtonComponent
             state="primary"
             text="Book Facility"
-            onClick={() =>
-              history.push({
-                pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
-                state: {
-                  dateRowStartDate: dateRowStartDate,
-                },
-              })
-            }
+            onClick={() => history.push(PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId)}
             size="small"
           />
         }
