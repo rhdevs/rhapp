@@ -18,6 +18,7 @@ import {
 import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { PATHS } from '../../routes/Routes'
+import { ViewBookingLocationState } from '../../routes/FacilityBooking/ViewBookingDailyView'
 
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
@@ -27,27 +28,23 @@ type Props = {
 }
 
 type State = {
-  dateRowStartDate: number
+  dailyViewDatesRowStartDate: number
 }
 
 export default function BookingSection({ facilityId, date }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
+  const location = useLocation<ViewBookingLocationState>()
   const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
-  // const [selectedBlockTimestamp, setSelectedBlockTimestamp] = useState<number>(-1)
-  // const [selectedStartTime, setSelectedStartTime] = useState(-1)
-
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
-  const location = useLocation<State>()
   const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
-    // dispatch(getTimeBlocks(new Date(2022, Math.floor(clickedDate / 100), clickedDate % 100)))
     dispatch(getTimeBlocks(clickedDate))
   }, [])
 

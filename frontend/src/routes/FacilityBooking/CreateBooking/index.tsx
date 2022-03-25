@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -31,6 +31,7 @@ import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+import { ViewBookingLocationState } from '../ViewBookingDailyView'
 
 const Background = styled.div`
   background-color: #fff;
@@ -83,9 +84,6 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
-// type State = {
-//   dateRowStartDate: number
-// }
 type FormValues = {
   eventName: string
   description: string
@@ -112,15 +110,14 @@ export default function CreateBooking() {
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
-    dailyViewDatesRowStartDate,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  // const location = useLocation<State>()
+  const location = useLocation<ViewBookingLocationState>()
   const params = useParams<{ facilityID: string }>()
 
   const selectedFacilityId = parseInt(params.facilityID)
-  // const dateRowStartDate = location.state.dateRowStartDate
-  const dateRowStartDate = dailyViewDatesRowStartDate
+  const dateRowStartDate = location.state.dateRowStartDate
+  // const dateRowStartDate = dailyViewDatesRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -183,7 +180,12 @@ export default function CreateBooking() {
   }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
-    history.push(PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId)
+    history.push({
+      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      state: {
+        dateRowStartDate: dateRowStartDate,
+      },
+    })
   }
 
   const onLeftClick = () => {

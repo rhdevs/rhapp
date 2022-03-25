@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 
@@ -18,6 +18,7 @@ import {
   updateDailyView,
 } from '../../../store/facilityBooking/action'
 import { PATHS } from '../../Routes'
+import { ViewBookingLocationState } from '../ViewBookingDailyView'
 
 const HEADER_HEIGHT = '70px'
 
@@ -51,13 +52,10 @@ const TitleText = styled.h2`
   margin-top: 0.7rem;
 `
 
-type State = {
-  dateRowStartDate: number
-}
-
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
+  const location = useLocation<ViewBookingLocationState>()
   const params = useParams<{ facilityID: string }>()
   const { selectedFacilityName, isLoading, selectedStartTime, dailyViewDatesRowStartDate } = useSelector(
     (state: RootState) => state.facilityBooking,
@@ -65,9 +63,10 @@ export default function CreateBookingDailyView() {
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const selectedFacilityId = parseInt(params.facilityID)
-  const dateRowStartDate = dailyViewDatesRowStartDate
 
   const [overlayDates, setOverlayDates] = useState<number[]>([])
+
+  const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -78,43 +77,32 @@ export default function CreateBookingDailyView() {
     updateOverlayDates()
   }, [selectedStartTime])
 
-  // TODO maybe also block dates before selected as well
   const updateOverlayDates = () => {
     if (selectedStartTime === 0) return
-
-    const newOverlayDates: number[] = []
 
     const year = clickedDate.getFullYear() // year e.g. 2022
     const month = clickedDate.getMonth() // month index e.g. 2 - March
     const selectedDate = clickedDate.getDate() // the date e.g. 23
-
-    const maxDatePrevMonth = new Date(year, month, 0).getDate() // max date of PREVIOUS month
     const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
+    // array from 1 to maxDateCurMonth
+    const newOverlayDates: number[] = Array.from({ length: maxDateCurMonth }, (_, index) => index + 1)
 
-    if (dateRowStartDate + 6 > maxDateCurMonth) {
-      // if week spans across 2 months
-      if (selectedDate < dateRowStartDate) {
-        // start date selected is from the next month
-        const cutoffDate = selectedDate + 2
-        const endDate = dateRowStartDate + 6 - maxDatePrevMonth
-        for (let i = cutoffDate; i <= endDate; i++) newOverlayDates.push(i)
-      } else {
-        // start date selected is from the previous month
-        const cutoffDate = (selectedDate + 2) % maxDateCurMonth
-        const endDate = dateRowStartDate + 6 - maxDateCurMonth
-        for (let i = cutoffDate; i <= maxDateCurMonth; i++) newOverlayDates.push(i)
-        for (let j = 1; j <= endDate; j++) newOverlayDates.push(j)
-      }
+    if (selectedDate === maxDateCurMonth) {
+      newOverlayDates.pop()
+      newOverlayDates.shift()
     } else {
-      const cutoffDate = selectedDate + 2
-      const endDate = dateRowStartDate + 6
-      for (let i = cutoffDate; i <= endDate; i++) newOverlayDates.push(i)
+      newOverlayDates.splice(selectedDate - 1, 2)
     }
     setOverlayDates(newOverlayDates)
   }
 
   const goBackToDailyViewPage = () => {
-    history.push(PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId)
+    history.push({
+      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      state: {
+        dateRowStartDate: dateRowStartDate,
+      },
+    })
   }
 
   const onLeftClick = () => {
