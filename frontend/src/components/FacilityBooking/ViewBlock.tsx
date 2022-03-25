@@ -19,7 +19,12 @@ const ViewBlock = (props: Props) => {
   }, [ref.current])
 
   return (
-    <StyledViewBooking ref={ref} isOccupied={props.entry.type === TimeBlockType.OCCUPIED} blockId={props.entry.id}>
+    <StyledViewBooking
+      ref={ref}
+      isOccupied={props.entry.type === TimeBlockType.OCCUPIED}
+      blockId={props.entry.id}
+      onClick={() => console.log('Onclick function')}
+    >
       {props.entry.type === TimeBlockType.OCCUPIED && (
         <>
           {props.entry.ccaName}

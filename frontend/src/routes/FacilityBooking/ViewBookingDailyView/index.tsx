@@ -11,6 +11,7 @@ import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { UnorderedListOutlined } from '@ant-design/icons'
+import { ViewBookingCard } from '../../../components/FacilityBooking/ViewBookingCard'
 
 const HEADER_HEIGHT = '70px'
 
@@ -77,10 +78,12 @@ export default function ViewBookingDailyView() {
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={BookingFacilityIcon}
       />
+
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <Background>
+          <ViewBookingCard selectedFacilityId={0} />
           <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
           <BookingSectionDiv>
             <ViewSection />
