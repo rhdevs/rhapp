@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -117,7 +117,6 @@ export default function CreateBooking() {
 
   const selectedFacilityId = parseInt(params.facilityID)
   const dateRowStartDate = location.state.dateRowStartDate
-  // const dateRowStartDate = dailyViewDatesRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))

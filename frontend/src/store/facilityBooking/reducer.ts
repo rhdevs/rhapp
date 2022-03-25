@@ -36,12 +36,9 @@ const initialState = {
   numRepeatWeekly: 1,
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
-
-  dailyViewDatesRowStartDate: 0,
   selectedBlockTimestamp: 0,
   selectedStartTime: 0,
   selectedEndTime: 0,
-
   bookingStartTime: 0,
   bookingEndTime: 0,
   bookingEndDate: 0,
@@ -80,12 +77,9 @@ type State = {
   booking: Booking | null
   bookingStatus: BookingStatus
   message?: string
-
-  dailyViewDatesRowStartDate: number
   selectedBlockTimestamp: number
   selectedStartTime: number
   selectedEndTime: number
-
   bookingStartTime: number
   bookingEndTime: number
   bookingEndDate: number

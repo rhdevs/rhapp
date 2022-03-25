@@ -15,9 +15,7 @@ type Props = {
 const BookingBlock = (props: Props) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const { selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
+  const { selectedStartTime, selectedEndTime } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     if (props.scrollTo) {

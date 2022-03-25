@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -27,10 +27,6 @@ type Props = {
   date: Date
 }
 
-type State = {
-  dailyViewDatesRowStartDate: number
-}
-
 export default function BookingSection({ facilityId, date }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -52,14 +48,14 @@ export default function BookingSection({ facilityId, date }: Props) {
     updateTimeBlocks()
   }, [selectedBlockTimestamp])
 
-  function assignType(entry: TimeBlock): TimeBlockType {
+  const assignType = (entry: TimeBlock): TimeBlockType => {
     if (entry.timestamp === selectedBlockTimestamp) return TimeBlockType.SELECTED
     if (entry.timestamp < selectedBlockTimestamp)
       return entry.type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : entry.type
     return entry.type
   }
 
-  function updateTimeBlocks() {
+  const updateTimeBlocks = () => {
     if (selectedStartTime === 0) return
     const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
       const type = assignType(entry)
@@ -68,7 +64,7 @@ export default function BookingSection({ facilityId, date }: Props) {
     dispatch(setTimeBlocks(newTimeblocks))
   }
 
-  function goToBookingPage() {
+  const goToBookingPage = () => {
     history.push({
       pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
       state: {
@@ -77,7 +73,7 @@ export default function BookingSection({ facilityId, date }: Props) {
     })
   }
 
-  function setSelectedBlock(selectedTimestamp: number) {
+  const setSelectedBlock = (selectedTimestamp: number) => {
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
 
     if (selectedStartTime === 0) {

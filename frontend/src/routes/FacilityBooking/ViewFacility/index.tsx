@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { FormOutlined } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
@@ -11,13 +12,11 @@ import {
   resetBooking,
   setIsLoading,
   setSelectedFacility,
-  setDailyViewDatesRowStartDate,
 } from '../../../store/facilityBooking/action'
 import { onRefresh } from '../../../common/reloadPage'
 import PullToRefresh from 'pull-to-refresh-react'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { FormOutlined } from '@ant-design/icons'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -68,7 +67,6 @@ export default function ViewFacility() {
 
   const onClickDate = (date: Date) => {
     const dateRowStartDate = getDateRowStartDate(date)
-    dispatch(setDailyViewDatesRowStartDate(dateRowStartDate))
 
     history.push({
       pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + params.facilityID,
