@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
 import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 
-// this component takes in an array of events or an array of dates that has events
-export const ViewBookingCard = (props: { selectedFacilityId: number }) => {
+import { Booking } from '../../store/facilityBooking/types'
+
+export const ViewBookingCard = (props: { Booking: Booking }) => {
   const BookingContainer = styled.div`
     position: absolute;
     bottom: 70px;

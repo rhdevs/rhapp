@@ -12,6 +12,7 @@ import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDate
 import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { UnorderedListOutlined } from '@ant-design/icons'
 import { ViewBookingCard } from '../../../components/FacilityBooking/ViewBookingCard'
+import { myBookingsStub } from '../../../store/stubs'
 
 const HEADER_HEIGHT = '70px'
 
@@ -83,7 +84,7 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <ViewBookingCard selectedFacilityId={0} />
+          <ViewBookingCard Booking={myBookingsStub[0]} />
           <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
           <BookingSectionDiv>
             <ViewSection />
