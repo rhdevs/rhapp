@@ -103,7 +103,6 @@ export default function EditBooking() {
     setValue,
   } = useForm<FormValues>()
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
-  const [ccaName, setCcaName] = useState<string>('')
   const {
     facilityList,
     isLoading,
@@ -114,6 +113,7 @@ export default function EditBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
+  const [ccaName, setCcaName] = useState(selectedBooking?.ccaName)
 
   useEffect(() => {
     dispatch(fetchSelectedFacility(parseInt(params1.bookingId)))
@@ -135,10 +135,6 @@ export default function EditBooking() {
       dispatch(resetNewBooking)
     }
   }, [dispatch])
-
-  const getFacilityName = () => {
-    return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
-  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -217,7 +213,7 @@ export default function EditBooking() {
                   value: cca.ccaName,
                 }))}
                 value={selectedBooking?.ccaName}
-                placeholder="CCA"
+                placeholder="CCAs"
                 onChange={(value) => setCcaName(value)}
                 filterOption={(inputValue, option) =>
                   option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
