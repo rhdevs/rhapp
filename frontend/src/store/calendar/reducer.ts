@@ -25,7 +25,6 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
         clickedDate: action.newClickedDate,
       }
     }
-
     case CALENDAR_ACTIONS.SET_IS_LOADING: {
       return {
         ...state,
@@ -38,21 +37,18 @@ export const calendar: Reducer<State, ActionTypes> = (state = initialState, acti
         CalendarViewFacilityStartDate: action.CalendarViewFacilityStartDate,
       }
     }
-
     case CALENDAR_ACTIONS.SET_FACILITY_BOOKINGS: {
       return {
         ...state,
         facilityBookings: action.facilityBookings,
       }
     }
-
     case CALENDAR_ACTIONS.SET_PROCESSED_DATES: {
       return {
         ...state,
         processedDates: action.processedDates,
       }
     }
-
     default:
       return state
   }
