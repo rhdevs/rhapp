@@ -8,6 +8,7 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
   const firstDayOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDay()
   const lastDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth + 1, 0).getDate()
   const bufferDates: number[] = []
+  let keyCounter = 0
 
   if (firstDayOfThisMonth === 0) {
     for (let i = 1; i < 7; i++) {
@@ -22,12 +23,11 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
   for (let i = firstDateOfThisMonth; i < lastDateOfThisMonth + 1; i++) {
     bufferDates.push(i)
   }
-
   return (
     <>
       {bufferDates.map((day) => {
         return day === 0 ? (
-          <EmptyDateContainer />
+          <EmptyDateContainer key={keyCounter++} />
         ) : (
           <ClickableDateContainer
             key={new Date(props.currentDate.getFullYear(), assignedMonth, day).toDateString()}

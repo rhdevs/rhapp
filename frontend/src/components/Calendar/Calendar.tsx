@@ -59,7 +59,6 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
   const currentYear = today.getFullYear()
 
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
-
   return (
     <>
       {isLoading ? (
@@ -79,11 +78,13 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
               return (
                 <>
                   {/* Note: 0 stands for Jan */}
-                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+                  {month.getMonth() === 0 && <YearContainer key={startingMonth++}>{currentYear + 1}</YearContainer>}
                   <MonthContainer key={startingMonth++}>
-                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-                    <DatesGridContainer>
-                      <DayHeaders />
+                    <MonthsHeaderContainer key={startingMonth++}>
+                      {month.toLocaleString('default', { month: 'long' })}
+                    </MonthsHeaderContainer>
+                    <DatesGridContainer key={startingMonth++}>
+                      <DayHeaders key={startingMonth++} />
                       <DateRows
                         key={startingMonth}
                         currentDate={today}

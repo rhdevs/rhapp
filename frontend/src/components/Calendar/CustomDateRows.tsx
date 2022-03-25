@@ -9,6 +9,7 @@ export const CustomDateRows = (props: {
   facilityId: number
 }) => {
   const bufferDates: number[] = []
+  let keyCounter = 0
 
   for (let i = props.firstDate.getDate(); i < props.lastDate.getDate() + 1; i++) {
     bufferDates.push(i)
@@ -18,7 +19,7 @@ export const CustomDateRows = (props: {
     <>
       {bufferDates.map((day) => {
         return day === 0 ? (
-          <EmptyDateContainer />
+          <EmptyDateContainer key={keyCounter++} />
         ) : (
           <ClickableDateContainer
             key={new Date(props.firstDate.getFullYear(), props.assignedMonth, day).toDateString()}
