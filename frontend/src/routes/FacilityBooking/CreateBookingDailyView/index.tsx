@@ -137,7 +137,7 @@ export default function CreateBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <h2>Choose starting time slot</h2> {/* TODO change display between starting/ending */}
+          <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
           <DailyViewDatesRow
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
