@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { DateRows } from '../../components/Calendar/DateRows'
+import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
 
 const DatesContainer = styled.div`
   display: flex;
@@ -11,25 +11,24 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
   const year = props.date.getFullYear()
   const month = props.date.getMonth()
   const dates = props.date.getDate()
-  const maxDate = new Date(year, month, 0).getDate()
+  const maxDateNumber = new Date(year, month, 0).getDate()
   const day = new Date(year, month, dates).getDay()
-  const startDate = dates - day < 0 ? maxDate - (day - dates) : dates - day
+  const startDateNumber = dates - day < 0 ? maxDateNumber - (day - dates) : dates - day
+  const startDate = new Date(year, month, startDateNumber)
 
-  if (startDate + 6 > maxDate) {
+  if (startDateNumber + 6 > maxDateNumber) {
     return (
       <DatesContainer>
-        <DateRows
+        <CustomDateRows
           firstDate={startDate}
           assignedMonth={month}
-          lastDateOfThisMonth={startDate + maxDate - startDate}
-          bufferDates={[]}
+          lastDate={new Date(year, month, startDateNumber + maxDateNumber - startDateNumber)}
           facilityId={props.selectedFacilityId}
         />
-        <DateRows
-          firstDate={1}
+        <CustomDateRows
+          firstDate={new Date(year, month, 1)}
           assignedMonth={month}
-          lastDateOfThisMonth={1 + 5 - (maxDate - startDate)}
-          bufferDates={[]}
+          lastDate={new Date(year, month, 1 + 5 - (maxDateNumber - startDateNumber))}
           facilityId={props.selectedFacilityId}
         />
       </DatesContainer>
@@ -37,11 +36,10 @@ const DailyViewDatesRow = (props: { date: Date; selectedFacilityId: number }) =>
   } else {
     return (
       <DatesContainer>
-        <DateRows
+        <CustomDateRows
           firstDate={startDate}
           assignedMonth={month}
-          lastDateOfThisMonth={startDate + 6}
-          bufferDates={[]}
+          lastDate={new Date(year, month, startDateNumber + 6)}
           facilityId={props.selectedFacilityId}
         />
       </DatesContainer>
