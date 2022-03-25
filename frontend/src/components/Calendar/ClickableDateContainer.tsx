@@ -42,7 +42,6 @@ export const ClickableDateContainer = (props: {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-  // const assignedDateMonth = props.assignedMonth * 100 + props.date
   const assignedDateMonth = new Date(props.date.getFullYear(), props.assignedMonth, props.date.getDate())
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
@@ -51,7 +50,7 @@ export const ClickableDateContainer = (props: {
       pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
       state: {
         facilityId: props.facilityId,
-        date: new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate()),
+        date: assignedDateMonth,
       },
     })
   }
@@ -62,11 +61,11 @@ export const ClickableDateContainer = (props: {
 
   const isCurrentDate = () => {
     const today = new Date()
-    return today === assignedDateMonth
+    return today.toDateString() === assignedDateMonth.toDateString()
   }
 
   const isCurrentDateClicked = () => {
-    return clickedDate === assignedDateMonth
+    return clickedDate.toDateString() === assignedDateMonth.toDateString()
   }
 
   return (

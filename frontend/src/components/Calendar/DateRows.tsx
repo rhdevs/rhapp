@@ -3,12 +3,8 @@ import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
 
 export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityId: number }) => {
-  const firstDateOfThisMonth = new Date(
-    props.currentDate.getFullYear(),
-    props.currentDate.getMonth() + props.nthMonth,
-    1,
-  ).getDate()
   const assignedMonth = props.currentDate.getMonth() + props.nthMonth
+  const firstDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDate()
   const firstDayOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDay()
   const lastDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth + 1, 0).getDate()
   const bufferDates: number[] = []
