@@ -7,11 +7,25 @@ import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 import { Booking } from '../../store/facilityBooking/types'
 
 export const ViewBookingCard = (props: { Booking: Booking }) => {
+  const BackgroundOverlay = styled.div`
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 3;
+    cursor: pointer;
+  `
+
   const BookingContainer = styled.div`
     position: absolute;
     bottom: 80px;
     top: 80px;
-    width: 90%;
+    width: 85%;
     max-width: 400px;
     cursor: pointer;
     background-color: #ffffff;
@@ -20,7 +34,7 @@ export const ViewBookingCard = (props: { Booking: Booking }) => {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    z-index: 2;
+    z-index: 5;
     align-items: center;
   `
 
@@ -116,31 +130,33 @@ export const ViewBookingCard = (props: { Booking: Booking }) => {
   }
 
   return (
-    <BookingContainer>
-      <BookingHeader>
-        <EventName>{'Bonding Camp'}</EventName>
-        <BookingCca>{'RHMP'}</BookingCca>
-      </BookingHeader>
-      <TelegramButton />
-      <TelegramHandle>{'@Alyssa'}</TelegramHandle>
-      <EventDetailsContainer>
-        <EventTimingContainer>
-          <EventTimings>{'Thursday'}</EventTimings>
-          <EventTimings>{'17/12/21'}</EventTimings>
-          <EventTimings>{'4:00 PM'}</EventTimings>
-        </EventTimingContainer>
-        <EventTimingsTo>{'TO'}</EventTimingsTo>
-        <EventTimingContainer>
-          <EventTimings>{'Thursday'}</EventTimings>
-          <EventTimings>{'17/12/21'}</EventTimings>
-          <EventTimings>{'4:00 PM'}</EventTimings>
-        </EventTimingContainer>
-      </EventDetailsContainer>
-      <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-      <AdditionalNote>
-        {'Will be using this place for RHMP bonding. Contact me if you have any question.'}
-      </AdditionalNote>
-      <ExitButton />
-    </BookingContainer>
+    <BackgroundOverlay>
+      <BookingContainer>
+        <BookingHeader>
+          <EventName>{'Bonding Camp'}</EventName>
+          <BookingCca>{'RHMP'}</BookingCca>
+        </BookingHeader>
+        <TelegramButton />
+        <TelegramHandle>{'@Alyssa'}</TelegramHandle>
+        <EventDetailsContainer>
+          <EventTimingContainer>
+            <EventTimings>{'Thursday'}</EventTimings>
+            <EventTimings>{'17/12/21'}</EventTimings>
+            <EventTimings>{'4:00 PM'}</EventTimings>
+          </EventTimingContainer>
+          <EventTimingsTo>{'TO'}</EventTimingsTo>
+          <EventTimingContainer>
+            <EventTimings>{'Thursday'}</EventTimings>
+            <EventTimings>{'17/12/21'}</EventTimings>
+            <EventTimings>{'4:00 PM'}</EventTimings>
+          </EventTimingContainer>
+        </EventDetailsContainer>
+        <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
+        <AdditionalNote>
+          {'Will be using this place for RHMP bonding. Contact me if you have any question.'}
+        </AdditionalNote>
+        <ExitButton />
+      </BookingContainer>
+    </BackgroundOverlay>
   )
 }
