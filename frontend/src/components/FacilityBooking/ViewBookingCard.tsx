@@ -8,6 +8,8 @@ import { Booking } from '../../store/facilityBooking/types'
 import { unixToFullDate } from '../../common/unixToFullDate'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import { unixToFullDay } from '../../common/unixToFullDay'
+import { openUserTelegram } from '../../common/telegramMethods'
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const BackgroundOverlay = styled.div`
   position: fixed;
@@ -147,6 +149,25 @@ export const ViewBookingCard = (props: Props) => {
     props.Booking.endTime = 0
   }
 
+  const fetchTelegram = async (userID) => {
+    try {
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+            throw data.err
+          } else {
+            return data.telegramHandle
+          }
+        })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <BackgroundOverlay>
       <BookingContainer>
@@ -155,7 +176,7 @@ export const ViewBookingCard = (props: Props) => {
           <BookingCca>{props.Booking.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
-        <TelegramHandle>{props.Booking?.displayName}</TelegramHandle>
+        <TelegramHandle>{props.Booking?.userID}</TelegramHandle>
         <EventDetailsContainer>
           <EventTimingContainer>
             <EventTimings>{unixToFullDay(props.Booking.startTime)}</EventTimings>
