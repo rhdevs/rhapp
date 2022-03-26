@@ -7,7 +7,7 @@ export const CustomDateRows = (props: {
   lastDate: Date
   assignedMonth: number
   facilityId: number
-  overlayDates?: number[]
+  disabledDates?: number[]
   onClickDate: (date: Date) => void
 }) => {
   const bufferDates: number[] = []
@@ -27,7 +27,7 @@ export const CustomDateRows = (props: {
             key={new Date(props.firstDate.getFullYear(), props.assignedMonth, date).toDateString()}
             date={new Date(props.firstDate.getFullYear(), props.assignedMonth, date)}
             facilityId={props.facilityId}
-            overlay={props.overlayDates?.includes(date)}
+            disabled={props.disabledDates?.includes(date)}
             onClickDate={props.onClickDate}
           />
         )

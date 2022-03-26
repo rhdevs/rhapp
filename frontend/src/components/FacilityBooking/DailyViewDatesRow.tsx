@@ -15,7 +15,7 @@ const DailyViewDatesRow = (props: {
   selectedFacilityId: number
   redirectTo: string
   dateRowStartDate: number
-  overlayDates?: number[]
+  disabledDates?: number[]
 }) => {
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
@@ -49,7 +49,7 @@ const DailyViewDatesRow = (props: {
           <CustomDateRows
             firstDate={dateNumberToObject(props.dateRowStartDate)}
             assignedMonth={month - 1}
-            overlayDates={props.overlayDates}
+            disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
             lastDate={maxDatePrevMonth}
@@ -57,7 +57,7 @@ const DailyViewDatesRow = (props: {
           <CustomDateRows
             firstDate={dateNumberToObject(1)}
             assignedMonth={month}
-            overlayDates={props.overlayDates}
+            disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
             lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDatePrevMonth.getDate())}
@@ -71,7 +71,7 @@ const DailyViewDatesRow = (props: {
           <CustomDateRows
             firstDate={dateNumberToObject(props.dateRowStartDate)}
             assignedMonth={month}
-            overlayDates={props.overlayDates}
+            disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
             lastDate={maxDateCurMonth}
@@ -79,7 +79,7 @@ const DailyViewDatesRow = (props: {
           <CustomDateRows
             firstDate={dateNumberToObject(1)}
             assignedMonth={month + 1}
-            overlayDates={props.overlayDates}
+            disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
             onClickDate={onClickDate}
             lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDateCurMonth.getDate())}
@@ -93,7 +93,7 @@ const DailyViewDatesRow = (props: {
         <CustomDateRows
           firstDate={dateNumberToObject(props.dateRowStartDate)}
           assignedMonth={month}
-          overlayDates={props.overlayDates}
+          disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
           onClickDate={onClickDate}
           lastDate={dateNumberToObject(props.dateRowStartDate + 6)}

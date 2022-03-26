@@ -64,7 +64,7 @@ export default function CreateBookingDailyView() {
 
   const selectedFacilityId = parseInt(params.facilityID)
 
-  const [overlayDates, setOverlayDates] = useState<number[]>([])
+  const [disabledDates, setDisabledDates] = useState<number[]>([])
 
   const dateRowStartDate = location.state.dateRowStartDate
 
@@ -74,10 +74,10 @@ export default function CreateBookingDailyView() {
   }, [clickedDate])
 
   useEffect(() => {
-    updateOverlayDates()
+    updatedisabledDates()
   }, [selectedStartTime])
 
-  const updateOverlayDates = () => {
+  const updatedisabledDates = () => {
     if (selectedStartTime === 0) return
 
     const year = clickedDate.getFullYear() // year e.g. 2022
@@ -85,15 +85,15 @@ export default function CreateBookingDailyView() {
     const selectedDate = clickedDate.getDate() // the date e.g. 23
     const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
     // array from 1 to maxDateCurMonth
-    const newOverlayDates: number[] = Array.from({ length: maxDateCurMonth }, (_, index) => index + 1)
+    const newDisabledDates: number[] = Array.from({ length: maxDateCurMonth }, (_, index) => index + 1)
 
     if (selectedDate === maxDateCurMonth) {
-      newOverlayDates.pop()
-      newOverlayDates.shift()
+      newDisabledDates.pop()
+      newDisabledDates.shift()
     } else {
-      newOverlayDates.splice(selectedDate - 1, 2)
+      newDisabledDates.splice(selectedDate - 1, 2)
     }
-    setOverlayDates(newOverlayDates)
+    setDisabledDates(newDisabledDates)
   }
 
   const goBackToDailyViewPage = () => {
@@ -126,7 +126,7 @@ export default function CreateBookingDailyView() {
             selectedFacilityId={selectedFacilityId}
             redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
             dateRowStartDate={dateRowStartDate}
-            overlayDates={overlayDates}
+            disabledDates={disabledDates}
           />
           <BookingSectionDiv>
             <BookingSection facilityId={selectedFacilityId} date={clickedDate} />

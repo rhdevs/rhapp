@@ -1,24 +1,23 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { setClickedDate } from '../../store/calendar/actions'
 import { RootState } from '../../store/types'
 
-const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean; overlay?: boolean }>`
+const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
   padding-top: 0px;
   padding-bottom: auto;
   text-align: center;
   height: 40px;
   width: 47.14px;
-  color: ${(props) => (props.selected ? 'white' : props.overlay ? '#888888' : props.currentDate ? '#58B994' : '')};
+  color: ${(props) => (props.selected ? 'white' : props.disabled ? '#888888' : props.isCurrentDate ? '#58B994' : '')};
   border-radius: 40px;
-  background-color: ${(props) => (props.selected ? '#468751' : props.currentDate ? '#D8E6DF' : '')};
+  background-color: ${(props) => (props.selected ? '#468751' : props.isCurrentDate ? '#D8E6DF' : '')};
   display: flex;
   justify-content: center;
   flex-direction: column;
-  cursor: ${(props) => (props.overlay ? 'default' : 'pointer')};
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `
 
 const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
@@ -36,11 +35,10 @@ export const ClickableDateContainer = (props: {
   date: Date
   eventPresent?: boolean
   facilityId: number
-  overlay?: boolean
+  disabled?: boolean
   onClickDate: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
 
@@ -64,10 +62,10 @@ export const ClickableDateContainer = (props: {
 
   return (
     <DateContainer
-      onClick={() => !props.overlay && DateContainerClickHandler(assignedDateMonth)}
+      onClick={() => !props.disabled && DateContainerClickHandler(assignedDateMonth)}
       selected={isCurrentDateClicked()}
-      currentDate={isCurrentDate()}
-      overlay={props.overlay}
+      isCurrentDate={isCurrentDate()}
+      disabled={props.disabled}
     >
       <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
       {props.date.getDate()}
