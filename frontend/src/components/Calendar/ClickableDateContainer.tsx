@@ -51,9 +51,13 @@ export const ClickableDateContainer = (props: { date: Date; eventPresent?: boole
       },
     })
   }
-  const DateContainerEndDateHandler = () => {
-    dispatch(setBookingEndDate(props.date.getTime() / 1000))
-    history.push(`/facility/booking/create/${params.facilityID}`)
+  const DateContainerEndDateHandler = (ClickedDate: number) => {
+    if (Date.now() / 1000 > ClickedDate) {
+      return
+    } else {
+      dispatch(setBookingEndDate(ClickedDate))
+      history.push(`/facility/booking/create/${params.facilityID}`)
+    }
   }
 
   const hasEvent = () => {
@@ -74,7 +78,7 @@ export const ClickableDateContainer = (props: { date: Date; eventPresent?: boole
       onClick={
         parseInt(params.isEndDate) === 0
           ? () => DateContainerClickHandler(assignedDateMonth)
-          : () => DateContainerEndDateHandler()
+          : () => DateContainerEndDateHandler(props.date.getTime() / 1000)
       }
       selected={isCurrentDateClicked()}
       currentDate={isCurrentDate()}
