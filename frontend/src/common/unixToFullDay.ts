@@ -3,7 +3,7 @@ import { days } from './dates'
 /**
  *
  * @param unixDate epoch/unix date time number
- * @returns time in the form of Monday, Tuesday etc
+ * @returns day in the form of Monday, Tuesday etc
  */
 export const unixToFullDay = (unixDate: number) => {
   const date = new Date(unixDate * 1000)
