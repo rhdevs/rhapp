@@ -27,7 +27,10 @@ const ViewBlock = (props: Props) => {
         ref={ref}
         isOccupied={props.entry.type === TimeBlockType.OCCUPIED}
         blockId={props.entry.id}
-        onClick={() => (props.onClickFunction(true), props.setViewBooking(props.entry.booking ?? myBookingsStub[0]))}
+        onClick={() => (
+          props.onClickFunction(props.entry.type === TimeBlockType.OCCUPIED),
+          props.setViewBooking(props.entry.booking ?? myBookingsStub[0])
+        )}
       >
         {props.entry.type === TimeBlockType.OCCUPIED && (
           <>

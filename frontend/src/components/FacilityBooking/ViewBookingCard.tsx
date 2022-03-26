@@ -119,7 +119,12 @@ const ButtonContainer = styled.img`
   cursor: pointer;
 `
 
-export const ViewBookingCard = (props: { Booking?: Booking; onClickFunction: Dispatch<SetStateAction<boolean>> }) => {
+type Props = {
+  Booking: Booking
+  onClickFunction: Dispatch<SetStateAction<boolean>>
+}
+
+export const ViewBookingCard = (props: Props) => {
   const ExitButton = () => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
@@ -134,37 +139,38 @@ export const ViewBookingCard = (props: { Booking?: Booking; onClickFunction: Dis
     )
   }
 
-  const startDateFull = unixToFullDate(props.Booking?.startTime ? props.Booking?.startTime : 0)
-  const endDateFull = unixToFullDate(props.Booking?.endTime ? props.Booking?.endTime : 0)
-  const startTimeFull = unixTo12HourTime(props.Booking?.startTime ? props.Booking?.startTime : 0)
-  const endTimeFull = unixTo12HourTime(props.Booking?.endTime ? props.Booking?.endTime : 0)
-  const startDayFull = unixToFullDay(props.Booking?.startTime ? props.Booking?.startTime : 0)
-  const endDayFull = unixToFullDay(props.Booking?.endTime ? props.Booking?.endTime : 0)
+  if (props.Booking.startTime == undefined) {
+    props.Booking.startTime = 0
+  }
+
+  if (props.Booking.endTime == undefined) {
+    props.Booking.endTime = 0
+  }
 
   return (
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <EventName>{props.Booking?.eventName}</EventName>
-          <BookingCca>{props.Booking?.ccaName}</BookingCca>
+          <EventName>{props.Booking.eventName}</EventName>
+          <BookingCca>{props.Booking.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
         <TelegramHandle>{props.Booking?.displayName}</TelegramHandle>
         <EventDetailsContainer>
           <EventTimingContainer>
-            <EventTimings>{startDayFull}</EventTimings>
-            <EventTimings>{startDateFull}</EventTimings>
-            <EventTimings>{startTimeFull}</EventTimings>
+            <EventTimings>{unixToFullDay(props.Booking.startTime)}</EventTimings>
+            <EventTimings>{unixToFullDate(props.Booking.startTime)}</EventTimings>
+            <EventTimings>{unixTo12HourTime(props.Booking.startTime)}</EventTimings>
           </EventTimingContainer>
           <EventTimingsTo>{'TO'}</EventTimingsTo>
           <EventTimingContainer>
-            <EventTimings>{endDayFull}</EventTimings>
-            <EventTimings>{endDateFull}</EventTimings>
-            <EventTimings>{endTimeFull}</EventTimings>
+            <EventTimings>{unixToFullDay(props.Booking.endTime)}</EventTimings>
+            <EventTimings>{unixToFullDate(props.Booking.endTime)}</EventTimings>
+            <EventTimings>{unixTo12HourTime(props.Booking.endTime)}</EventTimings>
           </EventTimingContainer>
         </EventDetailsContainer>
         <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-        <AdditionalNote>{props.Booking?.description}</AdditionalNote>
+        <AdditionalNote>{props.Booking.description}</AdditionalNote>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>
