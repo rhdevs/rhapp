@@ -34,56 +34,39 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   background-color: ${(props) => (props.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: {
-  year: number
-  date: number
-  eventPresent?: boolean
-  assignedMonth: number
-  facilityId: number
-}) => {
-  const params = useParams<{ isEndDate: string; facilityID: string }>()
+export const ClickableDateContainer = (props: { date: Date; eventPresent?: boolean; facilityId: number }) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-  const assignedDateMonth = props.assignedMonth * 100 + props.date
+  const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
+  const params = useParams<{ facilityID: string; isEndDate: string }>()
 
-  const DateContainerClickHandler = (newClickedDate: number) => {
+  const DateContainerClickHandler = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
     history.push({
       pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
       state: {
         facilityId: props.facilityId,
-        date: new Date(new Date().getFullYear(), props.assignedMonth, props.date),
+        date: assignedDateMonth,
       },
     })
   }
   const DateContainerEndDateHandler = () => {
-    dispatch(
-      setBookingEndDate(
-        Math.floor(
-          new Date(
-            props.year.toString() + '.' + (props.assignedMonth + 1).toString() + '.' + props.date.toString(),
-          ).getTime() / 1000,
-        ),
-      ),
-    )
+    dispatch(setBookingEndDate(props.date.getTime() / 1000))
     history.push(`/facility/booking/create/${params.facilityID}`)
   }
 
   const hasEvent = () => {
-    return processedDates.find((date) => date === assignedDateMonth) !== undefined
+    return processedDates.find((processedDate) => processedDate === assignedDateMonth) !== undefined
   }
 
   const isCurrentDate = () => {
     const today = new Date()
-    const month = new Date(today).getMonth()
-    const day = new Date(today).getDate()
-    const processedDate = month * 100 + day
-    return processedDate === assignedDateMonth
+    return today.toDateString() === assignedDateMonth.toDateString()
   }
 
   const isCurrentDateClicked = () => {
-    return clickedDate === assignedDateMonth
+    return clickedDate.toDateString() === assignedDateMonth.toDateString()
   }
 
   return (
@@ -97,7 +80,7 @@ export const ClickableDateContainer = (props: {
       currentDate={isCurrentDate()}
     >
       <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
-      {props.date}
+      {props.date.getDate()}
     </DateContainer>
   )
 }

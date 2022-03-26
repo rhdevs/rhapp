@@ -29,7 +29,7 @@ export enum CALENDAR_ACTIONS {
 
 type SetIsClicked = {
   type: typeof CALENDAR_ACTIONS.SET_CLICKED_DATE
-  newClickedDate: number
+  newClickedDate: Date
 }
 
 type SetIsLoading = {
@@ -49,7 +49,7 @@ type SetFacilityBookings = {
 
 type SetProcessedDates = {
   type: typeof CALENDAR_ACTIONS.SET_PROCESSED_DATES
-  processedDates: number[]
+  processedDates: Date[]
 }
 
 export type ActionTypes =
