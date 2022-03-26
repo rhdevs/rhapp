@@ -16,7 +16,7 @@ const BackgroundOverlay = styled.div`
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 3;
+  z-index: 201;
   cursor: pointer;
 `
 
@@ -33,7 +33,6 @@ const BookingContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  z-index: 5;
   align-items: center;
 `
 
