@@ -1,10 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 
 import { TimeBlock, TimeBlockType, Booking } from '../../store/facilityBooking/types'
 import { myBookingsStub } from '../../store/stubs'
 import { StyledViewBooking } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
-import { ViewBookingCard } from './ViewBookingCard'
 
 type Props = {
   entry: TimeBlock
@@ -24,7 +23,6 @@ const ViewBlock = (props: Props) => {
 
   return (
     <>
-      {/* {isViewBookingModalOpen && <ViewBookingCard Booking={viewBooking} onClickFunction={setIsViewBookingModalOpen} />} */}
       <StyledViewBooking
         ref={ref}
         isOccupied={props.entry.type === TimeBlockType.OCCUPIED}
