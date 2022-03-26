@@ -24,10 +24,8 @@ const ViewScheduleBlock = () => {
 
   return (
     <>
+      {isViewBookingModalOpen && <ViewBookingCard Booking={viewBooking} onClickFunction={setIsViewBookingModalOpen} />}
       <MainContainer>
-        {isViewBookingModalOpen && (
-          <ViewBookingCard Booking={viewBooking} onClickFunction={setIsViewBookingModalOpen} />
-        )}
         <CurrentTimeLine />
         <HourBlocks />
         <DailyContainer>

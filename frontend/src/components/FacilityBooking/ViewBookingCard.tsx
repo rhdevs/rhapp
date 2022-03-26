@@ -21,8 +21,8 @@ const BackgroundOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: 201;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 202;
   cursor: pointer;
 `
 
@@ -39,7 +39,7 @@ const BookingContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 201;
+  z-index: 205;
 `
 
 const BookingHeader = styled.div`
