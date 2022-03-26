@@ -26,17 +26,15 @@ const ViewBlock = (props: Props) => {
       {props.entry.type === TimeBlockType.OCCUPIED ? (
         <StyledViewBooking
           ref={ref}
-          isOccupied={props.entry.type === TimeBlockType.OCCUPIED}
+          isOccupied={true}
           blockId={props.entry.id}
           onClick={() => (props.onClickFunction(true), props.setViewBooking(props.entry.booking ?? myBookingsStub[0]))}
         >
-          {props.entry.type === TimeBlockType.OCCUPIED && (
-            <>
-              {props.entry.ccaName}
-              <br />
-              {props.entry.eventName}
-            </>
-          )}
+          <>
+            {props.entry.ccaName}
+            <br />
+            {props.entry.eventName}
+          </>
         </StyledViewBooking>
       ) : (
         <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id}></StyledViewBooking>
