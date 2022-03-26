@@ -5,36 +5,40 @@ import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
 import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 
 import { Booking } from '../../store/facilityBooking/types'
+import { unixToFullDate } from '../../common/unixToFullDate'
+import { unixTo12HourTime } from '../../common/unixTo12HourTime'
+import { unixToFullDay } from '../../common/unixToFullDay'
 
 const BackgroundOverlay = styled.div`
   position: fixed;
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(0, 0, 0, 0.2);
   z-index: 201;
   cursor: pointer;
 `
 
 const BookingContainer = styled.div`
   position: absolute;
-  bottom: 80px;
+  padding-bottom: 20px;
   top: 80px;
   width: 85%;
   max-width: 400px;
   cursor: pointer;
   background-color: #ffffff;
-  margin: 20px;
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 202;
+  z-index: 201;
 `
 
 const BookingHeader = styled.div`
@@ -48,6 +52,7 @@ const BookingHeader = styled.div`
   justify-content: center;
   z-index: 2;
   text-align: center;
+  padding: 20px 0px;
 `
 
 const EventName = styled.div`
@@ -114,7 +119,7 @@ const ButtonContainer = styled.img`
   cursor: pointer;
 `
 
-export const ViewBookingCard = (props: { Booking: Booking; onClickFunction: Dispatch<SetStateAction<boolean>> }) => {
+export const ViewBookingCard = (props: { Booking?: Booking; onClickFunction: Dispatch<SetStateAction<boolean>> }) => {
   const ExitButton = () => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
@@ -129,32 +134,37 @@ export const ViewBookingCard = (props: { Booking: Booking; onClickFunction: Disp
     )
   }
 
+  const startDateFull = unixToFullDate(props.Booking?.startTime ? props.Booking?.startTime : 0)
+  const endDateFull = unixToFullDate(props.Booking?.endTime ? props.Booking?.endTime : 0)
+  const startTimeFull = unixTo12HourTime(props.Booking?.startTime ? props.Booking?.startTime : 0)
+  const endTimeFull = unixTo12HourTime(props.Booking?.endTime ? props.Booking?.endTime : 0)
+  const startDayFull = unixToFullDay(props.Booking?.startTime ? props.Booking?.startTime : 0)
+  const endDayFull = unixToFullDay(props.Booking?.endTime ? props.Booking?.endTime : 0)
+
   return (
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <EventName>{'Bonding Camp'}</EventName>
-          <BookingCca>{'RHMP'}</BookingCca>
+          <EventName>{props.Booking?.eventName}</EventName>
+          <BookingCca>{props.Booking?.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
-        <TelegramHandle>{'@Alyssa'}</TelegramHandle>
+        <TelegramHandle>{props.Booking?.displayName}</TelegramHandle>
         <EventDetailsContainer>
           <EventTimingContainer>
-            <EventTimings>{'Thursday'}</EventTimings>
-            <EventTimings>{'17/12/21'}</EventTimings>
-            <EventTimings>{'4:00 PM'}</EventTimings>
+            <EventTimings>{startDayFull}</EventTimings>
+            <EventTimings>{startDateFull}</EventTimings>
+            <EventTimings>{startTimeFull}</EventTimings>
           </EventTimingContainer>
           <EventTimingsTo>{'TO'}</EventTimingsTo>
           <EventTimingContainer>
-            <EventTimings>{'Thursday'}</EventTimings>
-            <EventTimings>{'17/12/21'}</EventTimings>
-            <EventTimings>{'4:00 PM'}</EventTimings>
+            <EventTimings>{endDayFull}</EventTimings>
+            <EventTimings>{endDateFull}</EventTimings>
+            <EventTimings>{endTimeFull}</EventTimings>
           </EventTimingContainer>
         </EventDetailsContainer>
         <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-        <AdditionalNote>
-          {'Will be using this place for RHMP bonding. Contact me if you have any question.'}
-        </AdditionalNote>
+        <AdditionalNote>{props.Booking?.description}</AdditionalNote>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>

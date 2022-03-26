@@ -55,6 +55,7 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
             type: TimeBlockType.OCCUPIED,
             ccaName: updatedFB[i].ccaName,
             eventName: updatedFB[i].description,
+            booking: updatedFB[i],
           }
         }
       }
@@ -589,6 +590,7 @@ export const getTimeBlocks = () => (dispatch: Dispatch<ActionTypes>, getState: G
           ccaName: booking.ccaName,
           eventName: booking.eventName,
           type: TimeBlockType.OCCUPIED,
+          booking: booking,
         }
       }
     }

@@ -44,6 +44,7 @@ export type TimeBlock = {
   type: TimeBlockType
   ccaName?: string
   eventName?: string
+  booking?: Booking
 }
 
 export enum TimeBlockType {
