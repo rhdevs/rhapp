@@ -65,7 +65,7 @@ export default function ViewFacility() {
     return date - day // by default, date row start on sunday
   }
 
-  const onClickDate = (date: Date) => {
+  const onDateClick = (date: Date) => {
     const dateRowStartDate = getDateRowStartDate(date)
 
     history.push({
@@ -85,7 +85,7 @@ export default function ViewFacility() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityID)} onClickDate={onClickDate} />
+          <Calendar selectedFacilityId={parseInt(params.facilityID)} onDateClick={onDateClick} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>

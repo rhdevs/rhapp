@@ -27,7 +27,7 @@ const DailyViewDatesRow = (props: {
   const maxDatePrevMonth = new Date(year, month, 0) // max date of PREVIOUS month
   const maxDateCurMonth = new Date(year, month + 1, 0) // max date of CURRENT month
 
-  const onClickDate = (date: Date) => {
+  const onDateClick = (date: Date) => {
     history.push({
       pathname: props.redirectTo,
       state: {
@@ -51,7 +51,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month - 1}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onClickDate={onClickDate}
+            onDateClick={onDateClick}
             lastDate={maxDatePrevMonth}
           />
           <CustomDateRows
@@ -59,7 +59,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onClickDate={onClickDate}
+            onDateClick={onDateClick}
             lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDatePrevMonth.getDate())}
           />
         </DatesContainer>
@@ -73,7 +73,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onClickDate={onClickDate}
+            onDateClick={onDateClick}
             lastDate={maxDateCurMonth}
           />
           <CustomDateRows
@@ -81,7 +81,7 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month + 1}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onClickDate={onClickDate}
+            onDateClick={onDateClick}
             lastDate={dateNumberToObject(props.dateRowStartDate + 6 - maxDateCurMonth.getDate())}
           />
         </DatesContainer>
@@ -95,7 +95,7 @@ const DailyViewDatesRow = (props: {
           assignedMonth={month}
           disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
-          onClickDate={onClickDate}
+          onDateClick={onDateClick}
           lastDate={dateNumberToObject(props.dateRowStartDate + 6)}
         />
       </DatesContainer>

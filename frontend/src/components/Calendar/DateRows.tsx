@@ -7,7 +7,7 @@ export const DateRows = (props: {
   nthMonth: number
   facilityId: number
   overlayDates?: number[]
-  onClickDate: (date: Date) => void
+  onDateClick: (date: Date) => void
 }) => {
   const assignedMonth = props.currentDate.getMonth() + props.nthMonth
   const firstDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDate()
@@ -39,8 +39,8 @@ export const DateRows = (props: {
             key={new Date(props.currentDate.getFullYear(), assignedMonth, date).toDateString()}
             date={new Date(props.currentDate.getFullYear(), assignedMonth, date)}
             facilityId={props.facilityId}
-            overlay={props.overlayDates?.includes(date)}
-            onClickDate={props.onClickDate}
+            disabled={props.overlayDates?.includes(date)}
+            onDateClick={props.onDateClick}
           />
         )
       })}

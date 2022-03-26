@@ -45,7 +45,7 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { selectedFacilityId: number; onClickDate: (date: Date) => void }) => {
+export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date: Date) => void }) => {
   const dispatch = useDispatch()
   const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
@@ -72,7 +72,7 @@ export const Calendar = (props: { selectedFacilityId: number; onClickDate: (date
             currentDate={today}
             nthMonth={startingMonth++}
             facilityId={props.selectedFacilityId}
-            onClickDate={props.onClickDate}
+            onDateClick={props.onDateClick}
           />
         </DatesGridContainer>
       </MonthContainer>
@@ -89,7 +89,7 @@ export const Calendar = (props: { selectedFacilityId: number; onClickDate: (date
                   currentDate={today}
                   nthMonth={startingMonth++}
                   facilityId={props.selectedFacilityId}
-                  onClickDate={props.onClickDate}
+                  onDateClick={props.onDateClick}
                 />
               </DatesGridContainer>
             </MonthContainer>

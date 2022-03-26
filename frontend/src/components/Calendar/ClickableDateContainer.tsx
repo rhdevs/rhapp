@@ -20,8 +20,8 @@ const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; 
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `
 
-const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
-  display: ${(props) => (props.eventPresent ? 'block' : 'none')};
+const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
+  display: ${(props) => (props.hasEvent ? 'block' : 'none')};
   align-self: center;
   margin-top: -6px;
   margin-bottom: -1px;
@@ -33,41 +33,40 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
 
 export const ClickableDateContainer = (props: {
   date: Date
-  eventPresent?: boolean
   facilityId: number
+  hasEvent?: boolean
   disabled?: boolean
-  onClickDate: (date: Date) => void
+  onDateClick: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-  const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
-    props.onClickDate(newClickedDate)
+    props.onDateClick(newClickedDate)
   }
 
   const hasEvent = () => {
-    return processedDates.find((processedDate) => processedDate === assignedDateMonth) !== undefined
+    return processedDates.find((processedDate) => processedDate === props.date) !== undefined
   }
 
   const isCurrentDate = () => {
     const today = new Date()
-    return today.toDateString() === assignedDateMonth.toDateString()
+    return today.toDateString() === props.date.toDateString()
   }
 
   const isCurrentDateClicked = () => {
-    return clickedDate.toDateString() === assignedDateMonth.toDateString()
+    return clickedDate.toDateString() === props.date.toDateString()
   }
 
   return (
     <DateContainer
-      onClick={() => !props.disabled && DateContainerClickHandler(assignedDateMonth)}
+      onClick={() => !props.disabled && DateContainerClickHandler(props.date)}
       selected={isCurrentDateClicked()}
       isCurrentDate={isCurrentDate()}
       disabled={props.disabled}
     >
-      <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
+      <EventIndicator selected={isCurrentDateClicked()} hasEvent={hasEvent()} />
       {props.date.getDate()}
     </DateContainer>
   )
