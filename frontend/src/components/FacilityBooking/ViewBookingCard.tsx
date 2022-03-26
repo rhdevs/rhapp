@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
@@ -127,6 +127,8 @@ type Props = {
 }
 
 export const ViewBookingCard = (props: Props) => {
+  const [telegramHandle, setTelegramHandle] = useState<string>()
+
   const ExitButton = () => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
@@ -149,7 +151,7 @@ export const ViewBookingCard = (props: Props) => {
     props.Booking.endTime = 0
   }
 
-  const fetchTelegram = async (userID) => {
+  const fetchTelegram = async (userID: string) => {
     try {
       fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
         method: 'GET',
@@ -157,16 +159,19 @@ export const ViewBookingCard = (props: Props) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (data.telegramHandle === '' || data.telegramHandle === undefined) {
+          if (data.data === '' || data.data === undefined) {
             throw data.err
           } else {
-            return data.telegramHandle
+            setTelegramHandle(data.data)
           }
         })
     } catch (err) {
       console.log(err)
+      setTelegramHandle('')
     }
   }
+
+  console.log(fetchTelegram(props.Booking.userID))
 
   return (
     <BackgroundOverlay>
@@ -176,7 +181,7 @@ export const ViewBookingCard = (props: Props) => {
           <BookingCca>{props.Booking.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
-        <TelegramHandle>{props.Booking?.userID}</TelegramHandle>
+        <TelegramHandle>@{telegramHandle}</TelegramHandle>
         <EventDetailsContainer>
           <EventTimingContainer>
             <EventTimings>{unixToFullDay(props.Booking.startTime)}</EventTimings>
