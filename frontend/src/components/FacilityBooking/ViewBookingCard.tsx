@@ -8,7 +8,6 @@ import { Booking } from '../../store/facilityBooking/types'
 import { unixToFullDate } from '../../common/unixToFullDate'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import { unixToFullDay } from '../../common/unixToFullDay'
-import { openUserTelegram } from '../../common/telegramMethods'
 import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 
 const BackgroundOverlay = styled.div`
@@ -171,7 +170,7 @@ export const ViewBookingCard = (props: Props) => {
     }
   }
 
-  console.log(fetchTelegram(props.Booking.userID))
+  fetchTelegram(props.Booking.userID)
 
   return (
     <BackgroundOverlay>
