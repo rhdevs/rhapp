@@ -75,7 +75,6 @@ export default function BookingSection({ facilityId, date }: Props) {
 
   const setSelectedBlock = (selectedTimestamp: number) => {
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
-
     if (selectedStartTime === 0) {
       if (selectedEndTime === 0) {
         // selecting start time first before selecting end time

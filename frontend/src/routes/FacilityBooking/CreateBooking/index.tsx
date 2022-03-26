@@ -19,6 +19,7 @@ import {
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
+  setBookingStatus,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -140,6 +141,8 @@ export default function CreateBooking() {
     return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
 
+  console.log(bookingStatus)
+
   const onSubmit = (e) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
@@ -172,6 +175,7 @@ export default function CreateBooking() {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
       history.push(`${PATHS.VIEW_FACILITY}${selectedFacilityId}`)
+      dispatch(setBookingStatus(BookingStatus.INITIAL))
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
       setmodalIsOpen(true)

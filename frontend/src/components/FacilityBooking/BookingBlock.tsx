@@ -43,8 +43,11 @@ const BookingBlock = (props: Props) => {
     const cutoffStart = selectedStartTime === 0 ? currentStartHour : Math.max(currentStartHour, selectedStartTime)
     const cutoffEnd = selectedEndTime === 0 ? Infinity : selectedEndTime
 
-    return ((props.entry.type === TimeBlockType.OCCUPIED && cutoffStart >= props.entry.timestamp) ||
-      cutoffEnd <= props.entry.timestamp) as boolean
+    return (
+      props.entry.type === TimeBlockType.OCCUPIED ||
+      cutoffStart > props.entry.timestamp ||
+      cutoffEnd <= props.entry.timestamp
+    )
   }
 
   return (

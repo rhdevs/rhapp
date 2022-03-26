@@ -372,7 +372,9 @@ export const handleCreateNewBooking = (
   }
 }
 
-const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (dispatch: Dispatch<ActionTypes>) => {
+export const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
     bookingStatus: bookingStatus,
