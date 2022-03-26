@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import styled from 'styled-components'
 
 import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
@@ -7,7 +7,7 @@ import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 import { Booking } from '../../store/facilityBooking/types'
 
 const BackgroundOverlay = styled.div`
-  position: absolute;
+  position: fixed;
   display: block;
   width: 100%;
   height: 100%;
@@ -15,7 +15,7 @@ const BackgroundOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.03);
   z-index: 201;
   cursor: pointer;
 `
@@ -34,6 +34,7 @@ const BookingContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 202;
 `
 
 const BookingHeader = styled.div`
@@ -113,9 +114,9 @@ const ButtonContainer = styled.img`
   cursor: pointer;
 `
 
-export const ViewBookingCard = (props: { Booking: Booking }) => {
+export const ViewBookingCard = (props: { Booking: Booking; onClickFunction: Dispatch<SetStateAction<boolean>> }) => {
   const ExitButton = () => {
-    return <ButtonContainer src={ViewBookingCardButton} onClick={() => console.log('Close')} />
+    return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
 
   const TelegramButton = () => {

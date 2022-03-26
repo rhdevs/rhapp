@@ -84,7 +84,6 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <ViewBookingCard Booking={myBookingsStub[0]} />
           <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
           <BookingSectionDiv>
             <ViewSection />
