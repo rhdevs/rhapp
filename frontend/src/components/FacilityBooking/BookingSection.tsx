@@ -66,7 +66,7 @@ export default function BookingSection({ facilityId, date }: Props) {
 
   const goToBookingPage = () => {
     history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING + facilityId,
+      pathname: `${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`,
       state: {
         dateRowStartDate: dateRowStartDate,
       },

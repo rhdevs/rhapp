@@ -174,7 +174,7 @@ export default function CreateBooking() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      history.push(`${PATHS.VIEW_FACILITY}${selectedFacilityId}`)
+      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
       dispatch(setBookingStatus(BookingStatus.INITIAL))
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
@@ -184,7 +184,7 @@ export default function CreateBooking() {
 
   const goBackToTimeSelectionPage = () => {
     history.push({
-      pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
       state: {
         dateRowStartDate: dateRowStartDate,
       },

@@ -69,7 +69,7 @@ export default function ViewFacility() {
     const dateRowStartDate = getDateRowStartDate(date)
 
     history.push({
-      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + params.facilityID,
+      pathname: `${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityID}`,
       state: {
         dateRowStartDate: dateRowStartDate,
       },

@@ -70,7 +70,7 @@ export default function ViewBookingDailyView() {
   return (
     <>
       <TopNavBarRevamp
-        onLeftClick={() => history.push(PATHS.VIEW_FACILITY + selectedFacilityId)}
+        onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={
           <ButtonComponent
@@ -78,7 +78,7 @@ export default function ViewBookingDailyView() {
             text="Book Facility"
             onClick={() =>
               history.push({
-                pathname: PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+                pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
                 state: {
                   dateRowStartDate: dateRowStartDate,
                 },
@@ -95,7 +95,7 @@ export default function ViewBookingDailyView() {
           <DailyViewDatesRow
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
-            redirectTo={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
+            redirectTo={`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
             dateRowStartDate={dateRowStartDate}
           />
           <ViewSectionDiv>

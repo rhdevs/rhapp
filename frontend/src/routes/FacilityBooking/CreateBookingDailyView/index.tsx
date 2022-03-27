@@ -98,7 +98,7 @@ export default function CreateBookingDailyView() {
 
   const goBackToDailyViewPage = () => {
     history.push({
-      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId,
+      pathname: `${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
       state: {
         dateRowStartDate: dateRowStartDate,
       },
@@ -124,7 +124,7 @@ export default function CreateBookingDailyView() {
           <DailyViewDatesRow
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
-            redirectTo={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW + selectedFacilityId}
+            redirectTo={`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
             dateRowStartDate={dateRowStartDate}
             disabledDates={disabledDates}
           />
