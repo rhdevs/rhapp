@@ -29,11 +29,9 @@ const ViewBlock = (props: Props) => {
           blockId={props.entry.id}
           onClick={() => (props.openViewBookingModal(), props.setViewBookingEntryId())}
         >
-          <>
-            {props.entry.ccaName}
-            <br />
-            {props.entry.eventName}
-          </>
+          {props.entry.ccaName}
+          <br />
+          {props.entry.eventName}
         </StyledViewBooking>
       ) : (
         <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id}></StyledViewBooking>

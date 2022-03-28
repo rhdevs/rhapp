@@ -21,6 +21,7 @@ const ViewScheduleBlock = () => {
     dispatch(getTimeBlocks())
   }, [])
 
+  // passing entry ID instead of booking object which might be undefind
   const fetchBooking = (entryID) => {
     setViewBooking(timeBlocks[entryID].booking)
   }
