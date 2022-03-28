@@ -50,12 +50,12 @@ export type ViewBookingLocationState = {
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
-  const params = useParams<{ facilityID: string }>()
+  const params = useParams<{ facilityId: string }>()
   const location = useLocation<ViewBookingLocationState>()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
-  const selectedFacilityId = parseInt(params.facilityID)
+  const selectedFacilityId = parseInt(params.facilityId)
   const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {

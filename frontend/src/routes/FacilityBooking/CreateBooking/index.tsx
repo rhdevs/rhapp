@@ -114,9 +114,9 @@ export default function CreateBooking() {
   } = useSelector((state: RootState) => state.facilityBooking)
 
   const location = useLocation<ViewBookingLocationState>()
-  const params = useParams<{ facilityID: string }>()
+  const params = useParams<{ facilityId: string }>()
 
-  const selectedFacilityId = parseInt(params.facilityID)
+  const selectedFacilityId = parseInt(params.facilityId)
   const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function CreateBooking() {
         } else {
           dispatch(
             handleCreateNewBooking(
-              Number(params.facilityID),
+              Number(params.facilityId),
               data.eventName,
               bookingStartTime,
               bookingEndTime,
@@ -286,7 +286,7 @@ export default function CreateBooking() {
             text="Submit"
             type="submit"
             disabled={!formIsValid()}
-            onClick={() => console.log('submitted')}
+            onClick={() => null}
           />
         </Form>
       )}
