@@ -13,7 +13,7 @@ import { Booking } from '../../store/facilityBooking/types'
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
-  const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState(false)
+  const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean | undefined>()
   const [viewBooking, setViewBooking] = useState<Booking | undefined | null>(null)
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
@@ -28,7 +28,7 @@ const ViewScheduleBlock = () => {
 
   return (
     <>
-      {isViewBookingModalOpen && <ViewBookingCard Booking={viewBooking} onClickFunction={setIsViewBookingModalOpen} />}
+      {isViewBookingModalOpen && <ViewBookingCard booking={viewBooking} onClickFunction={setIsViewBookingModalOpen} />}
       <MainContainer>
         <CurrentTimeLine />
         <HourBlocks />

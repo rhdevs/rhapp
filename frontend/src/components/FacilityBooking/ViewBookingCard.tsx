@@ -121,8 +121,8 @@ const ButtonContainer = styled.img`
 `
 
 type Props = {
-  Booking?: Booking | null
-  onClickFunction: Dispatch<SetStateAction<boolean>>
+  booking?: Booking | null
+  onClickFunction: Dispatch<SetStateAction<boolean | undefined>>
 }
 
 export const ViewBookingCard = (props: Props) => {
@@ -132,7 +132,6 @@ export const ViewBookingCard = (props: Props) => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
 
-  console.log(props.Booking)
   const TelegramButton = () => {
     return (
       <ButtonContainer
@@ -146,19 +145,19 @@ export const ViewBookingCard = (props: Props) => {
   let bookingStartTimeUnix
   let bookingEndTimeUnix
 
-  if (props.Booking?.startTime == undefined) {
+  if (props.booking?.startTime == undefined) {
     bookingStartTimeUnix = 0
   } else {
-    bookingStartTimeUnix = props.Booking?.startTime
+    bookingStartTimeUnix = props.booking?.startTime
   }
 
-  if (props.Booking?.endTime == undefined) {
+  if (props.booking?.endTime == undefined) {
     bookingEndTimeUnix = 0
   } else {
-    bookingEndTimeUnix = props.Booking.endTime
+    bookingEndTimeUnix = props.booking.endTime
   }
 
-  const fetchTelegram = async (userID: string | undefined) => {
+  const fetchTelegram = (userID: string | undefined) => {
     if (userID) {
       try {
         fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
@@ -180,14 +179,14 @@ export const ViewBookingCard = (props: Props) => {
     }
   }
 
-  fetchTelegram(props.Booking?.userID)
+  fetchTelegram(props.booking?.userID)
 
   return (
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <EventName>{props.Booking?.eventName}</EventName>
-          <BookingCca>{props.Booking?.ccaName}</BookingCca>
+          <EventName>{props.booking?.eventName}</EventName>
+          <BookingCca>{props.booking?.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
         <TelegramHandle>@{telegramHandle}</TelegramHandle>
@@ -205,7 +204,7 @@ export const ViewBookingCard = (props: Props) => {
           </EventTimingContainer>
         </EventDetailsContainer>
         <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-        <AdditionalNote>{props.Booking?.description}</AdditionalNote>
+        <AdditionalNote>{props.booking?.description}</AdditionalNote>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>
