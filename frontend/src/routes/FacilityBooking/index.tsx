@@ -177,8 +177,8 @@ export default function FacilityBooking() {
     dispatch(changeTab(e.target.value))
   }
 
-  function FacilityLogo(props: { facilityID: number }) {
-    switch (props.facilityID) {
+  function FacilityLogo(props: { facilityId: number }) {
+    switch (props.facilityId) {
       case 1:
         return <FacilityAvatar src={MainAreaUL} />
       case 2:
@@ -261,7 +261,7 @@ export default function FacilityBooking() {
                         dispatch(setSelectedFacility(facility.facilityID))
                       }}
                     >
-                      <FacilityLogo key={facility.facilityID} facilityID={facility.facilityID} />
+                      <FacilityLogo key={facility.facilityID} facilityId={facility.facilityID} />
                       <FacilityLabels>
                         <FacilityHeader>{facility.facilityName}</FacilityHeader>
                         <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>

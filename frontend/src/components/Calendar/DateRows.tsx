@@ -2,7 +2,13 @@ import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
 
-export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityId: number }) => {
+export const DateRows = (props: {
+  currentDate: Date
+  nthMonth: number
+  facilityId: number
+  overlayDates?: number[]
+  onDateClick: (date: Date) => void
+}) => {
   const assignedMonth = props.currentDate.getMonth() + props.nthMonth
   const firstDateOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDate()
   const firstDayOfThisMonth = new Date(props.currentDate.getFullYear(), assignedMonth, 1).getDay()
@@ -25,14 +31,16 @@ export const DateRows = (props: { currentDate: Date; nthMonth: number; facilityI
   }
   return (
     <>
-      {bufferDates.map((day) => {
-        return day === 0 ? (
+      {bufferDates.map((date) => {
+        return date === 0 ? (
           <EmptyDateContainer key={keyCounter++} />
         ) : (
           <ClickableDateContainer
-            key={new Date(props.currentDate.getFullYear(), assignedMonth, day).toDateString()}
-            date={new Date(props.currentDate.getFullYear(), assignedMonth, day)}
+            key={new Date(props.currentDate.getFullYear(), assignedMonth, date).toDateString()}
+            date={new Date(props.currentDate.getFullYear(), assignedMonth, date)}
             facilityId={props.facilityId}
+            disabled={props.overlayDates?.includes(date)}
+            onDateClick={props.onDateClick}
           />
         )
       })}

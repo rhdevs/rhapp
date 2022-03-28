@@ -14,7 +14,7 @@ const ViewScheduleBlock = () => {
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
-    dispatch(getTimeBlocks())
+    dispatch(getTimeBlocks(new Date()))
   }, [])
 
   return (

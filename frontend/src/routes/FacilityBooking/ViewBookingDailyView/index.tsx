@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
 import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { updateDailyView } from '../../../store/facilityBooking/action'
+import ButtonComponent from '../../../components/Button'
+import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import { fetchFacilityNameFromID, setSelectedFacility } from '../../../store/facilityBooking/action'
-import { UnorderedListOutlined } from '@ant-design/icons'
 
 const HEADER_HEIGHT = '70px'
 
@@ -20,9 +19,11 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0px 36px;
+  overflow: hidden;
 `
 
-const BookingSectionDiv = styled.div`
+const ViewSectionDiv = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -42,51 +43,66 @@ const TitleText = styled.h2`
   text-overflow: ellipsis;
 `
 
-type State = {
-  date: Date
-  facilityId: number
+export type ViewBookingLocationState = {
+  dateRowStartDate: number
 }
 
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
+  const params = useParams<{ facilityId: string }>()
+  const location = useLocation<ViewBookingLocationState>()
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
-  const location = useLocation<State>()
-  const selectedFacilityId = location.state.facilityId
-  const date = location.state.date
+
+  const selectedFacilityId = parseInt(params.facilityId)
+  const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
-    dispatch(updateDailyView(date, selectedFacilityId))
-    dispatch(fetchFacilityNameFromID(selectedFacilityId))
-    if (selectedFacilityId == 0) {
-      dispatch(setSelectedFacility(selectedFacilityId))
-    }
-  }, [date])
+    dispatch(setIsLoading(true))
+    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+  }, [])
 
-  const BookingFacilityIcon = (
-    <UnorderedListOutlined
-      style={{ color: 'black', fontSize: '150%' }}
-      onClick={() => console.log('link to booking page')}
-    />
-  )
+  useEffect(() => {
+    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+  }, [clickedDate])
 
   return (
-    <div>
+    <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
-        rightComponent={BookingFacilityIcon}
+        rightComponent={
+          <ButtonComponent
+            state="primary"
+            text="Book Facility"
+            onClick={() =>
+              history.push({
+                pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
+                state: {
+                  dateRowStartDate: dateRowStartDate,
+                },
+              })
+            }
+            size="small"
+          />
+        }
       />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <Background>
-          <DailyViewDatesRow date={date} selectedFacilityId={selectedFacilityId} />
-          <BookingSectionDiv>
+          <DailyViewDatesRow
+            selectedDate={clickedDate}
+            selectedFacilityId={selectedFacilityId}
+            redirectTo={`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
+            dateRowStartDate={dateRowStartDate}
+          />
+          <ViewSectionDiv>
             <ViewSection />
-          </BookingSectionDiv>
+          </ViewSectionDiv>
         </Background>
       )}
-    </div>
+    </>
   )
 }

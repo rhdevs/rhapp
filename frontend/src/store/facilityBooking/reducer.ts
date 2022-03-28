@@ -20,8 +20,6 @@ const initialState = {
   newBookingName: '',
   newBookingFacilityName: '',
   newBookingFacilityId: '',
-  newBookingFromDate: new Date(),
-  newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
   newBookingCCA: '',
   newBookingDescription: '',
   createSuccess: false,
@@ -38,13 +36,14 @@ const initialState = {
   numRepeatWeekly: 1,
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
+  selectedBlockTimestamp: 0,
+  selectedStartTime: 0,
+  selectedEndTime: 0,
   bookingStartTime: 0,
   bookingEndTime: 0,
   bookingEndDate: 0,
   conflictBookings: [],
   timeBlocks: defaultTimeBlocks,
-  selectedStartTime: -1,
-  selectedEndTime: -1,
   selectedDayBookings: myBookingsStub,
 }
 
@@ -63,8 +62,6 @@ type State = {
   newBookingFacilityName: string
   newBookingFacilityId: string
   newBookingName: string
-  newBookingFromDate: Date
-  newBookingToDate: Date
   newBookingCCA: string
   newBookingDescription: string
   createSuccess: boolean
@@ -80,13 +77,14 @@ type State = {
   booking: Booking | null
   bookingStatus: BookingStatus
   message?: string
+  selectedBlockTimestamp: number
+  selectedStartTime: number
+  selectedEndTime: number
   bookingStartTime: number
   bookingEndTime: number
   bookingEndDate: number
   conflictBookings: Booking[]
   timeBlocks: TimeBlock[]
-  selectedStartTime: number
-  selectedEndTime: number
   selectedDayBookings: Booking[]
 }
 
@@ -155,18 +153,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
-    case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
-      return {
-        ...state,
-        newBookingFromDate: action.newBookingFromDate,
-      }
-    }
-    case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
-      return {
-        ...state,
-        newBookingToDate: action.newBookingToDate,
-      }
-    }
     case FACILITY_ACTIONS.SET_BOOKING_CCA: {
       return {
         ...state,
@@ -299,6 +285,26 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         message: action.message,
       }
     }
+
+    case FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP: {
+      return {
+        ...state,
+        selectedBlockTimestamp: action.selectedBlockTimestamp,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_START_TIME: {
+      return {
+        ...state,
+        selectedStartTime: action.selectedStartTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_END_TIME: {
+      return {
+        ...state,
+        selectedEndTime: action.selectedEndTime,
+      }
+    }
+
     case FACILITY_ACTIONS.SET_BOOKING_START_TIME: {
       return {
         ...state,
@@ -327,13 +333,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         timeBlocks: action.timeBlocks,
-      }
-    }
-    case FACILITY_ACTIONS.SET_START_END_TIME: {
-      return {
-        ...state,
-        selectedStartTime: action.selectedStartTime,
-        selectedEndTime: action.selectedEndTime,
       }
     }
     case FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS: {
