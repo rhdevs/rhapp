@@ -14,7 +14,7 @@ const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
   const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState(false)
-  const [viewBooking, setViewBooking] = useState<Booking | undefined>()
+  const [viewBooking, setViewBooking] = useState<Booking | undefined | null>(null)
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {

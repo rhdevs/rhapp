@@ -121,7 +121,7 @@ const ButtonContainer = styled.img`
 `
 
 type Props = {
-  Booking?: Booking
+  Booking?: Booking | null
   onClickFunction: Dispatch<SetStateAction<boolean>>
 }
 
