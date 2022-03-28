@@ -57,7 +57,7 @@ const SupperGroupContainer = styled.div`
   margin-top: -20px;
 `
 
-const NoSupperGroupText = styled.text`
+const NoSupperGroupText = styled.p`
   margin: auto;
   display: flex;
   justify-content: center;

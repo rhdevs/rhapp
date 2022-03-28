@@ -16,7 +16,7 @@ const HorizontalLine = styled.hr`
   border: none;
 `
 
-const StyledText = styled.text`
+const StyledText = styled.p`
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

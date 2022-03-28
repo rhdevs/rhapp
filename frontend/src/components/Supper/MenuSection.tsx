@@ -17,7 +17,8 @@ const SectionHeaderContainer = styled.div`
   padding: 8px 20px 0px 20px;
 `
 
-const SectionHeader = styled.text`
+const SectionHeader = styled.p`
+  margin: 0;
   font-size: 24px;
   font-weight: 700;
 `
@@ -43,19 +44,19 @@ const FoodAndQuantityContainer = styled.div`
   margin: 0;
 `
 
-const FoodContainer = styled.text`
+const FoodContainer = styled.p`
   margin: 5px 2px 5px 5px;
   font-size: 17px;
   font-weight: 700;
 `
 
-const QuantityContainer = styled.text`
+const QuantityContainer = styled.p`
   margin: 5px;
   color: #de5f4c;
   font-size: 17px;
   font-weight: 600;
 `
-const PriceContainer = styled.text`
+const PriceContainer = styled.p`
   margin: 0 0 3px 5px;
   font-size: 14px;
   font-weight: 200;
@@ -65,7 +66,7 @@ const EmptyContainer = styled.div`
   justify-content: space-around;
 `
 
-const EmptyContainerText = styled.text`
+const EmptyContainerText = styled.p`
   margin: 5px 2px 5px 5px;
   font-size: 15px;
   font-weight: 500;

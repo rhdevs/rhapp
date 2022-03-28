@@ -30,7 +30,8 @@ const HeaderContainer = styled.div`
   margin: 0 5px;
 `
 
-const HeaderText = styled.text`
+const HeaderText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
@@ -67,7 +68,8 @@ const NameContainer = styled.div`
   align-items: center;
 `
 
-const Name = styled.text`
+const Name = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
@@ -80,7 +82,8 @@ const EmptyContainer = styled.div`
   margin: 10px;
 `
 
-const EmptyContact = styled.text`
+const EmptyContact = styled.p`
+  margin: 0;
   font-size: 15px;
   font-weight: 400;
 `

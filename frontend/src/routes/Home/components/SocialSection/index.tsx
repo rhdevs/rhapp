@@ -52,7 +52,8 @@ const Tab = styled.div<TabProps>`
   opacity: ${(props) => (props.active ? 1 : 0.5)};
 `
 
-const NoPostText = styled.text`
+const NoPostText = styled.p`
+  margin: 0;
   font-size: 16px;
   text-align: center;
   padding: 23px;

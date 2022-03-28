@@ -31,7 +31,8 @@ const MainContainer = styled.form`
   flex-direction: column;
 `
 
-const FoodItemHeader = styled.text`
+const FoodItemHeader = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

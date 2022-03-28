@@ -59,7 +59,7 @@ const SupperGroupCardsContainer = styled.div`
   margin-top: -23px;
 `
 
-const EmptyText = styled.text`
+const EmptyText = styled.p`
   margin: 0.5rem 0 1rem 0;
   display: flex;
   justify-content: center;

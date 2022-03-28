@@ -31,7 +31,8 @@ const HeaderContainer = styled.div`
   align-items: center;
 `
 
-const HeaderText = styled.text`
+const HeaderText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
@@ -68,7 +69,8 @@ const LinkContainer = styled.div`
   display: flex;
 `
 
-const LinkText = styled.text`
+const LinkText = styled.p`
+  margin: 0;
   white-space: pre;
 `
 
