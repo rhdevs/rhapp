@@ -94,6 +94,14 @@ type Props = {
 
 export const ViewBookingCard = (props: Props) => {
   const [telegramHandle, setTelegramHandle] = useState<string>()
+  const [bookingStartTimeUnix, setBookingStartTimeUnix] = useState<number>(0)
+  const [bookingEndTimeUnix, setBookingEndTimeUnix] = useState<number>(0)
+
+  useEffect(() => {
+    fetchTelegram(props.booking?.userID)
+    setBookingStartTimeUnix(props.booking?.startTime == undefined ? 0 : props.booking?.startTime)
+    setBookingEndTimeUnix(props.booking?.endTime == undefined ? 0 : props.booking?.endTime)
+  })
 
   const ExitButton = () => {
     return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
@@ -101,21 +109,6 @@ export const ViewBookingCard = (props: Props) => {
 
   const TelegramButton = () => {
     return <TelegramButtonContainer src={ViewBookingCardUserIcon} onClick={() => console.log('Go to telegram')} />
-  }
-
-  let bookingStartTimeUnix
-  let bookingEndTimeUnix
-
-  if (props.booking?.startTime == undefined) {
-    bookingStartTimeUnix = 0
-  } else {
-    bookingStartTimeUnix = props.booking?.startTime
-  }
-
-  if (props.booking?.endTime == undefined) {
-    bookingEndTimeUnix = 0
-  } else {
-    bookingEndTimeUnix = props.booking.endTime
   }
 
   const fetchTelegram = (userID: string | undefined) => {
@@ -139,8 +132,6 @@ export const ViewBookingCard = (props: Props) => {
       }
     }
   }
-
-  fetchTelegram(props.booking?.userID)
 
   return (
     <BackgroundOverlay>
