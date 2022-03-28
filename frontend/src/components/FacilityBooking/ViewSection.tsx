@@ -8,19 +8,22 @@ import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { getTimeBlocks } from '../../store/facilityBooking/action'
 import { ViewBookingCard } from './ViewBookingCard'
-import { myBookingsStub } from '../../store/stubs'
 import { Booking } from '../../store/facilityBooking/types'
 
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
   const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState(false)
-  const [viewBooking, setViewBooking] = useState<Booking>(myBookingsStub[0])
+  const [viewBooking, setViewBooking] = useState<Booking | undefined>()
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
     dispatch(getTimeBlocks())
   }, [])
+
+  const fetchBooking = (entryID) => {
+    setViewBooking(timeBlocks[entryID].booking)
+  }
 
   return (
     <>
@@ -36,7 +39,7 @@ const ViewScheduleBlock = () => {
               // if day selected is not current, scroll to defaultTimePosition
               scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
               openViewBookingModal={() => setIsViewBookingModalOpen(true)}
-              setViewBooking={setViewBooking}
+              setViewBookingEntryId={() => fetchBooking(entry.id)}
             />
           ))}
         </DailyContainer>

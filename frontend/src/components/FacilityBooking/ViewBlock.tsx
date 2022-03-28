@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 
-import { TimeBlock, TimeBlockType, Booking } from '../../store/facilityBooking/types'
-import { myBookingsStub } from '../../store/stubs'
+import { TimeBlock } from '../../store/facilityBooking/types'
 import { StyledViewBooking } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
 
@@ -9,7 +8,7 @@ type Props = {
   entry: TimeBlock
   scrollTo?: boolean
   openViewBookingModal: () => void
-  setViewBooking: Dispatch<SetStateAction<Booking>>
+  setViewBookingEntryId: () => void
 }
 
 const ViewBlock = (props: Props) => {
@@ -23,12 +22,12 @@ const ViewBlock = (props: Props) => {
 
   return (
     <>
-      {props.entry.type === TimeBlockType.OCCUPIED ? (
+      {props.entry.booking ? (
         <StyledViewBooking
           ref={ref}
           isOccupied={true}
           blockId={props.entry.id}
-          onClick={() => (props.openViewBookingModal(), props.setViewBooking(props.entry.booking ?? myBookingsStub[0]))}
+          onClick={() => (props.openViewBookingModal(), props.setViewBookingEntryId())}
         >
           <>
             {props.entry.ccaName}

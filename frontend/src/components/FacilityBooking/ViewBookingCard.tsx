@@ -121,7 +121,7 @@ const ButtonContainer = styled.img`
 `
 
 type Props = {
-  Booking: Booking
+  Booking?: Booking
   onClickFunction: Dispatch<SetStateAction<boolean>>
 }
 
@@ -132,6 +132,7 @@ export const ViewBookingCard = (props: Props) => {
     return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
 
+  console.log(props.Booking)
   const TelegramButton = () => {
     return (
       <ButtonContainer
@@ -142,60 +143,69 @@ export const ViewBookingCard = (props: Props) => {
     )
   }
 
-  if (props.Booking.startTime == undefined) {
-    props.Booking.startTime = 0
+  let bookingStartTimeUnix
+  let bookingEndTimeUnix
+
+  if (props.Booking?.startTime == undefined) {
+    bookingStartTimeUnix = 0
+  } else {
+    bookingStartTimeUnix = props.Booking?.startTime
   }
 
-  if (props.Booking.endTime == undefined) {
-    props.Booking.endTime = 0
+  if (props.Booking?.endTime == undefined) {
+    bookingEndTimeUnix = 0
+  } else {
+    bookingEndTimeUnix = props.Booking.endTime
   }
 
-  const fetchTelegram = async (userID: string) => {
-    try {
-      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data.data === '' || data.data === undefined) {
-            throw data.err
-          } else {
-            setTelegramHandle(data.data)
-          }
+  const fetchTelegram = async (userID: string | undefined) => {
+    if (userID) {
+      try {
+        fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
+          method: 'GET',
+          mode: 'cors',
         })
-    } catch (err) {
-      console.log(err)
-      setTelegramHandle('')
+          .then((resp) => resp.json())
+          .then((data) => {
+            if (data.data === '' || data.data === undefined) {
+              throw data.err
+            } else {
+              setTelegramHandle(data.data)
+            }
+          })
+      } catch (err) {
+        console.log(err)
+        setTelegramHandle('')
+      }
     }
   }
 
-  fetchTelegram(props.Booking.userID)
+  fetchTelegram(props.Booking?.userID)
 
   return (
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <EventName>{props.Booking.eventName}</EventName>
-          <BookingCca>{props.Booking.ccaName}</BookingCca>
+          <EventName>{props.Booking?.eventName}</EventName>
+          <BookingCca>{props.Booking?.ccaName}</BookingCca>
         </BookingHeader>
         <TelegramButton />
         <TelegramHandle>@{telegramHandle}</TelegramHandle>
         <EventDetailsContainer>
           <EventTimingContainer>
-            <EventTimings>{unixToFullDay(props.Booking.startTime)}</EventTimings>
-            <EventTimings>{unixToFullDate(props.Booking.startTime)}</EventTimings>
-            <EventTimings>{unixTo12HourTime(props.Booking.startTime)}</EventTimings>
+            <EventTimings>{unixToFullDay(bookingStartTimeUnix)}</EventTimings>
+            <EventTimings>{unixToFullDate(bookingStartTimeUnix)}</EventTimings>
+            <EventTimings>{unixTo12HourTime(bookingStartTimeUnix)}</EventTimings>
           </EventTimingContainer>
           <EventTimingsTo>{'TO'}</EventTimingsTo>
           <EventTimingContainer>
-            <EventTimings>{unixToFullDay(props.Booking.endTime)}</EventTimings>
-            <EventTimings>{unixToFullDate(props.Booking.endTime)}</EventTimings>
-            <EventTimings>{unixTo12HourTime(props.Booking.endTime)}</EventTimings>
+            <EventTimings>{unixToFullDay(bookingEndTimeUnix)}</EventTimings>
+            <EventTimings>{unixToFullDate(bookingEndTimeUnix)}</EventTimings>
+            <EventTimings>{unixTo12HourTime(bookingEndTimeUnix)}</EventTimings>
           </EventTimingContainer>
         </EventDetailsContainer>
         <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-        <AdditionalNote>{props.Booking.description}</AdditionalNote>
+        <AdditionalNote>{props.Booking?.description}</AdditionalNote>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>
