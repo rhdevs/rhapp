@@ -67,9 +67,15 @@ const EventTimingContainer = styled.div`
   flex-direction: column;
 `
 
-const ButtonContainer = styled.img`
+const ExitButtonContainer = styled.img`
   width: 50px;
   height: 50px;
+  cursor: pointer;
+`
+
+const TelegramButtonContainer = styled.img`
+  width: 39px;
+  height: 39px;
   cursor: pointer;
 `
 
@@ -90,17 +96,11 @@ export const ViewBookingCard = (props: Props) => {
   const [telegramHandle, setTelegramHandle] = useState<string>()
 
   const ExitButton = () => {
-    return <ButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
+    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
   }
 
   const TelegramButton = () => {
-    return (
-      <ButtonContainer
-        style={{ width: '39px', margin: '15px 0px 0px 0px' }}
-        src={ViewBookingCardUserIcon}
-        onClick={() => console.log('Go to telegram')}
-      />
-    )
+    return <TelegramButtonContainer src={ViewBookingCardUserIcon} onClick={() => console.log('Go to telegram')} />
   }
 
   let bookingStartTimeUnix
