@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { DailyContainer, MainContainer } from './BlockStyles'
 import ViewBlock from './ViewBlock'
@@ -13,8 +13,8 @@ import { Booking } from '../../store/facilityBooking/types'
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const dispatch = useDispatch()
-  const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean | undefined>()
-  const [viewBooking, setViewBooking] = useState<Booking | undefined | null>(null)
+  const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean>()
+  const [viewBooking, setViewBooking] = useState<Booking>()
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   useEffect(() => {
@@ -22,8 +22,8 @@ const ViewScheduleBlock = () => {
   }, [])
 
   // passing entry ID instead of booking object which might be undefind
-  const fetchBooking = (entryID) => {
-    setViewBooking(timeBlocks[entryID].booking)
+  const fetchBooking = (entryId: number) => {
+    setViewBooking(timeBlocks[entryId].booking)
   }
 
   return (

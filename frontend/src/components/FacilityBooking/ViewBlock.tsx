@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { TimeBlock } from '../../store/facilityBooking/types'
 import { StyledViewBooking } from './BlockStyles'
@@ -27,7 +27,10 @@ const ViewBlock = (props: Props) => {
           ref={ref}
           isOccupied
           blockId={props.entry.id}
-          onClick={() => (props.openViewBookingModal(), props.setViewBookingEntryId())}
+          onClick={() => {
+            props.openViewBookingModal()
+            props.setViewBookingEntryId()
+          }}
         >
           {props.entry.ccaName}
           <br />

@@ -5,7 +5,7 @@ import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
 import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 
 import { Booking } from '../../store/facilityBooking/types'
-import { unixToFullDate } from '../../common/unixToFullDate'
+import { unixToFullDateNumeric } from '../../common/unixToFullDateNumeric'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import { unixToFullDay } from '../../common/unixToFullDay'
 import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
@@ -59,7 +59,7 @@ const BookingHeader = styled.p`
   padding: 20px 0px;
 `
 
-const TelegramDetailsContainer = styled.div`
+const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,6 +68,8 @@ const TelegramDetailsContainer = styled.div`
 const EventDetailsContainer = styled.div`
   display: flex;
   flex-direction: row;
+  gap: 15px;
+  align-items: center;
 `
 
 const EventTimingContainer = styled.div`
@@ -87,10 +89,10 @@ const TelegramButtonContainer = styled.img`
   cursor: pointer;
 `
 
-const StyledText = styled.text<{ fontSize?: string; fontWeight?: string; color?: string }>`
-  font-size: ${(props) => props.fontSize ?? `14px`};
-  color: ${(props) => props.color ?? `#191919`};
-  font-weight: ${(props) => props.fontWeight ?? `400`};
+const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed?: boolean }>`
+  font-size: ${(props) => (props.largeFont ? `22px` : `14px`)};
+  color: ${(props) => (props.grayed ? `#666666` : `#191919`)};
+  font-weight: ${(props) => (props.boldFont ? `700` : `400`)};
   text-align: center;
   line-height: 22px;
 `
@@ -119,23 +121,22 @@ export const ViewBookingCard = (props: Props) => {
     return <TelegramButtonContainer src={ViewBookingCardUserIcon} />
   }
 
-  const fetchTelegram = (userID: string | undefined) => {
-    if (userID) {
+  const fetchTelegram = (userId: string | undefined) => {
+    if (userId) {
       try {
-        fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userID, {
+        fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userId, {
           method: 'GET',
           mode: 'cors',
         })
           .then((resp) => resp.json())
           .then((data) => {
-            if (data.data === '' || data.data === undefined) {
+            if (!data.data) {
               throw data.err
             } else {
               setTelegramHandle(data.data)
             }
           })
       } catch (err) {
-        console.log(err)
         setTelegramHandle('')
       }
     }
@@ -145,36 +146,32 @@ export const ViewBookingCard = (props: Props) => {
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <StyledText fontSize="27px" fontWeight="700">
+          <StyledText largeFont boldFont>
             {props.booking?.eventName}
           </StyledText>
-          <StyledText fontSize="14px" fontWeight="400" color="#666666">
-            {props.booking?.ccaName}
-          </StyledText>
+          <StyledText grayed>{props.booking?.ccaName}</StyledText>
         </BookingHeader>
-        <TelegramDetailsContainer onClick={telegramHandle ? () => openUserTelegram(telegramHandle) : undefined}>
+        <SubContainer onClick={telegramHandle ? () => openUserTelegram(telegramHandle) : undefined}>
           <TelegramButton />
-          <StyledText fontSize="14px" fontWeight="400">
-            @{telegramHandle}
-          </StyledText>
-        </TelegramDetailsContainer>
+          <StyledText>@{telegramHandle}</StyledText>
+        </SubContainer>
         <EventDetailsContainer>
           <EventTimingContainer>
-            <StyledText color="#666666">{unixToFullDay(bookingStartTimeUnix)}</StyledText>
-            <StyledText color="#666666">{unixToFullDate(bookingStartTimeUnix)}</StyledText>
-            <StyledText color="#666666">{unixTo12HourTime(bookingStartTimeUnix)}</StyledText>
+            <StyledText grayed>{unixToFullDay(bookingStartTimeUnix)}</StyledText>
+            <StyledText grayed>{unixToFullDateNumeric(bookingStartTimeUnix)}</StyledText>
+            <StyledText grayed>{unixTo12HourTime(bookingStartTimeUnix)}</StyledText>
           </EventTimingContainer>
-          <StyledText fontWeight="700">{'TO'}</StyledText>
+          <StyledText boldFont>TO</StyledText>
           <EventTimingContainer>
-            <StyledText color="#666666">{unixToFullDay(bookingEndTimeUnix)}</StyledText>
-            <StyledText color="#666666">{unixToFullDate(bookingEndTimeUnix)}</StyledText>
-            <StyledText color="#666666">{unixTo12HourTime(bookingEndTimeUnix)}</StyledText>
+            <StyledText grayed>{unixToFullDay(bookingEndTimeUnix)}</StyledText>
+            <StyledText grayed>{unixToFullDateNumeric(bookingEndTimeUnix)}</StyledText>
+            <StyledText grayed>{unixTo12HourTime(bookingEndTimeUnix)}</StyledText>
           </EventTimingContainer>
         </EventDetailsContainer>
-        <StyledText fontSize="14px" fontWeight="700">
-          {'Additional Note'}
-        </StyledText>
-        <StyledText color="#666666">{props.booking?.description}</StyledText>
+        <SubContainer>
+          <StyledText boldFont>Additional Note</StyledText>
+          <StyledText grayed>{props.booking?.description}</StyledText>
+        </SubContainer>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>
