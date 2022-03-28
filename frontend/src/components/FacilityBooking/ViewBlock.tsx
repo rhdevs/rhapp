@@ -8,7 +8,7 @@ import { scrollToView } from './CurrentTimeLine'
 type Props = {
   entry: TimeBlock
   scrollTo?: boolean
-  onClickFunction: Dispatch<SetStateAction<boolean>>
+  openViewBookingModal: () => void
   setViewBooking: Dispatch<SetStateAction<Booking>>
 }
 
@@ -28,7 +28,7 @@ const ViewBlock = (props: Props) => {
           ref={ref}
           isOccupied={true}
           blockId={props.entry.id}
-          onClick={() => (props.onClickFunction(true), props.setViewBooking(props.entry.booking ?? myBookingsStub[0]))}
+          onClick={() => (props.openViewBookingModal(), props.setViewBooking(props.entry.booking ?? myBookingsStub[0]))}
         >
           <>
             {props.entry.ccaName}

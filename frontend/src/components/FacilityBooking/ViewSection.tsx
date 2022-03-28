@@ -35,7 +35,7 @@ const ViewScheduleBlock = () => {
               entry={entry}
               // if day selected is not current, scroll to defaultTimePosition
               scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
-              onClickFunction={setIsViewBookingModalOpen}
+              openViewBookingModal={() => setIsViewBookingModalOpen(true)}
               setViewBooking={setViewBooking}
             />
           ))}
