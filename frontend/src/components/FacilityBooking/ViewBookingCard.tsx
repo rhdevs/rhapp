@@ -9,6 +9,7 @@ import { unixToFullDate } from '../../common/unixToFullDate'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import { unixToFullDay } from '../../common/unixToFullDay'
 import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
+import { openUserTelegram } from '../../common/telegramMethods'
 
 const BackgroundOverlay = styled.div`
   position: fixed;
@@ -115,7 +116,7 @@ export const ViewBookingCard = (props: Props) => {
   }
 
   const TelegramButton = () => {
-    return <TelegramButtonContainer src={ViewBookingCardUserIcon} onClick={() => console.log('Go to telegram')} />
+    return <TelegramButtonContainer src={ViewBookingCardUserIcon} />
   }
 
   const fetchTelegram = (userID: string | undefined) => {
@@ -140,6 +141,10 @@ export const ViewBookingCard = (props: Props) => {
     }
   }
 
+  function openTelegram(telegramHandle: string) {
+    return openUserTelegram(telegramHandle)
+  }
+
   return (
     <BackgroundOverlay>
       <BookingContainer>
@@ -151,7 +156,7 @@ export const ViewBookingCard = (props: Props) => {
             {props.booking?.ccaName}
           </StyledText>
         </BookingHeader>
-        <TelegramDetailsContainer>
+        <TelegramDetailsContainer onClick={telegramHandle ? () => openTelegram(telegramHandle) : undefined}>
           <TelegramButton />
           <StyledText fontSize="14px" fontWeight="400">
             @{telegramHandle}
