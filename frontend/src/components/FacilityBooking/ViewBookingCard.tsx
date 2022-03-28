@@ -42,7 +42,7 @@ const BookingContainer = styled.div`
   z-index: 205;
 `
 
-const BookingHeader = styled.div`
+const BookingHeader = styled.p`
   width: 100%;
   height: 20%;
   cursor: pointer;
@@ -56,30 +56,30 @@ const BookingHeader = styled.div`
   padding: 20px 0px;
 `
 
-const EventName = styled.div`
+const EventName = styled.p`
   font-size: 22px;
   font-weight: 700;
   margin: 0;
 `
 
-const BookingCca = styled.div`
+const BookingCca = styled.p`
   font-size: 14px;
   font-weight: 400;
   margin: 0;
 `
-const TelegramHandle = styled.div`
+const TelegramHandle = styled.p`
   font-size: 14px;
   font-weight: 400;
   margin: 0;
 `
 
-const AdditionalNoteHeader = styled.div`
+const AdditionalNoteHeader = styled.p`
   font-size: 14px;
   font-weight: 700;
   margin: 10px 0px 0px 0px;
 `
 
-const AdditionalNote = styled.div`
+const AdditionalNote = styled.p`
   font-size: 14px;
   font-weight: 400;
   margin: 0px 50px 20px 50px;
@@ -106,7 +106,7 @@ const EventTimings = styled.div`
   line-height: 22px;
 `
 
-const EventTimingsTo = styled.div`
+const EventTimingsTo = styled.p`
   font-size: 14px;
   font-weight: 700;
   text-align: center;
