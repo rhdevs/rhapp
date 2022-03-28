@@ -56,38 +56,6 @@ const BookingHeader = styled.p`
   padding: 20px 0px;
 `
 
-const EventName = styled.p`
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0;
-`
-
-const BookingCca = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0;
-`
-
-const TelegramHandle = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0;
-`
-
-const AdditionalNoteHeader = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  margin: 10px 0 0 0;
-`
-
-const AdditionalNote = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  margin: 0px 50px 20px 50px;
-  text-align: center;
-  color: #666666;
-`
-
 const EventDetailsContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -99,27 +67,18 @@ const EventTimingContainer = styled.div`
   flex-direction: column;
 `
 
-const EventTimings = styled.div`
-  font-size: 14px;
-  font-weight: 400;
-  text-align: center;
-  color: #666666;
-  margin: 0px;
-  line-height: 22px;
-`
-
-const EventTimingsTo = styled.p`
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  color: #191919;
-  margin: 25px;
-`
-
 const ButtonContainer = styled.img`
   width: 50px;
   height: 50px;
   cursor: pointer;
+`
+
+const StyledText = styled.text<{ fontSize?: string; fontWeight?: string; color?: string }>`
+  font-size: ${(props) => props.fontSize ?? `14px`};
+  color: ${(props) => props.color ?? `#191919`};
+  font-weight: ${(props) => props.fontWeight ?? `400`};
+  text-align: center;
+  line-height: 22px;
 `
 
 type Props = {
@@ -187,26 +146,34 @@ export const ViewBookingCard = (props: Props) => {
     <BackgroundOverlay>
       <BookingContainer>
         <BookingHeader>
-          <EventName>{props.booking?.eventName}</EventName>
-          <BookingCca>{props.booking?.ccaName}</BookingCca>
+          <StyledText fontSize="27px" fontWeight="700">
+            {props.booking?.eventName}
+          </StyledText>
+          <StyledText fontSize="14px" fontWeight="400">
+            {props.booking?.ccaName}
+          </StyledText>
         </BookingHeader>
         <TelegramButton />
-        <TelegramHandle>@{telegramHandle}</TelegramHandle>
+        <StyledText fontSize="14px" fontWeight="400">
+          @{telegramHandle}
+        </StyledText>
         <EventDetailsContainer>
           <EventTimingContainer>
-            <EventTimings>{unixToFullDay(bookingStartTimeUnix)}</EventTimings>
-            <EventTimings>{unixToFullDate(bookingStartTimeUnix)}</EventTimings>
-            <EventTimings>{unixTo12HourTime(bookingStartTimeUnix)}</EventTimings>
+            <StyledText color="#666666">{unixToFullDay(bookingStartTimeUnix)}</StyledText>
+            <StyledText color="#666666">{unixToFullDate(bookingStartTimeUnix)}</StyledText>
+            <StyledText color="#666666">{unixTo12HourTime(bookingStartTimeUnix)}</StyledText>
           </EventTimingContainer>
-          <EventTimingsTo>{'TO'}</EventTimingsTo>
+          <StyledText fontWeight="700">{'TO'}</StyledText>
           <EventTimingContainer>
-            <EventTimings>{unixToFullDay(bookingEndTimeUnix)}</EventTimings>
-            <EventTimings>{unixToFullDate(bookingEndTimeUnix)}</EventTimings>
-            <EventTimings>{unixTo12HourTime(bookingEndTimeUnix)}</EventTimings>
+            <StyledText color="#666666">{unixToFullDay(bookingEndTimeUnix)}</StyledText>
+            <StyledText color="#666666">{unixToFullDate(bookingEndTimeUnix)}</StyledText>
+            <StyledText color="#666666">{unixTo12HourTime(bookingEndTimeUnix)}</StyledText>
           </EventTimingContainer>
         </EventDetailsContainer>
-        <AdditionalNoteHeader>{'Additional Note'}</AdditionalNoteHeader>
-        <AdditionalNote>{props.booking?.description}</AdditionalNote>
+        <StyledText fontSize="14px" fontWeight="700">
+          {'Additional Note'}
+        </StyledText>
+        <StyledText color="#666666">{props.booking?.description}</StyledText>
         <ExitButton />
       </BookingContainer>
     </BackgroundOverlay>
