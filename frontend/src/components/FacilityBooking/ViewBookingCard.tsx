@@ -30,6 +30,7 @@ const BookingContainer = styled.div`
   position: absolute;
   padding-bottom: 20px;
   top: 80px;
+  gap: 10px;
   width: 85%;
   max-width: 400px;
   cursor: pointer;
@@ -38,6 +39,7 @@ const BookingContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
   z-index: 205;
 `
@@ -56,10 +58,15 @@ const BookingHeader = styled.p`
   padding: 20px 0px;
 `
 
+const TelegramDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
 const EventDetailsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 15px;
 `
 
 const EventTimingContainer = styled.div`
@@ -140,14 +147,16 @@ export const ViewBookingCard = (props: Props) => {
           <StyledText fontSize="27px" fontWeight="700">
             {props.booking?.eventName}
           </StyledText>
-          <StyledText fontSize="14px" fontWeight="400">
+          <StyledText fontSize="14px" fontWeight="400" color="#666666">
             {props.booking?.ccaName}
           </StyledText>
         </BookingHeader>
-        <TelegramButton />
-        <StyledText fontSize="14px" fontWeight="400">
-          @{telegramHandle}
-        </StyledText>
+        <TelegramDetailsContainer>
+          <TelegramButton />
+          <StyledText fontSize="14px" fontWeight="400">
+            @{telegramHandle}
+          </StyledText>
+        </TelegramDetailsContainer>
         <EventDetailsContainer>
           <EventTimingContainer>
             <StyledText color="#666666">{unixToFullDay(bookingStartTimeUnix)}</StyledText>
