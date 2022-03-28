@@ -123,22 +123,18 @@ export const ViewBookingCard = (props: Props) => {
 
   const fetchTelegram = (userId: string | undefined) => {
     if (userId) {
-      try {
-        fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userId, {
-          method: 'GET',
-          mode: 'cors',
+      fetch(DOMAIN_URL.FACILITY + ENDPOINTS.TELEGRAM_HANDLE + '/' + userId, {
+        method: 'GET',
+        mode: 'cors',
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (!data.data) {
+            setTelegramHandle('')
+          } else {
+            setTelegramHandle(data.data)
+          }
         })
-          .then((resp) => resp.json())
-          .then((data) => {
-            if (!data.data) {
-              throw data.err
-            } else {
-              setTelegramHandle(data.data)
-            }
-          })
-      } catch (err) {
-        setTelegramHandle('')
-      }
     }
   }
 
