@@ -34,7 +34,7 @@ const ViewBlock = (props: Props) => {
           {props.entry.eventName}
         </StyledViewBooking>
       ) : (
-        <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id}></StyledViewBooking>
+        <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
       )}
     </>
   )
