@@ -15,7 +15,8 @@ import { getUpdateAllItemsPageDetails } from '../../../../store/supper/action/le
 import { RootState } from '../../../../store/types'
 import { OldInfoContainer } from '../UpdateDelivery'
 
-const ErrorText = styled.text`
+const ErrorText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

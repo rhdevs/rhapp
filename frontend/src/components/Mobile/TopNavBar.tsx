@@ -5,7 +5,8 @@ import styled from 'styled-components'
 
 import 'antd-mobile/dist/antd-mobile.css'
 
-const TitleText = styled.text`
+const TitleText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

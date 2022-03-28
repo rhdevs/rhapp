@@ -134,6 +134,9 @@ const CreateBooking = React.lazy(
 const CreateBookingDailyView = React.lazy(
   () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
 )
+const EditBooking = React.lazy(
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/EditBooking/index'),
+)
 
 // LAUNDRY
 const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
@@ -172,7 +175,7 @@ export default class Routes extends React.Component {
   render() {
     return (
       <Root>
-        <Suspense fallback={LoadingSpin}>
+        <Suspense fallback={<LoadingSpin />}>
           <AnimatedSwitch
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 0 }}
@@ -206,6 +209,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING} component={EditBooking} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />

@@ -38,13 +38,15 @@ const TextSubContainer = styled.div`
   width: 60%;
 `
 
-const TitleContainer = styled.text`
+const TitleContainer = styled.p`
+  margin: 0;
   font-size: 16px;
   font-weight: 500;
   line-height: 17px;
 `
 
-const OrderIdContainer = styled.text`
+const OrderIdContainer = styled.p`
+  margin: 0;
   font-size: 14px;
   line-height: 15px;
   font-weight: 300;
@@ -60,7 +62,7 @@ const StatusContainer = styled.div<{ statusOnly?: boolean }>`
   align-items: center;
 `
 
-const ReasonText = styled.text`
+const ReasonText = styled.p`
   font-weight: 200;
   font-size: 14px;
   margin: auto;
@@ -87,7 +89,7 @@ const IconImage = styled.img`
   height: fit-content;
 `
 
-const LocationText = styled.text`
+const LocationText = styled.p`
   font-size: 14px;
   margin: 0 5px;
 `
@@ -99,7 +101,7 @@ const PaymentTextContainer = styled.div`
   flex-wrap: wrap;
 `
 
-const CashText = styled.text`
+const CashText = styled.p`
   margin: 0 5px;
   font-size: 12px;
   color: rgba(0, 38, 66, 0.7);

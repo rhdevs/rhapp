@@ -69,7 +69,8 @@ const StyledImgShadowTwo = styled.div`
   right: -3px;
 `
 
-const TitleText = styled.text`
+const TitleText = styled.p`
+  margin: 0;
   color: black;
   font-family: Inter;
   font-size: 16px;
@@ -80,7 +81,8 @@ const TitleText = styled.text`
   text-overflow: ellipsis;
 `
 
-const TimeDateText = styled.text`
+const TimeDateText = styled.p`
+  margin: 0;
   color: grey;
   font-family: Inter;
   font-size: 14px;
@@ -89,7 +91,8 @@ const TimeDateText = styled.text`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-const DescriptionText = styled.text`
+const DescriptionText = styled.p`
+  margin: 0;
   color: black;
   font-family: Inter;
   font-size: 14px;

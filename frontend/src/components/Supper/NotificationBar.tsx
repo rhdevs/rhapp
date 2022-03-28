@@ -47,21 +47,24 @@ const RightContainer = styled.div`
   justify-content: center;
 `
 
-const HeaderText = styled.text`
+const HeaderText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: 300;
   font-size: 14px;
   line-height: 18px;
 `
 
-const GroupNameText = styled.text`
+const GroupNameText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 18px;
 `
 
-const DescriptionText = styled.text`
+const DescriptionText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: 200;
   font-size: 13px;

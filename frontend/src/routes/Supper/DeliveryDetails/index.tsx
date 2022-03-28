@@ -40,7 +40,8 @@ const MainContainer = styled.div`
   margin: 0 auto;
 `
 
-const StyledSGIdText = styled.text`
+const StyledSGIdText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -59,7 +60,8 @@ const DeliveryTimeContainer = styled.div`
   align-items: baseline;
 `
 
-const StyledTimeText = styled.text`
+const StyledTimeText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: normal;

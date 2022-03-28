@@ -101,7 +101,8 @@ const StyledText = styled.text<{ color?: string }>`
   color: ${(props) => props.color ?? 'black'};
 `
 
-const BoldText = styled.text`
+const BoldText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 400;
@@ -109,11 +110,13 @@ const BoldText = styled.text`
   line-height: 15px;
 `
 
-const ExtraTextContainer = styled.text`
+const ExtraTextContainer = styled.p`
+  margin: 0;
   line-height: normal;
 `
 
-const StyledEditedText = styled.text`
+const StyledEditedText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
@@ -122,7 +125,8 @@ const StyledEditedText = styled.text`
   color: ${V1_RED};
 `
 
-const ErrorText = styled.text`
+const ErrorText = styled.p`
+  margin: 0;
   text-align: center;
   color: ${V1_RED};
   font-family: 'Inter';

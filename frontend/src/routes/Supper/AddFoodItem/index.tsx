@@ -34,7 +34,8 @@ const MainContainer = styled.div`
   margin: 0 auto;
 `
 
-const FoodItemHeader = styled.text`
+const FoodItemHeader = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
