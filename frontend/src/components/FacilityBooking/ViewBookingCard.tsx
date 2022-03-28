@@ -141,10 +141,6 @@ export const ViewBookingCard = (props: Props) => {
     }
   }
 
-  function openTelegram(telegramHandle: string) {
-    return openUserTelegram(telegramHandle)
-  }
-
   return (
     <BackgroundOverlay>
       <BookingContainer>
@@ -156,7 +152,7 @@ export const ViewBookingCard = (props: Props) => {
             {props.booking?.ccaName}
           </StyledText>
         </BookingHeader>
-        <TelegramDetailsContainer onClick={telegramHandle ? () => openTelegram(telegramHandle) : undefined}>
+        <TelegramDetailsContainer onClick={telegramHandle ? () => openUserTelegram(telegramHandle) : undefined}>
           <TelegramButton />
           <StyledText fontSize="14px" fontWeight="400">
             @{telegramHandle}
