@@ -67,6 +67,7 @@ const BookingCca = styled.p`
   font-weight: 400;
   margin: 0;
 `
+
 const TelegramHandle = styled.p`
   font-size: 14px;
   font-weight: 400;
@@ -76,7 +77,7 @@ const TelegramHandle = styled.p`
 const AdditionalNoteHeader = styled.p`
   font-size: 14px;
   font-weight: 700;
-  margin: 10px 0px 0px 0px;
+  margin: 10px 0 0 0;
 `
 
 const AdditionalNote = styled.p`
@@ -86,6 +87,7 @@ const AdditionalNote = styled.p`
   text-align: center;
   color: #666666;
 `
+
 const EventDetailsContainer = styled.div`
   display: flex;
   flex-direction: row;
