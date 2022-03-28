@@ -35,13 +35,15 @@ const TitleContainer = styled.div<{ flex?: boolean }>`
   ${(props) => props.flex && 'display: flex;'}
 `
 
-const TitleText = styled.text`
+const TitleText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-size: 16px;
   font-weight: 400;
 `
 
-const DescriptionText = styled.text`
+const DescriptionText = styled.p`
+  margin: 0;
   font-weight: 250;
   font-size: 14px;
   padding-top: 0.5rem;

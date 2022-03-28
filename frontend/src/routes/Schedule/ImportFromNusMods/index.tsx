@@ -26,7 +26,8 @@ const BottomContainer = styled.div`
   left: 0;
 `
 
-const LinkText = styled.text`
+const LinkText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-weight: 200;

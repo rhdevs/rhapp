@@ -16,7 +16,8 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
-const AccountText = styled.text`
+const AccountText = styled.p`
+  margin: 0;
   font-family: ui-monospace;
   float: left;
   font-size: 12px;

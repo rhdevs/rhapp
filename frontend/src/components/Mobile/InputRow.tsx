@@ -44,7 +44,7 @@ const StyledTextArea = styled(TextArea)<{ haserror?: boolean }>`
   }
 `
 
-const StyledTitle = styled.text`
+const StyledTitle = styled.p`
   font-family: Inter;
   color: black;
   font-size: 15px;

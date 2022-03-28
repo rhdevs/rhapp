@@ -40,7 +40,7 @@ const StickyContainer = styled.div`
   background: ${V1_BACKGROUND};
 `
 
-const Restaurant = styled.text`
+const Restaurant = styled.p`
   font-weight: 700;
   font-size: 24px;
   margin-left: 5px;

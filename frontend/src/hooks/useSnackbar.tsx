@@ -27,7 +27,8 @@ import 'antd/dist/antd.css'
 
 import { message } from 'antd'
 
-const StyledText = styled.text`
+const StyledText = styled.p`
+  margin: 0;
   font-size: 17px;
   font-weight: 200;
 `

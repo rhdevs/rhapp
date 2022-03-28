@@ -169,7 +169,7 @@ export default class Routes extends React.Component {
   render() {
     return (
       <Root>
-        <Suspense fallback={LoadingSpin}>
+        <Suspense fallback={<LoadingSpin />}>
           <AnimatedSwitch
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 0 }}
