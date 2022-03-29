@@ -20,26 +20,22 @@ const ViewBlock = (props: Props) => {
     }
   }, [ref.current])
 
-  return (
-    <>
-      {props.entry.booking ? (
-        <StyledViewBooking
-          ref={ref}
-          isOccupied
-          blockId={props.entry.id}
-          onClick={() => {
-            props.openViewBookingModal()
-            props.setViewBookingEntryId()
-          }}
-        >
-          {props.entry.ccaName}
-          <br />
-          {props.entry.eventName}
-        </StyledViewBooking>
-      ) : (
-        <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
-      )}
-    </>
+  return props.entry.booking ? (
+    <StyledViewBooking
+      ref={ref}
+      isOccupied
+      blockId={props.entry.id}
+      onClick={() => {
+        props.openViewBookingModal()
+        props.setViewBookingEntryId()
+      }}
+    >
+      {props.entry.ccaName}
+      <br />
+      {props.entry.eventName}
+    </StyledViewBooking>
+  ) : (
+    <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
   )
 }
 

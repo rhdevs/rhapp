@@ -98,8 +98,8 @@ const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed
 `
 
 type Props = {
-  booking?: Booking | null
-  onClickFunction: Dispatch<SetStateAction<boolean | undefined>>
+  booking?: Booking
+  onClickFunction: Dispatch<SetStateAction<boolean>>
 }
 
 export const ViewBookingCard = (props: Props) => {
@@ -129,11 +129,7 @@ export const ViewBookingCard = (props: Props) => {
       })
         .then((resp) => resp.json())
         .then((data) => {
-          if (!data.data) {
-            setTelegramHandle('')
-          } else {
-            setTelegramHandle(data.data)
-          }
+          setTelegramHandle(data.data ?? '')
         })
     }
   }
