@@ -99,7 +99,7 @@ const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed
 
 type Props = {
   booking?: Booking
-  onClickFunction: Dispatch<SetStateAction<boolean | undefined>>
+  onClickFunction: () => void
 }
 
 export const ViewBookingCard = (props: Props) => {
@@ -114,7 +114,7 @@ export const ViewBookingCard = (props: Props) => {
   })
 
   const ExitButton = () => {
-    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction(false)} />
+    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction()} />
   }
 
   const TelegramButton = () => {
