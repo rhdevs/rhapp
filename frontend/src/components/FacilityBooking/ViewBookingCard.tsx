@@ -99,7 +99,7 @@ const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed
 
 type Props = {
   booking?: Booking
-  onClickFunction: Dispatch<SetStateAction<boolean>>
+  onClickFunction: Dispatch<SetStateAction<boolean | undefined>>
 }
 
 export const ViewBookingCard = (props: Props) => {
