@@ -45,7 +45,7 @@ const Status = styled.div<{ status: string }>`
   width: 4px;
   height: 49px;
   background: ${(props) =>
-    props.status == 'OPENED' ? `#58b994` : props.status == 'CLOSED' ? `#F37562` : `transparent`};
+    props.status === 'OPENED' ? `#58b994` : props.status === 'CLOSED' ? `#F37562` : `transparent`};
   border-radius: 2px;
   margin-top: 0.5em;
   margin-right: 4%;
