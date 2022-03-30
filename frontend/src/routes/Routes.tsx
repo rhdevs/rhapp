@@ -36,11 +36,11 @@ export enum PATHS {
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view',
-  VIEW_FACILITY_ID = '/facility/view/:facilityID/:isEndDate',
+  VIEW_FACILITY_ID = '/facility/view/:facilityId/:isEndDate',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
-  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityID',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',

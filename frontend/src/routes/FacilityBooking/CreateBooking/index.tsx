@@ -243,7 +243,7 @@ export default function CreateBooking() {
               title="End Date"
               value={bookingEndDate === 0 ? '' : unixToFullDate(bookingEndDate)}
               isCompulsory={true}
-              onClick={() => history.push(`/facility/view/${params.facilityId}/1`)}
+              onClick={() => history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}/1`)}
               // TODO, Redirect to choose date calender page
             ></SelectableField>
           )}

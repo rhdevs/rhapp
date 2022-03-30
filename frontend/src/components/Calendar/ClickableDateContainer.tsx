@@ -39,7 +39,7 @@ export const ClickableDateContainer = (props: { date: Date; eventPresent?: boole
   const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
-  const params = useParams<{ facilityID: string; isEndDate: string }>()
+  const params = useParams<{ facilityId: string; isEndDate: string }>()
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
@@ -56,7 +56,7 @@ export const ClickableDateContainer = (props: { date: Date; eventPresent?: boole
       return
     } else {
       dispatch(setBookingEndDate(ClickedDate))
-      history.push(`/facility/booking/create/${params.facilityID}`)
+      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
     }
   }
 

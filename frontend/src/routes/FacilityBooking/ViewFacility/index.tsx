@@ -28,15 +28,15 @@ const MainContainer = styled.div`
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityID: string }>()
+  const params = useParams<{ facilityId: string }>()
   const { selectedFacilityName, selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(resetBooking())
-    dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
+    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
     if (selectedFacilityId == 0) {
-      dispatch(setSelectedFacility(parseInt(params.facilityID)))
+      dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
 
@@ -58,7 +58,7 @@ export default function ViewFacility() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityID)} />
+          <Calendar selectedFacilityId={parseInt(params.facilityId)} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
