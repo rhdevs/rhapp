@@ -118,7 +118,7 @@ export default function CreateBooking() {
   const params = useParams<{ facilityId: string }>()
 
   const selectedFacilityId = parseInt(params.facilityId)
-  const dateRowStartDate = location.state.dateRowStartDate
+  // const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -189,12 +189,12 @@ export default function CreateBooking() {
   }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
-    history.push({
-      pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    // history.push({
+    //   pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
+    //   state: {
+    //     dateRowStartDate: dateRowStartDate,
+    //   },
+    // })
   }
 
   const onLeftClick = () => {
