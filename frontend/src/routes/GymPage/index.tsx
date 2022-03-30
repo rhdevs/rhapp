@@ -34,7 +34,6 @@ const GymBarContainer = styled.div`
 `
 
 const MainContainer = styled.div`
-  // Margin for top navigation bar
   margin-top: 45px;
 `
 
@@ -51,15 +50,14 @@ const GymTabContainer = styled.div<{ isSelected?: boolean }>`
   align-items: center;
   margin-bottom: 5px;
   background-color: #fff;
-  color: #191919;
+  color: ${(props) => (props.isSelected ? '#59ba95' : '#191919')};
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   height: 45px;
   ${(props) =>
     props.isSelected &&
-    `color: #59ba95;
-    background-position: 50% 2.5em;
+    `background-position: 50% 2.5em;
     background-image: linear-gradient(
       to bottom,
       #59ba95,
@@ -94,7 +92,7 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         />
         <TabContainer>
           {sections.map((section, index) => {
-            const isSelected = sections.indexOf(section) === currentTab - 1
+            const isSelected = index === currentTab - 1
             return (
               <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
                 {section}

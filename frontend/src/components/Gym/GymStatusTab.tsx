@@ -1,10 +1,10 @@
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import React, { ReactElement, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import GymStatus from './GymStatus'
 import GymKeyWith from './GymKeyWith'
 import GymConfirmationModal from './GymConfirmationModal'
-import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store/types'
 import { getGymStatus, getProfilePic } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
@@ -52,13 +52,13 @@ function GymStatusTab() {
 
   function getButtonStates(): ButtonStates {
     if (!gymStatus.gymIsOpen) {
-      if (gymStatus.keyHolder.displayName == name) {
+      if (gymStatus.keyHolder.displayName === name) {
         return gymButtonStates.get('gymClosed')!
       }
       return gymButtonStates.get('keyWithOthers')!
     }
     //Runs this if gym is open
-    if (gymStatus.keyHolder.displayName == name) {
+    if (gymStatus.keyHolder.displayName === name) {
       return gymButtonStates.get('gymOpen')!
     }
     return gymButtonStates.get('keyWithOthers')!

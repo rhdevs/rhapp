@@ -20,7 +20,6 @@ const Status = styled.div<{ isOpen: boolean }>`
   font-weight: bold;
   font-size: 22px;
   line-height: 26px;
-  letter-spacing: -0.015em;
   padding-left: 8px;
 
   background: ${(props) =>

@@ -32,7 +32,7 @@ export type KeyWithArgs = {
   keyStatus: string
 }
 
-export type reqArgs = {
+export type ReqArgs = {
   name: string
   telegram: string
 }
@@ -46,33 +46,33 @@ export enum GYM_ACTIONS {
   TOGGLE_GYM = 'GYM_ACTIONS.TOGGLE_GYM',
 }
 
-type getGymStatus = {
+type GetGymStatus = {
   type: typeof GYM_ACTIONS.GET_GYM_STATUS
   gymStatus: GymStatusStates
 }
 
-type getGymHistory = {
+type GetGymHistory = {
   type: GYM_ACTIONS.GET_GYM_HISTORY
   history: HistoryEntry[]
 }
 
-type moveKey = {
+type MoveKey = {
   type: GYM_ACTIONS.MOVE_KEY
-  keyArgs: reqArgs
+  keyArgs: ReqArgs
 }
 
-type returnKey = {
+type ReturnKey = {
   type: GYM_ACTIONS.RETURN_KEY
-  keyArgs: reqArgs
+  keyArgs: ReqArgs
 }
 
-type toggleGym = {
+type ToggleGym = {
   type: GYM_ACTIONS.TOGGLE_GYM
 }
 
-type getProfilePic = {
+type GetProfilePic = {
   type: GYM_ACTIONS.GET_PROFILE_PIC
   pic: string
 }
 
-export type ActionTypes = getGymStatus | getGymHistory | getProfilePic | moveKey | returnKey | toggleGym
+export type ActionTypes = GetGymStatus | GetGymHistory | GetProfilePic | MoveKey | ReturnKey | ToggleGym

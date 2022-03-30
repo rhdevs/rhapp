@@ -1,38 +1,37 @@
 import React, { useEffect } from 'react'
-import { unixToFormattedTimeNoSeconds } from '../../common/unixToFormattedTimeNoSeconds'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { getGymHistory } from '../../store/gym/action'
 import { RootState } from '../../store/types'
+import { unixToFormattedTimeNoSeconds } from '../../common/unixToFormattedTimeNoSeconds'
 
 const Container = styled.div`
   padding: 0 10% 0 8%;
   background: #fff;
 `
 
-const Date = styled.div`
+const Date = styled.p`
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
   line-height: 22px;
-  letter-spacing: -0.015em;
 
   color: #000000;
 
   padding-top: 5%;
+  margin: 0;
 `
 
-const Content = styled.div`
+const Content = styled.p`
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
   line-height: 22px;
-  letter-spacing: -0.015em;
 
   color: #000000;
-
+  margin: 0;
   padding: 8% 5% 1em 0;
 `
 

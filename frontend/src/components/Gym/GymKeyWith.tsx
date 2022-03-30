@@ -4,7 +4,7 @@ import Avatar from '../../assets/Avatar_4x.png'
 import { openUserTelegram } from '../../common/telegramMethods'
 import { LAPTOP_VIEW } from '../../common/breakpoints'
 
-const Header = styled.div`
+const Header = styled.h2`
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
@@ -13,6 +13,7 @@ const Header = styled.div`
   text-align: center;
   color: #000000;
   padding: 30px;
+  margin: 0;
 `
 
 const InfoArea = styled.div`
@@ -25,7 +26,6 @@ const InfoArea = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  letter-spacing: -0.015em;
   color: #191919;
 `
 

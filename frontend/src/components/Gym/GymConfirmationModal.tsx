@@ -1,8 +1,8 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { ConfirmationModal } from '../ConfirmationModal'
 import { moveKey, returnKey, toggleGym } from '../../store/gym/action'
 import { ButtonTypes } from '../../store/gym/types'
-import { useDispatch } from 'react-redux'
 
 function GymConfirmationModal(props: {
   gymIsOpen: boolean | null
