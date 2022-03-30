@@ -13,8 +13,9 @@ type Props = {
 }
 
 const BookingBlock = (props: Props) => {
-  const { selectedStartTime } = useSelector((state: RootState) => state.facilityBooking)
   const ref = useRef<HTMLDivElement>(null)
+
+  const { selectedStartTime, selectedEndTime } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     if (props.scrollTo) {
@@ -23,28 +24,30 @@ const BookingBlock = (props: Props) => {
   }, [ref.current])
 
   function blockText() {
-    let text = ''
     switch (props.entry.type) {
       case TimeBlockType.OCCUPIED:
-        text = 'Occupied'
-        break
+        return 'Occupied'
       case TimeBlockType.AVAILABLE:
-        text = 'Available'
-        break
+        return 'Available'
       case TimeBlockType.SELECTED:
-        text = 'Selected as starting time'
-        break
+        return 'Selected as starting time'
       default:
-        break
+        return ''
     }
-    return text
   }
 
   function hasOverlay() {
     const currentTimestamp = Math.round(Date.now() / 1000)
     const currentStartHour = currentTimestamp - (currentTimestamp % 3600)
-    const cutoff = selectedStartTime === -1 ? currentStartHour : Math.max(currentStartHour, selectedStartTime)
-    return (props.entry.type === TimeBlockType.OCCUPIED && cutoff >= props.entry.timestamp) as boolean
+
+    const cutoffStart = selectedStartTime === 0 ? currentStartHour : Math.max(currentStartHour, selectedStartTime)
+    const cutoffEnd = selectedEndTime === 0 ? Infinity : selectedEndTime
+
+    return (
+      props.entry.type === TimeBlockType.OCCUPIED ||
+      cutoffStart > props.entry.timestamp ||
+      cutoffEnd <= props.entry.timestamp
+    )
   }
 
   return (

@@ -10,7 +10,7 @@ const CounterContainer = styled.div<{ center?: boolean }>`
   ${(props) => props.center && 'margin: 0 auto;'}
 `
 
-const ValueContainer = styled.text`
+const ValueContainer = styled.p`
   font-size: 24px;
   font-weight: 500;
   margin: 25px;

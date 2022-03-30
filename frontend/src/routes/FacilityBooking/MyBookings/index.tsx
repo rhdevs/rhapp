@@ -121,8 +121,8 @@ const NoBookingsFound = styled.div`
   margin-top: 40px;
 `
 
-function FacilityLogo(props: { facilityID: number }) {
-  switch (props.facilityID) {
+function FacilityLogo(props: { facilityId: number }) {
+  switch (props.facilityId) {
     case 1:
       return <BookingAvatar src={MainAreaUL} />
     case 2:
@@ -183,7 +183,7 @@ export default function ViewMyBookings() {
                 if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
                     <BookingCard key={booking.bookingID}>
-                      <FacilityLogo key={booking.facilityID} facilityID={booking.facilityID} />
+                      <FacilityLogo key={booking.facilityID} facilityId={booking.facilityID} />
                       <BookingLabels
                         onClick={() => {
                           history.push('/facility/booking/view/' + booking.bookingID)

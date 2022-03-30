@@ -38,12 +38,16 @@ export enum PATHS {
   VIEW_FACILITY = '/facility/view',
   VIEW_FACILITY_ID = '/facility/view/:facilityId/:isEndDate',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/create/:facilityId',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
-  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/:facilityId',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/',
+  VIEW_FACILITY_CONFLICT_ID = '/facility/booking/create/conflict/:facilityId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
-  VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/:facilityId',
+  VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
   VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
   // LAUNDRY
@@ -128,6 +132,9 @@ const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict
 const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking/index'),
 )
+const CreateBookingDailyView = React.lazy(
+  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
+)
 const EditBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/EditBooking/index'),
 )
@@ -169,7 +176,7 @@ export default class Routes extends React.Component {
   render() {
     return (
       <Root>
-        <Suspense fallback={LoadingSpin}>
+        <Suspense fallback={<LoadingSpin />}>
           <AnimatedSwitch
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 0 }}
@@ -199,7 +206,9 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW} component={ViewBookingDailyView} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW_ID} component={ViewBookingDailyView} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING} component={EditBooking} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />

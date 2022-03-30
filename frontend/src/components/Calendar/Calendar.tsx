@@ -45,7 +45,7 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { selectedFacilityId: number }) => {
+export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date: Date) => void }) => {
   const dispatch = useDispatch()
   const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
 
@@ -59,39 +59,43 @@ export const Calendar = (props: { selectedFacilityId: number }) => {
   const currentYear = today.getFullYear()
 
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
-  return (
-    <>
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <CalenderContainer>
-          <YearContainer>{currentYear}</YearContainer>
-          <MonthContainer>
-            <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-            <DatesGridContainer>
-              <DayHeaders />
-              <DateRows currentDate={today} nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
-            </DatesGridContainer>
-          </MonthContainer>
-          <>
-            {monthList.slice(1).map((month) => {
-              return (
-                <div key={startingMonth}>
-                  {/* Note: 0 stands for Jan */}
-                  {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
-                  <MonthContainer>
-                    <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-                    <DatesGridContainer>
-                      <DayHeaders />
-                      <DateRows currentDate={today} nthMonth={startingMonth++} facilityId={props.selectedFacilityId} />
-                    </DatesGridContainer>
-                  </MonthContainer>
-                </div>
-              )
-            })}
-          </>
-        </CalenderContainer>
-      )}
-    </>
+  return isLoading ? (
+    <LoadingSpin />
+  ) : (
+    <CalenderContainer>
+      <YearContainer>{currentYear}</YearContainer>
+      <MonthContainer>
+        <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+        <DatesGridContainer>
+          <DayHeaders />
+          <DateRows
+            currentDate={today}
+            nthMonth={startingMonth++}
+            facilityId={props.selectedFacilityId}
+            onDateClick={props.onDateClick}
+          />
+        </DatesGridContainer>
+      </MonthContainer>
+      {monthList.slice(1).map((month) => {
+        return (
+          <div key={startingMonth}>
+            {/* Note: 0 stands for Jan */}
+            {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
+            <MonthContainer>
+              <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+              <DatesGridContainer>
+                <DayHeaders />
+                <DateRows
+                  currentDate={today}
+                  nthMonth={startingMonth++}
+                  facilityId={props.selectedFacilityId}
+                  onDateClick={props.onDateClick}
+                />
+              </DatesGridContainer>
+            </MonthContainer>
+          </div>
+        )
+      })}
+    </CalenderContainer>
   )
 }

@@ -4,7 +4,8 @@ import { RootState } from '../../../store/types'
 import { ConfirmationModal } from '../../../components/ConfirmationModal'
 import { useHistory } from 'react-router-dom'
 import { PATHS } from '../../Routes'
-import { handleCreateNewBooking } from '../../../store/facilityBooking/action'
+import { handleCreateNewBooking, setBookingStatus } from '../../../store/facilityBooking/action'
+import { BookingStatus } from '../../../store/facilityBooking/types'
 
 type Props = {
   modalOpen: boolean
@@ -17,8 +18,10 @@ export default function ConflictBookingModal(props: Props) {
 
   function toggleStatus() {
     props.setModalOpen(!open)
+    dispatch(setBookingStatus(BookingStatus.INITIAL))
   }
   function onRightClick() {
+    // TODO doesn't work as intended (investigate)
     dispatch(
       handleCreateNewBooking(
         booking?.facilityID,

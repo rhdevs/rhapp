@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -13,12 +13,13 @@ import {
   fetchAllCCAs,
   getFacilityList,
   setIsLoading,
-  resetBooking,
   handleCreateNewBooking,
-  setBookingStartTime,
-  setBookingEndTime,
   setBookingEndDate,
   resetNewBooking,
+  setSelectedBlockTimestamp,
+  setSelectedStartTime,
+  setSelectedEndTime,
+  setBookingStatus,
 } from '../../../store/facilityBooking/action'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
@@ -31,6 +32,7 @@ import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+import { ViewBookingLocationState } from '../ViewBookingDailyView'
 
 const Background = styled.div`
   background-color: #fff;
@@ -92,7 +94,6 @@ export default function CreateBooking() {
   const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
   const {
     handleSubmit,
     formState: { errors },
@@ -112,12 +113,13 @@ export default function CreateBooking() {
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate === 0 ? false : true)
-  const formIsValid = () => {
-    if (isWeeklyOn) {
-      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
-    }
-    return watch('eventName') !== '' && ccaName !== ''
-  }
+
+  const location = useLocation<ViewBookingLocationState>()
+  const params = useParams<{ facilityId: string }>()
+
+  const selectedFacilityId = parseInt(params.facilityId)
+  const dateRowStartDate = location.state.dateRowStartDate
+
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchAllCCAs())
@@ -129,8 +131,15 @@ export default function CreateBooking() {
     }
   }, [dispatch])
 
+  const formIsValid = () => {
+    if (isWeeklyOn) {
+      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
+    }
+    return watch('eventName') !== '' && ccaName !== ''
+  }
+
   const getFacilityName = () => {
-    return facilityList.find((facility) => facility.facilityID === Number(params.facilityId))?.facilityName
+    return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
 
   const handleToggleWeekly = () => {
@@ -139,6 +148,7 @@ export default function CreateBooking() {
       dispatch(setBookingEndDate(0))
     }
   }
+
   const onSubmit = (e) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
@@ -170,16 +180,47 @@ export default function CreateBooking() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
+      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
+      dispatch(setBookingStatus(BookingStatus.INITIAL))
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
       setmodalIsOpen(true)
     }
   }, [bookingStatus])
 
+  const goBackToTimeSelectionPage = () => {
+    history.push({
+      pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
+      state: {
+        dateRowStartDate: dateRowStartDate,
+      },
+    })
+  }
+
+  const onLeftClick = () => {
+    // when go back, reset user's time selections
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    dispatch(setSelectedEndTime(0))
+    goBackToTimeSelectionPage()
+  }
+
+  const startDateFieldOnClick = () => {
+    // reselect start date only
+    dispatch(setSelectedBlockTimestamp(0))
+    dispatch(setSelectedStartTime(0))
+    goBackToTimeSelectionPage()
+  }
+
+  const endDateFieldOnClick = () => {
+    // reselect end date only
+    dispatch(setSelectedEndTime(0))
+    goBackToTimeSelectionPage()
+  }
+
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -198,17 +239,15 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingStartTime(1644641028))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
+            onClick={startDateFieldOnClick}
+            isCompulsory
+          />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            isCompulsory={true}
-            onClick={() => dispatch(setBookingEndTime(1644648228))}
-            // TODO, Redirect to choose timing page
-          ></SelectableField>
+            onClick={endDateFieldOnClick}
+            isCompulsory
+          />
           <Container>
             <StyledTitle>CCA</StyledTitle>
             <CCAInput
@@ -245,7 +284,7 @@ export default function CreateBooking() {
               isCompulsory={true}
               onClick={() => history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}/1`)}
               // TODO, Redirect to choose date calender page
-            ></SelectableField>
+            />
           )}
           <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
           <div style={{ width: '100%', height: '30px' }}></div>
@@ -254,8 +293,8 @@ export default function CreateBooking() {
             text="Submit"
             type="submit"
             disabled={!formIsValid()}
-            onClick={() => console.log('submitted')}
-          ></ButtonComponent>
+            onClick={() => null}
+          />
         </Form>
       )}
     </Background>

@@ -1,30 +1,29 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
 import { setClickedDate } from '../../store/calendar/actions'
+import { useParams } from 'react-router-dom'
 import { RootState } from '../../store/types'
-import { PATHS } from '../../routes/Routes'
 import { setBookingEndDate } from '../../store/facilityBooking/action'
 
-const DateContainer = styled.div<{ selected?: boolean; currentDate?: boolean }>`
+const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
   padding-top: 0px;
   padding-bottom: auto;
   text-align: center;
   height: 40px;
   width: 47.14px;
-  color: ${(props) => (props.selected ? 'white' : props.currentDate ? '#58B994' : '')};
+  color: ${(props) => (props.selected ? 'white' : props.disabled ? '#888888' : props.isCurrentDate ? '#58B994' : '')};
   border-radius: 40px;
-  background-color: ${(props) => (props.selected ? '#468751' : props.currentDate ? '#D8E6DF' : '')};
+  background-color: ${(props) => (props.selected ? '#468751' : props.isCurrentDate ? '#D8E6DF' : '')};
   display: flex;
   justify-content: center;
   flex-direction: column;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 `
 
-const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }>`
-  display: ${(props) => (props.eventPresent ? 'block' : 'none')};
+const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
+  display: ${(props) => (props.hasEvent ? 'block' : 'none')};
   align-self: center;
   margin-top: -6px;
   margin-bottom: -1px;
@@ -34,56 +33,51 @@ const EventIndicator = styled.div<{ selected?: boolean; eventPresent?: boolean }
   background-color: ${(props) => (props.selected ? 'white' : '#468751')};
 `
 
-export const ClickableDateContainer = (props: { date: Date; eventPresent?: boolean; facilityId: number }) => {
+export const ClickableDateContainer = (props: {
+  date: Date
+  facilityId: number
+  hasEvent?: boolean
+  disabled?: boolean
+  onDateClick: (date: Date) => void
+}) => {
   const dispatch = useDispatch()
-  const history = useHistory()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-  const assignedDateMonth = new Date(props.date.getFullYear(), props.date.getMonth(), props.date.getDate())
-  const params = useParams<{ facilityId: string; isEndDate: string }>()
+  const params = useParams<{ isEndDate: string }>()
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
-    dispatch(setClickedDate(newClickedDate))
-    history.push({
-      pathname: PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW,
-      state: {
-        facilityId: props.facilityId,
-        date: assignedDateMonth,
-      },
-    })
-  }
-  const DateContainerEndDateHandler = (ClickedDate: number) => {
-    if (Date.now() / 1000 > ClickedDate) {
-      return
+    if (parseInt(params.isEndDate) === 0) {
+      dispatch(setClickedDate(newClickedDate))
     } else {
-      dispatch(setBookingEndDate(ClickedDate))
-      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+      const reccuringdate = newClickedDate.getTime() / 1000
+      if (Date.now() / 1000 > reccuringdate) {
+      } else {
+        dispatch(setBookingEndDate(reccuringdate))
+      }
     }
+    props.onDateClick(newClickedDate)
   }
 
   const hasEvent = () => {
-    return processedDates.find((processedDate) => processedDate === assignedDateMonth) !== undefined
+    return processedDates.find((processedDate) => processedDate === props.date) !== undefined
   }
 
   const isCurrentDate = () => {
     const today = new Date()
-    return today.toDateString() === assignedDateMonth.toDateString()
+    return today.toDateString() === props.date.toDateString()
   }
 
   const isCurrentDateClicked = () => {
-    return clickedDate.toDateString() === assignedDateMonth.toDateString()
+    return clickedDate.toDateString() === props.date.toDateString()
   }
 
   return (
     <DateContainer
-      onClick={
-        parseInt(params.isEndDate) === 0
-          ? () => DateContainerClickHandler(assignedDateMonth)
-          : () => DateContainerEndDateHandler(props.date.getTime() / 1000)
-      }
+      onClick={() => !props.disabled && DateContainerClickHandler(props.date)}
       selected={isCurrentDateClicked()}
-      currentDate={isCurrentDate()}
+      isCurrentDate={isCurrentDate()}
+      disabled={props.disabled}
     >
-      <EventIndicator selected={isCurrentDateClicked()} eventPresent={hasEvent()} />
+      <EventIndicator selected={isCurrentDateClicked()} hasEvent={hasEvent()} />
       {props.date.getDate()}
     </DateContainer>
   )

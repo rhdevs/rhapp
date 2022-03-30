@@ -93,7 +93,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
         bookings.map((booking) => (
           <BookingContainer
             key={booking.bookingID}
-            onClick={() => history.push(PATHS.VIEW_FACILITY_BOOKING_ID + booking.bookingID)}
+            onClick={() => history.push(`${PATHS.VIEW_FACILITY_BOOKING_ID}/${booking.bookingID}`)}
           >
             <BookingLeftDisplay>
               <DateComponent>

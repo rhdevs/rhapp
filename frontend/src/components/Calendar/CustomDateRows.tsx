@@ -7,6 +7,8 @@ export const CustomDateRows = (props: {
   lastDate: Date
   assignedMonth: number
   facilityId: number
+  disabledDates?: number[]
+  onDateClick: (date: Date) => void
 }) => {
   const bufferDates: number[] = []
   let keyCounter = 0
@@ -17,14 +19,16 @@ export const CustomDateRows = (props: {
 
   return (
     <>
-      {bufferDates.map((day) => {
-        return day === 0 ? (
+      {bufferDates.map((date) => {
+        return date === 0 ? (
           <EmptyDateContainer key={keyCounter++} />
         ) : (
           <ClickableDateContainer
-            key={new Date(props.firstDate.getFullYear(), props.assignedMonth, day).toDateString()}
-            date={new Date(props.firstDate.getFullYear(), props.assignedMonth, day)}
+            key={new Date(props.firstDate.getFullYear(), props.assignedMonth, date).toDateString()}
+            date={new Date(props.firstDate.getFullYear(), props.assignedMonth, date)}
             facilityId={props.facilityId}
+            disabled={props.disabledDates?.includes(date)}
+            onDateClick={props.onDateClick}
           />
         )
       })}

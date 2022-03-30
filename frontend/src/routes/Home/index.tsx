@@ -41,7 +41,8 @@ const TopBar = styled.div`
   z-index: 999;
 `
 
-const Greetings = styled.text`
+const Greetings = styled.p`
+  margin: 0;
   font-size: 17px;
   padding-left: 10px;
   color: #fff;
@@ -87,7 +88,7 @@ const BannerContainer = styled.div`
   margin: 1px 23px 5px 23px;
 `
 
-const BannerText = styled.text`
+const BannerText = styled.p`
   font-size: 17px;
   margin: auto;
 `

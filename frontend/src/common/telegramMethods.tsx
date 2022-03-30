@@ -6,5 +6,5 @@ export const teleShareWithText = (url: string, text: string) => {
 
 export const openUserTelegram = (telegramHandle: string) => {
   const site = 'https://telegram.me/' + telegramHandle
-  return window.open(site)
+  window.open(site)
 }

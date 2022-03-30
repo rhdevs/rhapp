@@ -44,6 +44,7 @@ export type TimeBlock = {
   type: TimeBlockType
   ccaName?: string
   eventName?: string
+  booking?: Booking
 }
 
 export enum TimeBlockType {
@@ -82,6 +83,9 @@ export enum FACILITY_ACTIONS {
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
   SET_BOOKING_STATUS = 'FACILITY_ACTIONS.SET_BOOKING_STATUS',
+  SET_SELECTED_BLOCK_TIMESTAMP = 'FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP',
+  SET_SELECTED_START_TIME = 'FACILITY_ACTIONS.SET_SELECTED_START_TIME',
+  SET_SELECTED_END_TIME = 'FACILITY_ACTIONS.SET_SELECTED_END_TIME',
   SET_BOOKING_START_TIME = 'FACILITY_ACTIONS.SET_BOOKING_START_TIME',
   SET_BOOKING_END_TIME = 'FACILITY_ACTIONS.SET_BOOKING_END_TIME',
   SET_BOOKING_END_DATE = 'FACILITY_ACTIONS.SET_BOOKING_END_DATE',
@@ -91,7 +95,6 @@ export enum FACILITY_ACTIONS {
   SET_REPEAT_WEEKLY = 'FACILITY_ACTIONS.SET_REPEAT_WEEKLY',
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
-  SET_START_END_TIME = 'FACILITY_ACTIONS.SET_START_END_TIME',
   SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
 }
 
@@ -148,16 +151,6 @@ type SetBookingName = {
 type SetFacilityName = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_FACILITY
   newBookingFacilityName: string
-}
-
-type SetBookingFromDate = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_FROM_DATE
-  newBookingFromDate: Date
-}
-
-type SetBookingToDate = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_TO_DATE
-  newBookingToDate: Date
 }
 
 type SetBookingCCA = {
@@ -252,6 +245,21 @@ type SetBookingStatus = {
   message?: string
 }
 
+type SetSelectedBlockTimestamp = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP
+  selectedBlockTimestamp: number
+}
+
+type SetSelectedStartTime = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_START_TIME
+  selectedStartTime: number
+}
+
+type SetSelectedEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_END_TIME
+  selectedEndTime: number
+}
+
 type SetBookingStartTime = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_START_TIME
   bookingStartTime: number
@@ -295,12 +303,6 @@ type SetTimeBlock = {
   timeBlocks: TimeBlock[]
 }
 
-type SetStartEndTime = {
-  type: typeof FACILITY_ACTIONS.SET_START_END_TIME
-  selectedStartTime: number
-  selectedEndTime: number
-}
-
 type SetSelectedDayBookings = {
   type: typeof FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS
   selectedDayBookings: Booking[]
@@ -317,8 +319,6 @@ export type ActionTypes =
   | DeleteMyBooking
   | EditMyBooking
   | SetBookingName
-  | SetBookingFromDate
-  | SetBookingToDate
   | SetBookingCCA
   | SetBookingDescription
   | SetViewFacilityStartDate
@@ -341,10 +341,12 @@ export type ActionTypes =
   | SetRepeatWeekly
   | SetBooking
   | SetBookingStatus
+  | SetSelectedBlockTimestamp
+  | SetSelectedStartTime
+  | SetSelectedEndTime
   | SetBookingStartTime
   | SetBookingEndTime
   | SetBookingEndDate
   | SetConflictBookings
   | SetTimeBlock
-  | SetStartEndTime
   | SetSelectedDayBookings
