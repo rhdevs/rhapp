@@ -52,6 +52,7 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
             type: TimeBlockType.OCCUPIED,
             ccaName: updatedDayBookings[i].ccaName,
             eventName: updatedDayBookings[i].eventName,
+            booking: updatedDayBookings[i],
           }
         }
       }

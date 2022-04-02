@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 
-import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
+import { TimeBlock } from '../../store/facilityBooking/types'
 import { StyledViewBooking } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
 
 type Props = {
   entry: TimeBlock
   scrollTo?: boolean
+  openViewBookingModal: () => void
+  setViewBookingEntryId: () => void
 }
 
 const ViewBlock = (props: Props) => {
@@ -18,16 +20,22 @@ const ViewBlock = (props: Props) => {
     }
   }, [ref.current])
 
-  return (
-    <StyledViewBooking ref={ref} isOccupied={props.entry.type === TimeBlockType.OCCUPIED} blockId={props.entry.id}>
-      {props.entry.type === TimeBlockType.OCCUPIED && (
-        <>
-          {props.entry.ccaName}
-          <br />
-          {props.entry.eventName}
-        </>
-      )}
+  return props.entry.booking ? (
+    <StyledViewBooking
+      ref={ref}
+      isOccupied
+      blockId={props.entry.id}
+      onClick={() => {
+        props.openViewBookingModal()
+        props.setViewBookingEntryId()
+      }}
+    >
+      {props.entry.ccaName}
+      <br />
+      {props.entry.eventName}
     </StyledViewBooking>
+  ) : (
+    <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
   )
 }
 
