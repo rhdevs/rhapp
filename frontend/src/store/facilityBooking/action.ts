@@ -13,9 +13,10 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
+// TODO both this and getTimeBlocks are being called twice
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
-  let updatedFB: Booking[] = []
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
+  console.log('call')
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
@@ -41,24 +42,25 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
   })
     .then((resp) => resp.json())
     .then((res) => {
-      updatedFB = res.data
-      for (let i = 0; i < updatedFB.length; i++) {
-        const starthour = new Date(updatedFB[i].startTime * 1000).getHours()
+      const updatedDayBookings: Booking[] = res.data
+      for (let i = 0; i < updatedDayBookings.length; i++) {
+        const starthour = new Date(updatedDayBookings[i].startTime * 1000).getHours()
         const endhour =
-          new Date(updatedFB[i].endTime * 1000).getHours() < starthour
+          new Date(updatedDayBookings[i].endTime * 1000).getHours() < starthour
             ? 23
-            : new Date(updatedFB[i].endTime * 1000).getHours()
-        for (let hour = starthour; hour < endhour + 1; hour++) {
+            : new Date(updatedDayBookings[i].endTime * 1000).getHours()
+        for (let hour = starthour; hour < endhour; hour++) {
           updatedTB[hour] = {
             id: hour,
-            timestamp: updatedFB[i].startTime,
+            timestamp: updatedDayBookings[i].startTime,
             type: TimeBlockType.OCCUPIED,
-            ccaName: updatedFB[i].ccaName,
-            eventName: updatedFB[i].description,
+            ccaName: updatedDayBookings[i].ccaName,
+            eventName: updatedDayBookings[i].eventName,
           }
         }
       }
-      dispatch(setSelectedDayBookings(updatedFB))
+
+      dispatch(setSelectedDayBookings(updatedDayBookings))
       dispatch(setTimeBlocks(updatedTB))
       dispatch(setIsLoading(false))
     })
@@ -444,9 +446,11 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   })
 }
 
+// TODO both this and updateDailyView are being called twice
+// TODO is this even necessay sing you have updateDailyView already
 export const getTimeBlocks = (date: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { selectedDayBookings } = getState().facilityBooking
-  const newTimeblocks = [...defaultTimeBlocks]
+  const newTimeblocks = [...defaultTimeBlocks] // TODO this depends on TODAY not the date selected
 
   const currentTime = Date.now() / 1000
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
@@ -466,7 +470,8 @@ export const getTimeBlocks = (date: Date) => (dispatch: Dispatch<ActionTypes>, g
       booking.startTime >= newTimeblocks[0].timestamp &&
       booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
     ) {
-      const roundedEndTime = booking.endTime + 3600 - (booking.endTime % 3600)
+      const roundedEndTime = booking.endTime - (booking.endTime % 3600)
+      console.log('set')
       const startTime = getBlockHr(get24Hourtime(booking.startTime))
       let endTime = getBlockHr(get24Hourtime(roundedEndTime))
       if (endTime === 0) {

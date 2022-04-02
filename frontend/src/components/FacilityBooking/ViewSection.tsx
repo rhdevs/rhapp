@@ -6,16 +6,17 @@ import ViewBlock from './ViewBlock'
 import { RootState } from '../../store/types'
 import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
-import { getTimeBlocks } from '../../store/facilityBooking/action'
+import { setIsLoading, updateDailyView } from '../../store/facilityBooking/action'
 
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const dispatch = useDispatch()
   const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
-  useEffect(() => {
-    dispatch(getTimeBlocks(new Date()))
-  }, [])
+  // useEffect(() => {
+  //   dispatch(getTimeBlocks(clickedDate))
+  // }, [])
 
   return (
     <MainContainer>

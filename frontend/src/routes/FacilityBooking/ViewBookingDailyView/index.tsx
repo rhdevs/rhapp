@@ -5,11 +5,11 @@ import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import ViewScheduleBlock from '../../../components/FacilityBooking/ViewSection'
 
 const HEADER_HEIGHT = '70px'
 
@@ -61,10 +61,6 @@ export default function ViewBookingDailyView() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
-  }, [])
-
-  useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   return (
@@ -99,7 +95,7 @@ export default function ViewBookingDailyView() {
             dateRowStartDate={dateRowStartDate}
           />
           <ViewSectionDiv>
-            <ViewSection />
+            <ViewScheduleBlock />
           </ViewSectionDiv>
         </Background>
       )}
