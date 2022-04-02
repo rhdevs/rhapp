@@ -2,8 +2,6 @@ import { Dispatch, GetState } from '../types'
 import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL, put } from '../endpoints'
 import dayjs from 'dayjs'
-import { getBlockHr } from '../../components/FacilityBooking/BookingSection'
-import { get24Hourtime } from '../../common/get24HourTime'
 import { defaultTimeBlocks } from '../stubs'
 
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -13,10 +11,8 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
-// TODO both this and getTimeBlocks are being called twice
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
-  console.log('call')
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
@@ -443,52 +439,5 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
     selectedDayBookings: selectedDayBookings,
-  })
-}
-
-// TODO both this and updateDailyView are being called twice
-// TODO is this even necessay sing you have updateDailyView already
-export const getTimeBlocks = (date: Date) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { selectedDayBookings } = getState().facilityBooking
-  const newTimeblocks = [...defaultTimeBlocks] // TODO this depends on TODAY not the date selected
-
-  const currentTime = Date.now() / 1000
-  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-
-  //set all type in newTimeblocks according to its time relative to now
-  for (let i = 0; i < 24; i++) {
-    const timestamp = adjustedStart.getTime() / 1000 + i * 3600
-    newTimeblocks[i] = {
-      id: i,
-      timestamp: timestamp,
-      type: timestamp > currentTime ? TimeBlockType.AVAILABLE : TimeBlockType.UNAVAILABLE,
-    }
-  }
-
-  selectedDayBookings.forEach((booking, i) => {
-    if (
-      booking.startTime >= newTimeblocks[0].timestamp &&
-      booking.endTime <= newTimeblocks[newTimeblocks.length - 1].timestamp + 3600
-    ) {
-      const roundedEndTime = booking.endTime - (booking.endTime % 3600)
-      console.log('set')
-      const startTime = getBlockHr(get24Hourtime(booking.startTime))
-      let endTime = getBlockHr(get24Hourtime(roundedEndTime))
-      if (endTime === 0) {
-        endTime = 24
-      }
-      for (let hour = startTime; hour < endTime; hour++) {
-        newTimeblocks[hour] = {
-          ...defaultTimeBlocks[hour],
-          ccaName: booking.ccaName,
-          eventName: booking.eventName,
-          type: TimeBlockType.OCCUPIED,
-        }
-      }
-    }
-  })
-  dispatch({
-    type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
-    timeBlocks: newTimeblocks,
   })
 }

@@ -7,7 +7,6 @@ import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
 import {
-  getTimeBlocks,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
@@ -34,15 +33,10 @@ export default function BookingSection({ facilityId, date }: Props) {
   const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
   const dateRowStartDate = location.state.dateRowStartDate
-
-  useEffect(() => {
-    dispatch(getTimeBlocks(clickedDate))
-  }, [])
 
   useEffect(() => {
     updateTimeBlocks()

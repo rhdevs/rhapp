@@ -9,7 +9,7 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import ViewScheduleBlock from '../../../components/FacilityBooking/ViewSection'
+import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
 
 const HEADER_HEIGHT = '70px'
 
