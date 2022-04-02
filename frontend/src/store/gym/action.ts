@@ -3,6 +3,8 @@ import { Dispatch } from '../types'
 import { ActionTypes, GYM_ACTIONS } from './types'
 import { unixToFullDate } from '../../common/unixToFullDate'
 
+const DEFAULT_VALUE = { name: '5-122', telegram: 'smchead' }
+
 export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_GYM_STATUS, DOMAINS.GYM)
     .then((res) => {
@@ -61,7 +63,7 @@ export const returnKey = (userID: string) => async (dispatch: Dispatch<ActionTyp
       }
       dispatch({
         type: GYM_ACTIONS.RETURN_KEY,
-        keyArgs: { name: '5-122', telegram: 'smchead' },
+        keyArgs: DEFAULT_VALUE,
       })
       dispatch(getProfilePic())
     })

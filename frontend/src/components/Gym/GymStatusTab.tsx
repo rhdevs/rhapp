@@ -8,7 +8,7 @@ import GymConfirmationModal from './GymConfirmationModal'
 import { RootState } from '../../store/types'
 import { getGymStatus, getProfilePic } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
-import { ButtonStates, ButtonTypes } from '../../store/gym/types'
+import { ButtonStates, ButtonTypes, gymStates } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
 const GymContainer = styled.div`
@@ -35,7 +35,7 @@ function GymStatusTab() {
   }, [])
 
   const [isModalOpen, setModalOpen] = useState<boolean>(false)
-  const [modalState, setModalState] = useState<ButtonTypes>()
+  const [modalState, setModalState] = useState<gymStates>()
 
   const buttonMap = new Map<ButtonTypes, string>([
     ['keyWithMe', 'Key With Me'],
@@ -75,13 +75,20 @@ function GymStatusTab() {
     setModalOpen(true)
     if (key === 'toggleGym') {
       if (gymStatus.gymIsOpen) {
-        setModalState('closeGym')
+        setModalState(gymStates.CLOSE_GYM)
         return
       }
-      setModalState('openGym')
+      setModalState(gymStates.OPEN_GYM)
       return
     }
-    setModalState(key)
+    setModalState(getGymStatesFromKey(key))
+  }
+
+  function getGymStatesFromKey(key: string): gymStates {
+    if (key == 'keyWithMe') {
+      return gymStates.KEY_WITH_ME
+    }
+    return gymStates.RETURN_KEY
   }
 
   function renderConfirmationModal(): ReactElement {

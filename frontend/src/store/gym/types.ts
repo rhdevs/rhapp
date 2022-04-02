@@ -37,6 +37,13 @@ export type ReqArgs = {
   telegram: string
 }
 
+export enum gymStates {
+  KEY_WITH_ME = 'GYM_STATES.KEY_WITH_ME',
+  RETURN_KEY = 'GYM_STATES.RETURN_KEY',
+  OPEN_GYM = 'GYM_STATES.OPEN_GYM',
+  CLOSE_GYM = 'GYM_STATES.CLOSE_GYM',
+}
+
 export enum GYM_ACTIONS {
   GET_GYM_STATUS = 'GYM_ACTIONS.GET_GYM_STATUS',
   GET_GYM_HISTORY = 'GYM_ACTIONS.GET_GYM_HISTORY',

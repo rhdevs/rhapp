@@ -23,7 +23,7 @@ const Date = styled.p`
   margin: 0;
 `
 
-const Content = styled.p`
+const Content = styled.label`
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
@@ -33,6 +33,10 @@ const Content = styled.p`
   color: #000000;
   margin: 0;
   padding: 8% 5% 1em 0;
+`
+
+const HistoryContainer = styled.div`
+  padding-bottom: 8%;
 `
 
 const ContentRow = styled.div`
@@ -51,10 +55,6 @@ const Status = styled.div<{ status: string }>`
   margin-bottom: 0.25em;
 `
 
-const PaddingFiller = styled.div`
-  padding-top: 8%;
-`
-
 const GymHistory = () => {
   const dispatch = useDispatch()
   const { gymHistory } = useSelector((state: RootState) => state.gym)
@@ -65,7 +65,7 @@ const GymHistory = () => {
     <Container>
       {gymHistory !== undefined &&
         gymHistory.map((entry) => (
-          <div key={entry.date}>
+          <HistoryContainer key={entry.date}>
             <Date>{entry.date}</Date>
             {entry.details.map((user) => (
               <ContentRow key={user.requesttime}>
@@ -74,8 +74,7 @@ const GymHistory = () => {
                 <Content>@{user.userDetails}</Content>
               </ContentRow>
             ))}
-            <PaddingFiller />
-          </div>
+          </HistoryContainer>
         ))}
     </Container>
   )
