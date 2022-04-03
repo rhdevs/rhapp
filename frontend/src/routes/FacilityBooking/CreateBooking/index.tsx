@@ -183,7 +183,7 @@ export default function CreateBooking() {
     history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
-  const onLeftClick = () => {
+  const reselectBothDates = () => {
     // when go back, reset user's time selections
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
@@ -191,14 +191,12 @@ export default function CreateBooking() {
     goBackToTimeSelectionPage()
   }
 
-  const startDateFieldOnClick = () => {
-    // reselect start date only
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    goBackToTimeSelectionPage()
+  const reselectStartDate = () => {
+    // TODO not yet implemented
+    reselectBothDates()
   }
 
-  const endDateFieldOnClick = () => {
+  const reselectEndDate = () => {
     // reselect end date only
     dispatch(setSelectedEndTime(0))
     goBackToTimeSelectionPage()
@@ -206,7 +204,7 @@ export default function CreateBooking() {
 
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={reselectBothDates} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -225,13 +223,13 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            onClick={startDateFieldOnClick}
+            onClick={reselectStartDate}
             isCompulsory
           />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            onClick={endDateFieldOnClick}
+            onClick={reselectEndDate}
             isCompulsory
           />
           <Container>

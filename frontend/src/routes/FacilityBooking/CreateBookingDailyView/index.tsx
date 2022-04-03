@@ -54,7 +54,7 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, isLoading, selectedStartTime } = useSelector(
+  const { selectedFacilityName, isLoading, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
@@ -68,24 +68,25 @@ export default function CreateBookingDailyView() {
   }, [clickedDate])
 
   useEffect(() => {
-    updatedisabledDates()
+    updateDisabledDates()
   }, [selectedStartTime])
 
-  const updatedisabledDates = () => {
+  const updateDisabledDates = () => {
     if (selectedStartTime === 0) return
 
-    const year = clickedDate.getFullYear() // year e.g. 2022
-    const month = clickedDate.getMonth() // month index e.g. 2 - March
-    const selectedDate = clickedDate.getDate() // the date e.g. 23
+    const startTimeDate = new Date(selectedStartTime * 1000)
+    const year = startTimeDate.getFullYear() // year e.g. 2022
+    const month = startTimeDate.getMonth() // month index e.g. 2 - March
+    const date = startTimeDate.getDate() // the date e.g. 23
     const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
     // array from 1 to maxDateCurMonth
     const newDisabledDates: number[] = Array.from({ length: maxDateCurMonth }, (_, index) => index + 1)
 
-    if (selectedDate === maxDateCurMonth) {
+    if (date === maxDateCurMonth) {
       newDisabledDates.pop()
       newDisabledDates.shift()
     } else {
-      newDisabledDates.splice(selectedDate - 1, 2)
+      newDisabledDates.splice(date - 1, 2)
     }
     setDisabledDates(newDisabledDates)
   }
@@ -116,7 +117,7 @@ export default function CreateBookingDailyView() {
             disabledDates={disabledDates}
           />
           <BookingSectionDiv>
-            <BookingSection facilityId={selectedFacilityId} date={clickedDate} />
+            <BookingSection facilityId={selectedFacilityId} />
           </BookingSectionDiv>
         </Background>
       )}

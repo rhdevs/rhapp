@@ -22,10 +22,9 @@ export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
 type Props = {
   facilityId: number
-  date: Date
 }
 
-export default function BookingSection({ facilityId, date }: Props) {
+export default function BookingSection({ facilityId }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
   const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
@@ -65,27 +64,16 @@ export default function BookingSection({ facilityId, date }: Props) {
         // selecting start time first before selecting end time
         dispatch(setSelectedStartTime(selectedTimestamp))
       } else {
-        // reselecting start time only, then go back to booking page
-        if (selectedTimestamp > selectedEndTime) {
-          return alert('start time should be earlier than end time!')
-        }
-        dispatch(setSelectedStartTime(selectedTimestamp))
-        dispatch(setBookingStartTime(selectedTimestamp))
-        goToBookingPage()
+        return // (reselect start time only without reselecting end time) disallowed for now
       }
     } else {
-      if (selectedEndTime === 0) {
-        // select end time (after start time is selected), then go to booking page
-        const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
+      // select end time (after start time is selected), then go to booking page
+      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
 
-        dispatch(setSelectedEndTime(selectedTimestamp))
-        dispatch(setBookingStartTime(selectedStartTime))
-        dispatch(setBookingEndTime(selectedEndTime))
-        goToBookingPage()
-      } else {
-        // disallowed case
-        return
-      }
+      dispatch(setSelectedEndTime(selectedTimestamp))
+      dispatch(setBookingStartTime(selectedStartTime))
+      dispatch(setBookingEndTime(selectedEndTime))
+      goToBookingPage()
     }
   }
 
