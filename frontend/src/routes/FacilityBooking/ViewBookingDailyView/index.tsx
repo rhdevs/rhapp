@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { useHistory, useParams } from 'react-router-dom'
-import { RootState } from '../../../store/types'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+
+import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import { PATHS } from '../../Routes'
-import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { getDateRowStartDate } from '../../../common/getDateRowStartDate'
+import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
 
 const HEADER_HEIGHT = '70px'
 
@@ -61,10 +62,6 @@ export default function ViewBookingDailyView() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
-  }, [])
-
-  useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   return (
@@ -92,7 +89,7 @@ export default function ViewBookingDailyView() {
             dateRowStartDate={dateRowStartDate}
           />
           <ViewSectionDiv>
-            <ViewSection />
+            <ViewScheduleBlock />
           </ViewSectionDiv>
         </Background>
       )}
