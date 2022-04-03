@@ -116,10 +116,6 @@ export default function CreateBooking() {
   const params = useParams<{ facilityId: string }>()
 
   const selectedFacilityId = parseInt(params.facilityId)
-<<<<<<< HEAD
-  // const dateRowStartDate = location.state.dateRowStartDate
-=======
->>>>>>> revamp/facilites
 
   useEffect(() => {
     dispatch(setIsLoading(true))

@@ -45,21 +45,17 @@ export const ClickableDateContainer = (props: {
   const params = useParams<{ isEndDate: string }>()
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
-<<<<<<< HEAD
     if (parseInt(params.isEndDate) === 0) {
       dispatch(setClickedDate(newClickedDate))
+      props.onDateClick && props.onDateClick(newClickedDate)
     } else {
       const reccuringdate = newClickedDate.getTime() / 1000
       if (Date.now() / 1000 > reccuringdate) {
       } else {
         dispatch(setBookingEndDate(reccuringdate))
       }
+      props.onDateClick && props.onDateClick(newClickedDate)
     }
-    props.onDateClick(newClickedDate)
-=======
-    dispatch(setClickedDate(newClickedDate))
-    props.onDateClick && props.onDateClick(newClickedDate)
->>>>>>> revamp/facilites
   }
 
   const hasEvent = () => {

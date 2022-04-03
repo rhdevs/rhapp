@@ -49,16 +49,8 @@ export default function ViewFacility() {
   )
 
   const onDateClick = (date: Date) => {
-<<<<<<< HEAD
     if (parseInt(params.isEndDate) === 0) {
-      const dateRowStartDate = getDateRowStartDate(date)
-
-      history.push({
-        pathname: `${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`,
-        state: {
-          dateRowStartDate: dateRowStartDate,
-        },
-      })
+      history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
     } else {
       const reccuringdate = date.getTime() / 1000
       if (Date.now() / 1000 > reccuringdate) {
@@ -67,9 +59,6 @@ export default function ViewFacility() {
         history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
       }
     }
-=======
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
->>>>>>> revamp/facilites
   }
 
   return (
