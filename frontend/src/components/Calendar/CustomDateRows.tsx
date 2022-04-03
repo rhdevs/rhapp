@@ -8,7 +8,7 @@ export const CustomDateRows = (props: {
   assignedMonth: number
   facilityId: number
   disabledDates?: number[]
-  onDateClick: (date: Date) => void
+  onDateClick?: (date: Date) => void
 }) => {
   const bufferDates: number[] = []
   let keyCounter = 0

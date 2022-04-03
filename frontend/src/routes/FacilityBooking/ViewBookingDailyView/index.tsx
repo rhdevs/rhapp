@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { RootState } from '../../../store/types'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+
+import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
-import ViewSection from '../../../components/FacilityBooking/ViewSection'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
+import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
+import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
 
@@ -43,25 +44,14 @@ const TitleText = styled.h2`
   text-overflow: ellipsis;
 `
 
-export type ViewBookingLocationState = {
-  dateRowStartDate: number
-}
-
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const params = useParams<{ facilityId: string }>()
-  const location = useLocation<ViewBookingLocationState>()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   const selectedFacilityId = parseInt(params.facilityId)
-  const dateRowStartDate = location.state.dateRowStartDate
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
-  }, [])
 
   useEffect(() => {
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
@@ -76,14 +66,7 @@ export default function ViewBookingDailyView() {
           <ButtonComponent
             state="primary"
             text="Book Facility"
-            onClick={() =>
-              history.push({
-                pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
-                state: {
-                  dateRowStartDate: dateRowStartDate,
-                },
-              })
-            }
+            onClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)}
             size="small"
           />
         }
@@ -92,14 +75,9 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <DailyViewDatesRow
-            selectedDate={clickedDate}
-            selectedFacilityId={selectedFacilityId}
-            redirectTo={`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
-            dateRowStartDate={dateRowStartDate}
-          />
+          <DailyViewDatesRow selectedDate={clickedDate} selectedFacilityId={selectedFacilityId} />
           <ViewSectionDiv>
-            <ViewSection />
+            <ViewScheduleBlock />
           </ViewSectionDiv>
         </Background>
       )}

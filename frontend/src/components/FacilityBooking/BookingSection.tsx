@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { DailyContainer, MainContainer } from './BlockStyles'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import BookingBlock from './BookingBlock'
 import { RootState } from '../../store/types'
 import {
-  getTimeBlocks,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
@@ -18,31 +17,21 @@ import {
 import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { PATHS } from '../../routes/Routes'
-import { ViewBookingLocationState } from '../../routes/FacilityBooking/ViewBookingDailyView'
 
 export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
 
 type Props = {
   facilityId: number
-  date: Date
 }
 
-export default function BookingSection({ facilityId, date }: Props) {
+export default function BookingSection({ facilityId }: Props) {
   const history = useHistory()
   const dispatch = useDispatch()
-  const location = useLocation<ViewBookingLocationState>()
   const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
-
-  const dateRowStartDate = location.state.dateRowStartDate
-
-  useEffect(() => {
-    dispatch(getTimeBlocks(clickedDate))
-  }, [])
 
   useEffect(() => {
     updateTimeBlocks()
@@ -65,12 +54,7 @@ export default function BookingSection({ facilityId, date }: Props) {
   }
 
   const goToBookingPage = () => {
-    history.push({
-      pathname: `${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`)
   }
 
   const setSelectedBlock = (selectedTimestamp: number) => {
@@ -80,27 +64,16 @@ export default function BookingSection({ facilityId, date }: Props) {
         // selecting start time first before selecting end time
         dispatch(setSelectedStartTime(selectedTimestamp))
       } else {
-        // reselecting start time only, then go back to booking page
-        if (selectedTimestamp > selectedEndTime) {
-          return alert('start time should be earlier than end time!')
-        }
-        dispatch(setSelectedStartTime(selectedTimestamp))
-        dispatch(setBookingStartTime(selectedTimestamp))
-        goToBookingPage()
+        return // (reselect start time only without reselecting end time) disallowed for now
       }
     } else {
-      if (selectedEndTime === 0) {
-        // select end time (after start time is selected), then go to booking page
-        const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
+      // select end time (after start time is selected), then go to booking page
+      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
 
-        dispatch(setSelectedEndTime(selectedTimestamp))
-        dispatch(setBookingStartTime(selectedStartTime))
-        dispatch(setBookingEndTime(selectedEndTime))
-        goToBookingPage()
-      } else {
-        // disallowed case
-        return
-      }
+      dispatch(setSelectedEndTime(selectedTimestamp))
+      dispatch(setBookingStartTime(selectedStartTime))
+      dispatch(setBookingEndTime(selectedEndTime))
+      goToBookingPage()
     }
   }
 
