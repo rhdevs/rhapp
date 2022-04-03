@@ -38,13 +38,14 @@ export const ClickableDateContainer = (props: {
   facilityId: number
   hasEvent?: boolean
   disabled?: boolean
-  onDateClick: (date: Date) => void
+  onDateClick?: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
   const params = useParams<{ isEndDate: string }>()
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
+<<<<<<< HEAD
     if (parseInt(params.isEndDate) === 0) {
       dispatch(setClickedDate(newClickedDate))
     } else {
@@ -55,6 +56,10 @@ export const ClickableDateContainer = (props: {
       }
     }
     props.onDateClick(newClickedDate)
+=======
+    dispatch(setClickedDate(newClickedDate))
+    props.onDateClick && props.onDateClick(newClickedDate)
+>>>>>>> revamp/facilites
   }
 
   const hasEvent = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -32,7 +32,6 @@ import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
-import { ViewBookingLocationState } from '../ViewBookingDailyView'
 
 const Background = styled.div`
   background-color: #fff;
@@ -114,11 +113,13 @@ export default function CreateBooking() {
   } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate === 0 ? false : true)
 
-  const location = useLocation<ViewBookingLocationState>()
   const params = useParams<{ facilityId: string }>()
 
   const selectedFacilityId = parseInt(params.facilityId)
+<<<<<<< HEAD
   // const dateRowStartDate = location.state.dateRowStartDate
+=======
+>>>>>>> revamp/facilites
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -189,15 +190,10 @@ export default function CreateBooking() {
   }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
-    // history.push({
-    //   pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
-    //   state: {
-    //     dateRowStartDate: dateRowStartDate,
-    //   },
-    // })
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
-  const onLeftClick = () => {
+  const reselectBothDates = () => {
     // when go back, reset user's time selections
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
@@ -205,14 +201,12 @@ export default function CreateBooking() {
     goBackToTimeSelectionPage()
   }
 
-  const startDateFieldOnClick = () => {
-    // reselect start date only
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    goBackToTimeSelectionPage()
+  const reselectStartDate = () => {
+    // TODO not yet implemented
+    reselectBothDates()
   }
 
-  const endDateFieldOnClick = () => {
+  const reselectEndDate = () => {
     // reselect end date only
     dispatch(setSelectedEndTime(0))
     goBackToTimeSelectionPage()
@@ -220,7 +214,7 @@ export default function CreateBooking() {
 
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={reselectBothDates} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -239,13 +233,13 @@ export default function CreateBooking() {
             value={
               bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
             }
-            onClick={startDateFieldOnClick}
+            onClick={reselectStartDate}
             isCompulsory
           />
           <SelectableField
             title="End"
             value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
-            onClick={endDateFieldOnClick}
+            onClick={reselectEndDate}
             isCompulsory
           />
           <Container>
