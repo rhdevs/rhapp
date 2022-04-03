@@ -10,7 +10,6 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
 import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import { getDateRowStartDate } from '../../../common/getDateRowStartDate'
 import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
 
 const HEADER_HEIGHT = '70px'
@@ -45,10 +44,6 @@ const TitleText = styled.h2`
   text-overflow: ellipsis;
 `
 
-export type ViewBookingLocationState = {
-  dateRowStartDate: number
-}
-
 export default function ViewBookingDailyView() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -57,7 +52,6 @@ export default function ViewBookingDailyView() {
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   const selectedFacilityId = parseInt(params.facilityId)
-  const dateRowStartDate = getDateRowStartDate(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -86,7 +80,6 @@ export default function ViewBookingDailyView() {
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
             redirectTo={`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
-            dateRowStartDate={dateRowStartDate}
           />
           <ViewSectionDiv>
             <ViewScheduleBlock />

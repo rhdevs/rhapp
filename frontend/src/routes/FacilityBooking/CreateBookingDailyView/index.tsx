@@ -18,8 +18,6 @@ import {
   updateDailyView,
 } from '../../../store/facilityBooking/action'
 import { PATHS } from '../../Routes'
-import { ViewBookingLocationState } from '../ViewBookingDailyView'
-import { getDateRowStartDate } from '../../../common/getDateRowStartDate'
 
 const HEADER_HEIGHT = '70px'
 
@@ -65,8 +63,6 @@ export default function CreateBookingDailyView() {
   const selectedFacilityId = parseInt(params.facilityId)
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
-
-  const dateRowStartDate = getDateRowStartDate(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -120,7 +116,6 @@ export default function CreateBookingDailyView() {
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
             redirectTo={`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
-            dateRowStartDate={dateRowStartDate}
             disabledDates={disabledDates}
           />
           <BookingSectionDiv>
