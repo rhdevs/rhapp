@@ -5,12 +5,12 @@ import styled from 'styled-components'
 
 import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
-import { PATHS } from '../../Routes'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { setIsLoading, updateDailyView } from '../../../store/facilityBooking/action'
+import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
+import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
 
@@ -54,7 +54,6 @@ export default function ViewBookingDailyView() {
   const selectedFacilityId = parseInt(params.facilityId)
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
@@ -76,11 +75,7 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <DailyViewDatesRow
-            selectedDate={clickedDate}
-            selectedFacilityId={selectedFacilityId}
-            redirectTo={`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
-          />
+          <DailyViewDatesRow selectedDate={clickedDate} selectedFacilityId={selectedFacilityId} />
           <ViewSectionDiv>
             <ViewScheduleBlock />
           </ViewSectionDiv>

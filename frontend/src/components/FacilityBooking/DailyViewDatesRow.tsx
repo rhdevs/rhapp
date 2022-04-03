@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { RootState } from '../../store/types'
 import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
@@ -10,13 +9,7 @@ const DatesContainer = styled.div`
   margin: auto;
 `
 
-const DailyViewDatesRow = (props: {
-  selectedDate: Date
-  selectedFacilityId: number
-  redirectTo: string
-  disabledDates?: number[]
-}) => {
-  const history = useHistory()
+const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: number; disabledDates?: number[] }) => {
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const year = clickedDate.getFullYear() // year e.g. 2022
@@ -36,11 +29,11 @@ const DailyViewDatesRow = (props: {
     return date - day // by default, date row start on sunday
   }
 
-  const dateRowStartDate = getDateRowStartDate()
+  const [dateRowStartDate, setDateRowStartDate] = useState(0)
 
-  const onDateClick = () => {
-    history.push(props.redirectTo)
-  }
+  useEffect(() => {
+    setDateRowStartDate(getDateRowStartDate())
+  }, [])
 
   const dateNumberToObject = (dateNum: number) => {
     return new Date(year, month, dateNum)
@@ -57,7 +50,6 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month - 1}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onDateClick={onDateClick}
             lastDate={maxDatePrevMonth}
           />
           <CustomDateRows
@@ -65,7 +57,6 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onDateClick={onDateClick}
             lastDate={dateNumberToObject(dateRowStartDate + 6 - maxDatePrevMonth.getDate())}
           />
         </DatesContainer>
@@ -79,7 +70,6 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onDateClick={onDateClick}
             lastDate={maxDateCurMonth}
           />
           <CustomDateRows
@@ -87,7 +77,6 @@ const DailyViewDatesRow = (props: {
             assignedMonth={month + 1}
             disabledDates={props.disabledDates}
             facilityId={props.selectedFacilityId}
-            onDateClick={onDateClick}
             lastDate={dateNumberToObject(dateRowStartDate + 6 - maxDateCurMonth.getDate())}
           />
         </DatesContainer>
@@ -101,7 +90,6 @@ const DailyViewDatesRow = (props: {
           assignedMonth={month}
           disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
-          onDateClick={onDateClick}
           lastDate={dateNumberToObject(dateRowStartDate + 6)}
         />
       </DatesContainer>

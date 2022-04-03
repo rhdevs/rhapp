@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory, useParams } from 'react-router-dom'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 
@@ -11,7 +11,6 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import { RootState } from '../../../store/types'
 import {
-  setIsLoading,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
   setSelectedStartTime,
@@ -65,7 +64,6 @@ export default function CreateBookingDailyView() {
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     dispatch(updateDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
@@ -115,7 +113,6 @@ export default function CreateBookingDailyView() {
           <DailyViewDatesRow
             selectedDate={clickedDate}
             selectedFacilityId={selectedFacilityId}
-            redirectTo={`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`}
             disabledDates={disabledDates}
           />
           <BookingSectionDiv>

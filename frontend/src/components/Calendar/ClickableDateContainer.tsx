@@ -36,14 +36,14 @@ export const ClickableDateContainer = (props: {
   facilityId: number
   hasEvent?: boolean
   disabled?: boolean
-  onDateClick: (date: Date) => void
+  onDateClick?: (date: Date) => void
 }) => {
   const dispatch = useDispatch()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
-    props.onDateClick(newClickedDate)
+    props.onDateClick && props.onDateClick(newClickedDate)
   }
 
   const hasEvent = () => {
