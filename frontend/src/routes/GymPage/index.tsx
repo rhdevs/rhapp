@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { css } from 'styled-components'
 import { Icon } from 'antd-mobile'
 import GymHistory from '../../components/Gym/GymHistory'
 import GymStatusTab from '../../components/Gym/GymStatusTab'
@@ -17,8 +18,6 @@ const NavBarIcons = styled(Icon)`
   width: 35px;
   height: 35px;
   position: fixed;
-  top: 5;
-  left: 5;
 `
 
 const GymBarContainer = styled.div`
@@ -55,28 +54,26 @@ const GymTabContainer = styled.div<{ isSelected?: boolean }>`
   font-weight: 400;
   font-size: 16px;
   height: 45px;
-  ${(props) =>
-    props.isSelected &&
-    `background-position: 50% 2.5em;
-    background-image: linear-gradient(
-      to bottom,
-      #59ba95,
-      #73bb75
-    );
-    background-repeat: no-repeat;
-    background-size: 100% 2px;`}
+  ${(props) => props.isSelected && SelectedTab}
+`
+
+const SelectedTab = css`
+  background-position: 50% 2.5em;
+  background-image: linear-gradient(to bottom, #59ba95, #73bb75);
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
 `
 
 export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
-  const [currentTab, setCurrentTab] = useState<number>(1)
+  const [currentTab, setCurrentTab] = useState<number>(0)
   const sections = ['Gym', 'History']
   const history = useHistory()
 
   function TabPage(tabID: number) {
     switch (tabID) {
-      case 1:
+      case 0:
         return <GymStatusTab />
-      case 2:
+      case 1:
         return <GymHistory />
     }
   }
@@ -92,9 +89,9 @@ export default function GymPage({ onLeftClick }: { onLeftClick?: () => void }) {
         />
         <TabContainer>
           {sections.map((section, index) => {
-            const isSelected = index === currentTab - 1
+            const isSelected = index === currentTab
             return (
-              <GymTabContainer key={index} onClick={() => setCurrentTab(index + 1)} isSelected={isSelected}>
+              <GymTabContainer key={index} onClick={() => setCurrentTab(index)} isSelected={isSelected}>
                 {section}
               </GymTabContainer>
             )
