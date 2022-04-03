@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 
@@ -19,6 +19,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import { PATHS } from '../../Routes'
 import { ViewBookingLocationState } from '../ViewBookingDailyView'
+import { getDateRowStartDate } from '../../../common/getDateRowStartDate'
 
 const HEADER_HEIGHT = '70px'
 
@@ -55,7 +56,6 @@ const TitleText = styled.h2`
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const location = useLocation<ViewBookingLocationState>()
   const params = useParams<{ facilityId: string }>()
   const { selectedFacilityName, isLoading, selectedStartTime } = useSelector(
     (state: RootState) => state.facilityBooking,
@@ -66,7 +66,7 @@ export default function CreateBookingDailyView() {
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
-  const dateRowStartDate = location.state.dateRowStartDate
+  const dateRowStartDate = getDateRowStartDate(clickedDate)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -97,12 +97,7 @@ export default function CreateBookingDailyView() {
   }
 
   const goBackToDailyViewPage = () => {
-    history.push({
-      pathname: `${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {

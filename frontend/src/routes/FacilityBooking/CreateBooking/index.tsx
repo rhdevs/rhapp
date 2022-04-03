@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -32,7 +32,6 @@ import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
-import { ViewBookingLocationState } from '../ViewBookingDailyView'
 
 const Background = styled.div`
   background-color: #fff;
@@ -113,11 +112,9 @@ export default function CreateBooking() {
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const location = useLocation<ViewBookingLocationState>()
   const params = useParams<{ facilityId: string }>()
 
   const selectedFacilityId = parseInt(params.facilityId)
-  const dateRowStartDate = location.state.dateRowStartDate
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -183,12 +180,7 @@ export default function CreateBooking() {
   }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
-    history.push({
-      pathname: `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`,
-      state: {
-        dateRowStartDate: dateRowStartDate,
-      },
-    })
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {
