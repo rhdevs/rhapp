@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 import { DailyContainer, MainContainer } from './BlockStyles'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
@@ -18,18 +18,14 @@ import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { PATHS } from '../../routes/Routes'
 
-export const getBlockHr = (hourString: string) => Number(hourString.slice(0, 2))
-
-type Props = {
-  facilityId: number
-}
-
-export default function BookingSection({ facilityId }: Props) {
+export default function BookingSection() {
   const history = useHistory()
   const dispatch = useDispatch()
+  const params = useParams<{ facilityId: string }>()
   const { timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
+  const selectedFacilityId = parseInt(params.facilityId)
 
   const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
@@ -54,7 +50,7 @@ export default function BookingSection({ facilityId }: Props) {
   }
 
   const goToBookingPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`)
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
   }
 
   const setSelectedBlock = (selectedTimestamp: number) => {

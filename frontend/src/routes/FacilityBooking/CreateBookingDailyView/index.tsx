@@ -117,7 +117,7 @@ export default function CreateBookingDailyView() {
             disabledDates={disabledDates}
           />
           <BookingSectionDiv>
-            <BookingSection facilityId={selectedFacilityId} />
+            <BookingSection />
           </BookingSectionDiv>
         </Background>
       )}
