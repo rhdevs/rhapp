@@ -225,9 +225,10 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
   const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
 
-  get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    if (response.data.length > 0) {
-      const transformedPost = cloneDeep(response.data).map((post) => {
+  get(endpoint, DOMAINS.SOCIAL, subroute).then((data) => {
+    const response = JSON.parse(data.data)
+    if (response.length > 0) {
+      const transformedPost = cloneDeep(response).map((post) => {
         post.date = post.createdAt
         post.postId = post.postID
         post.ccaId = post.ccaID
