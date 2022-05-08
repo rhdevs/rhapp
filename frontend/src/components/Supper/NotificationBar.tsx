@@ -94,7 +94,7 @@ export const NotificationBar = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (supperNotifications.length) {
+    if (supperNotifications !== undefined && supperNotifications.length) {
       setIsVisible(true)
       if (supperNotifications[0].notification === NotificationType.FOOD) {
         setNotifText(
