@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 export enum ENDPOINTS {
   // AUTH
@@ -183,12 +185,17 @@ async function makeRequest(
       DOMAIN_URL_REQ = DOMAIN_URL.GYM
       break
   }
-  return fetch(DOMAIN_URL_REQ + url, {
+  return axios({
     method: method,
-    headers: { ...additionalHeaders },
-    body: method === 'get' ? null : JSON.stringify(requestBody),
+    url: DOMAIN_URL_REQ + url,
+    headers: {
+      ...additionalHeaders,
+    },
+    data: requestBody,
+    // withCredentials: true,
+    validateStatus: (status) => status >= 200 && status < 400,
   })
-    .then((resp) => resp.json())
+    .then((response) => response.data)
     .catch((err) => console.log(err))
 }
 
