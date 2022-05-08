@@ -10,7 +10,7 @@ export enum ENDPOINTS {
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
   USER = '/user',
-  USER_PROFILE = '/profile/',
+  USER_PROFILE = '/profile',
   USER_PROFILE_PICTURE = '/profile/picture',
   EDIT_PROFILE = '/profiles',
   USER_CCAS = '/user_CCA',
@@ -108,6 +108,14 @@ export enum ENDPOINTS {
   LEAVE_SUPPER_GROUP = '/supperGroup',
   GET_OWNER_EDITS = '/order',
   UPDATE_OWNER_EDITS = '/supperGroup',
+
+  // GYM
+  GET_GYM_HISTORY = '/',
+  GET_GYM_STATUS = '/status',
+  GET_PROFILE_PICTURE = '/keyHolder/profilepic',
+  MOVE_KEY = '/movekey',
+  RETURN_KEY = '/returnkey',
+  TOGGLE_GYM = '/togglegym',
 }
 
 export enum DOMAINS {
@@ -117,6 +125,7 @@ export enum DOMAINS {
   SOCIAL = 'social',
   AUTH = 'auth',
   SUPPER = 'supper',
+  GYM = 'gym',
 }
 
 function proxy(url: string) {
@@ -130,6 +139,7 @@ const DOMAIN_RAW_URL = {
   SOCIAL: '//rhapp-backend.rhdevs.repl.co/social',
   AUTH: '//rhapp-backend.rhdevs.repl.co/auth',
   SUPPER: '//rhapp-backend.rhdevs.repl.co/supper',
+  GYM: '//rhapp-backend.rhdevs.repl.co/gym',
 }
 
 const DOMAIN_DEV_RAW_URL = {
@@ -139,6 +149,7 @@ const DOMAIN_DEV_RAW_URL = {
   SOCIAL: '//rhapp-backend-devel.rhdevs.repl.co/social',
   AUTH: '//rhapp-backend-devel.rhdevs.repl.co/auth',
   SUPPER: '//rhapp-backend-devel.rhdevs.repl.co/supper',
+  GYM: '//rhapp-backend-devel.rhdevs.repl.co/gym',
 }
 
 export const DOMAIN_URL = {
@@ -148,6 +159,7 @@ export const DOMAIN_URL = {
   SOCIAL: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SOCIAL : proxy(DOMAIN_DEV_RAW_URL.SOCIAL),
   AUTH: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.AUTH : proxy(DOMAIN_DEV_RAW_URL.AUTH),
   SUPPER: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.SUPPER),
+  GYM: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.GYM),
 }
 
 async function makeRequest(
@@ -176,6 +188,9 @@ async function makeRequest(
       break
     case DOMAINS.SUPPER:
       DOMAIN_URL_REQ = DOMAIN_URL.SUPPER
+      break
+    case DOMAINS.GYM:
+      DOMAIN_URL_REQ = DOMAIN_URL.GYM
       break
   }
   return fetch(DOMAIN_URL_REQ + url, {

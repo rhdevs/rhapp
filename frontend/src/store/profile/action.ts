@@ -26,12 +26,9 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
     dispatch(setIsLoading(true))
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userID, {
-      method: 'GET',
-    })
-      .then((resp) => resp.json())
+    get(ENDPOINTS.USER_PROFILE, DOMAINS.SOCIAL, '/' + userID)
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data.data[0] })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: JSON.parse(data.data)[0] })
       })
       .catch((err) => console.log(err))
   }
@@ -83,9 +80,11 @@ export const fetchUserFriends = (userID: string | null) => async (dispatch: Disp
 export const fetchUserPosts = (userID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
     dispatch(setIsLoading(true))
-    await get(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, '/' + userID).then((data) => {
-      dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: JSON.parse(data.data) })
-    })
+    await get(ENDPOINTS.ALL_POSTS, DOMAINS.SOCIAL, '/' + userID)
+      .then((data) => {
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_POSTS, posts: JSON.parse(data.data) })
+      })
+      .catch((err) => console.log(err))
   }
   dispatch(setIsLoading(false))
 }
