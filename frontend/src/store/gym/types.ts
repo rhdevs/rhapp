@@ -21,14 +21,14 @@ export type HistoryEntry = {
 
 export type UserEntry = {
   statusChange: string
-  requesttime: number
+  requestTime: number
   userDetails: string
 }
 
 export type KeyWithArgs = {
   userID: string
   telegramHandle: string
-  requesttime: number
+  requestTime: number
   keyStatus: string
 }
 

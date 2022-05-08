@@ -566,17 +566,17 @@ export const gymHistory: HistoryEntry[] = [
     details: [
       {
         statusChange: '',
-        requesttime: 1638416070,
+        requestTime: 1638416070,
         userDetails: '@John99',
       },
       {
         statusChange: '',
-        requesttime: 1638413730,
+        requestTime: 1638413730,
         userDetails: '@andy333',
       },
       {
         statusChange: 'open',
-        requesttime: 1638409291,
+        requestTime: 1638409291,
         userDetails: '@inspired_ahpau',
       },
     ],
@@ -586,27 +586,27 @@ export const gymHistory: HistoryEntry[] = [
     details: [
       {
         statusChange: '',
-        requesttime: 1638363931,
+        requestTime: 1638363931,
         userDetails: '5 - 409',
       },
       {
         statusChange: 'closed',
-        requesttime: 1638363510,
+        requestTime: 1638363510,
         userDetails: '@inspired_ahpau',
       },
       {
         statusChange: '',
-        requesttime: 1638360330,
+        requestTime: 1638360330,
         userDetails: '@inspired_ahpau',
       },
       {
         statusChange: '',
-        requesttime: 1638355410,
+        requestTime: 1638355410,
         userDetails: '@xiaomingwong',
       },
       {
         statusChange: '',
-        requesttime: 1638349170,
+        requestTime: 1638349170,
         userDetails: '@bob_the_builder',
       },
     ],

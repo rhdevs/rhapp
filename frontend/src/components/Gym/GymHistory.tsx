@@ -68,8 +68,8 @@ const GymHistory = () => {
           <HistoryContainer key={entry.date}>
             <Date>{entry.date}</Date>
             {entry.details.map((user) => (
-              <ContentRow key={user.requesttime}>
-                <Content>{unixToFormattedTimeNoSeconds(user.requesttime)}</Content>
+              <ContentRow key={user.requestTime}>
+                <Content>{unixToFormattedTimeNoSeconds(user.requestTime)}</Content>
                 <Status status={user.statusChange} />
                 <Content>@{user.userDetails}</Content>
               </ContentRow>
