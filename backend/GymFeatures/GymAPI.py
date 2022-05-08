@@ -24,14 +24,14 @@ gym_api = Blueprint("gym", __name__)
 def get_history():
     try:
 
-        data = list(db.Gym.find({},{"_id":0}).sort("requesttime",1))
+        data = list(db.Gym.find({},{"_id":0}).sort("requestTime",1))
         data = pd.DataFrame(data)
         checkkeyHolder = data['keyHolder'].shift(-1) == data['keyHolder']
-        checkrequesttime = data['requesttime'].shift(-1) - data['requesttime'] <= 60
+        checkrequestTime = data['requestTime'].shift(-1) - data['requestTime'] <= 60
         checkgymIsOpen = (data['gymIsOpen'] == False) & (data['gymIsOpen'].shift(-1) == True)
-        data = data[~((checkkeyHolder) & (checkrequesttime) & (checkgymIsOpen))].tail(10)
+        data = data[~((checkkeyHolder) & (checkrequestTime) & (checkgymIsOpen))].tail(10)
 
-        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requesttime, tz = pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d'), axis=1)
+        data['date'] = data.apply(lambda row: datetime.fromtimestamp(row.requestTime, tz = pytz.timezone('Asia/Singapore')).strftime('%Y-%m-%d'), axis=1)
         data = data.to_dict('records')
         data_list = []
 
@@ -42,7 +42,7 @@ def get_history():
             else:
                 temp_data['userDetails'] = i['keyHolder']['telegramHandle']
 
-            temp_data['requesttime'] = i['requesttime']
+            temp_data['requestTime'] = i['requestTime']
             temp_data['gymIsOpen'] = i['gymIsOpen']
             temp_data['date'] = i['date']
             temp_data['statusChange'] = i['statusChange']
@@ -63,7 +63,7 @@ def get_history():
         allHistory = sorted(allHistory, key = lambda d: d['date'], reverse = True)
 
         for d in allHistory:
-            newLst = sorted(d['details'], key = lambda x: x['requesttime'], reverse = True)
+            newLst = sorted(d['details'], key = lambda x: x['requestTime'], reverse = True)
             d['details'] = newLst
 
 
@@ -80,8 +80,8 @@ def get_history():
 def get_statuses():
     try:
         
-        data = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
-        del data['requesttime']
+        data = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
+        del data['requestTime']
         del data['keyIsReturned']
         
         if data['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
@@ -109,7 +109,7 @@ def move_key(userID):
         telegramHandle = usersData['telegramHandle']
         displayName = usersData['displayName']
 
-        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
 
         if latestData['keyHolder']['telegramHandle'] != DEFAULT_TELEGRAM_HANDLE and userID == db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID'] :
             return make_response({"err": "You are currently holding onto the key", "status": "failed"}, 403)
@@ -123,7 +123,7 @@ def move_key(userID):
             "displayName": displayName
             }
         insert_data["userID"] = userID
-        insert_data["requesttime"] = int(time.time())
+        insert_data["requestTime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
         db.Gym.insert_one(insert_data)
         
@@ -147,7 +147,7 @@ def return_key(userID):
         if (not authenticate(request.args.get("token"), userID)):
             return {"err": "Auth Failure", "status": "failed"}, 401
         
-        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
 
         if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
             return make_response({"err": "Key has already been returned", "status": "failed"}, 403)
@@ -166,7 +166,7 @@ def return_key(userID):
             "displayName": DEFAULT_KEY_LOC
         }
         insert_data["userID"] = userID
-        insert_data["requesttime"] = int(time.time())
+        insert_data["requestTime"] = int(time.time())
         insert_data["statusChange"] = "NO_CHANGE"
 
         db.Gym.insert_one(insert_data)
@@ -190,7 +190,7 @@ def toggle_gym(userID):
         if (not authenticate(request.args.get("token"), userID)):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
-        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requesttime", -1))[0]
+        latestData = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
 
         if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE or userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
             return make_response({"err": "You are not holding onto the key", "status": "failed"}, 403)
@@ -206,7 +206,7 @@ def toggle_gym(userID):
         insert_data["keyIsReturned"] = False
         insert_data["keyHolder"] =  data["keyHolder"]
         insert_data["userID"] = userID
-        insert_data["requesttime"] = int(time.time())
+        insert_data["requestTime"] = int(time.time())
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
         
@@ -221,7 +221,7 @@ def toggle_gym(userID):
 def getUserPicture():
     try:
 
-        data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requesttime", -1))
+        data = list(db.Gym.find({}, {"_id": 0, "userID": 1, "keyIsReturned": 1}).sort("requestTime", -1))
         if data[0]['keyIsReturned']==True:
             imageKey = 'default/profile_pic.png'
         else:
