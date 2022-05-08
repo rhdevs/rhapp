@@ -119,7 +119,7 @@ export enum ENDPOINTS {
 }
 
 export enum DOMAINS {
-  FACILITY = 'facility',
+  FACILITY = 'facilities',
   EVENT = 'event',
   LAUNDRY = 'laundry',
   SOCIAL = 'social',
@@ -132,34 +132,24 @@ function proxy(url: string) {
   return 'https://cors-anywhere-rhapp.herokuapp.com/https:' + url
 }
 
-const DOMAIN_RAW_URL = {
-  FACILITY: '//rhapp-backend.rhdevs.repl.co/facilities',
-  EVENT: '//rhapp-backend.rhdevs.repl.co/scheduling',
-  LAUNDRY: '//rhapp-backend.rhdevs.repl.co/laundry',
-  SOCIAL: '//rhapp-backend.rhdevs.repl.co/social',
-  AUTH: '//rhapp-backend.rhdevs.repl.co/auth',
-  SUPPER: '//rhapp-backend.rhdevs.repl.co/supper',
-  GYM: '//rhapp-backend.rhdevs.repl.co/gym',
+function prod(domain: DOMAINS) {
+  const url = '//rhapp-backend.rhdevs.repl.co/'
+  return url + domain
 }
 
-const DOMAIN_DEV_RAW_URL = {
-  FACILITY: '//rhapp-backend-devel.rhdevs.repl.co/facilities',
-  EVENT: '//rhapp-backend-devel.rhdevs.repl.co/scheduling',
-  LAUNDRY: '//rhapp-backend-devel.rhdevs.repl.co/laundry',
-  SOCIAL: '//rhapp-backend-devel.rhdevs.repl.co/social',
-  AUTH: '//rhapp-backend-devel.rhdevs.repl.co/auth',
-  SUPPER: '//rhapp-backend-devel.rhdevs.repl.co/supper',
-  GYM: '//rhapp-backend-devel.rhdevs.repl.co/gym',
+function dev(domain: DOMAINS) {
+  const url = '//rhapp-backend-devel.rhdevs.repl.co/'
+  return proxy(url + domain)
 }
 
 export const DOMAIN_URL = {
-  FACILITY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.FACILITY : proxy(DOMAIN_DEV_RAW_URL.FACILITY),
-  EVENT: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.EVENT : proxy(DOMAIN_DEV_RAW_URL.EVENT),
-  LAUNDRY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.LAUNDRY : proxy(DOMAIN_DEV_RAW_URL.LAUNDRY),
-  SOCIAL: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SOCIAL : proxy(DOMAIN_DEV_RAW_URL.SOCIAL),
-  AUTH: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.AUTH : proxy(DOMAIN_DEV_RAW_URL.AUTH),
-  SUPPER: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.SUPPER),
-  GYM: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.GYM),
+  FACILITY: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.FACILITY) : dev(DOMAINS.FACILITY),
+  EVENT: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.EVENT) : dev(DOMAINS.EVENT),
+  LAUNDRY: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.LAUNDRY) : dev(DOMAINS.LAUNDRY),
+  SOCIAL: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.SOCIAL) : dev(DOMAINS.SOCIAL),
+  AUTH: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.AUTH) : dev(DOMAINS.AUTH),
+  SUPPER: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.SUPPER) : dev(DOMAINS.SUPPER),
+  GYM: process.env.REACT_APP_MODE === 'production' ? prod(DOMAINS.GYM) : dev(DOMAINS.GYM),
 }
 
 async function makeRequest(
