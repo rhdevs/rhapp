@@ -142,14 +142,24 @@ const DOMAIN_RAW_URL = {
   GYM: '//rhapp-backend.rhdevs.repl.co/gym',
 }
 
+const DOMAIN_DEV_RAW_URL = {
+  FACILITY: '//rhapp-backend-devel.rhdevs.repl.co/facilities',
+  EVENT: '//rhapp-backend-devel.rhdevs.repl.co/scheduling',
+  LAUNDRY: '//rhapp-backend-devel.rhdevs.repl.co/laundry',
+  SOCIAL: '//rhapp-backend-devel.rhdevs.repl.co/social',
+  AUTH: '//rhapp-backend-devel.rhdevs.repl.co/auth',
+  SUPPER: '//rhapp-backend-devel.rhdevs.repl.co/supper',
+  GYM: '//rhapp-backend-devel.rhdevs.repl.co/gym',
+}
+
 export const DOMAIN_URL = {
-  FACILITY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.FACILITY : proxy(DOMAIN_RAW_URL.FACILITY),
-  EVENT: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.EVENT : proxy(DOMAIN_RAW_URL.EVENT),
-  LAUNDRY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.LAUNDRY : proxy(DOMAIN_RAW_URL.LAUNDRY),
-  SOCIAL: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SOCIAL : proxy(DOMAIN_RAW_URL.SOCIAL),
-  AUTH: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.AUTH : proxy(DOMAIN_RAW_URL.AUTH),
-  SUPPER: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_RAW_URL.SUPPER),
-  GYM: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_RAW_URL.GYM),
+  FACILITY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.FACILITY : proxy(DOMAIN_DEV_RAW_URL.FACILITY),
+  EVENT: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.EVENT : proxy(DOMAIN_DEV_RAW_URL.EVENT),
+  LAUNDRY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.LAUNDRY : proxy(DOMAIN_DEV_RAW_URL.LAUNDRY),
+  SOCIAL: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SOCIAL : proxy(DOMAIN_DEV_RAW_URL.SOCIAL),
+  AUTH: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.AUTH : proxy(DOMAIN_DEV_RAW_URL.AUTH),
+  SUPPER: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.SUPPER),
+  GYM: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.GYM),
 }
 
 async function makeRequest(
