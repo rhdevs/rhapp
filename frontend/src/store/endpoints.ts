@@ -1,4 +1,6 @@
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
+import axios from 'axios'
+
 export enum ENDPOINTS {
   // AUTH
   LOGIN = '/login',
@@ -128,78 +130,102 @@ export enum DOMAINS {
   GYM = 'gym',
 }
 
-function proxy(url: string) {
-  return 'https://cors-anywhere-rhapp.herokuapp.com/https:' + url
-}
-
-const DOMAIN_RAW_URL = {
-  FACILITY: '//rhapp-backend.rhdevs.repl.co/facilities',
-  EVENT: '//rhapp-backend.rhdevs.repl.co/scheduling',
-  LAUNDRY: '//rhapp-backend.rhdevs.repl.co/laundry',
-  SOCIAL: '//rhapp-backend.rhdevs.repl.co/social',
-  AUTH: '//rhapp-backend.rhdevs.repl.co/auth',
-  SUPPER: '//rhapp-backend.rhdevs.repl.co/supper',
-  GYM: '//rhapp-backend.rhdevs.repl.co/gym',
-}
-
-const DOMAIN_DEV_RAW_URL = {
-  FACILITY: '//rhapp-backend-devel.rhdevs.repl.co/facilities',
-  EVENT: '//rhapp-backend-devel.rhdevs.repl.co/scheduling',
-  LAUNDRY: '//rhapp-backend-devel.rhdevs.repl.co/laundry',
-  SOCIAL: '//rhapp-backend-devel.rhdevs.repl.co/social',
-  AUTH: '//rhapp-backend-devel.rhdevs.repl.co/auth',
-  SUPPER: '//rhapp-backend-devel.rhdevs.repl.co/supper',
-  GYM: '//rhapp-backend-devel.rhdevs.repl.co/gym',
-}
-
 export const DOMAIN_URL = {
-  FACILITY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.FACILITY : proxy(DOMAIN_DEV_RAW_URL.FACILITY),
-  EVENT: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.EVENT : proxy(DOMAIN_DEV_RAW_URL.EVENT),
-  LAUNDRY: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.LAUNDRY : proxy(DOMAIN_DEV_RAW_URL.LAUNDRY),
-  SOCIAL: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SOCIAL : proxy(DOMAIN_DEV_RAW_URL.SOCIAL),
-  AUTH: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.AUTH : proxy(DOMAIN_DEV_RAW_URL.AUTH),
-  SUPPER: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.SUPPER),
-  GYM: process.env.REACT_APP_MODE === 'production' ? DOMAIN_RAW_URL.SUPPER : proxy(DOMAIN_DEV_RAW_URL.GYM),
+  FACILITY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/facilities'
+      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
+  EVENT:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+      : '//rhappmiddleware.herokuapp.com/rhappevents',
+  LAUNDRY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/laundry'
+      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
+  SOCIAL:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/social'
+      : '//rhappmiddleware.herokuapp.com/rhappsocial',
+  AUTH:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/auth'
+      : '//rhappmiddleware.herokuapp.com/rhappauth',
+  SUPPER:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/supper'
+      : '//rhappmiddleware.herokuapp.com/rhappsupper',
+  GYM:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/gym'
+      : '//rhappmiddleware.herokuapp.com/rhappgym',
 }
 
 async function makeRequest(
   url: string,
   domain: DOMAINS,
   method: 'get' | 'post' | 'delete' | 'put',
-  additionalHeaders: HeadersInit | undefined = {},
+  additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
   let DOMAIN_URL_REQ: string
   switch (domain) {
     case DOMAINS.FACILITY:
-      DOMAIN_URL_REQ = DOMAIN_URL.FACILITY
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/facilities'
+          : '//rhappmiddleware.herokuapp.com/rhappfacilities'
       break
     case DOMAINS.EVENT:
-      DOMAIN_URL_REQ = DOMAIN_URL.EVENT
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+          : '//rhappmiddleware.herokuapp.com/rhappevents'
       break
     case DOMAINS.LAUNDRY:
-      DOMAIN_URL_REQ = DOMAIN_URL.LAUNDRY
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/laundry'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.SOCIAL:
-      DOMAIN_URL_REQ = DOMAIN_URL.SOCIAL
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/social'
+          : '//rhappmiddleware.herokuapp.com/rhappsocial'
       break
     case DOMAINS.AUTH:
-      DOMAIN_URL_REQ = DOMAIN_URL.AUTH
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/auth'
+          : '//rhappmiddleware.herokuapp.com/rhappauth'
       break
     case DOMAINS.SUPPER:
-      DOMAIN_URL_REQ = DOMAIN_URL.SUPPER
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/supper'
+          : '//rhappmiddleware.herokuapp.com/rhappsupper'
       break
     case DOMAINS.GYM:
-      DOMAIN_URL_REQ = DOMAIN_URL.GYM
+      DOMAIN_URL_REQ =
+        process.env.REACT_APP_MODE === 'production'
+          ? '//rhapp-backend.rhdevs.repl.co/gym'
+          : '//rhappmiddleware.herokuapp.com/rhappgym'
       break
   }
-  return fetch(DOMAIN_URL_REQ + url, {
+  return axios({
     method: method,
-    headers: { ...additionalHeaders },
-    body: method === 'get' ? null : JSON.stringify(requestBody),
-  })
-    .then((resp) => resp.json())
-    .catch((err) => console.log(err))
+    url: DOMAIN_URL_REQ + url,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      ...additionalHeaders,
+    },
+    data: requestBody,
+    // withCredentials: true,
+    validateStatus: (status) => {
+      return status >= 200 && status < 400;
+    },
+  }).then((response) => response.data)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,7 +239,7 @@ export function post(
   endpoint: ENDPOINTS,
   domain: DOMAINS,
   requestBody: Record<string, unknown>,
-  additionalHeaders: HeadersInit | undefined = {},
+  additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
   return makeRequest(endpoint + subRoute, domain, 'post', additionalHeaders, requestBody)
@@ -222,7 +248,7 @@ export function post(
 export function del(
   endpoint: ENDPOINTS,
   domain: DOMAINS,
-  additionalHeaders: HeadersInit | undefined = {},
+  additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
   return makeRequest(endpoint + subRoute, domain, 'delete', additionalHeaders)
@@ -232,7 +258,7 @@ export function put(
   endpoint: ENDPOINTS,
   domain: DOMAINS,
   requestBody: Record<string, unknown>,
-  additionalHeaders: HeadersInit | undefined = {},
+  additionalHeaders: Record<string, unknown> = {},
   subRoute = '',
 ): ResponsePromise {
   return makeRequest(endpoint + subRoute, domain, 'put', additionalHeaders, requestBody)

@@ -26,12 +26,9 @@ import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
 export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   if (userID !== null) {
     dispatch(setIsLoading(true))
-    fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE + userID, {
-      method: 'GET',
-    })
-      .then((resp) => resp.json())
+    get(ENDPOINTS.USER_PROFILE, DOMAINS.SOCIAL, '/' + userID)
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: data.data[0] })
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: JSON.parse(data.data)[0] })
       })
       .catch((err) => console.log(err))
   }
