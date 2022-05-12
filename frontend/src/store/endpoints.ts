@@ -223,7 +223,7 @@ async function makeRequest(
     data: requestBody,
     // withCredentials: true,
     validateStatus: (status) => {
-      return status >= 200 && status < 400;
+      return status >= 200 && status < 400
     },
   }).then((response) => response.data)
 }
