@@ -90,7 +90,7 @@ type FormValues = {
 }
 
 export default function CreateBooking() {
-  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const {
@@ -111,7 +111,7 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
-  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate === 0 ? false : true)
+  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
   const params = useParams<{ facilityId: string }>()
 
@@ -141,9 +141,7 @@ export default function CreateBooking() {
 
   const handleToggleWeekly = () => {
     setIsWeeklyOn(!isWeeklyOn)
-    if (isWeeklyOn === true) {
-      dispatch(setBookingEndDate(0))
-    }
+    isWeeklyOn && dispatch(setBookingEndDate(0))
   }
 
   const onSubmit = (e) => {
@@ -156,7 +154,7 @@ export default function CreateBooking() {
       handleSubmit((data) => {
         console.log(data, ccaName)
         if (bookingStatus === BookingStatus.CONFLICT) {
-          setmodalIsOpen(true)
+          setModalIsOpen(true)
         } else {
           dispatch(
             handleCreateNewBooking(
@@ -181,7 +179,7 @@ export default function CreateBooking() {
       dispatch(setBookingStatus(BookingStatus.INITIAL))
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
-      setmodalIsOpen(true)
+      setModalIsOpen(true)
     }
   }, [bookingStatus])
 
@@ -271,20 +269,14 @@ export default function CreateBooking() {
             <SelectableField
               title="End Date"
               value={bookingEndDate === 0 ? '' : unixToFullDate(bookingEndDate)}
-              isCompulsory={true}
+              isCompulsory
               onClick={() => history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}/1`)}
               // TODO, Redirect to choose date calender page
             />
           )}
-          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
-          <div style={{ width: '100%', height: '30px' }}></div>
-          <ButtonComponent
-            state={'primary'}
-            text="Submit"
-            type="submit"
-            disabled={!formIsValid()}
-            onClick={() => null}
-          />
+          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
+          <div style={{ width: '100%', height: '30px' }} />
+          <ButtonComponent state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={() => null} />
         </Form>
       )}
     </Background>
