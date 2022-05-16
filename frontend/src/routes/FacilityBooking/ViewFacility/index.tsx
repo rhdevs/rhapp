@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { FormOutlined } from '@ant-design/icons'
+import { FormOutlined, PropertySafetyFilled } from '@ant-design/icons'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
@@ -27,7 +27,7 @@ const MainContainer = styled.div`
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
+  const params = useParams<{ facilityId: string; isEndDate: string }>()
   const { selectedFacilityName, selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
@@ -49,7 +49,16 @@ export default function ViewFacility() {
   )
 
   const onDateClick = (date: Date) => {
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+    if (parseInt(params.isEndDate) === 0) {
+      history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+    } else {
+      const reccuringdate = date.getTime() / 1000
+      if (Date.now() / 1000 > reccuringdate) {
+        return
+      } else {
+        history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+      }
+    }
   }
 
   return (

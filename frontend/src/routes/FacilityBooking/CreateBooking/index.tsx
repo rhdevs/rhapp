@@ -90,7 +90,7 @@ type FormValues = {
 }
 
 export default function CreateBooking() {
-  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const {
@@ -100,7 +100,7 @@ export default function CreateBooking() {
     register,
     setValue,
   } = useForm<FormValues>()
-  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
+
   const [ccaName, setCcaName] = useState<string>('')
   const {
     facilityList,
@@ -111,6 +111,7 @@ export default function CreateBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
+  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
   const params = useParams<{ facilityId: string }>()
 
@@ -138,7 +139,10 @@ export default function CreateBooking() {
     return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
 
-  console.log(bookingStatus)
+  const handleToggleWeekly = () => {
+    setIsWeeklyOn(!isWeeklyOn)
+    isWeeklyOn && dispatch(setBookingEndDate(0))
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -150,7 +154,7 @@ export default function CreateBooking() {
       handleSubmit((data) => {
         console.log(data, ccaName)
         if (bookingStatus === BookingStatus.CONFLICT) {
-          setmodalIsOpen(true)
+          setModalIsOpen(true)
         } else {
           dispatch(
             handleCreateNewBooking(
@@ -175,7 +179,7 @@ export default function CreateBooking() {
       dispatch(setBookingStatus(BookingStatus.INITIAL))
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
-      setmodalIsOpen(true)
+      setModalIsOpen(true)
     }
   }, [bookingStatus])
 
@@ -259,25 +263,20 @@ export default function CreateBooking() {
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
-            <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
+            <Switch isOn={isWeeklyOn} handleToggle={() => handleToggleWeekly()} switchSize={50} />
           </WeeklyRecurrenceRow>
           {isWeeklyOn && (
             <SelectableField
               title="End Date"
-              value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
-              isCompulsory={true}
-              onClick={() => dispatch(setBookingEndDate(1644648228))}
+              value={bookingEndDate === 0 ? '' : unixToFullDate(bookingEndDate)}
+              isCompulsory
+              onClick={() => history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}/1`)}
               // TODO, Redirect to choose date calender page
             />
           )}
-          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
-          <ButtonComponent
-            state={'primary'}
-            text="Submit"
-            type="submit"
-            disabled={!formIsValid()}
-            onClick={() => null}
-          />
+          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
+          <div style={{ width: '100%', height: '30px' }} />
+          <ButtonComponent state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={() => null} />
         </Form>
       )}
     </Background>

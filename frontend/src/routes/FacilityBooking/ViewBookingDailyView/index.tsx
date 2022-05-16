@@ -60,7 +60,7 @@ export default function ViewBookingDailyView() {
   return (
     <>
       <TopNavBarRevamp
-        onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
+        onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}/0`)}
         centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
         rightComponent={
           <ButtonComponent
