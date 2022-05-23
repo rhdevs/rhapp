@@ -16,13 +16,14 @@ export const getUserDetail = () => (dispatch: Dispatch<ActionTypes>) => {
     if (response.data === '' || response.data === undefined) {
       console.log(response.err)
     } else {
-      const data = response.data
+      const data = response.data[0]
       dispatch({
         type: SOCIAL_ACTIONS.GET_USER_DETAIL,
         userId: data.userID,
         avatar: data.profilePictureUrl,
         name: data.displayName,
         position: data.position,
+        telegramHandle: data.telegramHandle,
       })
     }
   })
