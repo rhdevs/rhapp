@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import styled from 'styled-components'
-import { FormOutlined } from '@ant-design/icons'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
@@ -17,7 +16,6 @@ import {
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
-import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
@@ -31,7 +29,7 @@ export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setIsLoading(true))

@@ -55,7 +55,7 @@ export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, isLoading, selectedStartTime, selectedEndTime } = useSelector(
+  const { selectedFacilityName, isLoading, selectedStartTime } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
   const { clickedDate } = useSelector((state: RootState) => state.calendar)

@@ -14,7 +14,6 @@ import {
   fetchAllCCAs,
   getFacilityList,
   setIsLoading,
-  resetBooking,
   handleCreateNewBooking,
   setBookingStartTime,
   setBookingEndTime,
