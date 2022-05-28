@@ -5,6 +5,7 @@ import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
 
+// TODO sort out naming conventions esp when to put _ID at the back
 export enum PATHS {
   // DOCUMENTATION
   DOCS_LANDING_PAGE = '/docs',
@@ -36,7 +37,9 @@ export enum PATHS {
   // FACILITY BOOKING
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/view',
-  VIEW_FACILITY_ID = '/facility/view/:facilityId/:isEndDate',
+  VIEW_FACILITY_ID = '/facility/view/:facilityId',
+  SELECT_RECURRING_BOOKING_END_DATE = '/facility/booking/create/recurring/selectEndDate',
+  SELECT_RECURRING_BOOKING_END_DATE_ID = '/facility/booking/create/recurring/selectEndDate/:facilityId',
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create',
   CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/create/:facilityId',
@@ -48,8 +51,8 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
   VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/:facilityId',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
-  VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
-  VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
+  VIEW_MY_BOOKINGS = '/facility/booking/user',
+  VIEW_MY_BOOKINGS_ID = '/facility/booking/user/:userId',
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_MACHINE = '/facility/laundry/view',
@@ -123,7 +126,9 @@ const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ '.
 // FACILITY BOOKING
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
-const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
+const ViewMyBookings = React.lazy(
+  () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
+)
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
 const ViewBookingDailyView = React.lazy(
   () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/ViewBookingDailyView'),
@@ -136,7 +141,10 @@ const CreateBookingDailyView = React.lazy(
   () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
 )
 const EditBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/EditBooking/index'),
+  () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBooking/index'),
+)
+const SelectRecurringDatePage = React.lazy(
+  () => import(/* webpackChunckName: "SelectRecurringDatePage" */ './FacilityBooking/SelectRecurringDatePage'),
 )
 
 // LAUNDRY
@@ -204,13 +212,14 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
-            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW_ID} component={ViewBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING} component={EditBooking} />
+            <PrivateRoute exact path={PATHS.SELECT_RECURRING_BOOKING_END_DATE_ID} component={SelectRecurringDatePage} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />

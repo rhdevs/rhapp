@@ -273,8 +273,7 @@ export default function CreateBooking() {
               title="End Date"
               value={bookingEndDate === 0 ? '' : unixToFullDate(bookingEndDate)}
               isCompulsory
-              onClick={() => history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}/1`)}
-              // TODO, Redirect to choose date calender page
+              onClick={() => history.push(`${PATHS.SELECT_RECURRING_BOOKING_END_DATE}/${params.facilityId}`)}
             />
           )}
           <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />

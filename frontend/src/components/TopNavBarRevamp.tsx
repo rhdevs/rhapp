@@ -9,18 +9,18 @@ const TitleText = styled.h1`
   font-family: lato;
   font-style: normal;
   font-weight: 700;
-  font-size: 22px;
+  font-size: min(5vw, 22px);
   line-height: 20px;
   color: #000000;
   align-self: center;
   white-space: nowrap;
-  padding-left: 70px;
+  padding-left: min(9vw, 70px);
 `
 
 const StyledNavBar = styled(NavBar)`
   &.am-navbar {
     height: 70px;
-    background-color: #ffffff; !important
+    background-color: #ffffff !important;
   }
   max-width: 100%;
   position: sticky;
@@ -58,8 +58,9 @@ function TopNavBarRevamp(props: NavProps) {
       mode="light"
       icon={
         <>
-          {props.leftIcon && props.leftIconComponent}
-          {!props.leftIcon && (
+          {props.leftIcon ? (
+            props.leftIconComponent
+          ) : (
             <NavBarIcons
               type="left"
               onClick={() => {

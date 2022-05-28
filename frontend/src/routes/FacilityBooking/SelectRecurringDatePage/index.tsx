@@ -27,7 +27,7 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
-export default function ViewFacility() {
+export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
@@ -35,37 +35,29 @@ export default function ViewFacility() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(resetBooking())
+    dispatch(resetBooking()) // TODO what is this
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
     if (selectedFacilityId == 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
 
-  const MyBookingsIcon = (
-    <FormOutlined
-      style={{ color: 'black', fontSize: '150%' }}
-      onClick={() => {
-        history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-      }}
-    />
-  )
-
-  const onDateClick = () => {
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+  const onDateClick = (date: Date) => {
+    const reccuringdate = date.getTime() / 1000
+    if (Date.now() / 1000 <= reccuringdate) {
+      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+    }
   }
 
   return (
     <>
       <TopNavBarRevamp
-        title={selectedFacilityName}
-        rightComponent={MyBookingsIcon}
-        onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
+        title="Select Weekly Booking End Date"
+        onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
-          <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
     </>

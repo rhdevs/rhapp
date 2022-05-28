@@ -161,7 +161,7 @@ export default function FacilityBooking() {
     <img
       src={bookingsIcon}
       onClick={() => {
-        history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+        history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
       }}
     />
   )
@@ -262,7 +262,7 @@ export default function FacilityBooking() {
                     <FacilityCard
                       key={facility.facilityID}
                       onClick={() => {
-                        history.push(`${PATHS.VIEW_FACILITY}/${facility.facilityID}/0`)
+                        history.push(`${PATHS.VIEW_FACILITY}/${facility.facilityID}`)
                         dispatch(setSelectedFacility(facility.facilityID))
                       }}
                     >
