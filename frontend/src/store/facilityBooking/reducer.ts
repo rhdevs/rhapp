@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { Reducer } from 'redux'
 import { defaultTimeBlocks, myBookingsStub } from '../stubs'
 import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, BookingStatus, TimeBlock } from './types'

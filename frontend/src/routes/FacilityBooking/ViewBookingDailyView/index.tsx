@@ -3,14 +3,15 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
+import { updateDailyView } from '../../../store/facilityBooking/action'
+
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import ButtonComponent from '../../../components/Button'
-import { updateDailyView } from '../../../store/facilityBooking/action'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
-import { PATHS } from '../../Routes'
 
 const HEADER_HEIGHT = '70px'
 

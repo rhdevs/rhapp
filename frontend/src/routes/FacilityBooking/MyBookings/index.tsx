@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import deleteIcon from '../../../assets/deleteIcon.svg'
-import editIcon from '../../../assets/editIcon.svg'
-import catIcon from '../../../assets/catMagnifyGlass.svg'
+import PullToRefresh from 'pull-to-refresh-react'
+
+import { PATHS } from '../../Routes'
+import { onRefresh } from '../../../common/reloadPage'
 import {
   getMyBookings,
   setIsDeleteMyBooking,
@@ -14,11 +14,14 @@ import {
   setIsLoading,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { PATHS } from '../../Routes'
-import LoadingSpin from '../../../components/LoadingSpin'
-import { onRefresh } from '../../../common/reloadPage'
-import PullToRefresh from 'pull-to-refresh-react'
 
+import LoadingSpin from '../../../components/LoadingSpin'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
+import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+
+import deleteIcon from '../../../assets/deleteIcon.svg'
+import editIcon from '../../../assets/editIcon.svg'
+import catIcon from '../../../assets/catMagnifyGlass.svg'
 import AlumniRoom from '../../../assets/facilitiesLogos/AlumniRoom.svg'
 import BandRoom from '../../../assets/facilitiesLogos/BandRoom.svg'
 import BasketballCourt from '../../../assets/facilitiesLogos/BasketballCourt.svg'
@@ -35,7 +38,6 @@ import PoolAreaLL from '../../../assets/facilitiesLogos/PoolAreaLL.svg'
 import Stage from '../../../assets/facilitiesLogos/Stage.svg'
 import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
 import DummyAvatar from '../../../assets/dummyAvatar.svg'
-import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -175,8 +177,9 @@ export default function ViewMyBookings() {
       <PullToRefresh onRefresh={onRefresh}>
         <TopNavBar title={'My Bookings'} />
         <MainContainer>
-          {isLoading && <LoadingSpin />}
-          {!isLoading && (
+          {isLoading ? (
+            <LoadingSpin />
+          ) : (
             <>
               {myBookings.length === 0 && <NoBookingsFound>You have not made any bookings.</NoBookingsFound>}
               {myBookings?.map((booking) => {

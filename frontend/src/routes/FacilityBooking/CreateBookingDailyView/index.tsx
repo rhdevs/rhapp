@@ -5,18 +5,19 @@ import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
 import 'antd/dist/antd.css'
 
-import LoadingSpin from '../../../components/LoadingSpin'
-import BookingSection from '../../../components/FacilityBooking/BookingSection'
-import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import { RootState } from '../../../store/types'
+import { PATHS } from '../../Routes'
 import {
   setSelectedBlockTimestamp,
   setSelectedEndTime,
   setSelectedStartTime,
   updateDailyView,
 } from '../../../store/facilityBooking/action'
-import { PATHS } from '../../Routes'
+import { RootState } from '../../../store/types'
+
+import LoadingSpin from '../../../components/LoadingSpin'
+import BookingSection from '../../../components/FacilityBooking/BookingSection'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 
 const HEADER_HEIGHT = '70px'
 

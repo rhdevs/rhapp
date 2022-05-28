@@ -1,11 +1,12 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../../../store/types'
-import { ConfirmationModal } from '../../../components/ConfirmationModal'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+
 import { PATHS } from '../../Routes'
-import { handleCreateNewBooking, setBookingStatus } from '../../../store/facilityBooking/action'
+import { RootState } from '../../../store/types'
 import { BookingStatus } from '../../../store/facilityBooking/types'
+import { handleCreateNewBooking, setBookingStatus } from '../../../store/facilityBooking/action'
+import { ConfirmationModal } from '../../../components/ConfirmationModal'
 
 type Props = {
   modalOpen: boolean
@@ -16,11 +17,12 @@ export default function ConflictBookingModal(props: Props) {
   const history = useHistory()
   const { booking } = useSelector((state: RootState) => state.facilityBooking)
 
-  function toggleStatus() {
+  const toggleStatus = () => {
     props.setModalOpen(!open)
     dispatch(setBookingStatus(BookingStatus.INITIAL))
   }
-  function onRightClick() {
+
+  const onRightClick = () => {
     // TODO doesn't work as intended (investigate)
     dispatch(
       handleCreateNewBooking(
@@ -36,7 +38,7 @@ export default function ConflictBookingModal(props: Props) {
     )
     toggleStatus()
   }
-  function toLink() {
+  const toLink = () => {
     history.push(PATHS.VIEW_FACILITY_CONFLICT)
   }
 

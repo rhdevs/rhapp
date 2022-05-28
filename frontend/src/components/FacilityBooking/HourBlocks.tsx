@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { MainTimeContainer, TimeContainer } from './BlockStyles'
+import { MainTimeContainer, TimeContainer } from './BlockStyles.styled'
 
 const HourBlocks = () => {
   return (

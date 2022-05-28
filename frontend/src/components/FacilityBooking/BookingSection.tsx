@@ -2,10 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 
-import { DailyContainer, MainContainer } from './BlockStyles'
-import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
-import BookingBlock from './BookingBlock'
-import { RootState } from '../../store/types'
+import { PATHS } from '../../routes/Routes'
 import {
   setBookingEndTime,
   setBookingStartTime,
@@ -14,9 +11,14 @@ import {
   setSelectedStartTime,
   setTimeBlocks,
 } from '../../store/facilityBooking/action'
-import HourBlocks from './HourBlocks'
+import { RootState } from '../../store/types'
+import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
+
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
-import { PATHS } from '../../routes/Routes'
+import HourBlocks from './HourBlocks'
+import BookingBlock from './BookingBlock'
+
+import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
 export default function BookingSection() {
   const history = useHistory()

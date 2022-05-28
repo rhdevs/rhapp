@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+
 import { RootState } from '../../../store/types'
 import BookingCard from '../../../components/BookingCard'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { useHistory } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -20,10 +21,9 @@ const MainContainer = styled.div`
 export default function ViewConflict() {
   const history = useHistory()
   const { isLoading, conflictBookings } = useSelector((state: RootState) => state.facilityBooking)
+
   useEffect(() => {
-    if (conflictBookings.length === 0) {
-      history.goBack()
-    }
+    conflictBookings.length === 0 && history.goBack()
   })
 
   return (

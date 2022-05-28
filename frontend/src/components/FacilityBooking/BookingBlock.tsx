@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { RootState } from '../../store/types'
-import { StyledBookingBlock } from './BlockStyles'
+import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
+import { StyledBookingBlock } from './BlockStyles.styled'
 import { scrollToView } from './CurrentTimeLine'
 
 type Props = {

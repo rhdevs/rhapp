@@ -1,20 +1,23 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { FormOutlined, PropertySafetyFilled } from '@ant-design/icons'
-import BottomNavBar from '../../../components/Mobile/BottomNavBar'
+import PullToRefresh from 'pull-to-refresh-react'
+
+import styled from 'styled-components'
+import { FormOutlined } from '@ant-design/icons'
+
+import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
-import { RootState } from '../../../store/types'
 import {
   fetchFacilityNameFromID,
   resetBooking,
   setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
-import { onRefresh } from '../../../common/reloadPage'
-import PullToRefresh from 'pull-to-refresh-react'
+import { RootState } from '../../../store/types'
+
+import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 

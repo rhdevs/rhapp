@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { DailyContainer, MainContainer } from './BlockStyles'
-import ViewBlock from './ViewBlock'
 import { RootState } from '../../store/types'
+import { Booking } from '../../store/facilityBooking/types'
+
+import ViewBlock from './ViewBlock'
 import HourBlocks from './HourBlocks'
 import CurrentTimeLine, { isToday } from './CurrentTimeLine'
 import { ViewBookingCard } from './ViewBookingCard'
-import { Booking } from '../../store/facilityBooking/types'
+
+import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
@@ -23,7 +25,7 @@ const ViewScheduleBlock = () => {
   return (
     <>
       {isViewBookingModalOpen && (
-        <ViewBookingCard booking={viewBooking} onClickFunction={() => setIsViewBookingModalOpen(false)} />
+        <ViewBookingCard booking={viewBooking} onClick={() => setIsViewBookingModalOpen(false)} />
       )}
       <MainContainer>
         <CurrentTimeLine />

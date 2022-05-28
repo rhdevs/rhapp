@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 
 import { TimeBlock } from '../../store/facilityBooking/types'
-import { StyledViewBooking } from './BlockStyles'
 import { scrollToView } from './CurrentTimeLine'
+
+import { StyledViewBooking } from './BlockStyles.styled'
 
 type Props = {
   entry: TimeBlock

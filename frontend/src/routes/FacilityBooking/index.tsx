@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-import TopNavBar from '../../components/Mobile/TopNavBar'
-import bookingsIcon from '../../assets/bookingsIcon.svg'
-import JCRCBlockOutIcon from '../../assets/JCRCBlockOut.svg'
-import { PATHS } from '../Routes'
-import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import { useHistory } from 'react-router-dom'
-import { RootState } from '../../store/types'
+
+import styled from 'styled-components'
 import { Radio } from 'antd'
 import 'antd/dist/antd.css'
+
+import { PATHS } from '../Routes'
+import JCRCBlockOutModal from '../../components/Mobile/JCRCBlockOutModal'
+import TopNavBar from '../../components/Mobile/TopNavBar'
+import BottomNavBar from '../../components/Mobile/BottomNavBar'
+import LoadingSpin from '../../components/LoadingSpin'
+
 import {
   changeTab,
   getFacilityList,
@@ -17,7 +19,10 @@ import {
   setSelectedFacility,
   SetBlockOutIsOpen,
 } from '../../store/facilityBooking/action'
-import LoadingSpin from '../../components/LoadingSpin'
+import { RootState } from '../../store/types'
+
+import bookingsIcon from '../../assets/bookingsIcon.svg'
+import JCRCBlockOutIcon from '../../assets/JCRCBlockOut.svg'
 import AlumniRoom from '../../assets/facilitiesLogos/AlumniRoom.svg'
 import BandRoom from '../../assets/facilitiesLogos/BandRoom.svg'
 import BasketballCourt from '../../assets/facilitiesLogos/BasketballCourt.svg'
@@ -34,7 +39,6 @@ import PoolAreaLL from '../../assets/facilitiesLogos/PoolAreaLL.svg'
 import Stage from '../../assets/facilitiesLogos/Stage.svg'
 import TVRoom from '../../assets/facilitiesLogos/TVRoom.svg'
 import DummyAvatar from '../../assets/dummyAvatar.svg'
-import JCRCBlockOutModal from '../../components/Mobile/JCRCBlockOutModal'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -54,7 +58,7 @@ const FacilityCard = styled.div`
 const FacilityAvatar = styled.img`
   padding: 10px;
   width: 30%;
-  max-height 70px;
+  max-height: 70px;
 `
 
 const FacilityHeader = styled.p`
@@ -229,8 +233,9 @@ export default function FacilityBooking() {
         <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
       )}
       <MainContainer>
-        {isLoading && <LoadingSpin />}
-        {!isLoading && (
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
           <>
             <StyledRadioGroupDiv onChange={onChangeTab}>
               <StyledRadioGroup defaultValue={locationList[0]}>

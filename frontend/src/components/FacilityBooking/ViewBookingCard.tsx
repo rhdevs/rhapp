@@ -1,15 +1,16 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
-import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
-
-import { Booking } from '../../store/facilityBooking/types'
 import { unixToFullDateNumeric } from '../../common/unixToFullDateNumeric'
 import { unixTo12HourTime } from '../../common/unixTo12HourTime'
 import { unixToFullDay } from '../../common/unixToFullDay'
-import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
 import { openUserTelegram } from '../../common/telegramMethods'
+
+import { DOMAIN_URL, ENDPOINTS } from '../../store/endpoints'
+import { Booking } from '../../store/facilityBooking/types'
+
+import ViewBookingCardButton from '../../assets/viewBookingCardButton.svg'
+import ViewBookingCardUserIcon from '../../assets/viewBookingUserIcon.svg'
 
 const BackgroundOverlay = styled.div`
   position: fixed;
@@ -99,7 +100,7 @@ const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed
 
 type Props = {
   booking?: Booking
-  onClickFunction: () => void
+  onClick: () => void
 }
 
 export const ViewBookingCard = (props: Props) => {
@@ -114,7 +115,7 @@ export const ViewBookingCard = (props: Props) => {
   })
 
   const ExitButton = () => {
-    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClickFunction()} />
+    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClick()} />
   }
 
   const TelegramButton = () => {

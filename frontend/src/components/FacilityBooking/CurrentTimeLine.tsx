@@ -1,9 +1,10 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-
 import styled from 'styled-components'
+
 import { RootState } from '../../store/types'
-import { TOP_DISTANCE, BLOCK_HEIGHT, BLOCK_GAP } from './BlockStyles'
+
+import { TOP_DISTANCE, BLOCK_HEIGHT, BLOCK_GAP } from './BlockStyles.styled'
 
 const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?: string; bottom?: string }>`
   border: 1.5px solid #468751;
