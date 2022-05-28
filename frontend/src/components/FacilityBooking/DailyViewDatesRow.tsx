@@ -41,47 +41,25 @@ const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: numb
 
   if (dateRowStartDate + 6 > maxDateCurMonth.getDate()) {
     // if week spans across 2 months, display accordingly
-    if (date < dateRowStartDate) {
-      // current date selected is from the next month
-      return (
-        <DatesContainer>
-          <CustomDateRows
-            firstDate={dateNumberToObject(dateRowStartDate)}
-            assignedMonth={month - 1}
-            disabledDates={props.disabledDates}
-            facilityId={props.selectedFacilityId}
-            lastDate={maxDatePrevMonth}
-          />
-          <CustomDateRows
-            firstDate={dateNumberToObject(1)}
-            assignedMonth={month}
-            disabledDates={props.disabledDates}
-            facilityId={props.selectedFacilityId}
-            lastDate={dateNumberToObject(dateRowStartDate + 6 - maxDatePrevMonth.getDate())}
-          />
-        </DatesContainer>
-      )
-    } else {
-      // current date selected is from the previous month
-      return (
-        <DatesContainer>
-          <CustomDateRows
-            firstDate={dateNumberToObject(dateRowStartDate)}
-            assignedMonth={month}
-            disabledDates={props.disabledDates}
-            facilityId={props.selectedFacilityId}
-            lastDate={maxDateCurMonth}
-          />
-          <CustomDateRows
-            firstDate={dateNumberToObject(1)}
-            assignedMonth={month + 1}
-            disabledDates={props.disabledDates}
-            facilityId={props.selectedFacilityId}
-            lastDate={dateNumberToObject(dateRowStartDate + 6 - maxDateCurMonth.getDate())}
-          />
-        </DatesContainer>
-      )
-    }
+    const lastDate = date < dateRowStartDate ? maxDatePrevMonth : maxDateCurMonth
+    return (
+      <DatesContainer>
+        <CustomDateRows
+          firstDate={dateNumberToObject(dateRowStartDate)}
+          assignedMonth={date < dateRowStartDate ? month - 1 : month}
+          disabledDates={props.disabledDates}
+          facilityId={props.selectedFacilityId}
+          lastDate={lastDate}
+        />
+        <CustomDateRows
+          firstDate={dateNumberToObject(1)}
+          assignedMonth={date < dateRowStartDate ? month : month + 1}
+          disabledDates={props.disabledDates}
+          facilityId={props.selectedFacilityId}
+          lastDate={dateNumberToObject(dateRowStartDate + 6 - lastDate.getDate())}
+        />
+      </DatesContainer>
+    )
   } else {
     return (
       <DatesContainer>
