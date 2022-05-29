@@ -11,6 +11,7 @@ import { PATHS } from '../../Routes'
 import {
   fetchFacilityNameFromID,
   resetBooking,
+  setBookingEndDate,
   setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
@@ -41,8 +42,10 @@ export default function SelectRecurringDatePage() {
   }, [])
 
   const onDateClick = (date: Date) => {
-    const reccuringdate = date.getTime() / 1000
-    if (Date.now() / 1000 <= reccuringdate) {
+    const selectedDate = date.getTime() / 1000
+
+    if (Date.now() / 1000 <= selectedDate) {
+      dispatch(setBookingEndDate(selectedDate))
       history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
     }
   }

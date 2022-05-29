@@ -2,9 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { setClickedDate } from '../../store/calendar/actions'
-import { useParams } from 'react-router-dom'
 import { RootState } from '../../store/types'
-import { setBookingEndDate } from '../../store/facilityBooking/action'
 
 const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
@@ -42,20 +40,10 @@ export const ClickableDateContainer = (props: {
 }) => {
   const dispatch = useDispatch()
   const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-  const params = useParams<{ isEndDate: string }>()
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
-    if (parseInt(params.isEndDate) === 0) {
-      dispatch(setClickedDate(newClickedDate))
-      props.onDateClick && props.onDateClick(newClickedDate)
-    } else {
-      const reccuringdate = newClickedDate.getTime() / 1000
-      if (Date.now() / 1000 > reccuringdate) {
-      } else {
-        dispatch(setBookingEndDate(reccuringdate))
-      }
-      props.onDateClick && props.onDateClick(newClickedDate)
-    }
+    dispatch(setClickedDate(newClickedDate))
+    props.onDateClick && props.onDateClick(newClickedDate)
   }
 
   const hasEvent = () => {
