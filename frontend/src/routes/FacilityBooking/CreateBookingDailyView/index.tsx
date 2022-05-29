@@ -98,6 +98,7 @@ export default function CreateBookingDailyView() {
 
   const onLeftClick = () => {
     // reset user selection
+    // TODO you don't want to do this if you're just reselecting date from booking page
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     dispatch(setSelectedEndTime(0))

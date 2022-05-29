@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { RootState } from '../../store/types'
 import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
+import { setClickedDate } from '../../store/calendar/actions'
 
 const DatesContainer = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ const DatesContainer = styled.div`
 `
 
 const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: number; disabledDates?: number[] }) => {
+  const dispatch = useDispatch()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const year = clickedDate.getFullYear() // year e.g. 2022
@@ -40,6 +42,10 @@ const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: numb
     return new Date(year, month, dateNum)
   }
 
+  const onDateClick = (newClickedDate: Date) => {
+    dispatch(setClickedDate(newClickedDate))
+  }
+
   if (dateRowStartDate + 6 > maxDateCurMonth.getDate()) {
     // if week spans across 2 months, display accordingly
     const lastDate = date < dateRowStartDate ? maxDatePrevMonth : maxDateCurMonth
@@ -51,6 +57,7 @@ const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: numb
           disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
           lastDate={lastDate}
+          onDateClick={onDateClick}
         />
         <CustomDateRows
           firstDate={dateNumberToObject(1)}
@@ -58,6 +65,7 @@ const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: numb
           disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6 - lastDate.getDate())}
+          onDateClick={onDateClick}
         />
       </DatesContainer>
     )
@@ -70,6 +78,7 @@ const DailyViewDatesRow = (props: { selectedDate: Date; selectedFacilityId: numb
           disabledDates={props.disabledDates}
           facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6)}
+          onDateClick={onDateClick}
         />
       </DatesContainer>
     )

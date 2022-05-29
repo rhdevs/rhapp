@@ -217,7 +217,7 @@ export default function CreateBooking() {
       ) : (
         <Form onSubmit={onSubmit}>
           <InputField
-            name={'eventName'}
+            name="eventName"
             title="Event Name"
             placeholder="Event Name"
             required
@@ -256,7 +256,7 @@ export default function CreateBooking() {
             />
           </Container>
           <InputField
-            name={'description'}
+            name="description"
             title="Description"
             placeholder="Tell us what your booking is for!"
             textArea

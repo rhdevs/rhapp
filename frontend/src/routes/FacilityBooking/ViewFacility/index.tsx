@@ -20,6 +20,7 @@ import { RootState } from '../../../store/types'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import { setClickedDate } from '../../../store/calendar/actions'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -51,7 +52,8 @@ export default function ViewFacility() {
     />
   )
 
-  const onDateClick = () => {
+  const onDateClick = (newClickedDate: Date) => {
+    dispatch(setClickedDate(newClickedDate))
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 

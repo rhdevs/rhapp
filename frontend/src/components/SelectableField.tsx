@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -16,6 +16,7 @@ const StyledTextArea = styled.div<{ hasError?: boolean; isPlaceholder?: boolean 
   text-align: ${(props) => (props.hasError ? 'left' : props.isPlaceholder ? 'middle' : 'left')};
   color: ${(props) => (props.hasError ? '#F37562' : props.isPlaceholder ? '#BFBFBF' : 'black')};
   height: 2rem;
+  cursor: pointer;
 `
 
 const StyledTitle = styled.div`
