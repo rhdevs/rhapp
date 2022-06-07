@@ -15,7 +15,7 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
+  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
   const querySubString =
     selectedFacilityId +
     '/' +
@@ -40,19 +40,36 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     .then((res) => {
       const updatedDayBookings: Booking[] = res.data
       for (let i = 0; i < updatedDayBookings.length; i++) {
-        const starthour = new Date(updatedDayBookings[i].startTime * 1000).getHours()
-        const endhour =
-          new Date(updatedDayBookings[i].endTime * 1000).getHours() < starthour
-            ? 23
-            : new Date(updatedDayBookings[i].endTime * 1000).getHours()
-        for (let hour = starthour; hour < endhour; hour++) {
-          updatedTB[hour] = {
-            id: hour,
-            timestamp: updatedDayBookings[i].startTime,
-            type: TimeBlockType.OCCUPIED,
-            ccaName: updatedDayBookings[i].ccaName,
-            eventName: updatedDayBookings[i].eventName,
-            booking: updatedDayBookings[i],
+        if (new Date(updatedDayBookings[i].startTime * 1000).getDate() == date.getDate()) {
+          const starthour = new Date(updatedDayBookings[i].startTime * 1000).getHours()
+          const endhour =
+            new Date(updatedDayBookings[i].endTime * 1000).getHours() < starthour
+              ? 24
+              : new Date(updatedDayBookings[i].endTime * 1000).getHours()
+          for (let hour = starthour; hour < endhour; hour++) {
+            updatedTB[hour] = {
+              id: hour,
+              timestamp: updatedDayBookings[i].startTime,
+              type: TimeBlockType.OCCUPIED,
+              ccaName: updatedDayBookings[i].ccaName,
+              eventName: updatedDayBookings[i].eventName,
+              booking: updatedDayBookings[i],
+            }
+          }
+        }
+
+        if (new Date(updatedDayBookings[i].startTime * 1000).getDate() < date.getDate()) {
+          const starthour = 0
+          const endhour = new Date(updatedDayBookings[i].endTime * 1000).getHours()
+          for (let hour = starthour; hour < endhour; hour++) {
+            updatedTB[hour] = {
+              id: hour,
+              timestamp: updatedDayBookings[i].startTime,
+              type: TimeBlockType.OCCUPIED,
+              ccaName: updatedDayBookings[i].ccaName,
+              eventName: updatedDayBookings[i].eventName,
+              booking: updatedDayBookings[i],
+            }
           }
         }
       }
@@ -292,6 +309,7 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
+// TODO: What is the purpose of endDate??
 export const handleCreateNewBooking = (
   facilityID: number | undefined,
   eventName: string | undefined,
