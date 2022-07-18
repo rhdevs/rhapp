@@ -316,7 +316,7 @@ export default function CreateEvent() {
             <Controller
               as={
                 <StyledSelect border={selectBorder} color={selectColor}>
-                  <Option key={1} value={'Personal'}>
+                  <Option key={1} value="Personal">
                     Personal
                   </Option>
                   {targetAudienceList.map((cca, index) => (

@@ -122,8 +122,8 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
 
   return (
     <Background>
-      <TopNavBar title={'Share'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Search user'} value={searchValue} onChange={onChange} />
+      <TopNavBar title="Share" leftIcon={true} leftIconComponent={leftIcon} />
+      <SearchBar placeholder="Search user" value={searchValue} onChange={onChange} />
       {renderResults()}
       <BottomNavBar></BottomNavBar>
     </Background>

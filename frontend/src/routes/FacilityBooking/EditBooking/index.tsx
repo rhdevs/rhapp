@@ -184,7 +184,7 @@ export default function EditBooking() {
             <TopNavBar title={`Edit Booking for ${selectedBooking.facilityName}`} />
             <Form onSubmit={onSubmit}>
               <InputField
-                name={'eventName'}
+                name="eventName"
                 title="Event Name"
                 placeholder="Event Name"
                 required
@@ -228,7 +228,7 @@ export default function EditBooking() {
                 />
               </Container>
               <InputField
-                name={'description'}
+                name="description"
                 title="Description"
                 placeholder="Tell us what your booking is for!"
                 textArea
@@ -251,7 +251,7 @@ export default function EditBooking() {
               )}
               <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
               <ButtonComponent
-                state={'primary'}
+                state="primary"
                 text="Submit"
                 type="submit"
                 disabled={!formIsValid()}

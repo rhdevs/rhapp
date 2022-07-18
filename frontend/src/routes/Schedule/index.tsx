@@ -194,15 +194,15 @@ export default function Schedule() {
         {isLoading && <LoadingSpin />}
         {modal && (
           <ConfirmationModal
-            title={'Confirm Delete?'}
+            title="Confirm Delete?"
             hasLeftButton={true}
-            leftButtonText={'Delete'}
+            leftButtonText="Delete"
             onLeftButtonClick={() => {
               dispatch(setIsLoading(true))
               dispatch(deleteUserNusModsEvents(localStorage.getItem('userID')))
               setModal(false)
             }}
-            rightButtonText={'Cancel'}
+            rightButtonText="Cancel"
             onRightButtonClick={() => {
               setModal(false)
             }}

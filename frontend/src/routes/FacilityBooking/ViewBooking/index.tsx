@@ -181,7 +181,7 @@ export default function ViewBooking() {
 
   return (
     <>
-      <TopNavBar title={'View Booking'} />
+      <TopNavBar title="View Booking" />
       <MainContainer>
         {isLoading ? (
           <LoadingSpin />
@@ -251,15 +251,15 @@ export default function ViewBooking() {
               </EventCard>
               {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
                 <ConfirmationModal
-                  title={'Delete Booking?'}
+                  title="Delete Booking?"
                   hasLeftButton={true}
-                  leftButtonText={'Delete'}
+                  leftButtonText="Delete"
                   onLeftButtonClick={() => {
                     dispatch(deleteMyBooking(selectedBooking?.bookingID))
                     history.replace(PATHS.FACILITY_BOOKING_MAIN)
                     history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                   }}
-                  rightButtonText={'Cancel'}
+                  rightButtonText="Cancel"
                   onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
                 />
               )}

@@ -74,7 +74,7 @@ export default function ForgetPassword() {
 
   return (
     <div>
-      <TopNavBar title={'Forget Password'} />
+      <TopNavBar title="Forget Password" />
       <ForgetPasswordContainer>
         <InputTextLabel>Email: </InputTextLabel>
         <StyledEmailInput>
@@ -97,7 +97,7 @@ export default function ForgetPassword() {
         {success && (
           <AlertGroup>
             <Alert
-              message={'Please check your email for the reset link. It might be in your spam folder!'}
+              message="Please check your email for the reset link. It might be in your spam folder!"
               type="success"
               showIcon
             />

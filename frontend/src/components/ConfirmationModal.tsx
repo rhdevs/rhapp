@@ -111,7 +111,7 @@ export function ConfirmationModal(props: Props) {
               text={props.leftButtonText}
             />
           )}
-          <Button state={'primary'} onClick={props.onRightButtonClick} text={props.rightButtonText} />
+          <Button state="primary" onClick={props.onRightButtonClick} text={props.rightButtonText} />
         </ButtonContainer>
       </MainContainer>
     </>

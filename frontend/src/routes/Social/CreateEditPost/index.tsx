@@ -233,11 +233,11 @@ export default function CreateEditPost() {
       />
       {showConfirmationModal && (
         <ConfirmationModal
-          title={'Abandon Post?'}
+          title="Abandon Post?"
           hasLeftButton={true}
-          leftButtonText={'Abandon'}
+          leftButtonText="Abandon"
           onLeftButtonClick={() => history.goBack()}
-          rightButtonText={'Continue Editting'}
+          rightButtonText="Continue Editting"
           onRightButtonClick={() => setShowConfirmationModal(false)}
         />
       )}

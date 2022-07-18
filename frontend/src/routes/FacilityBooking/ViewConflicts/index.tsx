@@ -28,7 +28,7 @@ export default function ViewConflict() {
 
   return (
     <>
-      <TopNavBarRevamp title={'View Conflicts'} />
+      <TopNavBarRevamp title="View Conflicts" />
       <MainContainer>{isLoading ? <LoadingSpin /> : <BookingCard bookings={conflictBookings} />}</MainContainer>
     </>
   )
