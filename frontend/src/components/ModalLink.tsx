@@ -14,7 +14,7 @@ const Directinglink = styled.a`
 `
 
 type Props = {
-  text?: string
+  text: string
   onClick: React.MouseEventHandler<HTMLElement>
 }
 

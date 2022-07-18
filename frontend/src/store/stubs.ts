@@ -14,6 +14,8 @@ import {
   Food,
   UserDetails,
 } from './supper/types'
+import { GymStatusStates, HistoryEntry } from './gym/types'
+import { unixToFullDate } from '../common/unixToFullDate'
 
 /**
  * ######### STUBS LIST: #########
@@ -23,6 +25,7 @@ import {
  * 4. Search Results
  * 5. dummyUserId
  * 6. Calendar event dates
+ * 7. Gym Features
  */
 
 export const facilityListStub: Facility[] = [
@@ -588,3 +591,62 @@ export const eventDays: number[] = [1644072529, 1646491729, 1648565329, 16489109
 
 // dummy dates with events : 1st Mar, 3rd Mar, 31st Mar, 31st Jan (In component friendly format)
 export const processedDates: number[] = [204, 301, 303, 331, 131]
+export const gymStatus: GymStatusStates = {
+  gymIsOpen: false,
+  avatar: '',
+  keyHolder: { displayName: '5-122', telegramHandle: 'smchead' },
+  keyIsReturned: true,
+}
+
+export const gymHistory: HistoryEntry[] = [
+  {
+    date: unixToFullDate(1638426691),
+    details: [
+      {
+        statusChange: '',
+        requestTime: 1638416070,
+        userDetails: '@John99',
+      },
+      {
+        statusChange: '',
+        requestTime: 1638413730,
+        userDetails: '@andy333',
+      },
+      {
+        statusChange: 'open',
+        requestTime: 1638409291,
+        userDetails: '@inspired_ahpau',
+      },
+    ],
+  },
+  {
+    date: unixToFullDate(1638322891),
+    details: [
+      {
+        statusChange: '',
+        requestTime: 1638363931,
+        userDetails: '5 - 409',
+      },
+      {
+        statusChange: 'closed',
+        requestTime: 1638363510,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        statusChange: '',
+        requestTime: 1638360330,
+        userDetails: '@inspired_ahpau',
+      },
+      {
+        statusChange: '',
+        requestTime: 1638355410,
+        userDetails: '@xiaomingwong',
+      },
+      {
+        statusChange: '',
+        requestTime: 1638349170,
+        userDetails: '@bob_the_builder',
+      },
+    ],
+  },
+]

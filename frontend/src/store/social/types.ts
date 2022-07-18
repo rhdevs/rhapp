@@ -144,6 +144,7 @@ type GetUserDetail = {
   avatar?: string
   name: string
   position: Position[]
+  telegramHandle: string
 }
 
 export type ActionTypes =

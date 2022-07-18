@@ -32,6 +32,8 @@ const MainContainer = styled.div`
 const TitleText = styled.h1`
   font-family: Lato;
   font-size: 22px;
+  /* font-size: 16px; */
+  font-weight: 400;
   text-align: center;
 `
 
@@ -54,7 +56,7 @@ const ButtonContainer = styled.div`
 
 type Props = {
   link?: string
-  onLinkClick: React.MouseEventHandler<HTMLElement>
+  onLinkClick?: React.MouseEventHandler<HTMLElement>
   title: string
   description?: string | JSX.Element
   // Left Button Props
@@ -100,7 +102,7 @@ export function ConfirmationModal(props: Props) {
       >
         <TitleText>{props.title}</TitleText>
         <DescriptionText>{props.description}</DescriptionText>
-        <ModalLink text={props.link} onClick={props.onLinkClick} />
+        {props.link && props.onLinkClick && <ModalLink text={props.link} onClick={props.onLinkClick} />}
         <ButtonContainer>
           {props.hasLeftButton && props.leftButtonText && (
             <Button

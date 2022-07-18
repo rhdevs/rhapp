@@ -93,6 +93,8 @@ export enum PATHS {
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
+  //GYM
+  GYM_MAIN = '/gym',
 }
 
 //DOCUMENTATION
@@ -180,6 +182,8 @@ const UpdateAllItems = React.lazy(
 )
 const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
 
+//GYM
+const Gym = React.lazy(() => import(/* webpackChunckName: "Gym" */ './GymPage'))
 export default class Routes extends React.Component {
   render() {
     return (
@@ -245,6 +249,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.UPDATE_DELIVERY_BY_ID} component={UpdateDelivery} />
             <PrivateRoute exact path={PATHS.UPDATE_ALL_FOOD_ITEM_BY_ID} component={UpdateAllItems} />
             <PrivateRoute exact path={PATHS.USER_PAYMENT_BY_ID} component={Payment} />
+
+            <PrivateRoute exact path={PATHS.GYM_MAIN} component={Gym} />
 
             <PublicRoute exact path={PATHS.DOCS_LANDING_PAGE} component={Docs} />
             <PublicRoute exact path={PATHS.DOCS_SUPPER_BY_FILE} component={Supper_Documentation} />

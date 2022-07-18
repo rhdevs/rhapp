@@ -1,7 +1,7 @@
-import React, { ReactEventHandler } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-const Button = styled.button<{ state: 'primary' | 'secondary'; width?: string; size: 'small' | 'regular' }>`
+const Button = styled.button<{ state: 'primary' | 'secondary'; size: 'small' | 'regular'; width?: string }>`
   min-height: 35px;
   height: auto;
   width: ${(props) => props.width ?? `max-content`};
