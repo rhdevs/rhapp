@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
 
 const TitleText = styled.h1`
-  font-family: lato;
+  font-family: Lato;
   font-style: normal;
   font-weight: 700;
   font-size: min(5vw, 22px);

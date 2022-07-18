@@ -44,7 +44,7 @@ const BookingSectionDiv = styled.div`
 `
 
 const TitleText = styled.h2`
-  font-family: lato;
+  font-family: Lato;
   font-style: normal;
   font-weight: 700;
   font-size: 22px;
