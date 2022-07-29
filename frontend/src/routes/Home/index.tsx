@@ -14,7 +14,7 @@ import { getUserDetail } from '../../store/social/action'
 import { RootState } from '../../store/types'
 import laundry_icon from '../../assets/newIcons/washer.svg'
 import facilities_icon from '../../assets/newIcons/booking.svg'
-import calendar_icon from '../../assets/calenderIconSelected.svg'
+import gym_icon from '../../assets/gymIcon.svg'
 import supper_icon from '../../assets/supper/supperIconUnselected.png'
 import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../common/reloadPage'
@@ -63,7 +63,6 @@ const ActionButton = styled(Button)`
     background: #e18375 !important;
     border-color: #e18375 !important;
   }
-}
 `
 
 const ImageButton = styled.img<{ filter: string }>`
@@ -93,7 +92,7 @@ const BannerText = styled.text`
 const StyledTelegramIcon = styled.img`
   width: 3.3rem;
   border-radius: 50%;
-  position absolute;
+  position: absolute;
   right: 1rem;
 `
 
@@ -119,11 +118,11 @@ export default function Home() {
       },
     },
     {
-      name: 'calendar',
-      src: calendar_icon,
+      name: 'gym',
+      src: gym_icon,
       filter: 'brightness(5)',
       clickHandler: () => {
-        history.push(PATHS.SCHEDULE_PAGE)
+        history.push(PATHS.GYM_MAIN)
       },
     },
     {

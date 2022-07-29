@@ -137,7 +137,6 @@ def getAllCCA():
     return make_response(response, 200)
 
 
-@scheduling_api.route('/event/ccaID/<int:ccaID>', methods=["GET"])
 @scheduling_api.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID, referenceTime=0):
@@ -188,9 +187,8 @@ def getCCADetails(ccaID):
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        CCAofUserID = db.UserCCA.find({"userID": userID})
-        entries = [w["ccaID"] for w in CCAofUserID]
-        data = list(db.CCA.find({"ccaID": {"$in": entries}}, {"_id": 0}))
+        ccaIDs = list(map(int, db.User.find_one({'userID': userID}).get("userCCA")))
+        data = list(db.CCA.find({"ccaID": {"$in": ccaIDs}}, {"_id": 0}))
         response = {"status": "success", "data": data}
     except Exception as e:
         print(e)
@@ -252,18 +250,6 @@ def getEventAttendees(eventID):
     return make_response(response)
 
 
-@scheduling_api.route("/user_CCA/<int:ccaID>", methods=["GET"])
-@cross_origin()
-def getCCAMembers(ccaID):
-    try:
-        response = db.UserCCA.find({"ccaID": ccaID})
-        response = {"status": "success", "data": list(response)}
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response, 200)
-
-
 @scheduling_api.route("/user_CCA", methods=['POST', 'DELETE'])
 @cross_origin()
 def editUserCCA():
@@ -273,34 +259,15 @@ def editUserCCA():
         userID = data.get('userID')
 
         if request.method == "POST":
-            db.UserCCA.delete_many({"userID": userID})
-            if len(ccaID) > 0:
-                documents = [{"userID": userID, "ccaID": cca} for cca in ccaID]
-                upserts = [pymongo.UpdateOne(
-                    doc, {'$setOnInsert': doc}, upsert=True) for doc in documents]
-                db.UserCCA.bulk_write(upserts)
+            db.User.update_one({"userID": userID}, {"$push": {"userCCA" : ccaID}})
 
         elif request.method == "DELETE":
-            db.UserCCA.delete_many(body)
+            db.User.update_one({"userID": userID}, {"$pull": {"userCCA" : ccaID}})
 
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
-
-
-@scheduling_api.route("/user_CCA/", methods=["GET"])
-@cross_origin()
-def getCCAMembersName():
-    try:
-        ccaName = str(request.args.get('ccaName'))
-        response = db.UserCCA.find({"ccaName": ccaName})
-        response = {"status": "success", "data": list(response)}
-    except Exception as e:
-        print(e)
-        return {"err": "An error has occured", "status": "failed"}, 500
-    return make_response(response)
-
 
 @ scheduling_api.route("/permissions/<userID>", methods=["GET"])
 @ cross_origin()

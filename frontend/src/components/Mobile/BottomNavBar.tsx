@@ -1,19 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { PATHS } from '../../routes/Routes'
 import { TabBar } from 'antd-mobile'
-import { useLocation } from 'react-router-dom'
 import homeIconSelected from '../../assets/homeIconSelected.svg'
 import homeIconUnselected from '../../assets/homeIconUnselected.svg'
 import facilitiesIconSelected from '../../assets/facilitiesIconSelected.svg'
 import facilitiesIconUnselected from '../../assets/facilitiesIconUnselected.svg'
-import calenderIconSelected from '../../assets/calenderIconSelected.svg'
-import calenderIconUnselected from '../../assets/calenderIconUnselected.svg'
+import gymIcon from '../../assets/gymIconNav.svg'
 import profileIconSelected from '../../assets/profileIconSelected.svg'
 import profileIconUnselected from '../../assets/profileIconUnselected.svg'
-import supperIconSelected from '../../assets/supper/supperIconSelected.png'
-import supperIconUnselected from '../../assets/supper/supperIconUnselected.png'
 import 'antd-mobile/dist/antd-mobile.css'
 import { V1_BACKGROUND, V1_RED } from '../../common/colours'
 
@@ -57,55 +53,40 @@ function BottomNavBar() {
             icon={<StyledButton src={homeIconUnselected} />}
             selectedIcon={<StyledButton src={homeIconSelected} />}
             selected={activeTabIndex() === 1}
-            // badge={0}
             onPress={() => {
               history.push(PATHS.HOME_PAGE)
             }}
-          ></TabBar.Item>
+          />
           <TabBar.Item
             key="Facilities"
             title="Facilities"
             icon={<StyledButton src={facilitiesIconUnselected} />}
             selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
             selected={activeTabIndex() === 2}
-            // badge={12}
             onPress={() => {
               history.push(PATHS.FACILITY_BOOKING_MAIN)
             }}
-          ></TabBar.Item>
-          {/* <TabBar.Item
-            key="Calender"
-            title="Calender"
-            icon={<StyledButton src={calenderIconUnselected} />}
-            selectedIcon={<StyledButton src={calenderIconSelected} />}
-            selected={activeTabIndex() === 3}
-            // badge={'test'}
-            onPress={() => {
-              history.push(PATHS.SCHEDULE_PAGE)
-            }}
-          ></TabBar.Item> */}
+          />
           <TabBar.Item
-            key="Supper"
-            title="Supper"
-            icon={<StyledButton src={supperIconUnselected} />}
-            selectedIcon={<StyledButton src={supperIconSelected} />}
+            key="Gym"
+            title="Gym"
+            icon={<StyledButton src={gymIcon} />}
+            selectedIcon={<StyledButton src={gymIcon} />}
             selected={activeTabIndex() === 3}
-            // badge={'test'}
             onPress={() => {
-              history.push(PATHS.SUPPER_HOME)
+              history.push(PATHS.GYM_MAIN)
             }}
-          ></TabBar.Item>
+          />
           <TabBar.Item
             key="Profile"
             title="Profile"
             icon={<StyledButton src={profileIconUnselected} />}
             selectedIcon={<StyledButton src={profileIconSelected} />}
             selected={activeTabIndex() === 4}
-            // badge={1}
             onPress={() => {
               history.push(PATHS.PROFILE_PAGE + `${localStorage.getItem('userID')}`)
             }}
-          ></TabBar.Item>
+          />
         </TabBar>
       </BottomNav>
     </div>
