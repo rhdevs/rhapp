@@ -12,7 +12,7 @@ export enum ENDPOINTS {
   // USERS
   TELEGRAM_HANDLE = '/users/telegramID', //TODO make backend
   USER = '/user',
-  USER_PROFILE = '/profile/',
+  USER_PROFILE = '/profile',
   USER_PROFILE_PICTURE = '/profile/picture',
   EDIT_PROFILE = '/profiles',
   USER_CCAS = '/user_CCA',
