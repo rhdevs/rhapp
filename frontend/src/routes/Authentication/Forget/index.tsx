@@ -58,7 +58,7 @@ export default function ForgetPassword() {
       setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu' })
       return
     } else {
-      post(ENDPOINTS.FORGET_PASSWORD, DOMAINS.AUTH, { email: email })
+      post(ENDPOINTS.FORGET_PASSWORD, DOMAINS.AUTH, { email: email.toLowerCase() })
         .then((resp) => {
           if (resp.status === 'success') {
             setSuccess(true)

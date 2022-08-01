@@ -108,7 +108,6 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const passwordHash = sha256(password).toString()
 
   const [error, setError] = useState({ message: '' })
 
@@ -116,6 +115,7 @@ export default function Login() {
     if (username !== '' && password !== '') {
       setError({ message: '' })
       // setIsLoading(true)
+      const passwordHash = sha256(password).toString()
       const queryBody = {
         userID: username,
         passwordHash: passwordHash,
@@ -174,7 +174,7 @@ export default function Login() {
               value={username}
               onChange={(e) => {
                 const newUsername = e.target.value
-                setUsername(newUsername.toUpperCase())
+                setUsername(newUsername.trim().toUpperCase())
               }}
             />
           </StyledUsernameInput>

@@ -74,7 +74,7 @@ export default function Signup() {
   // const { name, email, password, password2 } = formData
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value
+    const value = e.target.name === 'userId' ? e.target.value.trim().toUpperCase() : e.target.value
     setFormData({
       ...formData,
       [e.target.name]: value,
@@ -95,7 +95,7 @@ export default function Signup() {
     const passwordHash = sha256(formData.password).toString()
 
     const newUser = {
-      userID: formData.userId.trim().toUpperCase(),
+      userID: formData.userId,
       passwordHash: passwordHash,
       email: formData.email.trim().toLowerCase(),
       // position: [0], //0 = 'Resident'
