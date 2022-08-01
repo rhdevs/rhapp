@@ -75,9 +75,10 @@ export default function Signup() {
   // const { name, email, password, password2 } = formData
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value
     setFormData({
       ...formData,
-      [e.target.name]: e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value,
+      [e.target.name]: value,
     })
   }
 
@@ -95,14 +96,14 @@ export default function Signup() {
     const passwordHash = sha256(formData.password).toString()
 
     const newUser = {
-      userID: formData.userId,
+      userID: formData.userId.trim().toUpperCase(),
       passwordHash: passwordHash,
-      email: formData.email,
+      email: formData.email.trim().toLowerCase(),
       // position: [0], //0 = 'Resident'
-      displayName: formData.display,
-      bio: formData.bio,
+      displayName: formData.display.trim(),
+      bio: formData.bio.trim(),
       block: parseInt(formData.block),
-      telegramHandle: formData.telegram,
+      telegramHandle: formData.telegram.trim(),
     }
     try {
       await fetch(DOMAIN_URL.AUTH + ENDPOINTS.REGISTER, {
