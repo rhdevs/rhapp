@@ -17,7 +17,6 @@ const MainContainer = styled.div`
 `
 
 const AccountText = styled.text`
-  font-family: ui-monospace;
   float: left;
   font-size: 12px;
   padding-bottom: 5px;
