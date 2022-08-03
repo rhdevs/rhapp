@@ -145,7 +145,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   }
 
   // 2. Update user profile
-  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE + `?token=${localStorage.getItem('token')}`, {
     method: 'PUT',
     mode: 'cors',
     headers: {
