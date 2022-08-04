@@ -98,7 +98,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
             <BookingLeftDisplay>
               <DateComponent>
                 {days[new Date(booking.startTime * 1000).getDay()]}{' '}
-                {/* TODO Change date month and year in <DateComponent></DateComponent> using unixtocalander function*/}
+                {/* TODO Change date month and year in <DateComponent/> using unixtocalander function*/}
                 {new Date(booking.startTime * 1000).getDate() +
                   ' ' +
                   months[new Date(booking.startTime * 1000).getMonth()] +

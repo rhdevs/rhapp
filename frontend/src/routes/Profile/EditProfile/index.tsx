@@ -136,7 +136,7 @@ export default function EditProfile() {
         style={{ marginLeft: 10, width: 15, color: 'gray' }}
         src={String(tickIcon)}
         onClick={() => handleAutoCompleteAdd(props.type, ccaToBeAdded, moduleToBeAdded)}
-      ></img>
+      />
     </>
   )
 

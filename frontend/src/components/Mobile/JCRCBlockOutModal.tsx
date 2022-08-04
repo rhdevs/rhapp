@@ -271,7 +271,7 @@ function JCRCBlockOutModal({
           <VenueSelection>
             <VenueOptions>
               Select all
-              <Venueinput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll}></Venueinput>
+              <Venueinput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll} />
             </VenueOptions>
             {facilityList.map((facility) => {
               if (facility.facilityLocation)
@@ -283,7 +283,7 @@ function JCRCBlockOutModal({
                       type="checkbox"
                       checked={selectedFacilities.includes(facility.facilityID)}
                       onClick={() => handleSelectOne(facility.facilityID)}
-                    ></Venueinput>
+                    />
                   </VenueOptions>
                 )
             })}
