@@ -274,7 +274,7 @@ def add_booking():
         if formData['facilityID'] == 15:
             ccaArray = db.User.find_one({'userID': formData['userID']}).get("userCCA")
             print(ccaArray)
-            if not "3" in ccaArray:
+            if not 3 in ccaArray:
                 return make_response({"err": "You must be in RH Dance to make this booking", "status": "failed"}, 403)
 
         # Convert

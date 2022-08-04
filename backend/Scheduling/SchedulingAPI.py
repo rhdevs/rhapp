@@ -137,6 +137,7 @@ def getAllCCA():
     return make_response(response, 200)
 
 
+@scheduling_api.route('/event/ccaID/<int:ccaID>', methods=["GET"])
 @scheduling_api.route('/event/ccaID/<int:ccaID>/<referenceTime>', methods=["GET"])
 @cross_origin()
 def getEventsCCA(ccaID, referenceTime=0):
@@ -187,9 +188,10 @@ def getCCADetails(ccaID):
 @cross_origin()
 def getUserCCAs(userID):
     try:
-        ccaIDs = list(map(int, db.User.find_one({'userID': userID}).get("userCCA")))
-        data = list(db.CCA.find({"ccaID": {"$in": ccaIDs}}, {"_id": 0}))
-        response = {"status": "success", "data": data}
+        ccaIDs = db.User.find_one({"userID": userID}, {"_id": 0}).get("userCCA")
+        ccaDetails = list(db.CCA.find({"ccaID": {"$in": ccaIDs}}, {"_id": 0}))
+        response = {"status": "success", "data": ccaDetails}
+
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
@@ -250,6 +252,18 @@ def getEventAttendees(eventID):
     return make_response(response)
 
 
+@scheduling_api.route("/user_CCA/<int:ccaID>", methods=["GET"])
+@cross_origin()
+def getCCAMembers(ccaID):
+    try:
+        response = db.UserCCA.find({"ccaID": ccaID})
+        response = {"status": "success", "data": list(response)}
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return make_response(response, 200)
+
+
 @scheduling_api.route("/user_CCA", methods=['POST', 'DELETE'])
 @cross_origin()
 def editUserCCA():
@@ -259,15 +273,37 @@ def editUserCCA():
         userID = data.get('userID')
 
         if request.method == "POST":
-            db.User.update_one({"userID": userID}, {"$push": {"userCCA" : ccaID}})
+            db.User.update_one({"userID": userID}, {"$set": {"userCCA" : ccaID}})
 
         elif request.method == "DELETE":
-            db.User.update_one({"userID": userID}, {"$pull": {"userCCA" : ccaID}})
-
+            originalCCAList = db.User.find_one({"userID": userID}, {"_id": 0}).get("userCCA")
+            editedCCAList = originalCCAList
+            for id in ccaID:
+                if any(ID not in originalCCAList for ID in ccaID):
+                    raise ValueError("Attempt to delete non-existent data")
+                editedCCAList.remove(id)
+            db.User.update_one({"userID": userID}, {"$set": {"userCCA" : editedCCAList}})      
+    except ValueError as e:
+        print(e)
+        return {"status": "failed", "message": "Some of the CCA IDs you are trying to delete are not inside existing list."}, 400
     except Exception as e:
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
     return {"status": "success"}, 200
+
+
+@scheduling_api.route("/user_CCA/", methods=["GET"])
+@cross_origin()
+def getCCAMembersName():
+    try:
+        ccaName = str(request.args.get('ccaName'))
+        response = db.UserCCA.find({"ccaName": ccaName})
+        response = {"status": "success", "data": list(response)}
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occured", "status": "failed"}, 500
+    return make_response(response)
+
 
 @ scheduling_api.route("/permissions/<userID>", methods=["GET"])
 @ cross_origin()
@@ -275,7 +311,7 @@ def getUserPermissions(userID):
     try:
         data = db.UserPermissions.find({"recipient": userID})
         donors = [pair["donor"] for pair in data]
-        results = db.User.find({"userID": {"$in": donors}}, {"passwordHash": 0})
+        results = db.Profiles.find({"userID": {"$in": donors}})
         response = [{info: profile[info] for info in profile.keys()
                      & {'userID', 'displayName'}} for profile in results]
         response = {"status": "success", "data": list(response)}

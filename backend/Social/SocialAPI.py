@@ -41,6 +41,7 @@ def hello():
 def profiles():
     try:
         data = request.get_json()
+        userID = data.get("userID")
 
         # BUG 570 Fix: Added authentication to check token before updating profile
         if (not request.args.get("token")):
