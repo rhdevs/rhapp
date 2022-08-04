@@ -38,6 +38,7 @@
     "nusmoderator": "^3.0.0",
     "password-hash": "^1.2.2",
     "pull-to-refresh-react": "^1.2.4",
+    "querystring": "^0.2.1",
     "react": "^17.0.1",
     "react-app-rewired": "^2.1.7",
     "react-calendar": "^3.4.0",
