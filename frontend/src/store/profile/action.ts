@@ -28,7 +28,10 @@ export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<A
     dispatch(setIsLoading(true))
     get(ENDPOINTS.USER_PROFILE, DOMAINS.SOCIAL, '/' + userID)
       .then((data) => {
-        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: JSON.parse(data.data)[0] })
+        const parsedData = JSON.parse(data.data)[0]
+        const userData = { ...parsedData, email: parsedData.email.toLowerCase() }
+        dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: userData })
+        console.log(userData)
       })
       .catch((err) => console.log(err))
   }
@@ -129,6 +132,7 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
 // One shot update database with all changes
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { user, ccas } = getState().profile
+  const token = localStorage.token
 
   // Set Loading while user waits
   dispatch(setIsLoading(true))
@@ -145,7 +149,7 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   }
 
   // 2. Update user profile
-  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE, {
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE + '?token=' + token, {
     method: 'PUT',
     mode: 'cors',
     headers: {
