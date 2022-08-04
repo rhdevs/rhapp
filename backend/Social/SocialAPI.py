@@ -44,11 +44,11 @@ def profiles():
         userID = data.get("userID")
 
         # BUG 570 Fix: Added authentication to check token before updating profile
-        #if (not request.args.get("token")):
-        #    return {"err": "No token", "status": "failed"}, 401
+        if (not request.args.get("token")):
+            return {"err": "No token", "status": "failed"}, 401
 
-        #if (not authenticate(request.args.get("token"), data.get("userID"))):
-        #    return {"err": "Auth Failure", "status": "failed"}, 401
+        if (not authenticate(request.args.get("token"), data.get("userID"))):
+            return {"err": "Auth Failure", "status": "failed"}, 401
 
         if "profilePictureURI" in data:
             data["profilePictureUrl"] = data.pop("profilePictureURI")
