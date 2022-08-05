@@ -1,3 +1,4 @@
+import querystring from 'querystring'
 import { DOMAIN_URL, DOMAINS, ENDPOINTS, get } from '../endpoints'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, PROFILE_ACTIONS, User, UserCCA } from './types'
@@ -145,7 +146,10 @@ export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<Ac
   }
 
   // 2. Update user profile
-  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE + `?token=${localStorage.getItem('token')}`, {
+  const urlParams = querystring.stringify({
+    token: localStorage.getItem('token'),
+  })
+  await fetch(DOMAIN_URL.SOCIAL + ENDPOINTS.EDIT_PROFILE + `?${urlParams}`, {
     method: 'PUT',
     mode: 'cors',
     headers: {
