@@ -171,7 +171,7 @@ export default function Signup() {
     return (
       userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
       userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
-      userId == 'RFHTBS' //  Else check if it's Evan
+      userId === 'RFHTBS' //  Else check if it's Evan
     )
   }
 
