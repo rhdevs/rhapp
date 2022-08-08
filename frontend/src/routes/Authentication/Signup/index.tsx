@@ -187,26 +187,21 @@ export default function Signup() {
   }
 
   const checkRegisterInfo = (formData) => {
-    let pass = true
     if (formData.password !== formData.password2) {
       setError({ message: 'Password does not match!' })
-      pass = false
-      return pass
+      return false
     }
-    if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
+    if (!(formData.email && formData.userId && formData.password && formData.password2)) {
       setError({ message: 'All fields are compulsory!' })
-      pass = false
-      return pass
+      return false
     }
-    if (!formData.email.endsWith('@u.nus.edu') && !formData.email.endsWith('@nus.edu.sg')) {
+    if (!formData.email.match(/^.+@u\.nus\.edu$/) && !formData.email.match(/^.+@nus\.edu\.sg$/)) {
       setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu or @nus.edu.sg' })
-      pass = false
-      return pass
+      return false
     }
     if (!isValidUserID(formData.userId)) {
       setError({ message: 'Please check that your NUS ID is your matriculation number' })
-      pass = false
-      return pass
+      return false
     }
     // WRONG PLACE TO CHECK TELE HANDLE
     // if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
@@ -214,7 +209,7 @@ export default function Signup() {
     //   pass = false
     //   return pass
     // }
-    return pass
+    return true
   }
 
   return (
