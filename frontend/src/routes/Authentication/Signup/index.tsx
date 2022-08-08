@@ -236,7 +236,7 @@ export default function Signup() {
               <br /> <br />
               <AccountText>NUS ID</AccountText>
               <Input
-                placeholder="A01234567X"
+                placeholder="E1234567"
                 name="userId"
                 style={{ borderRadius: '10px' }}
                 value={formData.userId}
