@@ -111,7 +111,7 @@ export default function Supper() {
     <SupperGroupHistoryContainer>
       <SupperGroupHistoryImg
         src={SupperGroupHistoryIcon}
-        alt={'My Supper Groups'}
+        alt="My Supper Groups"
         onClick={() => history.push(PATHS.SUPPER_HISTORY)}
       />
       <SupperGroupHistoryDescription>History</SupperGroupHistoryDescription>

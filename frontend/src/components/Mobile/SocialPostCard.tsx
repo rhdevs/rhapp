@@ -226,11 +226,11 @@ function SocialPostCard(props: socialPostCardProps) {
       </CardContainer>
       {deleteConfirmation && (
         <ConfirmationModal
-          title={'Delete Post?'}
+          title="Delete Post?"
           hasLeftButton={true}
-          leftButtonText={'Delete'}
+          leftButtonText="Delete"
           onLeftButtonClick={onConfirmDeleteClick}
-          rightButtonText={'Cancel'}
+          rightButtonText="Cancel"
           onRightButtonClick={onDeleteClick}
         />
       )}

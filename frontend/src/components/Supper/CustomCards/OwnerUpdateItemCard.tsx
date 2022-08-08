@@ -148,7 +148,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
               <FormHeader headerName="What changed?" />
               <Input
                 type="text"
-                defaultValue={''}
+                defaultValue=""
                 placeholder="List changes here"
                 name="changes"
                 ref={register({
@@ -160,7 +160,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
                 type="number"
                 placeholder="Indicate new price"
                 name="newPrice"
-                defaultValue={''}
+                defaultValue=""
                 ref={register({
                   required: false,
                   valueAsNumber: true,
@@ -181,7 +181,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
               )}
               <FormHeader headerName="Reason for edit" isCompulsory topMargin />
               <TextArea
-                defaultValue={''}
+                defaultValue=""
                 placeholder="e.g. Price different on app, sides unavailable, etc.."
                 name="editReason"
                 ref={register({
@@ -220,7 +220,7 @@ export const OwnerUpdateItemCard = (props: Props) => {
                 type="number"
                 placeholder="Indicate new delivery fee"
                 name="newDeliveryFee"
-                defaultValue={''}
+                defaultValue=""
                 ref={register({
                   required: true,
                   ...(props.deliveryFee && { validate: (input) => input.trim().length !== 0 }),

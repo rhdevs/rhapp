@@ -65,7 +65,7 @@ export default function Supper() {
       <OrderCard
         collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}
-        ownerId={'A1234567B'}
+        ownerId="A1234567B"
         supperGroupStatus={supperGroupStub.status}
         supperGroup={supperGroupStub}
       />

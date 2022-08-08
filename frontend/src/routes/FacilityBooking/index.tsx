@@ -220,13 +220,13 @@ export default function FacilityBooking() {
     <>
       {isJcrc ? (
         <TopNavBar
-          title={'Facilities'}
+          title="Facilities"
           leftIcon={true}
           centerComponent={JCRCBlockOutButton}
           rightComponent={MyBookingIcon}
         />
       ) : (
-        <TopNavBar title={'Facilities'} leftIcon={true} rightComponent={MyBookingIcon} />
+        <TopNavBar title="Facilities" leftIcon={true} rightComponent={MyBookingIcon} />
       )}
       <MainContainer>
         {isLoading && <LoadingSpin />}
@@ -244,10 +244,10 @@ export default function FacilityBooking() {
             <StyledBodyDiv>
               {blockOutIsOpen && (
                 <JCRCBlockOutModal
-                  title={'Facilities Blocking'}
+                  title="Facilities Blocking"
                   hasLeftButton={true}
-                  leftButtonText={'Confirm'}
-                  rightButtonText={'Close'}
+                  leftButtonText="Confirm"
+                  rightButtonText="Close"
                   facilities={facilityList}
                 />
               )}

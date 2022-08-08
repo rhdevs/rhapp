@@ -177,14 +177,14 @@ function ViewEventDetailCard({
       <Background>
         {removeModal && (
           <ConfirmationModal
-            title={'Confirm Remove?'}
+            title="Confirm Remove?"
             hasLeftButton={true}
-            leftButtonText={'Remove'}
+            leftButtonText="Remove"
             onLeftButtonClick={() => {
               dispatch(editUserEvents('remove', eventID, localStorage.getItem('userID')))
               history.push(PATHS.SCHEDULE_PAGE)
             }}
-            rightButtonText={'Cancel'}
+            rightButtonText="Cancel"
             onRightButtonClick={() => {
               setRemoveModal(false)
             }}
@@ -192,9 +192,9 @@ function ViewEventDetailCard({
         )}
         {deleteModal && (
           <ConfirmationModal
-            title={'Confirm Delete?'}
+            title="Confirm Delete?"
             hasLeftButton={true}
-            leftButtonText={'Delete'}
+            leftButtonText="Delete"
             onLeftButtonClick={() => {
               if (eventType === 'NUSMods') {
                 deleteSingleNusModsEvent(localStorage.getItem('userID'), eventID)
@@ -203,7 +203,7 @@ function ViewEventDetailCard({
               }
               history.push(PATHS.SCHEDULE_PAGE)
             }}
-            rightButtonText={'Cancel'}
+            rightButtonText="Cancel"
             onRightButtonClick={() => {
               setDeleteModal(false)
             }}

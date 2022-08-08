@@ -127,8 +127,8 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
                   }).length !== 0
                 } //check if event is already in schedule
                 stopPropagation={true}
-                defaultButtonDescription={'Add to Schedule'}
-                updatedButtonDescription={'Remove from Schedule'}
+                defaultButtonDescription="Add to Schedule"
+                updatedButtonDescription="Remove from Schedule"
                 onButtonClick={(buttonIsPressed) => {
                   if (
                     userAllEventsList.filter((event) => {
@@ -224,9 +224,9 @@ export default function EventList({ currentEvents }: { currentEvents: Scheduling
   return (
     <Background>
       <TopContainer>
-        <TopNavBar title={'Events'} leftIcon={true} leftIconComponent={leftIcon} />
+        <TopNavBar title="Events" leftIcon={true} leftIconComponent={leftIcon} />
         <SearchBarContainer>
-          <SearchBar placeholder={'Search event'} value={searchValue} onChange={onChange} />
+          <SearchBar placeholder="Search event" value={searchValue} onChange={onChange} />
           {!searchValue && selectedPageEvents.length !== 0 && <UpcomingEventsText>Upcoming Events</UpcomingEventsText>}
         </SearchBarContainer>
       </TopContainer>

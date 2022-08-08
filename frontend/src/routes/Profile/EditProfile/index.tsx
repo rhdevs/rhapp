@@ -249,7 +249,7 @@ export default function EditProfile() {
           }
           bordered={false}
           style={{ margin: '23px', borderRadius: '20px' }}
-          size={'small'}
+          size="small"
         >
           {renderSwitch(detailsItem.title)}
         </Card>
@@ -269,18 +269,18 @@ export default function EditProfile() {
   return (
     <MainContainer>
       <TopNavBar
-        title={'Edit Profile'}
+        title="Edit Profile"
         onLeftClick={() => {
           hasChanged ? setShowConfirmationModal(true) : history.goBack()
         }}
       />
       {showConfirmationModal && (
         <ConfirmationModal
-          title={'Discard Changes?'}
+          title="Discard Changes?"
           hasLeftButton={true}
-          leftButtonText={'Discard Edits'}
+          leftButtonText="Discard Edits"
           onLeftButtonClick={() => history.goBack()}
-          rightButtonText={'Back to Edit'}
+          rightButtonText="Back to Edit"
           onRightButtonClick={() => setShowConfirmationModal(false)}
         />
       )}

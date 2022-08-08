@@ -173,7 +173,7 @@ export default function ViewMyBookings() {
   return (
     <>
       <PullToRefresh onRefresh={onRefresh}>
-        <TopNavBar title={'My Bookings'} />
+        <TopNavBar title="My Bookings" />
         <MainContainer>
           {isLoading && <LoadingSpin />}
           {!isLoading && (
@@ -224,16 +224,16 @@ export default function ViewMyBookings() {
                       </RightActionGroups>
                       {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
                         <ConfirmationModal
-                          title={'Delete Booking?'}
+                          title="Delete Booking?"
                           hasLeftButton={true}
-                          leftButtonText={'Delete'}
+                          leftButtonText="Delete"
                           onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
                           onLeftButtonClick={() => {
                             dispatch(deleteMyBooking(booking.bookingID))
                             history.replace(PATHS.FACILITY_BOOKING_MAIN)
                             history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
                           }}
-                          rightButtonText={'Cancel'}
+                          rightButtonText="Cancel"
                           onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
                         />
                       )}

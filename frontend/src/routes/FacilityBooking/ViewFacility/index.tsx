@@ -278,7 +278,7 @@ export default function ViewFacility() {
                 }}
                 hasSuccessMessage={false}
                 stopPropagation={false}
-                defaultButtonDescription={'Book Facility'}
+                defaultButtonDescription="Book Facility"
                 defaultButtonColor="#DE5F4C"
                 updatedButtonColor="#DE5F4C"
                 updatedTextColor="white"
