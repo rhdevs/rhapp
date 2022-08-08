@@ -221,7 +221,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.email}
                 onChange={(e) => onChange(e)}
-              ></Input>
+              />
               <br /> <br />
               <AccountText>NUS ID</AccountText>
               <Input
@@ -230,7 +230,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.userId}
                 onChange={(e) => onChange(e)}
-              ></Input>
+              />
               <br />
               <br />
               <AccountText>Password</AccountText>
@@ -240,7 +240,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.password}
                 onChange={(e) => onChange(e)}
-              ></Input.Password>
+              />
               <br /> <br />
               <AccountText>Confirm Password</AccountText>
               <Input.Password
@@ -249,7 +249,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.password2}
                 onChange={(e) => onChange(e)}
-              ></Input.Password>
+              />
               <br /> <br />
               <PostButton>
                 <Button
@@ -277,7 +277,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.display}
                 onChange={(e) => onChange(e)}
-              ></Input>
+              />
               <br /> <br />
               <AccountText>Telegram Handle</AccountText>
               <Input
@@ -286,7 +286,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.telegram}
                 onChange={(e) => onChange(e)}
-              ></Input>
+              />
               <br /> <br />
               <Form.Item>
                 <Select
@@ -310,7 +310,7 @@ export default function Signup() {
                 style={{ borderRadius: '10px' }}
                 value={formData.bio}
                 onChange={(e) => onChange(e)}
-              ></Input.TextArea>
+              />
               <br />
               <br />
               <PostButton>

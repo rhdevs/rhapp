@@ -208,7 +208,7 @@ export default function ViewWashingMachine() {
             }}
           />
         ) : (
-          <div></div>
+          <div />
         )
         break
       case WMStatus.RESERVED:
@@ -230,7 +230,7 @@ export default function ViewWashingMachine() {
             }}
           />
         ) : (
-          <div></div>
+          <div />
         )
         break
     }

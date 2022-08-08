@@ -123,7 +123,7 @@ export default function ShareTimetable({ recentSearches }: { recentSearches: Rec
       <TopNavBar title="Share" leftIcon leftIconComponent={leftIcon} />
       <SearchBar placeholder="Search user" value={searchValue} onChange={onChange} />
       {renderResults()}
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Background>
   )
 }
