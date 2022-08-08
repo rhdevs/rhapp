@@ -109,7 +109,7 @@ export default function ViewPost() {
   }, [dispatch, postIdFromPath])
 
   useEffect(() => {
-    if (postId == postIdFromPath) {
+    if (postId === postIdFromPath) {
       setIsLoading(false)
     }
   }, [postId])
@@ -134,7 +134,7 @@ export default function ViewPost() {
   }
 
   const MenuIcon =
-    userId == userID ? (
+    userId === userID ? (
       <MenuContainer>
         <div onClick={onMenuClick}>
           <EllipsisOutlined rotate={90} style={{ fontSize: '16px' }} />

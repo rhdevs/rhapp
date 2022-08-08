@@ -82,9 +82,9 @@ const EditPersonalInfoContainer = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (canPush == 'true') {
+    if (canPush === 'true') {
       history.push('/social/profile/' + `${user.userID}`)
-    } else if (canPush == 'error') {
+    } else if (canPush === 'error') {
       error('Failed to update profile')
     }
   }, [canPush])

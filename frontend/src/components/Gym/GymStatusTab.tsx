@@ -85,7 +85,7 @@ function GymStatusTab() {
   }
 
   function getGymStatesFromKey(key: string): gymStates {
-    if (key == 'keyWithMe') {
+    if (key === 'keyWithMe') {
       return gymStates.KEY_WITH_ME
     }
     return gymStates.RETURN_KEY

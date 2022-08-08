@@ -257,7 +257,7 @@ export default function Signup() {
                   type="link"
                   onClick={() => {
                     const pass = checkRegisterInfo(formData)
-                    if (pass == true) {
+                    if (pass) {
                       setPageNum({ page: 2 })
                       setError({ message: '' })
                     }

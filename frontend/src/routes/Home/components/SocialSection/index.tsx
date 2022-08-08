@@ -87,7 +87,7 @@ export default function SocialSection() {
       return (
         <SocialPostCard
           key={postId}
-          isOwner={userID == userId}
+          isOwner={userID === userId}
           avatar={profilePic}
           name={name ?? ''}
           title={title}

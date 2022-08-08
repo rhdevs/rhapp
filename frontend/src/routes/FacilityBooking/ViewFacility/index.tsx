@@ -171,7 +171,7 @@ export default function ViewFacility() {
     dispatch(SetIsLoading(true))
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityID)))
     dispatch(getAllBookingsForFacility(ViewStartDate, ViewEndDate, parseInt(params.facilityID)))
-    if (selectedFacilityId == 0) {
+    if (selectedFacilityId === 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityID)))
     }
     return () => {
@@ -216,11 +216,11 @@ export default function ViewFacility() {
   const getHumanReadableTime = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
     let hour = date.getHours().toString()
-    if (hour.length == 1) {
+    if (hour.length === 1) {
       hour = '0' + hour
     }
     let minutes = date.getMinutes().toString()
-    if (minutes.length == 1) {
+    if (minutes.length === 1) {
       minutes = '0' + minutes
     }
 
