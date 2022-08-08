@@ -168,22 +168,11 @@ export default function Signup() {
   }
 
   const isValidUserID = (userId) => {
-    console.log(userId)
-    // Check if User ID is Axxxxxx
-    if (userId.length == 9 && userId[0] == 'A' && userId[8].match(/[A-Z]/i)) {
-      return true
-    }
-    //  Else Check for Exxxx ID
-    if (userId.length == 8 && userId[0] == 'E') {
-      return true
-    }
-
-    //  Else check if it's Evan
-    if (userId == 'RFHTBS') {
-      return true
-    }
-    // Otherwise, user ID is invalid
-    return false
+    return (
+      userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
+      userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
+      userId == 'RFHTBS' //  Else check if it's Evan
+    )
   }
 
   const checkRegisterInfo = (formData) => {
