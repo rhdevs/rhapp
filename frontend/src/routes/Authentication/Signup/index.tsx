@@ -77,7 +77,12 @@ export default function Signup() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value,
+      [e.target.name]:
+        e.target.name === 'userId'
+          ? e.target.value.toUpperCase()
+          : e.target.name === 'email'
+          ? e.target.value.toLowerCase()
+          : e.target.value,
     })
   }
 
