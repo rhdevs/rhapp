@@ -247,7 +247,7 @@ export default function ViewBooking() {
             {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
               <ConfirmationModal
                 title="Delete Booking?"
-                hasLeftButton={true}
+                hasLeftButton
                 leftButtonText="Delete"
                 onLeftButtonClick={() => {
                   dispatch(deleteMyBooking(selectedBooking?.bookingID))

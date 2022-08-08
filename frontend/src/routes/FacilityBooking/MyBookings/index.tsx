@@ -225,7 +225,7 @@ export default function ViewMyBookings() {
                       {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
                         <ConfirmationModal
                           title="Delete Booking?"
-                          hasLeftButton={true}
+                          hasLeftButton
                           leftButtonText="Delete"
                           onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
                           onLeftButtonClick={() => {

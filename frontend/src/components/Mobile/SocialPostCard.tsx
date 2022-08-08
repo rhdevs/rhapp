@@ -227,7 +227,7 @@ function SocialPostCard(props: socialPostCardProps) {
       {deleteConfirmation && (
         <ConfirmationModal
           title="Delete Post?"
-          hasLeftButton={true}
+          hasLeftButton
           leftButtonText="Delete"
           onLeftButtonClick={onConfirmDeleteClick}
           rightButtonText="Cancel"

@@ -190,12 +190,12 @@ export default function Schedule() {
   return (
     <Background>
       <PullToRefresh onRefresh={onRefresh}>
-        <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon={true} rightComponent={rightIcon} />
+        <TopNavBar title={`Timetable`} centerComponent={centerComponent} leftIcon rightComponent={rightIcon} />
         {isLoading && <LoadingSpin />}
         {modal && (
           <ConfirmationModal
             title="Confirm Delete?"
-            hasLeftButton={true}
+            hasLeftButton
             leftButtonText="Delete"
             onLeftButtonClick={() => {
               dispatch(setIsLoading(true))

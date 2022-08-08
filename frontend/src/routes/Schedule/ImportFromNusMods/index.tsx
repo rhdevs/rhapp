@@ -95,14 +95,14 @@ export default function ImportFromNusMods() {
 
   return (
     <Background>
-      <TopNavBar title="NUSMods" leftIcon={true} leftIconComponent={leftIcon} />
+      <TopNavBar title="NUSMods" leftIcon leftIconComponent={leftIcon} />
       <img alt="plusCircle" style={{ width: '90vw', display: 'flex', margin: '15px auto' }} src={nusmodsImportImage} />
       <BottomContainer>
         <form>
           {modal && (
             <ConfirmationModal
               title="Confirm Import?"
-              hasLeftButton={true}
+              hasLeftButton
               leftButtonText="Import"
               onLeftButtonClick={() => {
                 dispatch(setUserNusMods(localStorage.getItem('userID'), watch('nusmodsLink')))
@@ -135,7 +135,7 @@ export default function ImportFromNusMods() {
 
           <ButtonContainer>
             <Button
-              stopPropagation={true}
+              stopPropagation
               hasSuccessMessage={false}
               defaultButtonDescription="Import"
               onButtonClick={() => {

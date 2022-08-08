@@ -205,7 +205,7 @@ export default function Signup() {
     <>
       <MainContainer>
         {pageNum.page === 1 && <TopNavBar title="Sign Up" />}
-        {pageNum.page === 2 && <TopNavBar title="Almost Done!" leftIcon={true} />}
+        {pageNum.page === 2 && <TopNavBar title="Almost Done!" leftIcon />}
         {error.message !== '' && (
           <AlertGroup>
             <Alert message={error.message} type="error" closable showIcon />

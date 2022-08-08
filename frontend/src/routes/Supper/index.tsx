@@ -141,7 +141,7 @@ export default function Supper() {
     <PullToRefreshRH>
       <Background>
         <StickyContainer>
-          <TopNavBar leftIcon={true} title="Supper Time" rightComponent={rightIcon} />
+          <TopNavBar leftIcon title="Supper Time" rightComponent={rightIcon} />
           <SearchContainer>
             <SupperSearchBar />
             <Tooltip
