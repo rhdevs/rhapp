@@ -102,11 +102,7 @@ function EventCell(props: Props) {
       ? 'white'
       : DEFAULT_EVENT_CELL_WORDS_COLOUR
 
-  const onlyShowEventName = props.onlyShowEventName
-    ? props.onlyShowEventName
-    : (props.isSingleEvent ?? true) === true
-    ? false
-    : true
+  const onlyShowEventName = props.onlyShowEventName || !(props.isSingleEvent ?? true)
 
   const getEventHeight = () => {
     if (props.eventHeight) {
