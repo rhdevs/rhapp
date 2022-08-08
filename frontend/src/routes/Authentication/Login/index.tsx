@@ -112,7 +112,7 @@ export default function Login() {
   const [error, setError] = useState({ message: '' })
 
   const loginHandler = async () => {
-    if (username !== '' && password !== '') {
+    if (username && password) {
       setError({ message: '' })
       // setIsLoading(true)
       const passwordHash = sha256(password).toString()
