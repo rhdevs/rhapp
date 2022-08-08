@@ -1,4 +1,4 @@
-run = "python ./backend/main.py"
+run = "pip3 install -r ./backend/requirements.txt && python  ./backend/main.py"
 language = "python3"
 
 [packager]
