@@ -33,21 +33,21 @@ const SignUpContainer = styled.div`
 
 const PostButton = styled.div`
   text-align: center;
+
   .ant-btn-primary {
     background-color: #de5f4c;
     border-color: #de5f4c;
     font-size: 14px;
-    letter-spacing: 0em;
+    letter-spacing: 0;
     text-align: center;
     width: 100%;
     border-radius: 8px;
     margin-top: 10px;
   }
+
   .ant-btn-primary:focus {
-    background-color: #de5f4c;
     border-color: #de5f4c;
     background: #de5f4c;
-    border-color: #de5f4c;
   }
 `
 
@@ -162,6 +162,25 @@ export default function Signup() {
     }
   }
 
+  const isValidUserID = (userId) => {
+    console.log(userId)
+    // Check if User ID is Axxxxxx
+    if (userId.length == 9 && userId[0] == 'A' && userId[8].match(/[A-Z]/i)) {
+      return true
+    }
+    //  Else Check for Exxxx ID
+    if (userId.length == 8 && userId[0] == 'E') {
+      return true
+    }
+
+    //  Else check if it's Evan
+    if (userId == 'RFHTBS') {
+      return true
+    }
+    // Otherwise, user ID is invalid
+    return false
+  }
+
   const checkRegisterInfo = (formData) => {
     let pass = true
     if (formData.password !== formData.password2) {
@@ -179,7 +198,7 @@ export default function Signup() {
       pass = false
       return pass
     }
-    if (formData.userId.length !== 9 || formData.userId[0] !== 'A' || !formData.userId[8].match(/[A-Z]/i)) {
+    if (!isValidUserID(formData.userId)) {
       setError({ message: 'Please check that your NUS ID is your matriculation number' })
       pass = false
       return pass
