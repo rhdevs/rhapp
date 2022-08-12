@@ -33,21 +33,21 @@ const SignUpContainer = styled.div`
 
 const PostButton = styled.div`
   text-align: center;
+
   .ant-btn-primary {
     background-color: #de5f4c;
     border-color: #de5f4c;
     font-size: 14px;
-    letter-spacing: 0em;
+    letter-spacing: 0;
     text-align: center;
     width: 100%;
     border-radius: 8px;
     margin-top: 10px;
   }
+
   .ant-btn-primary:focus {
-    background-color: #de5f4c;
     border-color: #de5f4c;
     background: #de5f4c;
-    border-color: #de5f4c;
   }
 `
 
@@ -77,7 +77,12 @@ export default function Signup() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.name === 'userId' ? e.target.value.toUpperCase() : e.target.value,
+      [e.target.name]:
+        e.target.name === 'userId'
+          ? e.target.value.toUpperCase()
+          : e.target.name === 'email'
+          ? e.target.value.toLowerCase()
+          : e.target.value,
     })
   }
 
@@ -162,27 +167,30 @@ export default function Signup() {
     }
   }
 
+  const isValidUserID = (userId) => {
+    return (
+      userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
+      userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
+      userId === 'RFHTBS' //  Else check if it's Evan
+    )
+  }
+
   const checkRegisterInfo = (formData) => {
-    let pass = true
     if (formData.password !== formData.password2) {
       setError({ message: 'Password does not match!' })
-      pass = false
-      return pass
+      return false
     }
-    if (!formData.email || !formData.userId || !formData.password || !formData.password2) {
+    if (!(formData.email && formData.userId && formData.password && formData.password2)) {
       setError({ message: 'All fields are compulsory!' })
-      pass = false
-      return pass
+      return false
     }
-    if (!formData.email.endsWith('@u.nus.edu') && !formData.email.endsWith('@nus.edu.sg')) {
+    if (!formData.email.match(/^.+@u\.nus\.edu$/) && !formData.email.match(/^.+@nus\.edu\.sg$/)) {
       setError({ message: 'Please check if your NUS Email Domain is @u.nus.edu or @nus.edu.sg' })
-      pass = false
-      return pass
+      return false
     }
-    if (formData.userId.length !== 9 || formData.userId[0] !== 'A' || !formData.userId[8].match(/[A-Z]/i)) {
+    if (!isValidUserID(formData.userId)) {
       setError({ message: 'Please check that your NUS ID is your matriculation number' })
-      pass = false
-      return pass
+      return false
     }
     // WRONG PLACE TO CHECK TELE HANDLE
     // if (!formData.telegramHandle.match(/^[A-Za-z0-9_]+$/)) {
@@ -190,7 +198,7 @@ export default function Signup() {
     //   pass = false
     //   return pass
     // }
-    return pass
+    return true
   }
 
   return (
@@ -217,7 +225,7 @@ export default function Signup() {
               <br /> <br />
               <AccountText>NUS ID</AccountText>
               <Input
-                placeholder="A01234567X"
+                placeholder="E1234567"
                 name="userId"
                 style={{ borderRadius: '10px' }}
                 value={formData.userId}
