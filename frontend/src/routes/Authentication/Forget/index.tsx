@@ -82,7 +82,7 @@ export default function ForgetPassword() {
             placeholder="NUS Email Address"
             value={email}
             onChange={(e) => {
-              const input = e.target.value
+              const input = e.target.value.toLowerCase()
               setEmail(input)
             }}
           />
