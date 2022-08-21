@@ -87,6 +87,7 @@ const PersonalInfoSpan = styled.span`
 `
 const LogoutButton = styled.div`
   color: #de5f4c;
+  cursor: pointer;
 `
 
 export default function Profile() {
