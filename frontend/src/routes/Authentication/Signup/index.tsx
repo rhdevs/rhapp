@@ -17,7 +17,6 @@ const MainContainer = styled.div`
 `
 
 const AccountText = styled.text`
-  font-family: ui-monospace;
   float: left;
   font-size: 12px;
   padding-bottom: 5px;
@@ -75,6 +74,7 @@ export default function Signup() {
   // const { name, email, password, password2 } = formData
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.name === 'userId' ? e.target.value.trim().toUpperCase() : e.target.value
     setFormData({
       ...formData,
       [e.target.name]:
@@ -102,12 +102,12 @@ export default function Signup() {
     const newUser = {
       userID: formData.userId,
       passwordHash: passwordHash,
-      email: formData.email,
+      email: formData.email.trim().toLowerCase(),
       // position: [0], //0 = 'Resident'
-      displayName: formData.display,
-      bio: formData.bio,
+      displayName: formData.display.trim(),
+      bio: formData.bio.trim(),
       block: parseInt(formData.block),
-      telegramHandle: formData.telegram,
+      telegramHandle: formData.telegram.trim(),
     }
     try {
       await fetch(DOMAIN_URL.AUTH + ENDPOINTS.REGISTER, {
