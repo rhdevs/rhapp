@@ -1,3 +1,4 @@
+from curses import keyname
 from operator import is_
 from numpy import sort
 from db import *
@@ -24,7 +25,7 @@ gym_api = Blueprint("gym", __name__)
 def get_history():
     try:
 
-        data = list(db.Gym.find({},{"_id":0}).sort("requestTime",1))
+        data =  list(db.Gym.find({},{"_id":0}).sort("requestTime",1))
         data = pd.DataFrame(data)
         checkkeyHolder = data['keyHolder'].shift(-1) == data['keyHolder']
         checkrequestTime = data['requestTime'].shift(-1) - data['requestTime'] <= 60
@@ -86,8 +87,7 @@ def get_statuses():
         
         if data['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
             data['userID'] = ''
-        else:
-            data['userID'] = db.User.find_one({"telegramHandle": data['keyHolder']['telegramHandle']})['userID']
+        
         response = {"data": data, "status": "success"}
 
     except:
@@ -111,7 +111,7 @@ def move_key(userID):
 
         latestData = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
 
-        if latestData['keyHolder']['telegramHandle'] != DEFAULT_TELEGRAM_HANDLE and userID == db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID'] :
+        if latestData['keyHolder']['telegramHandle'] != DEFAULT_TELEGRAM_HANDLE and userID == latestData['userID'] :
             return make_response({"err": "You are currently holding onto the key", "status": "failed"}, 403)
         
         data = db.Gym.find().sort('_id',-1).limit(1).next()
@@ -151,11 +151,11 @@ def return_key(userID):
 
         if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE:
             return make_response({"err": "Key has already been returned", "status": "failed"}, 403)
-        
-        elif userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
+
+        elif userID != latestData['userID']:
             return make_response({"err": "You are not holding onto the key", "status": "failed"}, 403)
 
-        if userID == db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID'] and latestData['gymIsOpen'] == True:
+        elif userID == latestData['userID'] and latestData['gymIsOpen'] == True:
             return make_response({"err": "Please close the gym first", "status": "failed"}, 403)
 
         insert_data = {}
@@ -191,9 +191,15 @@ def toggle_gym(userID):
             return {"err": "Auth Failure", "status": "failed"}, 401
 
         latestData = list(db.Gym.find({}, {"_id": 0}).sort("requestTime", -1))[0]
-
-        if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE or userID != db.User.find_one({"telegramHandle": latestData['keyHolder']['telegramHandle']})['userID']:
+        
+        if latestData['keyHolder']['telegramHandle'] == DEFAULT_TELEGRAM_HANDLE or userID != latestData['userID']:
             return make_response({"err": "You are not holding onto the key", "status": "failed"}, 403)
+
+        reqUser = db.User.find_one(
+                {"userID": userID}
+            )
+        telegramHandle = reqUser['telegramHandle']
+        displayName = reqUser['displayName']
 
         data = db.Gym.find().sort('_id',-1).limit(1).next()
         insert_data = {}
@@ -204,9 +210,10 @@ def toggle_gym(userID):
         else:
             insert_data["statusChange"] = "CLOSED"
         insert_data["keyIsReturned"] = False
-        insert_data["keyHolder"] =  data["keyHolder"]
+        insert_data["keyHolder"] =  {"telegramHandle": telegramHandle, "displayName": displayName}
         insert_data["userID"] = userID
         insert_data["requestTime"] = int(time.time())
+
         db.Gym.insert_one(insert_data)
         response = {"status":"success"}
         
