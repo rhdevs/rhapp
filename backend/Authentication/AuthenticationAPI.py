@@ -1,6 +1,5 @@
 import os
 from flask_mail import Mail, Message
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from db import *
 from flask import Flask, jsonify, request, make_response, url_for
 from flask_cors import CORS, cross_origin
