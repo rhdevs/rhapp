@@ -10,6 +10,9 @@ import sha256 from 'crypto-js/sha256'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 
+// Array which contains all RF usernames
+const RF_Usernames=["EPHCSLE","BIEYHY","CEECSC","EPHFM","GROLC","ISSNTT","RFHTBS"];
+
 const MainContainer = styled.div`
   height: 110vh;
   width: 100vw;
@@ -171,7 +174,7 @@ export default function Signup() {
     return (
       userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
       userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
-      userId === 'RFHTBS' //  Else check if it's Evan
+      RF_Usernames.includes(userId)//  Else check if it's Evan
     )
   }
 
