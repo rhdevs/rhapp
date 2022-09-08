@@ -174,7 +174,7 @@ export default function Signup() {
     return (
       userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
       userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
-      RF_Usernames.includes(userId)//  Else check if it's Evan
+      RF_Usernames.includes(userId)//  Else check if it's in the list of RF Usernames
     )
   }
 
