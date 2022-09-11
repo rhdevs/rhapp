@@ -1,7 +1,7 @@
 export type User = {
   _id: string
   userID: string
-  profilePictureUrl: string
+  profilePicSignedUrl: string
   displayName: string
   telegramHandle: string
   block: number

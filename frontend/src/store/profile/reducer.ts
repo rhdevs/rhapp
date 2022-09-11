@@ -5,7 +5,7 @@ export const initialState = {
   user: {
     _id: '0',
     userID: localStorage.username,
-    profilePictureUrl: '',
+    profilePicSignedUrl: '',
     displayName: 'Your Profile is Loading',
     telegramHandle: 'zhoumm',
     block: 8,
