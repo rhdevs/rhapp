@@ -28,6 +28,7 @@ export const fetchUserDetails = (userID: string | null) => (dispatch: Dispatch<A
   if (userID !== null) {
     dispatch(setIsLoading(true))
     get(ENDPOINTS.USER_PROFILE, DOMAINS.SOCIAL, '/' + userID)
+      // get('social' as any, 'profile' as any, '/' + userID)
       .then((data) => {
         dispatch({ type: PROFILE_ACTIONS.SET_USER_DETAILS, user: JSON.parse(data.data)[0] })
       })
@@ -112,7 +113,7 @@ export const handleEditProfileDetails = (bio: string, displayName: string, teleg
     telegramHandle: telegramHandle,
     bio: bio,
     modules: newModules,
-    profilePictureUrl: userProfilePictureBase64,
+    profilePicSignedUrl: userProfilePictureBase64,
     block: block,
   }
 
