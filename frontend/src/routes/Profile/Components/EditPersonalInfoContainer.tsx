@@ -77,7 +77,7 @@ const EditPersonalInfoContainer = () => {
     if (newBio !== oldBio) {
       dispatch(setHasChanged(true))
     }
-    dispatch(handleNewProfilePicture(user.profilePictureUrl))
+    dispatch(handleNewProfilePicture(user.profilePicSignedUrl))
     dispatch(setCanPush('false'))
   }, [dispatch])
 
@@ -121,7 +121,7 @@ const EditPersonalInfoContainer = () => {
       <>
         <div className="image-upload">
           <label htmlFor="file-input">
-            {user.profilePictureUrl == undefined ? (
+            {user.profilePicSignedUrl == undefined ? (
               <AvatarSpan>
                 <Avatar
                   size={{ xs: 70 }}
@@ -138,7 +138,7 @@ const EditPersonalInfoContainer = () => {
               </AvatarSpan>
             ) : (
               <img
-                src={'data:image/png;base64,' + userProfilePictureBase64}
+                src={userProfilePictureBase64}
                 style={{
                   height: 75,
                   width: 75,
