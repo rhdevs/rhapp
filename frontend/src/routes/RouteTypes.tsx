@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { SetIsJcrc } from '../store/facilityBooking/action'
@@ -34,11 +34,11 @@ export const PrivateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
 
   if (localStorage.token) {
-    return getIsLoggedIn() ? (
-      <Route {...rest} render={(props) => <Component {...props} />} />
-    ) : (
-      <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
-    )
+    // return getIsLoggedIn() ? (
+    return <Route {...rest} render={(props) => <Component {...props} />} />
+    // ) : (
+    //   <Route {...rest} render={() => <Redirect push to="/auth/login" />} />
+    // )
   } else {
     return (
       <Route
@@ -66,7 +66,8 @@ export const AuthenticateRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
 
   if (localStorage.token) {
-    return getIsLoggedIn() ? (
+    // return  getIsLoggedIn() ? (
+    return (
       <Route
         {...rest}
         render={(props) => {
@@ -75,9 +76,10 @@ export const AuthenticateRoute = (routeProps: any) => {
           return <Redirect push to={redirectUrl} />
         }}
       />
-    ) : (
-      <Route {...rest} render={(props) => <Component {...props} />} />
     )
+    // ) : (
+    //   <Route {...rest} render={(props) => <Component {...props} />} />
+    // )
   } else {
     return <Route {...rest} render={(props) => <Component {...props} />} />
   }
