@@ -102,7 +102,7 @@ export const CreateOrderPageTwo = () => {
             <Wrapper topMargin>
               <FormHeader isCompulsory headerName="Split Delivery Fees" />
               <StyledRadioGroup
-                {...register('splitDeliveryFee', { required: true })}
+                {...(register('splitDeliveryFee', { required: true }) as any)}
                 onChange={(e) => {
                   clearErrors('splitDeliveryFee')
                   setValue('splitDeliveryFee', e.target.value)

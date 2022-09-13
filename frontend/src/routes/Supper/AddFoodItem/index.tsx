@@ -62,6 +62,7 @@ const AddFoodItem = () => {
     mode: 'all',
     reValidateMode: 'onChange',
   })
+
   const { supperGroup, foodMenu, isLoading, count } = useSelector((state: RootState) => state.supper)
   const compulsoryFields: Custom[] =
     foodMenu?.custom?.filter((custom) => {
@@ -192,7 +193,7 @@ const AddFoodItem = () => {
                 textarea
                 value={value}
                 onChange={onChange}
-                {...register('comments')}
+                {...(register('comments') as any)}
               />
             )}
             control={control}

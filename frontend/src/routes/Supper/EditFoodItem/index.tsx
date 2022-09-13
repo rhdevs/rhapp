@@ -272,7 +272,7 @@ const EditFoodItem = () => {
                   textarea
                   value={value}
                   onChange={onChange}
-                  {...register('comments')}
+                  {...(register('comments') as any)}
                 />
               )}
               control={control}
