@@ -87,7 +87,7 @@ export default function InputField(props: InputFieldProps) {
           onChange={(e) => setValue(name, e.target.value)}
           hasError={!!errors}
           defaultValue={defaultValue}
-          {...register(name, { required: required })}
+          {...(register(name, { required: required }) as any)}
         />
       ) : (
         <StyledInput
@@ -95,7 +95,7 @@ export default function InputField(props: InputFieldProps) {
           onChange={(e) => setValue(name, e.target.value)}
           hasError={!!errors}
           defaultValue={defaultValue}
-          {...register(name, { required: required })}
+          {...(register(name, { required: required }) as any)}
         />
       )}
     </Container>
