@@ -47,3 +47,6 @@ yarn-error.log/
 */.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+# Docs
+frontend/docs

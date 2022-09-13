@@ -19,7 +19,7 @@
   },
   "include": ["src"],
   "typedocOptions": {
-    "entryPoints": ["src/index.tsx"],
+    "entryPoints": ["src/common/*.ts"],
     "out": "docs"
   }
 }
