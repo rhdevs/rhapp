@@ -19,7 +19,17 @@
   },
   "include": ["src"],
   "typedocOptions": {
-    "entryPoints": ["src/common/*.ts"],
+    "entryPoints": [
+      "src/common/*",
+      "src/common/**/*",
+      "src/components/*",
+      "src/components/**/*",
+      "src/routes/*",
+      "src/routes/**/*",
+      "src/store/*",
+      "src/store/**/*"
+    ],
+    "entryPointStrategy": "resolve",
     "out": "docs"
   }
 }

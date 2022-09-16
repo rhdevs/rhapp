@@ -76,7 +76,7 @@ export default function ViewBookingDailyView() {
         <LoadingSpin />
       ) : (
         <Background>
-          <DailyViewDatesRow selectedDate={clickedDate} selectedFacilityId={selectedFacilityId} />
+          <DailyViewDatesRow selectedFacilityId={selectedFacilityId} />
           <ViewSectionDiv>
             <ViewScheduleBlock />
           </ViewSectionDiv>

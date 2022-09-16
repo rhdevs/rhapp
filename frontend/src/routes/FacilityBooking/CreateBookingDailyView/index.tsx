@@ -51,6 +51,42 @@ const TitleText = styled.h2`
   margin-top: 0.7rem;
 `
 
+/**
+ * # CreateBookingDailyView
+ * Path: `/facility/booking/dayview/create/:facilityId'`
+ *
+ * ## Page Description
+ * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page
+ * The user would select a starting time, followed by an ending time, on the timeline.
+ * Once the selection is done, the user would be automatically redirected to the CreateBooking page
+ *
+ * ## Components
+ * - `LoadingSpin`
+ * - `BookingSection`
+ * - `TopNavBarRevamp`
+ * - `DailyViewDatesRow`
+ *
+ * ## Redux
+ * ### Action functions
+ *
+ * #### /store/facilityBooking/action
+ * - `setSelectedBlockTimestamp<timeStamp: number>`
+ * - `setSelectedEndTime<endTime: number>`
+ * - `setSelectedStartTime<startTime: number>`
+ * - `updateDailyView<date: Date, selectedFacilityId: number>`
+ *
+ * ### `useSelector` variables
+ * #### state.facilityBooking
+ * - `selectedFacilityName`
+ * - `isLoading`
+ * - `selectedStartTime`
+ *
+ * @remarks
+ * <any remarks on this component type in here>
+ * I made this page last AY! - 2022 FE Head
+ *
+ */
+
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -71,6 +107,16 @@ export default function CreateBookingDailyView() {
   useEffect(() => {
     updateDisabledDates()
   }, [selectedStartTime])
+
+  /**
+   * updates `disabledDates: number[]` hook, which is an array of date numbers passed into `DailyViewDatesRow` to indicate dates that are disabled on the date row
+   * ## Use cases
+   * When the user selects a starting time block on the `BookingSection`, this function would calculate the dates on the selected week that are
+   * before the starting date, and dates `>=2` days after the starting date
+   *
+   * This ensures that the user does not book a location across `>=2` days
+   * @returns void
+   */
 
   const updateDisabledDates = () => {
     if (selectedStartTime === 0) return
@@ -113,11 +159,7 @@ export default function CreateBookingDailyView() {
       ) : (
         <Background>
           <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
-          <DailyViewDatesRow
-            selectedDate={clickedDate}
-            selectedFacilityId={selectedFacilityId}
-            disabledDates={disabledDates}
-          />
+          <DailyViewDatesRow selectedFacilityId={selectedFacilityId} disabledDates={disabledDates} />
           <BookingSectionDiv>
             <BookingSection />
           </BookingSectionDiv>
