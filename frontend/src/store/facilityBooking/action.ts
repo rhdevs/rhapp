@@ -4,6 +4,13 @@ import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
 import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 
+/**
+ *
+ * @param newError
+ * @returns updates `createBookingError`
+ *
+ * @remarks this function is currently unused! `createBookingError` is unused as well
+ */
 export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
@@ -11,6 +18,14 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
   })
 }
 
+/**
+ *
+ * @param date
+ * @param selectedFacilityId
+ * @returns updates `selectedDayBookings`, `timeBlocks`, `isLoading`
+ *
+ * @remarks <insert remarks here>
+ */
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
 

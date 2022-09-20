@@ -16,17 +16,11 @@ const DatesContainer = styled.div`
  * @param selectedFacilityId (type `number`)
  * @param disabledDates (type `number[]`, optional)
  *
- * A row of 7 dates in a week (Sunday to Saturday) that users can click on to change the selected dates. To be used after a facility is selected by a user.
- *
- * ## Redux
- * ### useSelector variables
- * `clickedDate: Date` - the date that the user has clicked on the date row
- * ### Actions
- * `setClickedDate` - sets the `clickedDate` value to the date which the user has clicked on
+ * @returns A row of 7 dates in a week (Sunday to Saturday) that users can click on to change the selected dates. To be used after a facility is selected by a user.
  *
  * @example
  * ```
- * // user selected Thursday, 15 September 2020
+ * // user selected Thursday, 15 September 2022
  * // component will display dates |11 12 13 14 (15) 16 17| with 15th highlighted in dark green
  * // if current date is in date row and not selected, it will be highlighted in light green
  * <DailyViewDatesRow selectedFacilityId={1} />

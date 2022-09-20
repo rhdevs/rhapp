@@ -56,34 +56,12 @@ const TitleText = styled.h2`
  * Path: `/facility/booking/dayview/create/:facilityId'`
  *
  * ## Page Description
- * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page
- * The user would select a starting time, followed by an ending time, on the timeline.
+ * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page. \
+ * The user would select a starting time, followed by an ending time, on the timeline. \
  * Once the selection is done, the user would be automatically redirected to the CreateBooking page
- *
- * ## Components
- * - `LoadingSpin`
- * - `BookingSection`
- * - `TopNavBarRevamp`
- * - `DailyViewDatesRow`
- *
- * ## Redux
- * ### Action functions
- *
- * #### /store/facilityBooking/action
- * - `setSelectedBlockTimestamp<timeStamp: number>`
- * - `setSelectedEndTime<endTime: number>`
- * - `setSelectedStartTime<startTime: number>`
- * - `updateDailyView<date: Date, selectedFacilityId: number>`
- *
- * ### `useSelector` variables
- * #### state.facilityBooking
- * - `selectedFacilityName`
- * - `isLoading`
- * - `selectedStartTime`
  *
  * @remarks
  * <any remarks on this component type in here>
- * I made this page last AY! - 2022 FE Head
  *
  */
 
