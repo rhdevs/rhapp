@@ -170,7 +170,7 @@ export default function Login() {
           <StyledUsernameInput>
             <Input
               type="text"
-              placeholder="Matric Number"
+              placeholder="User ID"
               value={username}
               onChange={(e) => {
                 const newUsername = e.target.value
