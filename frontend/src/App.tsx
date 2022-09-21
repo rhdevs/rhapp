@@ -11,11 +11,13 @@ import CustomParseFormat from 'dayjs/plugin/customParseFormat'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { OfflineStatus } from './components/OfflineStatus'
 import { NotificationBar } from './components/Supper/NotificationBar'
+import usePageTracking from './hooks/useGA'
 
 class App extends React.Component {
   render() {
     dayjs.extend(CustomParseFormat)
     dayjs.extend(RelativeTime)
+    usePageTracking()
 
     return (
       <Provider store={store}>
