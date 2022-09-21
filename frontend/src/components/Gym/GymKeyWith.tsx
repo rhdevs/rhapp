@@ -4,6 +4,19 @@ import Avatar from '../../assets/Avatar_4x.png'
 import { openUserTelegram } from '../../common/telegramMethods'
 import { LAPTOP_VIEW } from '../../common/breakpoints'
 
+/**
+ *
+ * @param props (type `interface`)
+ * @returns user's profile picture, name and link to his/her telegram 
+ * 
+ * @example 
+ * user called Shaun and has no profile picture 
+ * component will display the default profile picture, his name Shaun as well as his 
+ * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
+ * 
+ * @remarks 
+ */
+
 const Header = styled.h2`
   font-family: Lato;
   font-style: normal;
