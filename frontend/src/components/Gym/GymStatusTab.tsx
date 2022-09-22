@@ -11,6 +11,11 @@ import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes, gymStates } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
+/*
+* # GymStatusTab
+*  
+*/
+
 const GymContainer = styled.div`
   background: #fff;
   padding: 50px 0;

@@ -6,7 +6,7 @@ import { LAPTOP_VIEW } from '../../common/breakpoints'
 
 /**
  *
- * @param props (type `interface`)
+ * @param props (type `interface`. Contains name (string, user's name), handle (string, user's telegram handle), avatar(string, optional, user's profile picture))
  * @returns user's profile picture, name and link to his/her telegram 
  * 
  * @example 
