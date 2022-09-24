@@ -20,6 +20,16 @@ import BookingBlock from './BookingBlock'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
+/**
+ *
+ * @returns A section containing clickable timeblocks for booking
+ *
+ * @example
+ * Call the component in a page that allows user to book timeslot for specific facility.
+ * <BookingSection />
+ *
+ * @remarks
+ */
 export default function BookingSection() {
   const history = useHistory()
   const dispatch = useDispatch()
