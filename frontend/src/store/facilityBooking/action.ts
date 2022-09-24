@@ -337,6 +337,7 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
  * @param ccaID (number) [optional]
  * @param description (string) [optional]
  * @param forceBook (boolean) [optional]
+ *
  * @returns upon successful booking, reset variables in store used for booking.
  *
  * @remarks
