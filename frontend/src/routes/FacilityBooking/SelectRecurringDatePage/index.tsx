@@ -26,6 +26,15 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
+/**
+ * # SelectRecurringDatePage
+ * Path: `/facility/booking/create/recurring/selectEndDate/:facilityId`
+ *
+ * ## Page Description
+ * TODO: Figure out what this page does and how to access
+ *
+ * @remarks
+ */
 export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()
