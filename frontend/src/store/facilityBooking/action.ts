@@ -169,6 +169,12 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
+/**
+ * Verifies if the ending datetime is equal to or before the given start datetime
+ * @param toDate (Date) given ending datetime
+ * @param fromdate (Date) given starting datetime
+ * @returns sets the create booking error to the relevant error if any, otherwise sets empty string
+ */
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
   let newError: string
@@ -219,7 +225,11 @@ export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>)
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })
 }
 
-// currentMode TRUE == view bookings || FALSE == view availabilities
+/**
+ * Sets the current viewing mode in facilities
+ * @param currentMode (boolean) TRUE == view bookings, FALSE == view availabilities
+ * @returns updates the view facility mode state according to given mode
+ */
 export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   const ViewFacilityMode = currentMode ? 'Bookings' : 'Availabilities'
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
@@ -230,6 +240,10 @@ export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<A
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
 }
 
+/**
+ * Fetches all the CCAs from the endpoint
+ * @returns retrieves list of CCAs and disable loading
+ */
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
@@ -263,14 +277,29 @@ export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, succes
   })
 }
 
+/**
+ * Sets is loading
+ * @param desiredState (boolean) TRUE == loading, FALSE == not loading
+ * @returns sets the isloading state according to given state
+ */
 export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
+/**
+ * Sets block out
+ * @param desiredState (boolean) TRUE == open, FALSE == close
+ * @returns sets the block out state according to given state
+ */
 export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
 }
 
+/**
+ * Sets TRUE if JCRC
+ * @param desiredState (boolean) TRUE == JCRC, FALSE == not JCRC
+ * @returns sets JCRC state according to given state
+ */
 export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
