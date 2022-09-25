@@ -11,10 +11,21 @@ import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes, gymStates } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
-/*
-* # GymStatusTab
-*  
-*/
+/**
+ *
+ * @param 
+ * @returns gym status page with gym status, who the key is with, and three buttons (Key With Me, Return Key, Open Gym)
+ * 
+ * @example 
+ * user called Shaun and has no profile picture is holding on to the key 
+ * component will display the default profile picture, his name Shaun as well as his 
+ * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
+ * user Jonathan enters the page. He should see the above, and the 3 buttons below. 
+ * 
+ * @remarks 
+* <any remarks on this component type here> 
+ * 
+ */
 
 const GymContainer = styled.div`
   background: #fff;
@@ -55,6 +66,16 @@ function GymStatusTab() {
     ['keyWithOthers', { keyWithMe: true, returnKey: false, toggleGym: false }],
   ])
 
+/**
+ *
+ * @param 
+ * @returns Map<string, ButtonStates>, containing the status of the gym and key
+ * 
+ * @remarks
+ * <any remarks on this function type here> 
+ * 
+ */
+
   function getButtonStates(): ButtonStates {
     if (!gymStatus.gymIsOpen) {
       if (gymStatus.keyHolder.displayName === name) {
@@ -69,12 +90,35 @@ function GymStatusTab() {
     return gymButtonStates.get('keyWithOthers')!
   }
 
+/**
+ *
+ * @param key (type `string`)
+ * @returns text displayed on each button 
+ * 
+ * @remarks
+ * <any remarks on this function type here> 
+ * 
+ */
+
   function getButtonText(key: string): string {
     if (key === 'toggleGym') {
       return gymStatus.gymIsOpen ? buttonMap.get('closeGym')! : buttonMap.get('openGym')!
     }
     return buttonMap.get(key)!
   }
+
+/**
+ *
+ * Using a React Hook, sets the value of isModalOpen to true, and modalState to the current status of the gym
+ * isModalOpen and modalState are state variables, which are remembered by React 
+ * 
+ * @param key (type `string`)
+ * @returns 
+ * 
+ * @remarks
+ * <any remarks on this function type here> 
+ * 
+ */
 
   function handleModalState(key: string): void {
     setModalOpen(true)
@@ -89,12 +133,32 @@ function GymStatusTab() {
     setModalState(getGymStatesFromKey(key))
   }
 
+/**
+ *
+ * @param key (type `string`)
+ * @returns gym state from enum list gymStates 
+ * 
+ * @remarks 
+ * <any remarks on this function type here> 
+ * 
+ */
+
   function getGymStatesFromKey(key: string): gymStates {
     if (key == 'keyWithMe') {
       return gymStates.KEY_WITH_ME
     }
     return gymStates.RETURN_KEY
   }
+
+/**
+ *
+ * @param 
+ * @returns returns an object of GymConfirmationModal with the key holder's information and gym status 
+ * 
+ * @remarks 
+ * <any remarks on this function type here> 
+ * 
+ */
 
   function renderConfirmationModal(): ReactElement {
     return (
@@ -109,6 +173,13 @@ function GymStatusTab() {
       />
     )
   }
+
+/**
+ *
+ * @param 
+ * @returns a button to be displayed on the screen, with onClick function handleModalState()
+ * 
+ */
 
   function renderButton() {
     const buttonState = getButtonStates()

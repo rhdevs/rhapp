@@ -15,6 +15,8 @@ import { LAPTOP_VIEW } from '../../common/breakpoints'
  * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
  * 
  * @remarks 
+ * <any remarks on this component type here> 
+ * 
  */
 
 const Header = styled.h2`
