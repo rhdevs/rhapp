@@ -27,7 +27,7 @@ const MainContainer = styled.div`
  * For example, if CCA1 books a location at 12pm-2pm, and CCA2 tries to book the same location from 1pm-3pm \
  * a modal will appear, with a prompt to view conflict.
  * @returns TBD (see remarks)
- * 
+ *
  * @remarks
  * Does not currently work, redirects to `/facility/booking/create/conflict/`
  */
