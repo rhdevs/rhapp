@@ -27,7 +27,15 @@ const MainContainer = styled.div`
   height: 90vh;
   background-color: #fafaf4;
 `
-
+/**
+ * # ViewFacility
+ * Path: `facility/view/:facilityId
+ *
+ * ## Page Description
+ * This page is accessed after the user clicks on a facility from the Facilities page \
+ * The selected facility [e.g. Main Area (UL)] be selected, showing the available dates (i.e. calendar) to book
+ * @returns A calendar of available dates to book
+ */
 export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
