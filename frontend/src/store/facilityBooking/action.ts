@@ -6,7 +6,7 @@ import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBl
 
 /**
  *
- * @param newError
+ * @param newError (string) usage unsure
  * @returns updates `createBookingError`
  *
  * @remarks this function is currently unused! `createBookingError` is unused as well
@@ -24,7 +24,7 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
  * @param selectedFacilityId
  * @returns updates `selectedDayBookings`, `timeBlocks`, `isLoading`
  *
- * @remarks <insert remarks here>
+ * @remarks this function is currently unused!
  */
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
@@ -115,6 +115,16 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
+/**
+ *
+ * Takes in the user's ID and fetches an array of Booking objects that belongs to the user
+ *
+ * @param userId (string)
+ * @returns updates `myBookings`, `isLoading`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
@@ -154,19 +164,15 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
     type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
     newBooking: oldBooking,
   })
-  dispatch({
-    type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
-    newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
-  })
+  // TODO remove
+  // dispatch({
+  //   type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
+  //   newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
+  // })
 }
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
-}
-
-//TODO: Remove when edit booking is completed
-export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
@@ -201,16 +207,6 @@ export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-//TODO: Remove when edit booking is completed
-export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: newBookingCCA })
-}
-
-//TODO: Remove when edit booking is completed
-export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
-}
-
 export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDate
   const endDate = newDate
@@ -223,11 +219,6 @@ export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>)
 export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   const ViewFacilityMode = currentMode ? 'Bookings' : 'Availabilities'
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
-}
-
-// TODO: Remove when edit booking is done
-export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
 }
 
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {

@@ -15,12 +15,6 @@ const initialState = {
   myBookings: [],
   isDeleteMyBooking: -1,
   newBooking: undefined,
-  // CREATE NEW BOOKING STATES
-  newBookingName: '',
-  newBookingFacilityName: '',
-  newBookingFacilityId: '',
-  newBookingCCA: '',
-  newBookingDescription: '',
   createSuccess: false,
   createFailure: false,
   createBookingError: '',
@@ -58,11 +52,6 @@ type State = {
   myBookings: Booking[]
   isDeleteMyBooking: number
   newBooking: Booking | undefined
-  newBookingFacilityName: string
-  newBookingFacilityId: string
-  newBookingName: string
-  newBookingCCA: string
-  newBookingDescription: string
   createSuccess: boolean
   createFailure: boolean
   ViewStartDate: Date
@@ -89,12 +78,6 @@ type State = {
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID: {
-      return {
-        ...state,
-        newBookingFacilityId: action.newBookingFacilityId,
-      }
-    }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME: {
       return {
         ...state,
@@ -145,27 +128,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
-    case FACILITY_ACTIONS.SET_BOOKING_NAME: {
-      return {
-        ...state,
-        newBookingName: action.newBookingName,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_CCA: {
-      return {
-        ...state,
-        newBookingCCA: action.newBookingCCA,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION: {
-      return {
-        ...state,
-        newBookingDescription: action.newBookingDescription,
-      }
-    }
-
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
       return {
         ...state,
@@ -184,13 +146,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         ViewFacilityMode: action.ViewFacilityMode,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY: {
-      return {
-        ...state,
-        newBookingFacilityName: action.newBookingFacilityName,
       }
     }
 
