@@ -4,19 +4,19 @@ import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
 import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 
-/**
- *
- * @param newError (string) usage unsure
- * @returns updates `createBookingError`
- *
- * @remarks this function is currently unused! `createBookingError` is unused as well
- */
-export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: newError,
-  })
-}
+// /**
+//  *
+//  * @param newError (string) usage unsure
+//  * @returns updates `createBookingError`
+//  *
+//  * @remarks this function is currently unused! `createBookingError` is unused as well
+//  */
+// export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
+//   dispatch({
+//     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+//     createBookingError: newError,
+//   })
+// }
 
 /**
  *
@@ -24,7 +24,7 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
  * @param selectedFacilityId
  * @returns updates `selectedDayBookings`, `timeBlocks`, `isLoading`
  *
- * @remarks this function is currently unused!
+ * @remarks
  */
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
@@ -160,14 +160,10 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
 }
 
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-    newBooking: oldBooking,
-  })
-  // TODO remove
+  // TODO unused
   // dispatch({
-  //   type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
-  //   newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
+  //   type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+  //   newBooking: oldBooking,
   // })
 }
 
@@ -185,26 +181,19 @@ export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch
   } else {
     newError = ''
   }
-
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: newError,
-  })
-}
-
-//TODO: Remove when edit booking is completed
-export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: '',
-  })
+  // TODO unused
+  // dispatch({
+  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+  //   createBookingError: newError,
+  // })
 }
 
 export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: 'Your Event is now 0 minutes long!',
-  })
+  // TODO unused
+  // dispatch({
+  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+  //   createBookingError: 'Your Event is now 0 minutes long!',
+  // })
 }
 
 export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
@@ -266,17 +255,8 @@ export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
-//TODO: Remove when edit booking is done
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
-}
-
-//TODO: Remove when edit booking is done
-export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-    newBooking: undefined,
-  })
 }
 
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -291,14 +271,6 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
       return booking.data
     })
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
-}
-
-//TODO: Remove when edit booking is done
-export const setBookingRepeat = (numRepeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
-    numRepeatWeekly: numRepeatWeekly,
-  })
 }
 
 export const setBooking = (booking: Booking) => (dispatch: Dispatch<ActionTypes>) => {

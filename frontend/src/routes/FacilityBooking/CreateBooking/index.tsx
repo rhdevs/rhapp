@@ -18,7 +18,7 @@ import {
   setIsLoading,
   handleCreateNewBooking,
   setBookingEndDate,
-  resetNewBooking,
+  // resetNewBooking,
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
@@ -127,7 +127,7 @@ export default function CreateBooking() {
       dispatch(getFacilityList())
     }
     return () => {
-      dispatch(resetNewBooking)
+      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
     }
   }, [dispatch])
 

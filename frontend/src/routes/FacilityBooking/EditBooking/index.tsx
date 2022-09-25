@@ -18,7 +18,7 @@ import {
   setBookingStartTime,
   setBookingEndTime,
   setBookingEndDate,
-  resetNewBooking,
+  // resetNewBooking,
   fetchSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
@@ -133,7 +133,7 @@ export default function EditBooking() {
       dispatch(getFacilityList())
     }
     return () => {
-      dispatch(resetNewBooking)
+      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
     }
   }, [dispatch])
 
