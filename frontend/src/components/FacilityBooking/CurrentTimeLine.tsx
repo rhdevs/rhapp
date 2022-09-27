@@ -40,9 +40,24 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
  * @param bottom (type `string`)
  * @returns If the selected day is today, it returns a timeline indicating the current time, where its position
  * is updated every minute. Otherwise, it returns nothing.
- * @example // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time.
+ * @example ```
+ *  // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time. \
+ * //  In <BookingSection /> : 
+ *   <MainContainer>
+ *      <CurrentTimeLine />
+ *      <HourBlocks />
+ *      <DailyContainer />
+ *   </MainContainer>
+ * ```
  * @remarks <any remarks on this component type in here>
  */
+type Props = { 
+  width?: string;
+  top?: string; 
+  left?: string; 
+  right?: string; 
+  bottom?: string 
+}
 
 const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
