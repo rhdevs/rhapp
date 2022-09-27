@@ -44,7 +44,7 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
  * @remarks <any remarks on this component type in here>
  */
 
-const CurrentTimeLine = (props: { width?: string; top?: string; left?: string; right?: string; bottom?: string }) => {
+const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const [top, setTop] = useState<number>(calcTop())
