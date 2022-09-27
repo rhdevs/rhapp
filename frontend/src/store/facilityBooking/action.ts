@@ -291,7 +291,7 @@ export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
 /**
  * Takes in `bookingId` and updates `selectedBooking` for the `EditBooking` and `ViewBooking` pages.
  * @param bookingId (number)
- * @returns updates `selectedBooking`
+ * @returns updates `selectedBooking`, `isLoading`
  *
  * @remarks <insert remarks here>
  */
