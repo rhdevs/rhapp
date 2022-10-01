@@ -14,9 +14,6 @@ import { LAPTOP_VIEW } from '../../common/breakpoints'
  * component will display the default profile picture, his name Shaun as well as his 
  * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
  * 
- * @remarks 
- * <any remarks on this component type here> 
- * 
  */
 
 const Header = styled.h2`

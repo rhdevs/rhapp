@@ -22,9 +22,6 @@ import ButtonComponent from '../Button'
  * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
  * user Jonathan enters the page. He should see the above, and the 3 buttons below. 
  * 
- * @remarks 
-* <any remarks on this component type here> 
- * 
  */
 
 const GymContainer = styled.div`
@@ -71,9 +68,6 @@ function GymStatusTab() {
  * @param 
  * @returns Map<string, ButtonStates>, containing the status of the gym and key
  * 
- * @remarks
- * <any remarks on this function type here> 
- * 
  */
 
   function getButtonStates(): ButtonStates {
@@ -95,9 +89,6 @@ function GymStatusTab() {
  * @param key (type `string`)
  * @returns text displayed on each button 
  * 
- * @remarks
- * <any remarks on this function type here> 
- * 
  */
 
   function getButtonText(key: string): string {
@@ -114,9 +105,6 @@ function GymStatusTab() {
  * 
  * @param key (type `string`)
  * @returns 
- * 
- * @remarks
- * <any remarks on this function type here> 
  * 
  */
 
@@ -138,9 +126,6 @@ function GymStatusTab() {
  * @param key (type `string`)
  * @returns gym state from enum list gymStates 
  * 
- * @remarks 
- * <any remarks on this function type here> 
- * 
  */
 
   function getGymStatesFromKey(key: string): gymStates {
@@ -154,9 +139,6 @@ function GymStatusTab() {
  *
  * @param 
  * @returns returns an object of GymConfirmationModal with the key holder's information and gym status 
- * 
- * @remarks 
- * <any remarks on this function type here> 
  * 
  */
 

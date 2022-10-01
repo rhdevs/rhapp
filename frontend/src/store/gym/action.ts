@@ -49,8 +49,6 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
  * @param telegram 
  * @returns error if error is caught 
  * 
- * @remarks 
- * <any remarks on this function put here> 
  */
 
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -77,8 +75,6 @@ export const moveKey = (userID: string, name: string, telegram: string) => async
  * @param userId 
  * @returns error if error is caught
  * 
- * @remarks 
- * <any remarks on this function put here>  
  */
 
 export const returnKey = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {

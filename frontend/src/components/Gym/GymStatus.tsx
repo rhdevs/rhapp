@@ -9,9 +9,6 @@ import styled from 'styled-components'
  * @example 
  * Retrieves gym status from backend. If the gym is closed, display "Gym is Closed" in red 
  * 
- * @remarks 
- * <any remarks on this component type here> 
- * 
  */
 
 const Container = styled.div`
