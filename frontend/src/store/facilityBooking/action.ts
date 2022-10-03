@@ -288,8 +288,8 @@ export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
 
 /**
  * Sets block out
- * @param desiredState (boolean) TRUE == open, FALSE == close
- * @returns sets the block out state according to given state
+ * @param desiredState (boolean)
+ * @returns sets `blockOutIsOpen` state according to `desiredState`
  */
 export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
