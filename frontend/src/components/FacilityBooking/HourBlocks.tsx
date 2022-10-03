@@ -3,7 +3,7 @@ import React from 'react'
 import { MainTimeContainer, TimeContainer } from './BlockStyles.styled'
 
 /**
- * @returns A column of each hour from 0000 to 2400, to be displayed next to DailyContainer containing time blocks
+ * @returns A column that labels the hour blocks of the DailyContainer, from 0000 to 2400
  * @example
  * ```
  * // HourBlocks placed beside DailyContainer
