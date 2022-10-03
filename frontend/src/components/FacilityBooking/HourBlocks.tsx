@@ -6,7 +6,9 @@ import { MainTimeContainer, TimeContainer } from './BlockStyles.styled'
  * @returns A column of each hour from 0000 to 2400, to be displayed next to DailyContainer containing time blocks
  * @example
  * ```
+ * // HourBlocks placed beside DailyContainer
  * <HourBlocks/>
+ * <DailyContainer>...</DailyContainer>
  * ```
  */
 const HourBlocks = () => {
