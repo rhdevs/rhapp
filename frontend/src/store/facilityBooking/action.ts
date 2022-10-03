@@ -242,7 +242,7 @@ export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<A
 
 /**
  * Fetches all the CCAs from the endpoint
- * @returns retrieves list of CCAs and disable loading
+ * @returns sets `ccaList`, `isLoading`
  */
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
