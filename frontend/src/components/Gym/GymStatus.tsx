@@ -1,16 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-/**
- *
- * @param props (type `interface`. Contains isOpen(boolean, status of the gym))
- * @returns closed/open status of the gym 
- * 
- * @example 
- * Retrieves gym status from backend. If the gym is closed, display "Gym is Closed" in red 
- * 
- */
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -42,6 +32,17 @@ const Status = styled.div<{ isOpen: boolean }>`
 interface Props {
   isOpen: boolean | null
 }
+
+/**
+ *
+ * @param isOpen (boolean) status of the gym
+ * @returns closed/open status of the gym
+ *
+ * @example
+ * Retrieves gym status from backend. If the gym is closed, display "Gym is Closed" in red
+ * <GymStatus isOpen={True} />
+ *
+ */
 
 function GymStatus(props: Props) {
   if (props.isOpen == null) {

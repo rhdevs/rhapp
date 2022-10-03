@@ -4,18 +4,6 @@ import Avatar from '../../assets/Avatar_4x.png'
 import { openUserTelegram } from '../../common/telegramMethods'
 import { LAPTOP_VIEW } from '../../common/breakpoints'
 
-/**
- *
- * @param props (type `interface`. Contains name (string, user's name), handle (string, user's telegram handle), avatar(string, optional, user's profile picture))
- * @returns user's profile picture, name and link to his/her telegram 
- * 
- * @example 
- * user called Shaun and has no profile picture 
- * component will display the default profile picture, his name Shaun as well as his 
- * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
- * 
- */
-
 const Header = styled.h2`
   font-family: Lato;
   font-style: normal;
@@ -64,6 +52,21 @@ interface Props {
   avatar?: string
 }
 
+/**
+ *
+ * @param name (string)
+ * @param handle (string) user's telegram handle
+ * @param avatar (string, optional) user's profile picture
+ * @returns user's profile picture, name and link to his/her telegram
+ *
+ * @example
+ * user called Shaun and has no profile picture
+ * component will display the default profile picture, his name Shaun as well as his
+ * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
+ * <GymKeyWith name={"thomaslim"} handle={"@thomas123"} avatar={""} />
+ *
+ */
+
 function GymKeyWith(props: Props) {
   return (
     <>
@@ -78,7 +81,7 @@ function GymKeyWith(props: Props) {
       </ImageContainer>
       <Container>
         <InfoArea> {props.name} </InfoArea>
-        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.handle}</InfoArea>
+        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.avatar}</InfoArea>
       </Container>
     </>
   )

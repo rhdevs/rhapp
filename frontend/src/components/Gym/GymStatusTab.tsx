@@ -11,19 +11,6 @@ import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes, gymStates } from '../../store/gym/types'
 import ButtonComponent from '../Button'
 
-/**
- *
- * @param 
- * @returns gym status page with gym status, who the key is with, and three buttons (Key With Me, Return Key, Open Gym)
- * 
- * @example 
- * user called Shaun and has no profile picture is holding on to the key 
- * component will display the default profile picture, his name Shaun as well as his 
- * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
- * user Jonathan enters the page. He should see the above, and the 3 buttons below. 
- * 
- */
-
 const GymContainer = styled.div`
   background: #fff;
   padding: 50px 0;
@@ -36,6 +23,18 @@ const ButtonContainer = styled.div`
   justify-content: space-around;
   align-items: center;
 `
+/**
+ *
+ * @param
+ * @returns gym status page with gym status, who the key is with, and three buttons (Key With Me, Return Key, Open Gym)
+ *
+ * @example
+ * user called Shaun and has no profile picture is holding on to the key
+ * component will display the default profile picture, his name Shaun as well as his
+ * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
+ * user Jonathan enters the page. He should see the above, and the 3 buttons below.
+ *
+ */
 
 function GymStatusTab() {
   const dispatch = useDispatch()
@@ -63,12 +62,12 @@ function GymStatusTab() {
     ['keyWithOthers', { keyWithMe: true, returnKey: false, toggleGym: false }],
   ])
 
-/**
- *
- * @param 
- * @returns Map<string, ButtonStates>, containing the status of the gym and key
- * 
- */
+  /**
+   *
+   * @param
+   * @returns Map<string, ButtonStates>, containing the status of the gym and key
+   *
+   */
 
   function getButtonStates(): ButtonStates {
     if (!gymStatus.gymIsOpen) {
@@ -84,12 +83,12 @@ function GymStatusTab() {
     return gymButtonStates.get('keyWithOthers')!
   }
 
-/**
- *
- * @param key (type `string`)
- * @returns text displayed on each button 
- * 
- */
+  /**
+   *
+   * @param key (type `string`)
+   * @returns text displayed on each button
+   *
+   */
 
   function getButtonText(key: string): string {
     if (key === 'toggleGym') {
@@ -98,15 +97,14 @@ function GymStatusTab() {
     return buttonMap.get(key)!
   }
 
-/**
- *
- * Using a React Hook, sets the value of isModalOpen to true, and modalState to the current status of the gym
- * isModalOpen and modalState are state variables, which are remembered by React 
- * 
- * @param key (type `string`)
- * @returns 
- * 
- */
+  /**
+   *
+   * Sets `isModalOpen` to `true`, and `modalState` to the current status of the gym
+   *
+   * @param key (type `string`)
+   * @returns
+   *
+   */
 
   function handleModalState(key: string): void {
     setModalOpen(true)
@@ -121,12 +119,12 @@ function GymStatusTab() {
     setModalState(getGymStatesFromKey(key))
   }
 
-/**
- *
- * @param key (type `string`)
- * @returns gym state from enum list gymStates 
- * 
- */
+  /**
+   *
+   * @param key (type `string`)
+   * @returns gym state from enum list `gymStates`
+   *
+   */
 
   function getGymStatesFromKey(key: string): gymStates {
     if (key == 'keyWithMe') {
@@ -135,12 +133,12 @@ function GymStatusTab() {
     return gymStates.RETURN_KEY
   }
 
-/**
- *
- * @param 
- * @returns returns an object of GymConfirmationModal with the key holder's information and gym status 
- * 
- */
+  /**
+   *
+   * @param
+   * @returns renders `GymConfirmationModal` component with the key holder's information and gym status
+   *
+   */
 
   function renderConfirmationModal(): ReactElement {
     return (
@@ -156,12 +154,13 @@ function GymStatusTab() {
     )
   }
 
-/**
- *
- * @param 
- * @returns a button to be displayed on the screen, with onClick function handleModalState()
- * 
- */
+  /**
+   *
+   * @param
+   * @returns a button to be displayed on the screen, with onClick function handleModalState()
+   * handleModalState() sets the value of isModalOpen to true, and modalState to the current status of the gym
+   *
+   */
 
   function renderButton() {
     const buttonState = getButtonStates()

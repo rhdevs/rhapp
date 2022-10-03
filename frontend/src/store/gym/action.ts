@@ -41,14 +41,14 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 /**
- * 
- * Takes in the user's ID, name and telegram. Creates a POST request to update database on the current user who is holding onto the key 
- * 
- * @param userID 
- * @param name 
- * @param telegram 
- * @returns error if error is caught 
- * 
+ *
+ * Takes in the user's ID, name and telegram. Creates a POST request to update database on the current user who is holding onto the key
+ *
+ * @param userID
+ * @param name
+ * @param telegram
+ * @returns raises error if error
+ *
  */
 
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
@@ -69,12 +69,12 @@ export const moveKey = (userID: string, name: string, telegram: string) => async
 }
 
 /**
- * 
+ *
  * Takes in the user's ID. Creates a POST request to update database that the key has been returned
- * 
- * @param userId 
- * @returns error if error is caught
- * 
+ *
+ * @param userId
+ * @returns raises error if error
+ *
  */
 
 export const returnKey = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
