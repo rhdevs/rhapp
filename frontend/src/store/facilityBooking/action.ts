@@ -297,8 +297,8 @@ export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<
 
 /**
  * Sets TRUE if JCRC
- * @param desiredState (boolean) TRUE == JCRC, FALSE == not JCRC
- * @returns sets JCRC state according to given state
+ * @param desiredState (boolean)
+ * @returns sets `isJCRC` according to `desiredState`
  */
 export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
