@@ -1,9 +1,32 @@
+/**
+ * # GymConfirmationModal
+ *
+ * ## Page Description
+ * Popup windows to be displayed when user clicks one of the 'Key With Me',
+ * 'Return Key' or 'Open Gym' buttons.
+ *
+ */
+
 import React from 'react'
 import { ConfirmationModal } from '../ConfirmationModal'
 import { moveKey, returnKey, toggleGym } from '../../store/gym/action'
 import { gymStates } from '../../store/gym/types'
 import { useDispatch } from 'react-redux'
 
+/**
+ *
+ * Modifies the modal state of the gym.
+ *
+ * @param gymIsOpen (type `boolean`)
+ * @param userId (type `string`)
+ * @param name (type `string`)
+ * @param telegramHandle (type `string`)
+ * @param isModalOpen (type `boolean`)
+ * @param setModalOpen
+ * @param modalState
+ *
+ * @returns New modal state
+ */
 function GymConfirmationModal(props: {
   gymIsOpen: boolean | null
   userId: string

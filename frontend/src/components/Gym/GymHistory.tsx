@@ -1,3 +1,12 @@
+/**
+ * # GymHistory
+ *
+ * ## Page Description
+ * This page is accessed after the user clicks on the `History` buttom on the `Gym` Page.
+ * The user would be able to view the past gym bookings and the corresponding timestamps.
+ *
+ */
+
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
@@ -54,7 +63,12 @@ const Status = styled.div<{ status: string }>`
   margin-right: 4%;
   margin-bottom: 0.25em;
 `
-
+/**
+ * Displays the booking history of the gym.
+ *
+ * @returns Gym booking history, displaying the most recent bookings first.
+ *          Shows the date, time and user of each booking.
+ */
 const GymHistory = () => {
   const dispatch = useDispatch()
   const { gymHistory } = useSelector((state: RootState) => state.gym)
