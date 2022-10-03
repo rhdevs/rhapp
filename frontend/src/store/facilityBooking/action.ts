@@ -228,7 +228,7 @@ export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>)
 /**
  * Sets the current viewing mode in facilities
  * @param currentMode (boolean) TRUE == view bookings, FALSE == view availabilities
- * @returns updates the view facility mode state according to given mode
+ * @returns updates `viewFacilityModeState` according to `currentMode`
  */
 export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   const ViewFacilityMode = currentMode ? 'Bookings' : 'Availabilities'
