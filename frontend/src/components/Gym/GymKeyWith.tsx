@@ -56,7 +56,7 @@ interface Props {
  *
  * @param name (string)
  * @param handle (string) user's telegram handle
- * @param avatar (string, optional) user's profile picture. The string is of the form url 
+ * @param avatar (string, optional) user's profile picture. The string is of the form url
  * @returns user's profile picture, name and link to his/her telegram
  *
  * @example
@@ -81,7 +81,7 @@ function GymKeyWith(props: Props) {
       </ImageContainer>
       <Container>
         <InfoArea> {props.name} </InfoArea>
-        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.avatar}</InfoArea>
+        <InfoArea onClick={() => openUserTelegram(props.handle)}>{'@' + props.handle}</InfoArea>
       </Container>
     </>
   )
