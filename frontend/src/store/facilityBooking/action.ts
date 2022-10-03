@@ -173,7 +173,7 @@ export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<A
  * Verifies if the ending datetime is equal to or before the given start datetime
  * @param toDate (Date) given ending datetime
  * @param fromdate (Date) given starting datetime
- * @returns sets the create booking error to the relevant error if any, otherwise sets empty string
+ * @returns sets `createBookingError` to the relevant error if any, otherwise sets empty string
  */
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
