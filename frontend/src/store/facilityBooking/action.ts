@@ -279,8 +279,8 @@ export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, succes
 
 /**
  * Sets is loading
- * @param desiredState (boolean) TRUE == loading, FALSE == not loading
- * @returns sets the isloading state according to given state
+ * @param desiredState (boolean)
+ * @returns sets `isloading` according to `desiredState`
  */
 export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
