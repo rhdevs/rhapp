@@ -278,7 +278,7 @@ export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, succes
 }
 
 /**
- * Sets is loading
+ * 
  * @param desiredState (boolean)
  * @returns sets `isloading` according to `desiredState`
  */
