@@ -40,7 +40,7 @@ interface Props {
  *
  * @example
  * Retrieves gym status from backend. If the gym is closed, display "Gym is Closed" in red
- * <GymStatus isOpen={True} />
+ * <GymStatus isOpen />
  *
  */
 
