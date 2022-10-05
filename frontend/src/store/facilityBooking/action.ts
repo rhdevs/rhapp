@@ -450,7 +450,7 @@ export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<A
 }
 
 /**
- * Takes in `endTime` and updates `selectedEndTime` with its value.
+ * 
  * @param endTime (number)
  * @returns updates `selectedEndTime`
  *
