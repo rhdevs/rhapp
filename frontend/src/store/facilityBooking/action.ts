@@ -436,7 +436,7 @@ export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispa
 }
 
 /**
- * Takes in `startTime` and updates `selectedStartTime` with its value.
+ * 
  * @param startTime (number)
  * @returns updates `selectedStartTime`
  *
