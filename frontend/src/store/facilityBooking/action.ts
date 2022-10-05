@@ -422,7 +422,7 @@ export const setBookingStatus = (bookingStatus: BookingStatus, message?: string)
 }
 
 /**
- * Takes in `timeStamp` and updates `selectedBlockTimestamp` with its value.
+ * 
  * @param timeStamp (number)
  * @returns updates `selectedBlockTimestamp`
  *
