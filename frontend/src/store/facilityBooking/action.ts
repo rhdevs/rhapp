@@ -464,7 +464,7 @@ export const setSelectedEndTime = (endTime: number) => (dispatch: Dispatch<Actio
 }
 
 /**
- * Takes in `startTime` and updates `bookingStartTime` with its value.
+ * 
  * @param startTime (number)
  * @returns updates `bookingStartTime`
  *
