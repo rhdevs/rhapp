@@ -479,7 +479,7 @@ export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<Ac
 }
 
 /**
- * Takes in `endTime` and updates `bookingEndTime` with its value.
+ * 
  * @param endTime (number)
  * @returns updates `bookingEndTime`
  *
