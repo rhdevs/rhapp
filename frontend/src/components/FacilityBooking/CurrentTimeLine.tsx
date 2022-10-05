@@ -42,7 +42,7 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
  * is updated every minute. Otherwise, it returns nothing.
  * @example ```
  *  // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time. \
- * //  In <BookingSection /> :
+ *  //  In `BookingSection` :
  *   <MainContainer>
  *      <CurrentTimeLine />
  *      <HourBlocks />
