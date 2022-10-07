@@ -101,7 +101,7 @@ export const toggleGym = (userId: string) => async (dispatch: Dispatch<ActionTyp
  *
  * Creates a GET request to obtain the profile picture of the user.
  *
- * @returns raises error if error
+ * @returns updates `type`, `pic`
  *
  */
 export const getProfilePic = () => async (dispatch: Dispatch<ActionTypes>) => {
