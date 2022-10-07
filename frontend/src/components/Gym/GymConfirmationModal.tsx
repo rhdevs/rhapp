@@ -25,7 +25,7 @@ import { useDispatch } from 'react-redux'
  * @param setModalOpen (type `(value: ((prevState: boolean) => boolean) | boolean) => void`)
  * @param modalState (type `gymStates | undefined`)
  *
- * @returns New modal state
+ * @returns Popup window to be displayed when user clicks one of the 'Key With Me', 'Return Key' or 'Open Gym' buttons.
  */
 function GymConfirmationModal(props: {
   gymIsOpen: boolean | null
