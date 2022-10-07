@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { ConfirmationModal } from '../ConfirmationModal'
 import { moveKey, returnKey, toggleGym } from '../../store/gym/action'
