@@ -22,8 +22,8 @@ import { useDispatch } from 'react-redux'
  * @param name (type `string`)
  * @param telegramHandle (type `string`)
  * @param isModalOpen (type `boolean`)
- * @param setModalOpen
- * @param modalState
+ * @param setModalOpen (type `(value: ((prevState: boolean) => boolean) | boolean) => void`)
+ * @param modalState (type `gymStates | undefined`)
  *
  * @returns New modal state
  */
