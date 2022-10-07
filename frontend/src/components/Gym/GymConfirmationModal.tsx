@@ -1,11 +1,3 @@
-/**
- * # GymConfirmationModal
- *
- * ## Page Description
- * Popup windows to be displayed when user clicks one of the 'Key With Me',
- * 'Return Key' or 'Open Gym' buttons.
- *
- */
 
 import React from 'react'
 import { ConfirmationModal } from '../ConfirmationModal'
