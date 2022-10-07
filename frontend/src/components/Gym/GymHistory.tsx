@@ -1,11 +1,3 @@
-/**
- * # GymHistory
- *
- * ## Page Description
- * This page is accessed after the user clicks on the `History` buttom on the `Gym` Page.
- * The user would be able to view the past gym bookings and the corresponding timestamps.
- *
- */
 
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
