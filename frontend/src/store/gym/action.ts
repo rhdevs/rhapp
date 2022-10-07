@@ -79,7 +79,7 @@ export const returnKey = (userId: string) => async (dispatch: Dispatch<ActionTyp
  * Takes in the user's ID. Creates a POST request to update the usage status of the gym.
  *
  * @param userId (type `string`)
- * @returns raises error if error
+ * @returns updates `type`
  *
  */
 export const toggleGym = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
