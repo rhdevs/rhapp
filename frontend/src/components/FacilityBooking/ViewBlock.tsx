@@ -5,6 +5,29 @@ import { scrollToView } from './CurrentTimeLine'
 
 import { StyledViewBooking } from './BlockStyles.styled'
 
+/**
+ *
+ * @param entry (type `number`)
+ * @param scrollTo (type `boolean`, optional)
+ * @param openViewBookingModal: (type `function`)
+ * @param setViewBookingEntryId (type `function`)
+ *
+ * @returns An event block that contains the component displaying the:
+ *          1: Facility
+ *          2: CCA that made the booking
+ *          3: Event name
+ *          4: Date/Time of booking
+ *
+ * @example
+ * ```
+ * This component is displayed after the user clicks on a <BookingCard /> component and it contains a <StyledViewBooking /> with all the details of the booking.
+ * ```
+ *
+ * @remarks
+ * <any remarks on this component type in here>
+ *
+ */
+
 type Props = {
   entry: TimeBlock
   scrollTo?: boolean

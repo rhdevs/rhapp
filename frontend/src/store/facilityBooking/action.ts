@@ -114,7 +114,16 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
       dispatch(setIsLoading(false))
     })
 }
-
+/**
+ *
+ * Takes in the user's ID and fetches an array of Booking objects that belongs to the user
+ *
+ * @params userID (string)
+ * @returns updates `MyBookings`, `isLoading`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
@@ -128,6 +137,16 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
   dispatch(setIsLoading(false))
 }
 
+/**
+ *
+ * Takes in a number and closes the booking if it is -1
+ *
+ * @params isDeleteMyBooking (number, optional)
+ * @returns updates `isDeleteMyBooking`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 // -1 stands for closed, any others means open for that specific ID.
 export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
   if (isDeleteMyBooking !== undefined) {
@@ -135,6 +154,16 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: D
   }
 }
 
+/**
+ *
+ * Takes in a booking ID and closes it (by passing arg of -1 to setIsDeleteMyBooking)
+ *
+ * @params bookingID (number, optional)
+ * @returns updates `MyBookings`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
   if (bookingId !== undefined) {
@@ -149,6 +178,16 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
   }
 }
 
+/**
+ *
+ * Takes in an oldBooking and dispatches EDIT_MY_BOOKING and SET_BOOKING_FACILITY actions
+ *
+ * @params oldBooking (Booking)
+ * @returns updates `newBooking`, `newBookingFacilityName`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
@@ -160,6 +199,16 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
   })
 }
 
+/**
+ *
+ * Takes in a new tab and changes to that tab.
+ *
+ * @params newTab (string)
+ * @returns updates `newTab`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
 }
@@ -194,6 +243,14 @@ export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
+/**
+ *
+ * @params None
+ * @returns updates `createBookingError`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
@@ -211,6 +268,16 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
   dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
 }
 
+/**
+ *
+ * Takes in a new date object and updates both start and end dates to that date.
+ *
+ * @params newDate (date)
+ * @returns updates `ViewStartDate`, `ViewEndDate`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDate
   const endDate = newDate
