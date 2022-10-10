@@ -218,6 +218,16 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
+/**
+ *
+ * Takes in facility ID and sends a GET request to get the facility's name
+ *
+ * @param id (number)
+ * @returns updates `selectedFacilityName`
+ * @remarks
+ * // TODO Do we really need to get the names from BE everytime or we can just store the names locally?
+ */
+
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
     method: 'GET',
@@ -229,17 +239,27 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
-/*success && failure -> Success Message shown
-success && !failure -> When in createbooking, redirect to viewbooking with success message
-!success && failure -> Failure Message shown
-!success && !failure -> Normal state no error shown*/
-export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, successBoolean: boolean) => (
+/**
+ *
+ * @param isFailure (boolean)
+ * @param isSuccess (boolean)
+ * @returns updates `createFailure`, `createSuccess`
+ *
+ * @remarks
+ * // TODO THIS FUNCTION, AND ITS VALUES, ARE NOT USED!
+ * `success && failure` -> Success Message shown \
+ * `success && !failure` -> When in createbooking, redirect to viewbooking with success message \
+ * `!success && failure` -> Failure Message shown \
+ * `!success && !failure` -> Normal state no error
+ */
+
+export const resetCreateBookingSuccessFailure = (isFailure: boolean, isSuccess: boolean) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING,
-    createFailure: failureBoolean,
-    createSuccess: successBoolean,
+    createFailure: isFailure,
+    createSuccess: isSuccess,
   })
 }
 
@@ -273,12 +293,23 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
 
+/**
+ *
+ * @param booking (Booking)
+ * @returns updates `booking`
+ */
+
 export const setBooking = (booking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING,
     booking: booking,
   })
 }
+
+/**
+ *
+ * @returns sets `booking` to `null`
+ */
 
 export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -366,6 +397,13 @@ export const handleCreateNewBooking = (
     dispatch(setBookingEndTime(0))
   }
 }
+
+/**
+ *
+ * @param bookingStatus (BookingStatus)
+ * @param message (string: optional)
+ * @returns sets `bookingStatus`, `message`
+ */
 
 export const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (
   dispatch: Dispatch<ActionTypes>,
