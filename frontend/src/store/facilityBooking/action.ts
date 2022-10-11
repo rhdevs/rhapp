@@ -422,7 +422,7 @@ export const setBookingStatus = (bookingStatus: BookingStatus, message?: string)
 }
 
 /**
- * 
+ *
  * @param timeStamp (number)
  * @returns updates `selectedBlockTimestamp`
  *
@@ -436,7 +436,7 @@ export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispa
 }
 
 /**
- * 
+ *
  * @param startTime (number)
  * @returns updates `selectedStartTime`
  *
@@ -450,7 +450,7 @@ export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<A
 }
 
 /**
- * 
+ *
  * @param endTime (number)
  * @returns updates `selectedEndTime`
  *
@@ -464,7 +464,7 @@ export const setSelectedEndTime = (endTime: number) => (dispatch: Dispatch<Actio
 }
 
 /**
- * 
+ *
  * @param startTime (number)
  * @returns updates `bookingStartTime`
  *
@@ -479,7 +479,7 @@ export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<Ac
 }
 
 /**
- * 
+ *
  * @param endTime (number)
  * @returns updates `bookingEndTime`
  *

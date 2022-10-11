@@ -32,7 +32,6 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
   }
 }
 
-
 type Props = {
   width?: string
   top?: string
