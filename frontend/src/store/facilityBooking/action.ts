@@ -288,6 +288,13 @@ export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
+/**
+ * Takes in `bookingId` and updates `selectedBooking` for the `EditBooking` and `ViewBooking` pages.
+ * @param bookingId (number)
+ * @returns updates `selectedBooking`, `isLoading`
+ *
+ * @remarks <insert remarks here>
+ */
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
@@ -432,6 +439,13 @@ export const setBookingStatus = (bookingStatus: BookingStatus, message?: string)
   })
 }
 
+/**
+ *
+ * @param timeStamp (number)
+ * @returns updates `selectedBlockTimestamp`
+ *
+ * @remarks <insert remarks here>
+ */
 export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP,
@@ -439,6 +453,13 @@ export const setSelectedBlockTimestamp = (timeStamp: number) => (dispatch: Dispa
   })
 }
 
+/**
+ *
+ * @param startTime (number)
+ * @returns updates `selectedStartTime`
+ *
+ * @remarks <insert remarks here>
+ */
 export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_START_TIME,
@@ -446,6 +467,13 @@ export const setSelectedStartTime = (startTime: number) => (dispatch: Dispatch<A
   })
 }
 
+/**
+ *
+ * @param endTime (number)
+ * @returns updates `selectedEndTime`
+ *
+ * @remarks <insert remarks here>
+ */
 export const setSelectedEndTime = (endTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_END_TIME,
@@ -453,12 +481,28 @@ export const setSelectedEndTime = (endTime: number) => (dispatch: Dispatch<Actio
   })
 }
 
+/**
+ *
+ * @param startTime (number)
+ * @returns updates `bookingStartTime`
+ *
+ * @remarks <insert remarks here>
+ */
+
 export const setBookingStartTime = (startTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_START_TIME,
     bookingStartTime: startTime,
   })
 }
+
+/**
+ *
+ * @param endTime (number)
+ * @returns updates `bookingEndTime`
+ *
+ * @remarks <insert remarks here>
+ */
 
 export const setBookingEndTime = (endTime: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
