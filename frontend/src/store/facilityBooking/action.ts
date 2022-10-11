@@ -180,7 +180,6 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
 
 /**
  *
- * Takes in an oldBooking and dispatches EDIT_MY_BOOKING and SET_BOOKING_FACILITY actions
  *
  * @params oldBooking (Booking)
  * @returns updates `newBooking`, `newBookingFacilityName`
