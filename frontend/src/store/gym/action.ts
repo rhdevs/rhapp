@@ -7,6 +7,12 @@ import useSnackbar from '../../hooks/useSnackbar'
 const [error] = useSnackbar('error')
 const DEFAULT_VALUE = { name: '5-122', telegram: 'smchead' }
 
+/**
+ *
+ * Sends a GET request to the backend to get the gym data.
+ *
+ * @returns the current status of the gym
+ */
 export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_GYM_STATUS, DOMAINS.GYM)
     .then((res) => {
@@ -23,6 +29,12 @@ export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
     })
 }
 
+/**
+ *
+ * Sends a GET request to the backend to get the gym history.
+ *
+ * @returns the history of the gym
+ */
 export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_GYM_HISTORY, DOMAINS.GYM)
     .then((res) => {
