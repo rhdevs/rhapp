@@ -65,7 +65,7 @@ function GymStatusTab() {
   /**
    *
    * @param
-   * @returns Map<string, ButtonStates>, containing the status of the gym and key
+   * @returns `Map<string, ButtonStates>`, containing the status of the gym and key
    *
    */
 
