@@ -49,7 +49,6 @@ import { get24Hourtime } from '../../../common/get24HourTime'
  * ```
  *
  * @remarks
- * <any remarks on this component type in here>
  * Might make more sense to allow editing of the start/end date/time only and disable other fields.
  *
  */
