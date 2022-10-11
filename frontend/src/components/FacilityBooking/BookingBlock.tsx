@@ -12,6 +12,27 @@ type Props = {
   scrollTo?: boolean
 }
 
+/**
+ *
+ * // props
+ * @param entry (TimeBlock)
+ * @param onClick (React.MouseEventHandler<HTMLDivElement>)
+ * @param scrollTo (boolean) [optional]
+ *
+ * @returns A bookable block of time
+ *
+ * @example
+ * ```
+ * // Pass in a `TimeBlock` object to entry and a function to onClick to set block to booked given entry's timestamp when block is clicked.
+ * // Provide a condition to scrollTo to control where the screen scrolls to.
+ * <BookingBlock
+ *   onClick={() => setSelectedBlock(entry.timestamp)}
+ *   entry={entry}
+ *   scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
+ * />
+ * ```
+ * @remarks
+ */
 const BookingBlock = (props: Props) => {
   const ref = useRef<HTMLDivElement>(null)
 
