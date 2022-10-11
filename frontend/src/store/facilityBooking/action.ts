@@ -287,7 +287,6 @@ export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<Actio
 }
 
 /**
- * ```
  * @param desiredState (boolean)
  * @returns sets `blockOutIsOpen` state according to `desiredState`
  */
