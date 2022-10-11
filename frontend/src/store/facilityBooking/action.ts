@@ -242,7 +242,6 @@ export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
 
 /**
  *
- * @params None
  * @returns updates `createBookingError`
  *
  * @remarks
