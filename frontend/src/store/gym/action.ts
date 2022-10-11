@@ -30,6 +30,7 @@ export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
 }
 
 /**
+ * 
  * Sends a GET request to the backend to get the gym history.
  *
  * @returns the history of the gym
