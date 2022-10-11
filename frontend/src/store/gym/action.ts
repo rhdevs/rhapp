@@ -44,9 +44,9 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
  *
  * Takes in the user's ID, name and telegram. Creates a POST request to update database on the current user who is holding onto the key
  *
- * @param userID
- * @param name
- * @param telegram
+ * @param userID (string)
+ * @param name (string)
+ * @param telegram (string)
  * @returns raises error if error
  *
  */
