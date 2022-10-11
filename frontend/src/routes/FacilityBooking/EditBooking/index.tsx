@@ -40,11 +40,11 @@ import { get24Hourtime } from '../../../common/get24HourTime'
  *
  * @example
  * ```
- * The user can edit the following through this page:
- *  1: Facility
- *  2: Name of Event
- *  3: Start/End Date/Time
- *  4: CCA
+ * The user can edit the following through this page: \
+ *  1: Facility \
+ *  2: Name of Event \
+ *  3: Start/End Date/Time \
+ *  4: CCA \
  *  5: Description
  * ```
  *
