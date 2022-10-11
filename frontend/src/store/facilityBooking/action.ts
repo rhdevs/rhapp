@@ -139,7 +139,7 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
 
 /**
  *
- * Takes in a number and closes the booking if it is -1
+ * Takes in `isDeleteMyBooking` and closes the booking if it equals -1
  *
  * @params isDeleteMyBooking (number, optional)
  * @returns updates `isDeleteMyBooking`
