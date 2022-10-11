@@ -29,7 +29,7 @@ const MainContainer = styled.div`
 `
 /**
  * # ViewFacility
- * Path: `facility/view/:facilityId
+ * Path: `facility/view/:facilityId`
  *
  * ## Page Description
  * This page is accessed after the user clicks on a facility from the Facilities page \
