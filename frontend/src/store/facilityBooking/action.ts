@@ -324,7 +324,25 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-// TODO: What is the purpose of endDate??
+/**
+ *
+ * Given booking details, create booking in database and update bookingStatus in store.
+ * Throw errors if creation of booking fails.
+ *
+ * @param facilityID (number | undefined)
+ * @param eventName (string | undefined)
+ * @param startTime (number | null)
+ * @param endTime (number | null)
+ * @param endDate (number) [optional]
+ * @param ccaID (number) [optional]
+ * @param description (string) [optional]
+ * @param forceBook (boolean) [optional]
+ *
+ * @returns upon successful booking, reset variables in store used for booking.
+ *
+ * @remarks
+ * TODO: What is the purpose of endDate??
+ */
 export const handleCreateNewBooking = (
   facilityID: number | undefined,
   eventName: string | undefined,
@@ -448,6 +466,14 @@ export const setBookingEndTime = (endTime: number) => (dispatch: Dispatch<Action
     bookingEndTime: endTime,
   })
 }
+
+/**
+ *
+ * @param endDate (number)
+ * @returns updates `bookingEndDate`
+ *
+ * @remarks
+ */
 export const setBookingEndDate = (endDate: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_END_DATE,
@@ -455,6 +481,13 @@ export const setBookingEndDate = (endDate: number) => (dispatch: Dispatch<Action
   })
 }
 
+/**
+ *
+ * @param conflictBookings (Booking[])
+ * @returns updates `conflictBookings`
+ *
+ * @remarks
+ */
 export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS,
@@ -462,6 +495,13 @@ export const setConflictBookings = (conflictBookings: Booking[]) => (dispatch: D
   })
 }
 
+/**
+ *
+ * @param newTimeBlocks (TimeBlock[])
+ * @returns updates `timeBlocks`
+ *
+ * @remarks
+ */
 export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_TIME_BLOCKS,
@@ -469,6 +509,13 @@ export const setTimeBlocks = (newTimeBlocks: TimeBlock[]) => (dispatch: Dispatch
   })
 }
 
+/**
+ *
+ * @param selectedDayBookings (Booking[])
+ * @returns updates `selectedDayBookings`
+ *
+ * @remarks
+ */
 export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,

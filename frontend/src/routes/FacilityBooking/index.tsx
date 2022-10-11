@@ -142,6 +142,18 @@ const StyledBodyDiv = styled.div`
   overflow: scroll;
 `
 
+/**
+ * # FacilityBooking Page
+ * Path: `/facility`
+ *
+ * ## Page Description
+ * FacilityBooking Page is accessable through the `Facilities` button on main page as well as
+ * `Facilities` button in the botton nav bar. On FacilitiesBooking page, users will be shown
+ *  all the facilities (venue) that can be booked for events. Upon selection of facility, user will
+ * be directed to the selected facility page to select the date & timing for booking.
+ *
+ * @remarks
+ */
 export default function FacilityBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
