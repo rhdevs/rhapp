@@ -61,8 +61,7 @@ const TitleText = styled.h2`
  * Once the selection is done, the user would be automatically redirected to the CreateBooking page
  *
  * @remarks
- * BUG: I am able to select greyed out time blocks
- *
+ * // BUG: I am able to select greyed out time blocks
  *
  */
 
