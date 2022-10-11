@@ -60,10 +60,12 @@ interface Props {
  * @returns user's profile picture, name and link to his/her telegram
  *
  * @example
- * user called Shaun and has no profile picture
- * component will display the default profile picture, his name Shaun as well as his
- * telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
+ * ```
+ * // user called Shaun and has no profile picture
+ * // component will display the default profile picture, his name Shaun as well as his
+ * // telegram handle. Clicking on the telegram handle redirects the user to key holder's telegram
  * <GymKeyWith name="thomaslim" handle="@thomas123" avatar="" />
+ * ```
  *
  */
 
