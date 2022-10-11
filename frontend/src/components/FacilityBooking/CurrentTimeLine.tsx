@@ -32,6 +32,15 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
   }
 }
 
+
+type Props = {
+  width?: string
+  top?: string
+  left?: string
+  right?: string
+  bottom?: string
+}
+
 /**
  * @param width (type `string`)
  * @param top (type `string`)
@@ -51,14 +60,6 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
  * ```
  * @remarks <any remarks on this component type in here>
  */
-type Props = {
-  width?: string
-  top?: string
-  left?: string
-  right?: string
-  bottom?: string
-}
-
 const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
