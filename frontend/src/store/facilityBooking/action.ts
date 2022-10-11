@@ -145,9 +145,10 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
  * @returns updates `isDeleteMyBooking`
  *
  * @remarks
- * <any remarks on this function put here>
+ * -1 stands for closed, any others means open for that specific ID.
+ * // TODO shouldn't `isDeleteMyBooking` be a boolean value ??
  */
-// -1 stands for closed, any others means open for that specific ID.
+
 export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
   if (isDeleteMyBooking !== undefined) {
     dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
