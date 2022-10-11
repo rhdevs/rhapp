@@ -157,8 +157,8 @@ function GymStatusTab() {
   /**
    *
    * @param
-   * @returns a button to be displayed on the screen, with onClick function handleModalState() \
-   * handleModalState() sets the value of isModalOpen to true, and modalState to the current status of the gym
+   * @returns a button to be displayed on the screen, with onClick function `handleModalState()` \
+   * `handleModalState()` sets the value of isModalOpen to true, and modalState to the current status of the gym
    *
    */
 
