@@ -12,10 +12,10 @@ import { StyledViewBooking } from './BlockStyles.styled'
  * @param openViewBookingModal: (type `function`)
  * @param setViewBookingEntryId (type `function`)
  *
- * @returns An event block that contains the component displaying the:
- *          1: Facility
- *          2: CCA that made the booking
- *          3: Event name
+ * @returns An event block that contains the component displaying the: \
+ *          1: Facility \
+ *          2: CCA that made the booking \
+ *          3: Event name \
  *          4: Date/Time of booking
  *
  * @example
