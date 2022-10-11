@@ -197,7 +197,6 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
     newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
   })
 }
-
 /**
  *
  * @params newTab (string)
@@ -206,6 +205,7 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
  * @remarks
  * <any remarks on this function put here>
  */
+
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
 }

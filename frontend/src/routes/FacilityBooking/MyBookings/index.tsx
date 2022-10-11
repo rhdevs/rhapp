@@ -39,23 +39,6 @@ import Stage from '../../../assets/facilitiesLogos/Stage.svg'
 import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
 import DummyAvatar from '../../../assets/dummyAvatar.svg'
 
-/**
- *
- * @param FacilityId (type `number`)
- *
- * @returns The page that contains all of the user's bookings. The user can click on each booking to view it in detail,
- * or use the right action buttons to edit or delete the booking respectively
- *
- * @example
- * ```
- * If the user has not made any bookings, the page displays a simple message to the user: "You have not made any bookings."
- * Otherwise, the page displays each booking within a <BookingCard/> that displays the facility, CCA, name of event and time period of the booking
- * on the right side of each card, there are edit or delete action buttons for the user to modify each booking.
- * ```
- *
- *
- */
-
 const MainContainer = styled.div`
   width: 100%;
   height: 95vh;
@@ -80,7 +63,7 @@ const BookingCard = styled.div`
 const BookingAvatar = styled.img`
   padding: 10px;
   width: 20%;
-  max-height 70px;
+  max-height: 70px;
 `
 
 const BookingHeader = styled.div`
@@ -139,7 +122,15 @@ const NoBookingsFound = styled.div`
   align-self: center;
   margin-top: 40px;
 `
-
+/**
+ * @params facilityId (number)
+ *
+ * @returns The avatar/icon for according to the `facilityId`
+ * 
+ * @remarks
+ * <any remarks>
+ *
+ */
 function FacilityLogo(props: { facilityId: number }) {
   switch (props.facilityId) {
     case 1:
@@ -177,6 +168,19 @@ function FacilityLogo(props: { facilityId: number }) {
   }
 }
 
+/**
+ * # ViewMyBookings
+ *
+ * Path: `/facility/booking/user/:userId`
+ *
+ * ##Page Description
+ * The page that contains all of the user's bookings. The user can click on each booking to view it in detail,
+ * or use the right action buttons to edit or delete the booking respectively
+ *
+ * @remarks
+ * <any remarks>
+ *
+ */
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
   const history = useHistory()
