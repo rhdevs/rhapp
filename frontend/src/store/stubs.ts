@@ -205,7 +205,7 @@ export const searchResultsStub: SearchResult[] = [
 export const userProfileStub: User = {
   _id: '0',
   userID: localStorage.userID,
-  profilePictureUrl:
+  profilePicSignedUrl:
     'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
   displayName: 'Zhou MaoMao',
   telegramHandle: 'zhoumm',
@@ -325,7 +325,7 @@ export const orderList: Order[] = [
     user: {
       _id: '12',
       userID: 'j324ioasdia90da',
-      profilePictureUrl:
+      profilePicSignedUrl:
         'https://avatars0.githubusercontent.com/u/12388321?s=400&u=5cb37c17aecf292b713adbf41ceddfea943a55b4&v=4',
       displayName: 'Jane Doe',
       telegramHandle: 'jane_doe',

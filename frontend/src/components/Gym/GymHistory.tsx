@@ -54,7 +54,12 @@ const Status = styled.div<{ status: string }>`
   margin-right: 4%;
   margin-bottom: 0.25em;
 `
-
+/**
+ * Displays the booking history of the gym.
+ *
+ * @returns Gym booking history, displaying the most recent bookings first. \
+ *          Shows the date, time and user of each booking.
+ */
 const GymHistory = () => {
   const dispatch = useDispatch()
   const { gymHistory } = useSelector((state: RootState) => state.gym)
