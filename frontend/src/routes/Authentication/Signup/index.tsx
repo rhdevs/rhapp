@@ -54,6 +54,19 @@ const AlertGroup = styled.div`
   margin: 23px;
 `
 
+/**
+ * A list of custom usernames for the Residential Fellows and Admins
+ */
+const ADMIN_USERNAMES = [
+  'RFHTBS', // Evan
+  'EPHCSLE', // Mr Ezra
+  'BIEYHY', // Prof Yu
+  'CEECSC', // Prof Darren
+  'EPHFM', // Prof Mornin
+  'GROLC', // Prof Linda
+  'ISSNTT', // Prof Tin
+]
+
 export default function Signup() {
   const history = useHistory()
 
@@ -162,7 +175,7 @@ export default function Signup() {
           setIsLoading(false)
         })
     } catch (err) {
-      setError({ message: err })
+      setError({ message: err as any })
       setIsLoading(false)
     }
   }
@@ -171,7 +184,7 @@ export default function Signup() {
     return (
       userId.match(/^A\d{7}[A-Z]$/) || // Check if User ID is Axxxxxx
       userId.match(/^E\d{7}$/) || //  Else Check for Exxxx ID
-      userId === 'RFHTBS' //  Else check if it's Evan
+      ADMIN_USERNAMES.includes(userId) //  Else check if it's any of the RFs or Admins
     )
   }
 

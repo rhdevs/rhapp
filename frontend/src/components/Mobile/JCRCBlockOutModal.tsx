@@ -203,7 +203,7 @@ function JCRCBlockOutModal({
       endTime: parseInt((endDateTime.getTime() / 1000).toFixed(0)),
       facilities: selectedFacilities,
     }
-    if (selectedFacilities === []) {
+    if (selectedFacilities.length === 0) {
       setBlockoutFailure(true)
       setBlockoutSuccess(false)
       setAlertMsg('You have not chosen any facilities.')
