@@ -157,7 +157,7 @@ export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: D
 
 /**
  *
- * Takes in a booking ID and closes it (by passing arg of -1 to setIsDeleteMyBooking)
+ * Takes in a booking ID, and closes it by passing -1 to `setIsDeleteMyBooking`
  *
  * @params bookingID (number, optional)
  * @returns updates `MyBookings`
