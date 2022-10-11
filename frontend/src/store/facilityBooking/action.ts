@@ -269,7 +269,7 @@ export const editBookingDescription = (newBookingDescription: string) => (dispat
  *
  * Takes in a new date object and updates both start and end dates to that date.
  *
- * @params newDate (date)
+ * @params newDate (Date)
  * @returns updates `ViewStartDate`, `ViewEndDate`
  *
  * @remarks
