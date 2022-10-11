@@ -200,8 +200,6 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
 
 /**
  *
- * Takes in a new tab and changes to that tab.
- *
  * @params newTab (string)
  * @returns updates `newTab`
  *
