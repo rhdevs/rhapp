@@ -87,7 +87,7 @@ export default function ChangePassword() {
     <InvalidToken />
   ) : (
     <>
-      <TopNavBar title={'Reset Password'} leftIcon={true} />
+      <TopNavBar title="Reset Password" leftIcon />
       <MainContainer>
         {error.message !== '' && (
           <AlertGroup>
@@ -96,7 +96,7 @@ export default function ChangePassword() {
         )}
         {success && (
           <AlertGroup>
-            <Alert message={'Success! Your password has been changed.'} type="success" showIcon />
+            <Alert message="Success! Your password has been changed." type="success" showIcon />
           </AlertGroup>
         )}
         <div>

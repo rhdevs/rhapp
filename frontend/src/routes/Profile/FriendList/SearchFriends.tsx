@@ -75,7 +75,7 @@ export default function FriendList() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Friends'} />
+        <TopNavBar title="Friends" />
         {friendList.map((friend) => {
           return (
             <FriendCard key={friend.friendId}>

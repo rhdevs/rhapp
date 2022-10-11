@@ -10,7 +10,7 @@ const DEFAULT_VALUE = { name: '5-122', telegram: 'smchead' }
 export const getGymStatus = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_GYM_STATUS, DOMAINS.GYM)
     .then((res) => {
-      if (res.status == 'failed') {
+      if (res.status === 'failed') {
         throw res.err
       }
       dispatch({

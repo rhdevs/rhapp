@@ -40,7 +40,7 @@ export default class ChangePassword extends React.Component {
   render() {
     return (
       <>
-        <TopNavBar title={'Change Password'} leftIcon={true} />
+        <TopNavBar title="Change Password" leftIcon />
         <MainContainer>
           <div>
             <Space direction="vertical">

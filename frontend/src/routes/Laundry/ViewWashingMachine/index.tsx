@@ -197,7 +197,7 @@ export default function ViewWashingMachine() {
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={'Collect Laundry'}
+            defaultButtonDescription="Collect Laundry"
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
@@ -208,7 +208,7 @@ export default function ViewWashingMachine() {
             }}
           />
         ) : (
-          <div></div>
+          <div />
         )
         break
       case WMStatus.RESERVED:
@@ -219,7 +219,7 @@ export default function ViewWashingMachine() {
           <Button
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={'Cancel Reservation'}
+            defaultButtonDescription="Cancel Reservation"
             defaultButtonColor="#002642DD"
             updatedButtonColor="#002642DD"
             updatedTextColor="white"
@@ -230,7 +230,7 @@ export default function ViewWashingMachine() {
             }}
           />
         ) : (
-          <div></div>
+          <div />
         )
         break
     }
@@ -299,7 +299,7 @@ export default function ViewWashingMachine() {
               style={{ marginLeft: '23px' }}
               hasSuccessMessage={false}
               stopPropagation={false}
-              defaultButtonDescription={'Cancel'}
+              defaultButtonDescription="Cancel"
               defaultButtonColor="#FAFAF4"
               updatedButtonColor="#FAFAF4"
               updatedTextColor="#000000"
@@ -357,7 +357,7 @@ export default function ViewWashingMachine() {
               style={{ marginLeft: '23px' }}
               hasSuccessMessage={false}
               stopPropagation={false}
-              defaultButtonDescription={'Cancel'}
+              defaultButtonDescription="Cancel"
               defaultButtonColor="#FAFAF4"
               updatedButtonColor="#FAFAF4"
               updatedTextColor="#000000"
@@ -375,7 +375,7 @@ export default function ViewWashingMachine() {
             style={{ marginLeft: '23px' }}
             hasSuccessMessage={false}
             stopPropagation={false}
-            defaultButtonDescription={'Reserve'}
+            defaultButtonDescription="Reserve"
             defaultButtonColor="#FAFAF4"
             updatedButtonColor="#FAFAF4"
             updatedTextColor="#000000"

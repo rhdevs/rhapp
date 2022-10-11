@@ -47,7 +47,7 @@ interface Props {
  */
 
 function GymStatus(props: Props) {
-  if (props.isOpen == null) {
+  if (props.isOpen === null) {
     return <></>
   }
   return (

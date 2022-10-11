@@ -56,7 +56,7 @@ export const MaxPriceFixer = (props: Props) => {
         onClick={subFromPriceLimit}
       />
       <ValueContainer>${priceLimit}</ValueContainer>
-      <PlusButton color="DARK_BLUE" isAdding={true} onClick={addToPriceLimit} />
+      <PlusButton color="DARK_BLUE" isAdding onClick={addToPriceLimit} />
     </CounterContainer>
   )
 }

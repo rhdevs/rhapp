@@ -140,7 +140,7 @@ export default function CreateBooking() {
   }, [dispatch])
 
   useEffect(() => {
-    if (createSuccess === true && createFailure === false) {
+    if (createSuccess && !createFailure) {
       history.replace(PATHS.FACILITY_BOOKING_MAIN)
       if (newBookingFacilityId) {
         history.push('/facility/view/' + newBookingFacilityId)

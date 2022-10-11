@@ -72,7 +72,7 @@ export default function FriendList() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Friends'} />
+        <TopNavBar title="Friends" />
         {friends.length !== 0 ? (
           friends.map((friend) => {
             return (

@@ -207,7 +207,7 @@ export default function Profile() {
           title={<span style={{ fontSize: '20px' }}>CCAs</span>}
           bordered={false}
           style={{ margin: '23px', borderRadius: '20px' }}
-          size={'small'}
+          size="small"
         >
           {ccas &&
             ccas?.map((cca) => (
@@ -239,7 +239,7 @@ export default function Profile() {
           title={<span style={{ fontSize: '20px' }}>Modules</span>}
           bordered={false}
           style={{ margin: '23px', borderRadius: '20px' }}
-          size={'small'}
+          size="small"
         >
           {user.modules &&
             user.modules?.map((module) => (
@@ -281,9 +281,9 @@ export default function Profile() {
       <MainContainer>
         <PullToRefresh onRefresh={onRefresh}>
           {localStorage.getItem('userID') === user.userID ? (
-            <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+            <TopNavBar title="Profile" rightComponent={logoutButton} leftIcon />
           ) : (
-            <TopNavBar title={'Profile'} leftIcon />
+            <TopNavBar title="Profile" leftIcon />
           )}
           {isLoading && <LoadingSpin />}
           {!isLoading && (
