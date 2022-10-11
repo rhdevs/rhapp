@@ -9,6 +9,9 @@ node_modules/
 build/
 /build
 
+# docs
+docs/
+
 # caches
 .eslintcache
 .eslint-loader-cache-webpack
@@ -47,3 +50,6 @@ yarn-error.log/
 */.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+# Docs
+frontend/docs

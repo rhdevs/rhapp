@@ -40,6 +40,17 @@ export const getGymHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
     })
 }
 
+/**
+ *
+ * Takes in the user's ID, name and telegram. Creates a POST request to update database on the current user who is holding onto the key
+ *
+ * @param userID (string)
+ * @param name (string)
+ * @param telegram (string)
+ * @returns raises error if error
+ *
+ */
+
 export const moveKey = (userID: string, name: string, telegram: string) => async (dispatch: Dispatch<ActionTypes>) => {
   await post(ENDPOINTS.MOVE_KEY, DOMAINS.GYM, {}, {}, `/${userID}?token=${localStorage.getItem('token')}`)
     .then((res) => {
@@ -56,6 +67,15 @@ export const moveKey = (userID: string, name: string, telegram: string) => async
       error(err)
     })
 }
+
+/**
+ *
+ * Takes in the user's ID. Creates a POST request to update database that the key has been returned
+ *
+ * @param userId
+ * @returns raises error if error
+ *
+ */
 
 export const returnKey = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   await post(ENDPOINTS.RETURN_KEY, DOMAINS.GYM, {}, {}, `/${userId}?token=${localStorage.getItem('token')}`)

@@ -261,7 +261,7 @@ const EditSupperGroup = () => {
         <Wrapper topMargin>
           <FormHeader headerName="Split Delivery Fees" isCompulsory />
           <StyledRadioGroup
-            {...register('splitDeliveryFee', { required: true })}
+            {...(register('splitDeliveryFee', { required: true }) as any)}
             onChange={(e) => {
               clearErrors('splitDeliveryFee')
               setValue('splitDeliveryFee', e.target.value)
@@ -284,7 +284,10 @@ const EditSupperGroup = () => {
     return (
       <PICSection>
         <FormHeader topMargin headerName="Payment Method" isCompulsory />
-        <PaymentMethodBubbles {...register('paymentMethod', { required: true })} paymentMethods={paymentMethods} />
+        <PaymentMethodBubbles
+          {...(register('paymentMethod', { required: true }) as any)}
+          paymentMethods={paymentMethods}
+        />
         {paymentMethods
           .filter((pm) => pm !== PaymentMethod.CASH)
           .map((pm) => {

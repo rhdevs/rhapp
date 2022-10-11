@@ -162,7 +162,7 @@ export default function Signup() {
           setIsLoading(false)
         })
     } catch (err) {
-      setError({ message: err })
+      setError({ message: err as any })
       setIsLoading(false)
     }
   }

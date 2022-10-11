@@ -33,6 +33,19 @@ interface Props {
   isOpen: boolean | null
 }
 
+/**
+ *
+ * @param isOpen (boolean) status of the gym
+ * @returns closed/open status of the gym
+ *
+ * @example
+ * ```
+ * // Retrieves gym status from backend. If the gym is closed, display "Gym is Closed" in red
+ * <GymStatus isOpen />
+ * ```
+ *
+ */
+
 function GymStatus(props: Props) {
   if (props.isOpen == null) {
     return <></>

@@ -289,10 +289,10 @@ const DeliveryDetails = () => {
                           textarea
                           value={value}
                           onChange={onChange}
-                          {...register('cancelReason', {
+                          {...(register('cancelReason', {
                             ...(selectedSupperGroupStatus === SupperGroupStatus.CANCELLED && { required: true }),
                             ...(watch('cancelReason') && { validate: (input) => input.trim().length !== 0 }),
-                          })}
+                          }) as any)}
                           haserror={errors.cancelReason ? true : false}
                         />
                       )}
