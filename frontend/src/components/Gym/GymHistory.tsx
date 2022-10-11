@@ -57,7 +57,7 @@ const Status = styled.div<{ status: string }>`
 /**
  * Displays the booking history of the gym.
  *
- * @returns Gym booking history, displaying the most recent bookings first.
+ * @returns Gym booking history, displaying the most recent bookings first. \
  *          Shows the date, time and user of each booking.
  */
 const GymHistory = () => {
