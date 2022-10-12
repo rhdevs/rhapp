@@ -74,6 +74,14 @@ export const returnKey = (userId: string) => async (dispatch: Dispatch<ActionTyp
     })
 }
 
+/**
+ *
+ * Takes in the user's ID. Creates a POST request to update the usage status of the gym.
+ *
+ * @param userId (type `string`)
+ * @returns updates `type`
+ *
+ */
 export const toggleGym = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   await post(ENDPOINTS.TOGGLE_GYM, DOMAINS.GYM, {}, {}, `/${userId}?token=${localStorage.getItem('token')}`)
     .then((res) => {
@@ -89,6 +97,13 @@ export const toggleGym = (userId: string) => async (dispatch: Dispatch<ActionTyp
     })
 }
 
+/**
+ *
+ * Creates a GET request to obtain the profile picture of the user.
+ *
+ * @returns updates `type`, `pic`
+ *
+ */
 export const getProfilePic = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_PROFILE_PICTURE, DOMAINS.GYM)
     .then((res) => {

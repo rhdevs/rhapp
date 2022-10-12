@@ -171,6 +171,12 @@ export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) =
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
 }
 
+/**
+ * Verifies if the ending datetime is equal to or before the given start datetime
+ * @param toDate (Date) given ending datetime
+ * @param fromdate (Date) given starting datetime
+ * @returns sets `createBookingError` to the relevant error if any, otherwise sets empty string
+ */
 export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
   let newError: string
@@ -204,12 +210,20 @@ export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>)
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE, ViewEndDate: endDate })
 }
 
-// currentMode TRUE == view bookings || FALSE == view availabilities
+/**
+ * Sets the current viewing mode in facilities
+ * @param currentMode (boolean) TRUE -> view bookings, FALSE -> view availabilities
+ * @returns updates `viewFacilityModeState` according to `currentMode`
+ */
 export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   const ViewFacilityMode = currentMode ? 'Bookings' : 'Availabilities'
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
 }
 
+/**
+ * Fetches all the CCAs from the endpoint
+ * @returns sets `ccaList`, `isLoading`
+ */
 export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   get(ENDPOINTS.ALL_CCAS, DOMAINS.EVENT).then(async (resp) => {
     dispatch({ type: FACILITY_ACTIONS.GET_ALL_CCA, ccaList: resp.data })
@@ -227,7 +241,6 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
  * @remarks
  * // TODO Do we really need to get the names from BE everytime or we can just store the names locally?
  */
-
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
     method: 'GET',
@@ -263,14 +276,28 @@ export const resetCreateBookingSuccessFailure = (isFailure: boolean, isSuccess: 
   })
 }
 
+/**
+ *
+ * @param desiredState (boolean)
+ * @returns sets `isloading` according to `desiredState`
+ */
 export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
+/**
+ * @param desiredState (boolean)
+ * @returns sets `blockOutIsOpen` state according to `desiredState`
+ */
 export const SetBlockOutIsOpen = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_BLOCK_OUT_IS_OPEN, blockOutIsOpen: desiredState })
 }
 
+/**
+ * Sets TRUE if JCRC
+ * @param desiredState (boolean)
+ * @returns sets `isJCRC` according to `desiredState`
+ */
 export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
@@ -286,7 +313,7 @@ export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<A
  *
  * @remarks <insert remarks here>
  */
- 
+
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
