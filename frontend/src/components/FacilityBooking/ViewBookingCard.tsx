@@ -100,8 +100,22 @@ const StyledText = styled.text<{ largeFont?: boolean; boldFont?: boolean; grayed
 
 type Props = {
   booking?: Booking
-  onClick: () => void
+  exitOnClick: () => void
 }
+
+/**
+ *
+ * @param booking (type Booking, optional)
+ * @param exitOnClick (type () => void)
+ * @returns displays a pop-up card that shows the details of the booking
+ *
+ * @example
+ * ```
+ * <ViewBookingCard booking={viewBooking} exitOnClick={() => setIsViewBookingModalOpen(false)} />
+ * ```
+ *
+ * @remarks
+ */
 
 export const ViewBookingCard = (props: Props) => {
   const [telegramHandle, setTelegramHandle] = useState<string>()
@@ -115,7 +129,7 @@ export const ViewBookingCard = (props: Props) => {
   })
 
   const ExitButton = () => {
-    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.onClick()} />
+    return <ExitButtonContainer src={ViewBookingCardButton} onClick={() => props.exitOnClick()} />
   }
 
   const TelegramButton = () => {

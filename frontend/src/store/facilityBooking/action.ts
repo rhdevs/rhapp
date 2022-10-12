@@ -4,19 +4,19 @@ import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
 import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
 
-/**
- *
- * @param newError
- * @returns updates `createBookingError`
- *
- * @remarks this function is currently unused! `createBookingError` is unused as well
- */
-export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: newError,
-  })
-}
+// /**
+//  *
+//  * @param newError (string) usage unsure
+//  * @returns updates `createBookingError`
+//  *
+//  * @remarks this function is currently unused! `createBookingError` is unused as well
+//  */
+// export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
+//   dispatch({
+//     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+//     createBookingError: newError,
+//   })
+// }
 
 /**
  *
@@ -24,7 +24,7 @@ export const SetCreateBookingError = (newError: string) => async (dispatch: Disp
  * @param selectedFacilityId
  * @returns updates `selectedDayBookings`, `timeBlocks`, `isLoading`
  *
- * @remarks <insert remarks here>
+ * @remarks
  */
 export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
@@ -115,6 +115,16 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
+/**
+ *
+ * Takes in the user's ID and fetches an array of Booking objects that belongs to the user
+ *
+ * @param userId (string)
+ * @returns updates `myBookings`, `isLoading`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const getMyBookings = (userId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   let newList: Booking[] = []
   const TokenId = localStorage.getItem('token')
@@ -128,13 +138,34 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
   dispatch(setIsLoading(false))
 }
 
-// -1 stands for closed, any others means open for that specific ID.
+/**
+ *
+ * Takes in `isDeleteMyBooking` and closes the booking if it equals -1
+ *
+ * @params isDeleteMyBooking (number, optional)
+ * @returns updates `isDeleteMyBooking`
+ *
+ * @remarks
+ * -1 stands for closed, any others means open for that specific ID.
+ * // TODO shouldn't `isDeleteMyBooking` be a boolean value ??
+ */
+
 export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
   if (isDeleteMyBooking !== undefined) {
     dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
   }
 }
 
+/**
+ *
+ * Takes in a booking ID, and closes it by passing -1 to `setIsDeleteMyBooking`
+ *
+ * @params bookingID (number, optional)
+ * @returns updates `MyBookings`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
   if (bookingId !== undefined) {
@@ -149,24 +180,33 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
   }
 }
 
+/**
+ *
+ *
+ * @params oldBooking (Booking)
+ * @returns updates `newBooking`, `newBookingFacilityName`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-    newBooking: oldBooking,
-  })
-  dispatch({
-    type: FACILITY_ACTIONS.SET_BOOKING_FACILITY,
-    newBookingFacilityName: oldBooking.facilityName ? oldBooking.facilityName : '',
-  })
+  // TODO unused
+  // dispatch({
+  //   type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
+  //   newBooking: oldBooking,
+  // })
 }
+/**
+ *
+ * @params newTab (string)
+ * @returns updates `newTab`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
-}
-
-//TODO: Remove when edit booking is completed
-export const editBookingName = (newBookingName: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_NAME, newBookingName: newBookingName })
 }
 
 /**
@@ -185,38 +225,38 @@ export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch
   } else {
     newError = ''
   }
-
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: newError,
-  })
+  // TODO unused
+  // dispatch({
+  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+  //   createBookingError: newError,
+  // })
 }
 
-//TODO: Remove when edit booking is completed
-export const clearErrors = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: '',
-  })
-}
-
+/**
+ *
+ * @returns updates `createBookingError`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-    createBookingError: 'Your Event is now 0 minutes long!',
-  })
+  // TODO unused
+  // dispatch({
+  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
+  //   createBookingError: 'Your Event is now 0 minutes long!',
+  // })
 }
 
-//TODO: Remove when edit booking is completed
-export const editBookingCCA = (newBookingCCA: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_CCA, newBookingCCA: newBookingCCA })
-}
-
-//TODO: Remove when edit booking is completed
-export const editBookingDescription = (newBookingDescription: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION, newBookingDescription: newBookingDescription })
-}
-
+/**
+ *
+ * Takes in `newDate` and updates both `ViewStartDate` and `ViewEndDate` to that date.
+ *
+ * @params newDate (Date)
+ * @returns updates `ViewStartDate`, `ViewEndDate`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDate
   const endDate = newDate
@@ -235,11 +275,6 @@ export const setViewFacilityMode = (currentMode: boolean) => (dispatch: Dispatch
   dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_MODE, ViewFacilityMode: ViewFacilityMode })
 }
 
-// TODO: Remove when edit booking is done
-export const setNewBookingFacilityName = (name: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.SET_BOOKING_FACILITY, newBookingFacilityName: name })
-}
-
 /**
  * Fetches all the CCAs from the endpoint
  * @returns sets `ccaList`, `isLoading`
@@ -252,6 +287,16 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(false))
 }
 
+/**
+ *
+ * Takes in facility ID and sends a GET request to get the facility's name
+ *
+ * @param id (number)
+ * @returns updates `selectedFacilityName`
+ * @remarks
+ * // TODO Do we really need to get the names from BE everytime or we can just store the names locally?
+ */
+
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
     method: 'GET',
@@ -263,17 +308,27 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     })
 }
 
-/*success && failure -> Success Message shown
-success && !failure -> When in createbooking, redirect to viewbooking with success message
-!success && failure -> Failure Message shown
-!success && !failure -> Normal state no error shown*/
-export const resetCreateBookingSuccessFailure = (failureBoolean: boolean, successBoolean: boolean) => (
+/**
+ *
+ * @param isFailure (boolean)
+ * @param isSuccess (boolean)
+ * @returns updates `createFailure`, `createSuccess`
+ *
+ * @remarks
+ * // TODO THIS FUNCTION, AND ITS VALUES, ARE NOT USED!
+ * `success && failure` -> Success Message shown \
+ * `success && !failure` -> When in createbooking, redirect to viewbooking with success message \
+ * `!success && failure` -> Failure Message shown \
+ * `!success && !failure` -> Normal state no error
+ */
+
+export const resetCreateBookingSuccessFailure = (isFailure: boolean, isSuccess: boolean) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING,
-    createFailure: failureBoolean,
-    createSuccess: successBoolean,
+    createFailure: isFailure,
+    createSuccess: isSuccess,
   })
 }
 
@@ -303,17 +358,8 @@ export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
-//TODO: Remove when edit booking is done
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
-}
-
-//TODO: Remove when edit booking is done
-export const resetNewBooking = () => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-    newBooking: undefined,
-  })
 }
 
 /**
@@ -337,13 +383,11 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   // await fetch(DOMAIN_URL.EVENT + ENDPOINTS.CCA_DETAILS + '/' + booking.ccaID, { method: 'GET', mode: 'cors' })
 }
 
-//TODO: Remove when edit booking is done
-export const setBookingRepeat = (numRepeatWeekly: number) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_REPEAT_WEEKLY,
-    numRepeatWeekly: numRepeatWeekly,
-  })
-}
+/**
+ *
+ * @param booking (Booking)
+ * @returns updates `booking`
+ */
 
 export const setBooking = (booking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -351,6 +395,11 @@ export const setBooking = (booking: Booking) => (dispatch: Dispatch<ActionTypes>
     booking: booking,
   })
 }
+
+/**
+ *
+ * @returns sets `booking` to `null`
+ */
 
 export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -456,6 +505,13 @@ export const handleCreateNewBooking = (
     dispatch(setBookingEndTime(0))
   }
 }
+
+/**
+ *
+ * @param bookingStatus (BookingStatus)
+ * @param message (string: optional)
+ * @returns sets `bookingStatus`, `message`
+ */
 
 export const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (
   dispatch: Dispatch<ActionTypes>,
