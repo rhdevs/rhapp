@@ -138,13 +138,34 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
   dispatch(setIsLoading(false))
 }
 
-// -1 stands for closed, any others means open for that specific ID.
+/**
+ *
+ * Takes in `isDeleteMyBooking` and closes the booking if it equals -1
+ *
+ * @params isDeleteMyBooking (number, optional)
+ * @returns updates `isDeleteMyBooking`
+ *
+ * @remarks
+ * -1 stands for closed, any others means open for that specific ID.
+ * // TODO shouldn't `isDeleteMyBooking` be a boolean value ??
+ */
+
 export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
   if (isDeleteMyBooking !== undefined) {
     dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
   }
 }
 
+/**
+ *
+ * Takes in a booking ID, and closes it by passing -1 to `setIsDeleteMyBooking`
+ *
+ * @params bookingID (number, optional)
+ * @returns updates `MyBookings`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const TokenId = localStorage.getItem('token')
   if (bookingId !== undefined) {
@@ -159,6 +180,15 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
   }
 }
 
+/**
+ *
+ *
+ * @params oldBooking (Booking)
+ * @returns updates `newBooking`, `newBookingFacilityName`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
   // TODO unused
   // dispatch({
@@ -166,6 +196,14 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
   //   newBooking: oldBooking,
   // })
 }
+/**
+ *
+ * @params newTab (string)
+ * @returns updates `newTab`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 
 export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
@@ -188,6 +226,13 @@ export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch
   // })
 }
 
+/**
+ *
+ * @returns updates `createBookingError`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
   // TODO unused
   // dispatch({
@@ -196,6 +241,16 @@ export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
   // })
 }
 
+/**
+ *
+ * Takes in `newDate` and updates both `ViewStartDate` and `ViewEndDate` to that date.
+ *
+ * @params newDate (Date)
+ * @returns updates `ViewStartDate`, `ViewEndDate`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
 export const setViewDates = (newDate: Date) => (dispatch: Dispatch<ActionTypes>) => {
   const startDate = newDate
   const endDate = newDate
