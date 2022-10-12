@@ -113,7 +113,7 @@ export default function Profile() {
       <SocialPostCard
         key={postItem._id}
         isOwner={postItem.userID === params.userId}
-        avatar={user?.profilePictureUrl}
+        avatar={user?.profilePicSignedUrl}
         name={user?.displayName}
         title={postItem?.title}
         dateTime={date}
@@ -171,7 +171,7 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      {user?.profilePictureUrl == undefined ? (
+      {user?.profilePicSignedUrl == undefined ? (
         <AvatarSpan>
           <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
             {getInitials(user.displayName)}
@@ -182,7 +182,7 @@ export default function Profile() {
           <img
             alt="Profile Photo"
             style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
-            src={'data:image/png;base64,' + user?.profilePictureUrl}
+            src={user?.profilePicSignedUrl}
           />
         </AvatarSpan>
       )}

@@ -4,6 +4,20 @@ import { moveKey, returnKey, toggleGym } from '../../store/gym/action'
 import { gymStates } from '../../store/gym/types'
 import { useDispatch } from 'react-redux'
 
+/**
+ *
+ * Modifies the modal state of the gym.
+ *
+ * @param gymIsOpen (type `boolean`)
+ * @param userId (type `string`)
+ * @param name (type `string`)
+ * @param telegramHandle (type `string`)
+ * @param isModalOpen (type `boolean`)
+ * @param setModalOpen (type `(value: ((prevState: boolean) => boolean) | boolean) => void`)
+ * @param modalState (type `gymStates | undefined`)
+ *
+ * @returns Popup window to be displayed when user clicks one of the 'Key With Me', 'Return Key' or 'Open Gym' buttons.
+ */
 function GymConfirmationModal(props: {
   gymIsOpen: boolean | null
   userId: string
