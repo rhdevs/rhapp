@@ -34,6 +34,25 @@ import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
 
+/**
+ *
+ * @returns The page through which the user is able to edit his facility booking.
+ *
+ * @example
+ * ```
+ * The user can edit the following through this page: \
+ *  1: Facility \
+ *  2: Name of Event \
+ *  3: Start/End Date/Time \
+ *  4: CCA \
+ *  5: Description
+ * ```
+ *
+ * @remarks
+ * Might make more sense to allow editing of the start/end date/time only and disable other fields.
+ *
+ */
+
 const Background = styled.div`
   background-color: #fff;
   min-height: 100vh;

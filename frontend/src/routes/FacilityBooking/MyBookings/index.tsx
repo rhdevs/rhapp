@@ -63,7 +63,7 @@ const BookingCard = styled.div`
 const BookingAvatar = styled.img`
   padding: 10px;
   width: 20%;
-  max-height 70px;
+  max-height: 70px;
 `
 
 const BookingHeader = styled.div`
@@ -122,7 +122,15 @@ const NoBookingsFound = styled.div`
   align-self: center;
   margin-top: 40px;
 `
-
+/**
+ * @params facilityId (number)
+ *
+ * @returns The avatar/icon for according to the `facilityId`
+ *
+ * @remarks
+ * <any remarks>
+ *
+ */
 function FacilityLogo(props: { facilityId: number }) {
   switch (props.facilityId) {
     case 1:
@@ -160,6 +168,19 @@ function FacilityLogo(props: { facilityId: number }) {
   }
 }
 
+/**
+ * # ViewMyBookings
+ *
+ * Path: `/facility/booking/user/:userId`
+ *
+ * ##Page Description
+ * The page that contains all of the user's bookings. The user can click on each booking to view it in detail,
+ * or use the right action buttons to edit or delete the booking respectively
+ *
+ * @remarks
+ * <any remarks>
+ *
+ */
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
   const history = useHistory()
