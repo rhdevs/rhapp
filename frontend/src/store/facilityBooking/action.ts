@@ -296,7 +296,6 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
  * @remarks
  * // TODO Do we really need to get the names from BE everytime or we can just store the names locally?
  */
-
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
     method: 'GET',
@@ -369,6 +368,7 @@ export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<A
  *
  * @remarks <insert remarks here>
  */
+
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
