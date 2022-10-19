@@ -39,7 +39,7 @@ export default function LaundryMain() {
     <>
       <MainContainer>
         <PullToRefresh onRefresh={onRefresh}>
-          <TopNavBar title={'Laundry Time'} />
+          <TopNavBar title="Laundry Time" />
           {isLoading && <LoadingSpin />}
           {selectedLevel === null && selectedBlock !== 'Kuok' && (
             <h4 style={{ textAlign: 'center', padding: '23px 0px 0px 0px' }}>Select Both Your Block and Level!</h4>

@@ -9,6 +9,9 @@ node_modules/
 build/
 /build
 
+# docs
+docs/
+
 # caches
 .eslintcache
 .eslint-loader-cache-webpack

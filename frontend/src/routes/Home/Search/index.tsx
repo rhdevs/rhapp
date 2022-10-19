@@ -109,10 +109,10 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
 
   return (
     <Background>
-      <TopNavBar title={'Search'} leftIcon={true} leftIconComponent={leftIcon} />
-      <SearchBar placeholder={'Facility, People, Events etc.'} value={searchValue} onChange={onChange} />
+      <TopNavBar title="Search" leftIcon leftIconComponent={leftIcon} />
+      <SearchBar placeholder="Facility, People, Events etc." value={searchValue} onChange={onChange} />
       {renderResults()}
-      <BottomNavBar></BottomNavBar>
+      <BottomNavBar />
     </Background>
   )
 }

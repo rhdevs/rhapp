@@ -113,7 +113,7 @@ export default function Profile() {
       <SocialPostCard
         key={postItem._id}
         isOwner={postItem.userID === params.userId}
-        avatar={user?.profilePictureUrl}
+        avatar={user?.profilePicSignedUrl}
         name={user?.displayName}
         title={postItem?.title}
         dateTime={date}
@@ -171,7 +171,7 @@ export default function Profile() {
 
   const PersonalInfoContainer = () => (
     <ProfileDetailsGroup>
-      {user?.profilePictureUrl == undefined ? (
+      {user?.profilePicSignedUrl == undefined ? (
         <AvatarSpan>
           <Avatar size={{ xs: 85 }} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
             {getInitials(user.displayName)}
@@ -182,7 +182,7 @@ export default function Profile() {
           <img
             alt="Profile Photo"
             style={{ height: 100, width: 100, objectFit: 'cover', borderRadius: 100 / 2 }}
-            src={'data:image/png;base64,' + user?.profilePictureUrl}
+            src={user?.profilePicSignedUrl}
           />
         </AvatarSpan>
       )}
@@ -207,7 +207,7 @@ export default function Profile() {
           title={<span style={{ fontSize: '20px' }}>CCAs</span>}
           bordered={false}
           style={{ margin: '23px', borderRadius: '20px' }}
-          size={'small'}
+          size="small"
         >
           {ccas &&
             ccas?.map((cca) => (
@@ -239,7 +239,7 @@ export default function Profile() {
           title={<span style={{ fontSize: '20px' }}>Modules</span>}
           bordered={false}
           style={{ margin: '23px', borderRadius: '20px' }}
-          size={'small'}
+          size="small"
         >
           {user.modules &&
             user.modules?.map((module) => (
@@ -281,9 +281,9 @@ export default function Profile() {
       <MainContainer>
         <PullToRefresh onRefresh={onRefresh}>
           {localStorage.getItem('userID') === user.userID ? (
-            <TopNavBar title={'Profile'} rightComponent={logoutButton} leftIcon />
+            <TopNavBar title="Profile" rightComponent={logoutButton} leftIcon />
           ) : (
-            <TopNavBar title={'Profile'} leftIcon />
+            <TopNavBar title="Profile" leftIcon />
           )}
           {isLoading && <LoadingSpin />}
           {!isLoading && (

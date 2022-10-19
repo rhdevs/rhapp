@@ -65,7 +65,7 @@ export default function Supper() {
       <OrderCard
         collatedOrder={dummyCollatedOrderList}
         order={orderList[0]}
-        ownerId={'A1234567B'}
+        ownerId="A1234567B"
         supperGroupStatus={supperGroupStub.status}
         supperGroup={supperGroupStub}
       />
@@ -76,7 +76,7 @@ export default function Supper() {
         label={<OptionText>McCafe Caramel Frappe With Oreo Medium (+$4.45)</OptionText>}
       />
       <RhAppQrCode link="google.com" />
-      <Checkbox isChecked={true} />
+      <Checkbox isChecked />
       <BubbleSection title="Order Information" number={1}>
         hello
       </BubbleSection>

@@ -2,7 +2,7 @@ export const onRefresh = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const reload = true
-      if (reload === true) {
+      if (reload) {
         resolve('reload success')
         location.reload()
       } else {

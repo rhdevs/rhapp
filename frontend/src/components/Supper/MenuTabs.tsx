@@ -80,7 +80,7 @@ export const MenuTabs = (props: Props) => {
 
   return (
     <MainContainer>
-      <ToggleTabsContainer defaultValue={'All'}>
+      <ToggleTabsContainer defaultValue="All">
         {props.menuSections ? (
           ['All'].concat(props.menuSections).map((section, idx) => (
             <>

@@ -27,11 +27,11 @@ export const PostImage = ({ card, deleteFunc }: { card: string; deleteFunc: (str
     <MainContainer>
       {modal && (
         <ConfirmationModal
-          title={'Confirm Delete?'}
-          hasLeftButton={true}
-          leftButtonText={'Delete'}
+          title="Confirm Delete?"
+          hasLeftButton
+          leftButtonText="Delete"
           onLeftButtonClick={() => deleteFunc(card)} //change paths in future
-          rightButtonText={'Cancel'}
+          rightButtonText="Cancel"
           onRightButtonClick={() => setModal(false)}
         />
       )}
