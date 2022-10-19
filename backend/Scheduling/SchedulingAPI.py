@@ -189,8 +189,11 @@ def getCCADetails(ccaID):
 def getUserCCAs(userID):
     try:
         ccaIDs = db.User.find_one({"userID": userID}, {"_id": 0}).get("userCCA")
-        ccaDetails = list(db.CCA.find({"ccaID": {"$in": ccaIDs}}, {"_id": 0}))
-        response = {"status": "success", "data": ccaDetails}
+        if not ccaIDs:
+            response = {"status": "success", "data": []}
+        else:
+            ccaDetails = list(db.CCA.find({"ccaID": {"$in": ccaIDs}}, {"_id": 0}))
+            response = {"status": "success", "data": ccaDetails}
 
     except Exception as e:
         print(e)
