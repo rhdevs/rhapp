@@ -18,14 +18,6 @@ const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?
   ${(props) => props.bottom && `bottom: ${props.bottom};`}
 `
 
-type Props = {
-  width?: string
-  top?: string
-  left?: string
-  right?: string
-  bottom?: string
-}
-
 export function isToday(inputDate: number) {
   const today = new Date()
   return today.setHours(0, 0, 0, 0) == new Date(inputDate * 1000).setHours(0, 0, 0, 0)
@@ -40,6 +32,33 @@ export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTM
   }
 }
 
+type Props = {
+  width?: string
+  top?: string
+  left?: string
+  right?: string
+  bottom?: string
+}
+
+/**
+ * @param width (type `string`)
+ * @param top (type `string`)
+ * @param left (type `string`)
+ * @param right (type `string`)
+ * @param bottom (type `string`)
+ * @returns If the selected day is today, it returns a timeline indicating the current time, where its position
+ * is updated every minute. Otherwise, it returns nothing.
+ * @example ```
+ *  // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time.
+ *  //  In `BookingSection` :
+ *   <MainContainer>
+ *      <CurrentTimeLine />
+ *      <HourBlocks />
+ *      <DailyContainer />
+ *   </MainContainer>
+ * ```
+ * @remarks <any remarks on this component type in here>
+ */
 const CurrentTimeLine = (props: Props) => {
   const lineRef = useRef<HTMLHRElement>(null)
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)

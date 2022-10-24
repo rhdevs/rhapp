@@ -18,7 +18,7 @@ import {
   setIsLoading,
   handleCreateNewBooking,
   setBookingEndDate,
-  resetNewBooking,
+  // resetNewBooking,
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
@@ -92,6 +92,18 @@ type FormValues = {
   description: string
 }
 
+/**
+ * # CreateBooking
+ * Path: `/facility/booking/create/:facilityId
+ *
+ * ## Page Description
+ * This page contains the booking form for creating a booking. \
+ * Once the user selects the start and end time on the `CreateBookingDailyView` page, they will be directed to here
+ *
+ * @remarks
+ *
+ */
+
 export default function CreateBooking() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
@@ -127,10 +139,14 @@ export default function CreateBooking() {
       dispatch(getFacilityList())
     }
     return () => {
-      dispatch(resetNewBooking)
+      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
     }
   }, [dispatch])
 
+  /**
+   *
+   * @returns boolean to check if form is filled, else submit button is disabled
+   */
   const formIsValid = () => {
     if (isWeeklyOn) {
       return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
@@ -138,6 +154,10 @@ export default function CreateBooking() {
     return watch('eventName') !== '' && ccaName !== ''
   }
 
+  /**
+   *
+   * @returns string of the facility's name
+   */
   const getFacilityName = () => {
     return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
@@ -190,21 +210,27 @@ export default function CreateBooking() {
     history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
+  /**
+   * when user goes back, reset user's time selections
+   */
   const reselectBothDates = () => {
-    // when go back, reset user's time selections
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     dispatch(setSelectedEndTime(0))
     goBackToTimeSelectionPage()
   }
 
+  /**
+   * TODO not yet implemented
+   */
   const reselectStartDate = () => {
-    // TODO not yet implemented
     reselectBothDates()
   }
 
+  /**
+   * reselect end date only
+   */
   const reselectEndDate = () => {
-    // reselect end date only
     dispatch(setSelectedEndTime(0))
     goBackToTimeSelectionPage()
   }

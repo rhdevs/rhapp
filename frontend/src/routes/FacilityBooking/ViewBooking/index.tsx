@@ -129,6 +129,20 @@ const EventFacilityName = styled.div`
   align-items: baseline;
 `
 
+/**
+ * # ViewBooking
+ * Path: `/facility/booking/view/:bookingId'`
+ *
+ * ## Page Description
+ * The user gets redirected to this page after clicking one of the bookings listed in the `MyBookings` page. \
+ * This page displays the details of a booking, which is the RHEID (bookingId), Event name, CCA, start time, end time, facility, \
+ * person who created the booking, and additional notes.
+ *
+ * @remarks
+ * <any remarks on this component type in here>
+ *
+ */
+
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()

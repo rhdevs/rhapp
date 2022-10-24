@@ -105,7 +105,7 @@ export default function ViewPost() {
 
   const { viewPost } = useSelector((state: RootState) => state.social)
   const { userId, createdAt, description, title, postPics, postId, name } = viewPost
-  const { userID, profilePictureUrl } = useSelector((state: RootState) => state.profile.user)
+  const { userID, profilePicSignedUrl } = useSelector((state: RootState) => state.profile.user)
 
   useEffect(() => {
     dispatch(GetSpecificPost(postIdFromPath))
@@ -152,7 +152,7 @@ export default function ViewPost() {
       <Avatar
         size={{ xs: 40, sm: 64, md: 80, lg: 100, xl: 100, xxl: 100 }}
         style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-        src={profilePictureUrl}
+        src={profilePicSignedUrl}
         userId={userId}
       >
         {name ? getInitials(name) : ''}

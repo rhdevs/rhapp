@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Button = styled.button<{ state: 'primary' | 'secondary'; size: 'small' | 'regular'; width?: string }>`
+const StyledButton = styled.button<{ state: 'primary' | 'secondary'; size: 'small' | 'regular'; width?: string }>`
   min-height: 35px;
   height: auto;
   width: ${(props) => props.width ?? `max-content`};
@@ -39,9 +39,21 @@ type Props = {
   size?: 'small' | 'regular' | undefined
 }
 
+/**
+ *
+ * @param state ('primary' | 'secondary') Primary button is filled green, secondary is white (hollow)
+ * @param text (string) Text to be displayed on the button
+ * @param disabled (boolean) If the button is disabled, it will be greyed out, and not clickable
+ * @param type ('button' | 'submit' | 'reset' | undefined) Type of button, default is 'button'
+ * @param onClick (React.MouseEventHandler<HTMLButtonElement>) Function to be called when button is clicked
+ * @param setWidth (string | undefined) Width of the button, default is max-content
+ * @param size ('small' | 'regular' | undefined) Size of the button, default is regular
+ * @returns a button
+ */
+
 function ButtonComponent(prop: Props) {
   return (
-    <Button
+    <StyledButton
       onClick={prop.onClick}
       state={prop.state}
       disabled={prop.disabled}
@@ -50,7 +62,7 @@ function ButtonComponent(prop: Props) {
       size={prop.size ?? 'regular'}
     >
       {prop.text}
-    </Button>
+    </StyledButton>
   )
 }
 

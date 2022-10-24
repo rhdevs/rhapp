@@ -11,6 +11,18 @@ import { ViewBookingCard } from './ViewBookingCard'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
+/**
+ *
+ * @returns displays a 24h timeline of all bookings made on the facility
+ *
+ * @example
+ * ```
+ * <ViewScheduleBlock />
+ * ```
+ * @remarks
+ *
+ */
+
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean>()
@@ -25,7 +37,7 @@ const ViewScheduleBlock = () => {
   return (
     <>
       {isViewBookingModalOpen && (
-        <ViewBookingCard booking={viewBooking} onClick={() => setIsViewBookingModalOpen(false)} />
+        <ViewBookingCard booking={viewBooking} exitOnClick={() => setIsViewBookingModalOpen(false)} />
       )}
       <MainContainer>
         <CurrentTimeLine />
