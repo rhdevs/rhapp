@@ -72,7 +72,7 @@ export default function FriendList() {
   return (
     <>
       <MainContainer>
-        <TopNavBar title={'Friends'} />
+        <TopNavBar title="Friends" />
         {friends.length !== 0 ? (
           friends.map((friend) => {
             return (
@@ -82,13 +82,13 @@ export default function FriendList() {
                   history.push(PATHS.PROFILE_PAGE + '/' + friend.userID)
                 }}
               >
-                {friend.profilePictureUrl ? (
+                {friend.profilePicSignedUrl ? (
                   <FriendAvatar
                     onClick={() => {
                       history.push(PATHS.PROFILE_PAGE + `${friend.userID}`)
                     }}
                     style={{ width: 85, borderRadius: 100 / 2 }}
-                    src={friend.profilePictureUrl}
+                    src={friend.profilePicSignedUrl}
                   />
                 ) : (
                   <FriendAvatar src={dummyAvatar} />

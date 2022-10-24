@@ -134,7 +134,7 @@ export default function Login() {
               setError({ message: 'Server Error! Try again in awhile or approach an administrator!' })
               setIsLoading(false)
               throw new Error('Server Error')
-            } else if (resp.status == 403) {
+            } else if (resp.status === 403) {
               setError({ message: 'Credentials is wrong. Try Again!' })
               setIsLoading(false)
               throw new Error('Wrong Credentials')

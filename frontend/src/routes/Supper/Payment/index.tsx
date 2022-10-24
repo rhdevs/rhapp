@@ -129,7 +129,7 @@ const Payment = () => {
           <FormHeader fontSize="15px" headerName="What is your phone number?" isCompulsory />
           <Input
             type="number"
-            defaultValue={''}
+            defaultValue=""
             placeholder="Phone Number"
             name="phoneNumber"
             ref={register({

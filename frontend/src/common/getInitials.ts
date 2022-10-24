@@ -1,5 +1,5 @@
 export const getInitials = (name: string) => {
-  if (name == undefined) {
+  if (name === undefined) {
     return undefined
   }
   const names = name.split(' ')

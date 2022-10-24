@@ -26,16 +26,16 @@ export const setFilteredSupperGroups = () => (dispatch: Dispatch<ActionTypes>, g
       if (supperGroup.supperGroupName.toLowerCase().includes(query)) return supperGroup
     })
   }
-  if (closingTimeFilter == Filter.ASCENDING) {
+  if (closingTimeFilter === Filter.ASCENDING) {
     filteredSearchSupperGroups.sort((x, y) => (x.closingTime ?? 0) - (y.closingTime ?? 0))
-  } else if (closingTimeFilter == Filter.DESCENDING) {
+  } else if (closingTimeFilter === Filter.DESCENDING) {
     filteredSearchSupperGroups.sort((x, y) => (y.closingTime ?? 0) - (x.closingTime ?? 0))
   }
-  if (amountLeftFilter == Filter.ASCENDING) {
+  if (amountLeftFilter === Filter.ASCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (x.costLimit ?? Infinity - x.currentFoodCost) - (y.costLimit ?? Infinity - y.currentFoodCost),
     )
-  } else if (amountLeftFilter == Filter.DESCENDING) {
+  } else if (amountLeftFilter === Filter.DESCENDING) {
     filteredSearchSupperGroups.sort(
       (x, y) => (y.costLimit ?? Infinity - y.currentFoodCost) - (x.costLimit ?? Infinity - x.currentFoodCost),
     )

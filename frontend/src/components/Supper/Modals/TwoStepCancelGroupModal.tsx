@@ -91,7 +91,7 @@ export const TwoStepCancelGroupModal = (props: Props, e: React.MouseEvent<HTMLEl
             <Form>
               <FormHeader headerName="Reason for cancelling" isCompulsory />
               <TextArea
-                defaultValue={''}
+                defaultValue=""
                 placeholder="e.g. the restaurant closed, there are no delivery riders, etc.."
                 name="cancelReason"
                 ref={register({

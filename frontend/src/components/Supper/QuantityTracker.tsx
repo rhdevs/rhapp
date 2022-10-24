@@ -53,7 +53,7 @@ export const QuantityTracker = (props: Props) => {
     <CounterContainer center={props.center} margin={props.margin}>
       <MinusButton increment={1} min={props.min} defaultValue={props.default} onClick={subFromCount} />
       <ValueContainer>{count}</ValueContainer>
-      <PlusButton isAdding={true} onClick={addToCount} max={MAX} />
+      <PlusButton isAdding onClick={addToCount} max={MAX} />
     </CounterContainer>
   )
 }

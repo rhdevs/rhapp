@@ -307,11 +307,11 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      if (body.err == 'End time earlier than start time') {
+      if (body.err === 'End time earlier than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
-      } else if (body.err == 'Conflict Booking') {
+      } else if (body.err === 'Conflict Booking') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
-      } else if (body.err == 'You must be in RH Dance to make this booking') {
+      } else if (body.err === 'You must be in RH Dance to make this booking') {
         // As of this version, Dance Studio can only be booked by people who are in RH Dance.
         dispatch(SetCreateBookingError('You must be in RH Dance to make this booking'))
       } else {
@@ -340,9 +340,9 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
     if (response.status >= 400) {
       const body = await response.json()
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
-      if (body.err == 'End time eariler than start time') {
+      if (body.err === 'End time eariler than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
-      } else if (body.err == 'Conflict Booking') {
+      } else if (body.err === 'Conflict Booking') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
       } else {
         dispatch(SetCreateBookingError('Check your fields again! All fields should be filled up!'))
