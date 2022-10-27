@@ -44,6 +44,19 @@ const TitleText = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
 `
+/**
+ * # ViewBookingDailyView
+ * Path: `/facility/booking/dayview/:facilityId`
+ *
+ * ## Page Description
+ * The user gets redirected to this page after clicking on a date on the ViewFacility page. \
+ * This page shows all dates on the same week that is picked by the user, allowing them to alter their selection within that week. \
+ * The user gets redirected to the `CreateBookingDailyView` page after clicking the `Book Facility` button.
+ *
+ * @remarks
+ * <any remarks on this component type in here>
+ *
+ */
 
 export default function ViewBookingDailyView() {
   const history = useHistory()

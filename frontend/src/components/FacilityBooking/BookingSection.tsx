@@ -20,6 +20,17 @@ import BookingBlock from './BookingBlock'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
+/**
+ *
+ * Display blocks of time for user to select to book timeslot for specific facility.
+ *
+ * @returns A section containing clickable timeblocks for booking
+ *
+ * @example
+ * <BookingSection />
+ *
+ * @remarks
+ */
 export default function BookingSection() {
   const history = useHistory()
   const dispatch = useDispatch()

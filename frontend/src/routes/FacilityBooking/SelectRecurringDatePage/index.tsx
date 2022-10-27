@@ -26,6 +26,16 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
+/**
+ * # SelectRecurringDatePage
+ * Path: `/facility/booking/create/recurring/selectEndDate/:facilityId`
+ *
+ * ## Page Description
+ * SelectRecurringDatePage is accessible when user toggles weekly recurrence on in CreateBooking page
+ * and tries to select a weekly booking end date. The page displays days in calendar format for user to select an end date.
+ *
+ * @remarks
+ */
 export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()

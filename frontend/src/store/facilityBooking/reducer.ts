@@ -2,7 +2,7 @@ import { Reducer } from 'redux'
 import { defaultTimeBlocks, myBookingsStub } from '../stubs'
 import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, BookingStatus, TimeBlock } from './types'
 
-const initialState = {
+const initialState: State = {
   // MAIN PAGE
   isLoading: false,
   blockOutIsOpen: false,
@@ -14,25 +14,15 @@ const initialState = {
   selectedBooking: null,
   myBookings: [],
   isDeleteMyBooking: -1,
-  newBooking: undefined,
-  // CREATE NEW BOOKING STATES
-  newBookingName: '',
-  newBookingFacilityName: '',
-  newBookingFacilityId: '',
-  newBookingCCA: '',
-  newBookingDescription: '',
   createSuccess: false,
   createFailure: false,
-  createBookingError: '',
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: new Date(),
-  ViewFacilityMode: 'Bookings',
   selectedFacilityId: 0,
   ccaList: [],
   facilityBookings: [],
   selectedFacilityName: '',
-  numRepeatWeekly: 1,
   booking: null,
   bookingStatus: BookingStatus.INITIAL,
   selectedBlockTimestamp: 0,
@@ -57,12 +47,6 @@ type State = {
   selectedBooking: Booking | null
   myBookings: Booking[]
   isDeleteMyBooking: number
-  newBooking: Booking | undefined
-  newBookingFacilityName: string
-  newBookingFacilityId: string
-  newBookingName: string
-  newBookingCCA: string
-  newBookingDescription: string
   createSuccess: boolean
   createFailure: boolean
   ViewStartDate: Date
@@ -71,8 +55,6 @@ type State = {
   ccaList: userCCA[]
   facilityBookings: Booking[]
   selectedFacilityName: string
-  createBookingError: string
-  numRepeatWeekly: number
   booking: Booking | null
   bookingStatus: BookingStatus
   message?: string
@@ -89,22 +71,10 @@ type State = {
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID: {
-      return {
-        ...state,
-        newBookingFacilityId: action.newBookingFacilityId,
-      }
-    }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME: {
       return {
         ...state,
         selectedFacilityName: action.selectedFacilityName,
-      }
-    }
-    case FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR: {
-      return {
-        ...state,
-        createBookingError: action.createBookingError,
       }
     }
     case FACILITY_ACTIONS.GET_FACILITY_LIST: {
@@ -138,34 +108,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         myBookings: action.myBookings,
       }
     }
-    case FACILITY_ACTIONS.EDIT_MY_BOOKING: {
-      return {
-        ...state,
-        newBooking: action.newBooking,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_NAME: {
-      return {
-        ...state,
-        newBookingName: action.newBookingName,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_CCA: {
-      return {
-        ...state,
-        newBookingCCA: action.newBookingCCA,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION: {
-      return {
-        ...state,
-        newBookingDescription: action.newBookingDescription,
-      }
-    }
-
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
       return {
         ...state,
@@ -184,13 +126,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         ViewFacilityMode: action.ViewFacilityMode,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY: {
-      return {
-        ...state,
-        newBookingFacilityName: action.newBookingFacilityName,
       }
     }
 
@@ -262,13 +197,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         facilityBookings: action.facilityBookings,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_REPEAT_WEEKLY: {
-      return {
-        ...state,
-        numRepeatWeekly: action.numRepeatWeekly,
       }
     }
     case FACILITY_ACTIONS.SET_BOOKING: {

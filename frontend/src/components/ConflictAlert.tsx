@@ -45,6 +45,13 @@ const errorMessage: ErrorMessage = {
   SERVER_ERROR: 'Server is down now please try again later.',
 }
 
+/**
+ *
+ * @param errorType ('CONFLICT' | 'EMPTY_FIELD' | 'SERVER_ERROR')
+ * @returns
+ * @remarks TODO unused!
+ */
+
 export default function ConflictAlert(props: Props) {
   const { errorType } = props
   const history = useHistory()

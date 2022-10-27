@@ -34,7 +34,7 @@ export enum PATHS {
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
-  // FACILITY BOOKING
+  // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
   FACILITY_BOOKING_MAIN = '/facility',
   VIEW_FACILITY = '/facility/monthView',
   VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
