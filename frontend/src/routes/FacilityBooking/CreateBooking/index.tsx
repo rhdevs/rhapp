@@ -94,7 +94,7 @@ type FormValues = {
 
 /**
  * # CreateBooking
- * Path: `/facility/booking/create/:facilityId
+ * Path: `/facility/booking/create/:facilityId`
  *
  * ## Page Description
  * This page contains the booking form for creating a booking. \
