@@ -24,6 +24,11 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/calendar/actions'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+import { Alert } from 'antd'
+
+const AlertGroup = styled.div`
+  padding: 3px 23px 3px 23px;
+`
 
 const MainContainer = styled.div`
   width: 100%;
@@ -73,14 +78,27 @@ export default function ViewFacility() {
 
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
-      dispatch(setBookingStatus(BookingStatus.INITIAL))
+      async function wait3seconds() {
+        const promise = new Promise((resolve, reject) => {
+          setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), 3000)
+        }) // wait 3 seconds before setting booking status back to initial
+        const result = await promise
+        result
+      }
       console.log('sucessssssssss')
+      wait3seconds()
       // TODO show a toast notification to inform of success booking
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
       setModalIsOpen(true)
     }
   }, [bookingStatus])
+
+  const AlertSection = () => (
+    <AlertGroup>
+      <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+    </AlertGroup>
+  )
 
   return (
     <>
@@ -90,6 +108,7 @@ export default function ViewFacility() {
         onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
+        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
           <BottomNavBar />
