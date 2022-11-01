@@ -9,7 +9,7 @@ const StyledButton = styled.button<{
   fontSize?: string
 }>`
   min-height: 35px;
-  height: ${(props) => props.height ?? `max-content`};
+  height: ${(props) => props.height ?? 'auto'};
   width: ${(props) => props.width ?? `max-content`};
   border-radius: 25px;
   font-size: ${(props) => props.fontSize ?? `max-content`};
