@@ -6,6 +6,7 @@ import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import { handleCreateNewBooking, setBookingStatus } from '../../../store/facilityBooking/action'
+import { getAllBookingsForFacility } from '../../../store/calendar/actions'
 import { ConfirmationModal } from '../../../components/ConfirmationModal'
 
 type Props = {
@@ -16,6 +17,7 @@ export default function ConflictBookingModal(props: Props) {
   const dispatch = useDispatch()
   const history = useHistory()
   const { booking } = useSelector((state: RootState) => state.facilityBooking)
+  const { clickedDate } = useSelector((state: RootState) => state.calendar)
 
   const toggleStatus = () => {
     props.setModalOpen(!open)
@@ -24,6 +26,8 @@ export default function ConflictBookingModal(props: Props) {
 
   const onRightClick = () => {
     // TODO doesn't work as intended (investigate)
+    console.log(clickedDate)
+    booking?.startTime
     dispatch(
       handleCreateNewBooking(
         booking?.facilityID,

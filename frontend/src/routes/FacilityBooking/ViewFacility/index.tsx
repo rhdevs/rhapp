@@ -24,6 +24,8 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/calendar/actions'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -75,6 +77,18 @@ export default function ViewFacility() {
     if (bookingStatus === BookingStatus.SUCCESS) {
       dispatch(setBookingStatus(BookingStatus.INITIAL))
       console.log('sucessssssssss')
+      toast.success("Booking was Successfull",
+                    { 
+                      position: "bottom-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "light",
+                    }
+      )
       // TODO show a toast notification to inform of success booking
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
@@ -96,6 +110,7 @@ export default function ViewFacility() {
         </MainContainer>
       </PullToRefresh>
       <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
+      <ToastContainer />
     </>
   )
 }
