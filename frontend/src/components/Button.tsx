@@ -12,7 +12,7 @@ const StyledButton = styled.button<{
   height: ${(props) => props.height ?? 'auto'};
   width: ${(props) => props.width ?? `max-content`};
   border-radius: 25px;
-  font-size: ${(props) => props.fontSize ?? `max-content`};
+  font-size: ${(props) => props.fontSize ?? '12px'};
   border: solid 0.1rem transparent;
   background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
     linear-gradient(to left, #72ba75, #58b994);
