@@ -185,7 +185,7 @@ export default function CreateBooking() {
               data.eventName,
               bookingStartTime,
               bookingEndTime,
-              bookingEndTime,
+              bookingEndDate, // bookingEndDate????????????????
               ccaId,
               data.description,
             ),
