@@ -71,17 +71,20 @@ const BookingBlock = (props: Props) => {
     )
   }
 
+  const isClickable = () => {
+    return (
+      !hasOverlay() && (props.entry.type === TimeBlockType.AVAILABLE || props.entry.type === TimeBlockType.SELECTED)
+    )
+  }
+
   return (
     <StyledBookingBlock
       ref={ref}
-      onClick={
-        props.entry.type === TimeBlockType.AVAILABLE || props.entry.type === TimeBlockType.SELECTED
-          ? props.onClick
-          : undefined
-      }
+      onClick={isClickable() ? props.onClick : undefined}
       type={props.entry.type}
       blockId={props.entry.id}
       hasOverlay={hasOverlay()}
+      isClickable={isClickable()}
     >
       {blockText()}
     </StyledBookingBlock>
