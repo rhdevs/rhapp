@@ -19,8 +19,7 @@ const StyledButton = styled.button<{
   box-shadow: ${(props) => (props.state === 'primary' ? `0px` : `2px 1000px 1px #fff inset`)};
   color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
   padding: ${(props) => (props.size === 'small' ? `7px 14px` : `16px 30px`)};
-  line-height: 1px;
-  white-space: nowrap;
+  white-space: normal;
 
   &:active {
     background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
