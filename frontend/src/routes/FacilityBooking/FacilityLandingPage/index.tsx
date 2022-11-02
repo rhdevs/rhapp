@@ -1,10 +1,9 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import ButtonComponent from '../../../components/Button'
 import { PATHS } from '../../Routes'
+import ButtonComponent from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
-import { Icon } from 'antd-mobile'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 
 export default function FacilityLandingPage({ onLeftClick }: { onLeftClick?: () => void }) {
