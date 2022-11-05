@@ -270,7 +270,7 @@ function JCRCBlockOutModal({
           <h3>Venue</h3>
           <VenueSelection>
             <VenueOptions>
-              Select all
+              Select selectAll
               <Venueinput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll} />
             </VenueOptions>
             {facilityList.map((facility) => {
