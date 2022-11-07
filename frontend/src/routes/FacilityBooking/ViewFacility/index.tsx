@@ -95,7 +95,6 @@ export default function ViewFacility() {
         </MainContainer>
       </PullToRefresh>
       <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
-      {/* <ToastContainer /> */}
     </>
   )
 }
