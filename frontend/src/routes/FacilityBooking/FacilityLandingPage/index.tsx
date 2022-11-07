@@ -6,22 +6,8 @@ import ButtonComponent from '../../../components/Button'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 
-export default function FacilityLandingPage({ onLeftClick }: { onLeftClick?: () => void }) {
+export default function FacilityLandingPage() {
   const history = useHistory()
-  const TopBar = styled.div`
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: 50px;
-    background-color: #de5f4c;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-radius: 0px 0px 10px 10px;
-    z-index: 999;
-  `
   const SearchContainer = styled.div`
     display: flex;
     justify-content: space-between;
@@ -33,9 +19,9 @@ export default function FacilityLandingPage({ onLeftClick }: { onLeftClick?: () 
     justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
-    width: 297px;
+    width: 100%;
     height: 234px;
-    margin: 63px 35px 0px 43px;
+    margin: 63px 0px 0px 0px;
   `
   return (
     <>
@@ -49,6 +35,7 @@ export default function FacilityLandingPage({ onLeftClick }: { onLeftClick?: () 
             height="104px"
             fontSize="20px"
             size="small"
+            lineHeight="20px"
             onClick={() => {
               history.push(PATHS.FACILITY_BOOKING_MAIN)
             }}
@@ -60,14 +47,15 @@ export default function FacilityLandingPage({ onLeftClick }: { onLeftClick?: () 
             height="104px"
             fontSize="20px"
             size="small"
+            lineHeight="20px"
             onClick={() => {
-              history.push(PATHS.FACILITY_BOOKING_MAIN)
+              //TODO
             }}
           />
         </SearchContainer>
         <ButtonComponent
           state="primary"
-          text="View my Bookings"
+          text="View my Bookings                                                           "
           width="297px"
           height="80px"
           fontSize="20px"
