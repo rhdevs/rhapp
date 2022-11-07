@@ -84,7 +84,6 @@ const BookingBlock = (props: Props) => {
       type={props.entry.type}
       blockId={props.entry.id}
       hasOverlay={hasOverlay()}
-      isClickable={isClickable()}
     >
       {blockText()}
     </StyledBookingBlock>
