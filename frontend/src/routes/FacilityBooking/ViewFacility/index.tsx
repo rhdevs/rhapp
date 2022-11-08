@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
+import { Alert } from 'antd'
 import styled from 'styled-components'
 import { FormOutlined } from '@ant-design/icons'
 
@@ -24,7 +25,6 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/calendar/actions'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
-import { Alert } from 'antd'
 
 const AlertGroup = styled.div`
   padding: 3px 23px 3px 23px;
@@ -78,15 +78,14 @@ export default function ViewFacility() {
 
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
-      async function wait3seconds() {
+      async function delayStatusUpdate(seconds: number) {
         const promise = new Promise((resolve, reject) => {
-          setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), 3000)
-        }) // wait 3 seconds before setting booking status back to initial
-        const result = await promise
-        result
+          setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
+        }) // delay booking status update
+        await promise
       }
       console.log('sucessssssssss')
-      wait3seconds()
+      delayStatusUpdate(3)
       // TODO show a toast notification to inform of success booking
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
