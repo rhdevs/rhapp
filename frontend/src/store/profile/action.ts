@@ -102,31 +102,30 @@ export const populateProfileEdits = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const handleEditProfileDetails = (bio: string, displayName: string, telegramHandle: string, block: number) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
-  const newUser: User = {
-    ...user,
-    displayName: displayName,
-    telegramHandle: telegramHandle,
-    bio: bio,
-    modules: newModules,
-    profilePicSignedUrl: userProfilePictureBase64,
-    block: block,
+export const handleEditProfileDetails =
+  (bio: string, displayName: string, telegramHandle: string, block: number) =>
+  (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { user, newCCAs, newModules, userProfilePictureBase64 } = getState().profile
+    const newUser: User = {
+      ...user,
+      displayName: displayName,
+      telegramHandle: telegramHandle,
+      bio: bio,
+      modules: newModules,
+      profilePicSignedUrl: userProfilePictureBase64,
+      block: block,
+    }
+
+    // 1. Update local state
+    dispatch({
+      type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
+      user: newUser,
+      ccas: newCCAs,
+    })
+
+    // 2. Update database
+    dispatch(updateCurrentUser(newUser))
   }
-
-  // 1. Update local state
-  dispatch({
-    type: PROFILE_ACTIONS.UPDATE_CURRENT_USER,
-    user: newUser,
-    ccas: newCCAs,
-  })
-
-  // 2. Update database
-  dispatch(updateCurrentUser(newUser))
-}
 
 // One shot update database with all changes
 export const updateCurrentUser = (newUser: User) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
@@ -201,60 +200,56 @@ export const addUserCca = (cca: { userID: string; ccaID: number[] }) => (dispatc
   dispatch(setIsLoading(false))
 }
 
-export const handleCCADetails = (actionType: 'Delete' | 'Add', newCca: UserCCA) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { ccas } = getState().profile
-  const newUserCcas = ccas
+export const handleCCADetails =
+  (actionType: 'Delete' | 'Add', newCca: UserCCA) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { ccas } = getState().profile
+    const newUserCcas = ccas
 
-  // user.cca = ["rhdevs", "rhmp"]
-  switch (actionType) {
-    case 'Delete':
-      // newUserCcas.remove(newCCA)
-      for (let i = 0; i < newUserCcas.length; i++)
-        if (newUserCcas[i].ccaName === newCca.ccaName) {
-          newUserCcas.splice(i, 1)
-          break
+    // user.cca = ["rhdevs", "rhmp"]
+    switch (actionType) {
+      case 'Delete':
+        // newUserCcas.remove(newCCA)
+        for (let i = 0; i < newUserCcas.length; i++)
+          if (newUserCcas[i].ccaName === newCca.ccaName) {
+            newUserCcas.splice(i, 1)
+            break
+          }
+        // user.cca = ["rhdevs"]
+        break
+      case 'Add':
+        newUserCcas.push(newCca)
+        // user.cca = ["rhdevs","rhmp","voices"]
+        break
+    }
+
+    // 1. updatestate
+    dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_CCAS, newCCAs: newUserCcas })
+  }
+
+export const handleModuleDetails =
+  (actionType: 'Delete' | 'Add', newModule: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { user } = getState().profile
+    const newUserModules = user.modules
+    // user.cca = ["rhdevs", "rhmp"]
+    switch (actionType) {
+      case 'Delete':
+        // newUserModules.delete(newModule)
+        const index = newUserModules.indexOf(newModule)
+        if (index > -1) {
+          newUserModules.splice(index, 1)
         }
-      // user.cca = ["rhdevs"]
-      break
-    case 'Add':
-      newUserCcas.push(newCca)
-      // user.cca = ["rhdevs","rhmp","voices"]
-      break
+
+        // user.cca = ["rhdevs"]
+        break
+      case 'Add':
+        newUserModules.push(newModule)
+        // user.cca = ["rhdevs","rhmp","voices"]
+        break
+    }
+
+    // 1. updatestate
+    dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
   }
-
-  // 1. updatestate
-  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_CCAS, newCCAs: newUserCcas })
-}
-
-export const handleModuleDetails = (actionType: 'Delete' | 'Add', newModule: string) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { user } = getState().profile
-  const newUserModules = user.modules
-  // user.cca = ["rhdevs", "rhmp"]
-  switch (actionType) {
-    case 'Delete':
-      // newUserModules.delete(newModule)
-      const index = newUserModules.indexOf(newModule)
-      if (index > -1) {
-        newUserModules.splice(index, 1)
-      }
-
-      // user.cca = ["rhdevs"]
-      break
-    case 'Add':
-      newUserModules.push(newModule)
-      // user.cca = ["rhdevs","rhmp","voices"]
-      break
-  }
-
-  // 1. updatestate
-  dispatch({ type: PROFILE_ACTIONS.UPDATE_USER_MODULES, newModules: newUserModules })
-}
 
 export const setHasChanged = (hasChanged: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({

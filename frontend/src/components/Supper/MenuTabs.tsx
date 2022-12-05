@@ -22,7 +22,9 @@ const ToggleTabsContainer = styled(Radio.Group)`
     color: ${V1_RED};
   }
 
-  .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+  .ant-radio-button-wrapper-checked:not(
+      [class*=' ant-radio-button-wrapper-disabled']
+    ).ant-radio-button-wrapper:first-child {
     border-right-color: ${V1_RED};
     border-left-color: ${V1_RED};
   }

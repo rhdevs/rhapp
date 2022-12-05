@@ -36,25 +36,24 @@ export const getAllSupperGroups = () => async (dispatch: Dispatch<ActionTypes>) 
     })
 }
 
-export const getSupperGroupById = (supperGroupId: string | number | undefined) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (supperGroupId === undefined) return
-  await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
-    .then((resp) => {
-      if (resp.status === 'failed') {
-        throw resp.err
-      }
-      dispatch({
-        type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
-        supperGroup: resp.data,
+export const getSupperGroupById =
+  (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
+    if (supperGroupId === undefined) return
+    await get(ENDPOINTS.GET_SUPPER_GROUP_BY_ID, DOMAINS.SUPPER, `/${supperGroupId}`)
+      .then((resp) => {
+        if (resp.status === 'failed') {
+          throw resp.err
+        }
+        dispatch({
+          type: SUPPER_ACTIONS.GET_SUPPER_GROUP_BY_ID,
+          supperGroup: resp.data,
+        })
       })
-    })
-    .catch((err) => {
-      console.log(err)
-      setSupperErrorMessage('Failed to get supper group, please try again later.')
-    })
-}
+      .catch((err) => {
+        console.log(err)
+        setSupperErrorMessage('Failed to get supper group, please try again later.')
+      })
+  }
 
 export const getCreatedSupperHistory = () => async (dispatch: Dispatch<ActionTypes>) => {
   await get(ENDPOINTS.GET_SUPPER_GROUP_HISTORY, DOMAINS.SUPPER, `/${localStorage.userID}/supperGroupHistory`)
@@ -164,25 +163,24 @@ export const getFoodInOrder = (orderId?: string, foodId?: string) => async (disp
     })
 }
 
-export const getCollatedOrder = (supperGroupId: string | number | undefined) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (!supperGroupId) return
-  await get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
-    .then((resp) => {
-      if (resp.status === 'failed') {
-        throw resp.err
-      }
-      dispatch({
-        type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
-        collatedOrder: { ...resp.data, price: 0.0 },
+export const getCollatedOrder =
+  (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
+    if (!supperGroupId) return
+    await get(ENDPOINTS.GET_COLLATED_ORDER, DOMAINS.SUPPER, `/${supperGroupId}/collated`)
+      .then((resp) => {
+        if (resp.status === 'failed') {
+          throw resp.err
+        }
+        dispatch({
+          type: SUPPER_ACTIONS.GET_COLLATED_ORDER,
+          collatedOrder: { ...resp.data, price: 0.0 },
+        })
       })
-    })
-    .catch((err) => {
-      console.log(err)
-      dispatch(setSupperErrorMessage('Failed to get collated order, please try again later.'))
-    })
-}
+      .catch((err) => {
+        console.log(err)
+        dispatch(setSupperErrorMessage('Failed to get collated order, please try again later.'))
+      })
+  }
 
 export const getUserOrder = (supperGroupId: string | number | undefined) => async (dispatch: Dispatch<ActionTypes>) => {
   if (!supperGroupId) return

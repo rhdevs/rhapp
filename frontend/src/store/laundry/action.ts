@@ -36,103 +36,100 @@ export const getLocationList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
-export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(SetIsLoading(true))
-  const { locations, blocks, selectedLevel, selectedBlock } = getState().laundry
+export const SetBlockLevelSelections =
+  (newBlock: string, newLevel: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(SetIsLoading(true))
+    const { locations, blocks, selectedLevel, selectedBlock } = getState().laundry
 
-  // If only Block is selected
-  if (newLevel === '') {
-    newLevel = selectedLevel as string
-    const filterLocationByBlock = locations.filter(
-      (location) => location.block === parseInt(newBlock ? newBlock?.split(' ')[1] : ''),
-    )
-    const newLevelList = [...new Set(filterLocationByBlock.map((item: Location) => 'Level ' + item.level.toString()))]
+    // If only Block is selected
+    if (newLevel === '') {
+      newLevel = selectedLevel as string
+      const filterLocationByBlock = locations.filter(
+        (location) => location.block === parseInt(newBlock ? newBlock?.split(' ')[1] : ''),
+      )
+      const newLevelList = [...new Set(filterLocationByBlock.map((item: Location) => 'Level ' + item.level.toString()))]
+      dispatch({
+        type: LAUNDRY_ACTIONS.GET_LOCATION_LIST,
+        locations: locations,
+        blocks: blocks,
+        levels: newLevelList as string[],
+      })
+      dispatch(SetIsLoading(false))
+    } else {
+      newBlock = selectedBlock as string
+    }
     dispatch({
-      type: LAUNDRY_ACTIONS.GET_LOCATION_LIST,
-      locations: locations,
-      blocks: blocks,
-      levels: newLevelList as string[],
+      type: LAUNDRY_ACTIONS.SET_BLOCK_LEVEL_SELECTIONS,
+      selectedBlock: newBlock as string,
+      selectedLevel: newLevel as string,
     })
     dispatch(SetIsLoading(false))
-  } else {
-    newBlock = selectedBlock as string
+    dispatch(SetFilteredMachines(newBlock, newLevel))
   }
-  dispatch({
-    type: LAUNDRY_ACTIONS.SET_BLOCK_LEVEL_SELECTIONS,
-    selectedBlock: newBlock as string,
-    selectedLevel: newLevel as string,
-  })
-  dispatch(SetIsLoading(false))
-  dispatch(SetFilteredMachines(newBlock, newLevel))
-}
 
-export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  // const defaultProfilePictureUrl =
-  //   'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
-  dispatch(SetIsLoading(true))
+export const SetFilteredMachines =
+  (selectedBlock: string, selectedLevel: string) => async (dispatch: Dispatch<ActionTypes>) => {
+    // const defaultProfilePictureUrl =
+    //   'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+    dispatch(SetIsLoading(true))
 
-  // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
-  async function populateTable(): Promise<WashingMachine[]> {
-    let returnTable: WashingMachine[] = []
-    for (let i = 0; i < 3; i++) {
-      const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
-      const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
-      const queryUrl =
-        DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
-      await fetch(queryUrl, {
-        method: 'GET',
-        mode: 'cors',
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          console.log(data)
-          returnTable = returnTable.concat(data.data)
+    // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
+    async function populateTable(): Promise<WashingMachine[]> {
+      let returnTable: WashingMachine[] = []
+      for (let i = 0; i < 3; i++) {
+        const queryBlock = selectedBlock === 'Kuok' ? 7 : selectedBlock?.split(' ')[1]
+        const queryLevel = selectedBlock === 'Kuok' ? 0 : selectedLevel?.split(' ')[1]
+        const queryUrl =
+          DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?locationID=' + queryBlock + '-' + queryLevel + i
+        await fetch(queryUrl, {
+          method: 'GET',
+          mode: 'cors',
         })
+          .then((resp) => resp.json())
+          .then((data) => {
+            console.log(data)
+            returnTable = returnTable.concat(data.data)
+          })
+      }
+
+      return returnTable
     }
 
-    return returnTable
-  }
+    // const promises: Promise<void>[] = []
+    // const finalTable: WashingMachine[] = []
 
-  // const promises: Promise<void>[] = []
-  // const finalTable: WashingMachine[] = []
+    // await populateTable().then((returnTable) => {
+    //   returnTable.forEach((washingMachine) => {
+    //     console.log(washingMachine)
+    //     if (washingMachine.userID) {
+    //       promises.push(
+    //         axios.get(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + washingMachine.userID).then(
+    //           (response) => {
+    //             console.log(response)
+    //             washingMachine.userImage = response.data.data.image
+    //             finalTable.push(washingMachine)
+    //           },
+    //           (error) => {
+    //             console.log(error)
+    //           },
+    //         ),
+    //       )
+    //     } else {
+    //       washingMachine.userImage = defaultProfilePictureUrl
+    //       finalTable.push(washingMachine)
+    //     }
+    //   })
+    // })
 
-  // await populateTable().then((returnTable) => {
-  //   returnTable.forEach((washingMachine) => {
-  //     console.log(washingMachine)
-  //     if (washingMachine.userID) {
-  //       promises.push(
-  //         axios.get(DOMAIN_URL.SOCIAL + ENDPOINTS.USER_PROFILE_PICTURE + washingMachine.userID).then(
-  //           (response) => {
-  //             console.log(response)
-  //             washingMachine.userImage = response.data.data.image
-  //             finalTable.push(washingMachine)
-  //           },
-  //           (error) => {
-  //             console.log(error)
-  //           },
-  //         ),
-  //       )
-  //     } else {
-  //       washingMachine.userImage = defaultProfilePictureUrl
-  //       finalTable.push(washingMachine)
-  //     }
-  //   })
-  // })
-
-  // await Promise.all(promises)
-  populateTable().then((returnTable) => {
-    dispatch(SetIsLoading(false))
-    dispatch({
-      type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
-      filteredMachines: returnTable,
+    // await Promise.all(promises)
+    populateTable().then((returnTable) => {
+      dispatch(SetIsLoading(false))
+      dispatch({
+        type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
+        filteredMachines: returnTable,
+      })
     })
-  })
-}
+  }
 
 export const SetSelectedMachineFromId = (machineId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.LAUNDRY_MACHINE + '?machineID=' + machineId, {
@@ -202,59 +199,57 @@ export const SetManualEditMode = (isEdit: boolean) => async (dispatch: Dispatch<
  * WHATEVER ---> job: "Cancelled" ---> AVAILABLE
  *
  **/
-export const updateMachine = (updatedState: string, machineID: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { filteredMachines, duration } = getState().laundry
-  let newJob
-  switch (updatedState) {
-    case 'In Use':
-    case 'Reserved':
-      newJob = 'None'
-      break
-    case 'Available':
-      newJob = 'Cancelled'
-      break
-    default:
-      newJob = 'None'
-  }
+export const updateMachine =
+  (updatedState: string, machineID: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { filteredMachines, duration } = getState().laundry
+    let newJob
+    switch (updatedState) {
+      case 'In Use':
+      case 'Reserved':
+        newJob = 'None'
+        break
+      case 'Available':
+        newJob = 'Cancelled'
+        break
+      default:
+        newJob = 'None'
+    }
 
-  const queryBody: { job: string; machineID: string; userID: string | null; currentDuration: number } = {
-    job: newJob,
-    machineID: machineID,
-    userID: localStorage.getItem('userID'), //TODO: Update userId
-    currentDuration: duration * 60,
-  }
-  dispatch(SetIsLoading(true))
-  await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(queryBody),
-  })
-    .then((resp) => {
-      if (resp.ok) {
-        console.log('success')
-      } else {
-        throw new Error('fetching data failed')
-      }
+    const queryBody: { job: string; machineID: string; userID: string | null; currentDuration: number } = {
+      job: newJob,
+      machineID: machineID,
+      userID: localStorage.getItem('userID'), //TODO: Update userId
+      currentDuration: duration * 60,
+    }
+    dispatch(SetIsLoading(true))
+    await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(queryBody),
     })
-    .catch((error) => {
-      console.log(error)
-      // error, return to the page again
+      .then((resp) => {
+        if (resp.ok) {
+          console.log('success')
+        } else {
+          throw new Error('fetching data failed')
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        // error, return to the page again
+      })
+
+    dispatch(SetSelectedMachineFromId(machineID))
+
+    filteredMachines.forEach((machine) => {
+      if (machine.machineID === machineID) machine.job = updatedState as WMStatus
     })
-
-  dispatch(SetSelectedMachineFromId(machineID))
-
-  filteredMachines.forEach((machine) => {
-    if (machine.machineID === machineID) machine.job = updatedState as WMStatus
-  })
-  dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
-  dispatch(SetIsLoading(false))
-}
+    dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
+    dispatch(SetIsLoading(false))
+  }
 
 export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_DURATION, duration: duration })

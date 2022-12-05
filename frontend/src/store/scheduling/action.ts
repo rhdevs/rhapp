@@ -83,106 +83,103 @@ export const fetchAllPublicEvents = () => async (dispatch: Dispatch<ActionTypes>
   getFromBackend(ENDPOINTS.ALL_PUBLIC_EVENTS_AFTER_SPECIFIC_TIME + `/${currentUNIXDate}`, dispatchData)
 }
 
-export const fetchAllUserEvents = (userId: string | null, withNusModsEvents: boolean) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (userId !== null) {
-    const manipulateData = async (data: SchedulingEvent[]) => {
-      const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
-        return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
-      })
-      let allEvents: TimetableEvent[] = []
-      if (withNusModsEvents) {
-        const userNusModsEvents = await dispatch(getUserNusModsEvents(userId, false))
-        allEvents = userNusModsEvents ? timetableFormatEvents.concat(userNusModsEvents) : timetableFormatEvents
-      } else {
-        allEvents = timetableFormatEvents
+export const fetchAllUserEvents =
+  (userId: string | null, withNusModsEvents: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
+    if (userId !== null) {
+      const manipulateData = async (data: SchedulingEvent[]) => {
+        const timetableFormatEvents: TimetableEvent[] = data.map((singleEvent) => {
+          return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
+        })
+        let allEvents: TimetableEvent[] = []
+        if (withNusModsEvents) {
+          const userNusModsEvents = await dispatch(getUserNusModsEvents(userId, false))
+          allEvents = userNusModsEvents ? timetableFormatEvents.concat(userNusModsEvents) : timetableFormatEvents
+        } else {
+          allEvents = timetableFormatEvents
+        }
+
+        dispatch({
+          type: SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS,
+          userAllEventsList: allEvents,
+        })
       }
 
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_ALL_USER_EVENTS,
-        userAllEventsList: allEvents,
-      })
+      getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/all`, manipulateData)
+    } else {
+      error('Invalid action, you are not logged in!')
     }
-
-    getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/all`, manipulateData)
-  } else {
-    error('Invalid action, you are not logged in!')
   }
-}
 
 // ---------------------- TIMETABLE ----------------------
-export const fetchCurrentUserEvents = (userId: string | null, isUserEventsOnly: boolean) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  if (userId !== null) {
-    dispatch(setIsLoading(true))
-    const manipulateData = async (data: SchedulingEvent[]) => {
-      const { selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
-      // const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
-      const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
+export const fetchCurrentUserEvents =
+  (userId: string | null, isUserEventsOnly: boolean) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    if (userId !== null) {
+      dispatch(setIsLoading(true))
+      const manipulateData = async (data: SchedulingEvent[]) => {
+        const { selectedCCAEvents, selectedProfileNusModsEvents } = getState().scheduling
+        // const allFriendEvents: SchedulingEvent[] = selectedProfileEvents
+        const allCCAEvents: SchedulingEvent[] = selectedCCAEvents
 
-      let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
-        return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
-      })
-
-      // Add selected friends' & CCA events to current user's list of events
-      if (!isUserEventsOnly) {
-        // const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
-        //   return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
-        // })
-        // timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
-
-        const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
-          return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
+        let timetableFormatEvents: TimetableEvent[] = data.map((singleEvent: SchedulingEvent) => {
+          return convertSchedulingEventToTimetableEvent(singleEvent, false, false)
         })
-        timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
+
+        // Add selected friends' & CCA events to current user's list of events
+        if (!isUserEventsOnly) {
+          // const formattedFriendsEvents = allFriendEvents.map((friendEvent: SchedulingEvent) => {
+          //   return convertSchedulingEventToTimetableEvent(friendEvent, true, false)
+          // })
+          // timetableFormatEvents = timetableFormatEvents.concat(formattedFriendsEvents)
+
+          const formattedCCAEvents = allCCAEvents.map((CCAEvent: SchedulingEvent) => {
+            return convertSchedulingEventToTimetableEvent(CCAEvent, false, true)
+          })
+          timetableFormatEvents = timetableFormatEvents.concat(formattedCCAEvents)
+        }
+
+        let userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
+        if (userNusModsEvents === null) userNusModsEvents = []
+        const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
+        const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
+          ? userNusModsEvents
+          : userNusModsEvents.concat(friendsNusModsEvents)
+
+        const allEvents: TimetableEvent[] = allNusModsEvents.length
+          ? timetableFormatEvents.concat(allNusModsEvents)
+          : timetableFormatEvents
+
+        const startTime =
+          allNusModsEvents.length !== 0
+            ? Math.min(
+                Number(getNusModsEventsStartTime(allNusModsEvents)),
+                Number(getTimetableStartTime(timetableFormatEvents)),
+              )
+            : Number(getTimetableStartTime(timetableFormatEvents))
+
+        const endTime =
+          allNusModsEvents.length !== 0
+            ? Math.max(
+                Number(getNusModsEventsEndTime(allNusModsEvents)),
+                Number(getTimetableEndTime(timetableFormatEvents)),
+              )
+            : Number(getTimetableEndTime(timetableFormatEvents))
+
+        dispatch({
+          type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
+          userCurrentEvents: transformInformationToTimetableFormat(allEvents),
+          userCurrentEventsStartTime: startTime,
+          userCurrentEventsEndTime: endTime,
+          userCurrentEventsList: allEvents,
+        })
+        dispatch(setIsLoading(false))
       }
 
-      let userNusModsEvents: TimetableEvent[] = await dispatch(getUserNusModsEvents(userId, false))
-      if (userNusModsEvents === null) userNusModsEvents = []
-      const friendsNusModsEvents: TimetableEvent[] = selectedProfileNusModsEvents
-      const allNusModsEvents: TimetableEvent[] = isUserEventsOnly
-        ? userNusModsEvents
-        : userNusModsEvents.concat(friendsNusModsEvents)
+      const currentUNIXDate = Math.round(Date.now() / 1000)
 
-      const allEvents: TimetableEvent[] = allNusModsEvents.length
-        ? timetableFormatEvents.concat(allNusModsEvents)
-        : timetableFormatEvents
-
-      const startTime =
-        allNusModsEvents.length !== 0
-          ? Math.min(
-              Number(getNusModsEventsStartTime(allNusModsEvents)),
-              Number(getTimetableStartTime(timetableFormatEvents)),
-            )
-          : Number(getTimetableStartTime(timetableFormatEvents))
-
-      const endTime =
-        allNusModsEvents.length !== 0
-          ? Math.max(
-              Number(getNusModsEventsEndTime(allNusModsEvents)),
-              Number(getTimetableEndTime(timetableFormatEvents)),
-            )
-          : Number(getTimetableEndTime(timetableFormatEvents))
-
-      dispatch({
-        type: SCHEDULING_ACTIONS.GET_CURRENT_USER_EVENTS,
-        userCurrentEvents: transformInformationToTimetableFormat(allEvents),
-        userCurrentEventsStartTime: startTime,
-        userCurrentEventsEndTime: endTime,
-        userCurrentEventsList: allEvents,
-      })
+      getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/` + currentUNIXDate, manipulateData)
       dispatch(setIsLoading(false))
     }
-
-    const currentUNIXDate = Math.round(Date.now() / 1000)
-
-    getFromBackend(ENDPOINTS.USER_EVENT + `/${userId}/` + currentUNIXDate, manipulateData)
-    dispatch(setIsLoading(false))
   }
-}
 
 const getNusModsEventsStartTime = (allNusModsEvents: TimetableEvent[]) => {
   let startTime = allNusModsEvents[0].startTime
@@ -366,53 +363,51 @@ const getTimeStringFromUNIX = (unixDate: number) => {
 // ---------------------- TIMETABLE ----------------------
 
 // ---------------------- NUSMODS ----------------------
-export const setUserNusMods = (userId: string | null, userNusModsLink: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (userId !== null) {
-    const currentYear = new Date().getFullYear()
-    const academicYear = String(currentYear - 1) + '-' + String(currentYear)
-    const lasPositionOfWordSem = userNusModsLink.indexOf('sem-') + 'sem-'.length
-    const currentSemester = Number(userNusModsLink.substring(lasPositionOfWordSem, lasPositionOfWordSem + 1))
+export const setUserNusMods =
+  (userId: string | null, userNusModsLink: string) => async (dispatch: Dispatch<ActionTypes>) => {
+    if (userId !== null) {
+      const currentYear = new Date().getFullYear()
+      const academicYear = String(currentYear - 1) + '-' + String(currentYear)
+      const lasPositionOfWordSem = userNusModsLink.indexOf('sem-') + 'sem-'.length
+      const currentSemester = Number(userNusModsLink.substring(lasPositionOfWordSem, lasPositionOfWordSem + 1))
 
-    const requestBody = {
-      userID: userId,
-      url: userNusModsLink,
-      academicYear: academicYear,
-      currentSemester: currentSemester,
-    }
-    const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
-      .then((resp) => {
-        return resp
-      })
-      .catch((err) => {
+      const requestBody = {
+        userID: userId,
+        url: userNusModsLink,
+        academicYear: academicYear,
+        currentSemester: currentSemester,
+      }
+      const resp = await put(ENDPOINTS.ADD_MODS, DOMAINS.EVENT, requestBody)
+        .then((resp) => {
+          return resp
+        })
+        .catch((err) => {
+          error('Failed to import, please try again!')
+          dispatch(setNusModsStatus(false, true))
+          console.log(err)
+        })
+
+      if (resp.status >= 400) {
         error('Failed to import, please try again!')
         dispatch(setNusModsStatus(false, true))
-        console.log(err)
-      })
-
-    if (resp.status >= 400) {
-      error('Failed to import, please try again!')
-      dispatch(setNusModsStatus(false, true))
+      } else {
+        dispatch(fetchCurrentUserEvents(userId, false))
+        dispatch(setNusModsStatus(true, false))
+        success('NUSMods successfully imported!')
+      }
     } else {
-      dispatch(fetchCurrentUserEvents(userId, false))
-      dispatch(setNusModsStatus(true, false))
-      success('NUSMods successfully imported!')
+      error('Invalid action, you are not logged in!')
     }
-  } else {
-    error('Invalid action, you are not logged in!')
   }
-}
 
-export const setNusModsStatus = (nusModsIsSuccessful: boolean, nusModsIsFailure: boolean) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS,
-    nusModsIsSuccessful: nusModsIsSuccessful,
-    nusModsIsFailure: nusModsIsFailure,
-  })
-}
+export const setNusModsStatus =
+  (nusModsIsSuccessful: boolean, nusModsIsFailure: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+    dispatch({
+      type: SCHEDULING_ACTIONS.HANDLE_NUSMODS_STATUS,
+      nusModsIsSuccessful: nusModsIsSuccessful,
+      nusModsIsFailure: nusModsIsFailure,
+    })
+  }
 
 const getUserNusModsEvents = (userId: string | null, isFriends: boolean) => async (dispatch: Dispatch<ActionTypes>) => {
   if (userId !== null) {
@@ -466,31 +461,29 @@ export const deleteSingleNusModsEvent = async (userId: string | null, eventId: s
   }
 }
 
-export const deleteUserNusModsEvents = (userId: string | null) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  if (userId !== null) {
-    const updateDeleteStatus = (data) => {
-      if (data.ok) {
-        success('NUSMods events deleted!')
-        dispatch(fetchCurrentUserEvents(userId, false))
-      } else {
-        error('Failed to delete NUSMods events, please try again!')
-        console.log('FAILURE!!!! ' + data.status)
+export const deleteUserNusModsEvents =
+  (userId: string | null) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    if (userId !== null) {
+      const updateDeleteStatus = (data) => {
+        if (data.ok) {
+          success('NUSMods events deleted!')
+          dispatch(fetchCurrentUserEvents(userId, false))
+        } else {
+          error('Failed to delete NUSMods events, please try again!')
+          console.log('FAILURE!!!! ' + data.status)
+        }
+        dispatch(setIsLoading(false))
       }
+
+      const { userNusModsEventsList } = getState().scheduling
+
+      if (userNusModsEventsList.length)
+        postToBackend(ENDPOINTS.DELETE_MODS + `/${userId}`, 'DELETE', null, updateDeleteStatus)
       dispatch(setIsLoading(false))
+    } else {
+      error('Invalid action, you are not logged in!')
     }
-
-    const { userNusModsEventsList } = getState().scheduling
-
-    if (userNusModsEventsList.length)
-      postToBackend(ENDPOINTS.DELETE_MODS + `/${userId}`, 'DELETE', null, updateDeleteStatus)
-    dispatch(setIsLoading(false))
-  } else {
-    error('Invalid action, you are not logged in!')
   }
-}
 // ---------------------- NUSMODS ----------------------
 
 // ---------------------- SHARE SEARCH ----------------------
@@ -549,45 +542,44 @@ export const getSearchedEvents = (query: string) => async (dispatch: Dispatch<Ac
   dispatch(setIsLoading(false))
 }
 
-export const editUserEvents = (action: string, eventID: string, userId: string | null) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (userId !== null) {
-    const requestBody = {
-      userID: userId,
-      eventID: eventID,
-    }
-
-    if (action === 'remove') {
-      const updateEventStatus = (data) => {
-        if (data.ok) {
-          dispatch(fetchCurrentUserEvents(userId, false))
-          dispatch(fetchAllUserEvents(userId, true))
-          success('Successfully removed from schedule!')
-        } else {
-          error('Failed to remove event, please try again!')
-          console.log('FAILURE!!!! ' + data.status)
-        }
-      }
-      postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
-    } else if (action === 'add') {
-      const updateEventStatus = (data) => {
-        if (data.ok) {
-          dispatch(fetchCurrentUserEvents(userId, false))
-          dispatch(fetchAllUserEvents(userId, true))
-          success('Successfully added to schedule!')
-        } else {
-          console.log('FAILURE!!!! ' + data.status)
-          error('Failed to add event, please try again!')
-        }
+export const editUserEvents =
+  (action: string, eventID: string, userId: string | null) => (dispatch: Dispatch<ActionTypes>) => {
+    if (userId !== null) {
+      const requestBody = {
+        userID: userId,
+        eventID: eventID,
       }
 
-      postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
+      if (action === 'remove') {
+        const updateEventStatus = (data) => {
+          if (data.ok) {
+            dispatch(fetchCurrentUserEvents(userId, false))
+            dispatch(fetchAllUserEvents(userId, true))
+            success('Successfully removed from schedule!')
+          } else {
+            error('Failed to remove event, please try again!')
+            console.log('FAILURE!!!! ' + data.status)
+          }
+        }
+        postToBackend(ENDPOINTS.RSVP_EVENT, 'DELETE', requestBody, updateEventStatus)
+      } else if (action === 'add') {
+        const updateEventStatus = (data) => {
+          if (data.ok) {
+            dispatch(fetchCurrentUserEvents(userId, false))
+            dispatch(fetchAllUserEvents(userId, true))
+            success('Successfully added to schedule!')
+          } else {
+            console.log('FAILURE!!!! ' + data.status)
+            error('Failed to add event, please try again!')
+          }
+        }
+
+        postToBackend(ENDPOINTS.RSVP_EVENT, 'POST', requestBody, updateEventStatus)
+      }
+    } else {
+      error('Invalid action, you are not logged in!')
     }
-  } else {
-    error('Invalid action, you are not logged in!')
   }
-}
 
 export const getPublicEventsByPage = (pageIndex: number) => async (dispatch: Dispatch<ActionTypes>) => {
   const currentUNIXDate = Math.round(Date.now() / 1000)
@@ -657,55 +649,57 @@ export const getHallEventTypes = () => (dispatch: Dispatch<ActionTypes>) => {
   })
 }
 
-export const handleSubmitCreateEvent = (
-  eventName: string,
-  eventLocation: string,
-  eventDescription: string,
-  eventTargetAudience: string,
-  creatorIsAttending: boolean,
-) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  dispatch(setIsLoading(true))
+export const handleSubmitCreateEvent =
+  (
+    eventName: string,
+    eventLocation: string,
+    eventDescription: string,
+    eventTargetAudience: string,
+    creatorIsAttending: boolean,
+  ) =>
+  async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(setIsLoading(true))
 
-  const { newEventFromDate, newEventToDate } = getState().scheduling
-  const isPersonal = eventTargetAudience === 'Personal'
+    const { newEventFromDate, newEventToDate } = getState().scheduling
+    const isPersonal = eventTargetAudience === 'Personal'
 
-  const newEvent = {
-    eventName: eventName,
-    startDateTime: Math.round(newEventFromDate.getTime() / 1000),
-    endDateTime: Math.round(newEventToDate.getTime() / 1000),
-    description: eventDescription,
-    location: eventLocation,
-    userID: localStorage.getItem('userID'),
-    image: null,
-    ccaID: isPersonal ? null : parseInt(eventTargetAudience),
-    isPrivate: isPersonal,
-    ownerIsAttending: creatorIsAttending,
+    const newEvent = {
+      eventName: eventName,
+      startDateTime: Math.round(newEventFromDate.getTime() / 1000),
+      endDateTime: Math.round(newEventToDate.getTime() / 1000),
+      description: eventDescription,
+      location: eventLocation,
+      userID: localStorage.getItem('userID'),
+      image: null,
+      ccaID: isPersonal ? null : parseInt(eventTargetAudience),
+      isPrivate: isPersonal,
+      ownerIsAttending: creatorIsAttending,
+    }
+    await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
+      mode: 'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newEvent),
+    })
+      .then((resp) => resp.json().then((data) => ({ status: resp.status, body: data })))
+      .then((resp) => {
+        if (resp.status >= 400) {
+          error(resp.body.error)
+          dispatch(setCreatedEventID(null))
+        } else {
+          success('Event created!')
+          dispatch(setCreatedEventID(resp.body.eventID))
+          dispatch(resetCreateEventFields())
+        }
+      })
+      .catch((err) => {
+        error('Failed to create event, please try again!')
+        console.log(err)
+      })
+    dispatch(setIsLoading(false))
   }
-  await fetch(DOMAIN_URL.EVENT + ENDPOINTS.ADD_EVENT, {
-    mode: 'cors',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newEvent),
-  })
-    .then((resp) => resp.json().then((data) => ({ status: resp.status, body: data })))
-    .then((resp) => {
-      if (resp.status >= 400) {
-        error(resp.body.error)
-        dispatch(setCreatedEventID(null))
-      } else {
-        success('Event created!')
-        dispatch(setCreatedEventID(resp.body.eventID))
-        dispatch(resetCreateEventFields())
-      }
-    })
-    .catch((err) => {
-      error('Failed to create event, please try again!')
-      console.log(err)
-    })
-  dispatch(setIsLoading(false))
-}
 
 export const setCreatedEventID = (eventID: string | null) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -728,49 +722,48 @@ const resetCreateEventFields = () => (dispatch: Dispatch<ActionTypes>) => {
 // ---------------------- CREATE EVENTS ----------------------
 
 // ---------------------- VIEW EVENTS ----------------------
-export const setSelectedEvent = (selectedEvent: TimetableEvent | null, eventID: string | null) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  let event
-  if (selectedEvent) event = selectedEvent
-  else if (eventID) {
-    const eventFromBackend = await getFromBackend(ENDPOINTS.GET_EVENT_BY_EVENTID + `/${eventID}`, null)
-    if (eventFromBackend.err) {
-      const userNusModsEvents = await dispatch(getUserNusModsEvents(localStorage.getItem('userID'), false))
-      event = userNusModsEvents.find((indivEvent) => {
-        return indivEvent.eventID === eventID
-      })
-    } else {
-      let ccaDetails
-      if (eventFromBackend.ccaID !== null) ccaDetails = await dispatch(getCCADetails(eventFromBackend.ccaID))
-      else ccaDetails = null
-      event = {
-        eventID: eventFromBackend.eventID,
-        eventName: eventFromBackend.eventName,
-        startDateTime: eventFromBackend.startDateTime,
-        endDateTime: eventFromBackend.endDateTime,
-        description: eventFromBackend.description,
-        location: eventFromBackend.location,
-        ccaID: eventFromBackend.ccaID,
-        userID: eventFromBackend.userID,
-        image: eventFromBackend.image,
+export const setSelectedEvent =
+  (selectedEvent: TimetableEvent | null, eventID: string | null) => async (dispatch: Dispatch<ActionTypes>) => {
+    let event
+    if (selectedEvent) event = selectedEvent
+    else if (eventID) {
+      const eventFromBackend = await getFromBackend(ENDPOINTS.GET_EVENT_BY_EVENTID + `/${eventID}`, null)
+      if (eventFromBackend.err) {
+        const userNusModsEvents = await dispatch(getUserNusModsEvents(localStorage.getItem('userID'), false))
+        event = userNusModsEvents.find((indivEvent) => {
+          return indivEvent.eventID === eventID
+        })
+      } else {
+        let ccaDetails
+        if (eventFromBackend.ccaID !== null) ccaDetails = await dispatch(getCCADetails(eventFromBackend.ccaID))
+        else ccaDetails = null
+        event = {
+          eventID: eventFromBackend.eventID,
+          eventName: eventFromBackend.eventName,
+          startDateTime: eventFromBackend.startDateTime,
+          endDateTime: eventFromBackend.endDateTime,
+          description: eventFromBackend.description,
+          location: eventFromBackend.location,
+          ccaID: eventFromBackend.ccaID,
+          userID: eventFromBackend.userID,
+          image: eventFromBackend.image,
 
-        startTime: eventFromBackend.startTime,
-        endTime: eventFromBackend.endTime,
-        day: eventFromBackend.day,
-        eventType: eventFromBackend.isPrivate ? 'private' : 'public',
-        CCADetails: ccaDetails,
+          startTime: eventFromBackend.startTime,
+          endTime: eventFromBackend.endTime,
+          day: eventFromBackend.day,
+          eventType: eventFromBackend.isPrivate ? 'private' : 'public',
+          CCADetails: ccaDetails,
+        }
       }
+    } else {
+      //reset selected event
+      event = null
     }
-  } else {
-    //reset selected event
-    event = null
+    dispatch({
+      type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
+      selectedEvent: event,
+    })
   }
-  dispatch({
-    type: SCHEDULING_ACTIONS.SET_SELECTED_EVENT,
-    selectedEvent: event,
-  })
-}
 
 export const deleteSelectedEvent = (eventId: string) => (dispatch: Dispatch<ActionTypes>) => {
   const updateStatus = (data) => {
@@ -811,21 +804,19 @@ export const getCCADetails = (ccaID: number) => async (dispatch: Dispatch<Action
   return ccaDetails[0]
 }
 
-export const setSelectedCCAIds = (selectedCCAIds: number[]) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { selectedProfileIds } = getState().scheduling
+export const setSelectedCCAIds =
+  (selectedCCAIds: number[]) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { selectedProfileIds } = getState().scheduling
 
-  dispatch(fetchCCAEvents(selectedCCAIds))
-  dispatch(
-    fetchCurrentUserEvents(
-      localStorage.getItem('userID'),
-      selectedProfileIds.length === 0 && selectedCCAIds.length === 0,
-    ),
-  )
-  dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS, selectedCCAIds: selectedCCAIds })
-}
+    dispatch(fetchCCAEvents(selectedCCAIds))
+    dispatch(
+      fetchCurrentUserEvents(
+        localStorage.getItem('userID'),
+        selectedProfileIds.length === 0 && selectedCCAIds.length === 0,
+      ),
+    )
+    dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_CCA_IDS, selectedCCAIds: selectedCCAIds })
+  }
 
 const fetchCCAEvents = (ccaIds: number[]) => (dispatch: Dispatch<ActionTypes>) => {
   let allSelectedCCAEvents: SchedulingEvent[] = []
@@ -937,21 +928,19 @@ const fetchFriendsNusModsTimetable = (friendsIds: string[]) => async (dispatch: 
  *
  * @param selectedProfileIds array of profile IDs selected by the user
  */
-export const setSelectedProfileIds = (selectedProfileIds: string[]) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  const { selectedCCAIds } = getState().scheduling
+export const setSelectedProfileIds =
+  (selectedProfileIds: string[]) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    const { selectedCCAIds } = getState().scheduling
 
-  dispatch(fetchFriendTimetables(selectedProfileIds))
-  dispatch(
-    fetchCurrentUserEvents(
-      localStorage.getItem('userID'),
-      selectedProfileIds.length === 0 && selectedCCAIds.length === 0,
-    ),
-  )
-  dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
-}
+    dispatch(fetchFriendTimetables(selectedProfileIds))
+    dispatch(
+      fetchCurrentUserEvents(
+        localStorage.getItem('userID'),
+        selectedProfileIds.length === 0 && selectedCCAIds.length === 0,
+      ),
+    )
+    dispatch({ type: SCHEDULING_ACTIONS.SET_SELECTED_PROFILE_IDS, selectedProfileIds: selectedProfileIds })
+  }
 // ---------------------- CCA/FRIENDS(USERS) ----------------------
 
 export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {

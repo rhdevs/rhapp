@@ -112,45 +112,43 @@ export const DeleteImage = (urlToDelete: string) => (dispatch: Dispatch<ActionTy
   })
 }
 
-export const AddImage = (e: React.ChangeEvent<HTMLInputElement>) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch({ type: SOCIAL_ACTIONS.SET_IS_UPLOADING, isUploading: true })
-  const { warnings, newPostImages } = getState().social
-  e.preventDefault()
+export const AddImage =
+  (e: React.ChangeEvent<HTMLInputElement>) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch({ type: SOCIAL_ACTIONS.SET_IS_UPLOADING, isUploading: true })
+    const { warnings, newPostImages } = getState().social
+    e.preventDefault()
 
-  const reader = new FileReader()
-  const files = e.target.files ?? []
-  const file = files.length > 0 ? files[0] : null
-  if (!file) {
-    warnings.push('No file selected!')
-  } else if (!file.type.match('image.*')) {
-    warnings.push('File is not a photo!')
-  } else {
-    reader.readAsDataURL(file)
-    reader.onloadend = () => {
-      if (newPostImages.length > 2) {
-        warnings.push('The limit is 3 photos!')
+    const reader = new FileReader()
+    const files = e.target.files ?? []
+    const file = files.length > 0 ? files[0] : null
+    if (!file) {
+      warnings.push('No file selected!')
+    } else if (!file.type.match('image.*')) {
+      warnings.push('File is not a photo!')
+    } else {
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        if (newPostImages.length > 2) {
+          warnings.push('The limit is 3 photos!')
+        }
+        // TODO: Upload images to cloud, and delete
+        const newUrl =
+          reader.result && !(reader.result instanceof ArrayBuffer) && newPostImages.length < 3
+            ? [...newPostImages, reader.result]
+            : newPostImages
+
+        dispatch({
+          type: SOCIAL_ACTIONS.ADD_IMAGE,
+          newPostImages: newUrl,
+        })
       }
-      // TODO: Upload images to cloud, and delete
-      const newUrl =
-        reader.result && !(reader.result instanceof ArrayBuffer) && newPostImages.length < 3
-          ? [...newPostImages, reader.result]
-          : newPostImages
-
-      dispatch({
-        type: SOCIAL_ACTIONS.ADD_IMAGE,
-        newPostImages: newUrl,
-      })
     }
+    dispatch({ type: SOCIAL_ACTIONS.SET_IS_UPLOADING, isUploading: false })
+    dispatch({
+      type: SOCIAL_ACTIONS.SET_WARNINGS,
+      warnings: warnings,
+    })
   }
-  dispatch({ type: SOCIAL_ACTIONS.SET_IS_UPLOADING, isUploading: false })
-  dispatch({
-    type: SOCIAL_ACTIONS.SET_WARNINGS,
-    warnings: warnings,
-  })
-}
 
 export const PopWarning = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   const { warnings } = getState().social
@@ -161,108 +159,105 @@ export const PopWarning = () => (dispatch: Dispatch<ActionTypes>, getState: GetS
   })
 }
 
-export const EditPostDetail = (fieldName: string, fieldData: string) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  let { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
-  const { newPostImages } = getState().social
+export const EditPostDetail =
+  (fieldName: string, fieldData: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    let { newPostTitle, newPostBody, newPostOfficial, newPostCca } = getState().social
+    const { newPostImages } = getState().social
 
-  switch (fieldName) {
-    case 'title':
-      newPostTitle = fieldData
-      break
-    case 'body':
-      newPostBody = fieldData
-      break
-    case 'official':
-      newPostOfficial = !newPostOfficial
-      break
-    case 'postImage':
-      if (fieldData) {
-        newPostImages.push(fieldData)
-      }
-      break
-    case 'cca':
-      if (fieldData) {
-        newPostCca = parseInt(fieldData)
-      }
-      break
-  }
-
-  dispatch({
-    type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
-    newPostTitle: newPostTitle,
-    newPostBody: newPostBody,
-    newPostImages: newPostImages,
-    newPostOfficial: newPostOfficial,
-    newPostCca: newPostCca,
-  })
-}
-
-export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(SetIsLoading(true))
-  let endpoint: ENDPOINTS
-  const { posts } = getState().social
-
-  switch (postFilter) {
-    case POSTS_FILTER.OFFICIAL:
-      endpoint = ENDPOINTS.OFFICIAL_POSTS
-      break
-    case POSTS_FILTER.ALL:
-      endpoint = ENDPOINTS.ALL_POSTS
-      break
-    case POSTS_FILTER.FRIENDS:
-      endpoint = ENDPOINTS.FRIENDS_OF_USER_POSTS
-      break
-    default:
-      endpoint = ENDPOINTS.ALL_POSTS
-      break
-  }
-
-  // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
-  const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
-
-  get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
-    if (response.data.length > 0) {
-      const transformedPost = cloneDeep(response.data).map((post) => {
-        post.date = post.createdAt
-        post.postId = post.postID
-        post.ccaId = post.ccaID
-        post.userId = post.userID
-        post.date = new Date(post.createdAt)
-        post.profilePic = post.profilePictureURI
-        return post
-      })
-
-      //validate if caller made repeated call to the same posts
-      const transformedPostID = transformedPost.map((post) => post.postId)
-      const postIds = posts.map((post) => post.postId)
-      const postDiff = difference(transformedPostID, postIds)
-
-      if (postDiff.length > 0) {
-        const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
-        const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
-        dispatch({
-          type: SOCIAL_ACTIONS.GET_POSTS,
-          posts: sortedPosts,
-        })
-      } else {
-        //do nothing
-        //repeated call so do not concat same posts to existing posts
-      }
-    } else {
-      dispatch({
-        type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,
-        hasNoMorePosts: true,
-      })
+    switch (fieldName) {
+      case 'title':
+        newPostTitle = fieldData
+        break
+      case 'body':
+        newPostBody = fieldData
+        break
+      case 'official':
+        newPostOfficial = !newPostOfficial
+        break
+      case 'postImage':
+        if (fieldData) {
+          newPostImages.push(fieldData)
+        }
+        break
+      case 'cca':
+        if (fieldData) {
+          newPostCca = parseInt(fieldData)
+        }
+        break
     }
-    dispatch(SetIsLoading(false))
-  })
-}
+
+    dispatch({
+      type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
+      newPostTitle: newPostTitle,
+      newPostBody: newPostBody,
+      newPostImages: newPostImages,
+      newPostOfficial: newPostOfficial,
+      newPostCca: newPostCca,
+    })
+  }
+
+export const GetPosts =
+  (postFilter: POSTS_FILTER, limit?: number, userId?: string) =>
+  async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(SetIsLoading(true))
+    let endpoint: ENDPOINTS
+    const { posts } = getState().social
+
+    switch (postFilter) {
+      case POSTS_FILTER.OFFICIAL:
+        endpoint = ENDPOINTS.OFFICIAL_POSTS
+        break
+      case POSTS_FILTER.ALL:
+        endpoint = ENDPOINTS.ALL_POSTS
+        break
+      case POSTS_FILTER.FRIENDS:
+        endpoint = ENDPOINTS.FRIENDS_OF_USER_POSTS
+        break
+      default:
+        endpoint = ENDPOINTS.ALL_POSTS
+        break
+    }
+
+    // const subroute: string = postFilter != POSTS_FILTER.OFFICIAL ? `?N=${limit}&userID=${userId}` : `?N=${limit}`
+    const subroute = userId && limit ? `?N=${limit}&userID=${userId}` : limit ? `?N=${limit}` : ``
+
+    get(endpoint, DOMAINS.SOCIAL, subroute).then((response) => {
+      if (response.data.length > 0) {
+        const transformedPost = cloneDeep(response.data).map((post) => {
+          post.date = post.createdAt
+          post.postId = post.postID
+          post.ccaId = post.ccaID
+          post.userId = post.userID
+          post.date = new Date(post.createdAt)
+          post.profilePic = post.profilePictureURI
+          return post
+        })
+
+        //validate if caller made repeated call to the same posts
+        const transformedPostID = transformedPost.map((post) => post.postId)
+        const postIds = posts.map((post) => post.postId)
+        const postDiff = difference(transformedPostID, postIds)
+
+        if (postDiff.length > 0) {
+          const diffTransformedPosts = transformedPost.filter((post) => postDiff.includes(post.postId))
+          const sortedPosts = sortBy(diffTransformedPosts.concat(posts), ['postId']).reverse()
+          dispatch({
+            type: SOCIAL_ACTIONS.GET_POSTS,
+            posts: sortedPosts,
+          })
+        } else {
+          //do nothing
+          //repeated call so do not concat same posts to existing posts
+        }
+      } else {
+        dispatch({
+          type: SOCIAL_ACTIONS.SET_HAS_NO_MORE_POSTS,
+          hasNoMorePosts: true,
+        })
+      }
+      dispatch(SetIsLoading(false))
+    })
+  }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
