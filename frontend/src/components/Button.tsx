@@ -7,6 +7,7 @@ const StyledButton = styled.button<{
   width?: string
   height?: string
   fontSize?: string
+  lineHeight?: string
 }>`
   min-height: 35px;
   height: ${(props) => props.height ?? 'auto'};
@@ -19,8 +20,9 @@ const StyledButton = styled.button<{
   box-shadow: ${(props) => (props.state === 'primary' ? `0px` : `2px 1000px 1px #fff inset`)};
   color: ${(props) => (props.state === 'primary' ? `white` : `#58B994`)};
   padding: ${(props) => (props.size === 'small' ? `7px 14px` : `16px 30px`)};
-  line-height: 1px;
-  white-space: nowrap;
+  line-height: ${(props) => props.lineHeight ?? '1px'};
+  white-space: normal;
+  cursor: pointer;
 
   &:active {
     background: ${(props) => (props.state === 'primary' ? '#D8E6DF' : '#8B8B8B')};
@@ -45,6 +47,7 @@ type Props = {
   height?: string | undefined
   fontSize?: string | undefined
   size?: 'small' | 'regular' | undefined
+  lineHeight?: string | undefined
 }
 
 /**
@@ -72,6 +75,7 @@ function ButtonComponent(prop: Props) {
       height={prop.height}
       fontSize={prop.fontSize}
       size={prop.size ?? 'regular'}
+      lineHeight={prop.lineHeight}
     >
       {prop.text}
     </StyledButton>

@@ -46,7 +46,7 @@ const TitleText = styled.h2`
 `
 /**
  * # ViewBookingDailyView
- * Path: `/facility/booking/dayview/:facilityId`
+ * Path: `/facility/dayView/:facilityId`
  *
  * ## Page Description
  * The user gets redirected to this page after clicking on a date on the ViewFacility page. \

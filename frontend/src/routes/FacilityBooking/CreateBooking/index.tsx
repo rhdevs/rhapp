@@ -18,11 +18,9 @@ import {
   setIsLoading,
   handleCreateNewBooking,
   setBookingEndDate,
-  // resetNewBooking,
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
-  setBookingStatus,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import { BookingStatus } from '../../../store/facilityBooking/types'
@@ -34,7 +32,6 @@ import InputField from '../../../components/Mobile/InputField'
 import { Switch } from '../../../components/Switch'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
-import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 
 const Background = styled.div`
   background-color: #fff;
@@ -94,7 +91,7 @@ type FormValues = {
 
 /**
  * # CreateBooking
- * Path: `/facility/booking/create/:facilityId
+ * Path: `/facility/booking/create/:facilityId`
  *
  * ## Page Description
  * This page contains the booking form for creating a booking. \
@@ -105,7 +102,6 @@ type FormValues = {
  */
 
 export default function CreateBooking() {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const {
@@ -177,8 +173,10 @@ export default function CreateBooking() {
       handleSubmit((data) => {
         console.log(data, ccaName)
         if (bookingStatus === BookingStatus.CONFLICT) {
-          setModalIsOpen(true)
+          // setModalIsOpen(true)
         } else {
+          history.replace(PATHS.FACILITY_BOOKING_MAIN)
+          history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
           dispatch(
             handleCreateNewBooking(
               Number(params.facilityId),
@@ -194,17 +192,6 @@ export default function CreateBooking() {
       })()
     }
   }
-
-  useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) {
-      history.replace(PATHS.FACILITY_BOOKING_MAIN)
-      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
-      dispatch(setBookingStatus(BookingStatus.INITIAL))
-    }
-    if (bookingStatus === BookingStatus.CONFLICT) {
-      setModalIsOpen(true)
-    }
-  }, [bookingStatus])
 
   const goBackToTimeSelectionPage = () => {
     history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
@@ -302,7 +289,6 @@ export default function CreateBooking() {
               onClick={() => history.push(`${PATHS.SELECT_RECURRING_BOOKING_END_DATE}/${params.facilityId}`)}
             />
           )}
-          <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
           <div style={{ width: '100%', height: '30px' }} />
           <ButtonComponent state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={() => null} />
         </Form>

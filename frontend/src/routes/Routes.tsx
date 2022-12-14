@@ -34,22 +34,23 @@ export enum PATHS {
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
+
   // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
+  FACILITY_LANDING_PAGE = '/facilityLanding',
   FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/view',
-  VIEW_FACILITY_ID = '/facility/view/:facilityId',
+  VIEW_FACILITY = '/facility/monthView',
+  VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/:facilityId',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId',
+  CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
   SELECT_RECURRING_BOOKING_END_DATE = '/facility/booking/create/recurring/selectEndDate',
   SELECT_RECURRING_BOOKING_END_DATE_ID = '/facility/booking/create/recurring/selectEndDate/:facilityId',
-  CREATE_FACILITY_BOOKING = '/facility/booking/create',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview/create',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/create/:facilityId',
-  CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
-  VIEW_FACILITY_CONFLICT = '/facility/booking/create/conflict/',
-  VIEW_FACILITY_CONFLICT_ID = '/facility/booking/create/conflict/:facilityId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/booking/dayview',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/booking/dayview/:facilityId',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user',
   VIEW_MY_BOOKINGS_ID = '/facility/booking/user/:userId',
@@ -126,6 +127,9 @@ const ImportFromNusMods = React.lazy(
 )
 const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
+const FacilityLandingPage = React.lazy(
+  () => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking/FacilityLandingPage'),
+)
 const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(
@@ -214,6 +218,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
+            <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
             <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
