@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-// import { Switch } from 'react-router-dom'
 import LoadingSpin from '../components/LoadingSpin'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
@@ -104,7 +103,6 @@ const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" 
 const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePassword" */ './Profile/ChangePassword'))
 const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */ './Profile/FriendList'))
 // SCHEDULING
-const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
 const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
@@ -121,10 +119,7 @@ const CreateBooking = React.lazy(
   () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
 )
 // LAUNDRY
-const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
-const ViewWashingMachine = React.lazy(
-  () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
-)
+
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
@@ -155,7 +150,7 @@ const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Sup
 //GYM
 const Gym = React.lazy(() => import(/* webpackChunckName: "Gym" */ './GymPage'))
 export default class Routes extends React.Component {
-  render() {
+  render(): JSX.Element {
     return (
       <Root>
         <Suspense fallback={LoadingSpin}>

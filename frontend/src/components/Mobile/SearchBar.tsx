@@ -44,7 +44,7 @@ function SearchBar({
   value: string
   onChange: (input: string) => void
   isSupperSearchBar?: boolean
-}) {
+}): JSX.Element {
   return (
     <StyledSearchBar
       isSupperSearchBar={isSupperSearchBar ?? false}
