@@ -1,11 +1,11 @@
-import React from "react";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react'
+import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 
-import store from "./store/store";
-import Routes from "./routes/Routes";
+import store from './store/store'
+import Routes from './routes/Routes'
 
-import GlobalStyle from "./GlobalStyle";
+import GlobalStyle from './GlobalStyle'
 
 class App extends React.Component {
   render() {
@@ -16,8 +16,8 @@ class App extends React.Component {
           <Routes />
         </BrowserRouter>
       </Provider>
-    );
+    )
   }
 }
 
-export default App;
+export default App
