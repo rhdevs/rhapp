@@ -4,21 +4,6 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/bcryptjs": "^2.4.2",
-    "@types/jest": "^26.0.15",
-    "@types/js-cookie": "^2.2.6",
-    "@types/lodash": "^4.14.165",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-date-range": "^1.1.2",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.1.11",
-    "@types/react-router-dom": "^5.1.6",
-    "@types/react-truncate": "^2.3.3",
-    "@types/styled-components": "^5.1.4",
     "antd": "^4.16.6",
     "antd-mobile": "^2.3.4",
     "axios": "^0.21.0",
@@ -57,7 +42,6 @@
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.1",
     "typedoc": "^0.23.14",
-    "typescript": "^4.8.3",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -96,11 +80,27 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jest": "^26.0.15",
+    "@types/js-cookie": "^2.2.6",
+    "@types/lodash": "^4.14.165",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-date-range": "^1.1.2",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.11",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/react-truncate": "^2.3.3",
+    "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "typescript": "^4.8.3"
   }
 }
