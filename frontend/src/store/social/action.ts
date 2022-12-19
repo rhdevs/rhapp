@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch, GetState } from '../types'
 import { ActionTypes, SOCIAL_ACTIONS, POSTS_FILTER } from './types'
-import { DOMAIN_URL, ENDPOINTS, DOMAINS, post, get, del } from '../endpoints'
+import { DOMAIN_URL, ENDPOINTS, DOMAINS, get, del } from '../endpoints'
 import { cloneDeep, difference, sortBy } from 'lodash'
 import useSnackbar from '../../hooks/useSnackbar'
 import { fetchUserPosts } from '../profile/action'
@@ -274,43 +274,48 @@ export const GetPosts =
     })
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const DeletePost = (postIdToDelete: string) => async (dispatch: Dispatch<any>, getState: GetState) => {
-  const { posts } = getState().social
-  const newPosts = posts.filter((post) => {
-    return post.postId !== postIdToDelete
-  })
+export const DeletePost =
+  (postIdToDelete: string) =>
+  // TODO: Identify the type and change it
+  async (dispatch: Dispatch<any>, getState: GetState): Promise<void> => {
+    try {
+      const { posts } = getState().social
+      const newPosts = posts.filter((post) => {
+        return post.postId !== postIdToDelete
+      })
 
-  del(ENDPOINTS.DELETE_POST, DOMAINS.SOCIAL, {}, `?postID=${postIdToDelete}`)
-    .then(() => {
+      await axios.delete(DOMAINS.SOCIAL + ENDPOINTS.DELETE_POST + `?postID=${postIdToDelete}`)
       success('Your post has been deleted!')
       dispatch({
         type: SOCIAL_ACTIONS.DELETE_POST,
         posts: newPosts,
       })
       dispatch(fetchUserPosts(localStorage.getItem('userID')))
-    })
-    .catch(() => {
+    } catch (_) {
       error('Post not deleted. Try again later.')
+    }
+  }
+
+export const SwitchPostsFilter =
+  (postsFilter: POSTS_FILTER) =>
+  (dispatch: Dispatch<ActionTypes>): void => {
+    dispatch(SetHasNoMorePosts(false))
+    dispatch({
+      type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
+      postsFilter,
+      pageIndex: 0,
+      posts: [],
     })
-}
+  }
 
-export const SwitchPostsFilter = (postsFilter: POSTS_FILTER) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetHasNoMorePosts(false))
-  dispatch({
-    type: SOCIAL_ACTIONS.SWITCH_POSTS_FILTER,
-    postsFilter,
-    pageIndex: 0,
-    posts: [],
-  })
-}
-
-export const SetPostId = (postId: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({
-    type: SOCIAL_ACTIONS.SET_POST_ID,
-    postId,
-  })
-}
+export const SetPostId =
+  (postId: string) =>
+  (dispatch: Dispatch<ActionTypes>): void => {
+    dispatch({
+      type: SOCIAL_ACTIONS.SET_POST_ID,
+      postId,
+    })
+  }
 
 export const GetSpecificPost =
   (postId: string) =>
