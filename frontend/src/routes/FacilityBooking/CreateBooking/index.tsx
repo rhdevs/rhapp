@@ -169,9 +169,6 @@ export default function CreateBooking() {
         </div>
       )
     } else {
-      // if (newBookingCCA !== '' || newBookingDescription !== '' || newBookingFacilityName !== '') {
-      //   dispatch(SetCreateBookingError('All fields are compulsary!'))
-      // }
       return <CheckOutlined style={{ color: '#0000004d' }} />
     }
   }
