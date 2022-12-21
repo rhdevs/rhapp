@@ -79,14 +79,11 @@ export default function ViewFacility() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
       async function delayStatusUpdate(seconds: number) {
-        const promise = new Promise((resolve, reject) => {
+        await new Promise((resolve) => {
           setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
         }) // delay booking status update
-        await promise
       }
-      console.log('sucessssssssss')
       delayStatusUpdate(3)
-      // TODO show a toast notification to inform of success booking
     }
     if (bookingStatus === BookingStatus.CONFLICT) {
       setModalIsOpen(true)
