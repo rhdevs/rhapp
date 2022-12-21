@@ -57,7 +57,7 @@ export default function ViewFacility() {
     dispatch(setIsLoading(true))
     dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId == 0) {
+    if (selectedFacilityId === 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
@@ -76,18 +76,15 @@ export default function ViewFacility() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 
+  async function showAlertSection(seconds: number) {
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
+    })
+  }
+
   useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) {
-      async function delayStatusUpdate(seconds: number) {
-        await new Promise((resolve) => {
-          setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
-        }) // delay booking status update
-      }
-      delayStatusUpdate(3)
-    }
-    if (bookingStatus === BookingStatus.CONFLICT) {
-      setModalIsOpen(true)
-    }
+    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
+    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
   }, [bookingStatus])
 
   const AlertSection = () => (
