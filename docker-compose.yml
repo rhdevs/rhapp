@@ -1,4 +1,4 @@
-version: '0.2'
+version: '0.3'
 services:
   backend:
     build:
@@ -12,17 +12,24 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.backend.entrypoints=websecure"
     depends_on:
       - traefik
   traefik:
     image: traefik:v2.9
     command:
-      # Use without ssl certificates
+      #- "--log.level=DEBUG"
       - "--api.insecure=true"
-      - "--providers.docker"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      #- "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      #- "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
+      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - 80:80
+      - 443:443
       - 8081:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
