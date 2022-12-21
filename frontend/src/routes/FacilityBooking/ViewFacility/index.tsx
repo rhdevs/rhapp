@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
+import { Alert } from 'antd'
 import styled from 'styled-components'
 import { FormOutlined } from '@ant-design/icons'
 
@@ -24,6 +25,10 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/calendar/actions'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+
+const AlertGroup = styled.div`
+  padding: 3px 23px 3px 23px;
+`
 
 const MainContainer = styled.div`
   width: 100%;
@@ -52,7 +57,7 @@ export default function ViewFacility() {
     dispatch(setIsLoading(true))
     dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId == 0) {
+    if (selectedFacilityId === 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
@@ -71,15 +76,22 @@ export default function ViewFacility() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 
+  async function showAlertSection(seconds: number) {
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
+    })
+  }
+
   useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) {
-      dispatch(setBookingStatus(BookingStatus.INITIAL))
-      console.log('sucessssssssss')
-    }
-    if (bookingStatus === BookingStatus.CONFLICT) {
-      setModalIsOpen(true)
-    }
+    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
+    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
   }, [bookingStatus])
+
+  const AlertSection = () => (
+    <AlertGroup>
+      <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+    </AlertGroup>
+  )
 
   return (
     <>
@@ -89,6 +101,7 @@ export default function ViewFacility() {
         onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
+        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
           <BottomNavBar />
