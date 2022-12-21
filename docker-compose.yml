@@ -1,0 +1,11 @@
+version: '0.1'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.prod
+      args:
+        - GIT_COMMIT_HASH
+    ports:
+      - 8080:8080
+    restart: on-failure

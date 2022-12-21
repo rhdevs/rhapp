@@ -27,7 +27,6 @@ build
 **/ENV/
 **/env.bak/
 **/venv.bak/
-**/*/db.py
 
 # Logs
 **/*/logs/*

@@ -1,0 +1,16 @@
+FROM python:3.8.16-bullseye
+
+RUN apk update && \
+    apk add --no-cache git python build-base
+
+WORKDIR /home/backend
+
+ARG GIT_COMMIT_HASH
+ENV GIT_COMMIT_HASH $GIT_COMMIT_HASH
+
+## TODO: Split COPY statement for better caching
+COPY ./backend .
+
+RUN pip3 install -r ./backend/requirements.txt
+
+RUN python ./main.py
