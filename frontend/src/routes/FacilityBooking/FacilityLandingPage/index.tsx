@@ -55,7 +55,7 @@ export default function FacilityLandingPage() {
         </SearchContainer>
         <ButtonComponent
           state="primary"
-          text="View my Bookings                                                           "
+          text="View my Bookings"
           width="297px"
           height="80px"
           fontSize="20px"
