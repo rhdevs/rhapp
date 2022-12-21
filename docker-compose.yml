@@ -1,4 +1,4 @@
-version: '0.1'
+version: '0.2'
 services:
   backend:
     build:
@@ -9,3 +9,21 @@ services:
     ports:
       - 8080:8080
     restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+    depends_on:
+      - traefik
+  traefik:
+    image: traefik:v2.9
+    command:
+      # Use without ssl certificates
+      - "--api.insecure=true"
+      - "--providers.docker"
+    ports:
+      - 80:80
+      - 8081:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
