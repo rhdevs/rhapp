@@ -77,7 +77,7 @@ export default function ViewFacility() {
     if (bookingStatus === BookingStatus.SUCCESS) {
       dispatch(setBookingStatus(BookingStatus.INITIAL))
       console.log('sucessssssssss')
-      // TODO show a toast notification to inform of success booking
+      // toast notification to inform of success booking
       toast.success('Booking was Successfull !', {
         position: 'bottom-right',
         autoClose: 3000,
