@@ -131,27 +131,34 @@ export enum DOMAINS {
 }
 
 export const DOMAIN_URL = {
-  FACILITY: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/facilities'
-    : '//rhappmiddleware.herokuapp.com/rhappfacilities',
-  EVENT: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/scheduling'
-    : '//rhappmiddleware.herokuapp.com/rhappevents',
-  LAUNDRY: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/laundry'
-    : '//rhappmiddleware.herokuapp.com/rhapplaundry',
-  SOCIAL: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/social'
-    : '//rhappmiddleware.herokuapp.com/rhappsocial',
-  AUTH: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/auth'
-    : '//rhappmiddleware.herokuapp.com/rhappauth',
-  SUPPER: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/supper'
-    : '//rhappmiddleware.herokuapp.com/rhappsupper',
-  GYM: true // process.env.REACT_APP_MODE === 'production'
-    ? '//rhapp-backend.rhdevs.repl.co/gym'
-    : '//rhappmiddleware.herokuapp.com/rhappgym',
+  FACILITY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/facilities'
+      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
+  EVENT:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
+      : '//rhappmiddleware.herokuapp.com/rhappevents',
+  LAUNDRY:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/laundry'
+      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
+  SOCIAL:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/social'
+      : '//rhappmiddleware.herokuapp.com/rhappsocial',
+  AUTH:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/auth'
+      : '//rhappmiddleware.herokuapp.com/rhappauth',
+  SUPPER:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/supper'
+      : '//rhappmiddleware.herokuapp.com/rhappsupper',
+  GYM:
+    process.env.REACT_APP_MODE === 'production'
+      ? '//rhapp-backend.rhdevs.repl.co/gym'
+      : '//rhappmiddleware.herokuapp.com/rhappgym',
 }
 
 async function makeRequest(
