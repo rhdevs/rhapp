@@ -183,7 +183,7 @@ export default function CreateBooking() {
               data.eventName,
               bookingStartTime,
               bookingEndTime,
-              bookingEndTime,
+              bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
               ccaId,
               data.description,
             ),
