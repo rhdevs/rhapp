@@ -6,7 +6,6 @@ export const CustomDateRows = (props: {
   firstDate: Date
   lastDate: Date
   assignedMonth: number
-  facilityId: number
   disabledDates?: number[]
   onDateClick?: (date: Date) => void
 }) => {
@@ -26,7 +25,6 @@ export const CustomDateRows = (props: {
           <ClickableDateContainer
             key={new Date(props.firstDate.getFullYear(), props.assignedMonth, date).toDateString()}
             date={new Date(props.firstDate.getFullYear(), props.assignedMonth, date)}
-            facilityId={props.facilityId}
             disabled={props.disabledDates?.includes(date)}
             onDateClick={props.onDateClick}
           />

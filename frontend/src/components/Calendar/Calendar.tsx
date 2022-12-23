@@ -51,7 +51,7 @@ export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId))
+    dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId)) // TODO abstract this out
   }, [])
 
   const today = new Date()
@@ -68,12 +68,7 @@ export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date
         <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
         <DatesGridContainer>
           <DayHeaders />
-          <DateRows
-            currentDate={today}
-            nthMonth={startingMonth++}
-            facilityId={props.selectedFacilityId}
-            onDateClick={props.onDateClick}
-          />
+          <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
         </DatesGridContainer>
       </MonthContainer>
       {monthList.slice(1).map((month) => {
@@ -85,12 +80,7 @@ export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date
               <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
               <DatesGridContainer>
                 <DayHeaders />
-                <DateRows
-                  currentDate={today}
-                  nthMonth={startingMonth++}
-                  facilityId={props.selectedFacilityId}
-                  onDateClick={props.onDateClick}
-                />
+                <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
               </DatesGridContainer>
             </MonthContainer>
           </div>

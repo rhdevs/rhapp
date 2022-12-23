@@ -6,7 +6,6 @@ import { EmptyDateContainer } from './EmptyDateContainer'
 export const DateRows = (props: {
   currentDate: Date
   nthMonth: number
-  facilityId: number
   overlayDates?: number[]
   onDateClick: (date: Date) => void
 }) => {
@@ -39,7 +38,6 @@ export const DateRows = (props: {
           <ClickableDateContainer
             key={new Date(props.currentDate.getFullYear(), assignedMonth, date).toDateString()}
             date={new Date(props.currentDate.getFullYear(), assignedMonth, date)}
-            facilityId={props.facilityId}
             disabled={props.overlayDates?.includes(date)}
             onDateClick={props.onDateClick}
           />

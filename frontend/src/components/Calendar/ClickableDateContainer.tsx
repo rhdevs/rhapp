@@ -32,7 +32,6 @@ const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
 
 export const ClickableDateContainer = (props: {
   date: Date
-  facilityId: number
   hasEvent?: boolean
   disabled?: boolean
   onDateClick?: (date: Date) => void

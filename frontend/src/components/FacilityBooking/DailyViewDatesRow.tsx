@@ -37,7 +37,7 @@ const DatesContainer = styled.div`
  * <any remarks on this component type in here>
  *
  */
-
+// TODO selectedfacilityId redundant
 const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: number[] }) => {
   const dispatch = useDispatch()
   const { clickedDate } = useSelector((state: RootState) => state.calendar)
@@ -82,7 +82,6 @@ const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: 
           firstDate={dateNumberToObject(dateRowStartDate)}
           assignedMonth={date < dateRowStartDate ? month - 1 : month}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={lastDate}
           onDateClick={onDateClick}
         />
@@ -90,7 +89,6 @@ const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: 
           firstDate={dateNumberToObject(1)}
           assignedMonth={date < dateRowStartDate ? month : month + 1}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6 - lastDate.getDate())}
           onDateClick={onDateClick}
         />
@@ -103,7 +101,6 @@ const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: 
           firstDate={dateNumberToObject(dateRowStartDate)}
           assignedMonth={month}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6)}
           onDateClick={onDateClick}
         />
