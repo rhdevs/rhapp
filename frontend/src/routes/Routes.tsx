@@ -36,8 +36,8 @@ export enum PATHS {
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
 
   // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
-  FACILITY_LANDING_PAGE = '/facilityLanding',
-  FACILITY_BOOKING_MAIN = '/facility',
+  FACILITY_LANDING_PAGE = '/facility/main',
+  SELECT_FACILITY = '/facility/selectFacility',
   VIEW_FACILITY = '/facility/monthView',
   VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
@@ -127,10 +127,10 @@ const ImportFromNusMods = React.lazy(
 )
 const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
-const FacilityLandingPage = React.lazy(
-  () => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking/FacilityLandingPage'),
+const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking'))
+const SelectFacility = React.lazy(
+  () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/SelectFacility'),
 )
-const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
@@ -219,7 +219,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
-            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+            <PrivateRoute exact path={PATHS.SELECT_FACILITY} component={SelectFacility} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />

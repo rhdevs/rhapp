@@ -175,7 +175,7 @@ export default function CreateBooking() {
         if (bookingStatus === BookingStatus.CONFLICT) {
           // setModalIsOpen(true)
         } else {
-          history.replace(PATHS.FACILITY_BOOKING_MAIN)
+          history.replace(PATHS.SELECT_FACILITY)
           history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
           dispatch(
             handleCreateNewBooking(

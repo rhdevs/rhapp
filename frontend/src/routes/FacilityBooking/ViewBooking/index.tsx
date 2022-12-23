@@ -270,7 +270,7 @@ export default function ViewBooking() {
                   leftButtonText="Delete"
                   onLeftButtonClick={() => {
                     dispatch(deleteMyBooking(selectedBooking?.bookingID))
-                    history.replace(PATHS.FACILITY_BOOKING_MAIN)
+                    history.replace(PATHS.SELECT_FACILITY)
                     history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                   }}
                   rightButtonText="Cancel"

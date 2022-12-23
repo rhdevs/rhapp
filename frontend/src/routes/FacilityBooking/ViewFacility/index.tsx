@@ -98,7 +98,7 @@ export default function ViewFacility() {
       <TopNavBarRevamp
         title={selectedFacilityName}
         rightComponent={MyBookingsIcon}
-        onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
+        onLeftClick={() => history.push(`${PATHS.SELECT_FACILITY}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}

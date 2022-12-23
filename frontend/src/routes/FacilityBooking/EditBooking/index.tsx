@@ -186,7 +186,7 @@ export default function EditBooking() {
 
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
-      history.replace(PATHS.FACILITY_BOOKING_MAIN)
+      history.replace(PATHS.SELECT_FACILITY)
       history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
     } else if (bookingStatus === BookingStatus.CONFLICT) {
       setmodalIsOpen(true)
