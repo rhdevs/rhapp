@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { RootState } from '../../store/types'
 import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
-import { setClickedDate } from '../../store/calendar/actions'
+import { setClickedDate } from '../../store/facilityBooking/action'
 
 const DatesContainer = styled.div`
   display: flex;
@@ -40,7 +40,7 @@ const DatesContainer = styled.div`
 // TODO selectedfacilityId redundant
 const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: number[] }) => {
   const dispatch = useDispatch()
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   const year = clickedDate.getFullYear() // year e.g. 2022
   const month = clickedDate.getMonth() // month index e.g. 2 - March

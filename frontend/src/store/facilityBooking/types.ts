@@ -88,6 +88,7 @@ export enum FACILITY_ACTIONS {
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
   SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
+  SET_CLICKED_DATE = 'CALENDAR_ACTIONS.SET_CLICKED_DATE',
 }
 
 type SetViewFacilityName = {
@@ -260,6 +261,11 @@ type SetSelectedDayBookings = {
   selectedDayBookings: Booking[]
 }
 
+type SetIsClicked = {
+  type: typeof FACILITY_ACTIONS.SET_CLICKED_DATE
+  clickedDate: Date
+}
+
 // Reverse lookup map of DAY_STRING_TO_NUMBER
 export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
@@ -294,3 +300,4 @@ export type ActionTypes =
   | SetConflictBookings
   | SetTimeBlock
   | SetSelectedDayBookings
+  | SetIsClicked

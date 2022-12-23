@@ -34,6 +34,7 @@ const initialState: State = {
   conflictBookings: [],
   timeBlocks: defaultTimeBlocks,
   selectedDayBookings: myBookingsStub,
+  clickedDate: new Date(),
 }
 
 type State = {
@@ -67,6 +68,7 @@ type State = {
   conflictBookings: Booking[]
   timeBlocks: TimeBlock[]
   selectedDayBookings: Booking[]
+  clickedDate: Date
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -266,6 +268,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         selectedDayBookings: action.selectedDayBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CLICKED_DATE: {
+      return {
+        ...state,
+        clickedDate: action.clickedDate,
       }
     }
     default:

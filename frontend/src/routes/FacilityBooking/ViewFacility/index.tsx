@@ -22,7 +22,7 @@ import { RootState } from '../../../store/types'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { setClickedDate } from '../../../store/calendar/actions'
+import { setClickedDate } from '../../../store/facilityBooking/action'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 

@@ -650,3 +650,11 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
     selectedDayBookings: selectedDayBookings,
   })
 }
+
+// TODO check if really need
+export const setClickedDate = (newClickedDate: Date) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CLICKED_DATE,
+    clickedDate: newClickedDate,
+  })
+}

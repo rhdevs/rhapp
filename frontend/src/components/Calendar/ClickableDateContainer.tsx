@@ -39,7 +39,7 @@ export const ClickableDateContainer = (props: {
   const {
     clickedDate,
     // processedDates
-  } = useSelector((state: RootState) => state.calendar)
+  } = useSelector((state: RootState) => state.facilityBooking)
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
     props.onDateClick && props.onDateClick(newClickedDate)

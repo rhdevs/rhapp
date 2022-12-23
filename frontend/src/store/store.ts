@@ -10,7 +10,6 @@ import { social } from './social/reducer'
 import { laundry } from './laundry/reducer'
 import { profile } from './profile/reducer'
 import { supper } from './supper/reducer'
-import { calendar } from './calendar/reducer'
 import { gym } from './gym/reducer'
 
 export const rootReducer = combineReducers({
@@ -22,7 +21,6 @@ export const rootReducer = combineReducers({
   profile,
   laundry,
   supper,
-  calendar,
   gym,
 })
 const middlewares = [thunk]

@@ -13,7 +13,7 @@ import { setIsLoading } from '../../../store/facilityBooking/action'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { setClickedDate } from '../../../store/calendar/actions'
+import { setClickedDate } from '../../../store/facilityBooking/action'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 
 // TODO abstract this cos is repeated 3 times
