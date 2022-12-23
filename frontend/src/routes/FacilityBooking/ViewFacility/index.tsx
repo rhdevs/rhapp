@@ -103,7 +103,7 @@ export default function ViewFacility() {
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
-          <Calendar onDateClick={onDateClick} />
+          <Calendar onDateClick={onDateClick} monthsToShow={5} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>

@@ -68,7 +68,7 @@ export default function SelectRecurringDatePage() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar onDateClick={onDateClick} />
+          <Calendar onDateClick={onDateClick} monthsToShow={5} />
         </MainContainer>
       </PullToRefresh>
     </>

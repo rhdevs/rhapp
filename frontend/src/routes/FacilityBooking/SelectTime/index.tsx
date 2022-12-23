@@ -64,7 +64,7 @@ export default function selectTime() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar onDateClick={onDateClick} />
+          <Calendar onDateClick={onDateClick} monthsToShow={5} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>

@@ -41,37 +41,39 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { onDateClick: (date: Date) => void }) => {
+export const Calendar = (props: { onDateClick: (date: Date) => void; monthsToShow?: number }) => {
   const today = new Date()
-  let startingMonth = 0
   const currentYear = today.getFullYear()
+  const monthsToShow = props.monthsToShow ?? 5
+  let startingMonth = 0
+  let displayYear = currentYear
 
-  const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
+  const monthList = [...Array(monthsToShow).keys()].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
+
+  const Month = (innerProps: { month: Date }) => {
+    const isYearDisplayed = startingMonth === 0 || innerProps.month.getMonth() === 0 // display year if is first month of calender, or january
+    if (innerProps.month.getMonth() === 0 && startingMonth !== 0) displayYear++ // increment when a new year starts
+
+    return (
+      <div>
+        {/* Note: 0 stands for Jan */}
+        {isYearDisplayed && <YearContainer>{displayYear}</YearContainer>}
+        <MonthContainer>
+          <MonthsHeaderContainer>{innerProps.month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
+          <DatesGridContainer>
+            <DayHeaders />
+            <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
+          </DatesGridContainer>
+        </MonthContainer>
+      </div>
+    )
+  }
+
   return (
     <CalenderContainer>
-      <YearContainer>{currentYear}</YearContainer>
-      <MonthContainer>
-        <MonthsHeaderContainer>{monthList[0].toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-        <DatesGridContainer>
-          <DayHeaders />
-          <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
-        </DatesGridContainer>
-      </MonthContainer>
-      {monthList.slice(1).map((month) => {
-        return (
-          <div key={startingMonth}>
-            {/* Note: 0 stands for Jan */}
-            {month.getMonth() === 0 && <YearContainer>{currentYear + 1}</YearContainer>}
-            <MonthContainer>
-              <MonthsHeaderContainer>{month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
-              <DatesGridContainer>
-                <DayHeaders />
-                <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
-              </DatesGridContainer>
-            </MonthContainer>
-          </div>
-        )
-      })}
+      {monthList.map((month) => (
+        <Month month={month} key={startingMonth} />
+      ))}
     </CalenderContainer>
   )
 }

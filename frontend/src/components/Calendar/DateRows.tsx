@@ -1,4 +1,3 @@
-import { PropertySafetyFilled } from '@ant-design/icons'
 import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
