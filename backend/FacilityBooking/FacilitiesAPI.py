@@ -303,6 +303,76 @@ def check_bookings(facilityID):
     return make_response(response)
 
 
+@ facilities_api.route('/bookings', methods=["GET"])
+@ cross_origin(supports_credentials=True)
+def check_bookings_within_time():
+    try:
+        startTime = int(request.args.get('startTime')) if request.args.get('startTime') else 0
+        endTime = int(request.args.get('endTime')) if request.args.get('endTime') else -1
+        if endTime <= startTime:
+            return {"err": "Invalid start and end time", "status": "failed"}, 400
+        
+        condition = {
+            "$and": [
+            {
+                "startTime": {
+                    "$lt": endTime
+                }
+            },
+            {
+                "endTime": {
+                    "$gt": startTime
+                }
+            }
+            ]
+        }
+
+        pipeline = [
+            {'$match':
+                condition
+             },
+            {'$lookup': {
+                'from': 'User',
+                        'localField': 'userID',
+                        'foreignField': 'userID',
+                        'as': 'profile'
+            }},
+            {'$unwind': {'path': '$profile', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'displayName': '$profile.displayName'
+            }},
+            {'$lookup': {
+                'from': 'CCA',
+                        'localField': 'ccaID',
+                        'foreignField': 'ccaID',
+                        'as': 'cca'
+            }},
+            {'$unwind': {'path': '$cca', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'ccaName': '$cca.ccaName'
+            }},
+            {'$lookup': {
+                'from': 'Facilities',
+                        'localField': 'facilityID',
+                        'foreignField': 'facilityID',
+                        'as': 'facility'
+            }},
+            {'$unwind': {'path': '$facility', 'preserveNullAndEmptyArrays': True}},
+            {'$addFields': {
+                'facilityName': '$facility.facilityName'
+            }},
+            {'$project': {'profile': 0, 'cca': 0, 'facility': 0, '_id': 0}}
+        ]
+
+        data = list(db.Bookings.aggregate(pipeline))
+        data.sort(key=lambda x: x.get('startTime'))
+        response = {"startTime": startTime, "endTime": endTime, "bookings_placed": data, "status": "success"}, 200
+    except Exception as e:
+        print(e)
+        return {"err": "An error has occurred", "status": "failed"}, 500
+    return make_response(response)
+
+
 @ facilities_api.route('/bookings', methods=['POST'])
 @ cross_origin(supports_credentials=True)
 def add_booking():
