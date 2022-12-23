@@ -37,8 +37,7 @@ const DatesContainer = styled.div`
  * <any remarks on this component type in here>
  *
  */
-// TODO selectedfacilityId redundant
-const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: number[] }) => {
+const DailyViewDatesRow = (props: { disabledDates?: number[] }) => {
   const dispatch = useDispatch()
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 

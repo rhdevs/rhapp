@@ -136,7 +136,7 @@ export default function CreateBookingDailyView() {
       ) : (
         <Background>
           <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
-          <DailyViewDatesRow selectedFacilityId={selectedFacilityId} disabledDates={disabledDates} />
+          <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>
             <BookingSection />
           </BookingSectionDiv>
