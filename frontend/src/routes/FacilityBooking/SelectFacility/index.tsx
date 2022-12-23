@@ -143,18 +143,17 @@ const StyledBodyDiv = styled.div`
 `
 
 /**
- * # FacilityBooking Page
- * Path: `/facility`
+ * # Select Facility Page
+ * Path: `/facility/selectFacility`
  *
  * ## Page Description
- * FacilityBooking Page is accessable through the `Facilities` button on main page as well as
- * `Facilities` button in the botton nav bar. On FacilitiesBooking page, users will be shown
- *  all the facilities (venue) that can be booked for events. Upon selection of facility, user will
+ * Select Facility Page is accessable through the Facilities Landing Page. On FacilitiesBooking page, users will be shown
+ * all the facilities (venue) that can be booked for events. Upon selection of facility, user will
  * be directed to the selected facility page to select the date & timing for booking.
  *
  * @remarks
  */
-export default function FacilityBooking() {
+export default function SelectFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen, isJcrc } = useSelector(

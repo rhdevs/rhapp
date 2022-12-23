@@ -22,7 +22,18 @@ const LandingPageContainer = styled.div`
   height: 234px;
   margin-top: 63px;
 `
-
+/**
+ * # Facility Landing Page
+ * Path: `/facility`
+ *
+ * ## Page Description
+ * Facility Landing Page is accessable through the `Facilities` button on main page as well as
+ * `Facilities` button in the botton nav bar. On FacilitiesBooking page, users will be given the option to
+ * search for a facility to book by either searching for a facility `Search by Facility`, or
+ * by searching for a specific date/time to book `Search by Date/Time`
+ *
+ * @remarks
+ */
 export default function FacilityLandingPage() {
   const history = useHistory()
 
@@ -52,7 +63,7 @@ export default function FacilityLandingPage() {
             size="small"
             lineHeight="20px"
             onClick={() => {
-              //TODO
+              history.push(PATHS.SELECT_TIME)
             }}
           />
         </SearchContainer>
