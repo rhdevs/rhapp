@@ -49,7 +49,7 @@ export default function ViewFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId, bookingStatus } = useSelector(
+  const { selectedFacilityName, selectedFacilityId, bookingStatus, clickedDate } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -103,7 +103,7 @@ export default function ViewFacility() {
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
-          <Calendar onDateClick={onDateClick} monthsToShow={5} />
+          <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>

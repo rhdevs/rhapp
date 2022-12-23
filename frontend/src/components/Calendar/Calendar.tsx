@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { DayHeaders } from './DayHeaders'
-import { DateRows } from './DateRows'
+import { CalendarDateRows } from './CalendarDateRows'
 
 const CalenderContainer = styled.div`
   display: flex;
@@ -41,7 +41,7 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { onDateClick: (date: Date) => void; monthsToShow?: number }) => {
+export const Calendar = (props: { onDateClick: (date: Date) => void; clickedDate?: Date; monthsToShow?: number }) => {
   const today = new Date()
   const currentYear = today.getFullYear()
   const monthsToShow = props.monthsToShow ?? 5
@@ -62,7 +62,12 @@ export const Calendar = (props: { onDateClick: (date: Date) => void; monthsToSho
           <MonthsHeaderContainer>{innerProps.month.toLocaleString('default', { month: 'long' })}</MonthsHeaderContainer>
           <DatesGridContainer>
             <DayHeaders />
-            <DateRows currentDate={today} nthMonth={startingMonth++} onDateClick={props.onDateClick} />
+            <CalendarDateRows
+              currentDate={today}
+              clickedDate={props.clickedDate}
+              nthMonth={startingMonth++}
+              onDateClick={props.onDateClick}
+            />
           </DatesGridContainer>
         </MonthContainer>
       </div>
@@ -71,8 +76,8 @@ export const Calendar = (props: { onDateClick: (date: Date) => void; monthsToSho
 
   return (
     <CalenderContainer>
-      {monthList.map((month) => (
-        <Month month={month} key={startingMonth} />
+      {monthList.map((month, idx) => (
+        <Month month={month} key={idx} />
       ))}
     </CalenderContainer>
   )

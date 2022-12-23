@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/types'
 
 const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
@@ -32,19 +30,15 @@ const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
 
 export const ClickableDateContainer = (props: {
   date: Date
+  isClicked?: boolean
   hasEvent?: boolean
   disabled?: boolean
   onDateClick?: (date: Date) => void
 }) => {
-  const {
-    clickedDate,
-    // processedDates
-  } = useSelector((state: RootState) => state.facilityBooking)
-
   const DateContainerClickHandler = (newClickedDate: Date) => {
     props.onDateClick && props.onDateClick(newClickedDate)
   }
-  2
+
   const hasEvent = () => {
     // TODO event indicator doesn't work yet
     return false
@@ -55,19 +49,15 @@ export const ClickableDateContainer = (props: {
     return today.toDateString() === props.date.toDateString()
   }
 
-  const isCurrentDateClicked = () => {
-    return clickedDate.toDateString() === props.date.toDateString()
-  }
-
   return (
     <DateContainer
       onClick={() => !props.disabled && DateContainerClickHandler(props.date)}
-      selected={isCurrentDateClicked()}
+      selected={props.isClicked}
       isCurrentDate={isCurrentDate()}
       disabled={props.disabled}
     >
       {/* TODO event indicator doesn't work yet */}
-      <EventIndicator selected={isCurrentDateClicked()} hasEvent={hasEvent()} />
+      <EventIndicator selected={props.isClicked} hasEvent={hasEvent()} />
       {props.date.getDate()}
     </DateContainer>
   )

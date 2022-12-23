@@ -79,6 +79,7 @@ const DailyViewDatesRow = (props: { disabledDates?: number[] }) => {
       <DatesContainer>
         <CustomDateRows
           firstDate={dateNumberToObject(dateRowStartDate)}
+          clickedDate={clickedDate}
           assignedMonth={date < dateRowStartDate ? month - 1 : month}
           disabledDates={props.disabledDates}
           lastDate={lastDate}
@@ -86,6 +87,7 @@ const DailyViewDatesRow = (props: { disabledDates?: number[] }) => {
         />
         <CustomDateRows
           firstDate={dateNumberToObject(1)}
+          clickedDate={clickedDate}
           assignedMonth={date < dateRowStartDate ? month : month + 1}
           disabledDates={props.disabledDates}
           lastDate={dateNumberToObject(dateRowStartDate + 6 - lastDate.getDate())}
@@ -98,6 +100,7 @@ const DailyViewDatesRow = (props: { disabledDates?: number[] }) => {
       <DatesContainer>
         <CustomDateRows
           firstDate={dateNumberToObject(dateRowStartDate)}
+          clickedDate={clickedDate}
           assignedMonth={month}
           disabledDates={props.disabledDates}
           lastDate={dateNumberToObject(dateRowStartDate + 6)}

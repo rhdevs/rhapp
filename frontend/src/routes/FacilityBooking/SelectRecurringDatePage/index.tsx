@@ -40,7 +40,7 @@ export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -68,7 +68,7 @@ export default function SelectRecurringDatePage() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar onDateClick={onDateClick} monthsToShow={5} />
+          <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
         </MainContainer>
       </PullToRefresh>
     </>

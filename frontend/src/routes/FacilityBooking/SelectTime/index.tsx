@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
@@ -15,6 +15,7 @@ import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/facilityBooking/action'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+import { RootState } from '../../../store/types'
 
 // TODO abstract this cos is repeated 3 times
 const MainContainer = styled.div`
@@ -37,6 +38,7 @@ export default function selectTime() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
+  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -64,7 +66,7 @@ export default function selectTime() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar onDateClick={onDateClick} monthsToShow={5} />
+          <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
