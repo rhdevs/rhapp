@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { isSameDate } from '../../common/isSameDate'
 
 const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
@@ -44,16 +45,11 @@ export const ClickableDateContainer = (props: {
     return false
   }
 
-  const isCurrentDate = () => {
-    const today = new Date()
-    return today.toDateString() === props.date.toDateString()
-  }
-
   return (
     <DateContainer
       onClick={() => !props.disabled && DateContainerClickHandler(props.date)}
       selected={props.isClicked}
-      isCurrentDate={isCurrentDate()}
+      isCurrentDate={isSameDate(new Date(), props.date)}
       disabled={props.disabled}
     >
       {/* TODO event indicator doesn't work yet */}

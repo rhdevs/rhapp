@@ -1,6 +1,7 @@
 import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
+import { isSameDate } from '../../common/isSameDate'
 
 export const CalendarDateRows = (props: {
   currentDate: Date
@@ -38,7 +39,7 @@ export const CalendarDateRows = (props: {
     ) : (
       <ClickableDateContainer
         date={date}
-        isClicked={props.clickedDate?.toDateString() === date.toDateString()}
+        isClicked={props.clickedDate && isSameDate(props.clickedDate, date)}
         disabled={props.overlayDates?.includes(day)}
         onDateClick={props.onDateClick}
       />

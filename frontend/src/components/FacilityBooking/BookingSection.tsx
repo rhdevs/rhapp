@@ -14,11 +14,13 @@ import {
 import { RootState } from '../../store/types'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 
-import CurrentTimeLine, { isToday } from './CurrentTimeLine'
+import CurrentTimeLine from './CurrentTimeLine'
 import HourBlocks from './HourBlocks'
 import BookingBlock from './BookingBlock'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
+
+import { isSameDate } from '../../common/isSameDate'
 
 /**
  *
@@ -99,7 +101,7 @@ export default function BookingSection() {
               entry={entry}
               // if day selected is not current, scroll to defaultTimePosition
               // TODO doesn't work
-              scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
+              scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
             />
           )
         })}

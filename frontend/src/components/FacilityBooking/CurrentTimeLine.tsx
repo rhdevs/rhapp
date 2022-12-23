@@ -1,6 +1,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { isSameDate } from '../../common/isSameDate'
 
 import { RootState } from '../../store/types'
 
@@ -17,11 +18,6 @@ const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?
   ${(props) => props.right && `right: ${props.right};`}
   ${(props) => props.bottom && `bottom: ${props.bottom};`}
 `
-
-export function isToday(inputDate: number) {
-  const today = new Date()
-  return today.setHours(0, 0, 0, 0) == new Date(inputDate * 1000).setHours(0, 0, 0, 0)
-}
 
 export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTMLElement>, offset?: number) {
   if (ref.current) {
@@ -89,7 +85,7 @@ const CurrentTimeLine = (props: Props) => {
     scrollToView(lineRef)
   }, [lineRef.current])
 
-  return isToday(timeBlocks[0].timestamp) ? (
+  return isSameDate(new Date(), timeBlocks[0].timestamp * 1000) ? (
     <StyledHr
       ref={lineRef}
       width={props.width ?? 'calc(100% - 70.5px)'}

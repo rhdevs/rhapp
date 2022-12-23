@@ -1,6 +1,7 @@
 import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
 import { EmptyDateContainer } from './EmptyDateContainer'
+import { isSameDate } from '../../common/isSameDate'
 
 export const CustomDateRows = (props: {
   firstDate: Date
@@ -25,7 +26,7 @@ export const CustomDateRows = (props: {
     ) : (
       <ClickableDateContainer
         date={date}
-        isClicked={props.clickedDate?.toDateString() === date.toDateString()}
+        isClicked={props.clickedDate && isSameDate(props.clickedDate, date)}
         disabled={props.disabledDates?.includes(day)}
         onDateClick={props.onDateClick}
       />
