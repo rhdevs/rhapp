@@ -82,10 +82,7 @@ def available_facilities_within_time():
         ]
 
         occupied_facilities = list(db.Bookings.aggregate(pipeline))
-        available_facilities = []
-        for facility in all_facilities:
-            if facility not in occupied_facilities:
-                available_facilities.append(facility)
+        available_facilities = list(filter(lambda fac: fac not in occupied_facilities, all_facilities))
         response = {"available_facilities": available_facilities, "status": "success"}, 200
     except Exception as e:
         print(e)
