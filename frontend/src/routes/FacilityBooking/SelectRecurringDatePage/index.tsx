@@ -68,7 +68,7 @@ export default function SelectRecurringDatePage() {
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
+          <Calendar onDateClick={onDateClick} />
         </MainContainer>
       </PullToRefresh>
     </>

@@ -11,9 +11,11 @@ export enum PATHS {
   DOCS_LANDING_PAGE = '/docs',
   DOCS_SUPPER_BY_FILE = '/docs/supper/:file',
   DOCS_SUPPER = '/docs/supper',
+
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
+
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
@@ -25,6 +27,7 @@ export enum PATHS {
   EDIT_PROFILE_PAGE = '/social/editprofile',
   FRIEND_LIST_PAGE = '/social/profile/friendList/',
   VIEW_FRIEND_LIST_PAGE = '/social/profile/friendList/:userId',
+
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -37,6 +40,7 @@ export enum PATHS {
 
   // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
   FACILITY_LANDING_PAGE = '/facility/main',
+  // // SEARCH BY FACILITY
   SELECT_FACILITY = '/facility/selectFacility',
   VIEW_FACILITY = '/facility/monthView',
   VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
@@ -44,6 +48,9 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/:facilityId',
   CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
   CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId',
+  // // SEARCH BY TIME
+  SELECT_TIME = '/facility/selectTime',
+  // // CREATE BOOKING
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
@@ -54,16 +61,19 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user',
   VIEW_MY_BOOKINGS_ID = '/facility/booking/user/:userId',
+
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_MACHINE = '/facility/laundry/view',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
+
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
+
   //SUPPER
   SUPPER_HOME = '/supper',
   SUPPER_COMPONENTS_PAGE = '/supper/components',
@@ -94,6 +104,7 @@ export enum PATHS {
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
+
   //GYM
   GYM_MAIN = '/gym',
 }
@@ -131,6 +142,7 @@ const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "Facil
 const SelectFacility = React.lazy(
   () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/SelectFacility'),
 )
+const SelectTime = React.lazy(() => import(/* webpackChunckName: "SelectTime" */ './FacilityBooking/SelectTime'))
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
@@ -220,6 +232,7 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
             <PrivateRoute exact path={PATHS.SELECT_FACILITY} component={SelectFacility} />
+            <PrivateRoute exact path={PATHS.SELECT_TIME} component={SelectTime} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />

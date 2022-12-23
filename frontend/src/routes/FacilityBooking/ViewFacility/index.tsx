@@ -103,7 +103,7 @@ export default function ViewFacility() {
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
+          <Calendar onDateClick={onDateClick} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>

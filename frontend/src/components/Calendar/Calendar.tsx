@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../store/types'
 import { DayHeaders } from './DayHeaders'
-import { getAllBookingsForFacility, setIsLoading } from '../../store/calendar/actions'
-import LoadingSpin from '../LoadingSpin'
 import { DateRows } from './DateRows'
 
 const CalenderContainer = styled.div`
@@ -45,23 +41,13 @@ const DatesGridContainer = styled.div`
 `
 
 // this component takes in an array of events or an array of dates that has events
-export const Calendar = (props: { selectedFacilityId: number; onDateClick: (date: Date) => void }) => {
-  const dispatch = useDispatch()
-  const { CalendarViewFacilityStartDate, isLoading } = useSelector((state: RootState) => state.calendar)
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    dispatch(getAllBookingsForFacility(CalendarViewFacilityStartDate, props.selectedFacilityId)) // TODO abstract this out
-  }, [])
-
+export const Calendar = (props: { onDateClick: (date: Date) => void }) => {
   const today = new Date()
   let startingMonth = 0
   const currentYear = today.getFullYear()
 
   const monthList = [0, 1, 2, 3, 4].map((x) => new Date(today.getFullYear(), today.getMonth() + x, 1))
-  return isLoading ? (
-    <LoadingSpin />
-  ) : (
+  return (
     <CalenderContainer>
       <YearContainer>{currentYear}</YearContainer>
       <MonthContainer>

@@ -36,14 +36,18 @@ export const ClickableDateContainer = (props: {
   disabled?: boolean
   onDateClick?: (date: Date) => void
 }) => {
-  const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
+  const {
+    clickedDate,
+    // processedDates
+  } = useSelector((state: RootState) => state.calendar)
 
   const DateContainerClickHandler = (newClickedDate: Date) => {
     props.onDateClick && props.onDateClick(newClickedDate)
   }
-
+  2
   const hasEvent = () => {
-    return processedDates.find((processedDate) => processedDate === props.date) !== undefined
+    // TODO event indicator doesn't work yet
+    return false
   }
 
   const isCurrentDate = () => {
@@ -62,6 +66,7 @@ export const ClickableDateContainer = (props: {
       isCurrentDate={isCurrentDate()}
       disabled={props.disabled}
     >
+      {/* TODO event indicator doesn't work yet */}
       <EventIndicator selected={isCurrentDateClicked()} hasEvent={hasEvent()} />
       {props.date.getDate()}
     </DateContainer>
