@@ -45,8 +45,8 @@ type Props = {
  * @returns If the selected day is today, it returns a timeline indicating the current time, where its position
  * is updated every minute. Otherwise, it returns nothing.
  * @example ```
- *  // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time.
- *  //  In `BookingSection` :
+ *  // <CurrentTimeLine/> is used in the <BookingTimeSelector/> and <ViewScheduleBlock/> components to indicate the current time.
+ *  //  In `BookingTimeSelector` :
  *   <MainContainer>
  *      <CurrentTimeLine />
  *      <HourBlocks />

@@ -17,7 +17,6 @@ import {
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
-import LoadingSpin from '../../../components/LoadingSpin'
 import TimeSelector from '../../../components/FacilityBooking/TimeSelector'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
@@ -56,22 +55,14 @@ const TitleText = styled.h2`
 `
 
 /**
- * # CreateBookingDailyView
- * Path: `/facility/dayView/selectTime/:facilityId`
- *
- * ## Page Description
- * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page. \
- * The user would select a starting time, followed by an ending time, on the timeline. \
- * Once the selection is done, the user would be automatically redirected to the CreateBooking page
- *
+ * // TODO
  * @remarks
  *
  */
 
-export default function CreateBookingDailyView() {
+export default function SearchBookingTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
   const {
     timeBlocks,
     selectedBlockTimestamp,
@@ -82,59 +73,20 @@ export default function CreateBookingDailyView() {
   } = useSelector((state: RootState) => state.facilityBooking)
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
-  const selectedFacilityId = parseInt(params.facilityId)
-
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
-  useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
-  }, [clickedDate])
-
-  useEffect(() => {
-    updateDisabledDates()
-  }, [selectedStartTime])
-
-  /**
-   * updates `disabledDates: number[]` hook, which is an array of date numbers passed into `DailyViewDatesRow` to indicate dates that are disabled on the date row
-   * ## Use cases
-   * When the user selects a starting time block on the `BookingTimeSelector`, this function would calculate the dates on the selected week that are
-   * before the starting date, and dates `>=2` days after the starting date
-   *
-   * This ensures that the user does not book a location across `>=2` days
-   * @returns void
-   */
-
-  const updateDisabledDates = () => {
-    if (selectedStartTime === 0) return
-
-    const startTimeDate = new Date(selectedStartTime * 1000)
-    const year = startTimeDate.getFullYear() // year e.g. 2022
-    const month = startTimeDate.getMonth() // month index e.g. 2 - March
-    const date = startTimeDate.getDate() // the date e.g. 23
-    const maxDateCurMonth = new Date(year, month + 1, 0).getDate() // max date of CURRENT month
-    // array from 1 to maxDateCurMonth
-    const newDisabledDates: number[] = Array.from({ length: maxDateCurMonth }, (_, index) => index + 1)
-
-    if (date === maxDateCurMonth) {
-      newDisabledDates.pop()
-      newDisabledDates.shift()
-    } else {
-      newDisabledDates.splice(date - 1, 2)
-    }
-    setDisabledDates(newDisabledDates)
-  }
-
   const goBackToDailyViewPage = () => {
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    // history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {
-    // reset user selection
-    // TODO you don't want to do this if you're just reselecting date from booking page
+    history.push(PATHS.SEARCH_BOOKING_DATE)
+    // // reset user selection
+    // // TODO you don't want to do this if you're just reselecting date from booking page
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     dispatch(setSelectedEndTime(0))
-    goBackToDailyViewPage()
+    // goBackToDailyViewPage()
   }
 
   useEffect(() => {
@@ -157,9 +109,9 @@ export default function CreateBookingDailyView() {
     dispatch(setTimeBlocks(newTimeblocks))
   }
 
-  const goToBookingPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
-  }
+  // const goToBookingPage = () => {
+  //   history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+  // }
 
   const setSelectedBlock = (selectedTimestamp: number) => {
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
@@ -177,24 +129,20 @@ export default function CreateBookingDailyView() {
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
-      goToBookingPage()
+      // goToBookingPage()
     }
   }
 
   return (
     <>
-      <TopNavBarRevamp onLeftClick={onLeftClick} centerComponent={<TitleText>Book {selectedFacilityName}</TitleText>} />
-      {isLoading ? (
-        <LoadingSpin />
-      ) : (
-        <Background>
-          <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
-          <DailyViewDatesRow disabledDates={disabledDates} />
-          <BookingSectionDiv>
-            <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
-          </BookingSectionDiv>
-        </Background>
-      )}
+      <TopNavBarRevamp onLeftClick={onLeftClick} centerComponent={<TitleText>Select Timeslot</TitleText>} />
+      <Background>
+        <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
+        <DailyViewDatesRow />
+        <BookingSectionDiv>
+          <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
+        </BookingSectionDiv>
+      </Background>
     </>
   )
 }

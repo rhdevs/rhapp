@@ -26,23 +26,20 @@ import { MainCalendarContainer } from '../FacilityBooking.styled'
  *
  * @remarks
  */
-export default function searchBookingDate() {
+export default function SearchBookingDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-  }, [])
-
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
+    history.push(PATHS.SEARCH_BOOKING_TIME)
   }
 
   return (
     <>
       <TopNavBarRevamp
-        title="Select Starting Date to Book"
+        title="Select Starting Date"
         rightComponent={MyBookingsIcon()}
         onLeftClick={() => history.push(`${PATHS.FACILITY_LANDING_PAGE}`)}
       />
