@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
-
-import styled from 'styled-components'
-import { FormOutlined } from '@ant-design/icons'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
@@ -13,16 +10,11 @@ import { setIsLoading } from '../../../store/facilityBooking/action'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 import { setClickedDate } from '../../../store/facilityBooking/action'
-import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 import { RootState } from '../../../store/types'
 
-// TODO abstract this cos is repeated 3 times
-const MainContainer = styled.div`
-  width: 100%;
-  height: 90vh;
-  background-color: #fafaf4;
-`
+import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 /**
  * # Select Time Page
@@ -34,8 +26,7 @@ const MainContainer = styled.div`
  *
  * @remarks
  */
-export default function selectTime() {
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+export default function searchBookingDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
@@ -43,15 +34,6 @@ export default function selectTime() {
   useEffect(() => {
     dispatch(setIsLoading(true))
   }, [])
-
-  const MyBookingsIcon = (
-    <FormOutlined
-      style={{ color: 'black', fontSize: '150%' }}
-      onClick={() => {
-        history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-      }}
-    />
-  )
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
@@ -61,16 +43,15 @@ export default function selectTime() {
     <>
       <TopNavBarRevamp
         title="Select Starting Date to Book"
-        rightComponent={MyBookingsIcon}
-        onLeftClick={() => history.push(`${PATHS.SELECT_FACILITY}`)}
+        rightComponent={MyBookingsIcon()}
+        onLeftClick={() => history.push(`${PATHS.FACILITY_LANDING_PAGE}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
-        <MainContainer>
+        <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />
-        </MainContainer>
+        </MainCalendarContainer>
       </PullToRefresh>
-      <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
     </>
   )
 }

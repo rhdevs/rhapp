@@ -49,7 +49,7 @@ export enum PATHS {
   CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
   CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId',
   // // SEARCH BY TIME
-  SELECT_TIME = '/facility/selectTime',
+  SEARCH_BOOKING_DATE = '/facility/selectDate',
   // // CREATE BOOKING
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
@@ -142,7 +142,9 @@ const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "Facil
 const SelectFacility = React.lazy(
   () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/SelectFacility'),
 )
-const SelectTime = React.lazy(() => import(/* webpackChunckName: "SelectTime" */ './FacilityBooking/SelectTime'))
+const SearchBookingDate = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchBookingDate'),
+)
 const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
 const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
@@ -232,7 +234,7 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
             <PrivateRoute exact path={PATHS.SELECT_FACILITY} component={SelectFacility} />
-            <PrivateRoute exact path={PATHS.SELECT_TIME} component={SelectTime} />
+            <PrivateRoute exact path={PATHS.SEARCH_BOOKING_DATE} component={SearchBookingDate} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />

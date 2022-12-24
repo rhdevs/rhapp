@@ -6,7 +6,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 
 import { Alert } from 'antd'
 import styled from 'styled-components'
-import { FormOutlined } from '@ant-design/icons'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
@@ -22,19 +21,17 @@ import { RootState } from '../../../store/types'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 import { setClickedDate } from '../../../store/facilityBooking/action'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+
+import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 const AlertGroup = styled.div`
   padding: 3px 23px 3px 23px;
 `
 
-const MainContainer = styled.div`
-  width: 100%;
-  height: 90vh;
-  background-color: #fafaf4;
-`
 /**
  * # ViewFacility
  * Path: `facility/monthView/:facilityId`
@@ -62,15 +59,6 @@ export default function ViewFacility() {
     }
   }, [])
 
-  const MyBookingsIcon = (
-    <FormOutlined
-      style={{ color: 'black', fontSize: '150%' }}
-      onClick={() => {
-        history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-      }}
-    />
-  )
-
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
@@ -97,15 +85,15 @@ export default function ViewFacility() {
     <>
       <TopNavBarRevamp
         title={selectedFacilityName}
-        rightComponent={MyBookingsIcon}
+        rightComponent={MyBookingsIcon()}
         onLeftClick={() => history.push(`${PATHS.SELECT_FACILITY}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
-        <MainContainer>
+        <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />
-        </MainContainer>
+        </MainCalendarContainer>
       </PullToRefresh>
       <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
     </>

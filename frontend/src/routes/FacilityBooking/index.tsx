@@ -63,7 +63,7 @@ export default function FacilityLandingPage() {
             size="small"
             lineHeight="20px"
             onClick={() => {
-              history.push(PATHS.SELECT_TIME)
+              history.push(PATHS.SEARCH_BOOKING_DATE)
             }}
           />
         </SearchContainer>
