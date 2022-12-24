@@ -40,7 +40,21 @@ const DatesGridContainer = styled.div`
   grid-template-rows: 40px;
 `
 
-// this component takes in an array of events or an array of dates that has events
+/**
+ * A clickable calendar displaying a set number of months
+ *
+ * @param onDateClick ((date: Date) => void) callback function to run when a date is clicked
+ * @param clickedDate (Date, optional) date that is clicked on, which will be shown highlighted
+ * @param monthsToShow (number, optional) number of months (from current month) to be shown on calendar (default 5)
+ *
+ * @example
+ * ```
+ * <Calendar onDateClick={(date) => console.log(date.toDateString())} clickedDate={new Date()} monthsToShow={5} />
+ * ```
+ *
+ * @remarks
+ *
+ */
 export const Calendar = (props: { onDateClick: (date: Date) => void; clickedDate?: Date; monthsToShow?: number }) => {
   const today = new Date()
   const currentYear = today.getFullYear()

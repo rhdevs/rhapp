@@ -1,7 +1,7 @@
 import React from 'react'
 import { ClickableDateContainer } from './ClickableDateContainer'
-import { EmptyDateContainer } from './EmptyDateContainer'
 import { isSameDate } from '../../common/isSameDate'
+import { EmptyDateContainer } from './Calendar.styled'
 
 export const CalendarDateRows = (props: {
   currentDate: Date
