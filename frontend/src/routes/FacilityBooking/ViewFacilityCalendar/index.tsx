@@ -33,7 +33,7 @@ const AlertGroup = styled.div`
 `
 
 /**
- * # ViewFacility
+ * # ViewFacilityCalendar
  * Path: `facility/monthView/:facilityId`
  *
  * ## Page Description
@@ -41,7 +41,7 @@ const AlertGroup = styled.div`
  * The selected facility [e.g. Main Area (UL)] be selected, showing the available dates (i.e. calendar) to book
  * @returns A calendar of available dates to book
  */
-export default function ViewFacility() {
+export default function ViewFacilityCalendar() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -64,16 +64,17 @@ export default function ViewFacility() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 
+  // booking alerts and modals shown when redirected back after making a booking
+  useEffect(() => {
+    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
+    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
+  }, [bookingStatus])
+
   async function showAlertSection(seconds: number) {
     await new Promise((resolve) => {
       setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
     })
   }
-
-  useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
-    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
-  }, [bookingStatus])
 
   const AlertSection = () => (
     <AlertGroup>
