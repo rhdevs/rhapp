@@ -59,7 +59,6 @@ export enum FACILITY_ACTIONS {
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
   SET_IS_JCRC = 'FACILITY_ACTIONS.SET_IS_JCRC',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
-  CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
   SET_IS_DELETE_MY_BOOKING = 'FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING',
   DELETE_MY_BOOKING = 'FACILITY_ACTIONS.DELETE_MY_BOOKING',
@@ -104,11 +103,6 @@ type GetFacilityList = {
 type GetMyBookings = {
   type: typeof FACILITY_ACTIONS.GET_MY_BOOKINGS
   myBookings: Booking[]
-}
-
-type ChangeTab = {
-  type: typeof FACILITY_ACTIONS.CHANGE_TAB
-  newTab: string
 }
 
 type SetIsDeleteMyBooking = {
@@ -271,7 +265,6 @@ export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_
 
 export type ActionTypes =
   | GetFacilityList
-  | ChangeTab
   | GetMyBookings
   | SetIsDeleteMyBooking
   | DeleteMyBooking

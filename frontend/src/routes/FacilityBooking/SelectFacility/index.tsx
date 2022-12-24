@@ -2,17 +2,16 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { Radio } from 'antd'
+import { MainContainer } from '../FacilityBooking.styled'
 import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
-import JCRCBlockOutModal from '../../../components/Mobile/JCRCBlockOutModal'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
+import FacilitiesList from '../../../components/FacilityBooking/FacilitiesList'
 
 import {
-  changeTab,
   getFacilityList,
   setIsLoading,
   setSelectedFacility,
@@ -22,17 +21,6 @@ import { RootState } from '../../../store/types'
 
 import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import JCRCBlockOutIcon from '../../../assets/JCRCBlockOut.svg'
-import FacilityLogo from '../../../components/FacilityBooking/FacilityLogo'
-import {
-  MainContainer,
-  StyledRadioGroupDiv,
-  StyledRadioGroup,
-  StyledBodyDiv,
-  FacilityCard,
-  FacilityLabels,
-  FacilityHeader,
-  FacilitySubHeader,
-} from '../FacilityBooking.styled'
 
 /**
  * # Select Facility Page
@@ -48,16 +36,13 @@ import {
 export default function SelectFacility() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen, isJcrc } = useSelector(
+  const { facilityList, locationList, isLoading, blockOutIsOpen, isJcrc } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(getFacilityList())
-    return () => {
-      dispatch(changeTab('All'))
-    }
   }, [dispatch])
 
   const MyBookingIcon = (
@@ -80,8 +65,9 @@ export default function SelectFacility() {
     />
   )
 
-  const onChangeTab = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeTab(e.target.value))
+  const facilityCardOnClick = (facilityId: number) => {
+    history.push(`${PATHS.VIEW_FACILITY}/${facilityId}`)
+    dispatch(setSelectedFacility(facilityId))
   }
 
   return (
@@ -100,46 +86,12 @@ export default function SelectFacility() {
         {isLoading ? (
           <LoadingSpin />
         ) : (
-          <>
-            <StyledRadioGroupDiv onChange={onChangeTab}>
-              <StyledRadioGroup defaultValue={locationList[0]}>
-                {locationList.map((location, idx) => (
-                  <Radio.Button key={idx} value={location}>
-                    {location}
-                  </Radio.Button>
-                ))}
-              </StyledRadioGroup>
-            </StyledRadioGroupDiv>
-            <StyledBodyDiv>
-              {blockOutIsOpen && (
-                <JCRCBlockOutModal
-                  title="Facilities Blocking"
-                  hasLeftButton={true}
-                  leftButtonText="Confirm"
-                  rightButtonText="Close"
-                  facilities={facilityList}
-                />
-              )}
-              {facilityList.map((facility) => {
-                if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
-                  return (
-                    <FacilityCard
-                      key={facility.facilityID}
-                      onClick={() => {
-                        history.push(`${PATHS.VIEW_FACILITY}/${facility.facilityID}`)
-                        dispatch(setSelectedFacility(facility.facilityID))
-                      }}
-                    >
-                      <FacilityLogo key={facility.facilityID} facilityId={facility.facilityID} />
-                      <FacilityLabels>
-                        <FacilityHeader>{facility.facilityName}</FacilityHeader>
-                        <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
-                      </FacilityLabels>
-                    </FacilityCard>
-                  )
-              })}
-            </StyledBodyDiv>
-          </>
+          <FacilitiesList
+            facilityList={facilityList}
+            locationList={locationList}
+            facilityCardOnClick={facilityCardOnClick}
+            blockOutIsOpen={blockOutIsOpen}
+          />
         )}
         <BottomNavBar />
       </MainContainer>

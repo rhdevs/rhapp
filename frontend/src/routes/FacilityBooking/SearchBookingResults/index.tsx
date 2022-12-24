@@ -1,42 +1,28 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { Radio } from 'antd'
 import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
-import JCRCBlockOutModal from '../../../components/Mobile/JCRCBlockOutModal'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
+import FacilitiesList from '../../../components/FacilityBooking/FacilitiesList'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 
 import {
-  changeTab,
   getFacilityList,
   setIsLoading,
-  setSelectedFacility,
-  SetBlockOutIsOpen,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
+  setSelectedFacility,
   setSelectedStartTime,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
-import FacilityLogo from '../../../components/FacilityBooking/FacilityLogo'
-import {
-  MainContainer,
-  StyledRadioGroupDiv,
-  StyledRadioGroup,
-  StyledBodyDiv,
-  FacilityCard,
-  FacilityLabels,
-  FacilityHeader,
-  FacilitySubHeader,
-} from '../FacilityBooking.styled'
+import { MainContainer } from '../FacilityBooking.styled'
 
 // TODO abstract
 const TitleText = styled.h2`
@@ -49,37 +35,28 @@ const TitleText = styled.h2`
 
 /**
  * # View Search Results
- * Path: ``
+ * Path: `/facility/searchResults`
  *
  * ## Page Description
- * // TODO
+ * This page shows all the facilities that are available for booking during the user's selected timeslot
  *
  * @remarks
  */
 export default function SearchBookingResults() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, selectedTab, isLoading, blockOutIsOpen } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
-
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    dispatch(getFacilityList())
-    return () => {
-      dispatch(changeTab('All'))
-    }
-  }, [dispatch])
-
-  const onChangeTab = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeTab(e.target.value))
-  }
+  const { facilityList, locationList, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
   const goBack = () => {
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     dispatch(setSelectedEndTime(0))
     history.push(PATHS.SEARCH_BOOKING_TIME)
+  }
+
+  const facilityCardOnClick = (facilityId: number) => {
+    history.push(`${PATHS.VIEW_FACILITY}/${facilityId}`)
+    dispatch(setSelectedFacility(facilityId))
   }
 
   return (
@@ -94,46 +71,11 @@ export default function SearchBookingResults() {
         {isLoading ? (
           <LoadingSpin />
         ) : (
-          <>
-            <StyledRadioGroupDiv onChange={onChangeTab}>
-              <StyledRadioGroup defaultValue={locationList[0]}>
-                {locationList.map((location, idx) => (
-                  <Radio.Button key={idx} value={location}>
-                    {location}
-                  </Radio.Button>
-                ))}
-              </StyledRadioGroup>
-            </StyledRadioGroupDiv>
-            <StyledBodyDiv>
-              {blockOutIsOpen && (
-                <JCRCBlockOutModal
-                  title="Facilities Blocking"
-                  hasLeftButton={true}
-                  leftButtonText="Confirm"
-                  rightButtonText="Close"
-                  facilities={facilityList}
-                />
-              )}
-              {facilityList.map((facility) => {
-                if (facility.facilityLocation === selectedTab || selectedTab === '' || selectedTab === 'All')
-                  return (
-                    <FacilityCard
-                      key={facility.facilityID}
-                      onClick={() => {
-                        history.push(`${PATHS.VIEW_FACILITY}/${facility.facilityID}`)
-                        dispatch(setSelectedFacility(facility.facilityID))
-                      }}
-                    >
-                      <FacilityLogo key={facility.facilityID} facilityId={facility.facilityID} />
-                      <FacilityLabels>
-                        <FacilityHeader>{facility.facilityName}</FacilityHeader>
-                        <FacilitySubHeader>{facility.facilityLocation}</FacilitySubHeader>
-                      </FacilityLabels>
-                    </FacilityCard>
-                  )
-              })}
-            </StyledBodyDiv>
-          </>
+          <FacilitiesList
+            facilityList={facilityList}
+            locationList={locationList}
+            facilityCardOnClick={facilityCardOnClick}
+          />
         )}
         <BottomNavBar />
       </MainContainer>

@@ -9,7 +9,6 @@ const initialState: State = {
   isJcrc: false,
   facilityList: [],
   locationList: [],
-  selectedTab: '',
   selectedFacility: null,
   selectedBooking: null,
   myBookings: [],
@@ -43,7 +42,6 @@ type State = {
   isJcrc: boolean
   facilityList: Facility[]
   locationList: string[]
-  selectedTab: string
   selectedFacility: Facility | null
   selectedBooking: Booking | null
   myBookings: Booking[]
@@ -90,12 +88,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         myBookings: action.myBookings,
-      }
-    }
-    case FACILITY_ACTIONS.CHANGE_TAB: {
-      return {
-        ...state,
-        selectedTab: action.newTab,
       }
     }
     case FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING: {

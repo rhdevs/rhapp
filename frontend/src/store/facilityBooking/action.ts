@@ -225,18 +225,6 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
   //   newBooking: oldBooking,
   // })
 }
-/**
- *
- * @params newTab (string)
- * @returns updates `newTab`
- *
- * @remarks
- * <any remarks on this function put here>
- */
-
-export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
-}
 
 /**
  * Verifies if the ending datetime is equal to or before the given start datetime
