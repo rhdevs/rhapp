@@ -13,7 +13,7 @@ import {
   setSelectedEndTime,
   setSelectedStartTime,
   setTimeBlocks,
-  updateDailyView,
+  updateBookingDailyView,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -73,6 +73,7 @@ export default function CreateBookingDailyView() {
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
   const {
+    clickedDate,
     timeBlocks,
     selectedBlockTimestamp,
     selectedFacilityName,
@@ -80,14 +81,13 @@ export default function CreateBookingDailyView() {
     selectedStartTime,
     selectedEndTime,
   } = useSelector((state: RootState) => state.facilityBooking)
-  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   const selectedFacilityId = parseInt(params.facilityId)
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
   useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+    dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   useEffect(() => {
@@ -103,7 +103,6 @@ export default function CreateBookingDailyView() {
    * This ensures that the user does not book a location across `>=2` days
    * @returns void
    */
-
   const updateDisabledDates = () => {
     if (selectedStartTime === 0) return
 

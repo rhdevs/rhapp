@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { now } from 'lodash'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
@@ -26,7 +27,9 @@ import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBl
  *
  * @remarks
  */
-export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const updateBookingDailyView = (date: Date, selectedFacilityId: number) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
@@ -93,6 +96,32 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
       dispatch(setTimeBlocks(updatedTB))
       dispatch(setIsLoading(false))
     })
+}
+
+/**
+ *
+ * @param date
+ * @param selectedFacilityId
+ * @returns updates `timeBlocks`
+ *
+ * @remarks
+ */
+export const updateSearchDailyView = (date: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const currentTimestamp = now() / 1000
+
+  //set all elements in TB to available, if time is after now
+  for (let i = 0; i < 24; i++) {
+    const timestamp = adjustedStart.getTime() / 1000 + i * 3600
+    const isAvailable = timestamp >= currentTimestamp - 3600
+    updatedTB[i] = {
+      id: i,
+      timestamp: timestamp,
+      type: isAvailable ? TimeBlockType.AVAILABLE : TimeBlockType.UNAVAILABLE,
+    }
+  }
+  dispatch(setTimeBlocks(updatedTB))
 }
 
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {

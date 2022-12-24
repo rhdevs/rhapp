@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import 'antd-mobile/dist/antd-mobile.css'
@@ -13,7 +13,7 @@ import {
   setSelectedEndTime,
   setSelectedStartTime,
   setTimeBlocks,
-  updateDailyView,
+  updateSearchDailyView,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -55,38 +55,32 @@ const TitleText = styled.h2`
 `
 
 /**
- * // TODO
+ * # Search Booking Time Page
+ * Path: `/facility/selectDate/selectTime`
+ *
+ * ## Page Description
+ * This page is accesed when the user searches facilities by Date/Time, after they selected a date.
+ * This page allows them to select the timeslot which they wish to search for an available facility to book.
  * @remarks
  *
  */
-
 export default function SearchBookingTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const {
-    timeBlocks,
-    selectedBlockTimestamp,
-    selectedFacilityName,
-    isLoading,
-    selectedStartTime,
-    selectedEndTime,
-  } = useSelector((state: RootState) => state.facilityBooking)
-  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
+  const { clickedDate, timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
-  const [disabledDates, setDisabledDates] = useState<number[]>([])
-
-  const goBackToDailyViewPage = () => {
-    // history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
-  }
+  useEffect(() => {
+    dispatch(updateSearchDailyView(clickedDate))
+  }, [clickedDate])
 
   const onLeftClick = () => {
-    history.push(PATHS.SEARCH_BOOKING_DATE)
-    // // reset user selection
-    // // TODO you don't want to do this if you're just reselecting date from booking page
+    // reset user selection
     dispatch(setSelectedBlockTimestamp(0))
     dispatch(setSelectedStartTime(0))
     dispatch(setSelectedEndTime(0))
-    // goBackToDailyViewPage()
+    history.push(PATHS.SEARCH_BOOKING_DATE)
   }
 
   useEffect(() => {
@@ -109,10 +103,6 @@ export default function SearchBookingTime() {
     dispatch(setTimeBlocks(newTimeblocks))
   }
 
-  // const goToBookingPage = () => {
-  //   history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
-  // }
-
   const setSelectedBlock = (selectedTimestamp: number) => {
     dispatch(setSelectedBlockTimestamp(selectedTimestamp))
     if (selectedStartTime === 0) {
@@ -129,7 +119,7 @@ export default function SearchBookingTime() {
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
-      // goToBookingPage()
+      history.push(PATHS.SEARCH_BOOKING_RESULTS)
     }
   }
 

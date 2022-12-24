@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { updateDailyView } from '../../../store/facilityBooking/action'
+import { updateBookingDailyView } from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -68,7 +68,7 @@ export default function ViewBookingDailyView() {
   const selectedFacilityId = parseInt(params.facilityId)
 
   useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+    dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   return (
