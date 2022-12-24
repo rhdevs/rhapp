@@ -84,7 +84,7 @@ export default function ViewFacility() {
   return (
     <>
       <TopNavBarRevamp
-        title={selectedFacilityName}
+        title={`${selectedFacilityName} - Select Date to View`}
         rightComponent={MyBookingsIcon()}
         onLeftClick={() => history.push(`${PATHS.SELECT_FACILITY}`)}
       />

@@ -138,8 +138,9 @@ const StyledRadioGroupDiv = styled.div`
 
 const StyledBodyDiv = styled.div`
   background-color: #fafaf4;
-  height: 90vh;
+  height: 80vh;
   overflow: scroll;
+  overflow-x: hidden;
 `
 
 /**
