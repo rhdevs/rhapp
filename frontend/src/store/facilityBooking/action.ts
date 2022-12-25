@@ -3,7 +3,16 @@ import { now } from 'lodash'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
-import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
+import {
+  ActionTypes,
+  Booking,
+  BookingStatus,
+  Facility,
+  FACILITY_ACTIONS,
+  SearchMode,
+  TimeBlock,
+  TimeBlockType,
+} from './types'
 
 // /**
 //  *
@@ -277,16 +286,13 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
 
 /**
  *
- * // TODO
  * @params
- * @returns updates
+ * @returns updates `searchMode`
  *
  * @remarks
  * <any remarks on this function put here>
  */
-export const setSearchMode = (newSearchMode: 'none' | 'byFacility' | 'byTime') => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
+export const setSearchMode = (newSearchMode: SearchMode) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_SEARCH_MODE,
     searchMode: newSearchMode,

@@ -8,6 +8,7 @@ import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { setSearchMode } from '../../store/facilityBooking/action'
 import { useDispatch } from 'react-redux'
+import { SearchMode } from '../../store/facilityBooking/types'
 
 const SearchContainer = styled.div`
   display: flex;
@@ -41,12 +42,12 @@ export default function FacilityLandingPage() {
   const dispatch = useDispatch()
 
   const searchByFacilityOnClick = () => {
-    dispatch(setSearchMode('byFacility'))
+    dispatch(setSearchMode(SearchMode.BY_FACILITY))
     history.push(PATHS.SELECT_FACILITY)
   }
 
   const searchByDateTimeOnClick = () => {
-    dispatch(setSearchMode('byTime'))
+    dispatch(setSearchMode(SearchMode.BY_TIME))
     history.push(PATHS.SEARCH_BOOKING_DATE)
   }
 

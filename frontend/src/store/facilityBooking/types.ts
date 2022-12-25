@@ -54,6 +54,12 @@ export enum TimeBlockType {
   SELECTED = 'selected',
 }
 
+export enum SearchMode {
+  NONE,
+  BY_FACILITY,
+  BY_TIME,
+}
+
 export enum FACILITY_ACTIONS {
   SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
@@ -126,7 +132,7 @@ type DeleteMyBooking = {
 
 type SetSearchMode = {
   type: typeof FACILITY_ACTIONS.SET_SEARCH_MODE
-  searchMode: 'none' | 'byFacility' | 'byTime'
+  searchMode: SearchMode
 }
 
 type SetViewFacilityStartDate = {

@@ -24,7 +24,7 @@ import {
   resetTimeSelectorSelection,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { BookingStatus } from '../../../store/facilityBooking/types'
+import { BookingStatus, SearchMode } from '../../../store/facilityBooking/types'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -223,7 +223,7 @@ export default function CreateBooking() {
   }
 
   const onLeftClick = () => {
-    history.push(searchMode === 'byTime' ? PATHS.SEARCH_BOOKING_RESULTS : PATHS.SELECT_FACILITY)
+    history.push(searchMode === SearchMode.BY_TIME ? PATHS.SEARCH_BOOKING_RESULTS : PATHS.SELECT_FACILITY)
   }
 
   return (

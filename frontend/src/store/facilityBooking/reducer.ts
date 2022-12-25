@@ -1,6 +1,15 @@
 import { Reducer } from 'redux'
 import { defaultTimeBlocks, myBookingsStub } from '../stubs'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, BookingStatus, TimeBlock } from './types'
+import {
+  ActionTypes,
+  FACILITY_ACTIONS,
+  Facility,
+  Booking,
+  userCCA,
+  BookingStatus,
+  TimeBlock,
+  SearchMode,
+} from './types'
 
 const initialState: State = {
   // MAIN PAGE
@@ -17,7 +26,7 @@ const initialState: State = {
   isDeleteMyBooking: -1,
   createSuccess: false,
   createFailure: false,
-  searchMode: 'none',
+  searchMode: SearchMode.NONE,
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: new Date(),
@@ -54,7 +63,7 @@ type State = {
   isDeleteMyBooking: number
   createSuccess: boolean
   createFailure: boolean
-  searchMode: 'none' | 'byFacility' | 'byTime'
+  searchMode: SearchMode
   // VIEW FACILITY PARAMS
   ViewStartDate: Date
   ViewEndDate: Date
