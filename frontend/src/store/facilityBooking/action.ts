@@ -144,7 +144,36 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     })
 }
 
-// TODO not yet tesyed with backend, check on Monday if backend url is correct
+/**
+ *
+ * @param facilityList (Facility[])
+ * @param locationList (string[])
+ * @returns updates `facilityListWithinTime`, `locationListWithinTime`
+ *
+ * @remarks
+ */
+const setFacilityListWithinTime = (facilityList: Facility[], locationList: string[]) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
+    facilityListWithinTime: facilityList,
+    locationListWithinTime: locationList,
+  })
+}
+
+/**
+ *
+ * Updates time search facility list with facilities that are available within the time range
+ *
+ * @param startTime (number) - unix timestamp
+ * @param endTime (number) - unix timestamp
+ * @returns updates `facilityListWithinTime`, `locationListWithinTime`
+ *
+ * @remarks
+ * // TODO not yet tested with backend, check on Monday if backend url is correct
+ *
+ */
 export const getFacilityListWithinTime = (startTime: number, endTime: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
@@ -169,15 +198,14 @@ export const getFacilityListWithinTime = (startTime: number, endTime: number) =>
           }),
       )
       console.log(data)
-      const facilityListWithinTime = data.data
-      const commHallBack = facilityListWithinTime.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
-      facilityListWithinTime.splice(6, 0, commHallBack)
-      const uniqueLocationList = [...new Set(facilityListWithinTime.map((item: Facility) => item.facilityLocation))]
-      dispatch({
-        type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
-        facilityListWithinTime: facilityListWithinTime,
-        locationList: ['All'].concat(uniqueLocationList as string[]),
-      })
+      const facilityList = data.data
+      if (data.data) {
+        const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
+        const locationList = ['All'].concat(uniqueLocationList as string[])
+        dispatch(setFacilityListWithinTime(facilityList, locationList))
+      } else {
+        dispatch(setFacilityListWithinTime([], []))
+      }
       dispatch(setIsLoading(false))
     })
 }

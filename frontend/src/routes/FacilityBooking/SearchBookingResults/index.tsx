@@ -32,6 +32,26 @@ const TitleText = styled.h2`
   margin-top: 0.7rem;
 `
 
+const TimeText = styled.h2`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  margin-top: 0.7rem;
+`
+
+const NoFacilitiesText = styled.h1`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`
+
 /**
  * # View Search Results
  * Path: `/facility/searchResults`
@@ -44,12 +64,12 @@ const TitleText = styled.h2`
 export default function SearchBookingResults() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { bookingStartTime, bookingEndTime, facilityListWithinTime, locationList, isLoading } = useSelector(
+  const { bookingStartTime, bookingEndTime, facilityListWithinTime, locationListWithinTime, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
-    // dispatch(setIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(getFacilityListWithinTime(bookingStartTime, bookingEndTime))
   }, [dispatch])
 
@@ -67,25 +87,27 @@ export default function SearchBookingResults() {
     <>
       <TopNavBarRevamp
         onLeftClick={goBack}
-        centerComponent={<TitleText>Search Results [WIP]</TitleText>}
+        centerComponent={<TitleText>Available Facilities</TitleText>}
         rightComponent={MyBookingsIcon()}
       />
-      <h2 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        Displaying Facilities Available on: {unixToFullDateTime(bookingStartTime)} -{' '}
-        {unixToFullDateTime(bookingEndTime)}
-      </h2>
       <MainContainer>
+        <TimeText>
+          From: {unixToFullDateTime(bookingStartTime)} <br />
+          To: {unixToFullDateTime(bookingEndTime)}
+        </TimeText>
         {isLoading ? (
           <LoadingSpin />
+        ) : facilityListWithinTime.length === 0 ? (
+          <NoFacilitiesText>No facilities available!</NoFacilitiesText>
         ) : (
           <FacilitiesList
             facilityList={facilityListWithinTime}
-            locationList={locationList}
+            locationList={locationListWithinTime}
             facilityCardOnClick={facilityCardOnClick}
           />
         )}
-        <BottomNavBar />
       </MainContainer>
+      <BottomNavBar />
     </>
   )
 }

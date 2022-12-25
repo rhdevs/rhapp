@@ -106,7 +106,7 @@ type GetFacilityList = {
 type GetFacilityListWithinTime = {
   type: typeof FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME
   facilityListWithinTime: Facility[]
-  locationList: string[]
+  locationListWithinTime: string[]
 }
 
 type GetMyBookings = {

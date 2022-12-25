@@ -93,8 +93,8 @@ export default function SelectFacility() {
             blockOutIsOpen={blockOutIsOpen}
           />
         )}
-        <BottomNavBar />
       </MainContainer>
+      <BottomNavBar />
     </>
   )
 }

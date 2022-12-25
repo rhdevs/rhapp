@@ -10,6 +10,7 @@ const initialState: State = {
   facilityList: [],
   facilityListWithinTime: [],
   locationList: [],
+  locationListWithinTime: [],
   selectedFacility: null,
   selectedBooking: null,
   myBookings: [],
@@ -46,6 +47,7 @@ type State = {
   facilityList: Facility[]
   facilityListWithinTime: Facility[]
   locationList: string[]
+  locationListWithinTime: string[]
   selectedFacility: Facility | null
   selectedBooking: Booking | null
   myBookings: Booking[]
@@ -94,7 +96,7 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         facilityListWithinTime: action.facilityListWithinTime,
-        locationList: action.locationList,
+        locationListWithinTime: action.locationListWithinTime,
       }
     }
     case FACILITY_ACTIONS.GET_MY_BOOKINGS: {
