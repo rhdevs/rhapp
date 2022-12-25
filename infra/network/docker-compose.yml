@@ -4,9 +4,7 @@ services:
     image: traefik:v2.9
     command:
       - --log.level=DEBUG
-      - --api=true
       - --api.insecure=true
-      - --api.dashboard=true
       - --serversTransport.insecureSkipVerify=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -20,7 +18,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myresolver.acme.storage=/acme.json"
     env_file:
       - ../../secrets/.env #Access to env
     networks:
@@ -28,9 +26,11 @@ services:
     ports:
       - 80:80
       - 443:443
+      # For traefik dashboard, only expose for debugging
+      - 8081:8080
     volumes:
-      - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+      - ~/data/traefik/acme.json:/acme.json
     labels:
       # global redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"

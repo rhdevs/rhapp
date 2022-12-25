@@ -1,9 +1,9 @@
 version: '1'
 services:
-  backend-dev:
+  backend-prod:
     build:
       context: .
-      dockerfile: backend/Dockerfile.dev
+      dockerfile: backend/Dockerfile.prod
       args:
         - GIT_COMMIT_HASH
     expose:
@@ -13,14 +13,14 @@ services:
       - intranet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend-dev.rule=Host(`dev.api.rhapp.lol`)"
+      - "traefik.http.routers.backend-prod.rule=Host(`prod.api.rhapp.lol`)"
         # For using PathPrefixes
         #- "traefik.http.middlewares.strip.stripprefix.prefixes=/prod"
         #- "traefik.http.middlewares.strip.stripprefix.forceSlash=true"
         #- "traefik.http.routers.backend.middlewares=strip@docker"
-      - "traefik.http.routers.backend-dev.entrypoints=websecure"
-      - "traefik.http.routers.backend-dev.tls=true"
-      - "traefik.http.routers.backend-dev.tls.certresolver=myresolver"
+      - "traefik.http.routers.backend-prod.entrypoints=websecure"
+      - "traefik.http.routers.backend-prod.tls=true"
+      - "traefik.http.routers.backend-prod.tls.certresolver=myresolver"
 
 networks:
   intranet:
