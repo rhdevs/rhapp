@@ -5,7 +5,13 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { updateBookingDailyView } from '../../../store/facilityBooking/action'
+import {
+  resetTimeSelectorSelection,
+  setSelectedBlockTimestamp,
+  setSelectedEndTime,
+  setSelectedStartTime,
+  updateBookingDailyView,
+} from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -71,18 +77,19 @@ export default function ViewBookingDailyView() {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
+  const bookFacilityOnClick = () => {
+    // reset time selection on next page
+    resetTimeSelectorSelection()
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+  }
+
   return (
     <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{`${selectedFacilityName} - View Booked Timeslots`}</TitleText>}
         rightComponent={
-          <ButtonComponent
-            state="primary"
-            text="Book Facility"
-            onClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)}
-            size="small"
-          />
+          <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
         }
       />
       {isLoading ? (

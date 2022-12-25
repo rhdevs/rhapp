@@ -15,6 +15,7 @@ const initialState: State = {
   isDeleteMyBooking: -1,
   createSuccess: false,
   createFailure: false,
+  searchMode: 'none',
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: new Date(),
@@ -37,6 +38,7 @@ const initialState: State = {
 }
 
 type State = {
+  // MAIN PAGE
   isLoading: boolean
   blockOutIsOpen: boolean
   isJcrc: boolean
@@ -48,6 +50,8 @@ type State = {
   isDeleteMyBooking: number
   createSuccess: boolean
   createFailure: boolean
+  searchMode: 'none' | 'byFacility' | 'byTime'
+  // VIEW FACILITY PARAMS
   ViewStartDate: Date
   ViewEndDate: Date
   selectedFacilityId: number
@@ -100,6 +104,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         myBookings: action.myBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SEARCH_MODE: {
+      return {
+        ...state,
+        searchMode: action.searchMode,
       }
     }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
@@ -14,6 +14,7 @@ import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 
 import {
   getFacilityList,
+  resetTimeSelectorSelection,
   setIsLoading,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
@@ -23,6 +24,7 @@ import {
 import { RootState } from '../../../store/types'
 
 import { MainContainer } from '../FacilityBooking.styled'
+import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 // TODO abstract
 const TitleText = styled.h2`
@@ -45,17 +47,22 @@ const TitleText = styled.h2`
 export default function SearchBookingResults() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { facilityList, locationList, isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const { bookingStartTime, bookingEndTime, facilityList, locationList, isLoading } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
+
+  useEffect(() => {
+    // dispatch(setIsLoading(true))
+    dispatch(getFacilityList()) // TODO replace
+  }, [dispatch])
 
   const goBack = () => {
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    resetTimeSelectorSelection()
     history.push(PATHS.SEARCH_BOOKING_TIME)
   }
 
   const facilityCardOnClick = (facilityId: number) => {
-    history.push(`${PATHS.VIEW_FACILITY}/${facilityId}`)
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`)
     dispatch(setSelectedFacility(facilityId))
   }
 
@@ -66,7 +73,10 @@ export default function SearchBookingResults() {
         centerComponent={<TitleText>Search Results [WIP]</TitleText>}
         rightComponent={MyBookingsIcon()}
       />
-
+      <h2 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        Displaying Facilities Available on: {unixToFullDateTime(bookingStartTime)} -{' '}
+        {unixToFullDateTime(bookingEndTime)}
+      </h2>
       <MainContainer>
         {isLoading ? (
           <LoadingSpin />

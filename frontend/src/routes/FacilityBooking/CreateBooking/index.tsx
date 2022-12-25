@@ -21,6 +21,7 @@ import {
   setSelectedBlockTimestamp,
   setSelectedStartTime,
   setSelectedEndTime,
+  resetTimeSelectorSelection,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 import { BookingStatus } from '../../../store/facilityBooking/types'
@@ -121,6 +122,7 @@ export default function CreateBooking() {
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
+    searchMode,
   } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
@@ -201,9 +203,7 @@ export default function CreateBooking() {
    * when user goes back, reset user's time selections
    */
   const reselectBothDates = () => {
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    resetTimeSelectorSelection()
     goBackToTimeSelectionPage()
   }
 
@@ -222,9 +222,13 @@ export default function CreateBooking() {
     goBackToTimeSelectionPage()
   }
 
+  const onLeftClick = () => {
+    history.push(searchMode === 'byTime' ? PATHS.SEARCH_BOOKING_RESULTS : PATHS.SELECT_FACILITY)
+  }
+
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={reselectBothDates} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />
       ) : (

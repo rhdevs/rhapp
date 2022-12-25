@@ -65,6 +65,7 @@ export enum FACILITY_ACTIONS {
   HANDLE_BOOKING_NAME = 'FACILITY_ACTIONS.HANDLE_BOOKING_NAME',
   SET_BOOKING_TO_DATE = 'FACILITY_ACTIONS.SET_BOOKING_TO_DATE',
   SET_BOOKING_FROM_DATE = 'FACILITY_ACTIONS.SET_BOOKING_FROM_DATE',
+  SET_SEARCH_MODE = 'FACILITY_ACTIONS.SET_SEARCH_MODE',
   SET_VIEW_FACILITY_START_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE',
   SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
   SET_VIEW_FACILITY_MODE = 'FACILITY_ACTIONS.VIEW_FACILITY_MODE',
@@ -113,6 +114,11 @@ type SetIsDeleteMyBooking = {
 type DeleteMyBooking = {
   type: typeof FACILITY_ACTIONS.DELETE_MY_BOOKING
   myBookings: Booking[]
+}
+
+type SetSearchMode = {
+  type: typeof FACILITY_ACTIONS.SET_SEARCH_MODE
+  searchMode: 'none' | 'byFacility' | 'byTime'
 }
 
 type SetViewFacilityStartDate = {
@@ -268,6 +274,7 @@ export type ActionTypes =
   | GetMyBookings
   | SetIsDeleteMyBooking
   | DeleteMyBooking
+  | SetSearchMode
   | SetViewFacilityStartDate
   | SetViewFacilityEndDate
   | setViewFacilityMode

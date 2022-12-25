@@ -211,6 +211,24 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
 
 /**
  *
+ * // TODO
+ * @params
+ * @returns updates
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
+export const setSearchMode = (newSearchMode: 'none' | 'byFacility' | 'byTime') => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SEARCH_MODE,
+    searchMode: newSearchMode,
+  })
+}
+
+/**
+ *
  *
  * @params oldBooking (Booking)
  * @returns updates `newBooking`, `newBookingFacilityName`
@@ -427,6 +445,17 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
 
 /**
  *
+ * Resets user's selection on the `TimeSelector`
+ * @returns sets `selectedBlockTimestamp`, `selectedStartTime` and `selectedEndTime` to `0`
+ */
+export const resetTimeSelectorSelection = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setSelectedBlockTimestamp(0))
+  dispatch(setSelectedStartTime(0))
+  dispatch(setSelectedEndTime(0))
+}
+
+/**
+ *
  * Given booking details, create booking in database and update bookingStatus in store.
  * Throw errors if creation of booking fails.
  *
@@ -515,9 +544,7 @@ export const handleCreateNewBooking = (
         })
       }
     })
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    resetTimeSelectorSelection()
     dispatch(setBookingStartTime(0))
     dispatch(setBookingEndTime(0))
   }

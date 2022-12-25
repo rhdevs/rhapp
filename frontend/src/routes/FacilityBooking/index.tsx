@@ -6,6 +6,8 @@ import { PATHS } from '../Routes'
 import ButtonComponent from '../../components/Button'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
+import { setSearchMode } from '../../store/facilityBooking/action'
+import { useDispatch } from 'react-redux'
 
 const SearchContainer = styled.div`
   display: flex;
@@ -36,6 +38,17 @@ const LandingPageContainer = styled.div`
  */
 export default function FacilityLandingPage() {
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  const searchByFacilityOnClick = () => {
+    dispatch(setSearchMode('byFacility'))
+    history.push(PATHS.SELECT_FACILITY)
+  }
+
+  const searchByDateTimeOnClick = () => {
+    dispatch(setSearchMode('byTime'))
+    history.push(PATHS.SEARCH_BOOKING_DATE)
+  }
 
   return (
     <>
@@ -44,15 +57,13 @@ export default function FacilityLandingPage() {
         <SearchContainer>
           <ButtonComponent
             state="primary"
-            text="Search by facility"
+            text="Search by Facility"
             width="129px"
             height="104px"
             fontSize="20px"
             size="small"
             lineHeight="20px"
-            onClick={() => {
-              history.push(PATHS.SELECT_FACILITY)
-            }}
+            onClick={searchByFacilityOnClick}
           />
           <ButtonComponent
             state="primary"
@@ -62,14 +73,12 @@ export default function FacilityLandingPage() {
             fontSize="20px"
             size="small"
             lineHeight="20px"
-            onClick={() => {
-              history.push(PATHS.SEARCH_BOOKING_DATE)
-            }}
+            onClick={searchByDateTimeOnClick}
           />
         </SearchContainer>
         <ButtonComponent
           state="primary"
-          text="View my Bookings"
+          text="View My Bookings"
           width="297px"
           height="80px"
           fontSize="20px"

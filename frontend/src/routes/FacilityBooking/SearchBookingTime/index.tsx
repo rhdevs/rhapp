@@ -7,6 +7,7 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import {
+  resetTimeSelectorSelection,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
@@ -77,9 +78,7 @@ export default function SearchBookingTime() {
 
   const onLeftClick = () => {
     // reset user selection
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    resetTimeSelectorSelection()
     history.push(PATHS.SEARCH_BOOKING_DATE)
   }
 
@@ -116,9 +115,11 @@ export default function SearchBookingTime() {
       // select end time (after start time is selected), then go to booking page
       const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
 
+      // TODO sus why is selected end time set twice
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
+      resetTimeSelectorSelection()
       history.push(PATHS.SEARCH_BOOKING_RESULTS)
     }
   }
