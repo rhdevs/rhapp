@@ -9,7 +9,9 @@ ENV GIT_COMMIT_HASH $GIT_COMMIT_HASH
 
 ## TODO: Split COPY statement for better caching
 COPY ./backend .
+COPY ./secrets/prod_db.py ./db.py
+COPY ./secrets/S3_credentials.py ./S3/credentials.py
 
 RUN pip3 install -r ./requirements.txt
 
-CMD python ./main.py > /home/output.txt 2> /home/error.txt
+CMD python ./main.py
