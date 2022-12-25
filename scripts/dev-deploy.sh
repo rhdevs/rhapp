@@ -11,7 +11,7 @@ set -e
 set -x
 
 git pull
-# git checkout dev
+git checkout dev
 
 # Change directory to the main directory
 cd $WORK_DIR

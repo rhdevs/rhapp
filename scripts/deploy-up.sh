@@ -24,10 +24,10 @@ fi
 docker compose --project-name=machine -f $WORK_DIR/infra/network/docker-compose.yml build --no-cache
 docker compose --project-name=machine -f $WORK_DIR/infra/network/docker-compose.yml up --force-recreate -d
 # Deploy Production Backend
-# git checkout main
+git checkout main
 docker compose --project-name=blue    -f $WORK_DIR/docker-compose.prod.yml          build --no-cache
 docker compose --project-name=blue    -f $WORK_DIR/docker-compose.prod.yml          up -d
 # Deploy Dev Backend
-# git checkout devel
+git checkout devel
 docker compose --project-name=blue    -f $WORK_DIR/docker-compose.yml          build --no-cache
 docker compose --project-name=blue    -f $WORK_DIR/docker-compose.yml          up -d
