@@ -59,6 +59,7 @@ export enum FACILITY_ACTIONS {
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
   SET_IS_JCRC = 'FACILITY_ACTIONS.SET_IS_JCRC',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
+  GET_FACILITY_LIST_WITHIN_TIME = 'FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
   SET_IS_DELETE_MY_BOOKING = 'FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING',
   DELETE_MY_BOOKING = 'FACILITY_ACTIONS.DELETE_MY_BOOKING',
@@ -101,6 +102,13 @@ type GetFacilityList = {
   facilityList: Facility[]
   locationList: string[]
 }
+
+type GetFacilityListWithinTime = {
+  type: typeof FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME
+  facilityListWithinTime: Facility[]
+  locationList: string[]
+}
+
 type GetMyBookings = {
   type: typeof FACILITY_ACTIONS.GET_MY_BOOKINGS
   myBookings: Booking[]
@@ -271,6 +279,7 @@ export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_
 
 export type ActionTypes =
   | GetFacilityList
+  | GetFacilityListWithinTime
   | GetMyBookings
   | SetIsDeleteMyBooking
   | DeleteMyBooking

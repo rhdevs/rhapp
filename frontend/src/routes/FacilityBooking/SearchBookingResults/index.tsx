@@ -13,13 +13,10 @@ import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 
 import {
-  getFacilityList,
+  getFacilityListWithinTime,
   resetTimeSelectorSelection,
   setIsLoading,
-  setSelectedBlockTimestamp,
-  setSelectedEndTime,
   setSelectedFacility,
-  setSelectedStartTime,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -47,13 +44,13 @@ const TitleText = styled.h2`
 export default function SearchBookingResults() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { bookingStartTime, bookingEndTime, facilityList, locationList, isLoading } = useSelector(
+  const { bookingStartTime, bookingEndTime, facilityListWithinTime, locationList, isLoading } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
   useEffect(() => {
     // dispatch(setIsLoading(true))
-    dispatch(getFacilityList()) // TODO replace
+    dispatch(getFacilityListWithinTime(bookingStartTime, bookingEndTime))
   }, [dispatch])
 
   const goBack = () => {
@@ -82,7 +79,7 @@ export default function SearchBookingResults() {
           <LoadingSpin />
         ) : (
           <FacilitiesList
-            facilityList={facilityList}
+            facilityList={facilityListWithinTime}
             locationList={locationList}
             facilityCardOnClick={facilityCardOnClick}
           />

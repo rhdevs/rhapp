@@ -34,13 +34,6 @@ export const updateBookingDailyView = (date: Date, selectedFacilityId: number) =
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
-  const querySubString =
-    selectedFacilityId +
-    '/' +
-    '?startTime=' +
-    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
-    '&endTime=' +
-    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
 
   //set all elements in TB to available
   for (let i = 0; i < 24; i++) {
@@ -50,10 +43,17 @@ export const updateBookingDailyView = (date: Date, selectedFacilityId: number) =
       type: TimeBlockType.AVAILABLE,
     }
   }
-  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
-    method: 'GET',
-    mode: 'cors',
-  })
+  fetch(
+    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_BOOKING}/${selectedFacilityId}/?` +
+      new URLSearchParams({
+        startTime: (adjustedStart.getTime() / 1000).toFixed(0),
+        endTime: (adjustedEnd.getTime() / 1000).toFixed(0),
+      }),
+    {
+      method: 'GET',
+      mode: 'cors',
+    },
+  )
     .then((resp) => resp.json())
     .then((res) => {
       const updatedDayBookings: Booking[] = res.data
@@ -138,6 +138,44 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
         facilityList: facilityList,
+        locationList: ['All'].concat(uniqueLocationList as string[]),
+      })
+      dispatch(setIsLoading(false))
+    })
+}
+
+// TODO not yet tesyed with backend, check on Monday if backend url is correct
+export const getFacilityListWithinTime = (startTime: number, endTime: number) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  await fetch(
+    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
+      new URLSearchParams({
+        startTime: `${startTime}`,
+        endTime: `${endTime}`,
+      }),
+    {
+      method: 'GET',
+      mode: 'cors',
+    },
+  )
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(
+        `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
+          new URLSearchParams({
+            startTime: `${startTime}`,
+            endTime: `${endTime}`,
+          }),
+      )
+      console.log(data)
+      const facilityListWithinTime = data.data
+      const commHallBack = facilityListWithinTime.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
+      facilityListWithinTime.splice(6, 0, commHallBack)
+      const uniqueLocationList = [...new Set(facilityListWithinTime.map((item: Facility) => item.facilityLocation))]
+      dispatch({
+        type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
+        facilityListWithinTime: facilityListWithinTime,
         locationList: ['All'].concat(uniqueLocationList as string[]),
       })
       dispatch(setIsLoading(false))

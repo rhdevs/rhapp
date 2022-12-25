@@ -8,6 +8,7 @@ const initialState: State = {
   blockOutIsOpen: false,
   isJcrc: false,
   facilityList: [],
+  facilityListWithinTime: [],
   locationList: [],
   selectedFacility: null,
   selectedBooking: null,
@@ -43,6 +44,7 @@ type State = {
   blockOutIsOpen: boolean
   isJcrc: boolean
   facilityList: Facility[]
+  facilityListWithinTime: Facility[]
   locationList: string[]
   selectedFacility: Facility | null
   selectedBooking: Booking | null
@@ -85,6 +87,13 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         facilityList: action.facilityList,
+        locationList: action.locationList,
+      }
+    }
+    case FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME: {
+      return {
+        ...state,
+        facilityListWithinTime: action.facilityListWithinTime,
         locationList: action.locationList,
       }
     }
