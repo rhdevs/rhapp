@@ -1,7 +1,6 @@
 version: '1'
 services:
   backend:
-    container_name: rhapp-backend
     build:
       context: .
       dockerfile: backend/Dockerfile.prod
@@ -10,51 +9,51 @@ services:
     ports:
       - 8080:8080
     restart: on-failure
+    networks:
+      - intranet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.rhapp.lol`)"
+      - "traefik.http.routers.backend.rule=(Host(`api.rhapp.lol`) && PathPrefix(`/prod`))"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls=true"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
-      # global redirect to https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-    depends_on:
-    - traefik
+        #  traefik:
+        #    image: traefik:v2.9
+        #    command:
+        #      - --log.level=DEBUG
+        #      - --api.insecure=true
+        #      - --api.dashboard=true
+        #      - --serversTransport.insecureSkipVerify=true
+        #      - --providers.docker=true
+        #      - --providers.docker.exposedbydefault=false
+        #      - --entrypoints.web.address=:80
+        #      - --entrypoints.websecure.address=:443
+        #      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+        #      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+        #      - "--providers.docker.defaultRule=Host(`{{ normalize .Name }}.api.rhapp.lol`)"
+        #      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+        #      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=digitalocean"
+        #      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
+        #      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+        #      - "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
+        #      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+        #    env_file:
+        #      - ./secrets/.env #Access to env
+        #    networks:
+        #      - intranet
+        #    ports:
+        #      - 80:80
+        #      - 443:443
+        #        #- 8081:8080
+        #    volumes:
+        #      - ./letsencrypt:/letsencrypt
+        #      - /var/run/docker.sock:/var/run/docker.sock
+        #    labels:
+        #      - "traefik.enable=true"
+        #      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+        #      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.api.rhapp.lol`)"
+        #      - "traefik.http.routers.traefik-secure.service=api@internal"
 
-  traefik:
-    image: traefik:v2.9
-    command:
-      - --log.level=DEBUG
-      - --api.insecure=true
-      - --api.dashboard=true
-      - --serversTransport.insecureSkipVerify=true
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - "--providers.docker.defaultRule=Host(`{{ normalize .Name }}.api.rhapp.lol`)"
-      - --certificatesresolvers.myresolver.acme.dnschallenge=true
-      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=digitalocean"
-      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-
-    environment:
-      - "DO_AUTH_TOKEN=${DO_AUTH_TOKEN}"
-    ports:
-      - 80:80
-      - 443:443
-      - 8081:8080
-    volumes:
-      - ./letsencrypt:/letsencrypt
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.api.rhapp.lol`)"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
+networks:
+  intranet:
+    name: machine_intranet
