@@ -72,18 +72,20 @@ const TitleText = styled.h2`
 export default function CreateBookingDailyView() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
+  const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
   const {
     clickedDate,
-    timeBlocks,
+    isLoading,
     selectedBlockTimestamp,
     selectedFacilityName,
-    isLoading,
     selectedStartTime,
     selectedEndTime,
+    timeBlocks,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const selectedFacilityId = parseInt(params.facilityId)
+  const { facilityId, selectionMode } = params
+  const selectedFacilityId = parseInt(facilityId)
+  const isReselectingTime = selectionMode === 'reselect'
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
@@ -128,11 +130,14 @@ export default function CreateBookingDailyView() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
+  const goBackToCreateBookingPage = () => {
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+  }
+
   const onLeftClick = () => {
     // reset user selection
-    // TODO you don't want to do this if you're just reselecting date from booking page
     dispatch(resetTimeSelectorSelection())
-    goBackToDailyViewPage()
+    isReselectingTime ? goBackToCreateBookingPage() : goBackToDailyViewPage()
   }
 
   useEffect(() => {

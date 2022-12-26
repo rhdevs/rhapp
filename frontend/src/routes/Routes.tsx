@@ -47,7 +47,7 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
   VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/:facilityId',
   CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId/:selectionMode?',
   // // SEARCH BY TIME
   SEARCH_BOOKING_DATE = '/facility/selectDate',
   SEARCH_BOOKING_TIME = '/facility/selectDate/selectTime',

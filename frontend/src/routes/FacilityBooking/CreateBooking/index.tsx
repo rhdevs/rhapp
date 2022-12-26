@@ -196,7 +196,7 @@ export default function CreateBooking() {
   }
 
   const goBackToTimeSelectionPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}/reselect`)
   }
 
   /**
@@ -223,7 +223,9 @@ export default function CreateBooking() {
   }
 
   const onLeftClick = () => {
-    history.push(searchMode === SearchMode.BY_TIME ? PATHS.SEARCH_BOOKING_RESULTS : PATHS.SELECT_FACILITY)
+    history.push(
+      searchMode === SearchMode.BY_TIME ? PATHS.SEARCH_BOOKING_RESULTS : `${PATHS.VIEW_FACILITY}/${selectedFacilityId}`,
+    )
   }
 
   return (
