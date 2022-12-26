@@ -74,7 +74,7 @@ export default function SearchBookingResults() {
   }, [dispatch])
 
   const goBack = () => {
-    resetTimeSelectorSelection()
+    dispatch(resetTimeSelectorSelection())
     history.push(PATHS.SEARCH_BOOKING_TIME)
   }
 

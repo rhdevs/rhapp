@@ -55,9 +55,9 @@ export enum TimeBlockType {
 }
 
 export enum SearchMode {
-  NONE,
-  BY_FACILITY,
-  BY_TIME,
+  NONE = 'none',
+  BY_FACILITY = 'byFacility',
+  BY_TIME = 'byTime',
 }
 
 export enum FACILITY_ACTIONS {

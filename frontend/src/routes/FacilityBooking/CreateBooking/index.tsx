@@ -203,7 +203,7 @@ export default function CreateBooking() {
    * when user goes back, reset user's time selections
    */
   const reselectBothDates = () => {
-    resetTimeSelectorSelection()
+    dispatch(resetTimeSelectorSelection())
     goBackToTimeSelectionPage()
   }
 

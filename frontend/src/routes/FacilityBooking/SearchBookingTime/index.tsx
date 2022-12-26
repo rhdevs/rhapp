@@ -78,7 +78,7 @@ export default function SearchBookingTime() {
 
   const onLeftClick = () => {
     // reset user selection
-    resetTimeSelectorSelection()
+    dispatch(resetTimeSelectorSelection())
     history.push(PATHS.SEARCH_BOOKING_DATE)
   }
 
@@ -119,7 +119,7 @@ export default function SearchBookingTime() {
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
-      resetTimeSelectorSelection()
+      dispatch(resetTimeSelectorSelection())
       history.push(PATHS.SEARCH_BOOKING_RESULTS)
     }
   }

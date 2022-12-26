@@ -616,7 +616,7 @@ export const handleCreateNewBooking = (
         })
       }
     })
-    resetTimeSelectorSelection()
+    dispatch(resetTimeSelectorSelection())
     dispatch(setBookingStartTime(0))
     dispatch(setBookingEndTime(0))
   }
