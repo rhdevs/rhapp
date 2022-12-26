@@ -41,7 +41,7 @@ export enum PATHS {
   // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
   FACILITY_LANDING_PAGE = '/facility/main',
   // // SEARCH BY FACILITY
-  SELECT_FACILITY = '/facility/selectFacility',
+  VIEW_ALL_FACILITIES = '/facility/all',
   VIEW_FACILITY = '/facility/monthView',
   VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
   VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
@@ -142,7 +142,7 @@ const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ '.
 // FACILITY BOOKING
 const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking'))
 const SelectFacility = React.lazy(
-  () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/SelectFacility'),
+  () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/ViewAllFacilities'),
 )
 const SearchBookingDate = React.lazy(
   () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchBookingDate'),
@@ -154,21 +154,21 @@ const SearchBookingResults = React.lazy(
   () => import(/* webpackChunckName: "SearchBookingResults" */ './FacilityBooking/SearchBookingResults'),
 )
 const ViewFacility = React.lazy(
-  () => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacilityCalendar'),
+  () => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/FacilitySelectDate'),
 )
 const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
 )
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
 const ViewBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/ViewBookingDailyView'),
+  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/FacilityDayView'),
 )
 const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
 const CreateBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking/index'),
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBookingForm/index'),
 )
 const CreateBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
+  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/FacilitySelectTime'),
 )
 const EditBooking = React.lazy(
   () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBooking/index'),
@@ -243,7 +243,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
-            <PrivateRoute exact path={PATHS.SELECT_FACILITY} component={SelectFacility} />
+            <PrivateRoute exact path={PATHS.VIEW_ALL_FACILITIES} component={SelectFacility} />
             <PrivateRoute exact path={PATHS.SEARCH_BOOKING_DATE} component={SearchBookingDate} />
             <PrivateRoute exact path={PATHS.SEARCH_BOOKING_TIME} component={SearchBookingTime} />
             <PrivateRoute exact path={PATHS.SEARCH_BOOKING_RESULTS} component={SearchBookingResults} />

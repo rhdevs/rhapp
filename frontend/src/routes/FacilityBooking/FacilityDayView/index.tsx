@@ -51,7 +51,7 @@ const TitleText = styled.h2`
   text-overflow: ellipsis;
 `
 /**
- * # ViewBookingDailyView
+ * # Facility Day View
  * Path: `/facility/dayView/:facilityId`
  *
  * ## Page Description
@@ -64,7 +64,7 @@ const TitleText = styled.h2`
  *
  */
 
-export default function ViewBookingDailyView() {
+export default function FacilityDayView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const params = useParams<{ facilityId: string }>()

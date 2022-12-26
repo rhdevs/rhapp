@@ -33,7 +33,7 @@ const AlertGroup = styled.div`
 `
 
 /**
- * # ViewFacilityCalendar
+ * # Facility Select Date
  * Path: `facility/monthView/:facilityId`
  *
  * ## Page Description
@@ -41,7 +41,7 @@ const AlertGroup = styled.div`
  * The selected facility [e.g. Main Area (UL)] be selected, showing the available dates (i.e. calendar) to book
  * @returns A calendar of available dates to book
  */
-export default function ViewFacilityCalendar() {
+export default function FacilitySelectDate() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -87,7 +87,7 @@ export default function ViewFacilityCalendar() {
       <TopNavBarRevamp
         title={`${selectedFacilityName} - Select Date to View`}
         rightComponent={MyBookingsIcon()}
-        onLeftClick={() => history.push(`${PATHS.SELECT_FACILITY}`)}
+        onLeftClick={() => history.push(`${PATHS.VIEW_ALL_FACILITIES}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
         {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}

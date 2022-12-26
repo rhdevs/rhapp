@@ -91,7 +91,7 @@ type FormValues = {
 }
 
 /**
- * # CreateBooking
+ * # Create Booking Form
  * Path: `/facility/booking/create/:facilityId`
  *
  * ## Page Description
@@ -102,7 +102,7 @@ type FormValues = {
  *
  */
 
-export default function CreateBooking() {
+export default function CreateBookingForm() {
   const dispatch = useDispatch()
   const history = useHistory()
   const {
@@ -177,7 +177,7 @@ export default function CreateBooking() {
         if (bookingStatus === BookingStatus.CONFLICT) {
           // setModalIsOpen(true)
         } else {
-          history.replace(PATHS.SELECT_FACILITY)
+          history.replace(PATHS.VIEW_ALL_FACILITIES)
           history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
           dispatch(
             handleCreateNewBooking(

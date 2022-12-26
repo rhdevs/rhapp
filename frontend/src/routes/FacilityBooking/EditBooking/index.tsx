@@ -18,7 +18,6 @@ import {
   setBookingStartTime,
   setBookingEndTime,
   setBookingEndDate,
-  // resetNewBooking,
   fetchSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
@@ -33,25 +32,6 @@ import { unixToFullDate } from '../../../common/unixToFullDate'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { get24Hourtime } from '../../../common/get24HourTime'
-
-/**
- *
- * @returns The page through which the user is able to edit his facility booking.
- *
- * @example
- * ```
- * The user can edit the following through this page: \
- *  1: Facility \
- *  2: Name of Event \
- *  3: Start/End Date/Time \
- *  4: CCA \
- *  5: Description
- * ```
- *
- * @remarks
- * Might make more sense to allow editing of the start/end date/time only and disable other fields.
- *
- */
 
 const Background = styled.div`
   background-color: #fff;
@@ -109,20 +89,31 @@ type FormValues = {
   description: string
 }
 
+/**
+ *
+ * @returns The page through which the user is able to edit his facility booking.
+ *
+ * @example
+ * ```
+ * The user can edit the following through this page: \
+ *  1: Facility \
+ *  2: Name of Event \
+ *  3: Start/End Date/Time \
+ *  4: CCA \
+ *  5: Description
+ * ```
+ *
+ * @remarks
+ * Might make more sense to allow editing of the start/end date/time only and disable other fields.
+ * // TODO sus why is there a wierd timestamp 1644641028 below
+ *
+ */
 export default function EditBooking() {
-  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
-  const params1 = useParams<{ bookingId: string }>()
-  const {
-    handleSubmit,
-    formState: { errors },
-    watch,
-    register,
-    setValue,
-  } = useForm<FormValues>()
-  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
+  const params = useParams<{ facilityId: string; bookingId: string }>()
+  const { facilityId, bookingId } = params
+
   const {
     facilityList,
     isLoading,
@@ -133,10 +124,21 @@ export default function EditBooking() {
     bookingEndTime,
     bookingEndDate,
   } = useSelector((state: RootState) => state.facilityBooking)
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    watch,
+    register,
+    setValue,
+  } = useForm<FormValues>()
+
   const [ccaName, setCcaName] = useState(selectedBooking?.ccaName)
+  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
+  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
 
   useEffect(() => {
-    dispatch(fetchSelectedFacility(parseInt(params1.bookingId)))
+    dispatch(fetchSelectedFacility(parseInt(bookingId)))
   }, [dispatch])
 
   const formIsValid = () => {
@@ -170,7 +172,7 @@ export default function EditBooking() {
         } else {
           dispatch(
             handleCreateNewBooking(
-              Number(params.facilityId),
+              Number(facilityId),
               data.eventName,
               bookingStartTime,
               bookingEndTime,
@@ -186,8 +188,8 @@ export default function EditBooking() {
 
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) {
-      history.replace(PATHS.SELECT_FACILITY)
-      history.push(`${PATHS.VIEW_FACILITY}/${params.facilityId}`)
+      history.replace(PATHS.VIEW_ALL_FACILITIES)
+      history.push(`${PATHS.VIEW_FACILITY}/${facilityId}`)
     } else if (bookingStatus === BookingStatus.CONFLICT) {
       setmodalIsOpen(true)
     }

@@ -23,17 +23,17 @@ import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import JCRCBlockOutIcon from '../../../assets/JCRCBlockOut.svg'
 
 /**
- * # Select Facility Page
- * Path: `/facility/selectFacility`
+ * # View All Facilities Page
+ * Path: `/facility/all`
  *
  * ## Page Description
- * Select Facility Page is accessable through the Facilities Landing Page. On FacilitiesBooking page, users will be shown
+ * View All Facilities Page is accessable through the Facilities Landing Page. On FacilitiesBooking page, users will be shown
  * all the facilities (venue) that can be booked for events. Upon selection of facility, user will
  * be directed to the selected facility page to select the date & timing for booking.
  *
  * @remarks
  */
-export default function SelectFacility() {
+export default function ViewAllFacilities() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { facilityList, locationList, isLoading, blockOutIsOpen, isJcrc } = useSelector(

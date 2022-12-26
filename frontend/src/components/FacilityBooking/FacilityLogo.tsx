@@ -23,7 +23,15 @@ const FacilityAvatar = styled.img`
   width: 30%;
   max-height: 70px;
 `
-
+/**
+ * @params facilityId (number)
+ *
+ * @returns The avatar/icon for according to the `facilityId`
+ *
+ * @remarks
+ * <any remarks>
+ *
+ */
 export default function FacilityLogo(props: { facilityId: number }) {
   switch (props.facilityId) {
     case 1:

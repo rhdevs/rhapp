@@ -43,7 +43,7 @@ export default function FacilityLandingPage() {
 
   const searchByFacilityOnClick = () => {
     dispatch(setSearchMode(SearchMode.BY_FACILITY))
-    history.push(PATHS.SELECT_FACILITY)
+    history.push(PATHS.VIEW_ALL_FACILITIES)
   }
 
   const searchByDateTimeOnClick = () => {

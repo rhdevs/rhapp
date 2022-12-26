@@ -57,7 +57,7 @@ const TitleText = styled.h2`
 `
 
 /**
- * # CreateBookingDailyView
+ * # Facility Select Time
  * Path: `/facility/dayView/selectTime/:facilityId`
  *
  * ## Page Description
@@ -69,7 +69,7 @@ const TitleText = styled.h2`
  *
  */
 
-export default function CreateBookingDailyView() {
+export default function FacilitySelectTime() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
