@@ -64,7 +64,7 @@ function BottomNavBar() {
             selectedIcon={<StyledButton src={facilitiesIconSelected} />} //not available yet
             selected={activeTabIndex() === 2}
             onPress={() => {
-              history.push(PATHS.FACILITY_BOOKING_MAIN)
+              history.push(PATHS.FACILITY_LANDING_PAGE)
             }}
           />
           <TabBar.Item

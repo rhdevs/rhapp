@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
+import { Alert } from 'antd'
 import styled from 'styled-components'
 import { FormOutlined } from '@ant-design/icons'
 
@@ -12,6 +13,7 @@ import { PATHS } from '../../Routes'
 import {
   fetchFacilityNameFromID,
   resetBooking,
+  setBookingStatus,
   setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
@@ -21,6 +23,12 @@ import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import { setClickedDate } from '../../../store/calendar/actions'
+import { BookingStatus } from '../../../store/facilityBooking/types'
+import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+
+const AlertGroup = styled.div`
+  padding: 3px 23px 3px 23px;
+`
 
 const MainContainer = styled.div`
   width: 100%;
@@ -37,16 +45,19 @@ const MainContainer = styled.div`
  * @returns A calendar of available dates to book
  */
 export default function ViewFacility() {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityName, selectedFacilityId, bookingStatus } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
 
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(resetBooking())
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId == 0) {
+    if (selectedFacilityId === 0) {
       dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
@@ -65,6 +76,23 @@ export default function ViewFacility() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 
+  async function showAlertSection(seconds: number) {
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
+    })
+  }
+
+  useEffect(() => {
+    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
+    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
+  }, [bookingStatus])
+
+  const AlertSection = () => (
+    <AlertGroup>
+      <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+    </AlertGroup>
+  )
+
   return (
     <>
       <TopNavBarRevamp
@@ -73,11 +101,13 @@ export default function ViewFacility() {
         onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
+        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
         <MainContainer>
           <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
           <BottomNavBar />
         </MainContainer>
       </PullToRefresh>
+      <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
     </>
   )
 }
