@@ -10,7 +10,6 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import { unixToFullDate } from '../../../common/unixToFullDate'
-import { get24Hourtime } from '../../../common/get24HourTime'
 
 import {
   fetchAllCCAs,
@@ -18,8 +17,6 @@ import {
   setIsLoading,
   handleCreateNewBooking,
   setBookingEndDate,
-  setSelectedBlockTimestamp,
-  setSelectedStartTime,
   setSelectedEndTime,
   resetTimeSelectorSelection,
 } from '../../../store/facilityBooking/action'
@@ -33,6 +30,7 @@ import InputField from '../../../components/Mobile/InputField'
 import { Switch } from '../../../components/Switch'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
+import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 const Background = styled.div`
   background-color: #fff;
@@ -246,15 +244,13 @@ export default function CreateBookingForm() {
           />
           <SelectableField
             title="Start"
-            value={
-              bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
-            }
+            value={unixToFullDateTime(bookingStartTime)}
             onClick={reselectStartDate}
             isCompulsory
           />
           <SelectableField
             title="End"
-            value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
+            value={unixToFullDateTime(bookingEndTime)}
             onClick={reselectEndDate}
             isCompulsory
           />

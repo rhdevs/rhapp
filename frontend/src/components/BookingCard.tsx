@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { PATHS } from '../routes/Routes'
 import { DOMAIN_URL, ENDPOINTS } from '../store/endpoints'
 import { months, days } from '../common/dates'
-import { get24Hourtime } from '../common/get24HourTime'
+import { unixTo24HourTime } from '../common/unixTo24HourTime'
 import { openUserTelegram } from '../common/telegramMethods'
 
 import messageIcon from '../assets/messageIcon.svg'
@@ -106,7 +106,7 @@ export default function BookingCard({ bookings }: { bookings: Booking[] }) {
                   new Date(booking.startTime * 1000).getFullYear()}
               </DateComponent>
               <TimeComponent>
-                {get24Hourtime(booking.startTime)} to {get24Hourtime(booking.endTime)}
+                {unixTo24HourTime(booking.startTime)} to {unixTo24HourTime(booking.endTime)}
               </TimeComponent>
               <BookingCCAName>{booking.ccaName ? booking.ccaName : 'Personal'}</BookingCCAName>
             </BookingLeftDisplay>

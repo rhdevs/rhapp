@@ -1,10 +1,11 @@
 /**
- * Takes in 2 Date objects or unix timestamps, or 1 of each type, and check if both falls on the same day
+ * Takes in 2 Date objects or unix timestamps, or 1 of each type, and check if both falls on the same day \
+ * if you're comparing 2 timestamps just use `===` instead la pls
  *
  * @param date_1_2 Date object or unix timestamp (in miliseconds)
  * @returns `true` if both inputs' times are on the same date
  *
- * @remarks put in `new Date()` as param to compare Date with today
+ * @remarks put in `new Date()` as one of the param to compare Date with `today`
  */
 
 export const isSameDate = (date1: Date | number, date2: Date | number) => {

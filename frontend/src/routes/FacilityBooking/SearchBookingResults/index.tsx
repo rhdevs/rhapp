@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
+import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
+
 import FacilitiesList from '../../../components/FacilityBooking/FacilitiesList'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -21,7 +23,6 @@ import {
 import { RootState } from '../../../store/types'
 
 import { MainContainer } from '../FacilityBooking.styled'
-import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 // TODO abstract
 const TitleText = styled.h2`
@@ -92,8 +93,8 @@ export default function SearchBookingResults() {
       />
       <MainContainer>
         <TimeText>
-          From: {unixToFullDateTime(bookingStartTime)} <br />
-          To: {unixToFullDateTime(bookingEndTime)}
+          From: {bookingStartTime ? unixToFullDateTime(bookingStartTime) : '-'} <br />
+          To: {bookingEndTime ? unixToFullDateTime(bookingEndTime) : '-'}
         </TimeText>
         {isLoading ? (
           <LoadingSpin />

@@ -31,7 +31,7 @@ import { BookingStatus } from '../../../store/facilityBooking/types'
 import { unixToFullDate } from '../../../common/unixToFullDate'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
-import { get24Hourtime } from '../../../common/get24HourTime'
+import { unixTo24HourTime } from '../../../common/unixTo24HourTime'
 
 const Background = styled.div`
   background-color: #fff;
@@ -219,7 +219,7 @@ export default function EditBooking() {
                 value={
                   bookingStartTime == 0
                     ? ''
-                    : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
+                    : unixToFullDate(bookingStartTime) + ' at ' + unixTo24HourTime(bookingStartTime)
                 }
                 isCompulsory={true}
                 onClick={() => dispatch(setBookingStartTime(1644641028))}
@@ -227,7 +227,7 @@ export default function EditBooking() {
               <SelectableField
                 title="End"
                 value={
-                  bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)
+                  bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + unixTo24HourTime(bookingEndTime)
                 }
                 isCompulsory={true}
                 onClick={() => dispatch(setBookingEndTime(1644648228))}
