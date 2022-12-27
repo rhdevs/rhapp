@@ -28,10 +28,8 @@ export const StyledBookingBlock = styled.div<{
   type: TimeBlockType
   blockId: number
   hasOverlay?: boolean
-  isClickable: boolean
 }>`
-  //edited (props.type === TimeBlockType.AVAILABLE || props.type === TimeBlockType.SELECTED) && 'cursor: pointer;' to below
-  ${(props) => props.isClickable && 'cursor: pointer;'}
+  ${(props) => props.onClick && 'cursor: pointer;'}
   ${blockStyles}
   background: ${(props) =>
     props.type === TimeBlockType.OCCUPIED
