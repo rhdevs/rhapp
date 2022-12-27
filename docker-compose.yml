@@ -21,6 +21,15 @@ services:
       - "traefik.http.routers.backend-dev.entrypoints=websecure"
       - "traefik.http.routers.backend-dev.tls=true"
       - "traefik.http.routers.backend-dev.tls.certresolver=myresolver"
+        # Middleware for CORS - Configure this if we ever have issues with CORS
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,DELETE,POST"
+      - "traefik.http.middlewares.cors.headers.accessControlAllowOriginList=*"
+      - "traefik.http.middlewares.cors.headers.accessControlAllowCredentials=true"
+      - "traefik.http.middlewares.cors.headers.accessControlAllowHeaders=Origin,X-Requested-With,Content-Type,Accept,X-XSRF-TOKEN,Access-Contol-Allow-Origin"
+      - "traefik.http.middlewares.cors.headers.customrequestheaders.Content-Type=application/json;charset=UTF-8"
+      - "traefik.http.middlewares.cors.headers.customrequestheaders.X-Requested-With=XMLHttpRequest"
+      - "traefik.http.middlewares.cors.headers.customrequestheaders.Accept=application/json"
+      - "traefik.http.routers.backend-dev.middlewares=cors@docker"
 
 networks:
   intranet:
