@@ -133,6 +133,19 @@ export const updateSearchDailyView = (date: Date) => (dispatch: Dispatch<ActionT
   dispatch(setTimeBlocks(updatedTB))
 }
 
+/**
+ *
+ * @param facilityList (Facility[])
+ * @returns sorted facility list by alphabetical order
+ */
+export const sortFacilitiesAlphabetically = (facilityList: Facility[]) => {
+  return facilityList.sort((a, b) => {
+    if (a.facilityName < b.facilityName) return -1
+    if (a.facilityName > b.facilityName) return 1
+    return 0
+  })
+}
+
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
     method: 'GET',
@@ -141,13 +154,14 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     .then((resp) => resp.json())
     .then((data) => {
       const facilityList = data.data
-      const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
-      facilityList.splice(6, 0, commHallBack)
+      // const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
+      // facilityList.splice(6, 0, commHallBack)
       const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
+      const locationList = ['All'].concat(uniqueLocationList as string[])
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
         facilityList: facilityList,
-        locationList: ['All'].concat(uniqueLocationList as string[]),
+        locationList: locationList,
       })
       dispatch(setIsLoading(false))
     })
@@ -180,7 +194,6 @@ const setFacilityListWithinTime = (facilityList: Facility[], locationList: strin
  * @returns updates `facilityListWithinTime`, `locationListWithinTime`
  *
  * @remarks
- * // TODO not yet tested with backend, check on Monday if backend url is correct
  *
  */
 export const getFacilityListWithinTime = (startTime: number, endTime: number) => async (
@@ -206,7 +219,6 @@ export const getFacilityListWithinTime = (startTime: number, endTime: number) =>
             endTime: `${endTime}`,
           }),
       )
-      console.log(data)
       const facilityList = data.available_facilities
       if (facilityList) {
         const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]

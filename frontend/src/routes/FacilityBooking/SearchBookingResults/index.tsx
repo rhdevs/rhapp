@@ -19,6 +19,7 @@ import {
   resetTimeSelectorSelection,
   setIsLoading,
   setSelectedFacility,
+  sortFacilitiesAlphabetically,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -102,7 +103,7 @@ export default function SearchBookingResults() {
           <NoFacilitiesText>No facilities available!</NoFacilitiesText>
         ) : (
           <FacilitiesList
-            facilityList={facilityListWithinTime}
+            facilityList={sortFacilitiesAlphabetically(facilityListWithinTime)}
             locationList={locationListWithinTime}
             facilityCardOnClick={facilityCardOnClick}
           />

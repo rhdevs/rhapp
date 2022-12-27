@@ -16,6 +16,7 @@ import {
   setIsLoading,
   setSelectedFacility,
   SetBlockOutIsOpen,
+  sortFacilitiesAlphabetically,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -87,7 +88,7 @@ export default function ViewAllFacilities() {
           <LoadingSpin />
         ) : (
           <FacilitiesList
-            facilityList={facilityList}
+            facilityList={sortFacilitiesAlphabetically(facilityList)}
             locationList={locationList}
             facilityCardOnClick={facilityCardOnClick}
             blockOutIsOpen={blockOutIsOpen}
