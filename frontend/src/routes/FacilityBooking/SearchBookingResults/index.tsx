@@ -53,7 +53,7 @@ const NoFacilitiesText = styled.h1`
 `
 
 /**
- * # View Search Results
+ * # Search Booking Results
  * Path: `/facility/searchResults`
  *
  * ## Page Description

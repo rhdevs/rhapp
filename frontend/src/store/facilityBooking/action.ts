@@ -207,8 +207,8 @@ export const getFacilityListWithinTime = (startTime: number, endTime: number) =>
           }),
       )
       console.log(data)
-      const facilityList = data.data
-      if (data.data) {
+      const facilityList = data.available_facilities
+      if (facilityList) {
         const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
         const locationList = ['All'].concat(uniqueLocationList as string[])
         dispatch(setFacilityListWithinTime(facilityList, locationList))
