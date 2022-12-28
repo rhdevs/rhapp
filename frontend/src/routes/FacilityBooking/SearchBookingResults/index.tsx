@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
-import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 import FacilitiesList from '../../../components/FacilityBooking/FacilitiesList'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
@@ -23,27 +22,17 @@ import {
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
-import { MainContainer } from '../FacilityBooking.styled'
+const MainContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: #fafaf4;
+`
 
-// TODO abstract
 const TitleText = styled.h2`
   font-family: Lato;
   font-style: normal;
   font-weight: 700;
   font-size: 22px;
-  margin-top: 0.7rem;
-`
-
-const TimeText = styled.h2`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
   margin-top: 0.7rem;
 `
 
@@ -93,10 +82,6 @@ export default function SearchBookingResults() {
         rightComponent={MyBookingsIcon()}
       />
       <MainContainer>
-        <TimeText>
-          From: {bookingStartTime ? unixToFullDateTime(bookingStartTime) : '-'} <br />
-          To: {bookingEndTime ? unixToFullDateTime(bookingEndTime) : '-'}
-        </TimeText>
         {isLoading ? (
           <LoadingSpin />
         ) : facilityListWithinTime.length === 0 ? (
@@ -106,6 +91,9 @@ export default function SearchBookingResults() {
             facilityList={sortFacilitiesAlphabetically(facilityListWithinTime)}
             locationList={locationListWithinTime}
             facilityCardOnClick={facilityCardOnClick}
+            showTimeStartEnd
+            showTimeStart={bookingStartTime}
+            showTimeEnd={bookingEndTime}
           />
         )}
       </MainContainer>

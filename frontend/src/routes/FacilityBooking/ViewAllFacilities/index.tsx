@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { MainContainer } from '../FacilityBooking.styled'
 import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
@@ -22,6 +21,23 @@ import { RootState } from '../../../store/types'
 
 import bookingsIcon from '../../../assets/bookingsIcon.svg'
 import JCRCBlockOutIcon from '../../../assets/JCRCBlockOut.svg'
+import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
+import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
+import styled from 'styled-components'
+
+const MainContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: #fafaf4;
+`
+
+const TitleText = styled.h2`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 22px;
+  margin-top: 0.7rem;
+`
 
 /**
  * # View All Facilities Page
@@ -71,17 +87,20 @@ export default function ViewAllFacilities() {
     dispatch(setSelectedFacility(facilityId))
   }
 
+  const goBack = () => {
+    history.push(PATHS.FACILITY_LANDING_PAGE)
+  }
+
   return (
     <>
       {isJcrc ? (
-        <TopNavBar
-          title="Facilities"
-          leftIcon={true}
-          centerComponent={JCRCBlockOutButton}
-          rightComponent={MyBookingIcon}
-        />
+        <TopNavBar title="Facilities" leftIcon centerComponent={JCRCBlockOutButton} rightComponent={MyBookingIcon} />
       ) : (
-        <TopNavBar title="Facilities" leftIcon={true} rightComponent={MyBookingIcon} />
+        <TopNavBarRevamp
+          onLeftClick={goBack}
+          centerComponent={<TitleText>Available Facilities</TitleText>}
+          rightComponent={MyBookingsIcon()}
+        />
       )}
       <MainContainer>
         {isLoading ? (
