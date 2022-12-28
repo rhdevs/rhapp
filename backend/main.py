@@ -11,8 +11,10 @@ from Authentication.AuthenticationAPI import authentication_api
 from GymFeatures.GymAPI import gym_api
 from db import *
 from gevent.pywsgi import WSGIServer
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = "Content-Type"
 app.config['SECRET_KEY'] = AUTH_SECRET_KEY

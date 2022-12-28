@@ -6,6 +6,7 @@ output.txt
 
 # secrets
 secrets
+config.monitoring
 
 # dependencies
 /node_modules

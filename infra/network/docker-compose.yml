@@ -3,19 +3,28 @@ services:
  traefik:
     image: traefik:v2.9
     command:
+      # General Settings
       - --log.level=DEBUG
       - --api.insecure=true
       - --serversTransport.insecureSkipVerify=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
+      # Web Config
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.web.http.redirections.entryPoint.to=websecure
       - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      # Metrics
+      # Ideally we don't want this published to web, but oh well
+      #- --entrypoints.prometheus.address=:8090
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      # ACME Stuff
       - "--providers.docker.defaultRule=Host(`{{ normalize .Name }}.api.rhapp.lol`)"
-      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=digitalocean"
       - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
+      # Use this to test without generating an acme file
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/acme.json"
@@ -27,7 +36,9 @@ services:
       - 80:80
       - 443:443
       # For traefik dashboard, only expose for debugging
-      - 8081:8080
+      # - 8081:8080
+      # For prometheus
+      # - 8090:8090
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/data/traefik/acme.json:/acme.json
@@ -36,6 +47,53 @@ services:
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+ prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - intranet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.api.rhapp.lol`)"
+      - "traefik.http.routers.prometheus.tls=true"
+      - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
+      - "traefik.http.routers.prometheus.service=prometheus"
+        # Note: Ideally we want a seperate port so not everyone can access it, but oh well
+      - "traefik.http.routers.prometheus.entrypoints=websecure"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+ grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    volumes:
+      #- ./grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      #TODO: Secure this
+      - ./grafana/config.monitoring
+    networks:
+      - intranet
+    user: "104"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.api.rhapp.lol`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=myresolver"
+      - "traefik.http.routers.grafana.service=grafana"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
 networks:
   intranet:
     driver: bridge

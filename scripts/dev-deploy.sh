@@ -11,7 +11,7 @@ set -e
 set -x
 
 git pull
-git checkout dev
+git checkout devel
 
 # Change directory to the main directory
 cd $WORK_DIR
@@ -29,11 +29,11 @@ docker compose --project-name=green -f docker-compose.yml up -d
 # Wait for green to start
 sleep 2m
 
-# Restart blue, bringing it to latest
+# Restart purple, bringing it to latest
 # Use cached build from green
-docker compose --project-name=blue -f docker-compose.yml build
-docker compose --project-name=blue -f docker-compose.yml down --remove-orphans
-docker compose --project-name=blue -f docker-compose.yml up -d
+docker compose --project-name=purple -f docker-compose.yml build
+docker compose --project-name=purple -f docker-compose.yml down --remove-orphans
+docker compose --project-name=purple -f docker-compose.yml up -d
 
 # Wait for blue to start
 sleep 2m

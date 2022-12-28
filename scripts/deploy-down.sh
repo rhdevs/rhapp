@@ -8,10 +8,11 @@ set -e
 # Echo commands
 set -x
 
-# Prune all previous builds
+# Prune all previous builds - use this when doing heavy debugging
 docker system prune --all --force
 
 # Stop docker-compose
-docker compose --project-name=blue    down
-docker compose --project-name=green   down
+docker compose --project-name=blue    down --remove-orphans
+docker compose --project-name=purple    down --remove-orphans
+docker compose --project-name=green   down --remove-orphans
 docker compose --project-name=machine down --remove-orphans
