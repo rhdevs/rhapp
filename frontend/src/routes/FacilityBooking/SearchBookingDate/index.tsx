@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
-import { setIsLoading } from '../../../store/facilityBooking/action'
+import { resetTimeSelectorSelection } from '../../../store/facilityBooking/action'
 
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
@@ -17,12 +17,12 @@ import { RootState } from '../../../store/types'
 import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 /**
- * # Select Time Page
- * Path: `/facility/selectTime`
+ * # Search Booking Date
+ * Path: `/facility/selectDate`
  *
  * ## Page Description
- * Select Time Page is accessable through the Facilities Landing Page. On Select Time Page,
- * // TODO
+ * Search Booking Date is accessable through the Facilities Landing Page. \
+ * On Search Booking Date page, users will select the date which they want to search for available time slots.
  *
  * @remarks
  */
@@ -32,6 +32,7 @@ export default function SearchBookingDate() {
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   const onDateClick = (newClickedDate: Date) => {
+    dispatch(resetTimeSelectorSelection())
     dispatch(setClickedDate(newClickedDate))
     history.push(PATHS.SEARCH_BOOKING_TIME)
   }
