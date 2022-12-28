@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { REVAMP_GREEN } from '../common/colours'
 
 const SwitchButton = styled.span<{
   width?: number | undefined
@@ -26,7 +27,7 @@ const SwitchLabel = styled.label<{
   cursor: pointer;
   width: ${(props) => (props.width ? props.width + 'px' : '100px')};
   height: ${(props) => (props.width ? props.width * 0.5 + 'px' : '50px')};
-  background: ${(props) => (props.isOn ? (props.onColor ? props.onColor : '#468751') : '#F5F5F5')};
+  background: ${(props) => (props.isOn ? (props.onColor ? props.onColor : REVAMP_GREEN) : '#F5F5F5')};
   border-radius: 100px;
   border: ${(props) => (props.width ? props.width * 0.04 + 'px solid #D3D3D3' : '4px solid #808080')};
   position: relative;
