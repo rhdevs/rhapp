@@ -87,7 +87,7 @@ export default function ChangePassword() {
     <InvalidToken />
   ) : (
     <>
-      <TopNavBar title="Reset Password" leftIcon={true} />
+      <TopNavBar title="Reset Password" leftIcon />
       <MainContainer>
         {error.message !== '' && (
           <AlertGroup>

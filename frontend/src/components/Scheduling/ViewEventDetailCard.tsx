@@ -178,7 +178,7 @@ function ViewEventDetailCard({
         {removeModal && (
           <ConfirmationModal
             title="Confirm Remove?"
-            hasLeftButton={true}
+            hasLeftButton
             leftButtonText="Remove"
             onLeftButtonClick={() => {
               dispatch(editUserEvents('remove', eventID, localStorage.getItem('userID')))
@@ -193,7 +193,7 @@ function ViewEventDetailCard({
         {deleteModal && (
           <ConfirmationModal
             title="Confirm Delete?"
-            hasLeftButton={true}
+            hasLeftButton
             leftButtonText="Delete"
             onLeftButtonClick={() => {
               if (eventType === 'NUSMods') {
