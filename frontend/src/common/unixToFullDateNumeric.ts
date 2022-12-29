@@ -1,5 +1,3 @@
-import { months } from './dates'
-
 /**
  *
  * @param unixDate epoch/unix date time number
