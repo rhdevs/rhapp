@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { scrollToView } from './CurrentTimeLine'
 import { RootState } from '../../store/types'
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 import { StyledBookingBlock } from './BlockStyles.styled'
-import { scrollToView } from './CurrentTimeLine'
 
 type Props = {
   entry: TimeBlock
@@ -71,10 +71,8 @@ const BookingBlock = (props: Props) => {
     )
   }
 
-  const isClickable = () => 
-
-      !hasOverlay() && (props.entry.type === TimeBlockType.AVAILABLE || props.entry.type === TimeBlockType.SELECTED)
-
+  const isClickable = () =>
+    !hasOverlay() && (props.entry.type === TimeBlockType.AVAILABLE || props.entry.type === TimeBlockType.SELECTED)
 
   return (
     <StyledBookingBlock
