@@ -277,7 +277,7 @@ export default function EditProfile() {
       {showConfirmationModal && (
         <ConfirmationModal
           title="Discard Changes?"
-          hasLeftButton={true}
+          hasLeftButton
           leftButtonText="Discard Edits"
           onLeftButtonClick={() => history.goBack()}
           rightButtonText="Back to Edit"
