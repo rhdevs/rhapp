@@ -58,7 +58,7 @@ const TitleText = styled.h2`
 
 /**
  * # Facility Select Time
- * Path: `/facility/dayView/selectTime/:facilityId`
+ * Path: `/facility/selectedFacility/selectTime/:facilityId/:selectionMode?`
  *
  * ## Page Description
  * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page. \

@@ -222,7 +222,9 @@ export default function CreateBookingForm() {
 
   const onLeftClick = () => {
     history.push(
-      searchMode === SearchMode.BY_TIME ? PATHS.SEARCH_BOOKING_RESULTS : `${PATHS.VIEW_FACILITY}/${selectedFacilityId}`,
+      searchMode === SearchMode.BY_TIME
+        ? PATHS.SEARCH_BY_TIME_BOOKING_RESULTS
+        : `${PATHS.VIEW_FACILITY}/${selectedFacilityId}`,
     )
   }
 

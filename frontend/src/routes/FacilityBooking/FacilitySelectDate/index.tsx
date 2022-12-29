@@ -34,7 +34,7 @@ const AlertGroup = styled.div`
 
 /**
  * # Facility Select Date
- * Path: `facility/monthView/:facilityId`
+ * Path: `facility/selectedFacility/:facilityId`
  *
  * ## Page Description
  * This page is accessed after the user clicks on a facility from the Facilities page \

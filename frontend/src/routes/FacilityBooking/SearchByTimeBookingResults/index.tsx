@@ -44,15 +44,16 @@ const NoFacilitiesText = styled.h1`
 `
 
 /**
- * # Search Booking Results
- * Path: `/facility/searchResults`
+ * # Search By Time Booking Results
+ * Path: `/facility/searchByTime/searchResults`
  *
  * ## Page Description
- * This page shows all the facilities that are available for booking during the user's selected timeslot
+ * This page shows all the facilities that are available for booking during the user's selected timeslot \
+ * Only facilities available during the entire duration of selected timeslot will be shown
  *
  * @remarks
  */
-export default function SearchBookingResults() {
+export default function SearchByTimeBookingResults() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { bookingStartTime, bookingEndTime, facilityListWithinTime, locationListWithinTime, isLoading } = useSelector(
@@ -66,7 +67,7 @@ export default function SearchBookingResults() {
 
   const goBack = () => {
     dispatch(resetTimeSelectorSelection())
-    history.push(PATHS.SEARCH_BOOKING_TIME)
+    history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_TIME)
   }
 
   const facilityCardOnClick = (facilityId: number) => {

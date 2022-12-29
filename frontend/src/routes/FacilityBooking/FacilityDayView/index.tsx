@@ -5,13 +5,7 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import {
-  resetTimeSelectorSelection,
-  setSelectedBlockTimestamp,
-  setSelectedEndTime,
-  setSelectedStartTime,
-  updateBookingDailyView,
-} from '../../../store/facilityBooking/action'
+import { resetTimeSelectorSelection, updateBookingDailyView } from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -52,7 +46,7 @@ const TitleText = styled.h2`
 `
 /**
  * # Facility Day View
- * Path: `/facility/dayView/:facilityId`
+ * Path: `/facility/selectedFacility/dayView/:facilityId`
  *
  * ## Page Description
  * The user gets redirected to this page after clicking on a date on the ViewFacility page. \

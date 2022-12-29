@@ -41,7 +41,7 @@ const TitleText = styled.h2`
 
 /**
  * # View All Facilities Page
- * Path: `/facility/all`
+ * Path: `/facility/allFacilities`
  *
  * ## Page Description
  * View All Facilities Page is accessable through the Facilities Landing Page. On FacilitiesBooking page, users will be shown

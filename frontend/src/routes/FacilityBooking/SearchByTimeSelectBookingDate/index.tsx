@@ -17,16 +17,16 @@ import { RootState } from '../../../store/types'
 import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 /**
- * # Search Booking Date
- * Path: `/facility/selectDate`
+ * # Search By Time Select Booking Date
+ * Path: `/facility/searchByTime/selectDate`
  *
  * ## Page Description
- * Search Booking Date is accessable through the Facilities Landing Page. \
- * On Search Booking Date page, users will select the date which they want to search for available time slots.
+ * This page is accessable through the Facilities Landing Page. \
+ * On this page, users will select the date which they want to search for available time slots.
  *
  * @remarks
  */
-export default function SearchBookingDate() {
+export default function SearchByTimeSelectBookingDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
@@ -34,7 +34,7 @@ export default function SearchBookingDate() {
   const onDateClick = (newClickedDate: Date) => {
     dispatch(resetTimeSelectorSelection())
     dispatch(setClickedDate(newClickedDate))
-    history.push(PATHS.SEARCH_BOOKING_TIME)
+    history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_TIME)
   }
 
   return (

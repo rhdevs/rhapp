@@ -27,13 +27,13 @@ const LandingPageContainer = styled.div`
 `
 /**
  * # Facility Landing Page
- * Path: `/facility`
+ * Path: `/facility/main`
  *
  * ## Page Description
  * Facility Landing Page is accessable through the `Facilities` button on main page as well as
  * `Facilities` button in the botton nav bar. On FacilitiesBooking page, users will be given the option to
- * search for a facility to book by either searching for a facility `Search by Facility`, or
- * by searching for a specific date/time to book `Search by Date/Time`
+ * search for a facility to book by either selecting a facility `Select Facility`, or
+ * by searching for a specific timeframe to book `Search by Time`
  *
  * @remarks
  */
@@ -41,14 +41,14 @@ export default function FacilityLandingPage() {
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const searchByFacilityOnClick = () => {
+  const selectFacilityOnClick = () => {
     dispatch(setSearchMode(SearchMode.BY_FACILITY))
     history.push(PATHS.VIEW_ALL_FACILITIES)
   }
 
-  const searchByDateTimeOnClick = () => {
+  const searchByTimeOnClick = () => {
     dispatch(setSearchMode(SearchMode.BY_TIME))
-    history.push(PATHS.SEARCH_BOOKING_DATE)
+    history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE)
   }
 
   return (
@@ -58,23 +58,23 @@ export default function FacilityLandingPage() {
         <SearchContainer>
           <ButtonComponent
             state="primary"
-            text="Search by Facility"
+            text="Select Facility"
             width="129px"
             height="104px"
             fontSize="20px"
             size="small"
             lineHeight="20px"
-            onClick={searchByFacilityOnClick}
+            onClick={selectFacilityOnClick}
           />
           <ButtonComponent
             state="primary"
-            text="Search by Date/Time"
+            text="Search by Time"
             width="129px"
             height="104px"
             fontSize="20px"
             size="small"
             lineHeight="20px"
-            onClick={searchByDateTimeOnClick}
+            onClick={searchByTimeOnClick}
           />
         </SearchContainer>
         <ButtonComponent

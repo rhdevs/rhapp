@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-// import { Switch } from 'react-router-dom'
-import LoadingSpin from '../components/LoadingSpin'
-import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
+
+import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import LoadingSpin from '../components/LoadingSpin'
 
 // TODO sort out naming conventions esp when to put _ID at the back
 export enum PATHS {
@@ -38,20 +38,20 @@ export enum PATHS {
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
 
-  // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
+  // FACILITY BOOKING
   FACILITY_LANDING_PAGE = '/facility/main',
   // // SEARCH BY FACILITY
-  VIEW_ALL_FACILITIES = '/facility/all',
-  VIEW_FACILITY = '/facility/monthView',
-  VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/:facilityId',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId/:selectionMode?',
+  VIEW_ALL_FACILITIES = '/facility/allFacilities',
+  VIEW_FACILITY = '/facility/selectedFacility',
+  VIEW_FACILITY_ID = '/facility/selectedFacility/:facilityId',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/dayView',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/dayView/:facilityId',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/selectTime',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/selectTime/:facilityId/:selectionMode?',
   // // SEARCH BY TIME
-  SEARCH_BOOKING_DATE = '/facility/selectDate',
-  SEARCH_BOOKING_TIME = '/facility/selectDate/selectTime',
-  SEARCH_BOOKING_RESULTS = '/facility/searchResults',
+  SEARCH_BY_TIME_SELECT_BOOKING_DATE = '/facility/searchByTime/selectDate',
+  SEARCH_BY_TIME_SELECT_BOOKING_TIME = '/facility/searchByTime/selectDate/selectTime',
+  SEARCH_BY_TIME_BOOKING_RESULTS = '/facility/searchByTime/searchResults',
   // // CREATE BOOKING
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
@@ -145,13 +145,13 @@ const SelectFacility = React.lazy(
   () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/ViewAllFacilities'),
 )
 const SearchBookingDate = React.lazy(
-  () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchBookingDate'),
+  () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchByTimeSelectBookingDate'),
 )
 const SearchBookingTime = React.lazy(
-  () => import(/* webpackChunckName: "SearchBookingTime" */ './FacilityBooking/SearchBookingTime'),
+  () => import(/* webpackChunckName: "SearchBookingTime" */ './FacilityBooking/SearchByTimeSelectBookingTime'),
 )
 const SearchBookingResults = React.lazy(
-  () => import(/* webpackChunckName: "SearchBookingResults" */ './FacilityBooking/SearchBookingResults'),
+  () => import(/* webpackChunckName: "SearchBookingResults" */ './FacilityBooking/SearchByTimeBookingResults'),
 )
 const ViewFacility = React.lazy(
   () => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/FacilitySelectDate'),
@@ -244,9 +244,9 @@ export default class Routes extends React.Component {
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
             <PrivateRoute exact path={PATHS.VIEW_ALL_FACILITIES} component={SelectFacility} />
-            <PrivateRoute exact path={PATHS.SEARCH_BOOKING_DATE} component={SearchBookingDate} />
-            <PrivateRoute exact path={PATHS.SEARCH_BOOKING_TIME} component={SearchBookingTime} />
-            <PrivateRoute exact path={PATHS.SEARCH_BOOKING_RESULTS} component={SearchBookingResults} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE} component={SearchBookingDate} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_TIME} component={SearchBookingTime} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_BOOKING_RESULTS} component={SearchBookingResults} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />

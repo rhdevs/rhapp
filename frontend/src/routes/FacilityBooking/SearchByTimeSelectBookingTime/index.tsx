@@ -56,16 +56,16 @@ const TitleText = styled.h2`
 `
 
 /**
- * # Search Booking Time Page
- * Path: `/facility/selectDate/selectTime`
+ * # Search By Time Select Booking Time
+ * Path: `/facility/searchByTime/selectDate/selectTime`
  *
  * ## Page Description
- * This page is accesed when the user searches facilities by Date/Time, after they selected a date.
- * This page allows them to select the timeslot which they wish to search for an available facility to book.
+ * This page is accesed when the user searches facilities by Time, after they selected a date.
+ * This page allows them to select the timeslot which they wish to search for available facilities to book.
  * @remarks
  *
  */
-export default function SearchBookingTime() {
+export default function SearchByTimeSelectBookingTime() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate, timeBlocks, selectedBlockTimestamp, selectedStartTime, selectedEndTime } = useSelector(
@@ -79,7 +79,7 @@ export default function SearchBookingTime() {
   const onLeftClick = () => {
     // reset user selection
     dispatch(resetTimeSelectorSelection())
-    history.push(PATHS.SEARCH_BOOKING_DATE)
+    history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE)
   }
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function SearchBookingTime() {
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
       dispatch(resetTimeSelectorSelection())
-      history.push(PATHS.SEARCH_BOOKING_RESULTS)
+      history.push(PATHS.SEARCH_BY_TIME_BOOKING_RESULTS)
     }
   }
 
