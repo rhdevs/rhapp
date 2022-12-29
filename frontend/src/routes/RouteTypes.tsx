@@ -67,6 +67,18 @@ export const PrivateRoute = (routeProps: any) => {
   )
 }
 
+/**
+ * # PublicRoute
+ * Renders pages that do not require user log in.
+ *
+ * @param routeProps (any)
+ * @example
+ * ```
+ * // in Routes.tsx
+ * <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
+ * ```
+ * @returns
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PublicRoute = (routeProps: any) => {
   const { component: Component, ...rest } = routeProps
