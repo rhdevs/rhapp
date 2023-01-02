@@ -1,7 +1,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { REVAMP_GREEN } from '../../common/colours'
+import { PRIMARY_GREEN } from '../../common/colours'
 import { isSameDate } from '../../common/isSameDate'
 
 import { RootState } from '../../store/types'
@@ -9,8 +9,8 @@ import { RootState } from '../../store/types'
 import { TOP_DISTANCE, BLOCK_HEIGHT, BLOCK_GAP } from './BlockStyles.styled'
 
 const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?: string; bottom?: string }>`
-  border: 1.5px solid ${REVAMP_GREEN};
-  background-color: ${REVAMP_GREEN};
+  border: 1.5px solid ${PRIMARY_GREEN};
+  background-color: ${PRIMARY_GREEN};
   position: absolute;
   z-index: 1;
   width: ${(props) => props.width ?? '100%'};

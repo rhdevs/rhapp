@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { REVAMP_GREEN } from '../../common/colours'
+import { PRIMARY_GREEN } from '../../common/colours'
 import { isSameDate } from '../../common/isSameDate'
 
 const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
@@ -12,7 +12,7 @@ const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; 
   width: 47.14px;
   color: ${(props) => (props.selected ? 'white' : props.disabled ? '#888888' : props.isCurrentDate ? '#58B994' : '')};
   border-radius: 40px;
-  background-color: ${(props) => (props.selected ? REVAMP_GREEN : props.isCurrentDate ? '#D8E6DF' : '')};
+  background-color: ${(props) => (props.selected ? PRIMARY_GREEN : props.isCurrentDate ? '#D8E6DF' : '')};
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -27,7 +27,7 @@ const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
   height: 7px;
   width: 7px;
   border-radius: 50%;
-  background-color: ${(props) => (props.selected ? 'white' : REVAMP_GREEN)};
+  background-color: ${(props) => (props.selected ? 'white' : PRIMARY_GREEN)};
 `
 
 export const ClickableDateContainer = (props: {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Radio } from 'antd'
 
-import { REVAMP_GREEN } from '../../common/colours'
+import { PRIMARY_GREEN } from '../../common/colours'
 import { unixToFullDateTime } from '../../common/unixToFullDateTime'
 import FacilityLogo from './FacilityLogo'
 import JCRCBlockOutModal from '../Mobile/JCRCBlockOutModal'
@@ -45,40 +45,40 @@ const FacilityLabels = styled.div`
 
 const StyledRadioGroup = styled(Radio.Group)`
   .ant-radio-button-wrapper:hover {
-    color: ${REVAMP_GREEN};
+    color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
-    border-right-color: ${REVAMP_GREEN};
-    border-left-color: ${REVAMP_GREEN};
+    border-right-color: ${PRIMARY_GREEN};
+    border-left-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover:before {
     color: white;
-    background: ${REVAMP_GREEN};
-    border-color: ${REVAMP_GREEN};
+    background: ${PRIMARY_GREEN};
+    border-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
     color: white;
-    background: ${REVAMP_GREEN};
-    border-color: ${REVAMP_GREEN};
+    background: ${PRIMARY_GREEN};
+    border-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
-    border-color: ${REVAMP_GREEN};
+    border-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
     color: white;
-    background: ${REVAMP_GREEN};
-    border-color: ${REVAMP_GREEN};
+    background: ${PRIMARY_GREEN};
+    border-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled): hover {
     color: white;
-    background: ${REVAMP_GREEN};
-    border-color: ${REVAMP_GREEN};
+    background: ${PRIMARY_GREEN};
+    border-color: ${PRIMARY_GREEN};
   }
 
   .ant-radio-button-wrapper {
