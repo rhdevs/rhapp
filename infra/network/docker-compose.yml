@@ -1,0 +1,53 @@
+version: '1'
+services:
+ traefik:
+    image: traefik:v2.9
+    command:
+      # General Settings
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --serversTransport.insecureSkipVerify=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      # Web Config
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      # Metrics
+      # Ideally we don't want this published to web, but oh well
+      #- --entrypoints.prometheus.address=:8090
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      # ACME Stuff
+      - "--providers.docker.defaultRule=Host(`{{ normalize .Name }}.api.rhapp.lol`)"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=digitalocean"
+      - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=web"
+      # Use this to test without generating an acme file
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=raffleshalldevs@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/acme.json"
+    env_file:
+      - ../../secrets/.env #Access to env
+    networks:
+      - intranet
+    ports:
+      - 80:80
+      - 443:443
+      # For traefik dashboard, only expose for debugging
+      # - 8081:8080
+      # For prometheus
+      # - 8090:8090
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/data/traefik/acme.json:/acme.json
+    labels:
+      # global redirect to https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+networks:
+  intranet:
+    driver: bridge

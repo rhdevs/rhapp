@@ -1,0 +1,3 @@
+[submodule "infra/bots/rh_announcer_bot"]
+	path = infra/bots/rh_announcer_bot
+	url = https://github.com/rhdevs/rh_announcer_bot.git
