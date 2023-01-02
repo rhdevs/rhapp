@@ -131,12 +131,7 @@ export default function CreateBooking() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchAllCCAs())
-    if (facilityList.length === 0) {
-      dispatch(getFacilityList())
-    }
-    return () => {
-      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
-    }
+    facilityList.length === 0 && dispatch(getFacilityList())
   }, [dispatch])
 
   /**
