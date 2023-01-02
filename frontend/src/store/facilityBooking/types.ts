@@ -194,7 +194,7 @@ type SetBooking = {
 type SetBookingStatus = {
   type: typeof FACILITY_ACTIONS.SET_BOOKING_STATUS
   bookingStatus: BookingStatus
-  message?: string
+  bookingErrorMessage?: string
 }
 
 type SetSelectedBlockTimestamp = {

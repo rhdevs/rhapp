@@ -428,19 +428,17 @@ export const handleCreateNewBooking = (
         })
       } else {
         resp.json().then((body) => {
-          if (body.err == 'End time earlier than start time') {
+          if (body.err === 'End time earlier than start time') {
             dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
-          } else if (body.err == 'Conflict Booking') {
+          } else if (body.err === 'Conflict Booking') {
             dispatch(
               setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
             )
-          } else if (body.err == 'You must be in RH Dance to make this booking') {
+          } else if (body.err === 'You must be in RH Dance to make this booking') {
             // As of this version, Dance Studio can only be booked by people who are in RH Dance.
             dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
           } else {
-            dispatch(
-              setBookingStatus(BookingStatus.FAILURE, 'Check your fields again! All fields should be filled up!'),
-            )
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
           }
         })
       }
@@ -456,17 +454,17 @@ export const handleCreateNewBooking = (
 /**
  *
  * @param bookingStatus (BookingStatus)
- * @param message (string: optional)
- * @returns sets `bookingStatus`, `message`
+ * @param bookingErrorMessage (string: optional) error message to display
+ * @returns sets `bookingStatus`, `bookingErrorMessage`
  */
 
-export const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (
+export const setBookingStatus = (bookingStatus: BookingStatus, bookingErrorMessage?: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
     bookingStatus: bookingStatus,
-    message: message,
+    bookingErrorMessage: bookingErrorMessage,
   })
 }
 

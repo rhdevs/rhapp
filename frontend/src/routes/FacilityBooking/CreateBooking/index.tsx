@@ -113,15 +113,9 @@ export default function CreateBooking() {
   } = useForm<FormValues>()
 
   const [ccaName, setCcaName] = useState<string>('')
-  const {
-    facilityList,
-    isLoading,
-    ccaList,
-    bookingStatus,
-    bookingStartTime,
-    bookingEndTime,
-    bookingEndDate,
-  } = useSelector((state: RootState) => state.facilityBooking)
+  const { facilityList, isLoading, ccaList, bookingStartTime, bookingEndTime, bookingEndDate } = useSelector(
+    (state: RootState) => state.facilityBooking,
+  )
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
   const params = useParams<{ facilityId: string }>()
@@ -135,7 +129,6 @@ export default function CreateBooking() {
   }, [dispatch])
 
   /**
-   *
    * @returns boolean to check if form is filled, else submit button is disabled
    */
   const formIsValid = () => {
@@ -146,7 +139,6 @@ export default function CreateBooking() {
   }
 
   /**
-   *
    * @returns string of the facility's name
    */
   const getFacilityName = () => {
@@ -158,34 +150,26 @@ export default function CreateBooking() {
     isWeeklyOn && dispatch(setBookingEndDate(0))
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: any) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
 
-    if (!ccaId && ccaName !== 'Personal') {
-      //selected cca is not valid (error)
-    } else {
-      handleSubmit((data) => {
-        console.log(data, ccaName)
-        if (bookingStatus === BookingStatus.CONFLICT) {
-          // setModalIsOpen(true)
-        } else {
-          history.replace(PATHS.FACILITY_BOOKING_MAIN)
-          history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
-          dispatch(
-            handleCreateNewBooking(
-              Number(params.facilityId),
-              data.eventName,
-              bookingStartTime,
-              bookingEndTime,
-              bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
-              ccaId,
-              data.description,
-            ),
-          )
-        }
-      })()
-    }
+    handleSubmit((data) => {
+      console.log(data, ccaName)
+      history.replace(PATHS.FACILITY_BOOKING_MAIN)
+      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
+      dispatch(
+        handleCreateNewBooking(
+          Number(params.facilityId),
+          data.eventName,
+          bookingStartTime,
+          bookingEndTime,
+          bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
+          ccaId,
+          data.description,
+        ),
+      )
+    })()
   }
 
   const goBackToTimeSelectionPage = () => {
