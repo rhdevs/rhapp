@@ -1,3 +1,13 @@
+# letsencrypt
+letsencrypt
+
+# log files
+output.txt
+
+# secrets
+secrets
+config.monitoring
+
 # dependencies
 /node_modules
 node_modules/

@@ -1,0 +1,55 @@
+.git/
+# dependencies
+node_modules
+**/node_modules/
+**/**node_modules
+**/*/node_modules/*
+
+# production
+dist
+**/build/
+build
+
+# docs
+**/docs/
+
+# caches
+**/.eslintcache
+**/.eslint-loader-cache-webpack
+**/__pycache__
+
+
+# Environments
+**/.env
+**/.venv
+**/env/
+**/venv/
+**/ENV/
+**/env.bak/
+**/venv.bak/
+
+# Logs
+**/*/logs/*
+**/.log
+**/yarn-error.log/
+yarn-error.log
+**/*/yarn-error.log
+
+#env files
+**/.env
+.env
+**/.env/
+**/*/.env
+
+# IDE stuff
+**/.idea/
+
+#Apple files
+**/.DS_Store
+**/._.DS_Store
+**/*/.DS_Store
+**/**/.DS_Store
+**/**/._.DS_Store
+
+# Docs
+**/frontend/docs

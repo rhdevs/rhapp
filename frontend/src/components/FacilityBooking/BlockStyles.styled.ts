@@ -8,8 +8,8 @@ export const BLOCK_GAP = 5
 export const DailyContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${`${TOP_DISTANCE}px`} 5px;
-  gap: ${`${BLOCK_GAP}px`};
+  padding: ${TOP_DISTANCE}px 5px;
+  gap: ${BLOCK_GAP}px;
 `
 
 const blockStyles = css`
@@ -19,7 +19,7 @@ const blockStyles = css`
   color: #000;
   display: flex;
   white-space: nowrap;
-  height: ${`${BLOCK_HEIGHT}px`};
+  height: ${BLOCK_HEIGHT}px
   gap: 10px;
 `
 
@@ -29,7 +29,6 @@ export const StyledBookingBlock = styled.div<{
   blockId: number
   hasOverlay?: boolean
 }>`
-  //edited (props.type === TimeBlockType.AVAILABLE || props.type === TimeBlockType.SELECTED) && 'cursor: pointer;' to below
   ${(props) => props.onClick && 'cursor: pointer;'}
   ${blockStyles}
   background: ${(props) =>

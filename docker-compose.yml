@@ -1,0 +1,36 @@
+version: '1'
+services:
+  backend-dev:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.dev
+      args:
+        - GIT_COMMIT_HASH
+    expose:
+      - 8080
+    restart: on-failure
+    networks:
+      - intranet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend-dev.rule=Host(`dev.api.rhapp.lol`)"
+        # For using PathPrefixes
+        #- "traefik.http.middlewares.strip.stripprefix.prefixes=/prod"
+        #- "traefik.http.middlewares.strip.stripprefix.forceSlash=true"
+        #- "traefik.http.routers.backend.middlewares=strip@docker"
+      - "traefik.http.routers.backend-dev.entrypoints=websecure"
+      - "traefik.http.routers.backend-dev.tls=true"
+      - "traefik.http.routers.backend-dev.tls.certresolver=myresolver"
+        # Middleware for CORS - Configure this if we ever have issues with CORS
+        # - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,DELETE,POST"
+        # - "traefik.http.middlewares.cors.headers.accessControlAllowOriginList=*"
+        # - "traefik.http.middlewares.cors.headers.accessControlAllowCredentials=true"
+        # - "traefik.http.middlewares.cors.headers.accessControlAllowHeaders=Origin,X-Requested-With,Content-Type,Accept,X-XSRF-TOKEN,access-wontol-allow-origin"
+        # - "traefik.http.middlewares.cors.headers.customrequestheaders.Content-Type=application/json;charset=UTF-8"
+        # - "traefik.http.middlewares.cors.headers.customrequestheaders.X-Requested-With=XMLHttpRequest"
+        # - "traefik.http.middlewares.cors.headers.customrequestheaders.Accept=application/json"
+        # - "traefik.http.routers.backend-dev.middlewares=cors@docker"
+
+networks:
+  intranet:
+    name: machine_intranet

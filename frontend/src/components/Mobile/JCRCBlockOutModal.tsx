@@ -91,7 +91,7 @@ const VenueOptions = styled.label`
   align-items: center;
 `
 
-const Venueinput = styled.input`
+const VenueInput = styled.input`
   display: flex;
   justify-content: space-around;
   filter: invert(4%) sepia(0%) saturate(0%) hue-rotate(153deg) brightness(95%) contrast(88%);
@@ -271,14 +271,14 @@ function JCRCBlockOutModal({
           <VenueSelection>
             <VenueOptions>
               Select all
-              <Venueinput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll} />
+              <VenueInput id="0" type="checkbox" onClick={() => handleSelectAll()} checked={selectAll} />
             </VenueOptions>
             {facilityList.map((facility) => {
               if (facility.facilityLocation)
                 return (
                   <VenueOptions>
                     {facility.facilityName}
-                    <Venueinput
+                    <VenueInput
                       id={String(facility.facilityID)}
                       type="checkbox"
                       checked={selectedFacilities.includes(facility.facilityID)}

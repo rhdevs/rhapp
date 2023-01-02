@@ -1,15 +1,16 @@
-import LeftOutlined from '@ant-design/icons/lib/icons/LeftOutlined'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import LeftOutlined from '@ant-design/icons/lib/icons/LeftOutlined'
+
+import { PATHS } from '../../Routes'
 import { getSearchResults } from '../../../store/home/action'
 import { RootState } from '../../../store/types'
 
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -111,7 +112,7 @@ export default function Search({ recentSearches }: { recentSearches: RecentData[
 
   return (
     <Background>
-      <TopNavBar title="Search" leftIcon={true} leftIconComponent={leftIcon} />
+      <TopNavBar title="Search" leftIcon leftIconComponent={leftIcon} />
       <SearchBar placeholder="Facility, People, Events etc." value={searchValue} onChange={onChange} />
       {renderResults()}
       <BottomNavBar />

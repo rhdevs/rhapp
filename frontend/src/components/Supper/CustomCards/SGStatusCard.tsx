@@ -185,7 +185,7 @@ export const SGStatusCard = (props: Props) => {
             <SGStatusBubble text={SupperGroupStatus.ARRIVED} />
             {!props.isOwner && (
               <Button
-                stopPropagation={true}
+                stopPropagation
                 defaultButtonDescription="Message Owner"
                 onButtonClick={props.buttonTeleHandle ? onClick : undefined}
                 isFlipButton={false}
@@ -234,7 +234,7 @@ export const SGStatusCard = (props: Props) => {
             <SGStatusBubble text={SupperGroupStatus.CANCELLED} />
             {!props.isOwner && (
               <Button
-                stopPropagation={true}
+                stopPropagation
                 defaultButtonDescription="Message Owner"
                 onButtonClick={props.buttonTeleHandle ? onClick : undefined}
                 isFlipButton={false}
@@ -250,7 +250,7 @@ export const SGStatusCard = (props: Props) => {
           <SGStatusBubble text={props.supperGroupStatus ?? ''} />
           {!props.isOwner && (
             <Button
-              stopPropagation={true}
+              stopPropagation
               defaultButtonDescription="Message Owner"
               onButtonClick={props.buttonTeleHandle ? onClick : undefined}
               isFlipButton={false}
