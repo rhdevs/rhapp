@@ -55,14 +55,16 @@ const RightContainer = styled.div`
   margin: auto 0;
 `
 
-const StyledGroupIdText = styled.text`
+const StyledGroupIdText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 300;
   font-size: 12px;
 `
 
-const StyledGroupNameText = styled.text`
+const StyledGroupNameText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

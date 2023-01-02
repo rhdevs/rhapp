@@ -22,7 +22,8 @@ const BottomNavBar = styled.div`
   height: 64px;
 `
 
-const NoRecentDataText = styled.text`
+const NoRecentDataText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;
@@ -30,7 +31,8 @@ const NoRecentDataText = styled.text`
   justify-content: center;
 `
 
-const RecentDataText = styled.text`
+const RecentDataText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;

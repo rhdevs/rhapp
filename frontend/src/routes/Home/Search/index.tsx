@@ -1,15 +1,16 @@
-import LeftOutlined from '@ant-design/icons/lib/icons/LeftOutlined'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import LeftOutlined from '@ant-design/icons/lib/icons/LeftOutlined'
+
+import { PATHS } from '../../Routes'
 import { getSearchResults } from '../../../store/home/action'
 import { RootState } from '../../../store/types'
 
 import ImageDescriptionCard from '../../../components/Mobile/ImageDescriptionCard'
 import SearchBar from '../../../components/Mobile/SearchBar'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { PATHS } from '../../Routes'
 
 const Background = styled.div`
   background-color: #fafaf4;
@@ -21,7 +22,8 @@ const BottomNavBar = styled.div`
   height: 64px;
 `
 
-const NoRecentDataText = styled.text`
+const NoRecentDataText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;
@@ -29,7 +31,8 @@ const NoRecentDataText = styled.text`
   justify-content: center;
 `
 
-const RecentDataText = styled.text`
+const RecentDataText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;

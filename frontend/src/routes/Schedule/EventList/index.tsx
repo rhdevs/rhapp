@@ -31,7 +31,8 @@ const Background = styled.div`
   width: 100vw;
 `
 
-const NoEventDataText = styled.text`
+const NoEventDataText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;
@@ -54,7 +55,8 @@ const ResultsContainer = styled.div`
   height: 70vh;
 `
 
-const UpcomingEventsText = styled.text`
+const UpcomingEventsText = styled.p`
+  margin: 0;
   font-family: Inter;
   color: black;
   font-size: 20px;

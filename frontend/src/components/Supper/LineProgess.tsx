@@ -7,7 +7,8 @@ const MainContainer = styled.div<{ margin?: string }>`
   margin: ${(props) => props.margin ?? '2px'};
 `
 
-const TextContainer = styled.text`
+const TextContainer = styled.p`
+  margin: 0;
   display: flex;
   justify-content: center;
   padding-bottom: 5px;

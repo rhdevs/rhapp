@@ -22,14 +22,16 @@ export const OldInfoContainer = styled.div`
   border-radius: 5px;
 `
 
-const DeliveryText = styled.text`
+const DeliveryText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 14px;
 `
 
-const PriceText = styled.text`
+const PriceText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;

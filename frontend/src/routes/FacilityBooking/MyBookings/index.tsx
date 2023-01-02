@@ -2,40 +2,27 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
-import deleteIcon from '../../../assets/deleteIcon.svg'
-import editIcon from '../../../assets/editIcon.svg'
-import catIcon from '../../../assets/catMagnifyGlass.svg'
+import PullToRefresh from 'pull-to-refresh-react'
+
+import { PATHS } from '../../Routes'
+import { onRefresh } from '../../../common/reloadPage'
 import {
   getMyBookings,
   setIsDeleteMyBooking,
   deleteMyBooking,
   editMyBooking,
-  SetIsLoading,
+  setIsLoading,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { PATHS } from '../../Routes'
-import LoadingSpin from '../../../components/LoadingSpin'
-import { onRefresh } from '../../../common/reloadPage'
-import PullToRefresh from 'pull-to-refresh-react'
 
-import AlumniRoom from '../../../assets/facilitiesLogos/AlumniRoom.svg'
-import BandRoom from '../../../assets/facilitiesLogos/BandRoom.svg'
-import BasketballCourt from '../../../assets/facilitiesLogos/BasketballCourt.svg'
-import ConferenceRoomKFH from '../../../assets/facilitiesLogos/ConferenceRoomKFH.svg'
-import ConferenceRoomUL from '../../../assets/facilitiesLogos/ConferenceRoomUL.svg'
-import DanceStudio from '../../../assets/facilitiesLogos/DanceStudio.svg'
-import Foyer from '../../../assets/facilitiesLogos/Foyer.svg'
-import Gym from '../../../assets/facilitiesLogos/Gym.svg'
-import HardCourt from '../../../assets/facilitiesLogos/HardCourt.svg'
-import MainAreaCommHall from '../../../assets/facilitiesLogos/MainAreaCommHall.svg'
-import MainAreaUL from '../../../assets/facilitiesLogos/MainAreaUL.svg'
-import MeetingRoomLL from '../../../assets/facilitiesLogos/MeetingRoomLL.svg'
-import PoolAreaLL from '../../../assets/facilitiesLogos/PoolAreaLL.svg'
-import Stage from '../../../assets/facilitiesLogos/Stage.svg'
-import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
-import DummyAvatar from '../../../assets/dummyAvatar.svg'
+import FacilityLogo from '../../../components/FacilityBooking/FacilityLogo'
+import LoadingSpin from '../../../components/LoadingSpin'
+import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+
+import deleteIcon from '../../../assets/deleteIcon.svg'
+import editIcon from '../../../assets/editIcon.svg'
+import catIcon from '../../../assets/catMagnifyGlass.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -56,12 +43,6 @@ const BookingCard = styled.div`
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
-`
-
-const BookingAvatar = styled.img`
-  padding: 10px;
-  width: 20%;
-  max-height 70px;
 `
 
 const BookingHeader = styled.div`
@@ -121,43 +102,19 @@ const NoBookingsFound = styled.div`
   margin-top: 40px;
 `
 
-function FacilityLogo(props: { facilityID: number }) {
-  switch (props.facilityID) {
-    case 1:
-      return <BookingAvatar src={MainAreaUL} />
-    case 2:
-      return <BookingAvatar src={ConferenceRoomUL} />
-    case 3:
-      return <BookingAvatar src={AlumniRoom} />
-    case 4:
-      return <BookingAvatar src={Foyer} />
-    case 5:
-      return <BookingAvatar src={Stage} />
-    case 6:
-      return <BookingAvatar src={MainAreaCommHall} />
-    case 7:
-      return <BookingAvatar src={BandRoom} />
-    case 8:
-      return <BookingAvatar src={PoolAreaLL} />
-    case 9:
-      return <BookingAvatar src={TVRoom} />
-    case 10:
-      return <BookingAvatar src={MeetingRoomLL} />
-    case 11:
-      return <BookingAvatar src={ConferenceRoomKFH} />
-    case 12:
-      return <BookingAvatar src={HardCourt} />
-    case 13:
-      return <BookingAvatar src={BasketballCourt} />
-    case 14:
-      return <BookingAvatar src={Gym} />
-    case 15:
-      return <BookingAvatar src={DanceStudio} />
-    default:
-      return <BookingAvatar src={DummyAvatar} />
-  }
-}
-
+/**
+ * # ViewMyBookings
+ *
+ * Path: `/facility/booking/user/:userId`
+ *
+ * ##Page Description
+ * The page that contains all of the user's bookings. The user can click on each booking to view it in detail,
+ * or use the right action buttons to edit or delete the booking respectively
+ *
+ * @remarks
+ * <any remarks>
+ *
+ */
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -166,7 +123,7 @@ export default function ViewMyBookings() {
   const userIdFromPath = location.pathname.split('/').slice(-1)[0]
 
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(getMyBookings(userIdFromPath))
   }, [dispatch])
 
@@ -175,15 +132,16 @@ export default function ViewMyBookings() {
       <PullToRefresh onRefresh={onRefresh}>
         <TopNavBar title="My Bookings" />
         <MainContainer>
-          {isLoading && <LoadingSpin />}
-          {!isLoading && (
+          {isLoading ? (
+            <LoadingSpin />
+          ) : (
             <>
               {myBookings.length === 0 && <NoBookingsFound>You have not made any bookings.</NoBookingsFound>}
               {myBookings?.map((booking) => {
                 if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
                     <BookingCard key={booking.bookingID}>
-                      <FacilityLogo key={booking.facilityID} facilityID={booking.facilityID} />
+                      <FacilityLogo key={booking.facilityID} facilityId={booking.facilityID} />
                       <BookingLabels
                         onClick={() => {
                           history.push('/facility/booking/view/' + booking.bookingID)
@@ -230,8 +188,8 @@ export default function ViewMyBookings() {
                           onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
                           onLeftButtonClick={() => {
                             dispatch(deleteMyBooking(booking.bookingID))
-                            history.replace(PATHS.FACILITY_BOOKING_MAIN)
-                            history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
+                            history.replace(PATHS.VIEW_ALL_FACILITIES)
+                            history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                           }}
                           rightButtonText="Cancel"
                           onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}

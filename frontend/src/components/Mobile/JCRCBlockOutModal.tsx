@@ -51,7 +51,7 @@ const TitleTextContainer = styled.div`
   margin-button: 10px;
 `
 
-const TitleText = styled.text`
+const TitleText = styled.p`
   font-family: Inter;
   font-size: 16px;
   font-weight: bold;
@@ -104,7 +104,7 @@ const TimeSelectionContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const TimeSelectionToFrom = styled.text`
+const TimeSelectionToFrom = styled.p`
   margin-left: 20px;
   width: 20%;
   // border: 0.1px ridge rgb(0, 0, 0);

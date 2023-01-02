@@ -1,24 +1,27 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import editIcon from '../../../assets/editIcon.svg'
-import messageIcon from '../../../assets/messageIcon.svg'
-import { RootState } from '../../../store/types'
+import styled from 'styled-components'
+import { format } from 'date-fns'
+
+import { PATHS } from '../../Routes'
 import {
-  SetIsLoading,
+  setIsLoading,
   deleteMyBooking,
   editMyBooking,
   fetchSelectedFacility,
   setIsDeleteMyBooking,
 } from '../../../store/facilityBooking/action'
-import LoadingSpin from '../../../components/LoadingSpin'
-import { format } from 'date-fns'
-import deletepic from '../../../assets/delete.svg'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
-import { PATHS } from '../../Routes'
+import { RootState } from '../../../store/types'
+
+import TopNavBar from '../../../components/Mobile/TopNavBar'
+import LoadingSpin from '../../../components/LoadingSpin'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+
+import deletepic from '../../../assets/delete.svg'
+import editIcon from '../../../assets/editIcon.svg'
+import messageIcon from '../../../assets/messageIcon.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -126,6 +129,20 @@ const EventFacilityName = styled.div`
   align-items: baseline;
 `
 
+/**
+ * # ViewBooking
+ * Path: `/facility/booking/view/:bookingId'`
+ *
+ * ## Page Description
+ * The user gets redirected to this page after clicking one of the bookings listed in the `MyBookings` page. \
+ * This page displays the details of a booking, which is the RHEID (bookingId), Event name, CCA, start time, end time, facility, \
+ * person who created the booking, and additional notes.
+ *
+ * @remarks
+ * <any remarks on this component type in here>
+ *
+ */
+
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
@@ -159,7 +176,7 @@ export default function ViewBooking() {
     tab && (tab.location.href = site)
   }
   useEffect(() => {
-    dispatch(SetIsLoading(true))
+    dispatch(setIsLoading(true))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
   }, [dispatch])
 
@@ -180,85 +197,88 @@ export default function ViewBooking() {
     <>
       <TopNavBar title="View Booking" />
       <MainContainer>
-        {isLoading && <LoadingSpin />}
-        {!isLoading && selectedBooking && (
-          <>
-            <EventCard key={selectedBooking?.bookingID}>
-              <HeaderGroup>
-                <HeaderText>{selectedBooking?.eventName}</HeaderText>
-                <HeaderText>{selectedBooking?.ccaName}</HeaderText>
-                <IdText>RHEID-{params.bookingId}</IdText>
-              </HeaderGroup>
-              <DetailsGroup>
-                <TimeDetails>
-                  <CardDurationLabel>
-                    {timeDuration(selectedBooking.startTime, selectedBooking.endTime) > 1
-                      ? timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hrs'
-                      : timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hr'}
-                  </CardDurationLabel>
-                  <DateTimeDetails>
-                    {selectedBooking && (
-                      <>
-                        <CardTimeLabel>
-                          <b>Start: </b>
-                          {formatDate(selectedBooking.startTime)}
-                        </CardTimeLabel>
-                        <CardTimeLabel>
-                          <b>End: </b>
-                          {formatDate(selectedBooking.endTime)}
-                        </CardTimeLabel>
-                      </>
+        {isLoading ? (
+          <LoadingSpin />
+        ) : (
+          selectedBooking && (
+            <>
+              <EventCard key={selectedBooking?.bookingID}>
+                <HeaderGroup>
+                  <HeaderText>{selectedBooking?.eventName}</HeaderText>
+                  <HeaderText>{selectedBooking?.ccaName}</HeaderText>
+                  <IdText>RHEID-{params.bookingId}</IdText>
+                </HeaderGroup>
+                <DetailsGroup>
+                  <TimeDetails>
+                    <CardDurationLabel>
+                      {timeDuration(selectedBooking.startTime, selectedBooking.endTime) > 1
+                        ? timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hrs'
+                        : timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hr'}
+                    </CardDurationLabel>
+                    <DateTimeDetails>
+                      {selectedBooking && (
+                        <>
+                          <CardTimeLabel>
+                            <b>Start: </b>
+                            {formatDate(selectedBooking.startTime)}
+                          </CardTimeLabel>
+                          <CardTimeLabel>
+                            <b>End: </b>
+                            {formatDate(selectedBooking.endTime)}
+                          </CardTimeLabel>
+                        </>
+                      )}
+                    </DateTimeDetails>
+                  </TimeDetails>
+                  <EventFacilityName>
+                    <CardSubtitle>Facility</CardSubtitle>
+                    <p style={{ textAlign: 'right' }}>{selectedBooking?.facilityName}</p>
+                  </EventFacilityName>
+                  <EventOwnerDetails>
+                    <CardSubtitle>Created by</CardSubtitle>
+                    <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
+                  </EventOwnerDetails>
+                  <>
+                    <CardSubtitle>Additional Note</CardSubtitle>
+                    <p>{selectedBooking?.description}</p>
+                  </>
+                </DetailsGroup>
+                {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
+                  <ActionButtonGroup>
+                    <Icon
+                      src={editIcon}
+                      onClick={() => {
+                        dispatch(editMyBooking(selectedBooking))
+                        history.push(PATHS.CREATE_FACILITY_BOOKING)
+                      }}
+                    />
+                    <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
+                    {selectedBooking?.userID !== localStorage.getItem('userID') && (
+                      <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
                     )}
-                  </DateTimeDetails>
-                </TimeDetails>
-                <EventFacilityName>
-                  <CardSubtitle>Facility</CardSubtitle>
-                  <p style={{ textAlign: 'right' }}>{selectedBooking?.facilityName}</p>
-                </EventFacilityName>
-                <EventOwnerDetails>
-                  <CardSubtitle>Created by</CardSubtitle>
-                  <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
-                </EventOwnerDetails>
-                <>
-                  <CardSubtitle>Additional Note</CardSubtitle>
-                  <p>{selectedBooking?.description}</p>
-                </>
-              </DetailsGroup>
-              {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
-                <ActionButtonGroup>
-                  <Icon
-                    src={editIcon}
-                    onClick={() => {
-                      dispatch(editMyBooking(selectedBooking))
-                      history.push(PATHS.CREATE_FACILITY_BOOKING)
-                    }}
-                  />
-                  <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
-                  {selectedBooking?.userID !== localStorage.getItem('userID') && (
+                  </ActionButtonGroup>
+                ) : (
+                  <ActionButtonGroup>
                     <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
-                  )}
-                </ActionButtonGroup>
-              ) : (
-                <ActionButtonGroup>
-                  <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
-                </ActionButtonGroup>
+                  </ActionButtonGroup>
+                )}
+              </EventCard>
+              {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
+                <ConfirmationModal
+                  title="Delete Booking?"
+                  hasLeftButton={true}
+                  leftButtonText="Delete"
+                  onLeftButtonClick={() => {
+                    dispatch(deleteMyBooking(selectedBooking?.bookingID))
+                    history.replace(PATHS.VIEW_ALL_FACILITIES)
+                    history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
+                  }}
+                  rightButtonText="Cancel"
+                  onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+                />
               )}
-            </EventCard>
-            {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
-              <ConfirmationModal
-                title="Delete Booking?"
-                hasLeftButton
-                leftButtonText="Delete"
-                onLeftButtonClick={() => {
-                  dispatch(deleteMyBooking(selectedBooking?.bookingID))
-                  history.replace(PATHS.FACILITY_BOOKING_MAIN)
-                  history.push(PATHS.VIEW_MY_BOOKINGS_USERID + '/' + localStorage.getItem('userID'))
-                }}
-                rightButtonText="Cancel"
-                onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
-              />
-            )}
-          </>
+            </>
+          )
         )}
       </MainContainer>
     </>

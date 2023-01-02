@@ -66,13 +66,13 @@ const RowDescription = styled.div`
   justify-content: flex-start;
 `
 
-const StyledTitle = styled.text`
+const StyledTitle = styled.p`
   font-family: Inter;
   color: black;
   font-size: 15px;
   font-weight: bold;
   line-height: 30px;
-  margin-right: 20px;
+  margin: 0 20px 0 0;
   white-space: nowrap;
 `
 

@@ -13,7 +13,7 @@ export type userCCA = {
 }
 
 export type Booking = {
-  bookingID: number
+  bookingID?: number
   eventName: string
   facilityID: number
   facilityName?: string
@@ -24,7 +24,8 @@ export type Booking = {
   startTime: number
   endTime: number
   description: string
-  repeat?: number
+  repeat?: boolean
+  endDate?: number
 }
 
 export type Event = {
@@ -37,24 +38,41 @@ export type Event = {
   eventOwner: string
 }
 
+export type TimeBlock = {
+  id: number
+  timestamp: number
+  type: TimeBlockType
+  ccaName?: string
+  eventName?: string
+  booking?: Booking
+}
+
+export enum TimeBlockType {
+  AVAILABLE = 'available',
+  OCCUPIED = 'occupied',
+  UNAVAILABLE = 'unavailable',
+  SELECTED = 'selected',
+}
+
+export enum SearchMode {
+  NONE = 'none',
+  BY_FACILITY = 'byFacility',
+  BY_TIME = 'byTime',
+}
+
 export enum FACILITY_ACTIONS {
   SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
   SET_IS_JCRC = 'FACILITY_ACTIONS.SET_IS_JCRC',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
-  CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
+  GET_FACILITY_LIST_WITHIN_TIME = 'FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
   SET_IS_DELETE_MY_BOOKING = 'FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING',
   DELETE_MY_BOOKING = 'FACILITY_ACTIONS.DELETE_MY_BOOKING',
-  EDIT_MY_BOOKING = 'FACILITY_ACTIONS.EDIT_MY_BOOKING',
   HANDLE_BOOKING_NAME = 'FACILITY_ACTIONS.HANDLE_BOOKING_NAME',
-  SET_BOOKING_NAME = 'FACILITY_ACTIONS.SET_BOOKING_NAME',
-  SET_BOOKING_FACILITY = 'FACILITY_ACTIONS.SET_BOOKING_FACILITY',
-  SET_BOOKING_FACILITY_ID = 'FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID',
   SET_BOOKING_TO_DATE = 'FACILITY_ACTIONS.SET_BOOKING_TO_DATE',
   SET_BOOKING_FROM_DATE = 'FACILITY_ACTIONS.SET_BOOKING_FROM_DATE',
-  SET_BOOKING_CCA = 'FACILITY_ACTIONS.SET_BOOKING_CCA',
-  SET_BOOKING_DESCRIPTION = 'FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION',
+  SET_SEARCH_MODE = 'FACILITY_ACTIONS.SET_SEARCH_MODE',
   SET_VIEW_FACILITY_START_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE',
   SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
   SET_VIEW_FACILITY_MODE = 'FACILITY_ACTIONS.VIEW_FACILITY_MODE',
@@ -64,20 +82,20 @@ export enum FACILITY_ACTIONS {
   SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
-  SET_FACILITY_BOOKINGS = 'FACILITY_ACTION.SET_FACILITY_BOOKINGS',
-  SET_VIEW_FACILITY_NAME = 'FACILITY_ACTION.SET_VIEW_FACILITY_NAME',
-  SET_CREATE_BOOKING_ERROR = 'FACILITY_ACTION.SET_CREATE_BOOKING_ERROR',
-  SET_REPEAT_WEEKLY = 'FACILITY_ACTION.SET_REPEAT_WEEKLY',
-}
-
-type SetCreateBookingError = {
-  type: typeof FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR
-  createBookingError: string
-}
-
-type SetBookingFacilityId = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID
-  newBookingFacilityId: string
+  SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
+  SET_BOOKING_STATUS = 'FACILITY_ACTIONS.SET_BOOKING_STATUS',
+  SET_SELECTED_BLOCK_TIMESTAMP = 'FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP',
+  SET_SELECTED_START_TIME = 'FACILITY_ACTIONS.SET_SELECTED_START_TIME',
+  SET_SELECTED_END_TIME = 'FACILITY_ACTIONS.SET_SELECTED_END_TIME',
+  SET_BOOKING_START_TIME = 'FACILITY_ACTIONS.SET_BOOKING_START_TIME',
+  SET_BOOKING_END_TIME = 'FACILITY_ACTIONS.SET_BOOKING_END_TIME',
+  SET_BOOKING_END_DATE = 'FACILITY_ACTIONS.SET_BOOKING_END_DATE',
+  SET_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.SET_FACILITY_BOOKINGS',
+  SET_VIEW_FACILITY_NAME = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME',
+  SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
+  SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
+  SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
+  SET_CLICKED_DATE = 'CALENDAR_ACTIONS.SET_CLICKED_DATE',
 }
 
 type SetViewFacilityName = {
@@ -90,14 +108,16 @@ type GetFacilityList = {
   facilityList: Facility[]
   locationList: string[]
 }
+
+type GetFacilityListWithinTime = {
+  type: typeof FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME
+  facilityListWithinTime: Facility[]
+  locationListWithinTime: string[]
+}
+
 type GetMyBookings = {
   type: typeof FACILITY_ACTIONS.GET_MY_BOOKINGS
   myBookings: Booking[]
-}
-
-type ChangeTab = {
-  type: typeof FACILITY_ACTIONS.CHANGE_TAB
-  newTab: string
 }
 
 type SetIsDeleteMyBooking = {
@@ -110,39 +130,9 @@ type DeleteMyBooking = {
   myBookings: Booking[]
 }
 
-type EditMyBooking = {
-  type: typeof FACILITY_ACTIONS.EDIT_MY_BOOKING
-  newBooking: Booking | undefined
-}
-
-type SetBookingName = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_NAME
-  newBookingName: string
-}
-
-type SetFacilityName = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_FACILITY
-  newBookingFacilityName: string
-}
-
-type SetBookingFromDate = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_FROM_DATE
-  newBookingFromDate: Date
-}
-
-type SetBookingToDate = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_TO_DATE
-  newBookingToDate: Date
-}
-
-type SetBookingCCA = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_CCA
-  newBookingCCA: string
-}
-
-type SetBookingDescription = {
-  type: typeof FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION
-  newBookingDescription: string
+type SetSearchMode = {
+  type: typeof FACILITY_ACTIONS.SET_SEARCH_MODE
+  searchMode: SearchMode
 }
 
 type SetViewFacilityStartDate = {
@@ -211,9 +201,52 @@ type SetFacilityBookings = {
   facilityBookings: Booking[]
 }
 
-type SetRepeatWeekly = {
-  type: typeof FACILITY_ACTIONS.SET_REPEAT_WEEKLY
-  numRepeatWeekly: number
+type SetBooking = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING
+  booking: Booking | null
+}
+
+type SetBookingStatus = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_STATUS
+  bookingStatus: BookingStatus
+  bookingErrorMessage?: string
+}
+
+type SetSelectedBlockTimestamp = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP
+  selectedBlockTimestamp: number
+}
+
+type SetSelectedStartTime = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_START_TIME
+  selectedStartTime: number
+}
+
+type SetSelectedEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_END_TIME
+  selectedEndTime: number
+}
+
+type SetBookingStartTime = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_START_TIME
+  bookingStartTime: number
+}
+
+type SetBookingEndTime = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_END_TIME
+  bookingEndTime: number
+}
+
+type SetBookingEndDate = {
+  type: typeof FACILITY_ACTIONS.SET_BOOKING_END_DATE
+  bookingEndDate: number
+}
+
+export enum BookingStatus {
+  SUCCESS = 'success',
+  FAILURE = 'failure',
+  CONFLICT = 'conflict',
+  INITIAL = 'initial',
 }
 
 type dayNumber = { [dayString: string]: number }
@@ -226,25 +259,40 @@ export const DAY_STRING_TO_NUMBER: dayNumber = {
   Friday: 5,
   Saturday: 6,
 }
+
+type SetConflictBookings = {
+  type: typeof FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS
+  conflictBookings: Booking[]
+}
+
+type SetTimeBlock = {
+  type: typeof FACILITY_ACTIONS.SET_TIME_BLOCKS
+  timeBlocks: TimeBlock[]
+}
+
+type SetSelectedDayBookings = {
+  type: typeof FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS
+  selectedDayBookings: Booking[]
+}
+
+type SetIsClicked = {
+  type: typeof FACILITY_ACTIONS.SET_CLICKED_DATE
+  clickedDate: Date
+}
+
 // Reverse lookup map of DAY_STRING_TO_NUMBER
 export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
 export type ActionTypes =
   | GetFacilityList
-  | ChangeTab
+  | GetFacilityListWithinTime
   | GetMyBookings
   | SetIsDeleteMyBooking
   | DeleteMyBooking
-  | EditMyBooking
-  | SetBookingName
-  | SetBookingFromDate
-  | SetBookingToDate
-  | SetBookingCCA
-  | SetBookingDescription
+  | SetSearchMode
   | SetViewFacilityStartDate
   | SetViewFacilityEndDate
   | setViewFacilityMode
-  | SetFacilityName
   | HandleCreateBooking
   | PopulateFacilityBookings
   | SetFacilityDetails
@@ -255,7 +303,16 @@ export type ActionTypes =
   | GetAllCCA
   | SetFacilityBookings
   | SetViewFacilityName
-  | SetCreateBookingError
-  | SetBookingFacilityId
   | SetIsJcrc
-  | SetRepeatWeekly
+  | SetBooking
+  | SetBookingStatus
+  | SetSelectedBlockTimestamp
+  | SetSelectedStartTime
+  | SetSelectedEndTime
+  | SetBookingStartTime
+  | SetBookingEndTime
+  | SetBookingEndDate
+  | SetConflictBookings
+  | SetTimeBlock
+  | SetSelectedDayBookings
+  | SetIsClicked

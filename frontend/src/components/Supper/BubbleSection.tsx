@@ -80,7 +80,8 @@ height: fit-content;
 padding: 0 0.5rem;`}
 `
 
-const RedText = styled.text`
+const RedText = styled.p`
+  margin: 0;
   color: #ff4d4f;
   font-family: Inter;
   font-style: normal;

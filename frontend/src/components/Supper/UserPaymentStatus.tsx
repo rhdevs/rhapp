@@ -27,7 +27,7 @@ const TopContainer = styled.div`
   align-items: center;
 `
 
-const TopMoneyText = styled.text`
+const TopMoneyText = styled.p`
   width: fit-content;
   margin: auto;
   justify-content: flex-end;
@@ -52,7 +52,7 @@ const DetailsContainer = styled.div`
   display: flex;
 `
 
-const DeliveryFeeText = styled.text`
+const DeliveryFeeText = styled.p`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,7 +61,8 @@ const DeliveryFeeText = styled.text`
   padding-right: 5px;
 `
 
-const MoneyText = styled.text`
+const MoneyText = styled.p`
+  margin: 0;
   font-size: ${0.85 * 14}px;
 `
 
@@ -85,7 +86,7 @@ const CheckboxContainer = styled.div`
   width: fit-content;
 `
 
-const PaymentMethodText = styled.text`
+const PaymentMethodText = styled.p`
   font-family: Inter;
   font-style: normal;
   font-weight: 600;

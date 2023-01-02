@@ -1,91 +1,97 @@
-import dayjs from 'dayjs'
 import { Reducer } from 'redux'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA } from './types'
+import { defaultTimeBlocks, myBookingsStub } from '../stubs'
+import {
+  ActionTypes,
+  FACILITY_ACTIONS,
+  Facility,
+  Booking,
+  userCCA,
+  BookingStatus,
+  TimeBlock,
+  SearchMode,
+} from './types'
 
-const initialState = {
+const initialState: State = {
   // MAIN PAGE
   isLoading: false,
   blockOutIsOpen: false,
   isJcrc: false,
   facilityList: [],
+  facilityListWithinTime: [],
   locationList: [],
-  selectedTab: '',
+  locationListWithinTime: [],
   selectedFacility: null,
   selectedBooking: null,
   myBookings: [],
   isDeleteMyBooking: -1,
-  newBooking: undefined,
-  // CREATE NEW BOOKING STATES
-  newBookingName: '',
-  newBookingFacilityName: '',
-  newBookingFacilityId: '',
-  newBookingFromDate: new Date(),
-  newBookingToDate: dayjs(new Date()).add(1, 'hour').toDate(),
-  newBookingCCA: '',
-  newBookingDescription: '',
   createSuccess: false,
   createFailure: false,
-  createBookingError: '',
+  searchMode: SearchMode.NONE,
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: new Date(),
-  ViewFacilityMode: 'Bookings',
   selectedFacilityId: 0,
   ccaList: [],
   facilityBookings: [],
   selectedFacilityName: '',
-  numRepeatWeekly: 1,
+  booking: null,
+  bookingStatus: BookingStatus.INITIAL,
+  selectedBlockTimestamp: 0,
+  selectedStartTime: 0,
+  selectedEndTime: 0,
+  bookingStartTime: 0,
+  bookingEndTime: 0,
+  bookingEndDate: 0,
+  conflictBookings: [],
+  timeBlocks: defaultTimeBlocks,
+  selectedDayBookings: myBookingsStub,
+  clickedDate: new Date(),
 }
 
 type State = {
+  // MAIN PAGE
   isLoading: boolean
   blockOutIsOpen: boolean
   isJcrc: boolean
   facilityList: Facility[]
+  facilityListWithinTime: Facility[]
   locationList: string[]
-  selectedTab: string
+  locationListWithinTime: string[]
   selectedFacility: Facility | null
   selectedBooking: Booking | null
   myBookings: Booking[]
   isDeleteMyBooking: number
-  newBooking: Booking | undefined
-  newBookingFacilityName: string
-  newBookingFacilityId: string
-  newBookingName: string
-  newBookingFromDate: Date
-  newBookingToDate: Date
-  newBookingCCA: string
-  newBookingDescription: string
   createSuccess: boolean
   createFailure: boolean
+  searchMode: SearchMode
+  // VIEW FACILITY PARAMS
   ViewStartDate: Date
   ViewEndDate: Date
   selectedFacilityId: number
   ccaList: userCCA[]
   facilityBookings: Booking[]
   selectedFacilityName: string
-  createBookingError: string
-  numRepeatWeekly: number
+  booking: Booking | null
+  bookingStatus: BookingStatus
+  bookingErrorMessage?: string
+  selectedBlockTimestamp: number
+  selectedStartTime: number
+  selectedEndTime: number
+  bookingStartTime: number
+  bookingEndTime: number
+  bookingEndDate: number
+  conflictBookings: Booking[]
+  timeBlocks: TimeBlock[]
+  selectedDayBookings: Booking[]
+  clickedDate: Date
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
   switch (action.type) {
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY_ID: {
-      return {
-        ...state,
-        newBookingFacilityId: action.newBookingFacilityId,
-      }
-    }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME: {
       return {
         ...state,
         selectedFacilityName: action.selectedFacilityName,
-      }
-    }
-    case FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR: {
-      return {
-        ...state,
-        createBookingError: action.createBookingError,
       }
     }
     case FACILITY_ACTIONS.GET_FACILITY_LIST: {
@@ -95,16 +101,17 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         locationList: action.locationList,
       }
     }
+    case FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME: {
+      return {
+        ...state,
+        facilityListWithinTime: action.facilityListWithinTime,
+        locationListWithinTime: action.locationListWithinTime,
+      }
+    }
     case FACILITY_ACTIONS.GET_MY_BOOKINGS: {
       return {
         ...state,
         myBookings: action.myBookings,
-      }
-    }
-    case FACILITY_ACTIONS.CHANGE_TAB: {
-      return {
-        ...state,
-        selectedTab: action.newTab,
       }
     }
     case FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING: {
@@ -119,46 +126,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         myBookings: action.myBookings,
       }
     }
-    case FACILITY_ACTIONS.EDIT_MY_BOOKING: {
+    case FACILITY_ACTIONS.SET_SEARCH_MODE: {
       return {
         ...state,
-        newBooking: action.newBooking,
+        searchMode: action.searchMode,
       }
     }
-
-    case FACILITY_ACTIONS.SET_BOOKING_NAME: {
-      return {
-        ...state,
-        newBookingName: action.newBookingName,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_FROM_DATE: {
-      return {
-        ...state,
-        newBookingFromDate: action.newBookingFromDate,
-      }
-    }
-    case FACILITY_ACTIONS.SET_BOOKING_TO_DATE: {
-      return {
-        ...state,
-        newBookingToDate: action.newBookingToDate,
-      }
-    }
-    case FACILITY_ACTIONS.SET_BOOKING_CCA: {
-      return {
-        ...state,
-        newBookingCCA: action.newBookingCCA,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_DESCRIPTION: {
-      return {
-        ...state,
-        newBookingDescription: action.newBookingDescription,
-      }
-    }
-
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
       return {
         ...state,
@@ -177,13 +150,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         ViewFacilityMode: action.ViewFacilityMode,
-      }
-    }
-
-    case FACILITY_ACTIONS.SET_BOOKING_FACILITY: {
-      return {
-        ...state,
-        newBookingFacilityName: action.newBookingFacilityName,
       }
     }
 
@@ -257,11 +223,79 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         facilityBookings: action.facilityBookings,
       }
     }
-
-    case FACILITY_ACTIONS.SET_REPEAT_WEEKLY: {
+    case FACILITY_ACTIONS.SET_BOOKING: {
       return {
         ...state,
-        numRepeatWeekly: action.numRepeatWeekly,
+        booking: action.booking,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatus: action.bookingStatus,
+        bookingErrorMessage: action.bookingErrorMessage,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_SELECTED_BLOCK_TIMESTAMP: {
+      return {
+        ...state,
+        selectedBlockTimestamp: action.selectedBlockTimestamp,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_START_TIME: {
+      return {
+        ...state,
+        selectedStartTime: action.selectedStartTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_END_TIME: {
+      return {
+        ...state,
+        selectedEndTime: action.selectedEndTime,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_BOOKING_START_TIME: {
+      return {
+        ...state,
+        bookingStartTime: action.bookingStartTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_END_TIME: {
+      return {
+        ...state,
+        bookingEndTime: action.bookingEndTime,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_END_DATE: {
+      return {
+        ...state,
+        bookingEndDate: action.bookingEndDate,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS: {
+      return {
+        ...state,
+        conflictBookings: action.conflictBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_TIME_BLOCKS: {
+      return {
+        ...state,
+        timeBlocks: action.timeBlocks,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS: {
+      return {
+        ...state,
+        selectedDayBookings: action.selectedDayBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CLICKED_DATE: {
+      return {
+        ...state,
+        clickedDate: action.clickedDate,
       }
     }
     default:

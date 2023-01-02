@@ -9,7 +9,8 @@ const Header = styled.text<{ margin?: string; topMargin?: boolean; fontSize?: st
   margin-bottom: 5px;
   ${(props) => props.margin && `margin: ${props.margin}`}
 `
-const RedText = styled.text`
+const RedText = styled.p`
+  margin: 0;
   color: red;
   padding-right: 5px;
   font-family: Inter;
