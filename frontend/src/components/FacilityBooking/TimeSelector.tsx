@@ -14,6 +14,8 @@ import { isSameDate } from '../../common/isSameDate'
  *
  * Display blocks of time for user to select
  *
+ * @param timeBlocks (TimeBlock[]) - Array of timeblocks to display
+ * @param bookingBlockOnClick (Function) - Function to call when a timeblock is clicked
  * @returns A section containing clickable timeblocks
  *
  * @example

@@ -73,7 +73,7 @@ type State = {
   selectedFacilityName: string
   booking: Booking | null
   bookingStatus: BookingStatus
-  message?: string
+  bookingErrorMessage?: string
   selectedBlockTimestamp: number
   selectedStartTime: number
   selectedEndTime: number
@@ -233,7 +233,7 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         bookingStatus: action.bookingStatus,
-        message: action.message,
+        bookingErrorMessage: action.bookingErrorMessage,
       }
     }
 

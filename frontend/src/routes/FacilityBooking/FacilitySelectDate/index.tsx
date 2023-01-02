@@ -46,7 +46,7 @@ export default function FacilitySelectDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId, bookingStatus, clickedDate } = useSelector(
+  const { selectedFacilityName, selectedFacilityId, bookingStatus, clickedDate, bookingErrorMessage } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -64,23 +64,44 @@ export default function FacilitySelectDate() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
   }
 
-  // booking alerts and modals shown when redirected back after making a booking
   useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) showAlertSection(3)
+    if (bookingStatus === BookingStatus.SUCCESS) closeAlertDelay(5)
+    /* if FAILURE, don't close alert automatically and let the user close it */
     if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
   }, [bookingStatus])
 
-  async function showAlertSection(seconds: number) {
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000)
-    })
+  /**
+   * Closes the alert after a specified number of seconds
+   * @param seconds number of seconds to delay before closing alert
+   */
+  async function closeAlertDelay(seconds: number) {
+    await new Promise((resolve) =>
+      setTimeout(() => resolve(dispatch(setBookingStatus(BookingStatus.INITIAL))), seconds * 1000),
+    )
   }
 
-  const AlertSection = () => (
-    <AlertGroup>
-      <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
-    </AlertGroup>
+  const SuccessAlertSection = () => (
+    <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
   )
+  const FailureAlertSection = () => (
+    <Alert
+      message="Not Successful Boohoo :-("
+      description={bookingErrorMessage}
+      type="error"
+      closable
+      showIcon
+      onClose={() => dispatch(setBookingStatus(BookingStatus.INITIAL))}
+    />
+  )
+
+  const AlertSection = () => {
+    return (
+      <AlertGroup>
+        {bookingStatus === BookingStatus.SUCCESS && <SuccessAlertSection />}
+        {bookingStatus === BookingStatus.FAILURE && <FailureAlertSection />}
+      </AlertGroup>
+    )
+  }
 
   return (
     <>

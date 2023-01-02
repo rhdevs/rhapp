@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { now } from 'lodash'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
@@ -13,20 +12,6 @@ import {
   TimeBlock,
   TimeBlockType,
 } from './types'
-
-// /**
-//  *
-//  * @param newError (string) usage unsure
-//  * @returns updates `createBookingError`
-//  *
-//  * @remarks this function is currently unused! `createBookingError` is unused as well
-//  */
-// export const SetCreateBookingError = (newError: string) => async (dispatch: Dispatch<ActionTypes>) => {
-//   dispatch({
-//     type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-//     createBookingError: newError,
-//   })
-// }
 
 /**
  *
@@ -329,44 +314,6 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
 }
 
 /**
- * Verifies if the ending datetime is equal to or before the given start datetime
- * @param toDate (Date) given ending datetime
- * @param fromdate (Date) given starting datetime
- * @returns sets `createBookingError` to the relevant error if any, otherwise sets empty string
- */
-export const checkForDurationError = (toDate: Date, fromdate: Date) => (dispatch: Dispatch<ActionTypes>) => {
-  const duration = dayjs(toDate).diff(dayjs(fromdate), 'hour', true)
-  let newError: string
-  if (duration === 0) {
-    newError = 'End Date is the Same as Start Date!'
-  } else if (duration < 0) {
-    newError = 'End Date is before Start Date!'
-  } else {
-    newError = ''
-  }
-  // TODO unused
-  // dispatch({
-  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-  //   createBookingError: newError,
-  // })
-}
-
-/**
- *
- * @returns updates `createBookingError`
- *
- * @remarks
- * <any remarks on this function put here>
- */
-export const setDefaultError = () => (dispatch: Dispatch<ActionTypes>) => {
-  // TODO unused
-  // dispatch({
-  //   type: FACILITY_ACTIONS.SET_CREATE_BOOKING_ERROR,
-  //   createBookingError: 'Your Event is now 0 minutes long!',
-  // })
-}
-
-/**
  *
  * Takes in `newDate` and updates both `ViewStartDate` and `ViewEndDate` to that date.
  *
@@ -611,19 +558,17 @@ export const handleCreateNewBooking = (
         })
       } else {
         resp.json().then((body) => {
-          if (body.err == 'End time earlier than start time') {
+          if (body.err === 'End time earlier than start time') {
             dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
-          } else if (body.err == 'Conflict Booking') {
+          } else if (body.err === 'Conflict Booking') {
             dispatch(
               setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
             )
-          } else if (body.err == 'You must be in RH Dance to make this booking') {
+          } else if (body.err === 'You must be in RH Dance to make this booking') {
             // As of this version, Dance Studio can only be booked by people who are in RH Dance.
             dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
           } else {
-            dispatch(
-              setBookingStatus(BookingStatus.FAILURE, 'Check your fields again! All fields should be filled up!'),
-            )
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
           }
         })
       }
@@ -637,17 +582,17 @@ export const handleCreateNewBooking = (
 /**
  *
  * @param bookingStatus (BookingStatus)
- * @param message (string: optional)
- * @returns sets `bookingStatus`, `message`
+ * @param bookingErrorMessage (string: optional) error message to display
+ * @returns sets `bookingStatus`, `bookingErrorMessage`
  */
 
-export const setBookingStatus = (bookingStatus: BookingStatus, message?: string) => (
+export const setBookingStatus = (bookingStatus: BookingStatus, bookingErrorMessage?: string) => (
   dispatch: Dispatch<ActionTypes>,
 ) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
     bookingStatus: bookingStatus,
-    message: message,
+    bookingErrorMessage: bookingErrorMessage,
   })
 }
 

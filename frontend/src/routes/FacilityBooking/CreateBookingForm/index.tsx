@@ -131,16 +131,10 @@ export default function CreateBookingForm() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchAllCCAs())
-    if (facilityList.length === 0) {
-      dispatch(getFacilityList())
-    }
-    return () => {
-      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
-    }
+    facilityList.length === 0 && dispatch(getFacilityList())
   }, [dispatch])
 
   /**
-   *
    * @returns boolean to check if form is filled, else submit button is disabled
    */
   const formIsValid = () => {
@@ -151,7 +145,6 @@ export default function CreateBookingForm() {
   }
 
   /**
-   *
    * @returns string of the facility's name
    */
   const getFacilityName = () => {
@@ -163,34 +156,25 @@ export default function CreateBookingForm() {
     isWeeklyOn && dispatch(setBookingEndDate(0))
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: any) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
 
-    if (!ccaId && ccaName !== 'Personal') {
-      //selected cca is not valid (error)
-    } else {
-      handleSubmit((data) => {
-        console.log(data, ccaName)
-        if (bookingStatus === BookingStatus.CONFLICT) {
-          // setModalIsOpen(true)
-        } else {
-          history.replace(PATHS.VIEW_ALL_FACILITIES)
-          history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
-          dispatch(
-            handleCreateNewBooking(
-              Number(params.facilityId),
-              data.eventName,
-              bookingStartTime,
-              bookingEndTime,
-              bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
-              ccaId,
-              data.description,
-            ),
-          )
-        }
-      })()
-    }
+    handleSubmit((data) => {
+      history.replace(PATHS.VIEW_ALL_FACILITIES)
+      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
+      dispatch(
+        handleCreateNewBooking(
+          Number(params.facilityId),
+          data.eventName,
+          bookingStartTime,
+          bookingEndTime,
+          bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
+          ccaId,
+          data.description,
+        ),
+      )
+    })()
   }
 
   const goBackToTimeSelectionPage = () => {
