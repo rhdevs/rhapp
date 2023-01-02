@@ -1,7 +1,17 @@
+import { now } from 'lodash'
 import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
-import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBlock, TimeBlockType } from './types'
+import {
+  ActionTypes,
+  Booking,
+  BookingStatus,
+  Facility,
+  FACILITY_ACTIONS,
+  SearchMode,
+  TimeBlock,
+  TimeBlockType,
+} from './types'
 
 /**
  *
@@ -11,18 +21,13 @@ import { ActionTypes, Booking, BookingStatus, Facility, FACILITY_ACTIONS, TimeBl
  *
  * @remarks
  */
-export const updateDailyView = (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+export const updateBookingDailyView = (date: Date, selectedFacilityId: number) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
   const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
-  const querySubString =
-    selectedFacilityId +
-    '/' +
-    '?startTime=' +
-    parseInt((adjustedStart.getTime() / 1000).toFixed(0)) +
-    '&endTime=' +
-    parseInt((adjustedEnd.getTime() / 1000).toFixed(0))
 
   //set all elements in TB to available
   for (let i = 0; i < 24; i++) {
@@ -32,10 +37,17 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
       type: TimeBlockType.AVAILABLE,
     }
   }
-  fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_BOOKING + '/' + querySubString, {
-    method: 'GET',
-    mode: 'cors',
-  })
+  fetch(
+    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_BOOKING}/${selectedFacilityId}/?` +
+      new URLSearchParams({
+        startTime: (adjustedStart.getTime() / 1000).toFixed(0),
+        endTime: (adjustedEnd.getTime() / 1000).toFixed(0),
+      }),
+    {
+      method: 'GET',
+      mode: 'cors',
+    },
+  )
     .then((resp) => resp.json())
     .then((res) => {
       const updatedDayBookings: Booking[] = res.data
@@ -80,6 +92,45 @@ export const updateDailyView = (date: Date, selectedFacilityId: number) => async
     })
 }
 
+/**
+ *
+ * @param date
+ * @param selectedFacilityId
+ * @returns updates `timeBlocks`
+ *
+ * @remarks
+ */
+export const updateSearchDailyView = (date: Date) => (dispatch: Dispatch<ActionTypes>) => {
+  const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
+  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const currentTimestamp = now() / 1000
+
+  //set all elements in TB to available, if time is after now
+  for (let i = 0; i < 24; i++) {
+    const timestamp = adjustedStart.getTime() / 1000 + i * 3600
+    const isAvailable = timestamp >= currentTimestamp - 3600
+    updatedTB[i] = {
+      id: i,
+      timestamp: timestamp,
+      type: isAvailable ? TimeBlockType.AVAILABLE : TimeBlockType.UNAVAILABLE,
+    }
+  }
+  dispatch(setTimeBlocks(updatedTB))
+}
+
+/**
+ *
+ * @param facilityList (Facility[])
+ * @returns sorted facility list by alphabetical order
+ */
+export const sortFacilitiesAlphabetically = (facilityList: Facility[]) => {
+  return facilityList.sort((a, b) => {
+    if (a.facilityName < b.facilityName) return -1
+    if (a.facilityName > b.facilityName) return 1
+    return 0
+  })
+}
+
 export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY_LIST, {
     method: 'GET',
@@ -88,14 +139,79 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     .then((resp) => resp.json())
     .then((data) => {
       const facilityList = data.data
-      const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
-      facilityList.splice(6, 0, commHallBack)
+      // const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
+      // facilityList.splice(6, 0, commHallBack)
       const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
+      const locationList = ['All'].concat(uniqueLocationList as string[])
       dispatch({
         type: FACILITY_ACTIONS.GET_FACILITY_LIST,
         facilityList: facilityList,
-        locationList: ['All'].concat(uniqueLocationList as string[]),
+        locationList: locationList,
       })
+      dispatch(setIsLoading(false))
+    })
+}
+
+/**
+ *
+ * @param facilityList (Facility[])
+ * @param locationList (string[])
+ * @returns updates `facilityListWithinTime`, `locationListWithinTime`
+ *
+ * @remarks
+ */
+const setFacilityListWithinTime = (facilityList: Facility[], locationList: string[]) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  dispatch({
+    type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
+    facilityListWithinTime: facilityList,
+    locationListWithinTime: locationList,
+  })
+}
+
+/**
+ *
+ * Updates time search facility list with facilities that are available within the time range
+ *
+ * @param startTime (number) - unix timestamp
+ * @param endTime (number) - unix timestamp
+ * @returns updates `facilityListWithinTime`, `locationListWithinTime`
+ *
+ * @remarks
+ *
+ */
+export const getFacilityListWithinTime = (startTime: number, endTime: number) => async (
+  dispatch: Dispatch<ActionTypes>,
+) => {
+  await fetch(
+    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
+      new URLSearchParams({
+        startTime: `${startTime}`,
+        endTime: `${endTime}`,
+      }),
+    {
+      method: 'GET',
+      mode: 'cors',
+    },
+  )
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(
+        `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
+          new URLSearchParams({
+            startTime: `${startTime}`,
+            endTime: `${endTime}`,
+          }),
+      )
+      const facilityList = data.available_facilities
+      if (facilityList) {
+        const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
+        const locationList = ['All'].concat(uniqueLocationList as string[])
+        dispatch(setFacilityListWithinTime(facilityList, locationList))
+      } else {
+        dispatch(setFacilityListWithinTime([], []))
+      }
       dispatch(setIsLoading(false))
     })
 }
@@ -167,6 +283,21 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
 
 /**
  *
+ * @params
+ * @returns updates `searchMode`
+ *
+ * @remarks
+ * <any remarks on this function put here>
+ */
+export const setSearchMode = (newSearchMode: SearchMode) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_SEARCH_MODE,
+    searchMode: newSearchMode,
+  })
+}
+
+/**
+ *
  *
  * @params oldBooking (Booking)
  * @returns updates `newBooking`, `newBookingFacilityName`
@@ -180,18 +311,6 @@ export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<Action
   //   type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
   //   newBooking: oldBooking,
   // })
-}
-/**
- *
- * @params newTab (string)
- * @returns updates `newTab`
- *
- * @remarks
- * <any remarks on this function put here>
- */
-
-export const changeTab = (newTab: string) => (dispatch: Dispatch<ActionTypes>) => {
-  dispatch({ type: FACILITY_ACTIONS.CHANGE_TAB, newTab: newTab })
 }
 
 /**
@@ -357,6 +476,17 @@ export const resetBooking = () => (dispatch: Dispatch<ActionTypes>) => {
 
 /**
  *
+ * Resets user's selection on the `TimeSelector`
+ * @returns sets `selectedBlockTimestamp`, `selectedStartTime` and `selectedEndTime` to `0`
+ */
+export const resetTimeSelectorSelection = () => (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setSelectedBlockTimestamp(0))
+  dispatch(setSelectedStartTime(0))
+  dispatch(setSelectedEndTime(0))
+}
+
+/**
+ *
  * Given booking details, create booking in database and update bookingStatus in store.
  * Throw errors if creation of booking fails.
  *
@@ -443,9 +573,7 @@ export const handleCreateNewBooking = (
         })
       }
     })
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    dispatch(resetTimeSelectorSelection())
     dispatch(setBookingStartTime(0))
     dispatch(setBookingEndTime(0))
   }
@@ -593,5 +721,13 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   dispatch({
     type: FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS,
     selectedDayBookings: selectedDayBookings,
+  })
+}
+
+// TODO check if really need
+export const setClickedDate = (newClickedDate: Date) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_CLICKED_DATE,
+    clickedDate: newClickedDate,
   })
 }

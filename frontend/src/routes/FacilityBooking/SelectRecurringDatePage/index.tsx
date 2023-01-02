@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
-import styled from 'styled-components'
-
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
 import {
@@ -20,11 +18,7 @@ import { RootState } from '../../../store/types'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
-const MainContainer = styled.div`
-  width: 100%;
-  height: 90vh;
-  background-color: #fafaf4;
-`
+import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 /**
  * # SelectRecurringDatePage
@@ -40,7 +34,7 @@ export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityId } = useSelector((state: RootState) => state.facilityBooking)
+  const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -67,9 +61,9 @@ export default function SelectRecurringDatePage() {
         onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
-        <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
-        </MainContainer>
+        <MainCalendarContainer>
+          <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
+        </MainCalendarContainer>
       </PullToRefresh>
     </>
   )

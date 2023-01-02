@@ -19,7 +19,7 @@ const blockStyles = css`
   color: #000;
   display: flex;
   white-space: nowrap;
-  height: ${BLOCK_HEIGHT}px
+  height: ${BLOCK_HEIGHT}px;
   gap: 10px;
 `
 

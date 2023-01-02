@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/types'
+import { PRIMARY_GREEN } from '../../common/colours'
+import { isSameDate } from '../../common/isSameDate'
 
 const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; disabled?: boolean }>`
   font-size: 12px;
@@ -12,7 +12,7 @@ const DateContainer = styled.div<{ selected?: boolean; isCurrentDate?: boolean; 
   width: 47.14px;
   color: ${(props) => (props.selected ? 'white' : props.disabled ? '#888888' : props.isCurrentDate ? '#58B994' : '')};
   border-radius: 40px;
-  background-color: ${(props) => (props.selected ? '#468751' : props.isCurrentDate ? '#D8E6DF' : '')};
+  background-color: ${(props) => (props.selected ? PRIMARY_GREEN : props.isCurrentDate ? '#D8E6DF' : '')};
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -27,43 +27,34 @@ const EventIndicator = styled.div<{ selected?: boolean; hasEvent?: boolean }>`
   height: 7px;
   width: 7px;
   border-radius: 50%;
-  background-color: ${(props) => (props.selected ? 'white' : '#468751')};
+  background-color: ${(props) => (props.selected ? 'white' : PRIMARY_GREEN)};
 `
 
 export const ClickableDateContainer = (props: {
   date: Date
-  facilityId: number
+  isClicked?: boolean
   hasEvent?: boolean
   disabled?: boolean
   onDateClick?: (date: Date) => void
 }) => {
-  const { clickedDate, processedDates } = useSelector((state: RootState) => state.calendar)
-
   const DateContainerClickHandler = (newClickedDate: Date) => {
     props.onDateClick && props.onDateClick(newClickedDate)
   }
 
   const hasEvent = () => {
-    return processedDates.find((processedDate) => processedDate === props.date) !== undefined
-  }
-
-  const isCurrentDate = () => {
-    const today = new Date()
-    return today.toDateString() === props.date.toDateString()
-  }
-
-  const isCurrentDateClicked = () => {
-    return clickedDate.toDateString() === props.date.toDateString()
+    // TODO event indicator doesn't work yet
+    return false
   }
 
   return (
     <DateContainer
       onClick={() => !props.disabled && DateContainerClickHandler(props.date)}
-      selected={isCurrentDateClicked()}
-      isCurrentDate={isCurrentDate()}
+      selected={props.isClicked}
+      isCurrentDate={isSameDate(new Date(), props.date)}
       disabled={props.disabled}
     >
-      <EventIndicator selected={isCurrentDateClicked()} hasEvent={hasEvent()} />
+      {/* TODO event indicator doesn't work yet */}
+      <EventIndicator selected={props.isClicked} hasEvent={hasEvent()} />
       {props.date.getDate()}
     </DateContainer>
   )

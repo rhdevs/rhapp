@@ -6,7 +6,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 
 import { Alert } from 'antd'
 import styled from 'styled-components'
-import { FormOutlined } from '@ant-design/icons'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
@@ -22,34 +21,32 @@ import { RootState } from '../../../store/types'
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import { setClickedDate } from '../../../store/calendar/actions'
+import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
+import { setClickedDate } from '../../../store/facilityBooking/action'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
+
+import { MainCalendarContainer } from '../FacilityBooking.styled'
 
 const AlertGroup = styled.div`
   padding: 3px 23px 3px 23px;
 `
 
-const MainContainer = styled.div`
-  width: 100%;
-  height: 90vh;
-  background-color: #fafaf4;
-`
 /**
- * # ViewFacility
- * Path: `facility/monthView/:facilityId`
+ * # Facility Select Date
+ * Path: `facility/selectedFacility/:facilityId`
  *
  * ## Page Description
  * This page is accessed after the user clicks on a facility from the Facilities page \
  * The selected facility [e.g. Main Area (UL)] be selected, showing the available dates (i.e. calendar) to book
  * @returns A calendar of available dates to book
  */
-export default function ViewFacility() {
+export default function FacilitySelectDate() {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId, bookingStatus, bookingErrorMessage } = useSelector(
+  const { selectedFacilityName, selectedFacilityId, bookingStatus, clickedDate, bookingErrorMessage } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -61,15 +58,6 @@ export default function ViewFacility() {
       dispatch(setSelectedFacility(parseInt(params.facilityId)))
     }
   }, [])
-
-  const MyBookingsIcon = (
-    <FormOutlined
-      style={{ color: 'black', fontSize: '150%' }}
-      onClick={() => {
-        history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-      }}
-    />
-  )
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
@@ -118,16 +106,16 @@ export default function ViewFacility() {
   return (
     <>
       <TopNavBarRevamp
-        title={selectedFacilityName}
-        rightComponent={MyBookingsIcon}
-        onLeftClick={() => history.push(`${PATHS.FACILITY_BOOKING_MAIN}`)}
+        title={`${selectedFacilityName} - Select Date to View`}
+        rightComponent={MyBookingsIcon()}
+        onLeftClick={() => history.push(`${PATHS.VIEW_ALL_FACILITIES}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
-        <AlertSection />
-        <MainContainer>
-          <Calendar selectedFacilityId={parseInt(params.facilityId)} onDateClick={onDateClick} />
+        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
+        <MainCalendarContainer>
+          <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />
-        </MainContainer>
+        </MainCalendarContainer>
       </PullToRefresh>
       <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
     </>

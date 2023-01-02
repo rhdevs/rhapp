@@ -7,17 +7,22 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import {
+  resetTimeSelectorSelection,
+  setBookingEndTime,
+  setBookingStartTime,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
   setSelectedStartTime,
-  updateDailyView,
+  setTimeBlocks,
+  updateBookingDailyView,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import LoadingSpin from '../../../components/LoadingSpin'
-import BookingSection from '../../../components/FacilityBooking/BookingSection'
+import TimeSelector from '../../../components/FacilityBooking/TimeSelector'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
+import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
 
 const HEADER_HEIGHT = '70px'
 
@@ -52,8 +57,8 @@ const TitleText = styled.h2`
 `
 
 /**
- * # CreateBookingDailyView
- * Path: `/facility/dayView/selectTime/:facilityId`
+ * # Facility Select Time
+ * Path: `/facility/selectedFacility/selectTime/:facilityId/:selectionMode?`
  *
  * ## Page Description
  * This page is accessed after the user clicks on the `Book Facility` button on the `ViewBookingDailyView` page. \
@@ -61,25 +66,31 @@ const TitleText = styled.h2`
  * Once the selection is done, the user would be automatically redirected to the CreateBooking page
  *
  * @remarks
- * // BUG: I am able to select greyed out time blocks
  *
  */
 
-export default function CreateBookingDailyView() {
+export default function FacilitySelectTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, isLoading, selectedStartTime } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
+  const {
+    clickedDate,
+    isLoading,
+    selectedBlockTimestamp,
+    selectedFacilityName,
+    selectedStartTime,
+    selectedEndTime,
+    timeBlocks,
+  } = useSelector((state: RootState) => state.facilityBooking)
 
-  const selectedFacilityId = parseInt(params.facilityId)
+  const { facilityId, selectionMode } = params
+  const selectedFacilityId = parseInt(facilityId)
+  const isReselectingTime = selectionMode === 'reselect'
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
 
   useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+    dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
 
   useEffect(() => {
@@ -89,13 +100,12 @@ export default function CreateBookingDailyView() {
   /**
    * updates `disabledDates: number[]` hook, which is an array of date numbers passed into `DailyViewDatesRow` to indicate dates that are disabled on the date row
    * ## Use cases
-   * When the user selects a starting time block on the `BookingSection`, this function would calculate the dates on the selected week that are
+   * When the user selects a starting time block on the `BookingTimeSelector`, this function would calculate the dates on the selected week that are
    * before the starting date, and dates `>=2` days after the starting date
    *
    * This ensures that the user does not book a location across `>=2` days
    * @returns void
    */
-
   const updateDisabledDates = () => {
     if (selectedStartTime === 0) return
 
@@ -120,13 +130,59 @@ export default function CreateBookingDailyView() {
     history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
   }
 
+  const goBackToCreateBookingPage = () => {
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+  }
+
   const onLeftClick = () => {
     // reset user selection
-    // TODO you don't want to do this if you're just reselecting date from booking page
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
-    goBackToDailyViewPage()
+    dispatch(resetTimeSelectorSelection())
+    isReselectingTime ? goBackToCreateBookingPage() : goBackToDailyViewPage()
+  }
+
+  useEffect(() => {
+    updateTimeBlocks()
+  }, [selectedBlockTimestamp])
+
+  const assignType = (entry: TimeBlock): TimeBlockType => {
+    if (entry.timestamp === selectedBlockTimestamp) return TimeBlockType.SELECTED
+    if (entry.timestamp < selectedBlockTimestamp)
+      return entry.type === TimeBlockType.AVAILABLE ? TimeBlockType.UNAVAILABLE : entry.type
+    return entry.type
+  }
+
+  const updateTimeBlocks = () => {
+    if (selectedStartTime === 0) return
+    const newTimeblocks: TimeBlock[] = timeBlocks.map((entry) => {
+      const type = assignType(entry)
+      return { ...entry, type }
+    })
+    dispatch(setTimeBlocks(newTimeblocks))
+  }
+
+  const goToBookingPage = () => {
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+  }
+
+  const setSelectedBlock = (selectedTimestamp: number) => {
+    dispatch(setSelectedBlockTimestamp(selectedTimestamp))
+    if (selectedStartTime === 0) {
+      if (selectedEndTime === 0) {
+        // selecting start time first before selecting end time
+        dispatch(setSelectedStartTime(selectedTimestamp))
+      } else {
+        return // (reselect start time only without reselecting end time) disallowed for now
+      }
+    } else {
+      // select end time (after start time is selected), then go to booking page
+      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
+
+      // TODO sus why is selected end time set twice
+      dispatch(setSelectedEndTime(selectedTimestamp))
+      dispatch(setBookingStartTime(selectedStartTime))
+      dispatch(setBookingEndTime(selectedEndTime))
+      goToBookingPage()
+    }
   }
 
   return (
@@ -137,9 +193,9 @@ export default function CreateBookingDailyView() {
       ) : (
         <Background>
           <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
-          <DailyViewDatesRow selectedFacilityId={selectedFacilityId} disabledDates={disabledDates} />
+          <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>
-            <BookingSection />
+            <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
           </BookingSectionDiv>
         </Background>
       )}

@@ -1,6 +1,15 @@
 import { Reducer } from 'redux'
 import { defaultTimeBlocks, myBookingsStub } from '../stubs'
-import { ActionTypes, FACILITY_ACTIONS, Facility, Booking, userCCA, BookingStatus, TimeBlock } from './types'
+import {
+  ActionTypes,
+  FACILITY_ACTIONS,
+  Facility,
+  Booking,
+  userCCA,
+  BookingStatus,
+  TimeBlock,
+  SearchMode,
+} from './types'
 
 const initialState: State = {
   // MAIN PAGE
@@ -8,14 +17,16 @@ const initialState: State = {
   blockOutIsOpen: false,
   isJcrc: false,
   facilityList: [],
+  facilityListWithinTime: [],
   locationList: [],
-  selectedTab: '',
+  locationListWithinTime: [],
   selectedFacility: null,
   selectedBooking: null,
   myBookings: [],
   isDeleteMyBooking: -1,
   createSuccess: false,
   createFailure: false,
+  searchMode: SearchMode.NONE,
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
   ViewEndDate: new Date(),
@@ -34,21 +45,26 @@ const initialState: State = {
   conflictBookings: [],
   timeBlocks: defaultTimeBlocks,
   selectedDayBookings: myBookingsStub,
+  clickedDate: new Date(),
 }
 
 type State = {
+  // MAIN PAGE
   isLoading: boolean
   blockOutIsOpen: boolean
   isJcrc: boolean
   facilityList: Facility[]
+  facilityListWithinTime: Facility[]
   locationList: string[]
-  selectedTab: string
+  locationListWithinTime: string[]
   selectedFacility: Facility | null
   selectedBooking: Booking | null
   myBookings: Booking[]
   isDeleteMyBooking: number
   createSuccess: boolean
   createFailure: boolean
+  searchMode: SearchMode
+  // VIEW FACILITY PARAMS
   ViewStartDate: Date
   ViewEndDate: Date
   selectedFacilityId: number
@@ -67,6 +83,7 @@ type State = {
   conflictBookings: Booking[]
   timeBlocks: TimeBlock[]
   selectedDayBookings: Booking[]
+  clickedDate: Date
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -84,16 +101,17 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
         locationList: action.locationList,
       }
     }
+    case FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME: {
+      return {
+        ...state,
+        facilityListWithinTime: action.facilityListWithinTime,
+        locationListWithinTime: action.locationListWithinTime,
+      }
+    }
     case FACILITY_ACTIONS.GET_MY_BOOKINGS: {
       return {
         ...state,
         myBookings: action.myBookings,
-      }
-    }
-    case FACILITY_ACTIONS.CHANGE_TAB: {
-      return {
-        ...state,
-        selectedTab: action.newTab,
       }
     }
     case FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING: {
@@ -106,6 +124,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         myBookings: action.myBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_SEARCH_MODE: {
+      return {
+        ...state,
+        searchMode: action.searchMode,
       }
     }
     case FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE: {
@@ -266,6 +290,12 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         selectedDayBookings: action.selectedDayBookings,
+      }
+    }
+    case FACILITY_ACTIONS.SET_CLICKED_DATE: {
+      return {
+        ...state,
+        clickedDate: action.clickedDate,
       }
     }
     default:

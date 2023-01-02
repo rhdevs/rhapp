@@ -1,14 +1,16 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { PRIMARY_GREEN } from '../../common/colours'
+import { isSameDate } from '../../common/isSameDate'
 
 import { RootState } from '../../store/types'
 
 import { TOP_DISTANCE, BLOCK_HEIGHT, BLOCK_GAP } from './BlockStyles.styled'
 
 const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?: string; bottom?: string }>`
-  border: 1.5px solid #468751;
-  background-color: #468751;
+  border: 1.5px solid ${PRIMARY_GREEN};
+  background-color: ${PRIMARY_GREEN};
   position: absolute;
   z-index: 1;
   width: ${(props) => props.width ?? '100%'};
@@ -17,11 +19,6 @@ const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?
   ${(props) => props.right && `right: ${props.right};`}
   ${(props) => props.bottom && `bottom: ${props.bottom};`}
 `
-
-export function isToday(inputDate: number) {
-  const today = new Date()
-  return today.setHours(0, 0, 0, 0) == new Date(inputDate * 1000).setHours(0, 0, 0, 0)
-}
 
 export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTMLElement>, offset?: number) {
   if (ref.current) {
@@ -49,8 +46,8 @@ type Props = {
  * @returns If the selected day is today, it returns a timeline indicating the current time, where its position
  * is updated every minute. Otherwise, it returns nothing.
  * @example ```
- *  // <CurrentTimeLine/> is used in the <BookingSection/> and <ViewScheduleBlock/> components to indicate the current time.
- *  //  In `BookingSection` :
+ *  // <CurrentTimeLine/> is used in the <BookingTimeSelector/> and <ViewScheduleBlock/> components to indicate the current time.
+ *  //  In `BookingTimeSelector` :
  *   <MainContainer>
  *      <CurrentTimeLine />
  *      <HourBlocks />
@@ -89,7 +86,7 @@ const CurrentTimeLine = (props: Props) => {
     scrollToView(lineRef)
   }, [lineRef.current])
 
-  return isToday(timeBlocks[0].timestamp) ? (
+  return isSameDate(new Date(), timeBlocks[0].timestamp * 1000) ? (
     <StyledHr
       ref={lineRef}
       width={props.width ?? 'calc(100% - 70.5px)'}

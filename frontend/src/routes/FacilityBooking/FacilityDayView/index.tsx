@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { updateDailyView } from '../../../store/facilityBooking/action'
+import { resetTimeSelectorSelection, updateBookingDailyView } from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -45,8 +45,8 @@ const TitleText = styled.h2`
   text-overflow: ellipsis;
 `
 /**
- * # ViewBookingDailyView
- * Path: `/facility/dayView/:facilityId`
+ * # Facility Day View
+ * Path: `/facility/selectedFacility/dayView/:facilityId`
  *
  * ## Page Description
  * The user gets redirected to this page after clicking on a date on the ViewFacility page. \
@@ -58,38 +58,39 @@ const TitleText = styled.h2`
  *
  */
 
-export default function ViewBookingDailyView() {
+export default function FacilityDayView() {
   const history = useHistory()
   const dispatch = useDispatch()
   const params = useParams<{ facilityId: string }>()
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
   const { isLoading, selectedFacilityName } = useSelector((state: RootState) => state.facilityBooking)
 
   const selectedFacilityId = parseInt(params.facilityId)
 
   useEffect(() => {
-    dispatch(updateDailyView(clickedDate, selectedFacilityId))
+    dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
   }, [clickedDate])
+
+  const bookFacilityOnClick = () => {
+    // reset time selection on next page
+    dispatch(resetTimeSelectorSelection())
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+  }
 
   return (
     <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
-        centerComponent={<TitleText>{selectedFacilityName}</TitleText>}
+        centerComponent={<TitleText>{`${selectedFacilityName} - View Booked Timeslots`}</TitleText>}
         rightComponent={
-          <ButtonComponent
-            state="primary"
-            text="Book Facility"
-            onClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)}
-            size="small"
-          />
+          <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
         }
       />
       {isLoading ? (
         <LoadingSpin />
       ) : (
         <Background>
-          <DailyViewDatesRow selectedFacilityId={selectedFacilityId} />
+          <DailyViewDatesRow />
           <ViewSectionDiv>
             <ViewScheduleBlock />
           </ViewSectionDiv>

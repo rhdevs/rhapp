@@ -6,10 +6,12 @@ import { Booking } from '../../store/facilityBooking/types'
 
 import ViewBlock from './ViewBlock'
 import HourBlocks from './HourBlocks'
-import CurrentTimeLine, { isToday } from './CurrentTimeLine'
+import CurrentTimeLine from './CurrentTimeLine'
 import { ViewBookingCard } from './ViewBookingCard'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
+
+import { isSameDate } from '../../common/isSameDate'
 
 /**
  *
@@ -48,7 +50,7 @@ const ViewScheduleBlock = () => {
               key={index}
               entry={entry}
               // if day selected is not current, scroll to defaultTimePosition
-              scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
+              scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
               openViewBookingModal={() => setIsViewBookingModalOpen(true)}
               setViewBookingEntryId={() => fetchBooking(entry.id)}
             />

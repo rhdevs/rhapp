@@ -15,6 +15,7 @@ import {
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
+import FacilityLogo from '../../../components/FacilityBooking/FacilityLogo'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
@@ -22,22 +23,6 @@ import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
 import deleteIcon from '../../../assets/deleteIcon.svg'
 import editIcon from '../../../assets/editIcon.svg'
 import catIcon from '../../../assets/catMagnifyGlass.svg'
-import AlumniRoom from '../../../assets/facilitiesLogos/AlumniRoom.svg'
-import BandRoom from '../../../assets/facilitiesLogos/BandRoom.svg'
-import BasketballCourt from '../../../assets/facilitiesLogos/BasketballCourt.svg'
-import ConferenceRoomKFH from '../../../assets/facilitiesLogos/ConferenceRoomKFH.svg'
-import ConferenceRoomUL from '../../../assets/facilitiesLogos/ConferenceRoomUL.svg'
-import DanceStudio from '../../../assets/facilitiesLogos/DanceStudio.svg'
-import Foyer from '../../../assets/facilitiesLogos/Foyer.svg'
-import Gym from '../../../assets/facilitiesLogos/Gym.svg'
-import HardCourt from '../../../assets/facilitiesLogos/HardCourt.svg'
-import MainAreaCommHall from '../../../assets/facilitiesLogos/MainAreaCommHall.svg'
-import MainAreaUL from '../../../assets/facilitiesLogos/MainAreaUL.svg'
-import MeetingRoomLL from '../../../assets/facilitiesLogos/MeetingRoomLL.svg'
-import PoolAreaLL from '../../../assets/facilitiesLogos/PoolAreaLL.svg'
-import Stage from '../../../assets/facilitiesLogos/Stage.svg'
-import TVRoom from '../../../assets/facilitiesLogos/TVRoom.svg'
-import DummyAvatar from '../../../assets/dummyAvatar.svg'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -58,12 +43,6 @@ const BookingCard = styled.div`
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
-`
-
-const BookingAvatar = styled.img`
-  padding: 10px;
-  width: 20%;
-  max-height: 70px;
 `
 
 const BookingHeader = styled.div`
@@ -122,51 +101,6 @@ const NoBookingsFound = styled.div`
   align-self: center;
   margin-top: 40px;
 `
-/**
- * @params facilityId (number)
- *
- * @returns The avatar/icon for according to the `facilityId`
- *
- * @remarks
- * <any remarks>
- *
- */
-function FacilityLogo(props: { facilityId: number }) {
-  switch (props.facilityId) {
-    case 1:
-      return <BookingAvatar src={MainAreaUL} />
-    case 2:
-      return <BookingAvatar src={ConferenceRoomUL} />
-    case 3:
-      return <BookingAvatar src={AlumniRoom} />
-    case 4:
-      return <BookingAvatar src={Foyer} />
-    case 5:
-      return <BookingAvatar src={Stage} />
-    case 6:
-      return <BookingAvatar src={MainAreaCommHall} />
-    case 7:
-      return <BookingAvatar src={BandRoom} />
-    case 8:
-      return <BookingAvatar src={PoolAreaLL} />
-    case 9:
-      return <BookingAvatar src={TVRoom} />
-    case 10:
-      return <BookingAvatar src={MeetingRoomLL} />
-    case 11:
-      return <BookingAvatar src={ConferenceRoomKFH} />
-    case 12:
-      return <BookingAvatar src={HardCourt} />
-    case 13:
-      return <BookingAvatar src={BasketballCourt} />
-    case 14:
-      return <BookingAvatar src={Gym} />
-    case 15:
-      return <BookingAvatar src={DanceStudio} />
-    default:
-      return <BookingAvatar src={DummyAvatar} />
-  }
-}
 
 /**
  * # ViewMyBookings
@@ -254,7 +188,7 @@ export default function ViewMyBookings() {
                           onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
                           onLeftButtonClick={() => {
                             dispatch(deleteMyBooking(booking.bookingID))
-                            history.replace(PATHS.FACILITY_BOOKING_MAIN)
+                            history.replace(PATHS.VIEW_ALL_FACILITIES)
                             history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                           }}
                           rightButtonText="Cancel"

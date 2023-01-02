@@ -54,18 +54,25 @@ export enum TimeBlockType {
   SELECTED = 'selected',
 }
 
+export enum SearchMode {
+  NONE = 'none',
+  BY_FACILITY = 'byFacility',
+  BY_TIME = 'byTime',
+}
+
 export enum FACILITY_ACTIONS {
   SET_IS_LOADING = 'FACILITY_ACTIONS.SET_IS_LOADING',
   SET_BLOCK_OUT_IS_OPEN = 'FACILITY_ACTIONS.SET_BLOCK_OUT_OPEN',
   SET_IS_JCRC = 'FACILITY_ACTIONS.SET_IS_JCRC',
   GET_FACILITY_LIST = 'FACILITY_ACTIONS.GET_FACILITY_LIST',
-  CHANGE_TAB = 'FACILITY_ACTIONS.CHANGE_TAB',
+  GET_FACILITY_LIST_WITHIN_TIME = 'FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME',
   GET_MY_BOOKINGS = 'FACILITY_ACTIONS.GET_MY_BOOKINGS',
   SET_IS_DELETE_MY_BOOKING = 'FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING',
   DELETE_MY_BOOKING = 'FACILITY_ACTIONS.DELETE_MY_BOOKING',
   HANDLE_BOOKING_NAME = 'FACILITY_ACTIONS.HANDLE_BOOKING_NAME',
   SET_BOOKING_TO_DATE = 'FACILITY_ACTIONS.SET_BOOKING_TO_DATE',
   SET_BOOKING_FROM_DATE = 'FACILITY_ACTIONS.SET_BOOKING_FROM_DATE',
+  SET_SEARCH_MODE = 'FACILITY_ACTIONS.SET_SEARCH_MODE',
   SET_VIEW_FACILITY_START_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE',
   SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
   SET_VIEW_FACILITY_MODE = 'FACILITY_ACTIONS.VIEW_FACILITY_MODE',
@@ -88,6 +95,7 @@ export enum FACILITY_ACTIONS {
   SET_CONFLICT_BOOKINGS = 'FACILITY_ACTIONS.SET_CONFLICT_BOOKINGS',
   SET_TIME_BLOCKS = 'FACILITY_ACTIONS.SET_TIME_BLOCKS',
   SET_SELECTED_DAY_BOOKINGS = 'FACILITY_ACTIONS.SET_SELECTED_DAY_BOOKINGS',
+  SET_CLICKED_DATE = 'CALENDAR_ACTIONS.SET_CLICKED_DATE',
 }
 
 type SetViewFacilityName = {
@@ -100,14 +108,16 @@ type GetFacilityList = {
   facilityList: Facility[]
   locationList: string[]
 }
+
+type GetFacilityListWithinTime = {
+  type: typeof FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME
+  facilityListWithinTime: Facility[]
+  locationListWithinTime: string[]
+}
+
 type GetMyBookings = {
   type: typeof FACILITY_ACTIONS.GET_MY_BOOKINGS
   myBookings: Booking[]
-}
-
-type ChangeTab = {
-  type: typeof FACILITY_ACTIONS.CHANGE_TAB
-  newTab: string
 }
 
 type SetIsDeleteMyBooking = {
@@ -118,6 +128,11 @@ type SetIsDeleteMyBooking = {
 type DeleteMyBooking = {
   type: typeof FACILITY_ACTIONS.DELETE_MY_BOOKING
   myBookings: Booking[]
+}
+
+type SetSearchMode = {
+  type: typeof FACILITY_ACTIONS.SET_SEARCH_MODE
+  searchMode: SearchMode
 }
 
 type SetViewFacilityStartDate = {
@@ -260,15 +275,21 @@ type SetSelectedDayBookings = {
   selectedDayBookings: Booking[]
 }
 
+type SetIsClicked = {
+  type: typeof FACILITY_ACTIONS.SET_CLICKED_DATE
+  clickedDate: Date
+}
+
 // Reverse lookup map of DAY_STRING_TO_NUMBER
 export const DAY_NUMBER_TO_STRING: { [dayNumber: number]: string } = invert(DAY_STRING_TO_NUMBER)
 
 export type ActionTypes =
   | GetFacilityList
-  | ChangeTab
+  | GetFacilityListWithinTime
   | GetMyBookings
   | SetIsDeleteMyBooking
   | DeleteMyBooking
+  | SetSearchMode
   | SetViewFacilityStartDate
   | SetViewFacilityEndDate
   | setViewFacilityMode
@@ -294,3 +315,4 @@ export type ActionTypes =
   | SetConflictBookings
   | SetTimeBlock
   | SetSelectedDayBookings
+  | SetIsClicked

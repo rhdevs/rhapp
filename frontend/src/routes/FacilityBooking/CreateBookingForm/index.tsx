@@ -10,7 +10,6 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import { unixToFullDate } from '../../../common/unixToFullDate'
-import { get24Hourtime } from '../../../common/get24HourTime'
 
 import {
   fetchAllCCAs,
@@ -18,12 +17,11 @@ import {
   setIsLoading,
   handleCreateNewBooking,
   setBookingEndDate,
-  setSelectedBlockTimestamp,
-  setSelectedStartTime,
   setSelectedEndTime,
+  resetTimeSelectorSelection,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { BookingStatus } from '../../../store/facilityBooking/types'
+import { BookingStatus, SearchMode } from '../../../store/facilityBooking/types'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -32,6 +30,7 @@ import InputField from '../../../components/Mobile/InputField'
 import { Switch } from '../../../components/Switch'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
+import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 const Background = styled.div`
   background-color: #fff;
@@ -90,7 +89,7 @@ type FormValues = {
 }
 
 /**
- * # CreateBooking
+ * # Create Booking Form
  * Path: `/facility/booking/create/:facilityId`
  *
  * ## Page Description
@@ -101,7 +100,7 @@ type FormValues = {
  *
  */
 
-export default function CreateBooking() {
+export default function CreateBookingForm() {
   const dispatch = useDispatch()
   const history = useHistory()
   const {
@@ -113,9 +112,16 @@ export default function CreateBooking() {
   } = useForm<FormValues>()
 
   const [ccaName, setCcaName] = useState<string>('')
-  const { facilityList, isLoading, ccaList, bookingStartTime, bookingEndTime, bookingEndDate } = useSelector(
-    (state: RootState) => state.facilityBooking,
-  )
+  const {
+    facilityList,
+    isLoading,
+    ccaList,
+    bookingStatus,
+    bookingStartTime,
+    bookingEndTime,
+    bookingEndDate,
+    searchMode,
+  } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
   const params = useParams<{ facilityId: string }>()
@@ -155,8 +161,7 @@ export default function CreateBooking() {
     const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
 
     handleSubmit((data) => {
-      console.log(data, ccaName)
-      history.replace(PATHS.FACILITY_BOOKING_MAIN)
+      history.replace(PATHS.VIEW_ALL_FACILITIES)
       history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
       dispatch(
         handleCreateNewBooking(
@@ -173,16 +178,14 @@ export default function CreateBooking() {
   }
 
   const goBackToTimeSelectionPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}/reselect`)
   }
 
   /**
    * when user goes back, reset user's time selections
    */
   const reselectBothDates = () => {
-    dispatch(setSelectedBlockTimestamp(0))
-    dispatch(setSelectedStartTime(0))
-    dispatch(setSelectedEndTime(0))
+    dispatch(resetTimeSelectorSelection())
     goBackToTimeSelectionPage()
   }
 
@@ -201,9 +204,17 @@ export default function CreateBooking() {
     goBackToTimeSelectionPage()
   }
 
+  const onLeftClick = () => {
+    history.push(
+      searchMode === SearchMode.BY_TIME
+        ? PATHS.SEARCH_BY_TIME_BOOKING_RESULTS
+        : `${PATHS.VIEW_FACILITY}/${selectedFacilityId}`,
+    )
+  }
+
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={reselectBothDates} />
+      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />
       ) : (
@@ -219,15 +230,13 @@ export default function CreateBooking() {
           />
           <SelectableField
             title="Start"
-            value={
-              bookingStartTime == 0 ? '' : unixToFullDate(bookingStartTime) + ' at ' + get24Hourtime(bookingStartTime)
-            }
+            value={unixToFullDateTime(bookingStartTime)}
             onClick={reselectStartDate}
             isCompulsory
           />
           <SelectableField
             title="End"
-            value={bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + get24Hourtime(bookingEndTime)}
+            value={unixToFullDateTime(bookingEndTime)}
             onClick={reselectEndDate}
             isCompulsory
           />

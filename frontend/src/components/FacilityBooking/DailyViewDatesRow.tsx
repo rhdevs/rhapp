@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { RootState } from '../../store/types'
 import { CustomDateRows } from '../../components/Calendar/CustomDateRows'
-import { setClickedDate } from '../../store/calendar/actions'
+import { setClickedDate } from '../../store/facilityBooking/action'
 
 const DatesContainer = styled.div`
   display: flex;
@@ -37,10 +37,9 @@ const DatesContainer = styled.div`
  * <any remarks on this component type in here>
  *
  */
-
-const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: number[] }) => {
+const DailyViewDatesRow = (props: { disabledDates?: number[] }) => {
   const dispatch = useDispatch()
-  const { clickedDate } = useSelector((state: RootState) => state.calendar)
+  const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   const year = clickedDate.getFullYear() // year e.g. 2022
   const month = clickedDate.getMonth() // month index e.g. 2 - March
@@ -80,17 +79,17 @@ const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: 
       <DatesContainer>
         <CustomDateRows
           firstDate={dateNumberToObject(dateRowStartDate)}
+          clickedDate={clickedDate}
           assignedMonth={date < dateRowStartDate ? month - 1 : month}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={lastDate}
           onDateClick={onDateClick}
         />
         <CustomDateRows
           firstDate={dateNumberToObject(1)}
+          clickedDate={clickedDate}
           assignedMonth={date < dateRowStartDate ? month : month + 1}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6 - lastDate.getDate())}
           onDateClick={onDateClick}
         />
@@ -101,9 +100,9 @@ const DailyViewDatesRow = (props: { selectedFacilityId: number; disabledDates?: 
       <DatesContainer>
         <CustomDateRows
           firstDate={dateNumberToObject(dateRowStartDate)}
+          clickedDate={clickedDate}
           assignedMonth={month}
           disabledDates={props.disabledDates}
-          facilityId={props.selectedFacilityId}
           lastDate={dateNumberToObject(dateRowStartDate + 6)}
           onDateClick={onDateClick}
         />

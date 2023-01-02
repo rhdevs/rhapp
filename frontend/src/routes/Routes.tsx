@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-// import { Switch } from 'react-router-dom'
-import LoadingSpin from '../components/LoadingSpin'
-import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
+
+import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import LoadingSpin from '../components/LoadingSpin'
 
 // TODO sort out naming conventions esp when to put _ID at the back
 export enum PATHS {
@@ -11,9 +11,11 @@ export enum PATHS {
   DOCS_LANDING_PAGE = '/docs',
   DOCS_SUPPER_BY_FILE = '/docs/supper/:file',
   DOCS_SUPPER = '/docs/supper',
+
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
+
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
@@ -25,6 +27,7 @@ export enum PATHS {
   EDIT_PROFILE_PAGE = '/social/editprofile',
   FRIEND_LIST_PAGE = '/social/profile/friendList/',
   VIEW_FRIEND_LIST_PAGE = '/social/profile/friendList/:userId',
+
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -35,15 +38,21 @@ export enum PATHS {
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
 
-  // FACILITY BOOKING // TODO rename some routes so that is follows the user flow?
-  FACILITY_LANDING_PAGE = '/facilityLanding',
-  FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/monthView',
-  VIEW_FACILITY_ID = '/facility/monthView/:facilityId',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/:facilityId',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/dayView/selectTime',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/dayView/selectTime/:facilityId',
+  // FACILITY BOOKING
+  FACILITY_LANDING_PAGE = '/facility/main',
+  // // SEARCH BY FACILITY
+  VIEW_ALL_FACILITIES = '/facility/allFacilities',
+  VIEW_FACILITY = '/facility/selectedFacility',
+  VIEW_FACILITY_ID = '/facility/selectedFacility/:facilityId',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/dayView',
+  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/dayView/:facilityId',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/selectTime',
+  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/selectTime/:facilityId/:selectionMode?',
+  // // SEARCH BY TIME
+  SEARCH_BY_TIME_SELECT_BOOKING_DATE = '/facility/searchByTime/selectDate',
+  SEARCH_BY_TIME_SELECT_BOOKING_TIME = '/facility/searchByTime/selectDate/selectTime',
+  SEARCH_BY_TIME_BOOKING_RESULTS = '/facility/searchByTime/searchResults',
+  // // CREATE BOOKING
   CREATE_FACILITY_BOOKING = '/facility/booking/create',
   CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
   VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
@@ -54,16 +63,19 @@ export enum PATHS {
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user',
   VIEW_MY_BOOKINGS_ID = '/facility/booking/user/:userId',
+
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_MACHINE = '/facility/laundry/view',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
+
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
+
   //SUPPER
   SUPPER_HOME = '/supper',
   SUPPER_COMPONENTS_PAGE = '/supper/components',
@@ -94,6 +106,7 @@ export enum PATHS {
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
+
   //GYM
   GYM_MAIN = '/gym',
 }
@@ -127,24 +140,35 @@ const ImportFromNusMods = React.lazy(
 )
 const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
-const FacilityLandingPage = React.lazy(
-  () => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking/FacilityLandingPage'),
+const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking'))
+const SelectFacility = React.lazy(
+  () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/ViewAllFacilities'),
 )
-const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
-const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
+const SearchBookingDate = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchByTimeSelectBookingDate'),
+)
+const SearchBookingTime = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingTime" */ './FacilityBooking/SearchByTimeSelectBookingTime'),
+)
+const SearchBookingResults = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingResults" */ './FacilityBooking/SearchByTimeBookingResults'),
+)
+const ViewFacility = React.lazy(
+  () => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/FacilitySelectDate'),
+)
 const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
 )
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
 const ViewBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/ViewBookingDailyView'),
+  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/FacilityDayView'),
 )
 const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
 const CreateBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking/index'),
+  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBookingForm/index'),
 )
 const CreateBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/CreateBookingDailyView'),
+  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/FacilitySelectTime'),
 )
 const EditBooking = React.lazy(
   () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBooking/index'),
@@ -219,7 +243,10 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
             <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
-            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
+            <PrivateRoute exact path={PATHS.VIEW_ALL_FACILITIES} component={SelectFacility} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE} component={SearchBookingDate} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_TIME} component={SearchBookingTime} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_BOOKING_RESULTS} component={SearchBookingResults} />
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
