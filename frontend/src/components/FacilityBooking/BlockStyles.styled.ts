@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { TimeBlockType } from '../../store/facilityBooking/types'
 
-export const BLOCK_HEIGHT = 90
+export const BLOCK_HEIGHT = 40
 export const TOP_DISTANCE = 10
 export const BLOCK_GAP = 5
 
@@ -10,10 +10,12 @@ export const DailyContainer = styled.div`
   flex-direction: column;
   padding: ${TOP_DISTANCE}px 5px;
   gap: ${BLOCK_GAP}px;
+  overflow: hidden;
 `
 
 const blockStyles = css`
   position: relative;
+  align-items: center;
   border-radius: 10px;
   padding: 10px 15px;
   color: #000;

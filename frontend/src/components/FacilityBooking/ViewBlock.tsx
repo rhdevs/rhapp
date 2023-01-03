@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from 'react'
+import styled from 'styled-components'
 
 import { TimeBlock } from '../../store/facilityBooking/types'
 import { scrollToView } from './CurrentTimeLine'
 
 import { StyledViewBooking } from './BlockStyles.styled'
+
+const StyledBookingInfo = styled.span`
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
 
 type Props = {
   entry: TimeBlock
@@ -65,9 +73,9 @@ const ViewBlock = (props: Props) => {
         props.setViewBookingEntryId()
       }}
     >
-      {props.entry.ccaName}
-      <br />
-      {props.entry.eventName}
+      <StyledBookingInfo>
+        {props.entry.ccaName} - {props.entry.eventName}
+      </StyledBookingInfo>
     </StyledViewBooking>
   ) : (
     <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
