@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components'
@@ -19,13 +18,15 @@ import {
   setBookingEndTime,
   setBookingEndDate,
   fetchSelectedFacility,
+  setBookingFormName,
+  setBookingFormCCA,
+  setBookingFormDescription,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import InputField from '../../../components/Mobile/InputField'
-// TODO, change the way how InputField works?
 import { Switch } from '../../../components/Switch'
 import { BookingStatus } from '../../../store/facilityBooking/types'
 import { unixToFullDate } from '../../../common/unixToFullDate'
@@ -84,11 +85,6 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
-type FormValues = {
-  eventName: string
-  description: string
-}
-
 /**
  *
  * @returns The page through which the user is able to edit his facility booking.
@@ -106,6 +102,8 @@ type FormValues = {
  * @remarks
  * Might make more sense to allow editing of the start/end date/time only and disable other fields.
  * // TODO sus why is there a wierd timestamp 1644641028 below
+ * // TODO doesn't work now
+ * // TODO consider using the same page as create booking form
  *
  */
 export default function EditBooking() {
@@ -123,17 +121,11 @@ export default function EditBooking() {
     selectedBooking,
     bookingEndTime,
     bookingEndDate,
+    bookingFormName,
+    bookingFormCCA,
+    bookingFormDescription,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const {
-    handleSubmit,
-    formState: { errors },
-    watch,
-    register,
-    setValue,
-  } = useForm<FormValues>()
-
-  const [ccaName, setCcaName] = useState(selectedBooking?.ccaName)
   const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
 
@@ -142,10 +134,7 @@ export default function EditBooking() {
   }, [dispatch])
 
   const formIsValid = () => {
-    if (isWeeklyOn) {
-      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
-    }
-    return watch('eventName') !== '' && ccaName !== ''
+    return bookingFormName !== '' && bookingFormCCA !== '' && !(isWeeklyOn && bookingEndDate === 0)
   }
   useEffect(() => {
     dispatch(setIsLoading(true))
@@ -160,30 +149,28 @@ export default function EditBooking() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
+    const ccaId = ccaList.find((cca) => cca.ccaName === bookingFormCCA)?.ccaID
 
-    if (!ccaId && ccaName !== 'Personal') {
-      //selected cca is not valid (error)
-    } else {
-      handleSubmit((data) => {
-        console.log(data, ccaName)
-        if (bookingStatus === BookingStatus.CONFLICT) {
-          setmodalIsOpen(true)
-        } else {
-          dispatch(
-            handleCreateNewBooking(
-              Number(facilityId),
-              data.eventName,
-              bookingStartTime,
-              bookingEndTime,
-              bookingEndTime,
-              ccaId,
-              data.description,
-            ),
-          )
-        }
-      })()
-    }
+    // if (!ccaId && bookingFormCCA !== 'Personal') {
+    //   //selected cca is not valid (error)
+    // } else {
+    //     console.log(data, bookingFormCCA)
+    //     if (bookingStatus === BookingStatus.CONFLICT) {
+    //       setmodalIsOpen(true)
+    //     } else {
+    dispatch(
+      handleCreateNewBooking(
+        Number(facilityId),
+        bookingFormName,
+        bookingStartTime,
+        bookingEndTime,
+        bookingEndTime,
+        ccaId,
+        bookingFormDescription,
+      ),
+    )
+    //     }
+    // }
   }
 
   useEffect(() => {
@@ -205,14 +192,12 @@ export default function EditBooking() {
             <TopNavBar title={`Edit Booking for ${selectedBooking.facilityName}`} />
             <Form onSubmit={onSubmit}>
               <InputField
-                name="eventName"
                 title="Event Name"
                 placeholder="Event Name"
                 required
-                register={register}
                 defaultValue={selectedBooking.eventName}
-                setValue={setValue}
-                errors={errors.eventName}
+                onChange={(e) => dispatch(setBookingFormName(e.target.value))}
+                // errors={errors.eventName}
               />
               <SelectableField
                 title="Start"
@@ -240,7 +225,7 @@ export default function EditBooking() {
                   }))}
                   value={selectedBooking.ccaName}
                   placeholder="CCAs"
-                  onChange={(value) => setCcaName(value)}
+                  onChange={(value) => dispatch(setBookingFormCCA(value))}
                   filterOption={(inputValue, option) =>
                     option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                   }
@@ -249,14 +234,12 @@ export default function EditBooking() {
                 />
               </Container>
               <InputField
-                name="description"
                 title="Description"
                 placeholder="Tell us what your booking is for!"
                 textArea
                 defaultValue={selectedBooking.description}
-                register={register}
-                setValue={setValue}
-                errors={errors.description}
+                onChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
+                // errors={errors.description}
               />
               <WeeklyRecurrenceRow>
                 <StyledTitle>Weekly Recurrence</StyledTitle>
