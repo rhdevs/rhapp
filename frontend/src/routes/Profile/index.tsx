@@ -232,37 +232,37 @@ export default function Profile() {
     )
   }
 
-  const ModulesItem = () => {
-    return (
-      <div className="site-card-border-less-wrapper">
-        <Card
-          title={<span style={{ fontSize: '20px' }}>Modules</span>}
-          bordered={false}
-          style={{ margin: '23px', borderRadius: '20px' }}
-          size="small"
-        >
-          {user.modules &&
-            user.modules?.map((module) => (
-              <>
-                <span
-                  style={{
-                    backgroundColor: '#F5F5F5',
-                    padding: '9px 16px',
-                    borderRadius: '9px',
-                    lineHeight: '40px',
-                    margin: '10px',
-                  }}
-                  key={module}
-                >
-                  {module}
-                </span>{' '}
-                <br />
-              </>
-            ))}
-        </Card>
-      </div>
-    )
-  }
+  // const ModulesItem = () => {
+  //   return (
+  //     <div className="site-card-border-less-wrapper">
+  //       <Card
+  //         title={<span style={{ fontSize: '20px' }}>Modules</span>}
+  //         bordered={false}
+  //         style={{ margin: '23px', borderRadius: '20px' }}
+  //         size="small"
+  //       >
+  //         {user.modules &&
+  //           user.modules?.map((module) => (
+  //             <>
+  //               <span
+  //                 style={{
+  //                   backgroundColor: '#F5F5F5',
+  //                   padding: '9px 16px',
+  //                   borderRadius: '9px',
+  //                   lineHeight: '40px',
+  //                   margin: '10px',
+  //                 }}
+  //                 key={module}
+  //               >
+  //                 {module}
+  //               </span>{' '}
+  //               <br />
+  //             </>
+  //           ))}
+  //       </Card>
+  //     </div>
+  //   )
+  // }
 
   const logoutButton = (
     <LogoutButton

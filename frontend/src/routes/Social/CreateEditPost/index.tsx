@@ -10,7 +10,7 @@ import { Alert } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/types'
 import {
-  AddImage,
+  // AddImage,
   DeleteImage,
   EditPostDetail,
   GetPostDetailsToEdit,
@@ -97,34 +97,34 @@ const Content = styled.div`
   height: 60%;
 `
 
-const Footer = styled.div`
-  height: 30%;
-  text-align: center;
-`
-const InputFile = styled.input`
-  opacity: 0;
-  width: 0.1px;
-  height: 0.1px;
-  overflow: hidden;
-  z-index: -1;
-  position: absolute;
-  cursor: pointer;
-`
-
-const InputLabel = styled.label`
-  cursor: pointer;
-  background-color: #f5f5f5;
-  display: block;
-  position: relative;
-  width: 115px;
-  height: 40px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #484848;
-  left: 106.5px;
-`
+// const Footer = styled.div`
+//   height: 30%;
+//   text-align: center;
+// `
+// const InputFile = styled.input`
+//   opacity: 0;
+//   width: 0.1px;
+//   height: 0.1px;
+//   overflow: hidden;
+//   z-index: -1;
+//   position: absolute;
+//   cursor: pointer;
+// `
+//
+// const InputLabel = styled.label`
+//   cursor: pointer;
+//   background-color: #f5f5f5;
+//   display: block;
+//   position: relative;
+//   width: 115px;
+//   height: 40px;
+//   border-radius: 5px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: #484848;
+//   left: 106.5px;
+// `
 
 const Announcement = styled.div`
   display: flex;
