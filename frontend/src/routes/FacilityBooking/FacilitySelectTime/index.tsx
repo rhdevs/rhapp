@@ -68,11 +68,10 @@ const TitleText = styled.h2`
  * @remarks
  *
  */
-
 export default function FacilitySelectTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
+  const params = useParams<{ facilityId: string; selectionMode: 'reselect' | undefined }>()
   const {
     clickedDate,
     isLoading,
@@ -192,7 +191,10 @@ export default function FacilitySelectTime() {
         <LoadingSpin />
       ) : (
         <Background>
-          <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
+          <h2>
+            {params.selectionMode === 'reselect' ? 'Reselect' : 'Choose'}{' '}
+            {selectedStartTime !== 0 ? 'ending' : 'starting'} time slot
+          </h2>
           <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>
             <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
