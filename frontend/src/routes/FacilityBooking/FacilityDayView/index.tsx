@@ -39,7 +39,8 @@ const TitleText = styled.h2`
   font-family: Lato;
   font-style: normal;
   font-weight: 700;
-  font-size: 22px;
+  font-size: min(5vw, 22px);
+  max-width: 50vw;
   margin-top: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
