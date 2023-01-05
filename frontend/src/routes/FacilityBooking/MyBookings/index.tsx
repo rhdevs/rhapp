@@ -180,7 +180,7 @@ export default function ViewMyBookings() {
             <>
               {myBookings.length === 0 && <NoBookingsFound>You have not made any bookings.</NoBookingsFound>}
               {myBookings?.map((booking) => {
-                if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
+                if (booking.endTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
                   return (
                     <BookingCard key={booking.bookingID}>
                       <FacilityLogo key={booking.facilityID} facilityID={booking.facilityID} />
