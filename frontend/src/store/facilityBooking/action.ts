@@ -309,7 +309,7 @@ export const handleCreateBooking = (isEdit: boolean) => async (dispatch: Dispatc
       dispatch({ type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING, createFailure: true, createSuccess: false })
       if (body.err === 'End time earlier than start time') {
         dispatch(SetCreateBookingError('End time is earlier than start time!'))
-      } else if (body.err === 'Conflict Booking') {
+      } else if (body.err === 'Conflicted booking with previous bookings.') {
         dispatch(SetCreateBookingError('There is already a booking that exists at specified timing'))
       } else if (body.err === 'You must be in RH Dance to make this booking') {
         // As of this version, Dance Studio can only be booked by people who are in RH Dance.
