@@ -1,3 +1,5 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
+/*eslint @typescript-eslint/no-non-null-assertion : off */
 import React, { useEffect } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { useDispatch } from 'react-redux'

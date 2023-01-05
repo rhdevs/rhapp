@@ -59,13 +59,9 @@ export function register(config?: Config) {
       event.waitUntil(
         caches.keys().then(function (cacheNames) {
           return Promise.all(
-            cacheNames
-              .filter(function (cacheName) {
-                return true
-              })
-              .map(function (cacheName) {
-                return caches.delete(cacheName)
-              }),
+            cacheNames.map(function (cacheName) {
+              return caches.delete(cacheName)
+            }),
           )
         }),
       )

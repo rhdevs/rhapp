@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
@@ -21,7 +22,7 @@ import {
   resetTimeSelectorSelection,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { BookingStatus, SearchMode } from '../../../store/facilityBooking/types'
+import { SearchMode } from '../../../store/facilityBooking/types'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
@@ -116,7 +117,6 @@ export default function CreateBookingForm() {
     facilityList,
     isLoading,
     ccaList,
-    bookingStatus,
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
