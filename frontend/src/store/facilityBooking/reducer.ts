@@ -46,6 +46,9 @@ const initialState: State = {
   timeBlocks: defaultTimeBlocks,
   selectedDayBookings: myBookingsStub,
   clickedDate: new Date(),
+  bookingFormName: '',
+  bookingFormCCA: '',
+  bookingFormDescription: '',
 }
 
 type State = {
@@ -84,6 +87,9 @@ type State = {
   timeBlocks: TimeBlock[]
   selectedDayBookings: Booking[]
   clickedDate: Date
+  bookingFormName: string
+  bookingFormCCA: string
+  bookingFormDescription: string
 }
 
 export const facilityBooking: Reducer<State, ActionTypes> = (state = initialState, action) => {
@@ -296,6 +302,24 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         clickedDate: action.clickedDate,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_FORM_NAME: {
+      return {
+        ...state,
+        bookingFormName: action.bookingFormName,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_FORM_CCA: {
+      return {
+        ...state,
+        bookingFormCCA: action.bookingFormCCA,
+      }
+    }
+    case FACILITY_ACTIONS.SET_BOOKING_FORM_DESCRIPTION: {
+      return {
+        ...state,
+        bookingFormDescription: action.bookingFormDescription,
       }
     }
     default:
