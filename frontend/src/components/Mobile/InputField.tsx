@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FieldError, UseFormMethods } from 'react-hook-form'
 
 const RedText = styled.span`
   color: #f37562;
@@ -57,20 +56,18 @@ const StyledTitle = styled.div`
 `
 
 type InputFieldProps = {
-  name: string
   title: string
+  value?: string
   placeholder?: string
   textArea?: boolean
   required?: boolean
   defaultValue?: string
-  register: UseFormMethods['register']
-  setValue: UseFormMethods['setValue']
-  errors?: FieldError
+  onChange?: (e: any) => void
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { name, title, placeholder, textArea, required, defaultValue, register, setValue, errors } = props
+  const { title, value, placeholder, textArea, required, defaultValue, onChange } = props
 
   return (
     <Container>
@@ -82,22 +79,24 @@ export default function InputField(props: InputFieldProps) {
       )}
       {textArea ? (
         <StyledTextArea
-          placeholder={errors ? `${title} is required` : placeholder}
+          placeholder={placeholder}
+          value={value}
           rows={5}
-          onChange={(e) => setValue(name, e.target.value)}
-          hasError={!!errors}
+          onChange={onChange}
+          // hasError={!!errors}
           defaultValue={defaultValue}
-          {...(register(name, { required: required }) as any)}
         />
       ) : (
         <StyledInput
-          placeholder={errors ? `${title} is required` : placeholder}
-          onChange={(e) => setValue(name, e.target.value)}
-          hasError={!!errors}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          // hasError={!!errors}
           defaultValue={defaultValue}
-          {...(register(name, { required: required }) as any)}
         />
       )}
     </Container>
   )
 }
+
+// errors ? `${title} is required` : placeholder

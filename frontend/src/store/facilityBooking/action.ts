@@ -731,3 +731,30 @@ export const setClickedDate = (newClickedDate: Date) => async (dispatch: Dispatc
     clickedDate: newClickedDate,
   })
 }
+
+export const setBookingFormName = (name: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_FORM_NAME,
+    bookingFormName: name,
+  })
+}
+
+export const setBookingFormCCA = (cca: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_FORM_CCA,
+    bookingFormCCA: cca,
+  })
+}
+
+export const setBookingFormDescription = (description: string) => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch({
+    type: FACILITY_ACTIONS.SET_BOOKING_FORM_DESCRIPTION,
+    bookingFormDescription: description,
+  })
+}
+
+export const resetBookingFormInfo = () => async (dispatch: Dispatch<ActionTypes>) => {
+  dispatch(setBookingFormName(''))
+  dispatch(setBookingFormCCA(''))
+  dispatch(setBookingFormDescription(''))
+}

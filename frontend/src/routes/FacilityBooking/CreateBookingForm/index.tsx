@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 
 import { AutoComplete } from 'antd'
@@ -10,6 +9,7 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import { unixToFullDate } from '../../../common/unixToFullDate'
+import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 import {
   fetchAllCCAs,
@@ -19,18 +19,20 @@ import {
   setBookingEndDate,
   setSelectedEndTime,
   resetTimeSelectorSelection,
+  setBookingFormCCA,
+  setBookingFormDescription,
+  setBookingFormName,
+  resetBookingFormInfo,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
-import { BookingStatus, SearchMode } from '../../../store/facilityBooking/types'
+import { SearchMode } from '../../../store/facilityBooking/types'
 
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import LoadingSpin from '../../../components/LoadingSpin'
 import InputField from '../../../components/Mobile/InputField'
-// TODO, change the way how InputField works?
 import { Switch } from '../../../components/Switch'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
-import { unixToFullDateTime } from '../../../common/unixToFullDateTime'
 
 const Background = styled.div`
   background-color: #fff;
@@ -83,11 +85,6 @@ const CCAInput = styled(AutoComplete)`
   }
 `
 
-type FormValues = {
-  eventName: string
-  description: string
-}
-
 /**
  * # Create Booking Form
  * Path: `/facility/booking/create/:facilityId`
@@ -99,28 +96,20 @@ type FormValues = {
  * @remarks
  *
  */
-
 export default function CreateBookingForm() {
   const dispatch = useDispatch()
   const history = useHistory()
   const {
-    handleSubmit,
-    formState: { errors },
-    watch,
-    register,
-    setValue,
-  } = useForm<FormValues>()
-
-  const [ccaName, setCcaName] = useState<string>('')
-  const {
     facilityList,
     isLoading,
     ccaList,
-    bookingStatus,
     bookingStartTime,
     bookingEndTime,
     bookingEndDate,
     searchMode,
+    bookingFormName,
+    bookingFormCCA,
+    bookingFormDescription,
   } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
@@ -138,10 +127,7 @@ export default function CreateBookingForm() {
    * @returns boolean to check if form is filled, else submit button is disabled
    */
   const formIsValid = () => {
-    if (isWeeklyOn) {
-      return watch('eventName') !== '' && ccaName !== '' && bookingEndDate !== 0
-    }
-    return watch('eventName') !== '' && ccaName !== ''
+    return bookingFormName !== '' && bookingFormCCA !== '' && !(isWeeklyOn && bookingEndDate === 0)
   }
 
   /**
@@ -158,23 +144,22 @@ export default function CreateBookingForm() {
 
   const onSubmit = (e: any) => {
     e.preventDefault()
-    const ccaId = ccaList.find((cca) => cca.ccaName === ccaName)?.ccaID
+    const ccaId = ccaList.find((cca) => cca.ccaName === bookingFormCCA)?.ccaID
 
-    handleSubmit((data) => {
-      history.replace(PATHS.VIEW_ALL_FACILITIES)
-      history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
-      dispatch(
-        handleCreateNewBooking(
-          Number(params.facilityId),
-          data.eventName,
-          bookingStartTime,
-          bookingEndTime,
-          bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
-          ccaId,
-          data.description,
-        ),
-      )
-    })()
+    history.replace(PATHS.VIEW_ALL_FACILITIES)
+    history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)
+    dispatch(
+      handleCreateNewBooking(
+        Number(params.facilityId),
+        bookingFormName,
+        bookingStartTime,
+        bookingEndTime,
+        bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
+        ccaId,
+        bookingFormDescription,
+      ),
+    )
+    dispatch(resetBookingFormInfo())
   }
 
   /** when user goes back, reset user's time selections */
@@ -201,6 +186,7 @@ export default function CreateBookingForm() {
   }
 
   const onLeftClick = () => {
+    dispatch(resetBookingFormInfo())
     searchMode === SearchMode.BY_TIME ? history.push(PATHS.SEARCH_BY_TIME_BOOKING_RESULTS) : goBack()
   }
 
@@ -210,15 +196,13 @@ export default function CreateBookingForm() {
       {isLoading ? (
         <LoadingSpin />
       ) : (
-        <Form onSubmit={onSubmit}>
+        <Form>
           <InputField
-            name="eventName"
             title="Event Name"
             placeholder="Event Name"
+            value={bookingFormName}
             required
-            register={register}
-            setValue={setValue}
-            errors={errors.eventName}
+            onChange={(e) => dispatch(setBookingFormName(e.target.value))}
           />
           <SelectableField
             title="Start"
@@ -238,9 +222,9 @@ export default function CreateBookingForm() {
               options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
                 value: cca.ccaName,
               }))}
-              value={ccaName}
+              value={bookingFormCCA}
               placeholder="CCA"
-              onChange={(value) => setCcaName(value)}
+              onChange={(value) => dispatch(setBookingFormCCA(value))}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
@@ -249,13 +233,11 @@ export default function CreateBookingForm() {
             />
           </Container>
           <InputField
-            name="description"
             title="Description"
             placeholder="Tell us what your booking is for!"
+            value={bookingFormDescription}
             textArea
-            register={register}
-            setValue={setValue}
-            errors={errors.description}
+            onChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
           />
           <WeeklyRecurrenceRow>
             <StyledTitle>Weekly Recurrence</StyledTitle>
@@ -270,7 +252,7 @@ export default function CreateBookingForm() {
             />
           )}
           <div style={{ width: '100%', height: '30px' }} />
-          <ButtonComponent state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={() => null} />
+          <ButtonComponent state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={onSubmit} />
         </Form>
       )}
     </Background>
