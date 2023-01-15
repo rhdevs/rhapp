@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { AutoComplete } from 'antd'
@@ -71,15 +71,9 @@ const CCAInput = styled(AutoComplete)`
 
 type Props = {
   facilityId: number
-  // defaultEventName?: string
-  // defaultCCA?: string
-  // defaultDescription?: string
-  // eventNameOnChange?: (e: any) => void
-  startDateOnClick?: () => void
-  endDateOnClick?: () => void
-  // ccaOnChange?: (e: any) => void
-  // descriptionOnChange?: (e: any) => void
-  submitOnClick?: MouseEventHandler<HTMLButtonElement>
+  startDateOnClick: () => void
+  endDateOnClick: () => void
+  submitOnClick: MouseEventHandler<HTMLButtonElement>
 }
 
 const BookingForm = (props: Props) => {
@@ -97,21 +91,11 @@ const BookingForm = (props: Props) => {
   } = useSelector((state: RootState) => state.facilityBooking)
   const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(bookingEndDate !== 0)
 
-  // const params = useParams<{ facilityId: string }>()
-
-  // const selectedFacilityId = parseInt(params.facilityId)
-
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchAllCCAs())
     facilityList.length === 0 && dispatch(getFacilityList())
   }, [dispatch])
-
-  // useEffect(() => {
-  //   dispatch(setBookingFormName(props.defaultEventName))
-  //   dispatch(setBookingFormCCA(props.defaultCCA))
-  //   dispatch(setBookingFormDescription(props.defaultDescription))
-  // }, [dispatch])
 
   /**
    * @returns boolean to check if form is filled, else submit button is disabled
@@ -144,13 +128,13 @@ const BookingForm = (props: Props) => {
       <SelectableField
         title="Start"
         value={unixToFullDateTime(bookingStartTime)}
-        onClick={() => props.startDateOnClick}
+        onClick={props.startDateOnClick}
         isCompulsory
       />
       <SelectableField
         title="End"
         value={unixToFullDateTime(bookingEndTime)}
-        onClick={() => props.endDateOnClick}
+        onClick={props.endDateOnClick}
         isCompulsory
       />
       <Container>
@@ -192,7 +176,7 @@ const BookingForm = (props: Props) => {
         text="Submit"
         type="submit"
         disabled={!formIsValid()}
-        onClick={() => props.submitOnClick}
+        onClick={props.submitOnClick}
       />
     </Form>
   )

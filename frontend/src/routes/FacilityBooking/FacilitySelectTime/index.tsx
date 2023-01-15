@@ -180,7 +180,7 @@ export default function FacilitySelectTime() {
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
       dispatch(setBookingEndTime(selectedEndTime))
-      goToBookingPage()
+      isReselectingTime ? history.goBack() : goToBookingPage()
     }
   }
 
@@ -192,8 +192,7 @@ export default function FacilitySelectTime() {
       ) : (
         <Background>
           <h2>
-            {params.selectionMode === 'reselect' ? 'Reselect' : 'Choose'}{' '}
-            {selectedStartTime !== 0 ? 'ending' : 'starting'} time slot
+            {isReselectingTime ? 'Reselect' : 'Choose'} {selectedStartTime !== 0 ? 'ending' : 'starting'} time slot
           </h2>
           <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>

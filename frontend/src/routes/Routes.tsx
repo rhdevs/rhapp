@@ -172,7 +172,7 @@ const CreateBookingDailyView = React.lazy(
   () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/FacilitySelectTime'),
 )
 const EditBooking = React.lazy(
-  () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBooking/index'),
+  () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBookingForm/index'),
 )
 const SelectRecurringDatePage = React.lazy(
   () => import(/* webpackChunckName: "SelectRecurringDatePage" */ './FacilityBooking/SelectRecurringDatePage'),

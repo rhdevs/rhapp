@@ -13,12 +13,8 @@ import {
   getFacilityList,
   setIsLoading,
   handleCreateNewBooking,
-  setBookingEndDate,
   setSelectedEndTime,
   resetTimeSelectorSelection,
-  setBookingFormCCA,
-  setBookingFormDescription,
-  setBookingFormName,
   resetBookingFormInfo,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
@@ -137,11 +133,8 @@ export default function CreateBookingForm() {
       ) : (
         <BookingForm
           facilityId={selectedFacilityId}
-          // eventNameOnChange={(e) => dispatch(setBookingFormName(e.target.value))}
           startDateOnClick={reselectStartDate}
           endDateOnClick={reselectEndDate}
-          // ccaOnChange={(value) => dispatch(setBookingFormCCA(value))}
-          // descriptionOnChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
           submitOnClick={onSubmit}
         />
       )}

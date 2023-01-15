@@ -754,12 +754,26 @@ export const setBookingFormDescription = (description: string) => async (dispatc
   })
 }
 
+/**
+ * Resets the booking form to blank values
+ * @returns updates `bookingFormName`, `bookingFormCCA`, `bookingFormDescription` to empty strings
+ */
 export const resetBookingFormInfo = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setBookingFormName(''))
   dispatch(setBookingFormCCA(''))
   dispatch(setBookingFormDescription(''))
 }
 
+/**
+ * Fetches the default values for the booking form when editing a booking
+ *
+ * @param bookingId (number) the id of the booking to be edited
+ * @returns updates `selectedBooking`, `bookingFormName`, `bookingStartTime`,
+ *  `bookingEndTime`, `bookingFormCCA`, `bookingFormDescription`
+ *
+ * @remarks
+ *
+ */
 export const fetchEditBookingFormDefaultValues = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
@@ -768,8 +782,9 @@ export const fetchEditBookingFormDefaultValues = (bookingId: number) => async (d
     .then((resp) => resp.json())
     .then(async (booking) => {
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
-
       dispatch(setBookingFormName(booking.data.eventName))
+      dispatch(setBookingStartTime(booking.data.startTime))
+      dispatch(setBookingEndTime(booking.data.endTime))
       dispatch(setBookingFormCCA(booking.data.ccaName))
       dispatch(setBookingFormDescription(booking.data.description))
       dispatch(setIsLoading(false))

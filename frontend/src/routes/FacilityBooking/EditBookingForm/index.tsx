@@ -21,6 +21,9 @@ import {
   setBookingFormName,
   setBookingFormCCA,
   setBookingFormDescription,
+  resetTimeSelectorSelection,
+  setSelectedEndTime,
+  resetBookingFormInfo,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -107,7 +110,7 @@ const CCAInput = styled(AutoComplete)`
  * // TODO does this allow unauthorised edit of booking, since one can modify the url to any booking id?
  *
  */
-export default function EditBooking() {
+export default function EditBookingForm() {
   const dispatch = useDispatch()
   const history = useHistory()
   // const params = useParams<{ bookingId: string }>()
@@ -160,30 +163,41 @@ export default function EditBooking() {
     // if (bookingStatus === BookingStatus.CONFLICT) {
     //   setmodalIsOpen(true)
     // } else {
+    history.replace(PATHS.VIEW_ALL_FACILITIES)
+    history.push(`${PATHS.VIEW_FACILITY}/${selectedBooking?.facilityID}`)
     dispatch(
       handleCreateNewBooking(
         Number(selectedBooking?.facilityID),
-        'eventName',
+        bookingFormName,
         bookingStartTime,
         bookingEndTime,
-        bookingEndTime,
+        bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
         ccaId,
-        'description',
+        bookingFormDescription,
       ),
     )
+    dispatch(resetBookingFormInfo())
     // }
     // })()
     // }
   }
 
-  // useEffect(() => {
-  //   if (bookingStatus === BookingStatus.SUCCESS) {
-  //     history.replace(PATHS.VIEW_ALL_FACILITIES)
-  //     history.push(`${PATHS.VIEW_FACILITY}/${selectedBooking?.facilityID}`)
-  //   } else if (bookingStatus === BookingStatus.CONFLICT) {
-  //     setmodalIsOpen(true)
-  //   }
-  // }, [bookingStatus])
+  const reselectBothDates = () => {
+    console.log(selectedBooking)
+    dispatch(resetTimeSelectorSelection())
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBooking?.facilityID}/reselect`)
+  }
+
+  const reselectStartDate = () => {
+    console.log(selectedBooking)
+    reselectBothDates()
+  }
+
+  const reselectEndDate = () => {
+    console.log(selectedBooking)
+    dispatch(setSelectedEndTime(0))
+    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBooking?.facilityID}/reselect`)
+  }
 
   return (
     <Background>
@@ -195,85 +209,10 @@ export default function EditBooking() {
             <TopNavBar title={`Edit Booking for ${selectedBooking.facilityName}`} />
             <BookingForm
               facilityId={selectedBooking.facilityID}
-              // defaultEventName={selectedBooking.eventName}
-              // defaultCCA={selectedBooking.ccaName}
-              // defaultDescription={selectedBooking.description}
-              // startDateOnClick={}
-              // endDateOnClick={}
+              startDateOnClick={reselectStartDate}
+              endDateOnClick={reselectEndDate}
               submitOnClick={onSubmit}
             />
-            {/* <Form onSubmit={onSubmit}>
-              <InputField
-                title="Event Name"
-                placeholder="Event Name"
-                required
-                defaultValue={selectedBooking.eventName}
-                onChange={(e) => dispatch(setBookingFormName(e.target.value))}
-                // errors={errors.eventName}
-              />
-              <SelectableField
-                title="Start"
-                value={
-                  bookingStartTime === 0
-                    ? ''
-                    : unixToFullDate(bookingStartTime) + ' at ' + unixTo24HourTime(bookingStartTime)
-                }
-                isCompulsory
-                onClick={() => dispatch(setBookingStartTime(1644641028))}
-              />
-              <SelectableField
-                title="End"
-                value={
-                  bookingEndTime === 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + unixTo24HourTime(bookingEndTime)
-                }
-                isCompulsory
-                onClick={() => dispatch(setBookingEndTime(1644648228))}
-              />
-              <Container>
-                <StyledTitle>CCA</StyledTitle>
-                <CCAInput
-                  options={ccaList.concat({ ccaID: 0, ccaName: 'Personal', category: 'Personal' }).map((cca) => ({
-                    value: cca.ccaName,
-                  }))}
-                  value={selectedBooking.ccaName}
-                  placeholder="CCAs"
-                  onChange={(value) => dispatch(setBookingFormCCA(value))}
-                  filterOption={(inputValue, option) =>
-                    option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  notFoundContent="No Matching CCAs"
-                  allowClear
-                />
-              </Container>
-              <InputField
-                title="Description"
-                placeholder="Tell us what your booking is for!"
-                textArea
-                defaultValue={selectedBooking.description}
-                onChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
-                // errors={errors.description}
-              />
-              <WeeklyRecurrenceRow>
-                <StyledTitle>Weekly Recurrence</StyledTitle>
-                <Switch isOn={isWeeklyOn} handleToggle={() => setIsWeeklyOn(!isWeeklyOn)} switchSize={50} />
-              </WeeklyRecurrenceRow>
-              {isWeeklyOn && (
-                <SelectableField
-                  title="End Date"
-                  value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
-                  isCompulsory
-                  onClick={() => dispatch(setBookingEndDate(1644648228))}
-                />
-              )}
-              <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setmodalIsOpen} />
-              <ButtonComponent
-                state="primary"
-                text="Submit"
-                type="submit"
-                disabled={!formIsValid()}
-                onClick={() => console.log('submitted')}
-              />
-            </Form> */}
           </>
         )
       )}
