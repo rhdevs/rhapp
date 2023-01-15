@@ -7,7 +7,6 @@ import PullToRefresh from 'pull-to-refresh-react'
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
 import {
-  fetchFacilityNameFromID,
   resetBooking,
   setBookingEndDate,
   setIsLoading,
@@ -39,10 +38,7 @@ export default function SelectRecurringDatePage() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(resetBooking()) // TODO what is this
-    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId == 0) {
-      dispatch(setSelectedFacility(parseInt(params.facilityId)))
-    }
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
   const onDateClick = (date: Date) => {

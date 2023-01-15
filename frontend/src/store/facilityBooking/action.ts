@@ -360,7 +360,6 @@ export const fetchAllCCAs = () => (dispatch: Dispatch<ActionTypes>) => {
  * @param id (number)
  * @returns updates `selectedFacilityName`
  * @remarks
- * // TODO Do we really need to get the names from BE everytime or we can just store the names locally?
  */
 export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.FACILITY + '/' + id, {
@@ -423,6 +422,11 @@ export const SetIsJcrc = (desiredState: boolean) => (dispatch: Dispatch<ActionTy
   dispatch({ type: FACILITY_ACTIONS.SET_IS_JCRC, isJcrc: desiredState })
 }
 
+/**
+ * Sets the selected facility ID
+ * @param facilityID (number)
+ * @returns updates `selectedFacilityId`
+ */
 export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: FACILITY_ACTIONS.SET_SELECTED_FACILITY, selectedFacilityId: facilityID })
 }
