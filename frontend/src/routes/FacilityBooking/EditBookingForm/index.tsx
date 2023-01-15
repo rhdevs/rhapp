@@ -24,6 +24,7 @@ import {
   resetTimeSelectorSelection,
   setSelectedEndTime,
   resetBookingFormInfo,
+  handleEditBooking,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
@@ -113,8 +114,8 @@ const CCAInput = styled(AutoComplete)`
 export default function EditBookingForm() {
   const dispatch = useDispatch()
   const history = useHistory()
-  // const params = useParams<{ bookingId: string }>()
-  // const { bookingId } = params
+  const params = useParams<{ bookingId: string }>()
+  const { bookingId } = params
 
   const {
     facilityList,
@@ -166,12 +167,12 @@ export default function EditBookingForm() {
     history.replace(PATHS.VIEW_ALL_FACILITIES)
     history.push(`${PATHS.VIEW_FACILITY}/${selectedBooking?.facilityID}`)
     dispatch(
-      handleCreateNewBooking(
+      handleEditBooking(
+        Number(bookingId),
         Number(selectedBooking?.facilityID),
         bookingFormName,
         bookingStartTime,
         bookingEndTime,
-        bookingEndDate === 0 ? bookingEndTime : bookingEndDate,
         ccaId,
         bookingFormDescription,
       ),
@@ -183,18 +184,15 @@ export default function EditBookingForm() {
   }
 
   const reselectBothDates = () => {
-    console.log(selectedBooking)
     dispatch(resetTimeSelectorSelection())
     history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBooking?.facilityID}/reselect`)
   }
 
   const reselectStartDate = () => {
-    console.log(selectedBooking)
     reselectBothDates()
   }
 
   const reselectEndDate = () => {
-    console.log(selectedBooking)
     dispatch(setSelectedEndTime(0))
     history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBooking?.facilityID}/reselect`)
   }
@@ -206,12 +204,16 @@ export default function EditBookingForm() {
       ) : (
         selectedBooking && (
           <>
-            <TopNavBar title={`Edit Booking for ${selectedBooking.facilityName}`} />
+            <TopNavBar
+              title={`Edit Booking for ${selectedBooking.facilityName}`}
+              onLeftClick={() => history.goBack()}
+            />
             <BookingForm
               facilityId={selectedBooking.facilityID}
               startDateOnClick={reselectStartDate}
               endDateOnClick={reselectEndDate}
               submitOnClick={onSubmit}
+              isEditBooking
             />
           </>
         )

@@ -18,7 +18,7 @@ const Container = styled.div`
 `
 
 const StyledInput = styled.input<{ hasError?: boolean }>`
-  background: #f3f3f9;
+  background: ${(props) => (props.disabled ? '#dbdbe0' : '#f3f3f9')};
   width: 100%;
   border-radius: 10px;
   border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
@@ -32,7 +32,7 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
 `
 
 const StyledTextArea = styled.textarea<{ hasError?: boolean }>`
-  background: #f3f3f9;
+  background: ${(props) => (props.disabled ? '#dbdbe0' : '#f3f3f9')};
   width: 100%;
   border-radius: 10px;
   padding: 10px 16px;
@@ -63,18 +63,19 @@ type InputFieldProps = {
   required?: boolean
   defaultValue?: string
   onChange?: (e: any) => void
+  disabled?: boolean
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { title, value, placeholder, textArea, required, defaultValue, onChange } = props
+  const { title, value, placeholder, textArea, required, defaultValue, onChange, disabled } = props
 
   return (
     <Container>
       {title && (
         <StyledTitle>
           {title}
-          {required && RedAsterisk}
+          {required && !disabled && RedAsterisk}
         </StyledTitle>
       )}
       {textArea ? (
@@ -85,6 +86,7 @@ export default function InputField(props: InputFieldProps) {
           onChange={onChange}
           // hasError={!!errors}
           defaultValue={defaultValue}
+          disabled={disabled}
         />
       ) : (
         <StyledInput
@@ -93,6 +95,7 @@ export default function InputField(props: InputFieldProps) {
           onChange={onChange}
           // hasError={!!errors}
           defaultValue={defaultValue}
+          disabled={disabled}
         />
       )}
     </Container>

@@ -74,8 +74,12 @@ type Props = {
   startDateOnClick: () => void
   endDateOnClick: () => void
   submitOnClick: MouseEventHandler<HTMLButtonElement>
+  isEditBooking?: boolean
+  // weeklyRecurrenceSelector?: boolean
+  // disableNameInput?: boolean
 }
 
+// TODO docs
 const BookingForm = (props: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -124,6 +128,7 @@ const BookingForm = (props: Props) => {
         value={bookingFormName}
         required
         onChange={(e) => dispatch(setBookingFormName(e.target.value))}
+        disabled={props.isEditBooking}
       />
       <SelectableField
         title="Start"
@@ -158,10 +163,12 @@ const BookingForm = (props: Props) => {
         textArea
         onChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
       />
-      <WeeklyRecurrenceRow>
-        <StyledTitle>Weekly Recurrence</StyledTitle>
-        <Switch isOn={isWeeklyOn} handleToggle={() => handleToggleWeekly()} switchSize={50} />
-      </WeeklyRecurrenceRow>
+      {!props.isEditBooking && (
+        <WeeklyRecurrenceRow>
+          <StyledTitle>Weekly Recurrence</StyledTitle>
+          <Switch isOn={isWeeklyOn} handleToggle={() => handleToggleWeekly()} switchSize={50} />
+        </WeeklyRecurrenceRow>
+      )}
       {isWeeklyOn && (
         <SelectableField
           title="End Date"

@@ -1,5 +1,5 @@
 import { now } from 'lodash'
-import { Dispatch, GetState } from '../types'
+import { Dispatch, GetState, RootState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
 import {
@@ -12,6 +12,7 @@ import {
   TimeBlock,
   TimeBlockType,
 } from './types'
+import { useSelector } from 'react-redux'
 
 /**
  *
@@ -550,6 +551,109 @@ export const handleCreateNewBooking = (
       },
       body: JSON.stringify(requestBody),
     }).then((resp) => {
+      if (resp.status === 200) {
+        dispatch(setBookingStatus(BookingStatus.SUCCESS))
+      } else if (resp.status === 409) {
+        dispatch(setBookingStatus(BookingStatus.CONFLICT))
+        resp.json().then((body) => {
+          dispatch(setConflictBookings(body.conflict_bookings))
+        })
+      } else {
+        resp.json().then((body) => {
+          if (body.err === 'End time earlier than start time') {
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
+          } else if (body.err === 'Conflict Booking') {
+            dispatch(
+              setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
+            )
+          } else if (body.err === 'You must be in RH Dance to make this booking') {
+            // As of this version, Dance Studio can only be booked by people who are in RH Dance.
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
+          } else {
+            dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
+          }
+        })
+      }
+    })
+    dispatch(resetTimeSelectorSelection())
+    dispatch(setBookingStartTime(0))
+    dispatch(setBookingEndTime(0))
+  }
+}
+
+/**
+ *
+ * Given booking details, edit booking in database and update bookingStatus in store.
+ * Throw errors if edit of booking fails.
+ *
+ * @param bookingID (number)
+ * @param facilityID (number | undefined)
+ * @param startTime (number | null)
+ * @param endTime (number | null)
+ * @param ccaID (number) [optional]
+ * @param description (string) [optional]
+ *
+ * @returns upon successful booking, reset variables in store used for booking.
+ *
+ * @remarks
+ *
+ */
+export const handleEditBooking = (
+  bookingID: number,
+  facilityID: number | undefined,
+  eventName: string | undefined,
+  startTime: number | null,
+  endTime: number | null,
+  // endDate?: number,
+  ccaID?: number,
+  description?: string,
+  // forceBook?: boolean,
+) => async (dispatch: Dispatch<ActionTypes>) => {
+  const requestBody = {
+    facilityID: facilityID,
+    // eventName: eventName,
+    userID: localStorage.getItem('userID'),
+    ccaID: ccaID,
+    startTime: startTime,
+    endTime: endTime,
+    // bookUntil: endDate,
+    description: description,
+    // forceBook: forceBook,
+  }
+  dispatch(
+    setBooking({
+      eventName: eventName ?? '',
+      facilityID: facilityID ?? -1,
+      userID: localStorage.getItem('userID') ?? '',
+      ccaID: ccaID ?? -1,
+      startTime: startTime ?? Math.round(Date.now() / 1000),
+      endTime: endTime ?? Math.round(Date.now() / 1000),
+      description: description ?? '',
+      endDate: 0,
+    }),
+  )
+  if (startTime === null || endTime === null) {
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
+  } else {
+    const tokenId = localStorage.getItem('token')
+    fetch(
+      DOMAIN_URL.FACILITY +
+        ENDPOINTS.BOOKING +
+        '/' +
+        bookingID +
+        '?token=' +
+        tokenId +
+        '&userID=' +
+        localStorage.getItem('userID'),
+      {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      },
+    ).then((resp) => {
       if (resp.status === 200) {
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
