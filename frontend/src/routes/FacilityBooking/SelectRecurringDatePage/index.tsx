@@ -29,6 +29,7 @@ import { MainCalendarContainer } from '../FacilityBooking.styled'
  * and tries to select a weekly booking end date. The page displays days in calendar format for user to select an end date.
  *
  * @remarks
+ * // TODO redirect to edit page when come from edit page
  */
 export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
@@ -37,7 +38,6 @@ export default function SelectRecurringDatePage() {
   const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     dispatch(resetBooking()) // TODO what is this
     dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
     if (selectedFacilityId == 0) {
@@ -50,7 +50,7 @@ export default function SelectRecurringDatePage() {
 
     if (Date.now() / 1000 <= selectedDate) {
       dispatch(setBookingEndDate(selectedDate))
-      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+      history.goBack()
     }
   }
 
@@ -58,7 +58,8 @@ export default function SelectRecurringDatePage() {
     <>
       <TopNavBarRevamp
         title="Select Weekly Booking End Date"
-        onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
+        // onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
+        onLeftClick={() => history.goBack()}
       />
       <PullToRefresh onRefresh={onRefresh}>
         <MainCalendarContainer>

@@ -58,7 +58,8 @@ export enum PATHS {
   VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
   SELECT_RECURRING_BOOKING_END_DATE = '/facility/booking/create/recurring/selectEndDate',
   SELECT_RECURRING_BOOKING_END_DATE_ID = '/facility/booking/create/recurring/selectEndDate/:facilityId',
-  EDIT_FACILITY_BOOKING = '/facility/booking/edit/:bookingId',
+  EDIT_FACILITY_BOOKING = '/facility/booking/edit/',
+  EDIT_FACILITY_BOOKING_ID = '/facility/booking/edit/:bookingId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user',
@@ -254,7 +255,7 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
             <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
-            <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING} component={EditBooking} />
+            <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING_ID} component={EditBooking} />
             <PrivateRoute exact path={PATHS.SELECT_RECURRING_BOOKING_END_DATE_ID} component={SelectRecurringDatePage} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 

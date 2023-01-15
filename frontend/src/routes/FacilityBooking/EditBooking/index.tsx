@@ -33,6 +33,7 @@ import { unixToFullDate } from '../../../common/unixToFullDate'
 import SelectableField from '../../../components/SelectableField'
 import ButtonComponent from '../../../components/Button'
 import { unixTo24HourTime } from '../../../common/unixTo24HourTime'
+import BookingForm from '../../../components/FacilityBooking/BookingForm'
 
 const Background = styled.div`
   background-color: #fff;
@@ -102,15 +103,15 @@ const CCAInput = styled(AutoComplete)`
  * @remarks
  * Might make more sense to allow editing of the start/end date/time only and disable other fields.
  * // TODO sus why is there a wierd timestamp 1644641028 below
- * // TODO doesn't work now
  * // TODO consider using the same page as create booking form
+ * // TODO does this allow unauthorised edit of booking, since one can modify the url to any booking id?
  *
  */
 export default function EditBooking() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string; bookingId: string }>()
-  const { facilityId, bookingId } = params
+  // const params = useParams<{ bookingId: string }>()
+  // const { bookingId } = params
 
   const {
     facilityList,
@@ -118,7 +119,7 @@ export default function EditBooking() {
     ccaList,
     bookingStatus,
     bookingStartTime,
-    selectedBooking,
+    selectedBooking, // TODO send data to form data
     bookingEndTime,
     bookingEndDate,
     bookingFormName,
@@ -126,61 +127,63 @@ export default function EditBooking() {
     bookingFormDescription,
   } = useSelector((state: RootState) => state.facilityBooking)
 
-  const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
-  const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
+  // const [modalIsOpen, setmodalIsOpen] = useState<boolean>(false)
+  // const [isWeeklyOn, setIsWeeklyOn] = useState<boolean>(false)
 
-  useEffect(() => {
-    dispatch(fetchSelectedFacility(parseInt(bookingId)))
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(fetchSelectedFacility(parseInt(bookingId)))
+  // }, [dispatch])
 
-  const formIsValid = () => {
-    return bookingFormName !== '' && bookingFormCCA !== '' && !(isWeeklyOn && bookingEndDate === 0)
-  }
-  useEffect(() => {
-    dispatch(setIsLoading(true))
-    dispatch(fetchAllCCAs())
-    if (facilityList.length === 0) {
-      dispatch(getFacilityList())
-    }
-    return () => {
-      // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
-    }
-  }, [dispatch])
+  // const formIsValid = () => {
+  //   return bookingFormName !== '' && bookingFormCCA !== '' && !(isWeeklyOn && bookingEndDate === 0)
+  // }
+  // useEffect(() => {
+  //   dispatch(setIsLoading(true))
+  //   dispatch(fetchAllCCAs())
+  //   if (facilityList.length === 0) {
+  //     dispatch(getFacilityList())
+  //   }
+  //   return () => {
+  //     // dispatch(resetNewBooking) // TODO this function is defunct; newBooking is unused
+  //   }
+  // }, [dispatch])
 
   const onSubmit = (e) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === bookingFormCCA)?.ccaID
 
-    // if (!ccaId && bookingFormCCA !== 'Personal') {
+    // if (!ccaId && ccaName !== 'Personal') {
     //   //selected cca is not valid (error)
     // } else {
-    //     console.log(data, bookingFormCCA)
-    //     if (bookingStatus === BookingStatus.CONFLICT) {
-    //       setmodalIsOpen(true)
-    //     } else {
+    // handleSubmit((data) => {
+    // console.log(data, ccaName)
+    // if (bookingStatus === BookingStatus.CONFLICT) {
+    //   setmodalIsOpen(true)
+    // } else {
     dispatch(
       handleCreateNewBooking(
-        Number(facilityId),
-        bookingFormName,
+        Number(selectedBooking?.facilityID),
+        'eventName',
         bookingStartTime,
         bookingEndTime,
         bookingEndTime,
         ccaId,
-        bookingFormDescription,
+        'description',
       ),
     )
-    //     }
+    // }
+    // })()
     // }
   }
 
-  useEffect(() => {
-    if (bookingStatus === BookingStatus.SUCCESS) {
-      history.replace(PATHS.VIEW_ALL_FACILITIES)
-      history.push(`${PATHS.VIEW_FACILITY}/${facilityId}`)
-    } else if (bookingStatus === BookingStatus.CONFLICT) {
-      setmodalIsOpen(true)
-    }
-  }, [bookingStatus])
+  // useEffect(() => {
+  //   if (bookingStatus === BookingStatus.SUCCESS) {
+  //     history.replace(PATHS.VIEW_ALL_FACILITIES)
+  //     history.push(`${PATHS.VIEW_FACILITY}/${selectedBooking?.facilityID}`)
+  //   } else if (bookingStatus === BookingStatus.CONFLICT) {
+  //     setmodalIsOpen(true)
+  //   }
+  // }, [bookingStatus])
 
   return (
     <Background>
@@ -190,7 +193,16 @@ export default function EditBooking() {
         selectedBooking && (
           <>
             <TopNavBar title={`Edit Booking for ${selectedBooking.facilityName}`} />
-            <Form onSubmit={onSubmit}>
+            <BookingForm
+              facilityId={selectedBooking.facilityID}
+              // defaultEventName={selectedBooking.eventName}
+              // defaultCCA={selectedBooking.ccaName}
+              // defaultDescription={selectedBooking.description}
+              // startDateOnClick={}
+              // endDateOnClick={}
+              submitOnClick={onSubmit}
+            />
+            {/* <Form onSubmit={onSubmit}>
               <InputField
                 title="Event Name"
                 placeholder="Event Name"
@@ -202,19 +214,19 @@ export default function EditBooking() {
               <SelectableField
                 title="Start"
                 value={
-                  bookingStartTime == 0
+                  bookingStartTime === 0
                     ? ''
                     : unixToFullDate(bookingStartTime) + ' at ' + unixTo24HourTime(bookingStartTime)
                 }
-                isCompulsory={true}
+                isCompulsory
                 onClick={() => dispatch(setBookingStartTime(1644641028))}
               />
               <SelectableField
                 title="End"
                 value={
-                  bookingEndTime == 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + unixTo24HourTime(bookingEndTime)
+                  bookingEndTime === 0 ? '' : unixToFullDate(bookingEndTime) + ' at ' + unixTo24HourTime(bookingEndTime)
                 }
-                isCompulsory={true}
+                isCompulsory
                 onClick={() => dispatch(setBookingEndTime(1644648228))}
               />
               <Container>
@@ -249,7 +261,7 @@ export default function EditBooking() {
                 <SelectableField
                   title="End Date"
                   value={bookingEndDate == 0 ? '' : unixToFullDate(bookingEndDate)}
-                  isCompulsory={true}
+                  isCompulsory
                   onClick={() => dispatch(setBookingEndDate(1644648228))}
                 />
               )}
@@ -261,7 +273,7 @@ export default function EditBooking() {
                 disabled={!formIsValid()}
                 onClick={() => console.log('submitted')}
               />
-            </Form>
+            </Form> */}
           </>
         )
       )}

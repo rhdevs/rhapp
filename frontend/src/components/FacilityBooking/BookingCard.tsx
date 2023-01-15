@@ -4,16 +4,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { PATHS } from '../../routes/Routes'
-import { editMyBooking, setIsDeleteMyBooking, deleteMyBooking } from '../../store/facilityBooking/action'
+import {
+  editMyBooking,
+  setIsDeleteMyBooking,
+  deleteMyBooking,
+  resetBookingFormInfo,
+  setBookingFormCCA,
+  setBookingFormDescription,
+  setBookingFormName,
+  fetchEditBookingFormDefaultValues,
+} from '../../store/facilityBooking/action'
 import { Booking } from '../../store/facilityBooking/types'
 import { RootState } from '../../store/types'
 import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 import FacilityLogo from './FacilityLogo'
+import { days, months } from '../../common/dates'
 
 import deleteIcon from '../../assets/deleteIcon.svg'
 import editIcon from '../../assets/editIcon.svg'
-import { unixToFullDateTime } from '../../common/unixToFullDateTime'
-import { days, months } from '../../common/dates'
 
 const BookingCardStyled = styled.div`
   position: relative;
@@ -77,24 +85,37 @@ const ActionButton = styled.img`
   padding: 15px;
 `
 
+/**
+ * Returns a string of the format `Sun 1 Jan (2023) at 12:00 to (Mon 2 Jan (2023) at) 13:00` (optional) \
+ * Year/month/date labels are omitted whenever redundant. Examples: (assume this year is 2023)
+ * - Both times on same day, this year: `Sat 30 Dec at 12:00 to 13:00`
+ * - Both times on same day, other years: `Mon 1 Jan 2024 at 12:00 to 13:00`
+ * - Both times on different days, this year: `Sat 30 Dec at 12:00 to Sun 31 Dec at 13:00`
+ * - Both times on different days, other year: `Mon 1 Jan 2024 at 12:00 to Tue 2 Jan 2024 13:00`
+ * - Start time on this year but ends on another year: `Sun 31 Dec 2023 at 12:00 to Mon 1 Jan 2024 at 13:00`
+ * - Start time on another year and ends on yet another year: `Tue 31 Dec 2024 at 12:00 to Wed 1 Jan 2025 at 13:00`
+ *
+ * @param startTime (number) unix timestamp
+ * @param endTime (number) unix timestamp
+ * @returns formatted time string
+ */
 const timeString = (startTime: number, endTime: number) => {
   if (startTime === 0 || endTime === 0) return ''
   const startDateObj = new Date(startTime * 1000)
   const endDateObj = new Date(endTime * 1000)
 
   const startYear = startDateObj.getFullYear()
-  const endYear = endDateObj.getFullYear()
   const startMonth = startDateObj.getMonth()
-  const endMonth = endDateObj.getMonth()
-
   const startDate = startDateObj.getDate()
-  const endDate = endDateObj.getDate()
   const startDay = days[startDateObj.getDay()].slice(0, 3)
-  const endDay = days[endDateObj.getDay()].slice(0, 3)
-
   const startHour = `0${startDateObj.getHours()}`.slice(-2)
-  const endHour = `0${endDateObj.getHours()}`.slice(-2)
   const startMinutes = `0${startDateObj.getMinutes()}`.slice(-2)
+
+  const endYear = endDateObj.getFullYear()
+  const endMonth = endDateObj.getMonth()
+  const endDate = endDateObj.getDate()
+  const endDay = days[endDateObj.getDay()].slice(0, 3)
+  const endHour = `0${endDateObj.getHours()}`.slice(-2)
   const endMinutes = `0${endDateObj.getMinutes()}`.slice(-2)
 
   const thisYear = new Date().getFullYear()
@@ -137,8 +158,10 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
         <ActionButton
           src={editIcon}
           onClick={() => {
-            dispatch(editMyBooking(booking))
-            history.push(PATHS.CREATE_FACILITY_BOOKING)
+            if (booking.bookingID) {
+              dispatch(fetchEditBookingFormDefaultValues(booking.bookingID))
+              history.push(`${PATHS.EDIT_FACILITY_BOOKING}${booking.bookingID}`)
+            }
           }}
         />
         <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))} />

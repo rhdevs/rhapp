@@ -303,7 +303,7 @@ export const setSearchMode = (newSearchMode: SearchMode) => async (dispatch: Dis
  * @returns updates `newBooking`, `newBookingFacilityName`
  *
  * @remarks
- * <any remarks on this function put here>
+ * TODO unused
  */
 export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
   // TODO unused
@@ -428,13 +428,14 @@ export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<A
 }
 
 /**
+ * Gets information of booking by `bookingId` \
  * Takes in `bookingId` and updates `selectedBooking` for the `EditBooking` and `ViewBooking` pages.
+ *
  * @param bookingId (number)
  * @returns updates `selectedBooking`, `isLoading`
  *
  * @remarks <insert remarks here>
  */
-
 export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
   await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
     method: 'GET',
@@ -757,4 +758,21 @@ export const resetBookingFormInfo = () => async (dispatch: Dispatch<ActionTypes>
   dispatch(setBookingFormName(''))
   dispatch(setBookingFormCCA(''))
   dispatch(setBookingFormDescription(''))
+}
+
+export const fetchEditBookingFormDefaultValues = (bookingId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+  await fetch(DOMAIN_URL.FACILITY + ENDPOINTS.VIEW_BOOKING + '/' + bookingId, {
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((resp) => resp.json())
+    .then(async (booking) => {
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
+
+      dispatch(setBookingFormName(booking.data.eventName))
+      dispatch(setBookingFormCCA(booking.data.ccaName))
+      dispatch(setBookingFormDescription(booking.data.description))
+      dispatch(setIsLoading(false))
+      return booking.data
+    })
 }
