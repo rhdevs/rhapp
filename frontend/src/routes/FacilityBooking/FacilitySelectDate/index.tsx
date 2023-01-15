@@ -54,10 +54,8 @@ export default function FacilitySelectDate() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(resetBooking())
-    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId === 0) {
-      dispatch(setSelectedFacility(parseInt(params.facilityId)))
-    }
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
   const onDateClick = (newClickedDate: Date) => {

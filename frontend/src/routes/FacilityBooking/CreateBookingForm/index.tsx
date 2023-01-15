@@ -127,7 +127,7 @@ export default function CreateBookingForm() {
 
   return (
     <Background>
-      <TopNavBar title={`Book ${getFacilityName()}`} onLeftClick={onLeftClick} />
+      <TopNavBar title={`Book ${getFacilityName() ?? ''}`} onLeftClick={onLeftClick} />
       {isLoading ? (
         <LoadingSpin />
       ) : (

@@ -8,11 +8,13 @@ import 'antd/dist/antd.css'
 import { PATHS } from '../../Routes'
 import {
   resetBookingFormInfo,
+  fetchFacilityNameFromID,
   resetTimeSelectorSelection,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
+  setSelectedFacility,
   setSelectedStartTime,
   setTimeBlocks,
   updateBookingDailyView,
@@ -101,6 +103,11 @@ export default function FacilitySelectTime() {
       : []
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
+
+  useEffect(() => {
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
+  }, [])
 
   useEffect(() => {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
