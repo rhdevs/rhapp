@@ -147,7 +147,7 @@ export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { selectedBooking, isDeleteMyBooking, isLoading, isJcrc } = useSelector(
+  const { selectedBookingToView, isDeleteMyBooking, isLoading, isJcrc } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -200,31 +200,31 @@ export default function ViewBooking() {
         {isLoading ? (
           <LoadingSpin />
         ) : (
-          selectedBooking && (
+          selectedBookingToView && (
             <>
-              <EventCard key={selectedBooking?.bookingID}>
+              <EventCard key={selectedBookingToView?.bookingID}>
                 <HeaderGroup>
-                  <HeaderText>{selectedBooking?.eventName}</HeaderText>
-                  <HeaderText>{selectedBooking?.ccaName}</HeaderText>
+                  <HeaderText>{selectedBookingToView?.eventName}</HeaderText>
+                  <HeaderText>{selectedBookingToView?.ccaName}</HeaderText>
                   <IdText>RHEID-{params.bookingId}</IdText>
                 </HeaderGroup>
                 <DetailsGroup>
                   <TimeDetails>
                     <CardDurationLabel>
-                      {timeDuration(selectedBooking.startTime, selectedBooking.endTime) > 1
-                        ? timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hrs'
-                        : timeDuration(selectedBooking.startTime, selectedBooking.endTime) + 'hr'}
+                      {timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) > 1
+                        ? timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) + 'hrs'
+                        : timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) + 'hr'}
                     </CardDurationLabel>
                     <DateTimeDetails>
-                      {selectedBooking && (
+                      {selectedBookingToView && (
                         <>
                           <CardTimeLabel>
                             <b>Start: </b>
-                            {formatDate(selectedBooking.startTime)}
+                            {formatDate(selectedBookingToView.startTime)}
                           </CardTimeLabel>
                           <CardTimeLabel>
                             <b>End: </b>
-                            {formatDate(selectedBooking.endTime)}
+                            {formatDate(selectedBookingToView.endTime)}
                           </CardTimeLabel>
                         </>
                       )}
@@ -232,44 +232,47 @@ export default function ViewBooking() {
                   </TimeDetails>
                   <EventFacilityName>
                     <CardSubtitle>Facility</CardSubtitle>
-                    <p style={{ textAlign: 'right' }}>{selectedBooking?.facilityName}</p>
+                    <p style={{ textAlign: 'right' }}>{selectedBookingToView?.facilityName}</p>
                   </EventFacilityName>
                   <EventOwnerDetails>
                     <CardSubtitle>Created by</CardSubtitle>
-                    <p style={{ textAlign: 'right' }}>{selectedBooking?.displayName}</p>
+                    <p style={{ textAlign: 'right' }}>{selectedBookingToView?.displayName}</p>
                   </EventOwnerDetails>
                   <>
                     <CardSubtitle>Additional Note</CardSubtitle>
-                    <p>{selectedBooking?.description}</p>
+                    <p>{selectedBookingToView?.description}</p>
                   </>
                 </DetailsGroup>
-                {selectedBooking?.userID === localStorage.getItem('userID') || isJcrc ? (
+                {selectedBookingToView?.userID === localStorage.getItem('userID') || isJcrc ? (
                   <ActionButtonGroup>
                     <Icon
                       src={editIcon}
                       onClick={() => {
-                        dispatch(editMyBooking(selectedBooking))
+                        dispatch(editMyBooking(selectedBookingToView))
                         history.push(PATHS.CREATE_FACILITY_BOOKING)
                       }}
                     />
-                    <Icon src={deletepic} onClick={() => dispatch(setIsDeleteMyBooking(selectedBooking.bookingID))} />
-                    {selectedBooking?.userID !== localStorage.getItem('userID') && (
-                      <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                    <Icon
+                      src={deletepic}
+                      onClick={() => dispatch(setIsDeleteMyBooking(selectedBookingToView.bookingID))}
+                    />
+                    {selectedBookingToView?.userID !== localStorage.getItem('userID') && (
+                      <Icon onClick={() => fetchTelegram(selectedBookingToView)} src={messageIcon} />
                     )}
                   </ActionButtonGroup>
                 ) : (
                   <ActionButtonGroup>
-                    <Icon onClick={() => fetchTelegram(selectedBooking)} src={messageIcon} />
+                    <Icon onClick={() => fetchTelegram(selectedBookingToView)} src={messageIcon} />
                   </ActionButtonGroup>
                 )}
               </EventCard>
-              {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBooking?.bookingID && (
+              {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBookingToView?.bookingID && (
                 <ConfirmationModal
                   title="Delete Booking?"
                   hasLeftButton={true}
                   leftButtonText="Delete"
                   onLeftButtonClick={() => {
-                    dispatch(deleteMyBooking(selectedBooking?.bookingID))
+                    dispatch(deleteMyBooking(selectedBookingToView?.bookingID))
                     history.replace(PATHS.VIEW_ALL_FACILITIES)
                     history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                   }}

@@ -21,7 +21,8 @@ const initialState: State = {
   locationList: [],
   locationListWithinTime: [],
   selectedFacility: null,
-  selectedBooking: null,
+  selectedBookingToView: null,
+  selectedBookingToEdit: null,
   myBookings: [],
   isDeleteMyBooking: -1,
   createSuccess: false,
@@ -61,7 +62,8 @@ type State = {
   locationList: string[]
   locationListWithinTime: string[]
   selectedFacility: Facility | null
-  selectedBooking: Booking | null
+  selectedBookingToView: Booking | null
+  selectedBookingToEdit: Booking | null
   myBookings: Booking[]
   isDeleteMyBooking: number
   createSuccess: boolean
@@ -184,7 +186,14 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     case FACILITY_ACTIONS.SET_VIEW_BOOKING: {
       return {
         ...state,
-        selectedBooking: action.selectedBooking,
+        selectedBookingToView: action.selectedBookingToView,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_EDIT_BOOKING: {
+      return {
+        ...state,
+        selectedBookingToEdit: action.selectedBookingToEdit,
       }
     }
 

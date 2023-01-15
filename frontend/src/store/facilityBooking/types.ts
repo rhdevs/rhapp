@@ -80,6 +80,7 @@ export enum FACILITY_ACTIONS {
   POPULATE_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS',
   SET_FACILITY_DETAILS = 'FACILITY_ACTIONS.SET_FACILITY_DETAILS',
   SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
+  SET_EDIT_BOOKING = 'FACILITY_ACTIONS.SET_EDIT_BOOKING',
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
@@ -171,7 +172,12 @@ type SetFacilityDetails = {
 
 type SetViewBooking = {
   type: typeof FACILITY_ACTIONS.SET_VIEW_BOOKING
-  selectedBooking: Booking
+  selectedBookingToView: Booking
+}
+
+type SetEditBooking = {
+  type: typeof FACILITY_ACTIONS.SET_EDIT_BOOKING
+  selectedBookingToEdit: Booking
 }
 
 type SetIsLoading = {
@@ -315,6 +321,7 @@ export type ActionTypes =
   | PopulateFacilityBookings
   | SetFacilityDetails
   | SetViewBooking
+  | SetEditBooking
   | SetIsLoading
   | SetBlockOutIsOpen
   | SetSelectedFacility

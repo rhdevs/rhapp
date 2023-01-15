@@ -1,5 +1,5 @@
 import { now } from 'lodash'
-import { Dispatch, GetState, RootState } from '../types'
+import { Dispatch, GetState } from '../types'
 import { ENDPOINTS, DOMAINS, get, del, DOMAIN_URL } from '../endpoints'
 import { defaultTimeBlocks } from '../stubs'
 import {
@@ -12,7 +12,6 @@ import {
   TimeBlock,
   TimeBlockType,
 } from './types'
-import { useSelector } from 'react-redux'
 
 /**
  *
@@ -25,14 +24,14 @@ import { useSelector } from 'react-redux'
 export const updateBookingDailyView = (date: Date, selectedFacilityId: number) => async (
   dispatch: Dispatch<ActionTypes>,
 ) => {
-  const updatedTB: TimeBlock[] = [...defaultTimeBlocks]
+  const updatedTimeBlocks: TimeBlock[] = [...defaultTimeBlocks]
 
   const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
   const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
 
-  //set all elements in TB to available
+  //set all elements in Time Blocks to available
   for (let i = 0; i < 24; i++) {
-    updatedTB[i] = {
+    updatedTimeBlocks[i] = {
       id: i,
       timestamp: adjustedStart.getTime() / 1000 + i * 3600,
       type: TimeBlockType.AVAILABLE,
@@ -52,43 +51,48 @@ export const updateBookingDailyView = (date: Date, selectedFacilityId: number) =
     .then((resp) => resp.json())
     .then((res) => {
       const updatedDayBookings: Booking[] = res.data
-      for (let i = 0; i < updatedDayBookings.length; i++) {
-        if (new Date(updatedDayBookings[i].startTime * 1000).getDate() == date.getDate()) {
-          const starthour = new Date(updatedDayBookings[i].startTime * 1000).getHours()
-          const endhour =
-            new Date(updatedDayBookings[i].endTime * 1000).getHours() < starthour
-              ? 24
-              : new Date(updatedDayBookings[i].endTime * 1000).getHours()
-          for (let hour = starthour; hour < endhour; hour++) {
-            updatedTB[hour] = {
+      for (const booking of updatedDayBookings) {
+        const startTimeObject = new Date(booking.startTime * 1000)
+        const endTimeObject = new Date(booking.endTime * 1000)
+        const startDate = startTimeObject.getDate()
+
+        if (startDate === date.getDate()) {
+          const startHour = startTimeObject.getHours()
+          const endHour = endTimeObject.getHours() < startHour ? 24 : endTimeObject.getHours()
+          let timestamp = booking.startTime
+          for (let hour = startHour; hour < endHour; hour++) {
+            updatedTimeBlocks[hour] = {
               id: hour,
-              timestamp: updatedDayBookings[i].startTime,
+              timestamp: timestamp,
               type: TimeBlockType.OCCUPIED,
-              ccaName: updatedDayBookings[i].ccaName,
-              eventName: updatedDayBookings[i].eventName,
-              booking: updatedDayBookings[i],
+              ccaName: booking.ccaName,
+              eventName: booking.eventName,
+              booking: booking,
             }
+            timestamp += 3600
           }
         }
 
-        if (new Date(updatedDayBookings[i].startTime * 1000).getDate() < date.getDate()) {
-          const starthour = 0
-          const endhour = new Date(updatedDayBookings[i].endTime * 1000).getHours()
-          for (let hour = starthour; hour < endhour; hour++) {
-            updatedTB[hour] = {
+        if (startDate < date.getDate()) {
+          const startHour = 0
+          const endHour = endTimeObject.getHours()
+          let timestamp = booking.startTime
+          for (let hour = startHour; hour < endHour; hour++) {
+            updatedTimeBlocks[hour] = {
               id: hour,
-              timestamp: updatedDayBookings[i].startTime,
+              timestamp: timestamp,
               type: TimeBlockType.OCCUPIED,
-              ccaName: updatedDayBookings[i].ccaName,
-              eventName: updatedDayBookings[i].eventName,
-              booking: updatedDayBookings[i],
+              ccaName: booking.ccaName,
+              eventName: booking.eventName,
+              booking: booking,
             }
+            timestamp += 3600
           }
         }
       }
 
       dispatch(setSelectedDayBookings(updatedDayBookings))
-      dispatch(setTimeBlocks(updatedTB))
+      dispatch(setTimeBlocks(updatedTimeBlocks))
       dispatch(setIsLoading(false))
     })
 }
@@ -430,10 +434,10 @@ export const setSelectedFacility = (facilityID: number) => (dispatch: Dispatch<A
 
 /**
  * Gets information of booking by `bookingId` \
- * Takes in `bookingId` and updates `selectedBooking` for the `EditBooking` and `ViewBooking` pages.
+ * Takes in `bookingId` and updates `selectedBookingToView` for the `EditBooking` and `ViewBooking` pages.
  *
  * @param bookingId (number)
- * @returns updates `selectedBooking`, `isLoading`
+ * @returns updates `selectedBookingToView`, `isLoading`
  *
  * @remarks <insert remarks here>
  */
@@ -444,7 +448,7 @@ export const fetchSelectedFacility = (bookingId: number) => async (dispatch: Dis
   })
     .then((resp) => resp.json())
     .then(async (booking) => {
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
+      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBookingToView: booking.data })
       dispatch(setIsLoading(false))
       return booking.data
     })
@@ -485,6 +489,24 @@ export const resetTimeSelectorSelection = () => (dispatch: Dispatch<ActionTypes>
   dispatch(setSelectedBlockTimestamp(0))
   dispatch(setSelectedStartTime(0))
   dispatch(setSelectedEndTime(0))
+}
+
+/**
+ *
+ * @param body (any) json response from BE
+ * @returns sets `bookingErrorMessage` according to `body`
+ */
+const setBookingStatusErrorMessage = (body: any) => (dispatch: Dispatch<ActionTypes>) => {
+  if (body.err === 'End time earlier than start time') {
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
+  } else if (body.err === 'Conflict Booking') {
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'))
+  } else if (body.err === 'You must be in RH Dance to make this booking') {
+    // As of this version, Dance Studio can only be booked by people who are in RH Dance.
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
+  } else {
+    dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
+  }
 }
 
 /**
@@ -560,18 +582,7 @@ export const handleCreateNewBooking = (
         })
       } else {
         resp.json().then((body) => {
-          if (body.err === 'End time earlier than start time') {
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
-          } else if (body.err === 'Conflict Booking') {
-            dispatch(
-              setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
-            )
-          } else if (body.err === 'You must be in RH Dance to make this booking') {
-            // As of this version, Dance Studio can only be booked by people who are in RH Dance.
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
-          } else {
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
-          }
+          setBookingStatusErrorMessage(body)
         })
       }
     })
@@ -604,21 +615,16 @@ export const handleEditBooking = (
   eventName: string | undefined,
   startTime: number | null,
   endTime: number | null,
-  // endDate?: number,
   ccaID?: number,
   description?: string,
-  // forceBook?: boolean,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = {
     facilityID: facilityID,
-    // eventName: eventName,
     userID: localStorage.getItem('userID'),
     ccaID: ccaID,
     startTime: startTime,
     endTime: endTime,
-    // bookUntil: endDate,
     description: description,
-    // forceBook: forceBook,
   }
   dispatch(
     setBooking({
@@ -663,18 +669,7 @@ export const handleEditBooking = (
         })
       } else {
         resp.json().then((body) => {
-          if (body.err === 'End time earlier than start time') {
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
-          } else if (body.err === 'Conflict Booking') {
-            dispatch(
-              setBookingStatus(BookingStatus.FAILURE, 'There is already a booking that exists at specified timing'),
-            )
-          } else if (body.err === 'You must be in RH Dance to make this booking') {
-            // As of this version, Dance Studio can only be booked by people who are in RH Dance.
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'You must be in RH Dance to make this booking'))
-          } else {
-            dispatch(setBookingStatus(BookingStatus.FAILURE, 'An error has occurred. Please try again later'))
-          }
+          setBookingStatusErrorMessage
         })
       }
     })
@@ -872,8 +867,9 @@ export const resetBookingFormInfo = () => async (dispatch: Dispatch<ActionTypes>
  * Fetches the default values for the booking form when editing a booking
  *
  * @param bookingId (number) the id of the booking to be edited
- * @returns updates `selectedBooking`, `bookingFormName`, `bookingStartTime`,
- *  `bookingEndTime`, `bookingFormCCA`, `bookingFormDescription`
+ * @returns updates `selectedBookingToEdit`, `selectedStartTime`, `selectedEndTime`,
+ *  `bookingFormName`, `bookingStartTime`, `bookingEndTime`,
+ *  `bookingFormCCA`, `bookingFormDescription`, `isLoading`
  *
  * @remarks
  *
@@ -885,7 +881,12 @@ export const fetchEditBookingFormDefaultValues = (bookingId: number) => async (d
   })
     .then((resp) => resp.json())
     .then(async (booking) => {
-      dispatch({ type: FACILITY_ACTIONS.SET_VIEW_BOOKING, selectedBooking: booking.data })
+      // set selectedBookingToEdit
+      dispatch({ type: FACILITY_ACTIONS.SET_EDIT_BOOKING, selectedBookingToEdit: booking.data })
+      //set selected times
+      dispatch(setSelectedStartTime(booking.data.startTime))
+      dispatch(setSelectedEndTime(booking.data.endTime))
+      // set booking form values
       dispatch(setBookingFormName(booking.data.eventName))
       dispatch(setBookingStartTime(booking.data.startTime))
       dispatch(setBookingEndTime(booking.data.endTime))
