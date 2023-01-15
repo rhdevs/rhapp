@@ -565,14 +565,21 @@ export const handleCreateNewBooking = (
     dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
   } else {
     const tokenId = localStorage.getItem('token')
-    fetch(DOMAIN_URL.FACILITY + ENDPOINTS.BOOKING + '?token=' + tokenId + '&userID=' + localStorage.getItem('userID'), {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
+    fetch(
+      `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}?` +
+        new URLSearchParams({
+          token: tokenId!,
+          userID: localStorage.getItem('userID')!,
+        }),
+      {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       },
-      body: JSON.stringify(requestBody),
-    }).then((resp) => {
+    ).then((resp) => {
       if (resp.status === 200) {
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
@@ -595,10 +602,12 @@ export const handleCreateNewBooking = (
 /**
  *
  * Given booking details, edit booking in database and update bookingStatus in store.
- * Throw errors if edit of booking fails.
+ * Throw errors if edit of booking fails. \
+ * NOTE: `eventName` is not used in BE (i.e. not editable)
  *
  * @param bookingID (number)
  * @param facilityID (number | undefined)
+ * @param eventName (string | undefined) - NOTE `eventName` is not used in BE (i.e. not editable)
  * @param startTime (number | null)
  * @param endTime (number | null)
  * @param ccaID (number) [optional]
@@ -619,6 +628,7 @@ export const handleEditBooking = (
   description?: string,
 ) => async (dispatch: Dispatch<ActionTypes>) => {
   const requestBody = {
+    // Note that eventName is not editable in the BE
     facilityID: facilityID,
     userID: localStorage.getItem('userID'),
     ccaID: ccaID,
@@ -643,14 +653,11 @@ export const handleEditBooking = (
   } else {
     const tokenId = localStorage.getItem('token')
     fetch(
-      DOMAIN_URL.FACILITY +
-        ENDPOINTS.BOOKING +
-        '/' +
-        bookingID +
-        '?token=' +
-        tokenId +
-        '&userID=' +
-        localStorage.getItem('userID'),
+      `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}/${bookingID}?` +
+        new URLSearchParams({
+          token: tokenId!,
+          userID: localStorage.getItem('userID')!,
+        }),
       {
         method: 'PUT',
         mode: 'cors',
@@ -669,7 +676,7 @@ export const handleEditBooking = (
         })
       } else {
         resp.json().then((body) => {
-          setBookingStatusErrorMessage
+          setBookingStatusErrorMessage(body)
         })
       }
     })
