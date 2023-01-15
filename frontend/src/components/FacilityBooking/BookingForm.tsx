@@ -70,16 +70,33 @@ const CCAInput = styled(AutoComplete)`
 `
 
 type Props = {
+  type: 'create' | 'edit'
   facilityId: number
   startDateOnClick: () => void
   endDateOnClick: () => void
   submitOnClick: MouseEventHandler<HTMLButtonElement>
-  isEditBooking?: boolean
-  // weeklyRecurrenceSelector?: boolean
-  // disableNameInput?: boolean
 }
 
-// TODO docs
+/**
+ * A form used for creating or editing a booking
+ *
+ * @param facilityId (number) - the id of the facility
+ * @param startDateOnClick (() => void) - function to be called when start date is clicked
+ * @param endDateOnClick (() => void) - function to be called when end date is clicked
+ * @param submitOnClick (MouseEventHandler<HTMLButtonElement>) - function to be called when submit button is clicked
+ * @param isEditBooking (boolean) - whether the form is for editing a booking
+ *
+ * @example
+ * // For creating a booking
+ * <BookingForm
+    type="create"
+    facilityId={selectedFacilityId}
+    startDateOnClick={reselectStartDate}
+    endDateOnClick={reselectEndDate}
+    submitOnClick={onSubmit}
+  />
+ *  @returns
+ */
 const BookingForm = (props: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -108,13 +125,6 @@ const BookingForm = (props: Props) => {
     return bookingFormName !== '' && bookingFormCCA !== '' && !(isWeeklyOn && bookingEndDate === 0)
   }
 
-  /**
-   * @returns string of the facility's name
-   */
-  const getFacilityName = () => {
-    return facilityList.find((facility) => facility.facilityID === props.facilityId)?.facilityName
-  }
-
   const handleToggleWeekly = () => {
     setIsWeeklyOn(!isWeeklyOn)
     isWeeklyOn && dispatch(setBookingEndDate(0))
@@ -128,7 +138,7 @@ const BookingForm = (props: Props) => {
         value={bookingFormName}
         required
         onChange={(e) => dispatch(setBookingFormName(e.target.value))}
-        disabled={props.isEditBooking}
+        disabled={props.type === 'edit'}
       />
       <SelectableField
         title="Start"
@@ -163,7 +173,7 @@ const BookingForm = (props: Props) => {
         textArea
         onChange={(e) => dispatch(setBookingFormDescription(e.target.value))}
       />
-      {!props.isEditBooking && (
+      {props.type === 'create' && ( // Weekly recurrence setting only for creating booking
         <WeeklyRecurrenceRow>
           <StyledTitle>Weekly Recurrence</StyledTitle>
           <Switch isOn={isWeeklyOn} handleToggle={() => handleToggleWeekly()} switchSize={50} />

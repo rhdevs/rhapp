@@ -496,7 +496,7 @@ export const resetTimeSelectorSelection = () => (dispatch: Dispatch<ActionTypes>
  * @param body (any) json response from BE
  * @returns sets `bookingErrorMessage` according to `body`
  */
-const setBookingStatusErrorMessage = (body: any) => (dispatch: Dispatch<ActionTypes>) => {
+const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>) => {
   if (body.err === 'End time earlier than start time') {
     dispatch(setBookingStatus(BookingStatus.FAILURE, 'End time is earlier than start time!'))
   } else if (body.err === 'Conflict Booking') {
@@ -568,8 +568,8 @@ export const handleCreateNewBooking = (
     fetch(
       `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}?` +
         new URLSearchParams({
-          token: tokenId!,
-          userID: localStorage.getItem('userID')!,
+          token: `${tokenId}`,
+          userID: `${localStorage.getItem('userID')}`,
         }),
       {
         method: 'POST',
@@ -655,8 +655,8 @@ export const handleEditBooking = (
     fetch(
       `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}/${bookingID}?` +
         new URLSearchParams({
-          token: tokenId!,
-          userID: localStorage.getItem('userID')!,
+          token: `${tokenId}`,
+          userID: `${localStorage.getItem('userID')}`,
         }),
       {
         method: 'PUT',

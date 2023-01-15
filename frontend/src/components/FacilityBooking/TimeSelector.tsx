@@ -15,7 +15,7 @@ import { DailyContainer, MainContainer } from './BlockStyles.styled'
  *
  * @param timeBlocks (TimeBlock[]) - Array of timeblocks to display
  * @param bookingBlockOnClick (Function) - Function to call when a timeblock is clicked
- * @param overwriteAvailability (number[]) - Array of timestamps to overwrite `OCCUPIED` to `AVAILABLE`
+ * @param overwriteAvailability (number[]) [optional] - Array of timestamps to overwrite `OCCUPIED` to `AVAILABLE`
  * @returns A section containing clickable timeblocks
  *
  * @example

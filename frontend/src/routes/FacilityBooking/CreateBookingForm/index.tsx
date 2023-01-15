@@ -77,7 +77,7 @@ export default function CreateBookingForm() {
     return facilityList.find((facility) => facility.facilityID === Number(selectedFacilityId))?.facilityName
   }
 
-  const onSubmit = (e: any) => {
+  const onSubmit = (e) => {
     e.preventDefault()
     const ccaId = ccaList.find((cca) => cca.ccaName === bookingFormCCA)?.ccaID
 
@@ -132,6 +132,7 @@ export default function CreateBookingForm() {
         <LoadingSpin />
       ) : (
         <BookingForm
+          type="create"
           facilityId={selectedFacilityId}
           startDateOnClick={reselectStartDate}
           endDateOnClick={reselectEndDate}

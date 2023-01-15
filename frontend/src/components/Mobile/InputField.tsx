@@ -62,7 +62,7 @@ type InputFieldProps = {
   textArea?: boolean
   required?: boolean
   defaultValue?: string
-  onChange?: (e: any) => void
+  onChange?: (e) => void
   disabled?: boolean
 }
 

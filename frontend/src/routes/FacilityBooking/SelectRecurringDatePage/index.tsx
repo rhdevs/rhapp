@@ -5,12 +5,10 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
-import { PATHS } from '../../Routes'
 import {
   fetchFacilityNameFromID,
   resetBooking,
   setBookingEndDate,
-  setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
@@ -56,11 +54,7 @@ export default function SelectRecurringDatePage() {
 
   return (
     <>
-      <TopNavBarRevamp
-        title="Select Weekly Booking End Date"
-        // onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
-        onLeftClick={() => history.goBack()}
-      />
+      <TopNavBarRevamp title="Select Weekly Booking End Date" onLeftClick={() => history.goBack()} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />

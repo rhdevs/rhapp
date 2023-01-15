@@ -5,13 +5,8 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../routes/Routes'
 import {
-  editMyBooking,
   setIsDeleteMyBooking,
   deleteMyBooking,
-  resetBookingFormInfo,
-  setBookingFormCCA,
-  setBookingFormDescription,
-  setBookingFormName,
   fetchEditBookingFormDefaultValues,
 } from '../../store/facilityBooking/action'
 import { Booking } from '../../store/facilityBooking/types'
@@ -60,7 +55,7 @@ const BookingSubHeaderEventName = styled.div`
 
   color: rgba(0, 0, 0, 0.65);
 `
-// TODO: fix styling when backend is up
+
 const BookingTime = styled.p`
   font-style: normal;
   font-weight: thin;

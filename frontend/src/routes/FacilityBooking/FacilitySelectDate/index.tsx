@@ -9,6 +9,7 @@ import styled from 'styled-components'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
+
 import {
   fetchFacilityNameFromID,
   resetBooking,
@@ -16,14 +17,14 @@ import {
   setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
+import { setClickedDate } from '../../../store/facilityBooking/action'
+import { BookingStatus } from '../../../store/facilityBooking/types'
 import { RootState } from '../../../store/types'
 
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
-import { setClickedDate } from '../../../store/facilityBooking/action'
-import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 
 import { MainCalendarContainer } from '../FacilityBooking.styled'

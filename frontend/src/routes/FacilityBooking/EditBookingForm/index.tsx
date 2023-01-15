@@ -113,11 +113,11 @@ export default function EditBookingForm() {
           <>
             <TopNavBar title={`Edit Booking for ${selectedBookingToEdit.facilityName}`} onLeftClick={onLeftClick} />
             <BookingForm
+              type="edit"
               facilityId={selectedBookingToEdit.facilityID}
               startDateOnClick={reselectStartDate}
               endDateOnClick={reselectEndDate}
               submitOnClick={onSubmit}
-              isEditBooking
             />
           </>
         )
