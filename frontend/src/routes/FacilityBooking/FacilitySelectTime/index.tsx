@@ -7,6 +7,7 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import {
+  resetBookingFormInfo,
   resetTimeSelectorSelection,
   setBookingEndTime,
   setBookingStartTime,
@@ -169,6 +170,7 @@ export default function FacilitySelectTime() {
   }
 
   const goToBookingPage = () => {
+    dispatch(resetBookingFormInfo())
     history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
   }
 

@@ -99,6 +99,11 @@ export default function EditBookingForm() {
     )
   }
 
+  const onLeftClick = () => {
+    dispatch(resetBookingFormInfo())
+    history.goBack()
+  }
+
   return (
     <Background>
       {isLoading ? (
@@ -106,10 +111,7 @@ export default function EditBookingForm() {
       ) : (
         selectedBookingToEdit && (
           <>
-            <TopNavBar
-              title={`Edit Booking for ${selectedBookingToEdit.facilityName}`}
-              onLeftClick={() => history.goBack()}
-            />
+            <TopNavBar title={`Edit Booking for ${selectedBookingToEdit.facilityName}`} onLeftClick={onLeftClick} />
             <BookingForm
               facilityId={selectedBookingToEdit.facilityID}
               startDateOnClick={reselectStartDate}
