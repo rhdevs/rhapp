@@ -246,25 +246,24 @@ export const getMyBookings = (userId: string) => async (dispatch: Dispatch<Actio
 
 /**
  *
- * Takes in `isDeleteMyBooking` and closes the booking if it equals -1
+ * Indicates the id of the booking to be deleted.
+ * Default value is -1 when no booking is to be deleted
  *
- * @params isDeleteMyBooking (number, optional)
- * @returns updates `isDeleteMyBooking`
+ * @params bookingIdToDelete (number, optional)
+ * @returns updates `bookingIdToDelete`
  *
  * @remarks
- * -1 stands for closed, any others means open for that specific ID.
- * // TODO shouldn't `isDeleteMyBooking` be a boolean value ??
+ *
  */
-
-export const setIsDeleteMyBooking = (isDeleteMyBooking?: number) => (dispatch: Dispatch<ActionTypes>) => {
-  if (isDeleteMyBooking !== undefined) {
-    dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, isDeleteMyBooking: isDeleteMyBooking })
+export const setBookingIdToDelete = (bookingIdToDelete?: number) => (dispatch: Dispatch<ActionTypes>) => {
+  if (bookingIdToDelete !== undefined) {
+    dispatch({ type: FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING, bookingIdToDelete: bookingIdToDelete })
   }
 }
 
 /**
  *
- * Takes in a booking ID, and closes it by passing -1 to `setIsDeleteMyBooking`
+ * Deletes a booking from the database and updates the `myBookings` state with the new list of bookings after deletion
  *
  * @params bookingID (number, optional)
  * @returns updates `MyBookings`
@@ -281,7 +280,7 @@ export const deleteMyBooking = (bookingId?: number) => async (dispatch: Dispatch
         type: FACILITY_ACTIONS.DELETE_MY_BOOKING,
         myBookings: myBookings.filter((booking) => booking.bookingID !== bookingId),
       })
-      dispatch(setIsDeleteMyBooking(-1))
+      dispatch(setBookingIdToDelete(-1))
     })
   }
 }
@@ -299,23 +298,6 @@ export const setSearchMode = (newSearchMode: SearchMode) => async (dispatch: Dis
     type: FACILITY_ACTIONS.SET_SEARCH_MODE,
     searchMode: newSearchMode,
   })
-}
-
-/**
- *
- *
- * @params oldBooking (Booking)
- * @returns updates `newBooking`, `newBookingFacilityName`
- *
- * @remarks
- * TODO unused
- */
-export const editMyBooking = (oldBooking: Booking) => (dispatch: Dispatch<ActionTypes>) => {
-  // TODO unused
-  // dispatch({
-  //   type: FACILITY_ACTIONS.EDIT_MY_BOOKING,
-  //   newBooking: oldBooking,
-  // })
 }
 
 /**
@@ -375,30 +357,6 @@ export const fetchFacilityNameFromID = (id: number) => async (dispatch: Dispatch
     .then((facility) => {
       dispatch({ type: FACILITY_ACTIONS.SET_VIEW_FACILITY_NAME, selectedFacilityName: facility.data[0].facilityName })
     })
-}
-
-/**
- *
- * @param isFailure (boolean)
- * @param isSuccess (boolean)
- * @returns updates `createFailure`, `createSuccess`
- *
- * @remarks
- * // TODO THIS FUNCTION, AND ITS VALUES, ARE NOT USED!
- * `success && failure` -> Success Message shown \
- * `success && !failure` -> When in createbooking, redirect to viewbooking with success message \
- * `!success && failure` -> Failure Message shown \
- * `!success && !failure` -> Normal state no error
- */
-
-export const resetCreateBookingSuccessFailure = (isFailure: boolean, isSuccess: boolean) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: FACILITY_ACTIONS.HANDLE_CREATE_BOOKING,
-    createFailure: isFailure,
-    createSuccess: isSuccess,
-  })
 }
 
 /**
@@ -522,7 +480,7 @@ const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>)
  * @param eventName (string | undefined)
  * @param startTime (number | null)
  * @param endTime (number | null)
- * @param endDate (number) [optional]
+ * @param endDate (number) [optional] - end date of recurring bookings (bookings created weekly up to the end date)
  * @param ccaID (number) [optional]
  * @param description (string) [optional]
  * @param forceBook (boolean) [optional]
@@ -530,7 +488,6 @@ const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>)
  * @returns upon successful booking, reset variables in store used for booking.
  *
  * @remarks
- * TODO: What is the purpose of endDate??
  */
 export const handleCreateNewBooking = (
   facilityID: number | undefined,
@@ -835,7 +792,6 @@ export const setSelectedDayBookings = (selectedDayBookings: Booking[]) => (dispa
   })
 }
 
-// TODO check if really need
 export const setClickedDate = (newClickedDate: Date) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: FACILITY_ACTIONS.SET_CLICKED_DATE,

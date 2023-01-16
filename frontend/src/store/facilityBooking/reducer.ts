@@ -24,9 +24,7 @@ const initialState: State = {
   selectedBookingToView: null,
   selectedBookingToEdit: null,
   myBookings: [],
-  isDeleteMyBooking: -1,
-  createSuccess: false,
-  createFailure: false,
+  bookingIdToDelete: -1,
   searchMode: SearchMode.NONE,
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
@@ -65,9 +63,7 @@ type State = {
   selectedBookingToView: Booking | null
   selectedBookingToEdit: Booking | null
   myBookings: Booking[]
-  isDeleteMyBooking: number
-  createSuccess: boolean
-  createFailure: boolean
+  bookingIdToDelete: number
   searchMode: SearchMode
   // VIEW FACILITY PARAMS
   ViewStartDate: Date
@@ -125,7 +121,7 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     case FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING: {
       return {
         ...state,
-        isDeleteMyBooking: action.isDeleteMyBooking,
+        bookingIdToDelete: action.bookingIdToDelete,
       }
     }
     case FACILITY_ACTIONS.DELETE_MY_BOOKING: {
@@ -158,14 +154,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       return {
         ...state,
         ViewFacilityMode: action.ViewFacilityMode,
-      }
-    }
-
-    case FACILITY_ACTIONS.HANDLE_CREATE_BOOKING: {
-      return {
-        ...state,
-        createFailure: action.createFailure,
-        createSuccess: action.createSuccess,
       }
     }
 

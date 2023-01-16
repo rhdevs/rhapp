@@ -5,12 +5,13 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../routes/Routes'
 import {
-  setIsDeleteMyBooking,
+  setBookingIdToDelete,
   deleteMyBooking,
   fetchEditBookingFormDefaultValues,
 } from '../../store/facilityBooking/action'
 import { Booking } from '../../store/facilityBooking/types'
 import { RootState } from '../../store/types'
+
 import { ConfirmationModal } from '../Mobile/ConfirmationModal'
 import FacilityLogo from './FacilityLogo'
 import { days, months } from '../../common/dates'
@@ -35,6 +36,7 @@ const BookingHeader = styled.div`
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
+  margin: 5px 0;
 
   color: rgba(0, 0, 0, 0.65);
 `
@@ -56,15 +58,20 @@ const BookingSubHeaderEventName = styled.div`
   color: rgba(0, 0, 0, 0.65);
 `
 
-const BookingTime = styled.p`
+const BookingTime = styled.div`
   font-style: normal;
   font-weight: thin;
   font-size: 12px;
   line-height: 12px;
+  margin: 5px 0 10px;
+
   color: #de5f4c;
 `
 
 const BookingLabels = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 42%;
   align-self: center;
   margin-top: 10px;
 `
@@ -73,7 +80,7 @@ const RightActionGroups = styled.div`
   position: absolute;
   right: 0px;
   top: 50%;
-  transform: translate(-17%, -50%);
+  transform: translate(-10%, -50%);
 `
 
 const ActionButton = styled.img`
@@ -143,7 +150,7 @@ const timeString = (startTime: number, endTime: number) => {
 const BookingCard = ({ booking }: { booking: Booking }) => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { isDeleteMyBooking } = useSelector((state: RootState) => state.facilityBooking)
+  const { bookingIdToDelete } = useSelector((state: RootState) => state.facilityBooking)
 
   return (
     <BookingCardStyled key={booking.bookingID}>
@@ -170,21 +177,21 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
             }
           }}
         />
-        <ActionButton src={deleteIcon} onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))} />
+        <ActionButton src={deleteIcon} onClick={() => dispatch(setBookingIdToDelete(booking.bookingID))} />
       </RightActionGroups>
-      {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
+      {bookingIdToDelete === booking.bookingID && (
         <ConfirmationModal
           title="Delete Booking?"
           hasLeftButton
           leftButtonText="Delete"
-          onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
+          onOverlayClick={() => dispatch(setBookingIdToDelete(-1))}
           onLeftButtonClick={() => {
             dispatch(deleteMyBooking(booking.bookingID))
             history.replace(PATHS.VIEW_ALL_FACILITIES)
             history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
           }}
           rightButtonText="Cancel"
-          onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+          onRightButtonClick={() => dispatch(setBookingIdToDelete(-1))}
         />
       )}
     </BookingCardStyled>

@@ -8,9 +8,9 @@ import { PATHS } from '../../Routes'
 import {
   setIsLoading,
   deleteMyBooking,
-  editMyBooking,
   fetchSelectedFacility,
-  setIsDeleteMyBooking,
+  setBookingIdToDelete,
+  fetchEditBookingFormDefaultValues,
 } from '../../../store/facilityBooking/action'
 import { DOMAIN_URL, ENDPOINTS } from '../../../store/endpoints'
 import { RootState } from '../../../store/types'
@@ -31,7 +31,7 @@ const MainContainer = styled.div`
 `
 
 const EventCard = styled.div`
-  background: linear-gradient(to top, #ffffff 78%, #ef9688 22%);
+  background: linear-gradient(to top, #ffffff 76%, #ef9688 24%);
   cursor: pointer;
   margin: 23px;
   padding: 15px;
@@ -88,6 +88,7 @@ const CardSubtitle = styled.p`
 `
 
 const CardDurationLabel = styled.p`
+  min-width: 100px;
   font-weight: 600;
   font-size: 24px;
   line-height: 14px;
@@ -142,12 +143,11 @@ const EventFacilityName = styled.div`
  * <any remarks on this component type in here>
  *
  */
-
 export default function ViewBooking() {
   const params = useParams<{ bookingId: string }>()
   const dispatch = useDispatch()
   const history = useHistory()
-  const { selectedBookingToView, isDeleteMyBooking, isLoading, isJcrc } = useSelector(
+  const { selectedBookingToView, bookingIdToDelete, isLoading, isJcrc } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -175,6 +175,7 @@ export default function ViewBooking() {
     const site = 'https://telegram.me/' + userID
     tab && (tab.location.href = site)
   }
+
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(fetchSelectedFacility(parseInt(params.bookingId)))
@@ -182,16 +183,20 @@ export default function ViewBooking() {
 
   const formatDate = (eventStartTime: number) => {
     const date = new Date(eventStartTime * 1000)
-    return format(date, 'MM/dd/yy hh:mm a')
+    return format(date, 'dd MMM yyyy, HH:mm')
   }
 
-  const timeDuration = (eventStartTime: number, eventEndTime: number) => {
+  const getTimeDuration = (eventStartTime: number, eventEndTime: number) => {
     const startDate = new Date(eventStartTime * 1000)
     const endDate = new Date(eventEndTime * 1000)
     const timeDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 3600)
 
     return Math.round(timeDiff * 2) / 2
   }
+
+  const bookingTimeDuration = selectedBookingToView
+    ? getTimeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime)
+    : -1
 
   return (
     <>
@@ -211,9 +216,7 @@ export default function ViewBooking() {
                 <DetailsGroup>
                   <TimeDetails>
                     <CardDurationLabel>
-                      {timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) > 1
-                        ? timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) + 'hrs'
-                        : timeDuration(selectedBookingToView.startTime, selectedBookingToView.endTime) + 'hr'}
+                      {bookingTimeDuration === 1 ? '1 hr' : `${bookingTimeDuration} hrs`}
                     </CardDurationLabel>
                     <DateTimeDetails>
                       {selectedBookingToView && (
@@ -248,13 +251,15 @@ export default function ViewBooking() {
                     <Icon
                       src={editIcon}
                       onClick={() => {
-                        dispatch(editMyBooking(selectedBookingToView))
-                        history.push(PATHS.CREATE_FACILITY_BOOKING)
+                        if (params.bookingId) {
+                          dispatch(fetchEditBookingFormDefaultValues(Number(params.bookingId)))
+                          history.push(`${PATHS.EDIT_FACILITY_BOOKING}${params.bookingId}`)
+                        }
                       }}
                     />
                     <Icon
                       src={deletepic}
-                      onClick={() => dispatch(setIsDeleteMyBooking(selectedBookingToView.bookingID))}
+                      onClick={() => dispatch(setBookingIdToDelete(selectedBookingToView.bookingID))}
                     />
                     {selectedBookingToView?.userID !== localStorage.getItem('userID') && (
                       <Icon onClick={() => fetchTelegram(selectedBookingToView)} src={messageIcon} />
@@ -266,10 +271,10 @@ export default function ViewBooking() {
                   </ActionButtonGroup>
                 )}
               </EventCard>
-              {isDeleteMyBooking !== -1 && isDeleteMyBooking === selectedBookingToView?.bookingID && (
+              {bookingIdToDelete === selectedBookingToView?.bookingID && (
                 <ConfirmationModal
                   title="Delete Booking?"
-                  hasLeftButton={true}
+                  hasLeftButton
                   leftButtonText="Delete"
                   onLeftButtonClick={() => {
                     dispatch(deleteMyBooking(selectedBookingToView?.bookingID))
@@ -277,7 +282,7 @@ export default function ViewBooking() {
                     history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
                   }}
                   rightButtonText="Cancel"
-                  onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
+                  onRightButtonClick={() => dispatch(setBookingIdToDelete(-1))}
                 />
               )}
             </>
