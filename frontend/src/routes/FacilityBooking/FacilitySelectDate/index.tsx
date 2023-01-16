@@ -53,6 +53,7 @@ export default function FacilitySelectDate() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
+    dispatch(setClickedDate(new Date())) // Set the default date to today
     dispatch(resetBooking())
     selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
     selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))

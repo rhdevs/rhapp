@@ -76,6 +76,8 @@ export default function FacilitySelectTime() {
   const history = useHistory()
   const params = useParams<{ facilityId: string; selectionMode: 'reselect' | 'reselectExistingBooking' | undefined }>()
   const {
+    bookingStartTime,
+    bookingEndTime,
     clickedDate,
     isLoading,
     selectedBlockTimestamp,
@@ -151,9 +153,15 @@ export default function FacilitySelectTime() {
   }
 
   const onLeftClick = () => {
-    // reset user selection
-    dispatch(resetTimeSelectorSelection())
-    isReselectingTime ? history.goBack() : goBackToDailyViewPage()
+    if (isReselectingTime) {
+      // set back to original booking time if user cancels reselection
+      dispatch(setSelectedStartTime(bookingStartTime))
+      dispatch(setSelectedEndTime(bookingEndTime))
+      history.goBack() // to booking form
+    } else {
+      dispatch(resetTimeSelectorSelection())
+      goBackToDailyViewPage()
+    }
   }
 
   useEffect(() => {
