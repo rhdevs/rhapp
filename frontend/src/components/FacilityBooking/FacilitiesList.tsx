@@ -181,7 +181,7 @@ const FacilitiesList = (props: {
         {blockOutIsOpen && (
           <JCRCBlockOutModal
             title="Facilities Blocking"
-            hasLeftButton={true}
+            hasLeftButton
             leftButtonText="Confirm"
             rightButtonText="Close"
             facilities={facilityList}

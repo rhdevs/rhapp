@@ -1,28 +1,18 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
-import { PATHS } from '../../Routes'
 import { onRefresh } from '../../../common/reloadPage'
-import {
-  getMyBookings,
-  setIsDeleteMyBooking,
-  deleteMyBooking,
-  editMyBooking,
-  setIsLoading,
-} from '../../../store/facilityBooking/action'
+import { getMyBookings, setIsLoading } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
-import FacilityLogo from '../../../components/FacilityBooking/FacilityLogo'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
-import { ConfirmationModal } from '../../../components/Mobile/ConfirmationModal'
+import BookingCard from '../../../components/FacilityBooking/BookingCard'
 
-import deleteIcon from '../../../assets/deleteIcon.svg'
-import editIcon from '../../../assets/editIcon.svg'
 import catIcon from '../../../assets/catMagnifyGlass.svg'
+import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -32,67 +22,6 @@ const MainContainer = styled.div`
   top: 70px;
   overflow: scroll;
   padding-bottom: 50px;
-`
-const BookingCard = styled.div`
-  position: relative;
-  cursor: pointer;
-  background-color: #ffffff;
-  margin: 23px;
-  margin-top: 0px;
-  min-height: 70px;
-  border-radius: 20px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  display: flex;
-`
-
-const BookingHeader = styled.div`
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 16px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-
-const BookingSubHeaderCCAName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 12px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-const BookingSubHeaderEventName = styled.div`
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 12px;
-
-  color: rgba(0, 0, 0, 0.65);
-`
-// TODO: fix styling when backend is up
-const BookingTime = styled.p`
-  font-style: normal;
-  font-weight: thin;
-  font-size: 12px;
-  line-height: 12px;
-  color: #de5f4c;
-`
-
-const BookingLabels = styled.div`
-  align-self: center;
-  margin-top: 10px;
-`
-
-const RightActionGroups = styled.div`
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  transform: translate(-17%, -50%);
-`
-
-const ActionButton = styled.img`
-  padding: 15px;
 `
 
 const NoBookingsFound = styled.div`
@@ -117,14 +46,14 @@ const NoBookingsFound = styled.div`
  */
 export default function ViewMyBookings() {
   const dispatch = useDispatch()
-  const history = useHistory()
-  const { myBookings, isDeleteMyBooking, isLoading } = useSelector((state: RootState) => state.facilityBooking)
+  const params = useParams<{ userId: string }>()
+  const { myBookings, isLoading } = useSelector((state: RootState) => state.facilityBooking)
 
-  const userIdFromPath = location.pathname.split('/').slice(-1)[0]
+  const userId = params.userId
 
   useEffect(() => {
     dispatch(setIsLoading(true))
-    dispatch(getMyBookings(userIdFromPath))
+    dispatch(getMyBookings(userId))
   }, [dispatch])
 
   return (
@@ -137,67 +66,9 @@ export default function ViewMyBookings() {
           ) : (
             <>
               {myBookings.length === 0 && <NoBookingsFound>You have not made any bookings.</NoBookingsFound>}
-              {myBookings?.map((booking) => {
-                if (booking.startTime > parseInt((new Date().getTime() / 1000).toFixed(0))) {
-                  return (
-                    <BookingCard key={booking.bookingID}>
-                      <FacilityLogo key={booking.facilityID} facilityId={booking.facilityID} />
-                      <BookingLabels
-                        onClick={() => {
-                          history.push('/facility/booking/view/' + booking.bookingID)
-                        }}
-                      >
-                        <BookingHeader>{booking.facilityName}</BookingHeader>
-                        <BookingSubHeaderCCAName>
-                          {booking.ccaName ? booking.ccaName : 'Personal'}:
-                        </BookingSubHeaderCCAName>
-                        <BookingSubHeaderEventName>
-                          {booking.eventName.length > 25 ? booking.eventName.slice(0, 25) + '...' : booking.eventName}
-                        </BookingSubHeaderEventName>
-                        <BookingTime>
-                          {new Date(booking.startTime * 1000).toDateString().slice(0, -4)}{' '}
-                          {new Date(booking.startTime * 1000).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}{' '}
-                          to{' '}
-                          {new Date(booking.endTime * 1000).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </BookingTime>
-                      </BookingLabels>
-                      <RightActionGroups>
-                        <ActionButton
-                          src={editIcon}
-                          onClick={() => {
-                            dispatch(editMyBooking(booking))
-                            history.push(PATHS.CREATE_FACILITY_BOOKING)
-                          }}
-                        />
-                        <ActionButton
-                          src={deleteIcon}
-                          onClick={() => dispatch(setIsDeleteMyBooking(booking.bookingID))}
-                        />
-                      </RightActionGroups>
-                      {isDeleteMyBooking !== -1 && isDeleteMyBooking === booking.bookingID && (
-                        <ConfirmationModal
-                          title="Delete Booking?"
-                          hasLeftButton
-                          leftButtonText="Delete"
-                          onOverlayClick={() => dispatch(setIsDeleteMyBooking(-1))}
-                          onLeftButtonClick={() => {
-                            dispatch(deleteMyBooking(booking.bookingID))
-                            history.replace(PATHS.VIEW_ALL_FACILITIES)
-                            history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-                          }}
-                          rightButtonText="Cancel"
-                          onRightButtonClick={() => dispatch(setIsDeleteMyBooking(-1))}
-                        />
-                      )}
-                    </BookingCard>
-                  )
-                }
+              {myBookings?.map((booking, idx) => {
+                const isOver = booking.endTime < parseInt((new Date().getTime() / 1000).toFixed(0))
+                if (!isOver) return <BookingCard key={idx} booking={booking} />
               })}
               {myBookings?.length === 0 && !myBookings && (
                 <div>

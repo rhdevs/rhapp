@@ -21,11 +21,10 @@ const initialState: State = {
   locationList: [],
   locationListWithinTime: [],
   selectedFacility: null,
-  selectedBooking: null,
+  selectedBookingToView: null,
+  selectedBookingToEdit: null,
   myBookings: [],
-  isDeleteMyBooking: -1,
-  createSuccess: false,
-  createFailure: false,
+  bookingIdToDelete: -1,
   searchMode: SearchMode.NONE,
   // VIEW FACILITY PARAMS
   ViewStartDate: new Date(),
@@ -61,11 +60,10 @@ type State = {
   locationList: string[]
   locationListWithinTime: string[]
   selectedFacility: Facility | null
-  selectedBooking: Booking | null
+  selectedBookingToView: Booking | null
+  selectedBookingToEdit: Booking | null
   myBookings: Booking[]
-  isDeleteMyBooking: number
-  createSuccess: boolean
-  createFailure: boolean
+  bookingIdToDelete: number
   searchMode: SearchMode
   // VIEW FACILITY PARAMS
   ViewStartDate: Date
@@ -123,7 +121,7 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     case FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING: {
       return {
         ...state,
-        isDeleteMyBooking: action.isDeleteMyBooking,
+        bookingIdToDelete: action.bookingIdToDelete,
       }
     }
     case FACILITY_ACTIONS.DELETE_MY_BOOKING: {
@@ -159,14 +157,6 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
       }
     }
 
-    case FACILITY_ACTIONS.HANDLE_CREATE_BOOKING: {
-      return {
-        ...state,
-        createFailure: action.createFailure,
-        createSuccess: action.createSuccess,
-      }
-    }
-
     case FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS: {
       return {
         ...state,
@@ -184,7 +174,14 @@ export const facilityBooking: Reducer<State, ActionTypes> = (state = initialStat
     case FACILITY_ACTIONS.SET_VIEW_BOOKING: {
       return {
         ...state,
-        selectedBooking: action.selectedBooking,
+        selectedBookingToView: action.selectedBookingToView,
+      }
+    }
+
+    case FACILITY_ACTIONS.SET_EDIT_BOOKING: {
+      return {
+        ...state,
+        selectedBookingToEdit: action.selectedBookingToEdit,
       }
     }
 
