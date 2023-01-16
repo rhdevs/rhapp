@@ -5,7 +5,12 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { resetTimeSelectorSelection, updateBookingDailyView } from '../../../store/facilityBooking/action'
+import {
+  fetchFacilityNameFromID,
+  resetTimeSelectorSelection,
+  setSelectedFacility,
+  updateBookingDailyView,
+} from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -70,6 +75,8 @@ export default function FacilityDayView() {
 
   useEffect(() => {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [clickedDate])
 
   const bookFacilityOnClick = () => {

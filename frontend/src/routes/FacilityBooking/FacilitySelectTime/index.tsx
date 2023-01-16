@@ -7,11 +7,13 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import {
+  fetchFacilityNameFromID,
   resetTimeSelectorSelection,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
+  setSelectedFacility,
   setSelectedStartTime,
   setTimeBlocks,
   updateBookingDailyView,
@@ -68,11 +70,10 @@ const TitleText = styled.h2`
  * @remarks
  *
  */
-
 export default function FacilitySelectTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
+  const params = useParams<{ facilityId: string; selectionMode: 'reselect' | undefined }>()
   const {
     clickedDate,
     isLoading,
@@ -88,6 +89,11 @@ export default function FacilitySelectTime() {
   const isReselectingTime = selectionMode === 'reselect'
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
+
+  useEffect(() => {
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
+  }, [])
 
   useEffect(() => {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
@@ -192,7 +198,10 @@ export default function FacilitySelectTime() {
         <LoadingSpin />
       ) : (
         <Background>
-          <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
+          <h2>
+            {params.selectionMode === 'reselect' ? 'Reselect' : 'Choose'}{' '}
+            {selectedStartTime !== 0 ? 'ending' : 'starting'} time slot
+          </h2>
           <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>
             <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
