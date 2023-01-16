@@ -45,7 +45,7 @@ const TitleText = styled.h2`
   font-style: normal;
   font-weight: 700;
   font-size: min(5vw, 22px);
-  max-width: 50vw;
+  max-width: 45vw;
   margin-top: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -63,7 +63,6 @@ const TitleText = styled.h2`
  * <any remarks on this component type in here>
  *
  */
-
 export default function FacilityDayView() {
   const history = useHistory()
   const dispatch = useDispatch()

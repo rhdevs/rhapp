@@ -10,11 +10,13 @@ const TitleText = styled.h1`
   font-style: normal;
   font-weight: 700;
   font-size: min(5vw, 22px);
-  line-height: 20px;
+  line-height: 28px;
   color: #000000;
   align-self: center;
   white-space: nowrap;
-  padding-left: min(9vw, 70px);
+  max-width: 70vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const StyledNavBar = styled(NavBar)`
