@@ -26,7 +26,6 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 36px;
   overflow: hidden;
 `
 
@@ -88,7 +87,7 @@ export default function FacilityDayView() {
     <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
-        centerComponent={<TitleText>{`${selectedFacilityName} - View Booked Timeslots`}</TitleText>}
+        centerComponent={<TitleText>{selectedFacilityName} - View Booked Timeslots</TitleText>}
         rightComponent={
           <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
         }
