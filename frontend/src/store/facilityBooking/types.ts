@@ -76,10 +76,10 @@ export enum FACILITY_ACTIONS {
   SET_VIEW_FACILITY_START_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_START_DATE',
   SET_VIEW_FACILITY_END_DATE = 'FACILITY_ACTIONS.SET_VIEW_FACILITY_END_DATE',
   SET_VIEW_FACILITY_MODE = 'FACILITY_ACTIONS.VIEW_FACILITY_MODE',
-  HANDLE_CREATE_BOOKING = 'FACILITY_ACTIONS.HANDLE_CREATE_BOOKING',
   POPULATE_FACILITY_BOOKINGS = 'FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS',
   SET_FACILITY_DETAILS = 'FACILITY_ACTIONS.SET_FACILITY_DETAILS',
   SET_VIEW_BOOKING = 'FACILITY_ACTIONS.SET_VIEW_BOOKING',
+  SET_EDIT_BOOKING = 'FACILITY_ACTIONS.SET_EDIT_BOOKING',
   SET_SELECTED_FACILITY = 'FACILITY_ACTIONS.SET_SELECTED_FACILITY',
   GET_ALL_CCA = 'FACILITY_ACTIONS.GET_ALL_CCA',
   SET_BOOKING = 'FACILITY_ACTIONS.SET_BOOKING',
@@ -125,7 +125,7 @@ type GetMyBookings = {
 
 type SetIsDeleteMyBooking = {
   type: typeof FACILITY_ACTIONS.SET_IS_DELETE_MY_BOOKING
-  isDeleteMyBooking: number
+  bookingIdToDelete: number
 }
 
 type DeleteMyBooking = {
@@ -153,12 +153,6 @@ type setViewFacilityMode = {
   ViewFacilityMode: string
 }
 
-type HandleCreateBooking = {
-  type: typeof FACILITY_ACTIONS.HANDLE_CREATE_BOOKING
-  createSuccess: boolean
-  createFailure: boolean
-}
-
 type PopulateFacilityBookings = {
   type: typeof FACILITY_ACTIONS.POPULATE_FACILITY_BOOKINGS
   bookings: Booking[]
@@ -171,7 +165,12 @@ type SetFacilityDetails = {
 
 type SetViewBooking = {
   type: typeof FACILITY_ACTIONS.SET_VIEW_BOOKING
-  selectedBooking: Booking
+  selectedBookingToView: Booking
+}
+
+type SetEditBooking = {
+  type: typeof FACILITY_ACTIONS.SET_EDIT_BOOKING
+  selectedBookingToEdit: Booking
 }
 
 type SetIsLoading = {
@@ -311,10 +310,10 @@ export type ActionTypes =
   | SetViewFacilityStartDate
   | SetViewFacilityEndDate
   | setViewFacilityMode
-  | HandleCreateBooking
   | PopulateFacilityBookings
   | SetFacilityDetails
   | SetViewBooking
+  | SetEditBooking
   | SetIsLoading
   | SetBlockOutIsOpen
   | SetSelectedFacility

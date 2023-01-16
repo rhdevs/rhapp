@@ -5,13 +5,7 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
-import { PATHS } from '../../Routes'
-import {
-  resetBooking,
-  setBookingEndDate,
-  setIsLoading,
-  setSelectedFacility,
-} from '../../../store/facilityBooking/action'
+import { resetBooking, setBookingEndDate, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import { Calendar } from '../../../components/Calendar/Calendar'
@@ -28,6 +22,7 @@ import { MainCalendarContainer } from '../FacilityBooking.styled'
  * and tries to select a weekly booking end date. The page displays days in calendar format for user to select an end date.
  *
  * @remarks
+ * // TODO redirect to edit page when come from edit page
  */
 export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()
@@ -36,7 +31,6 @@ export default function SelectRecurringDatePage() {
   const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     dispatch(resetBooking()) // TODO what is this
     selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
@@ -46,16 +40,13 @@ export default function SelectRecurringDatePage() {
 
     if (Date.now() / 1000 <= selectedDate) {
       dispatch(setBookingEndDate(selectedDate))
-      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+      history.goBack()
     }
   }
 
   return (
     <>
-      <TopNavBarRevamp
-        title="Select Weekly Booking End Date"
-        onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
-      />
+      <TopNavBarRevamp title="Select Weekly Booking End Date" onLeftClick={() => history.goBack()} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
