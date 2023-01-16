@@ -878,7 +878,7 @@ export const resetBookingFormInfo = () => async (dispatch: Dispatch<ActionTypes>
  * Fetches the default values for the booking form when editing a booking
  *
  * @param bookingId (number) the id of the booking to be edited
- * @returns updates `selectedBookingToEdit`, `selectedStartTime`, `selectedEndTime`,
+ * @returns updates `selectedBookingToEdit`, `clickedDate`, `selectedStartTime`, `selectedEndTime`,
  *  `bookingFormName`, `bookingStartTime`, `bookingEndTime`,
  *  `bookingFormCCA`, `bookingFormDescription`, `isLoading`
  *
@@ -894,6 +894,8 @@ export const fetchEditBookingFormDefaultValues = (bookingId: number) => async (d
     .then(async (booking) => {
       // set selectedBookingToEdit
       dispatch({ type: FACILITY_ACTIONS.SET_EDIT_BOOKING, selectedBookingToEdit: booking.data })
+      // set clicked date
+      dispatch(setClickedDate(new Date(booking.data.startTime * 1000)))
       //set selected times
       dispatch(setSelectedStartTime(booking.data.startTime))
       dispatch(setSelectedEndTime(booking.data.endTime))

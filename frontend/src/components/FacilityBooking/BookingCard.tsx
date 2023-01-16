@@ -129,6 +129,17 @@ const timeString = (startTime: number, endTime: number) => {
   return `${startDateDateString} at ${startHour}:${startMinutes} to ${endDateDateString}${endHour}:${endMinutes}`
 }
 
+/**
+ * A clickable rectangular card that displays an existing booking's information,
+ * and allows the user to view details, edit or delete the booking.
+ *
+ * @param booking (Booking) booking object
+ *
+ * @example
+ * <BookingCard booking={booking} />
+ *
+ * @returns BookingCard component
+ */
 const BookingCard = ({ booking }: { booking: Booking }) => {
   const dispatch = useDispatch()
   const history = useHistory()
