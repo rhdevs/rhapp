@@ -5,11 +5,7 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
-import {
-  resetBooking,
-  setBookingEndDate,
-  setSelectedFacility,
-} from '../../../store/facilityBooking/action'
+import { resetBooking, setBookingEndDate, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import { Calendar } from '../../../components/Calendar/Calendar'
