@@ -200,13 +200,6 @@ export const getFacilityListWithinTime = (startTime: number, endTime: number) =>
   )
     .then((resp) => resp.json())
     .then((data) => {
-      console.log(
-        `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
-          new URLSearchParams({
-            startTime: `${startTime}`,
-            endTime: `${endTime}`,
-          }),
-      )
       const facilityList = data.available_facilities
       if (facilityList) {
         const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
