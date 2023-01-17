@@ -26,7 +26,6 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 36px;
   overflow: hidden;
 `
 
@@ -44,7 +43,8 @@ const TitleText = styled.h2`
   font-family: Lato;
   font-style: normal;
   font-weight: 700;
-  font-size: 22px;
+  font-size: min(5vw, 22px);
+  max-width: 45vw;
   margin-top: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,7 +62,6 @@ const TitleText = styled.h2`
  * <any remarks on this component type in here>
  *
  */
-
 export default function FacilityDayView() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -88,7 +87,7 @@ export default function FacilityDayView() {
     <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
-        centerComponent={<TitleText>{`${selectedFacilityName} - View Booked Timeslots`}</TitleText>}
+        centerComponent={<TitleText>{selectedFacilityName} - View Booked Timeslots</TitleText>}
         rightComponent={
           <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
         }

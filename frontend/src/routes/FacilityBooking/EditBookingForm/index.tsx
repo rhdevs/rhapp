@@ -107,7 +107,7 @@ export default function EditBookingForm() {
       ) : (
         selectedBookingToEdit && (
           <>
-            <TopNavBar title={`Edit Booking for ${selectedBookingToEdit.facilityName}`} onLeftClick={onLeftClick} />
+            <TopNavBar title={`Edit ${selectedBookingToEdit.facilityName} Booking`} onLeftClick={onLeftClick} />
             <BookingForm
               type="edit"
               facilityId={selectedBookingToEdit.facilityID}
