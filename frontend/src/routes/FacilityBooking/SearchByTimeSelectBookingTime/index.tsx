@@ -113,12 +113,9 @@ export default function SearchByTimeSelectBookingTime() {
       }
     } else {
       // select end time (after start time is selected), then go to booking page
-      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-
-      // TODO sus why is selected end time set twice
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
-      dispatch(setBookingEndTime(selectedEndTime))
+      dispatch(setBookingEndTime(selectedTimestamp + 3600))
       dispatch(resetTimeSelectorSelection())
       history.push(PATHS.SEARCH_BY_TIME_BOOKING_RESULTS)
     }

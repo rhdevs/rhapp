@@ -23,7 +23,7 @@ export default function ConflictBookingModal(props: Props) {
   }
 
   const onRightClick = () => {
-    // TODO doesn't work as intended (investigate)
+    // proceed with non-conflict bookings
     dispatch(
       handleCreateNewBooking(
         booking?.facilityID,
