@@ -173,7 +173,7 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
           onClick={() => {
             if (booking.bookingID) {
               dispatch(fetchEditBookingFormDefaultValues(booking.bookingID))
-              history.push(`${PATHS.EDIT_FACILITY_BOOKING}${booking.bookingID}`)
+              history.push(`${PATHS.EDIT_BOOKING_FORM}${booking.bookingID}`)
             }
           }}
         />

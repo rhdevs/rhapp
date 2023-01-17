@@ -5,7 +5,6 @@ import { AnimatedSwitch } from 'react-router-transition'
 import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import LoadingSpin from '../components/LoadingSpin'
 
-// TODO sort out naming conventions esp when to put _ID at the back
 export enum PATHS {
   // DOCUMENTATION
   DOCS_LANDING_PAGE = '/docs',
@@ -44,22 +43,22 @@ export enum PATHS {
   VIEW_ALL_FACILITIES = '/facility/allFacilities',
   VIEW_FACILITY = '/facility/selectedFacility',
   VIEW_FACILITY_ID = '/facility/selectedFacility/:facilityId',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/dayView',
-  VIEW_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/dayView/:facilityId',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW = '/facility/selectedFacility/selectTime',
-  CREATE_FACILITY_BOOKING_DAILY_VIEW_ID = '/facility/selectedFacility/selectTime/:facilityId/:selectionMode?',
+  FACILITY_DAY_VIEW = '/facility/selectedFacility/dayView',
+  FACILITY_DAY_VIEW_ID = '/facility/selectedFacility/dayView/:facilityId',
+  FACILITY_SELECT_TIME = '/facility/selectedFacility/selectTime',
+  FACILITY_SELECT_TIME_ID = '/facility/selectedFacility/selectTime/:facilityId/:selectionMode?',
   // // SEARCH BY TIME
   SEARCH_BY_TIME_SELECT_BOOKING_DATE = '/facility/searchByTime/selectDate',
   SEARCH_BY_TIME_SELECT_BOOKING_TIME = '/facility/searchByTime/selectDate/selectTime',
   SEARCH_BY_TIME_BOOKING_RESULTS = '/facility/searchByTime/searchResults',
   // // CREATE BOOKING
-  CREATE_FACILITY_BOOKING = '/facility/booking/create',
-  CREATE_FACILITY_BOOKING_ID = '/facility/booking/create/:facilityId',
+  CREATE_BOOKING_FORM = '/facility/booking/create',
+  CREATE_BOOKING_FORM_ID = '/facility/booking/create/:facilityId',
   VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
   SELECT_RECURRING_BOOKING_END_DATE = '/facility/booking/create/recurring/selectEndDate',
   SELECT_RECURRING_BOOKING_END_DATE_ID = '/facility/booking/create/recurring/selectEndDate/:facilityId',
-  EDIT_FACILITY_BOOKING = '/facility/booking/edit/',
-  EDIT_FACILITY_BOOKING_ID = '/facility/booking/edit/:bookingId',
+  EDIT_BOOKING_FORM = '/facility/booking/edit/',
+  EDIT_BOOKING_FORM_ID = '/facility/booking/edit/:bookingId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
   VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
   VIEW_MY_BOOKINGS = '/facility/booking/user',
@@ -161,18 +160,18 @@ const ViewMyBookings = React.lazy(
   () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
 )
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
-const ViewBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "ViewBookingDailyView" */ './FacilityBooking/FacilityDayView'),
+const FacilityDayView = React.lazy(
+  () => import(/* webpackChunckName: "FacilityDayView" */ './FacilityBooking/FacilityDayView'),
 )
 const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
-const CreateBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBookingForm/index'),
+const CreateBookingForm = React.lazy(
+  () => import(/* webpackChunckName: "CreateBookingForm" */ './FacilityBooking/CreateBookingForm/index'),
 )
-const CreateBookingDailyView = React.lazy(
-  () => import(/* webpackChunckName: "CreateBookingDailyView" */ './FacilityBooking/FacilitySelectTime'),
+const FacilitySelectTime = React.lazy(
+  () => import(/* webpackChunckName: "FacilitySelectTime" */ './FacilityBooking/FacilitySelectTime'),
 )
-const EditBooking = React.lazy(
-  () => import(/* webpackChunckName: "EditBooking" */ './FacilityBooking/EditBookingForm/index'),
+const EditBookingForm = React.lazy(
+  () => import(/* webpackChunckName: "EditBookingForm" */ './FacilityBooking/EditBookingForm/index'),
 )
 const SelectRecurringDatePage = React.lazy(
   () => import(/* webpackChunckName: "SelectRecurringDatePage" */ './FacilityBooking/SelectRecurringDatePage'),
@@ -251,11 +250,11 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
             <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW_ID} component={ViewBookingDailyView} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW_ID} component={CreateBookingDailyView} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING_ID} component={CreateBooking} />
-            <PrivateRoute exact path={PATHS.EDIT_FACILITY_BOOKING_ID} component={EditBooking} />
+            <PrivateRoute exact path={PATHS.FACILITY_DAY_VIEW_ID} component={FacilityDayView} />
+            <PrivateRoute exact path={PATHS.CREATE_BOOKING_FORM} component={CreateBookingForm} />
+            <PrivateRoute exact path={PATHS.CREATE_BOOKING_FORM_ID} component={CreateBookingForm} />
+            <PrivateRoute exact path={PATHS.FACILITY_SELECT_TIME_ID} component={FacilitySelectTime} />
+            <PrivateRoute exact path={PATHS.EDIT_BOOKING_FORM_ID} component={EditBookingForm} />
             <PrivateRoute exact path={PATHS.SELECT_RECURRING_BOOKING_END_DATE_ID} component={SelectRecurringDatePage} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 

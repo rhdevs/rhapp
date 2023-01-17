@@ -81,7 +81,7 @@ export default function FacilityDayView() {
   const bookFacilityOnClick = () => {
     // reset time selection on next page
     dispatch(resetTimeSelectorSelection())
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedFacilityId}`)
   }
 
   return (

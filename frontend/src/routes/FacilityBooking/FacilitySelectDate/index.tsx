@@ -61,7 +61,7 @@ export default function FacilitySelectDate() {
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+    history.push(`${PATHS.FACILITY_DAY_VIEW}/${params.facilityId}`)
   }
 
   useEffect(() => {

@@ -87,7 +87,7 @@ export const MainContainer = styled.div`
 export const MainTimeContainer = styled.div`
   border-right: 2.5px solid #a9a9a9;
   display: flex;
-  gap: ${`${BLOCK_GAP}px`};
+  gap: ${BLOCK_GAP}px;
   flex-direction: column;
   justify-content: space-between;
 `

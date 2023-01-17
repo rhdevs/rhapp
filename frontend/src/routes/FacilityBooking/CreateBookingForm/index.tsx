@@ -100,7 +100,7 @@ export default function CreateBookingForm() {
   /** when user goes back, reset user's time selections */
   const reselectBothDates = () => {
     dispatch(resetTimeSelectorSelection())
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}/reselect`)
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedFacilityId}/reselect`)
   }
 
   /** currently the same as reselectBothDates */
@@ -111,18 +111,18 @@ export default function CreateBookingForm() {
   /**  reselect end date only */
   const reselectEndDate = () => {
     dispatch(setSelectedEndTime(0))
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}/reselect`)
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedFacilityId}/reselect`)
   }
 
   /** similar to reselectBothDates, but without the reselect in the url path to prevent infinite loop */
-  const goBack = () => {
+  const goBackToSelectTime = () => {
     dispatch(resetTimeSelectorSelection())
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {
     dispatch(resetBookingFormInfo())
-    searchMode === SearchMode.BY_TIME ? history.push(PATHS.SEARCH_BY_TIME_BOOKING_RESULTS) : goBack()
+    searchMode === SearchMode.BY_TIME ? history.push(PATHS.SEARCH_BY_TIME_BOOKING_RESULTS) : goBackToSelectTime()
   }
 
   return (

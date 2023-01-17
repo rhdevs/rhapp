@@ -253,7 +253,7 @@ export default function ViewBooking() {
                       onClick={() => {
                         if (params.bookingId) {
                           dispatch(fetchEditBookingFormDefaultValues(Number(params.bookingId)))
-                          history.push(`${PATHS.EDIT_FACILITY_BOOKING}${params.bookingId}`)
+                          history.push(`${PATHS.EDIT_BOOKING_FORM}${params.bookingId}`)
                         }
                       }}
                     />

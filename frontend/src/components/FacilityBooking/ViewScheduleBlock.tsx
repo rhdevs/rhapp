@@ -11,7 +11,7 @@ import { ViewBookingCard } from './ViewBookingCard'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
-import { isSameDate } from '../../common/isSameDate'
+// import { isSameDate } from '../../common/isSameDate'
 
 /**
  *
@@ -24,7 +24,6 @@ import { isSameDate } from '../../common/isSameDate'
  * @remarks
  *
  */
-
 const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean>()
@@ -50,7 +49,8 @@ const ViewScheduleBlock = () => {
               key={index}
               entry={entry}
               // if day selected is not current, scroll to defaultTimePosition
-              scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
+              // TODO doesn't work
+              // scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
               openViewBookingModal={() => setIsViewBookingModalOpen(true)}
               setViewBookingEntryId={() => fetchBooking(entry.id)}
             />

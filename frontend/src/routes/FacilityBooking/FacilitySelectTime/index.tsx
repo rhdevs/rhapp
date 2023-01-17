@@ -149,7 +149,7 @@ export default function FacilitySelectTime() {
   }
 
   const goBackToDailyViewPage = () => {
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.FACILITY_DAY_VIEW}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {
@@ -186,7 +186,7 @@ export default function FacilitySelectTime() {
 
   const goToBookingPage = () => {
     dispatch(resetBookingFormInfo())
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+    history.push(`${PATHS.CREATE_BOOKING_FORM}/${selectedFacilityId}`)
   }
 
   const setSelectedBlock = (selectedTimestamp: number) => {
@@ -200,12 +200,9 @@ export default function FacilitySelectTime() {
       }
     } else {
       // select end time (after start time is selected), then go to booking page
-      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-
-      // TODO sus why is selected end time set twice
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
-      dispatch(setBookingEndTime(selectedEndTime))
+      dispatch(setBookingEndTime(selectedTimestamp + 3600)) // Add 1 hour to selected block as end time
       isReselectingTime ? history.goBack() : goToBookingPage()
     }
   }
