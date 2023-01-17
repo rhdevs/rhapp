@@ -61,7 +61,7 @@ export default function FacilitySelectDate() {
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+    history.push(`${PATHS.FACILITY_DAY_VIEW}/${params.facilityId}`)
   }
 
   useEffect(() => {
@@ -81,7 +81,14 @@ export default function FacilitySelectDate() {
   }
 
   const SuccessAlertSection = () => (
-    <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+    <Alert
+      message="Successful"
+      description="Yay yippe doodles"
+      type="success"
+      closable
+      showIcon
+      onClose={() => dispatch(setBookingStatus(BookingStatus.INITIAL))}
+    />
   )
   const FailureAlertSection = () => (
     <Alert
@@ -111,7 +118,7 @@ export default function FacilitySelectDate() {
         onLeftClick={() => history.push(`${PATHS.VIEW_ALL_FACILITIES}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
-        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
+        <AlertSection />
         <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />

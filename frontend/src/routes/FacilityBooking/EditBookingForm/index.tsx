@@ -83,9 +83,7 @@ export default function EditBookingForm() {
 
   const reselectBothDates = () => {
     dispatch(resetTimeSelectorSelection())
-    history.push(
-      `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBookingToEdit?.facilityID}/reselectExistingBooking`,
-    )
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedBookingToEdit?.facilityID}/reselectExistingBooking`)
   }
 
   const reselectStartDate = () => {
@@ -94,9 +92,7 @@ export default function EditBookingForm() {
 
   const reselectEndDate = () => {
     dispatch(setSelectedEndTime(0))
-    history.push(
-      `${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedBookingToEdit?.facilityID}/reselectExistingBooking`,
-    )
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedBookingToEdit?.facilityID}/reselectExistingBooking`)
   }
 
   const onLeftClick = () => {

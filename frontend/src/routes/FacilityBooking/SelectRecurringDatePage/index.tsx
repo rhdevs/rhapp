@@ -22,7 +22,6 @@ import { MainCalendarContainer } from '../FacilityBooking.styled'
  * and tries to select a weekly booking end date. The page displays days in calendar format for user to select an end date.
  *
  * @remarks
- * // TODO redirect to edit page when come from edit page
  */
 export default function SelectRecurringDatePage() {
   const dispatch = useDispatch()

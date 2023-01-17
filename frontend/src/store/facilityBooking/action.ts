@@ -144,8 +144,6 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
     .then((resp) => resp.json())
     .then((data) => {
       const facilityList = data.data
-      // const commHallBack = facilityList.pop() // Move Comm Hall (Back) to be beside Comm Hall (Front)
-      // facilityList.splice(6, 0, commHallBack)
       const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
       const locationList = ['All'].concat(uniqueLocationList as string[])
       dispatch({
@@ -457,6 +455,8 @@ export const resetTimeSelectorSelection = () => (dispatch: Dispatch<ActionTypes>
  *
  * @param body (any) json response from BE
  * @returns sets `bookingErrorMessage` according to `body`
+ * @remarks
+ * // TODO work with BE to standardise error messages instead of comparing strings
  */
 const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>) => {
   if (body.err === 'End time earlier than start time') {

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 
 import CurrentTimeLine from './CurrentTimeLine'
 import HourBlocks from './HourBlocks'
 import BookingBlock from './BookingBlock'
-import { isSameDate } from '../../common/isSameDate'
+// import { isSameDate } from '../../common/isSameDate'
 
 import { DailyContainer, MainContainer } from './BlockStyles.styled'
 
@@ -29,11 +29,7 @@ export default function TimeSelector(props: {
   overwriteAvailability?: number[]
 }) {
   const { timeBlocks, bookingBlockOnClick } = { ...props }
-  const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
-
-  useEffect(() => {
-    console.log(timeBlocks)
-  }, [])
+  // const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
 
   return (
     <MainContainer>
@@ -52,7 +48,7 @@ export default function TimeSelector(props: {
               entry={updatedEntry}
               // if day selected is not current, scroll to defaultTimePosition
               // TODO doesn't work
-              scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
+              // scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
             />
           )
         })}
