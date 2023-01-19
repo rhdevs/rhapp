@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React from 'react'
 import styled from 'styled-components'
 

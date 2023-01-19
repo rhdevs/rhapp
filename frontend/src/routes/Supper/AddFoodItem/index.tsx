@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'

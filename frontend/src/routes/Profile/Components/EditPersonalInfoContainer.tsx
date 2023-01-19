@@ -19,11 +19,6 @@ const MainContainer = styled.div`
   width: 75vw;
 `
 
-const BlockParagraph = styled.p`
-  font-size: 15px;
-  font-weight: 300;
-`
-
 const AvatarSpan = styled.span`
   display: inline-block;
   height: 150px;
@@ -97,24 +92,24 @@ const EditPersonalInfoContainer = () => {
   }
 
   // On file select (from the pop up)
-  const onFileChange = (event) => {
-    // Update the state
-    // console.log('file to upload: ' + event.target.files[0])
-    const file = event.target.files[0]
+  // const onFileChange = (event) => {
+  //   // Update the state
+  //   // console.log('file to upload: ' + event.target.files[0])
+  //   const file = event.target.files[0]
+  //
+  //   if (file) {
+  //     const reader = new FileReader()
+  //     reader.onload = handleReaderLoad
+  //     reader.readAsBinaryString(file)
+  //   }
+  // }
 
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = handleReaderLoad
-      reader.readAsBinaryString(file)
-    }
-  }
-
-  const handleReaderLoad = (readerEvt) => {
-    const binaryString = readerEvt.target.result
-    // console.log('binary string: ' + btoa(binaryString))
-    dispatch(handleNewProfilePicture(btoa(binaryString)))
-    dispatch(setHasChanged(true))
-  }
+  // const handleReaderLoad = (readerEvt) => {
+  //   const binaryString = readerEvt.target.result
+  //   // console.log('binary string: ' + btoa(binaryString))
+  //   dispatch(handleNewProfilePicture(btoa(binaryString)))
+  //   dispatch(setHasChanged(true))
+  // }
 
   const EditProfileImage = () => {
     // TODO doesn't work

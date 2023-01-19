@@ -47,8 +47,8 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { position } = getState().social
+export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
+  // const { position } = getState().social
 
   dispatch({
     type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
