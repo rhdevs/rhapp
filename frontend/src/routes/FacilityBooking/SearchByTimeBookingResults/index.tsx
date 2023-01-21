@@ -15,6 +15,7 @@ import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
 
 import {
   getFacilityListWithinTime,
+  resetBookingFormInfo,
   resetTimeSelectorSelection,
   setIsLoading,
   setSelectedFacility,
@@ -71,8 +72,9 @@ export default function SearchByTimeBookingResults() {
   }
 
   const facilityCardOnClick = (facilityId: number) => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${facilityId}`)
+    history.push(`${PATHS.CREATE_BOOKING_FORM}/${facilityId}`)
     dispatch(setSelectedFacility(facilityId))
+    dispatch(resetBookingFormInfo())
   }
 
   return (

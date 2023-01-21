@@ -9,6 +9,7 @@ import styled from 'styled-components'
 
 import { onRefresh } from '../../../common/reloadPage'
 import { PATHS } from '../../Routes'
+
 import {
   fetchFacilityNameFromID,
   resetBooking,
@@ -16,14 +17,14 @@ import {
   setIsLoading,
   setSelectedFacility,
 } from '../../../store/facilityBooking/action'
+import { setClickedDate } from '../../../store/facilityBooking/action'
+import { BookingStatus } from '../../../store/facilityBooking/types'
 import { RootState } from '../../../store/types'
 
 import BottomNavBar from '../../../components/Mobile/BottomNavBar'
 import { Calendar } from '../../../components/Calendar/Calendar'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import MyBookingsIcon from '../../../components/FacilityBooking/MyBookingsIcon'
-import { setClickedDate } from '../../../store/facilityBooking/action'
-import { BookingStatus } from '../../../store/facilityBooking/types'
 import ConflictBookingModal from '../ViewConflicts/ConflictBookingModal'
 
 import { MainCalendarContainer } from '../FacilityBooking.styled'
@@ -52,16 +53,15 @@ export default function FacilitySelectDate() {
 
   useEffect(() => {
     dispatch(setIsLoading(true))
+    dispatch(setClickedDate(new Date())) // Set the default date to today
     dispatch(resetBooking())
-    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId === 0) {
-      dispatch(setSelectedFacility(parseInt(params.facilityId)))
-    }
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(setClickedDate(newClickedDate))
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${params.facilityId}`)
+    history.push(`${PATHS.FACILITY_DAY_VIEW}/${params.facilityId}`)
   }
 
   useEffect(() => {
@@ -81,7 +81,14 @@ export default function FacilitySelectDate() {
   }
 
   const SuccessAlertSection = () => (
-    <Alert message="Successful" description="Yay yippe doodles" type="success" closable showIcon />
+    <Alert
+      message="Successful"
+      description="Yay yippe doodles"
+      type="success"
+      closable
+      showIcon
+      onClose={() => dispatch(setBookingStatus(BookingStatus.INITIAL))}
+    />
   )
   const FailureAlertSection = () => (
     <Alert
@@ -111,7 +118,7 @@ export default function FacilitySelectDate() {
         onLeftClick={() => history.push(`${PATHS.VIEW_ALL_FACILITIES}`)}
       />
       <PullToRefresh onRefresh={onRefresh}>
-        {bookingStatus === BookingStatus.SUCCESS && <AlertSection />}
+        <AlertSection />
         <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
           <BottomNavBar />

@@ -7,22 +7,25 @@ import 'antd/dist/antd.css'
 
 import { PATHS } from '../../Routes'
 import {
+  resetBookingFormInfo,
+  fetchFacilityNameFromID,
   resetTimeSelectorSelection,
   setBookingEndTime,
   setBookingStartTime,
   setSelectedBlockTimestamp,
   setSelectedEndTime,
+  setSelectedFacility,
   setSelectedStartTime,
   setTimeBlocks,
   updateBookingDailyView,
 } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
+import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TimeSelector from '../../../components/FacilityBooking/TimeSelector'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
-import { TimeBlock, TimeBlockType } from '../../../store/facilityBooking/types'
 
 const HEADER_HEIGHT = '70px'
 
@@ -68,15 +71,17 @@ const TitleText = styled.h2`
  * @remarks
  *
  */
-
 export default function FacilitySelectTime() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams<{ facilityId: string; selectionMode: string | undefined }>()
+  const params = useParams<{ facilityId: string; selectionMode: 'reselect' | 'reselectExistingBooking' | undefined }>()
   const {
+    bookingStartTime,
+    bookingEndTime,
     clickedDate,
     isLoading,
     selectedBlockTimestamp,
+    selectedBookingToEdit,
     selectedFacilityName,
     selectedStartTime,
     selectedEndTime,
@@ -85,9 +90,26 @@ export default function FacilitySelectTime() {
 
   const { facilityId, selectionMode } = params
   const selectedFacilityId = parseInt(facilityId)
-  const isReselectingTime = selectionMode === 'reselect'
+  const isReselectingTime = selectionMode === 'reselect' || selectionMode === 'reselectExistingBooking'
+
+  /**
+   * when editing booking, overwrite time blocks where the edited booking is supposed to occupy,
+   * so that they show up as `AVAILABLE` instead of `OCCUPIED`
+   */
+  const overwriteAvailabilityOfEditingBooking =
+    selectionMode === 'reselectExistingBooking' && selectedBookingToEdit
+      ? Array.from(
+          { length: (selectedBookingToEdit.endTime - selectedBookingToEdit.startTime) / 3600 },
+          (_, index) => selectedBookingToEdit.startTime + index * 3600,
+        )
+      : []
 
   const [disabledDates, setDisabledDates] = useState<number[]>([])
+
+  useEffect(() => {
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
+  }, [])
 
   useEffect(() => {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
@@ -127,17 +149,19 @@ export default function FacilitySelectTime() {
   }
 
   const goBackToDailyViewPage = () => {
-    history.push(`${PATHS.VIEW_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
-  }
-
-  const goBackToCreateBookingPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+    history.push(`${PATHS.FACILITY_DAY_VIEW}/${selectedFacilityId}`)
   }
 
   const onLeftClick = () => {
-    // reset user selection
-    dispatch(resetTimeSelectorSelection())
-    isReselectingTime ? goBackToCreateBookingPage() : goBackToDailyViewPage()
+    if (isReselectingTime) {
+      // set back to original booking time if user cancels reselection
+      dispatch(setSelectedStartTime(bookingStartTime))
+      dispatch(setSelectedEndTime(bookingEndTime))
+      history.goBack() // to booking form
+    } else {
+      dispatch(resetTimeSelectorSelection())
+      goBackToDailyViewPage()
+    }
   }
 
   useEffect(() => {
@@ -161,7 +185,8 @@ export default function FacilitySelectTime() {
   }
 
   const goToBookingPage = () => {
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${selectedFacilityId}`)
+    dispatch(resetBookingFormInfo())
+    history.push(`${PATHS.CREATE_BOOKING_FORM}/${selectedFacilityId}`)
   }
 
   const setSelectedBlock = (selectedTimestamp: number) => {
@@ -175,13 +200,10 @@ export default function FacilitySelectTime() {
       }
     } else {
       // select end time (after start time is selected), then go to booking page
-      const selectedEndTime = selectedTimestamp + 3600 // Add 1 hour to selected block as end time
-
-      // TODO sus why is selected end time set twice
       dispatch(setSelectedEndTime(selectedTimestamp))
       dispatch(setBookingStartTime(selectedStartTime))
-      dispatch(setBookingEndTime(selectedEndTime))
-      goToBookingPage()
+      dispatch(setBookingEndTime(selectedTimestamp + 3600)) // Add 1 hour to selected block as end time
+      isReselectingTime ? history.goBack() : goToBookingPage()
     }
   }
 
@@ -192,10 +214,16 @@ export default function FacilitySelectTime() {
         <LoadingSpin />
       ) : (
         <Background>
-          <h2>Choose {selectedStartTime ? 'ending' : 'starting'} time slot</h2>
+          <h2>
+            {isReselectingTime ? 'Reselect' : 'Choose'} {selectedStartTime !== 0 ? 'ending' : 'starting'} time slot
+          </h2>
           <DailyViewDatesRow disabledDates={disabledDates} />
           <BookingSectionDiv>
-            <TimeSelector timeBlocks={timeBlocks} bookingBlockOnClick={setSelectedBlock} />
+            <TimeSelector
+              timeBlocks={timeBlocks}
+              bookingBlockOnClick={setSelectedBlock}
+              overwriteAvailability={overwriteAvailabilityOfEditingBooking}
+            />
           </BookingSectionDiv>
         </Background>
       )}

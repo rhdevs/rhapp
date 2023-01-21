@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
@@ -30,6 +30,10 @@ export default function SearchByTimeSelectBookingDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const { clickedDate } = useSelector((state: RootState) => state.facilityBooking)
+
+  useEffect(() => {
+    dispatch(setClickedDate(new Date())) // Set the default date to today
+  }, [])
 
   const onDateClick = (newClickedDate: Date) => {
     dispatch(resetTimeSelectorSelection())

@@ -5,7 +5,12 @@ import styled from 'styled-components'
 
 import { PATHS } from '../../Routes'
 import { RootState } from '../../../store/types'
-import { resetTimeSelectorSelection, updateBookingDailyView } from '../../../store/facilityBooking/action'
+import {
+  fetchFacilityNameFromID,
+  resetTimeSelectorSelection,
+  setSelectedFacility,
+  updateBookingDailyView,
+} from '../../../store/facilityBooking/action'
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
@@ -21,7 +26,6 @@ const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 36px;
   overflow: hidden;
 `
 
@@ -39,7 +43,8 @@ const TitleText = styled.h2`
   font-family: Lato;
   font-style: normal;
   font-weight: 700;
-  font-size: 22px;
+  font-size: min(5vw, 22px);
+  max-width: 45vw;
   margin-top: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,7 +62,6 @@ const TitleText = styled.h2`
  * <any remarks on this component type in here>
  *
  */
-
 export default function FacilityDayView() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -69,19 +73,21 @@ export default function FacilityDayView() {
 
   useEffect(() => {
     dispatch(updateBookingDailyView(clickedDate, selectedFacilityId))
+    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [clickedDate])
 
   const bookFacilityOnClick = () => {
     // reset time selection on next page
     dispatch(resetTimeSelectorSelection())
-    history.push(`${PATHS.CREATE_FACILITY_BOOKING_DAILY_VIEW}/${selectedFacilityId}`)
+    history.push(`${PATHS.FACILITY_SELECT_TIME}/${selectedFacilityId}`)
   }
 
   return (
     <>
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
-        centerComponent={<TitleText>{`${selectedFacilityName} - View Booked Timeslots`}</TitleText>}
+        centerComponent={<TitleText>{selectedFacilityName} - View Booked Timeslots</TitleText>}
         rightComponent={
           <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
         }

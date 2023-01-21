@@ -1,7 +1,6 @@
 /*eslint @typescript-eslint/no-explicit-any : off */
 import React from 'react'
 import styled from 'styled-components'
-import { FieldError, UseFormMethods } from 'react-hook-form'
 
 const RedText = styled.span`
   color: #f37562;
@@ -20,7 +19,7 @@ const Container = styled.div`
 `
 
 const StyledInput = styled.input<{ hasError?: boolean }>`
-  background: #f3f3f9;
+  background: ${(props) => (props.disabled ? '#dbdbe0' : '#f3f3f9')};
   width: 100%;
   border-radius: 10px;
   border: 1px solid ${(props) => (props.hasError ? '#f37562' : '#f3f3f9')};
@@ -34,7 +33,7 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
 `
 
 const StyledTextArea = styled.textarea<{ hasError?: boolean }>`
-  background: #f3f3f9;
+  background: ${(props) => (props.disabled ? '#dbdbe0' : '#f3f3f9')};
   width: 100%;
   border-radius: 10px;
   padding: 10px 16px;
@@ -58,47 +57,50 @@ const StyledTitle = styled.div`
 `
 
 type InputFieldProps = {
-  name: string
   title: string
+  value?: string
   placeholder?: string
   textArea?: boolean
   required?: boolean
   defaultValue?: string
-  register: UseFormMethods['register']
-  setValue: UseFormMethods['setValue']
-  errors?: FieldError
+  onChange?: (e) => void
+  disabled?: boolean
 }
 
 export default function InputField(props: InputFieldProps) {
   const RedAsterisk = <RedText>*</RedText>
-  const { name, title, placeholder, textArea, required, defaultValue, register, setValue, errors } = props
+  const { title, value, placeholder, textArea, required, defaultValue, onChange, disabled } = props
 
   return (
     <Container>
       {title && (
         <StyledTitle>
           {title}
-          {required && RedAsterisk}
+          {required && !disabled && RedAsterisk}
         </StyledTitle>
       )}
       {textArea ? (
         <StyledTextArea
-          placeholder={errors ? `${title} is required` : placeholder}
+          placeholder={placeholder}
+          value={value}
           rows={5}
-          onChange={(e) => setValue(name, e.target.value)}
-          hasError={!!errors}
+          onChange={onChange}
+          // hasError={!!errors}
           defaultValue={defaultValue}
-          {...(register(name, { required: required }) as any)}
+          disabled={disabled}
         />
       ) : (
         <StyledInput
-          placeholder={errors ? `${title} is required` : placeholder}
-          onChange={(e) => setValue(name, e.target.value)}
-          hasError={!!errors}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          // hasError={!!errors}
           defaultValue={defaultValue}
-          {...(register(name, { required: required }) as any)}
+          disabled={disabled}
         />
       )}
     </Container>
   )
 }
+
+// errors ? `${title} is required` : placeholder

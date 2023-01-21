@@ -5,14 +5,7 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
-import { PATHS } from '../../Routes'
-import {
-  fetchFacilityNameFromID,
-  resetBooking,
-  setBookingEndDate,
-  setIsLoading,
-  setSelectedFacility,
-} from '../../../store/facilityBooking/action'
+import { resetBooking, setBookingEndDate, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import { Calendar } from '../../../components/Calendar/Calendar'
@@ -37,12 +30,8 @@ export default function SelectRecurringDatePage() {
   const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(setIsLoading(true))
     dispatch(resetBooking()) // TODO what is this
-    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    if (selectedFacilityId == 0) {
-      dispatch(setSelectedFacility(parseInt(params.facilityId)))
-    }
+    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
   const onDateClick = (date: Date) => {
@@ -50,16 +39,13 @@ export default function SelectRecurringDatePage() {
 
     if (Date.now() / 1000 <= selectedDate) {
       dispatch(setBookingEndDate(selectedDate))
-      history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)
+      history.goBack()
     }
   }
 
   return (
     <>
-      <TopNavBarRevamp
-        title="Select Weekly Booking End Date"
-        onLeftClick={() => history.push(`${PATHS.CREATE_FACILITY_BOOKING}/${params.facilityId}`)}
-      />
+      <TopNavBarRevamp title="Select Weekly Booking End Date" onLeftClick={() => history.goBack()} />
       <PullToRefresh onRefresh={onRefresh}>
         <MainCalendarContainer>
           <Calendar onDateClick={onDateClick} clickedDate={clickedDate} monthsToShow={5} />
