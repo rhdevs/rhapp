@@ -3,12 +3,16 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { PATHS } from '../Routes'
-import ButtonComponent from '../../components/Button'
+import TextButton from '../../components/TextButton'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
 import { setSearchMode } from '../../store/facilityBooking/action'
 import { useDispatch } from 'react-redux'
 import { SearchMode } from '../../store/facilityBooking/types'
+
+import doorIcon from '../../assets/door.svg'
+import calenderTimeIcon from '../../assets/calendarTime.svg'
+import IconButton from '../../components/IconButton'
 
 const SearchContainer = styled.div`
   display: flex;
@@ -51,12 +55,15 @@ export default function FacilityLandingPage() {
     history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE)
   }
 
+  // TODO implement new design
   return (
     <>
       <TopNavBar title="Faclility Booking" />
       <LandingPageContainer>
         <SearchContainer>
-          <ButtonComponent
+          <IconButton text="By Facility" onClick={selectFacilityOnClick} icon={doorIcon} width="80px" height="80px" />
+          <IconButton text="By Time" onClick={searchByTimeOnClick} icon={calenderTimeIcon} width="80px" height="80px" />
+          {/* <TextButton
             state="primary"
             text="Select Facility"
             width="129px"
@@ -65,8 +72,8 @@ export default function FacilityLandingPage() {
             size="small"
             lineHeight="20px"
             onClick={selectFacilityOnClick}
-          />
-          <ButtonComponent
+          /> */}
+          {/* <TextButton
             state="primary"
             text="Search by Time"
             width="129px"
@@ -75,9 +82,9 @@ export default function FacilityLandingPage() {
             size="small"
             lineHeight="20px"
             onClick={searchByTimeOnClick}
-          />
+          /> */}
         </SearchContainer>
-        <ButtonComponent
+        <TextButton
           state="primary"
           text="View My Bookings"
           width="297px"

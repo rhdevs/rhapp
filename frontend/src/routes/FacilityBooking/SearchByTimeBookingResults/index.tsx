@@ -90,6 +90,7 @@ export default function SearchByTimeBookingResults() {
         ) : facilityListWithinTime.length === 0 ? (
           <NoFacilitiesText>No facilities available!</NoFacilitiesText>
         ) : (
+          // TODO implement new design
           <FacilitiesList
             facilityList={sortFacilitiesAlphabetically(facilityListWithinTime)}
             locationList={locationListWithinTime}
