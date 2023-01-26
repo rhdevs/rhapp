@@ -30,7 +30,7 @@ export default function SelectRecurringDatePage() {
   const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(resetBooking()) // TODO what is this
+    dispatch(resetBooking())
     selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
