@@ -1,25 +1,42 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { PATHS } from '../Routes'
-import TextButton from '../../components/TextButton'
+import { PRIMARY_GREEN } from '../../common/colours'
 import BottomNavBar from '../../components/Mobile/BottomNavBar'
 import TopNavBar from '../../components/Mobile/TopNavBar'
+import IconButton from '../../components/IconButton'
+
 import { setSearchMode } from '../../store/facilityBooking/action'
-import { useDispatch } from 'react-redux'
 import { SearchMode } from '../../store/facilityBooking/types'
 
 import doorIcon from '../../assets/door.svg'
 import calenderTimeIcon from '../../assets/calendarTime.svg'
-import IconButton from '../../components/IconButton'
+
+const StyledMenuTitle = styled.span`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 22px;
+  line-height: 26px;
+  letter-spacing: -0.015em;
+
+  color: #191919;
+`
 
 const SearchContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  height: 154px;
-  width: 297px;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 64px;
+  margin: 42px 0;
+
+  width: 224px;
+  height: 107px;
 `
+
 const LandingPageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,6 +45,20 @@ const LandingPageContainer = styled.div`
   width: 100%;
   height: 234px;
   margin-top: 63px;
+`
+
+const CurrentBookingsLink = styled.span`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 20px;
+
+  letter-spacing: 0.05em;
+  text-decoration-line: underline;
+
+  color: ${PRIMARY_GREEN};
+  cursor: pointer;
 `
 /**
  * # Facility Landing Page
@@ -55,45 +86,20 @@ export default function FacilityLandingPage() {
     history.push(PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE)
   }
 
-  // TODO implement new design
   return (
     <>
       <TopNavBar title="Faclility Booking" />
       <LandingPageContainer>
+        <StyledMenuTitle>Check Booking Availability</StyledMenuTitle>
         <SearchContainer>
           <IconButton text="By Facility" onClick={selectFacilityOnClick} icon={doorIcon} width="80px" height="80px" />
           <IconButton text="By Time" onClick={searchByTimeOnClick} icon={calenderTimeIcon} width="80px" height="80px" />
-          {/* <TextButton
-            state="primary"
-            text="Select Facility"
-            width="129px"
-            height="104px"
-            fontSize="20px"
-            size="small"
-            lineHeight="20px"
-            onClick={selectFacilityOnClick}
-          /> */}
-          {/* <TextButton
-            state="primary"
-            text="Search by Time"
-            width="129px"
-            height="104px"
-            fontSize="20px"
-            size="small"
-            lineHeight="20px"
-            onClick={searchByTimeOnClick}
-          /> */}
         </SearchContainer>
-        <TextButton
-          state="primary"
-          text="View My Bookings"
-          width="297px"
-          height="80px"
-          fontSize="20px"
-          onClick={() => {
-            history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)
-          }}
-        />
+        <CurrentBookingsLink
+          onClick={() => history.push(`${PATHS.VIEW_MY_BOOKINGS}/${localStorage.getItem('userID')}`)}
+        >
+          View your current bookings
+        </CurrentBookingsLink>
       </LandingPageContainer>
       <BottomNavBar />
     </>
