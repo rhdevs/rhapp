@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import PullToRefresh from 'pull-to-refresh-react'
 
@@ -10,9 +11,6 @@ import { RootState } from '../../../store/types'
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBar from '../../../components/Mobile/TopNavBar'
 import BookingCard from '../../../components/FacilityBooking/BookingCard'
-
-import catIcon from '../../../assets/catMagnifyGlass.svg'
-import { useParams } from 'react-router-dom'
 
 const MainContainer = styled.div`
   width: 100%;
@@ -70,11 +68,6 @@ export default function ViewMyBookings() {
                 const isOver = booking.endTime < parseInt((new Date().getTime() / 1000).toFixed(0))
                 if (!isOver) return <BookingCard key={idx} booking={booking} />
               })}
-              {myBookings?.length === 0 && !myBookings && (
-                <div>
-                  <img src={catIcon} /> <h1>You have no Bookings yet!</h1>
-                </div>
-              )}
             </>
           )}
         </MainContainer>
