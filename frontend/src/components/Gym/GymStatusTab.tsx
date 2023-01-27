@@ -9,7 +9,7 @@ import { RootState } from '../../store/types'
 import { getGymStatus, getProfilePic } from '../../store/gym/action'
 import { getUserDetail } from '../../store/social/action'
 import { ButtonStates, ButtonTypes, gymStates } from '../../store/gym/types'
-import ButtonComponent from '../Button'
+import TextButton from '../TextButton'
 
 const GymContainer = styled.div`
   background: #fff;
@@ -165,7 +165,7 @@ function GymStatusTab() {
   function renderButton() {
     const buttonState = getButtonStates()
     return Object.keys(buttonState).map((key: string) => (
-      <ButtonComponent
+      <TextButton
         key={key}
         state={buttonState[key] ? 'primary' : 'secondary'}
         text={getButtonText(key)}

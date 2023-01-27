@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import Button from './Button'
+import Button from './TextButton'
 import ModalLink from './ModalLink'
 
 const OverlayContainer = styled.div<{ overlayBackgroundColor: string }>`
