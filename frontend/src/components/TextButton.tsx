@@ -51,12 +51,14 @@ type Props = {
 }
 
 /**
+ * A resizable button with rounded corners that can contain text \
+ * Comes in two states: Primary (filled green) and Secondary (hollow white)
  *
  * @param state ('primary' | 'secondary') Primary button is filled green, secondary is white (hollow)
  * @param text (string) Text to be displayed on the button
  * @param onClick (React.MouseEventHandler<HTMLButtonElement>) Function to be called when button is clicked
  * @param disabled (optional) (boolean) If the button is disabled, it will be greyed out, and not clickable
- * @param type (optional) ('button' | 'submit' | 'reset' | undefined) Type of button, default is 'button'
+ * @param type (optional) ('button' | 'submit' | 'reset' | undefined) Type of button, default `button`
  * @param width (optional) (string | undefined) Width of the button, default is max-content
  * @param height (optional) (string | undefined) Height of the button, default is max-content
  * @param fontSize (optional) (string | undefined) Font size of the text of the button, default is max-content
@@ -64,7 +66,7 @@ type Props = {
  * @returns a button
  */
 
-function ButtonComponent(prop: Props) {
+function TextButton(prop: Props) {
   return (
     <StyledButton
       onClick={prop.onClick}
@@ -82,4 +84,4 @@ function ButtonComponent(prop: Props) {
   )
 }
 
-export default ButtonComponent
+export default TextButton

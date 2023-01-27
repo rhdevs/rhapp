@@ -25,7 +25,7 @@ import {
 import InputField from '../../components/Mobile/InputField'
 import { Switch } from '../../components/Switch'
 import SelectableField from '../../components/SelectableField'
-import ButtonComponent from '../../components/Button'
+import TextButton from '../TextButton'
 
 const Form = styled.form`
   width: 100%;
@@ -188,13 +188,7 @@ const BookingForm = (props: Props) => {
         />
       )}
       <div style={{ width: '100%', height: '30px' }} />
-      <ButtonComponent
-        state="primary"
-        text="Submit"
-        type="submit"
-        disabled={!formIsValid()}
-        onClick={props.submitOnClick}
-      />
+      <TextButton state="primary" text="Submit" type="submit" disabled={!formIsValid()} onClick={props.submitOnClick} />
     </Form>
   )
 }

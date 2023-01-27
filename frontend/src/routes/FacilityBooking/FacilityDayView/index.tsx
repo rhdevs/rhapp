@@ -14,7 +14,7 @@ import {
 
 import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
-import ButtonComponent from '../../../components/Button'
+import TextButton from '../../../components/TextButton'
 import DailyViewDatesRow from '../../../components/FacilityBooking/DailyViewDatesRow'
 import ViewScheduleBlock from '../../../components/FacilityBooking/ViewScheduleBlock'
 
@@ -88,9 +88,7 @@ export default function FacilityDayView() {
       <TopNavBarRevamp
         onLeftClick={() => history.push(`${PATHS.VIEW_FACILITY}/${selectedFacilityId}`)}
         centerComponent={<TitleText>{selectedFacilityName} - View Booked Timeslots</TitleText>}
-        rightComponent={
-          <ButtonComponent state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />
-        }
+        rightComponent={<TextButton state="primary" text="Book Facility" onClick={bookFacilityOnClick} size="small" />}
       />
       {isLoading ? (
         <LoadingSpin />

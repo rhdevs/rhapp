@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Radio } from 'antd'
+import { format } from 'date-fns'
 
 import { PRIMARY_GREEN } from '../../common/colours'
-import { unixToFullDateTime } from '../../common/unixToFullDateTime'
 import FacilityLogo from './FacilityLogo'
 import JCRCBlockOutModal from '../Mobile/JCRCBlockOutModal'
 import { Facility } from '../../store/facilityBooking/types'
+
+import circleRightArrow from '../../assets/circleRightArrow.svg'
 
 const FacilitiesListMainDiv = styled.div`
   height: 100%;
@@ -102,18 +104,28 @@ const StyledBodyDiv = styled.div`
   height: 100%;
 `
 
-const TimeTextDiv = styled.h2`
+const TimeTextDiv = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 21px 0;
 
-  background-color: #fafaf4;
   font-family: Lato;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  margin-top: 0.7rem;
+  font-size: 15px;
+  line-height: 20px;
+  color: #000000;
+  background-color: #fafaf4;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
 `
 
 /**
@@ -123,7 +135,7 @@ const TimeTextDiv = styled.h2`
  * @param locationList (`string[]`) - list of locations to be displayed
  * @param facilityCardOnClick (`(facilityId: number) => void`) - function to be called when a facility card is clicked
  * @param blockOutIsOpen (`boolean`, optional) - whether the block out modal is open or not
- * @param showTimeStartEnd (`boolean`, optional) - whether to display start and end time in the header with format `From: Day, DD Month YYYY at HHMM\n To: Day, DD Month YYYY at HHMM`
+ * @param showTimeStartEnd (`boolean`, optional) - whether to display start and end time in the header with format `From: Fri 27 Jan 2023, 1am (->) To: Fri 27 Jan 2023, 3am`
  * @param showTimeStart (`number`, optional) - unix timestamp for header start time
  * @param showTimeEnd (`number`, optional) - unix timestamp for header start time
  *
@@ -154,10 +166,12 @@ const FacilitiesList = (props: {
     setSelectedTab(e.target.value)
   }
 
+  const timeFormat = 'eee dd MMM yyyy, haaa'
   const StartEndTimeText = (
     <TimeTextDiv>
-      <span>From: {props.showTimeStart ? unixToFullDateTime(props.showTimeStart) : '-'}</span>
-      <span>To: {props.showTimeEnd ? unixToFullDateTime(props.showTimeEnd) : '-'}</span>
+      <span>From: {props.showTimeStart ? format(props.showTimeStart * 1000, timeFormat) : '-'}</span>
+      <img src={circleRightArrow} />
+      <span>To: {props.showTimeEnd ? format(props.showTimeEnd * 1000, timeFormat) : '-'}</span>
     </TimeTextDiv>
   )
 

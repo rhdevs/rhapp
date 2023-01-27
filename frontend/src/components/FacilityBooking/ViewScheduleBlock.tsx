@@ -28,7 +28,7 @@ const ViewScheduleBlock = () => {
   const { timeBlocks } = useSelector((state: RootState) => state.facilityBooking)
   const [isViewBookingModalOpen, setIsViewBookingModalOpen] = useState<boolean>()
   const [viewBooking, setViewBooking] = useState<Booking>()
-  const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
+  // const defaultTimePosition = 16 //4pm (can range from 0 to 23 - length of timeBlocks)
 
   // passing entry ID instead of booking object which might be undefind
   const fetchBooking = (entryId: number) => {
