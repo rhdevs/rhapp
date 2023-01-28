@@ -17,6 +17,7 @@ import { isSameDate } from '../../common/isSameDate'
  * @param timeBlocks (TimeBlock[]) - Array of timeblocks to display
  * @param bookingBlockOnClick (Function) - Function to call when a timeblock is clicked
  * @param overwriteAvailability (number[]) [optional] - Array of timestamps to overwrite `OCCUPIED` to `AVAILABLE`
+ * @param disableDefaultAutoscroll (boolean) [optional] - Disables autoscroll to default time
  * @returns A section containing clickable timeblocks
  *
  * @example
@@ -28,6 +29,7 @@ export default function TimeSelector(props: {
   timeBlocks: TimeBlock[]
   bookingBlockOnClick: (timestamp: number) => void
   overwriteAvailability?: number[]
+  disableDefaultAutoscroll?: boolean
 }) {
   const { timeBlocks, bookingBlockOnClick } = { ...props }
 
@@ -37,7 +39,7 @@ export default function TimeSelector(props: {
   // scroll to defaultTimePosition if day selected is not current (i.e. current time line is not visible)
   const ref = createRef<HTMLDivElement>()
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    !props.disableDefaultAutoscroll && ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [ref])
 
   return (
