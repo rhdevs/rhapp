@@ -473,6 +473,7 @@ const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>)
  * @param eventName (string | undefined)
  * @param startTime (number | null)
  * @param endTime (number | null)
+ * @param isRecurring (boolean) - if booking is recurring (weekly)
  * @param endDate (number) [optional] - end date of recurring bookings (bookings created weekly up to the end date)
  * @param ccaID (number) [optional]
  * @param description (string) [optional]
@@ -487,6 +488,7 @@ export const handleCreateNewBooking = (
   eventName: string | undefined,
   startTime: number | null,
   endTime: number | null,
+  isRecurring: boolean,
   endDate?: number,
   ccaID?: number,
   description?: string,
@@ -499,7 +501,7 @@ export const handleCreateNewBooking = (
     ccaID: ccaID,
     startTime: startTime,
     endTime: endTime,
-    bookUntil: endDate,
+    bookUntil: isRecurring ? (endDate ? endDate + 86400 : undefined) : endTime, // add 86400 to end date to include the last day
     description: description,
     forceBook: forceBook,
   }
@@ -534,10 +536,11 @@ export const handleCreateNewBooking = (
         body: JSON.stringify(requestBody),
       },
     ).then((resp) => {
+      console.log(resp)
       if (resp.status === 200) {
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
-        dispatch(setBookingStatus(BookingStatus.CONFLICT))
+        dispatch(setBookingStatus(isRecurring ? BookingStatus.CONFLICT_RECURRING : BookingStatus.CONFLICT_SINGLE))
         resp.json().then((body) => {
           dispatch(setConflictBookings(body.conflict_bookings))
         })
@@ -624,7 +627,7 @@ export const handleEditBooking = (
       if (resp.status === 200) {
         dispatch(setBookingStatus(BookingStatus.SUCCESS))
       } else if (resp.status === 409) {
-        dispatch(setBookingStatus(BookingStatus.CONFLICT))
+        dispatch(setBookingStatus(BookingStatus.CONFLICT_SINGLE))
         resp.json().then((body) => {
           dispatch(setConflictBookings(body.conflict_bookings))
         })

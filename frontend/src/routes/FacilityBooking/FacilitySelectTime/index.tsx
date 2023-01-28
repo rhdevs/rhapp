@@ -223,6 +223,7 @@ export default function FacilitySelectTime() {
               timeBlocks={timeBlocks}
               bookingBlockOnClick={setSelectedBlock}
               overwriteAvailability={overwriteAvailabilityOfEditingBooking}
+              disableDefaultAutoscroll={isReselectingTime}
             />
           </BookingSectionDiv>
         </Background>

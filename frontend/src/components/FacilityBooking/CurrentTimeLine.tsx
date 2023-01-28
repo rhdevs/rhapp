@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { createRef, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { PRIMARY_GREEN } from '../../common/colours'
@@ -19,15 +19,6 @@ const StyledHr = styled.hr<{ width?: string; top?: string; left?: string; right?
   ${(props) => props.right && `right: ${props.right};`}
   ${(props) => props.bottom && `bottom: ${props.bottom};`}
 `
-
-export function scrollToView(ref: RefObject<HTMLHRElement> | React.RefObject<HTMLElement>, offset?: number) {
-  if (ref.current) {
-    window.scrollTo({
-      top: ref.current.offsetTop + (offset ?? -180), // adjust distance between object and top of window
-      behavior: 'smooth',
-    })
-  }
-}
 
 type Props = {
   width?: string
@@ -82,13 +73,14 @@ const CurrentTimeLine = (props: Props) => {
     return () => clearInterval(interval)
   }, [])
 
+  const ref = createRef<HTMLHRElement>()
   useEffect(() => {
-    scrollToView(lineRef)
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [lineRef.current])
 
   return isSameDate(new Date(), timeBlocks[0].timestamp * 1000) ? (
     <StyledHr
-      ref={lineRef}
+      ref={ref}
       width={props.width ?? 'calc(100% - 70.5px)'}
       top={props.top ?? top + 'px'}
       left={props.left}

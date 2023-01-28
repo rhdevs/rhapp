@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import PullToRefresh from 'pull-to-refresh-react'
 
 import { onRefresh } from '../../../common/reloadPage'
-import { resetBooking, setBookingEndDate, setSelectedFacility } from '../../../store/facilityBooking/action'
+import { setBookingEndDate, setSelectedFacility } from '../../../store/facilityBooking/action'
 import { RootState } from '../../../store/types'
 
 import { Calendar } from '../../../components/Calendar/Calendar'
@@ -30,7 +30,6 @@ export default function SelectRecurringDatePage() {
   const { selectedFacilityId, clickedDate } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
-    dispatch(resetBooking())
     selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
