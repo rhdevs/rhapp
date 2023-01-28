@@ -54,7 +54,9 @@ export default function FacilitySelectDate() {
   useEffect(() => {
     dispatch(setIsLoading(true))
     dispatch(setClickedDate(new Date())) // Set the default date to today
-    dispatch(resetBooking())
+    bookingStatus !== BookingStatus.CONFLICT_RECURRING &&
+      bookingStatus !== BookingStatus.CONFLICT_SINGLE &&
+      dispatch(resetBooking())
     selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
     selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
@@ -67,7 +69,9 @@ export default function FacilitySelectDate() {
   useEffect(() => {
     if (bookingStatus === BookingStatus.SUCCESS) closeAlertDelay(5)
     /* if FAILURE, don't close alert automatically and let the user close it */
-    if (bookingStatus === BookingStatus.CONFLICT) setModalIsOpen(true)
+    if (bookingStatus === BookingStatus.CONFLICT_SINGLE || bookingStatus === BookingStatus.CONFLICT_RECURRING) {
+      setModalIsOpen(true)
+    }
   }, [bookingStatus])
 
   /**
@@ -124,7 +128,11 @@ export default function FacilitySelectDate() {
           <BottomNavBar />
         </MainCalendarContainer>
       </PullToRefresh>
-      <ConflictBookingModal modalOpen={modalIsOpen} setModalOpen={setModalIsOpen} />
+      <ConflictBookingModal
+        type={bookingStatus === BookingStatus.CONFLICT_RECURRING ? 'recurring' : 'single'}
+        modalOpen={modalIsOpen}
+        setModalOpen={setModalIsOpen}
+      />
     </>
   )
 }

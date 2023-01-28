@@ -247,7 +247,8 @@ type SetBookingEndDate = {
 export enum BookingStatus {
   SUCCESS = 'success',
   FAILURE = 'failure',
-  CONFLICT = 'conflict',
+  CONFLICT_SINGLE = 'conflict-single',
+  CONFLICT_RECURRING = 'conflict-recurring',
   INITIAL = 'initial',
 }
 
