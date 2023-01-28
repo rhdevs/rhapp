@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef, useEffect } from 'react'
 
 import { TimeBlock, TimeBlockType } from '../../store/facilityBooking/types'
 
@@ -7,7 +7,8 @@ import HourBlocks from './HourBlocks'
 import BookingBlock from './BookingBlock'
 // import { isSameDate } from '../../common/isSameDate'
 
-import { DailyContainer, MainContainer } from './BlockStyles.styled'
+import { BLOCK_GAP, DailyContainer, MainContainer } from './BlockStyles.styled'
+import { isSameDate } from '../../common/isSameDate'
 
 /**
  *
@@ -29,7 +30,15 @@ export default function TimeSelector(props: {
   overwriteAvailability?: number[]
 }) {
   const { timeBlocks, bookingBlockOnClick } = { ...props }
-  // const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
+
+  const isCurrentDay = isSameDate(new Date(), timeBlocks[0].timestamp * 1000)
+  const defaultTimePosition = 16 // 4pm (can range from 0 to 23 - length of timeBlocks)
+
+  // scroll to defaultTimePosition if day selected is not current (i.e. current time line is not visible)
+  const ref = createRef<HTMLDivElement>()
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [ref])
 
   return (
     <MainContainer>
@@ -42,14 +51,13 @@ export default function TimeSelector(props: {
           const updatedEntry = toOverwrite ? { ...entry, type: TimeBlockType.AVAILABLE } : entry
 
           return (
-            <BookingBlock
-              key={index}
-              onClick={() => bookingBlockOnClick(entry.timestamp)}
-              entry={updatedEntry}
-              // if day selected is not current, scroll to defaultTimePosition
-              // TODO doesn't work
-              // scrollTo={!isSameDate(new Date(), timeBlocks[0].timestamp) && index === defaultTimePosition}
-            />
+            <>
+              <BookingBlock key={index} onClick={() => bookingBlockOnClick(entry.timestamp)} entry={updatedEntry} />
+              {
+                // if day selected is not current, scroll to defaultTimePosition
+                !isCurrentDay && index === defaultTimePosition && <div style={{ marginBottom: -BLOCK_GAP }} ref={ref} />
+              }
+            </>
           )
         })}
       </DailyContainer>

@@ -1,13 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 
 import { TimeBlock } from '../../store/facilityBooking/types'
-import { scrollToView } from './CurrentTimeLine'
 
 import { StyledViewBooking } from './BlockStyles.styled'
 
 type Props = {
   entry: TimeBlock
-  scrollTo?: boolean
   openViewBookingModal: () => void
   setViewBookingEntryId: () => void
 }
@@ -18,7 +16,6 @@ type Props = {
  * If there is a booking made during that hour, it displays its details. Otherwise, it is greyed out.
  *
  * @param entry (type `number`)
- * @param scrollTo (type `boolean`, optional)
  * @param openViewBookingModal: (type `function`)
  * @param setViewBookingEntryId (type `function`)
  *
@@ -35,7 +32,6 @@ type Props = {
  *  key={index}
  *  entry={entry}
  *  // if day selected is not current, scroll to defaultTimePosition
- *  scrollTo={!isToday(timeBlocks[0].timestamp) && index === defaultTimePosition}
  *  openViewBookingModal={() => setIsViewBookingModalOpen(true)}
  *  setViewBookingEntryId={() => fetchBooking(entry.id)}
  * />
@@ -47,17 +43,8 @@ type Props = {
  */
 
 const ViewBlock = (props: Props) => {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (props.scrollTo) {
-      scrollToView(ref)
-    }
-  }, [ref.current])
-
   return props.entry.booking ? (
     <StyledViewBooking
-      ref={ref}
       isOccupied
       blockId={props.entry.id}
       onClick={() => {
@@ -70,7 +57,7 @@ const ViewBlock = (props: Props) => {
       {props.entry.eventName}
     </StyledViewBooking>
   ) : (
-    <StyledViewBooking ref={ref} isOccupied={false} blockId={props.entry.id} />
+    <StyledViewBooking isOccupied={false} blockId={props.entry.id} />
   )
 }
 
