@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -31,7 +32,8 @@ const MainContainer = styled.form`
   flex-direction: column;
 `
 
-const FoodItemHeader = styled.text`
+const FoodItemHeader = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;

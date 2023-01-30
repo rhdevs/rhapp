@@ -41,7 +41,8 @@ import { SupperButton } from '../../components/Supper/SupperButton'
 import { V1_GREY_BACKGROUND } from '../../common/colours'
 import { TwoStepCancelGroupModal } from '../../components/Supper/Modals/TwoStepCancelGroupModal'
 
-const OptionText = styled.text`
+const OptionText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 200;

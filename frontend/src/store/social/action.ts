@@ -47,8 +47,8 @@ export const GetPostDetailsToEdit = () => (dispatch: Dispatch<ActionTypes>, getS
   })
 }
 
-export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
-  const { position } = getState().social
+export const ResetPostDetails = () => (dispatch: Dispatch<ActionTypes>) => {
+  // const { position } = getState().social
 
   dispatch({
     type: SOCIAL_ACTIONS.EDIT_NEW_FIELDS,
@@ -204,7 +204,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   let endpoint: ENDPOINTS
   const { posts } = getState().social
 
@@ -260,7 +260,7 @@ export const GetPosts = (postFilter: POSTS_FILTER, limit?: number, userId?: stri
         hasNoMorePosts: true,
       })
     }
-    dispatch(SetIsLoading(false))
+    dispatch(setIsLoading(false))
   })
 }
 
@@ -338,7 +338,7 @@ export const IncreasePageIndex = () => (dispatch: Dispatch<ActionTypes>, getStat
   })
 }
 
-export const SetIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (isLoading: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
     type: SOCIAL_ACTIONS.SET_IS_LOADING,
     isLoading: isLoading,

@@ -1,18 +1,20 @@
 import React, { Suspense } from 'react'
 import styled from 'styled-components'
-// import { Switch } from 'react-router-dom'
-import LoadingSpin from '../components/LoadingSpin'
-import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
 import { AnimatedSwitch } from 'react-router-transition'
+
+import { PrivateRoute, PublicRoute, AuthenticateRoute } from './RouteTypes'
+import LoadingSpin from '../components/LoadingSpin'
 
 export enum PATHS {
   // DOCUMENTATION
   DOCS_LANDING_PAGE = '/docs',
   DOCS_SUPPER_BY_FILE = '/docs/supper/:file',
   DOCS_SUPPER = '/docs/supper',
+
   // MAIN LANDING PAGE
   HOME_PAGE = '/',
   SEARCH_PAGE = '/search',
+
   // AUTHENTICATION
   LOGIN_PAGE = '/auth/login',
   SIGNUP_PAGE = '/auth/signup',
@@ -24,6 +26,7 @@ export enum PATHS {
   EDIT_PROFILE_PAGE = '/social/editprofile',
   FRIEND_LIST_PAGE = '/social/profile/friendList/',
   VIEW_FRIEND_LIST_PAGE = '/social/profile/friendList/:userId',
+
   // SCHEDULING
   SCHEDULE_PAGE = '/schedule',
   SHARE_TIMETABLE_PAGE = '/schedule/share',
@@ -33,24 +36,46 @@ export enum PATHS {
   IMPORT_FROM_NUSMODS = '/schedule/import/nusmods',
   VIEW_EVENT = '/schedule/events/view',
   VIEW_EVENT_ID = '/schedule/events/view/:eventId',
+
   // FACILITY BOOKING
-  FACILITY_BOOKING_MAIN = '/facility',
-  VIEW_FACILITY = '/facility/view/:facilityID',
-  CREATE_FACILITY_BOOKING = '/facility/booking/create',
+  FACILITY_LANDING_PAGE = '/facility/main',
+  // // SEARCH BY FACILITY
+  VIEW_ALL_FACILITIES = '/facility/allFacilities',
+  VIEW_FACILITY = '/facility/selectedFacility',
+  VIEW_FACILITY_ID = '/facility/selectedFacility/:facilityId',
+  FACILITY_DAY_VIEW = '/facility/selectedFacility/dayView',
+  FACILITY_DAY_VIEW_ID = '/facility/selectedFacility/dayView/:facilityId',
+  FACILITY_SELECT_TIME = '/facility/selectedFacility/selectTime',
+  FACILITY_SELECT_TIME_ID = '/facility/selectedFacility/selectTime/:facilityId/:selectionMode?',
+  // // SEARCH BY TIME
+  SEARCH_BY_TIME_SELECT_BOOKING_DATE = '/facility/searchByTime/selectDate',
+  SEARCH_BY_TIME_SELECT_BOOKING_TIME = '/facility/searchByTime/selectDate/selectTime',
+  SEARCH_BY_TIME_BOOKING_RESULTS = '/facility/searchByTime/searchResults',
+  // // CREATE BOOKING
+  CREATE_BOOKING_FORM = '/facility/booking/create',
+  CREATE_BOOKING_FORM_ID = '/facility/booking/create/:facilityId',
+  VIEW_FACILITY_CONFLICT = '/facility/booking/conflict',
+  SELECT_RECURRING_BOOKING_END_DATE = '/facility/booking/create/recurring/selectEndDate',
+  SELECT_RECURRING_BOOKING_END_DATE_ID = '/facility/booking/create/recurring/selectEndDate/:facilityId',
+  EDIT_BOOKING_FORM = '/facility/booking/edit/',
+  EDIT_BOOKING_FORM_ID = '/facility/booking/edit/:bookingId',
   VIEW_FACILITY_BOOKING = '/facility/booking/view/:bookingId',
-  VIEW_FACILITY_BOOKING_ID = '/facility/booking/view/',
-  VIEW_MY_BOOKINGS = '/facility/booking/user/:userId',
-  VIEW_MY_BOOKINGS_USERID = '/facility/booking/user',
+  VIEW_FACILITY_BOOKING_ID = '/facility/booking/view',
+  VIEW_MY_BOOKINGS = '/facility/booking/user',
+  VIEW_MY_BOOKINGS_ID = '/facility/booking/user/:userId',
+
   // LAUNDRY
   LAUNDRY_MAIN = '/facility/laundry',
   VIEW_MACHINE = '/facility/laundry/view',
   VIEW_WASHING_MACHINE = '/facility/laundry/view/:machineId',
+
   //SOCIAL
   VIEW_POST = '/social/post/',
   VIEW_POST_ID = '/social/post/:postId',
   CREATE_POST = '/social/post/create',
   EDIT = '/social/post/edit',
   EDIT_POST = '/social/post/edit/:postId',
+
   //SUPPER
   SUPPER_HOME = '/supper',
   SUPPER_COMPONENTS_PAGE = '/supper/components',
@@ -81,9 +106,11 @@ export enum PATHS {
   UPDATE_DELIVERY_BY_ID = '/supper/:supperGroupId/update/delivery',
   USER_PAYMENT = '/supper/payment/order',
   USER_PAYMENT_BY_ID = '/supper/payment/order/:orderId',
+
   //GYM
   GYM_MAIN = '/gym',
 }
+
 //DOCUMENTATION
 const Docs = React.lazy(() => import(/* webpackChunckName: "Docs" */ '../docs/index'))
 const Supper_Documentation = React.lazy(() => import(/* webpackChunckName: "Supper_Documentation" */ '../docs/supper'))
@@ -104,7 +131,7 @@ const EditProfile = React.lazy(() => import(/* webpackChunckName: "EditProfile" 
 const ChangePassword = React.lazy(() => import(/* webpackChunckName: "ChangePassword" */ './Profile/ChangePassword'))
 const FriendList = React.lazy(() => import(/* webpackChunckName: "FriendList" */ './Profile/FriendList'))
 // SCHEDULING
-const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
+// const Schedule = React.lazy(() => import(/* webpackChunckName: "Scheduling" */ './Schedule'))
 const ShareTimetable = React.lazy(() => import(/* webpackChunckName: "ShareTimetable" */ './Schedule/ShareTimetable'))
 const EventList = React.lazy(() => import(/* webpackChunckName: "EventList" */ './Schedule/EventList'))
 const CreateEvent = React.lazy(() => import(/* webpackChunckName: "CreateEvent" */ './Schedule/CreateEvent'))
@@ -113,18 +140,48 @@ const ImportFromNusMods = React.lazy(
 )
 const ViewEvent = React.lazy(() => import(/*webpackChunckName: "ViewEvent" */ './Schedule/ViewEvent'))
 // FACILITY BOOKING
-const FacilityBooking = React.lazy(() => import(/* webpackChunckName: "FacilityBooking" */ './FacilityBooking'))
-const ViewFacility = React.lazy(() => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/ViewFacility'))
-const ViewMyBookings = React.lazy(() => import(/* webpackChunckName: "ViewMyBooking" */ './FacilityBooking/MyBookings'))
+const FacilityLandingPage = React.lazy(() => import(/* webpackChunckName: "FacilityLandingPage" */ './FacilityBooking'))
+const SelectFacility = React.lazy(
+  () => import(/* webpackChunckName: "SelectFacility" */ './FacilityBooking/ViewAllFacilities'),
+)
+const SearchBookingDate = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingDate" */ './FacilityBooking/SearchByTimeSelectBookingDate'),
+)
+const SearchBookingTime = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingTime" */ './FacilityBooking/SearchByTimeSelectBookingTime'),
+)
+const SearchBookingResults = React.lazy(
+  () => import(/* webpackChunckName: "SearchBookingResults" */ './FacilityBooking/SearchByTimeBookingResults'),
+)
+const ViewFacility = React.lazy(
+  () => import(/* webpackChunckName: "ViewFacility" */ './FacilityBooking/FacilitySelectDate'),
+)
+const ViewMyBookings = React.lazy(
+  () => import(/* webpackChunckName: "ViewMyBookings" */ './FacilityBooking/MyBookings'),
+)
 const ViewBooking = React.lazy(() => import(/* webpackChunckName: "ViewBooking" */ './FacilityBooking/ViewBooking'))
-const CreateBooking = React.lazy(
-  () => import(/* webpackChunckName: "CreateBooking" */ './FacilityBooking/CreateBooking'),
+const FacilityDayView = React.lazy(
+  () => import(/* webpackChunckName: "FacilityDayView" */ './FacilityBooking/FacilityDayView'),
 )
+const ViewConflict = React.lazy(() => import(/* webpackChunckName: "ViewConflict" */ './FacilityBooking/ViewConflicts'))
+const CreateBookingForm = React.lazy(
+  () => import(/* webpackChunckName: "CreateBookingForm" */ './FacilityBooking/CreateBookingForm/index'),
+)
+const FacilitySelectTime = React.lazy(
+  () => import(/* webpackChunckName: "FacilitySelectTime" */ './FacilityBooking/FacilitySelectTime'),
+)
+const EditBookingForm = React.lazy(
+  () => import(/* webpackChunckName: "EditBookingForm" */ './FacilityBooking/EditBookingForm/index'),
+)
+const SelectRecurringDatePage = React.lazy(
+  () => import(/* webpackChunckName: "SelectRecurringDatePage" */ './FacilityBooking/SelectRecurringDatePage'),
+)
+
 // LAUNDRY
-const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
-const ViewWashingMachine = React.lazy(
-  () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
-)
+// const LaundryMain = React.lazy(() => import(/* webpackChunckName: "LaundryMain" */ './Laundry'))
+// const ViewWashingMachine = React.lazy(
+//   () => import(/* webpackChunckName: "ViewWashingMachine" */ './Laundry/ViewWashingMachine'),
+// )
 //SOCIAL
 const ViewPost = React.lazy(() => import(/* webpackChunckName: "ViewPost" */ './Social/ViewPost'))
 const CreateEditPost = React.lazy(() => import(/* webpackChunckName: "CreateEditPost" */ './Social/CreateEditPost'))
@@ -152,13 +209,14 @@ const UpdateAllItems = React.lazy(
   () => import(/* webpackChuckName: "UpdateAllItems" */ './Supper/OrderSummary/UpdateAllItems'),
 )
 const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Supper/Payment'))
+
 //GYM
 const Gym = React.lazy(() => import(/* webpackChunckName: "Gym" */ './GymPage'))
 export default class Routes extends React.Component {
   render() {
     return (
       <Root>
-        <Suspense fallback={LoadingSpin}>
+        <Suspense fallback={<LoadingSpin />}>
           <AnimatedSwitch
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 0 }}
@@ -184,11 +242,21 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.IMPORT_FROM_NUSMODS} component={ImportFromNusMods} />
             <PrivateRoute exact path={PATHS.VIEW_EVENT_ID} component={ViewEvent} key={PATHS.VIEW_EVENT_ID} />
 
-            <PrivateRoute exact path={PATHS.FACILITY_BOOKING_MAIN} component={FacilityBooking} />
-            <PrivateRoute exact path={PATHS.VIEW_FACILITY} component={ViewFacility} />
-            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS} component={ViewMyBookings} />
+            <PrivateRoute exact path={PATHS.FACILITY_LANDING_PAGE} component={FacilityLandingPage} />
+            <PrivateRoute exact path={PATHS.VIEW_ALL_FACILITIES} component={SelectFacility} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_DATE} component={SearchBookingDate} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_SELECT_BOOKING_TIME} component={SearchBookingTime} />
+            <PrivateRoute exact path={PATHS.SEARCH_BY_TIME_BOOKING_RESULTS} component={SearchBookingResults} />
+            <PrivateRoute exact path={PATHS.VIEW_FACILITY_ID} component={ViewFacility} />
+            <PrivateRoute exact path={PATHS.VIEW_MY_BOOKINGS_ID} component={ViewMyBookings} />
             <PublicRoute exact path={PATHS.VIEW_FACILITY_BOOKING} component={ViewBooking} />
-            <PrivateRoute exact path={PATHS.CREATE_FACILITY_BOOKING} component={CreateBooking} />
+            <PrivateRoute exact path={PATHS.FACILITY_DAY_VIEW_ID} component={FacilityDayView} />
+            <PrivateRoute exact path={PATHS.CREATE_BOOKING_FORM} component={CreateBookingForm} />
+            <PrivateRoute exact path={PATHS.CREATE_BOOKING_FORM_ID} component={CreateBookingForm} />
+            <PrivateRoute exact path={PATHS.FACILITY_SELECT_TIME_ID} component={FacilitySelectTime} />
+            <PrivateRoute exact path={PATHS.EDIT_BOOKING_FORM_ID} component={EditBookingForm} />
+            <PrivateRoute exact path={PATHS.SELECT_RECURRING_BOOKING_END_DATE_ID} component={SelectRecurringDatePage} />
+            <PublicRoute exact path={PATHS.VIEW_FACILITY_CONFLICT} component={ViewConflict} />
 
             <PublicRoute exact path={PATHS.LAUNDRY_MAIN} component={ComingSoon} />
             <PublicRoute exact path={PATHS.VIEW_WASHING_MACHINE} component={ComingSoon} />

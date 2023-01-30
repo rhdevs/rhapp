@@ -45,7 +45,8 @@ const ButtonTextContainer = styled.div`
   margin: 0 15px;
 `
 
-const TextField = styled.text`
+const TextField = styled.p`
+  margin: 0;
   font-size: 17px;
 `
 

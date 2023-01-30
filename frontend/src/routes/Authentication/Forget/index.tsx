@@ -11,7 +11,8 @@ const ForgetPasswordContainer = styled.div`
   margin: 0px 23px;
   padding-top: 50px;
 `
-const InputTextLabel = styled.text`
+const InputTextLabel = styled.p`
+  margin: 0;
   float: left;
   font-size: 17px;
   padding: 0px 0px 4px 0px;

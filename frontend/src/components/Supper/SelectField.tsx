@@ -22,14 +22,16 @@ export const OptionTitleContainer = styled.div`
   align-items: center;
 `
 
-export const CustomHeaders = styled.text`
+export const CustomHeaders = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
   font-size: 17px;
 `
 
-export const RedText = styled.text`
+export const RedText = styled.p`
+  margin: 0;
   color: #ff4d4f;
   font-family: Inter;
   font-style: normal;
@@ -38,7 +40,8 @@ export const RedText = styled.text`
   white-space: nowrap;
 `
 
-export const SelectText = styled.text`
+export const SelectText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 300;
@@ -75,7 +78,7 @@ export const CheckboxContainer = styled.div<{ isHidden?: boolean }>`
   display: ${(props) => (props.isHidden ? 'none' : 'inherit')};
 `
 
-export const OptionText = styled.text`
+export const OptionText = styled.p`
   font-family: Inter;
   font-style: normal;
   font-size: 14px;

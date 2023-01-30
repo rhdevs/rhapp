@@ -1,3 +1,5 @@
+/*eslint @typescript-eslint/no-explicit-any: "off"*/
+/*eslint @typescript-eslint/no-unused-vars: "off"*/
 //https://docs.google.com/spreadsheets/d/1_txnmuoX-rZVrHhZki4wNCBfSZQN3J86lN-PXw1xS4g/edit#gid=328274554
 import axios from 'axios'
 
@@ -20,6 +22,7 @@ export enum ENDPOINTS {
 
   // FACILITY
   FACILITY_LIST = '/facilities',
+  FACILITY_LIST_WITHIN_TIME = '/available',
   FACILITY = '/facilities',
   FACILITY_BOOKING = '/bookings/facility',
   BOOKING = '/bookings',
@@ -130,35 +133,29 @@ export enum DOMAINS {
   GYM = 'gym',
 }
 
+export enum SLUGS {
+  FACILITY = 'facilities',
+  EVENT = 'scheduling',
+  LAUNDRY = 'laundry',
+  SOCIAL = 'social',
+  AUTH = 'auth',
+  SUPPER = 'supper',
+  GYM = 'gym',
+}
+
+export const BASE_URL =
+  process.env.REACT_APP_MODE === 'production'
+    ? 'https://prod.api.rhapp.lol' // production
+    : 'https://dev.api.rhapp.lol' // development
+
 export const DOMAIN_URL = {
-  FACILITY:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/facilities'
-      : '//rhappmiddleware.herokuapp.com/rhappfacilities',
-  EVENT:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/scheduling'
-      : '//rhappmiddleware.herokuapp.com/rhappevents',
-  LAUNDRY:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/laundry'
-      : '//rhappmiddleware.herokuapp.com/rhapplaundry',
-  SOCIAL:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/social'
-      : '//rhappmiddleware.herokuapp.com/rhappsocial',
-  AUTH:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/auth'
-      : '//rhappmiddleware.herokuapp.com/rhappauth',
-  SUPPER:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/supper'
-      : '//rhappmiddleware.herokuapp.com/rhappsupper',
-  GYM:
-    process.env.REACT_APP_MODE === 'production'
-      ? '//rhapp-backend.rhdevs.repl.co/gym'
-      : '//rhappmiddleware.herokuapp.com/rhappgym',
+  FACILITY: `${BASE_URL}/${SLUGS.FACILITY}`,
+  EVENT: `${BASE_URL}/${SLUGS.EVENT}`,
+  LAUNDRY: `${BASE_URL}/${SLUGS.LAUNDRY}`,
+  SOCIAL: `${BASE_URL}/${SLUGS.SOCIAL}`,
+  AUTH: `${BASE_URL}/${SLUGS.AUTH}`,
+  SUPPER: `${BASE_URL}/${SLUGS.SUPPER}`,
+  GYM: `${BASE_URL}/${SLUGS.GYM}`,
 }
 
 async function makeRequest(
@@ -168,51 +165,10 @@ async function makeRequest(
   additionalHeaders: Record<string, unknown> = {},
   requestBody: Record<string, unknown> = {},
 ) {
-  let DOMAIN_URL_REQ: string
-  switch (domain) {
-    case DOMAINS.FACILITY:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/facilities'
-          : '//rhappmiddleware.herokuapp.com/rhappfacilities'
-      break
-    case DOMAINS.EVENT:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/scheduling'
-          : '//rhappmiddleware.herokuapp.com/rhappevents'
-      break
-    case DOMAINS.LAUNDRY:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/laundry'
-          : '//rhappmiddleware.herokuapp.com/rhappsocial'
-      break
-    case DOMAINS.SOCIAL:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/social'
-          : '//rhappmiddleware.herokuapp.com/rhappsocial'
-      break
-    case DOMAINS.AUTH:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/auth'
-          : '//rhappmiddleware.herokuapp.com/rhappauth'
-      break
-    case DOMAINS.SUPPER:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/supper'
-          : '//rhappmiddleware.herokuapp.com/rhappsupper'
-      break
-    case DOMAINS.GYM:
-      DOMAIN_URL_REQ =
-        process.env.REACT_APP_MODE === 'production'
-          ? '//rhapp-backend.rhdevs.repl.co/gym'
-          : '//rhappmiddleware.herokuapp.com/rhappgym'
-      break
+  function getDomainKey(value: string) {
+    return Object.entries(DOMAINS).find(([key, val]) => val === value)?.[0]
   }
+  const DOMAIN_URL_REQ = DOMAIN_URL[getDomainKey(domain) as any]
   return axios({
     method: method,
     url: DOMAIN_URL_REQ + url,

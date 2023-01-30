@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import 'antd/dist/antd.css'
 import { PATHS } from '../Routes'
 import { Button } from 'antd'
-import TelegramIcon from '../../assets/TelegramIcon.svg'
+// import TelegramIcon from '../../assets/TelegramIcon.svg'
 // import { SearchOutlined } from '@ant-design/icons'
 import AnnouncementCarousel from '../../components/Mobile/AnnouncementCarousel'
 import SocialSection from './components/SocialSection'
@@ -39,7 +39,8 @@ const TopBar = styled.div`
   z-index: 999;
 `
 
-const Greetings = styled.text`
+const Greetings = styled.p`
+  margin: 0;
   font-size: 17px;
   padding-left: 10px;
   color: #fff;
@@ -73,29 +74,6 @@ const ImageButton = styled.img<{ filter: string }>`
   filter: ${(props) => props.filter};
 `
 
-const BannerContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  background-color: #e7f7ff;
-  position: relative;
-  height: 3.3rem;
-  margin-top: -10px;
-  border-radius: 15px;
-  margin: 1px 23px 5px 23px;
-`
-
-const BannerText = styled.text`
-  font-size: 17px;
-  margin: auto;
-`
-
-const StyledTelegramIcon = styled.img`
-  width: 3.3rem;
-  border-radius: 50%;
-  position: absolute;
-  right: 1rem;
-`
-
 export default function Home() {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -114,7 +92,7 @@ export default function Home() {
       src: facilities_icon,
       filter: 'invert(1)',
       clickHandler: () => {
-        history.push(PATHS.FACILITY_BOOKING_MAIN)
+        history.push(PATHS.FACILITY_LANDING_PAGE)
       },
     },
     {

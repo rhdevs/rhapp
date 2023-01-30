@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,7 +41,8 @@ const MainContainer = styled.div`
   margin: 0 auto;
 `
 
-const StyledSGIdText = styled.text`
+const StyledSGIdText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -59,7 +61,8 @@ const DeliveryTimeContainer = styled.div`
   align-items: baseline;
 `
 
-const StyledTimeText = styled.text`
+const StyledTimeText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: normal;

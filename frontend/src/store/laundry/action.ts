@@ -3,12 +3,12 @@ import { ActionTypes, LAUNDRY_ACTIONS, Location, WashingMachine, WMStatus } from
 import { ENDPOINTS, DOMAIN_URL } from '../endpoints'
 // import axios from 'axios'
 
-export const SetIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
+export const setIsLoading = (desiredState: boolean) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({ type: LAUNDRY_ACTIONS.SET_IS_LOADING, isLoading: desiredState })
 }
 
 export const getLocationList = () => async (dispatch: Dispatch<ActionTypes>) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.MACHINE_LIST, {
     method: 'GET',
     mode: 'cors',
@@ -32,7 +32,7 @@ export const getLocationList = () => async (dispatch: Dispatch<ActionTypes>) => 
         blocks: blocks as string[],
         levels: [],
       })
-      dispatch(SetIsLoading(false))
+      dispatch(setIsLoading(false))
     })
 }
 
@@ -40,7 +40,7 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
   dispatch: Dispatch<ActionTypes>,
   getState: GetState,
 ) => {
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   const { locations, blocks, selectedLevel, selectedBlock } = getState().laundry
 
   // If only Block is selected
@@ -56,7 +56,7 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
       blocks: blocks,
       levels: newLevelList as string[],
     })
-    dispatch(SetIsLoading(false))
+    dispatch(setIsLoading(false))
   } else {
     newBlock = selectedBlock as string
   }
@@ -65,7 +65,7 @@ export const SetBlockLevelSelections = (newBlock: string, newLevel: string) => a
     selectedBlock: newBlock as string,
     selectedLevel: newLevel as string,
   })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
   dispatch(SetFilteredMachines(newBlock, newLevel))
 }
 
@@ -74,7 +74,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
 ) => {
   // const defaultProfilePictureUrl =
   //   'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
 
   // iterate i for 3 times so that side 1, side 2 and side 0 are all covered.
   async function populateTable(): Promise<WashingMachine[]> {
@@ -126,7 +126,7 @@ export const SetFilteredMachines = (selectedBlock: string, selectedLevel: string
 
   // await Promise.all(promises)
   populateTable().then((returnTable) => {
-    dispatch(SetIsLoading(false))
+    dispatch(setIsLoading(false))
     dispatch({
       type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES,
       filteredMachines: returnTable,
@@ -226,7 +226,7 @@ export const updateMachine = (updatedState: string, machineID: string) => async 
     userID: localStorage.getItem('userID'), //TODO: Update userId
     currentDuration: duration * 60,
   }
-  dispatch(SetIsLoading(true))
+  dispatch(setIsLoading(true))
   await fetch(DOMAIN_URL.LAUNDRY + ENDPOINTS.UPDATE_MACHINE, {
     method: 'POST',
     mode: 'cors',
@@ -253,7 +253,7 @@ export const updateMachine = (updatedState: string, machineID: string) => async 
     if (machine.machineID === machineID) machine.job = updatedState as WMStatus
   })
   dispatch({ type: LAUNDRY_ACTIONS.SET_FILTERED_MACHINES, filteredMachines: filteredMachines })
-  dispatch(SetIsLoading(false))
+  dispatch(setIsLoading(false))
 }
 
 export const SetDuration = (duration: number) => async (dispatch: Dispatch<ActionTypes>) => {

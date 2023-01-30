@@ -1,3 +1,4 @@
+/*eslint @typescript-eslint/no-explicit-any : off */
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
@@ -16,7 +17,9 @@ const MainContainer = styled.div`
   background-color: #fafaf4;
 `
 
-const AccountText = styled.text`
+const AccountText = styled.p`
+  margin: 0;
+  font-family: ui-monospace;
   float: left;
   font-size: 12px;
   padding-bottom: 5px;
@@ -87,7 +90,7 @@ export default function Signup() {
   // const { name, email, password, password2 } = formData
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.name === 'userId' ? e.target.value.trim().toUpperCase() : e.target.value
+    // const value = e.target.name === 'userId' ? e.target.value.trim().toUpperCase() : e.target.value
     setFormData({
       ...formData,
       [e.target.name]:

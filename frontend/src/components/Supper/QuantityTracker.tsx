@@ -13,7 +13,7 @@ const CounterContainer = styled.div<{ center?: boolean | undefined; margin?: str
   ${(props) => props.margin && `margin: ${props.margin};`}
 `
 
-const ValueContainer = styled.text`
+const ValueContainer = styled.p`
   font-size: 24px;
   font-weight: 500;
   margin: 0 20px;

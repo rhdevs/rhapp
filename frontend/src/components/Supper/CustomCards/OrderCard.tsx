@@ -51,7 +51,8 @@ const EmptyTextContainer = styled.div`
   font-size: 12px;
 `
 
-const MyOrderText = styled.text`
+const MyOrderText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -91,7 +92,8 @@ const PriceMainContainer = styled.div`
   padding-top: 7px;
 `
 
-const TotalTitleText = styled.text`
+const TotalTitleText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -99,7 +101,8 @@ const TotalTitleText = styled.text`
   padding-top: 5px;
 `
 
-const TotalPriceText = styled.text`
+const TotalPriceText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -108,7 +111,8 @@ const TotalPriceText = styled.text`
   padding-top: 5px;
 `
 
-const PriceTitleText = styled.text`
+const PriceTitleText = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -134,7 +138,8 @@ const SubtotalContainer = styled.div`
   justify-content: space-between;
 `
 
-const SubtotalText = styled.text`
+const SubtotalText = styled.p`
+  margin: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -142,7 +147,8 @@ const SubtotalText = styled.text`
   line-height: 14px;
 `
 
-const SubtotalPrice = styled.text`
+const SubtotalPrice = styled.p`
+  margin: 0;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
