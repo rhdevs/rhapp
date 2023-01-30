@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import { RootState } from '../../../store/types'
 import BookingCard from '../../../components/BookingCard'
-import LoadingSpin from '../../../components/LoadingSpin'
 import TopNavBarRevamp from '../../../components/TopNavBarRevamp'
 
 const MainContainer = styled.div`
@@ -33,7 +32,7 @@ const MainContainer = styled.div`
  */
 export default function ViewConflict() {
   const history = useHistory()
-  const { isLoading, conflictBookings } = useSelector((state: RootState) => state.facilityBooking)
+  const { conflictBookings } = useSelector((state: RootState) => state.facilityBooking)
 
   useEffect(() => {
     conflictBookings.length === 0 && history.goBack()
@@ -42,7 +41,9 @@ export default function ViewConflict() {
   return (
     <>
       <TopNavBarRevamp title="View Conflicts" />
-      <MainContainer>{isLoading ? <LoadingSpin /> : <BookingCard bookings={conflictBookings} />}</MainContainer>
+      <MainContainer>
+        <BookingCard bookings={conflictBookings} />
+      </MainContainer>
     </>
   )
 }
