@@ -501,7 +501,7 @@ export const handleCreateNewBooking = (
     ccaID: ccaID,
     startTime: startTime,
     endTime: endTime,
-    bookUntil: isRecurring ? endDate : endTime,
+    bookUntil: isRecurring ? (endDate ? endDate + 86400 : undefined) : endTime, // add 86400 to end date to include the last day
     description: description,
     forceBook: forceBook,
   }
