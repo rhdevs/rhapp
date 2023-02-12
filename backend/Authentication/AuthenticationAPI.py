@@ -140,7 +140,7 @@ def register():
                             "bio": bio,
                             "block": block,
                             "telegramHandle": telegramHandle,
-                            "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
+                            "imageKey": "default/profile_pic.png"
                             })
     except Exception as e:
         print(e)
