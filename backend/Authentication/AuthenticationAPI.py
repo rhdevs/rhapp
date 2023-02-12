@@ -128,7 +128,7 @@ def register():
         if telegramHandle.startswith('@'):
             telegramHandle = telegramHandle[1:]
 
-        if db.User.find({'userID': userID}).count():  # entry exists
+        if db.User.count_documents({'userID': userID}):  # entry exists
             return jsonify({'message': 'User already exists'}), 401
         # add to User table
         # note: if the user data does not adhere to defined validation standards, an error will be thrown here
