@@ -128,7 +128,7 @@ def register():
         if telegramHandle.startswith('@'):
             telegramHandle = telegramHandle[1:]
 
-        if db.User.find({'userID': userID}).count():  # entry exists
+        if db.User.count_documents({'userID': userID}):  # entry exists
             return jsonify({'message': 'User already exists'}), 401
         # add to User table
         # note: if the user data does not adhere to defined validation standards, an error will be thrown here
@@ -140,7 +140,7 @@ def register():
                             "bio": bio,
                             "block": block,
                             "telegramHandle": telegramHandle,
-                            "profilePictureURI": "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon"
+                            "imageKey": "default/profile_pic.png"
                             })
     except Exception as e:
         print(e)
