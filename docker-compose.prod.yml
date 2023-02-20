@@ -9,7 +9,7 @@ services:
     expose:
       - 8080
     restart: on-failure
-    env-file:
+    env_file:
       - ./secrets/rhapp_env
     networks:
       - intranet
