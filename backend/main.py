@@ -9,6 +9,7 @@ from Scheduling.SchedulingAPI import scheduling_api
 from Supper.SupperAPI import supper_api
 from Authentication.AuthenticationAPI import authentication_api
 from GymFeatures.GymAPI import gym_api
+from CrowdAnalyser.CrowdAPI import crowd_api;
 from db import *
 from gevent.pywsgi import WSGIServer
 from prometheus_flask_exporter import PrometheusMetrics
