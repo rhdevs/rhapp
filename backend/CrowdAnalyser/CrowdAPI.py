@@ -13,9 +13,9 @@ sys.path.append("../")
 
 crowd_api = Blueprint("crowd", __name__)
 
-@crowd_api.route('/getweekly', methods=["GET"])
+@crowd_api.route('/getweekly/<facilityID>/', methods=["GET"])
 @cross_origin(supports_credentials=True)
-def get_weekly_crowd():
+def get_weekly_crowd(facilityID):
     try: 
         # Get today's date
         today = datetime.today()
@@ -35,7 +35,9 @@ def get_weekly_crowd():
         crowd_result = []
         for _ in range(0, counter):
             # Find all the data for the current day
-            data = list(db.Crowd.find({"time": {"$gte": start_of_day, "$lte": start_of_day + 86400}}))
+            data = list(db.Crowd.find(
+                {"facilityID": int(facilityID)}, 
+                {"time": {"$gte": start_of_day, "$lte": start_of_day + 86400}}))
             level_sum = 0
             for item in data:
                 level_sum += item['level']
