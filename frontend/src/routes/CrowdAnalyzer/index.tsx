@@ -31,6 +31,12 @@ const CrowdAnalyzerBarContainer = styled.div`
 `
 
 const MainContainer = styled.div`
+  background-color: #fff;
+  min-height: 100vh;
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
   margin-top: 45px;
 `
 
@@ -40,12 +46,14 @@ const TabContainer = styled.div`
   margin: 0 15%;
 `
 
-const DescriptionContainer = styled.div`
-  margin-top: 300px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 50px;
+const FacilityNameContainer = styled.div`
+  color: '#000000';
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 22px;
+  position: absolute;
+  margin: 15% 10%;
 `
 
 const LevelContainer = styled.div`
@@ -54,6 +62,10 @@ const LevelContainer = styled.div`
   font-weight: 700;
   font-size: 18px;
   line-height: 20px;
+  margin-left: 30px;
+  top: 50%;
+  margin: 15% 10%;
+  position: absolute;
 `
 
 const LevelValueContainer = styled.div`
@@ -62,6 +74,11 @@ const LevelValueContainer = styled.div`
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;
+  margin-right: 30px;
+  top: 50%;
+  right: 5%;
+  margin: 15% 10%;
+  position: absolute;
 `
 const CrowdAnalyzerTabContainer = styled.div`
   flex: 50%;
@@ -77,11 +94,19 @@ const CrowdAnalyzerTabContainer = styled.div`
   font-size: 22px;
   height: 20px;
 `
-
-export default function CrowdAnalyzerPage({ onLeftClick }: { onLeftClick?: () => void }) {
+/**
+ * # CreateCrowdAnalyzerPage
+ * Path: '/crowd'
+ *
+ * ## Page Description
+ * This page is accessed to check crowd analytics.
+ *
+ */
+const CrowdAnalyzerPage = ({ onLeftClick }: { onLeftClick?: () => void }) => {
   const title = 'Crowd Analyzer'
   const level = 'Current level:'
   const value = 'High - 98%'
+  const facility = 'Gym'
   const history = useHistory()
 
   return (
@@ -97,14 +122,17 @@ export default function CrowdAnalyzerPage({ onLeftClick }: { onLeftClick?: () =>
           <CrowdAnalyzerTabContainer>{title}</CrowdAnalyzerTabContainer>
         </TabContainer>
       </CrowdAnalyzerBarContainer>
+
       <MainContainer>
         <SearchBar />
-        <DescriptionContainer>
-          <LevelContainer>{level}</LevelContainer>
-          <LevelValueContainer>{value}</LevelValueContainer>
-        </DescriptionContainer>
+
+        <FacilityNameContainer>{facility}</FacilityNameContainer>
+        <LevelContainer>{level}</LevelContainer>
+        <LevelValueContainer>{value}</LevelValueContainer>
       </MainContainer>
       <BottomNavBar />
     </PullToRefreshRH>
   )
 }
+
+export default CrowdAnalyzerPage

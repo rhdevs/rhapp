@@ -34,6 +34,11 @@ const TextContainer = styled.div`
   color: #807d7d;
   line-height: 20px;
 `
+/**
+ * @returns A search box
+ *
+ * @example <SearchBox />
+ */
 const SearchBar = ({ text }: { text?: string }) => {
   return (
     <SearchContainer>
