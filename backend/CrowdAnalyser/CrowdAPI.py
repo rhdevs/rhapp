@@ -61,19 +61,21 @@ def get_weekly_crowd():
 
 
 
-@crowd_api.route('/getdaily', methods = ["GET"])
+@crowd_api.route('/daily', methods = ["GET"])
 @cross_origin(supports_credentials=True)
 def get_daily_crowd():
     try: 
+        print("supp")
         # Get facilityID and time
         facilityID = request.args.get('facilityID')
-        time = request.args.get('time')
+        time = int(request.args.get('time'))
 
         # Get data Crowd table
         data = list(db.Crowd.find({
             "facilityID": int(facilityID), 
             "time": {"$gte": time, "$lte": time + 24 * 60 * 60}
             }))
+        print(data)
         
         # Calculating average crowd level
         level_sum = 0
@@ -86,7 +88,7 @@ def get_daily_crowd():
             avg_level = level_sum / len(data) 
         
         # return response if successful
-        response = {"facilityID": facilityID, "level": avg_level, "status": "success"}
+        response = {"facilityID": facilityID, "level": {time, avg_level}, "status": "success"}
         return make_response(response)
     except Exception as e:
         print(e)
@@ -96,12 +98,26 @@ def get_daily_crowd():
     
 
 
-@crowd_api.route('/postdaily', methods = ["POST"])
+@crowd_api.route('/daily', methods = ["POST"])
 @cross_origin(supports_credentials=True)
 def post_daily_crowd():
     try: 
+        inputs = request.get_json()
+        
+        key = inputs["key"]
+        facilityID = int(inputs["facilityID"])
+        time = int(inputs["time"])
+        level = int(inputs["level"])
 
-        return None
+        db.Crowd.insert_one({
+            "key": key,
+            "facilityID": facilityID,
+            "time": time,
+            "level": level
+        })
+        
+        return make_response({"status": "success"}) 
     except Exception as e:
-        return None
+        print(e)
+        return make_response({"status": "failed"}) 
     
