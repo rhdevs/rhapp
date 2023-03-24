@@ -47,7 +47,7 @@ export default function FacilitySelectDate() {
   const dispatch = useDispatch()
   const history = useHistory()
   const params = useParams<{ facilityId: string }>()
-  const { selectedFacilityName, selectedFacilityId, bookingStatus, clickedDate, bookingErrorMessage } = useSelector(
+  const { selectedFacilityName, bookingStatus, clickedDate, bookingErrorMessage } = useSelector(
     (state: RootState) => state.facilityBooking,
   )
 
@@ -57,8 +57,8 @@ export default function FacilitySelectDate() {
     bookingStatus !== BookingStatus.CONFLICT_RECURRING &&
       bookingStatus !== BookingStatus.CONFLICT_SINGLE &&
       dispatch(resetBooking())
-    selectedFacilityName.length === 0 && dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
-    selectedFacilityId === 0 && dispatch(setSelectedFacility(parseInt(params.facilityId)))
+    dispatch(fetchFacilityNameFromID(parseInt(params.facilityId)))
+    dispatch(setSelectedFacility(parseInt(params.facilityId)))
   }, [])
 
   const onDateClick = (newClickedDate: Date) => {
