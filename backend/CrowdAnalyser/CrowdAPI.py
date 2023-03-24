@@ -57,3 +57,51 @@ def get_weekly_crowd():
         print(e)
         return {"err": "An error has occured", "status": "failed"}, 500
     return make_response(response)
+
+
+
+
+@crowd_api.route('/getdaily', methods = ["GET"])
+@cross_origin(supports_credentials=True)
+def get_daily_crowd():
+    try: 
+        # Get facilityID and time
+        facilityID = request.args.get('facilityID')
+        time = request.args.get('time')
+
+        # Get data Crowd table
+        data = list(db.Crowd.find({
+            "facilityID": int(facilityID), 
+            "time": {"$gte": time, "$lte": time + 24 * 60 * 60}
+            }))
+        
+        # Calculating average crowd level
+        level_sum = 0
+        for checkpoint in data:
+            level_sum += checkpoint["level"]
+        avg_level = 0
+        if len(data) == 0:
+            avg_level = 0
+        else:
+            avg_level = level_sum / len(data) 
+        
+        # return response if successful
+        response = {"facilityID": facilityID, "level": avg_level, "status": "success"}
+        return make_response(response)
+    except Exception as e:
+        print(e)
+        # return false response if unsuccessful
+        response = {"err": "An error has occured", "status": "failed"}
+        return make_response(response)
+    
+
+
+@crowd_api.route('/postdaily', methods = ["POST"])
+@cross_origin(supports_credentials=True)
+def post_daily_crowd():
+    try: 
+
+        return None
+    except Exception as e:
+        return None
+    
