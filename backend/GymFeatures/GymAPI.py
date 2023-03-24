@@ -1,4 +1,3 @@
-from curses import keyname
 from operator import is_
 from numpy import sort
 from db import *

@@ -9,6 +9,7 @@ from Scheduling.SchedulingAPI import scheduling_api
 from Supper.SupperAPI import supper_api
 from Authentication.AuthenticationAPI import authentication_api
 from GymFeatures.GymAPI import gym_api
+from CrowdAnalyser.CrowdAPI import crowd_api;
 from db import *
 from gevent.pywsgi import WSGIServer
 from prometheus_flask_exporter import PrometheusMetrics
@@ -26,6 +27,7 @@ app.register_blueprint(scheduling_api, url_prefix="/scheduling")
 app.register_blueprint(supper_api, url_prefix="/supper")
 app.register_blueprint(authentication_api, url_prefix="/auth")
 app.register_blueprint(gym_api, url_prefix="/gym")
+app.register_blueprint(crowd_api, url_prefix="/crowd")
 
 @app.route("/")
 def hello():
