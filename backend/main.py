@@ -27,6 +27,7 @@ app.register_blueprint(scheduling_api, url_prefix="/scheduling")
 app.register_blueprint(supper_api, url_prefix="/supper")
 app.register_blueprint(authentication_api, url_prefix="/auth")
 app.register_blueprint(gym_api, url_prefix="/gym")
+app.register_blueprint(crowd_api, url_prefix="/crowd")
 
 @app.route("/")
 def hello():
