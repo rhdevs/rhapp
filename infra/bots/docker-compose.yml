@@ -1,0 +1,27 @@
+version: '1'
+services:
+  bot-prod:
+    build:
+      context: .
+      dockerfile: rh_announcer_bot/Dockerfile
+      args:
+        - GIT_COMMIT_HASH
+    expose:
+      - 8081
+    restart: on-failure
+    networks:
+      - intranet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bot-prod.rule=Host(`bot.api.rhapp.lol`)"
+        # For using PathPrefixes
+        #- "traefik.http.middlewares.strip.stripprefix.prefixes=/prod"
+        #- "traefik.http.middlewares.strip.stripprefix.forceSlash=true"
+        #- "traefik.http.routers.backend.middlewares=strip@docker"
+      - "traefik.http.routers.bot-prod.entrypoints=websecure"
+      - "traefik.http.routers.bot-prod.tls=true"
+      - "traefik.http.routers.bot-prod.tls.certresolver=myresolver"
+
+networks:
+  intranet:
+    name: machine_intranet

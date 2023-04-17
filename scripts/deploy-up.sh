@@ -44,6 +44,9 @@ docker compose --project-name=machine -f $WORK_DIR/infra/network/docker-compose.
 # Deploy Analytics Stack
 docker compose --project-name=mech -f $WORK_DIR/infra/analytics/docker-compose.yml build --no-cache
 docker compose --project-name=mech -f $WORK_DIR/infra/analytics/docker-compose.yml up --force-recreate -d
+# Deploy Bot
+docker compose --project-name=metal -f $WORK_DIR/infra/bots/docker-compose.yml build --no-cache
+docker compose --project-name=metal -f $WORK_DIR/infra/bots/docker-compose.yml up --force-recreate -d
 # Deploy Production Backend
 git checkout main
 docker compose --project-name=blue    -f $WORK_DIR/docker-compose.prod.yml          build --no-cache

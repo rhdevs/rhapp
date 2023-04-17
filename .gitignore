@@ -3,10 +3,15 @@ letsencrypt
 
 # log files
 output.txt
+dump
+err
+logs
+out.logs
 
 # secrets
 secrets
 config.monitoring
+bot_creds.py
 
 # dependencies
 /node_modules
