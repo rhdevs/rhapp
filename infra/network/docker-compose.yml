@@ -34,9 +34,11 @@ services:
       - intranet
     ports:
       - 80:80
+      - 88:88
       - 443:443
       # For telebot
       - 8081:8081 
+      - 8443:8443
       # For traefik dashboard, only expose for debugging
       # - 8081:8080
       # For prometheus
