@@ -15,5 +15,6 @@ docker system prune --all --force
 docker compose --project-name=blue    down --remove-orphans
 docker compose --project-name=purple    down --remove-orphans
 docker compose --project-name=green   down --remove-orphans
+docker compose --project-name=metal down --remove-orphans
 docker compose --project-name=mech down --remove-orphans
 docker compose --project-name=machine down --remove-orphans

@@ -18,3 +18,5 @@ cd $WORK_DIR
 
 # Deploy Prod instance
 ./prod-deploy.sh
+
+## TODO - deploy bot instance as well
