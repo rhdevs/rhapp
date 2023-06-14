@@ -17,4 +17,5 @@ docker compose --project-name=purple    down --remove-orphans
 docker compose --project-name=green   down --remove-orphans
 docker compose --project-name=metal down --remove-orphans
 docker compose --project-name=mech down --remove-orphans
-docker compose --project-name=machine down --remove-orphans
+# No need to down traefik unless updating static traefik configs
+# docker compose --project-name=machine down --remove-orphans

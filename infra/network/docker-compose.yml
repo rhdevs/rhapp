@@ -39,8 +39,9 @@ services:
       # For telebot
       - 8081:8081 
       - 8443:8443
+      - 5000:5000
       # For traefik dashboard, only expose for debugging
-      # - 8081:8080
+      - 8082:8080
       # For prometheus
       # - 8090:8090
     volumes:

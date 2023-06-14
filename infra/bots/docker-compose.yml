@@ -7,6 +7,9 @@ services:
       args:
         - GIT_COMMIT_HASH
     expose:
+      - 80
+      - 443
+      - 5000
       - 8081
       - 8443
     restart: on-failure
@@ -19,11 +22,12 @@ services:
         #- "traefik.http.middlewares.strip.stripprefix.prefixes=/prod"
         #- "traefik.http.middlewares.strip.stripprefix.forceSlash=true"
         #- "traefik.http.routers.backend.middlewares=strip@docker"
-      - "traefik.http.routers.bot-prod.entrypoints=websecure"
+        #- "traefik.http.routers.bot-prod.entrypoints=websecure"
+      - "traefik.http.routers.bot-prod.service=bot-prod"
       - "traefik.http.routers.bot-prod.tls=true"
       - "traefik.http.routers.bot-prod.tls.certresolver=myresolver"
-      - "traefik.http.services.bot-prod.loadbalancer.server.port=8081"
-      - "traefik.http.services.bot-prod.loadbalancer.server.port=8084"
+      - "traefik.http.services.bot-prod.loadbalancer.server.port=8443"
+        #- "traefik.http.services.bot-prod.loadbalancer.server.port=8084"
 
 
 networks:
