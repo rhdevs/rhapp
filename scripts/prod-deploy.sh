@@ -39,4 +39,12 @@ docker compose --project-name=blue -f docker-compose.prod.yml up -d
 sleep 2m
 
 # Tear down green, we can now reuse it for next deploy
-docker compose --project-name=green  -f docker-compose.yml down --remove-orphans
+docker compose --project-name=green  -f docker-compose.yml down --remove-orphan
+
+cd /rhapp/infra/bots/rh_announcerbot
+
+docker compose --project-name=metal -f docker-compose.yml build
+docker compose --project-name=metal -f docker-compose.yml down --remove-orphans
+docker compose --project-name=metal -f docker-compose.yml build up -d
+
+
