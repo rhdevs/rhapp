@@ -45,6 +45,6 @@ cd ~/rhapp/infra/bots/rh_announcer_bot
 
 docker compose --project-name=metal -f docker-compose.yml build
 docker compose --project-name=metal -f docker-compose.yml down --remove-orphans
-docker compose --project-name=metal -f docker-compose.yml build up -d
+docker compose --project-name=metal -f docker-compose.yml up -d
 
 
