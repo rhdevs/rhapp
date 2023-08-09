@@ -41,10 +41,21 @@ sleep 2m
 # Tear down green, we can now reuse it for next deploy
 docker compose --project-name=green  -f docker-compose.yml down --remove-orphans
 
-cd ~/rhapp/infra/bots/
+# Same for metal
+
+cd ~/rhapp/infra/bots
+
+# Create cached build of metal
+docker compose --project-name=metal-green -f docker-compose.prod.yml build --no-cache
+docker compose --project-name=metal-green -f docker-compose.prod.yml up -d
+
+# Wait for green to start
+sleep 2m
 
 docker compose --project-name=metal -f docker-compose.yml build
 docker compose --project-name=metal -f docker-compose.yml down --remove-orphans
 docker compose --project-name=metal -f docker-compose.yml up -d
 
 
+# Tear down green, we can now reuse it for next deploy
+docker compose --project-name=metal-green  -f docker-compose.yml down --remove-orphans
