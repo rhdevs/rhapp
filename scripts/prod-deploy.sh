@@ -46,8 +46,8 @@ docker compose --project-name=green  -f docker-compose.yml down --remove-orphans
 cd ~/rhapp/infra/bots
 
 # Create cached build of metal
-docker compose --project-name=metal-green -f docker-compose.prod.yml build --no-cache
-docker compose --project-name=metal-green -f docker-compose.prod.yml up -d
+docker compose --project-name=metal-green -f docker-compose.yml build --no-cache
+docker compose --project-name=metal-green -f docker-compose.yml up -d
 
 # Wait for green to start
 sleep 2m
