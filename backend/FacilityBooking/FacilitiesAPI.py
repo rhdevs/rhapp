@@ -306,7 +306,7 @@ def check_bookings_within_time():
     try:
         startTime = int(request.args.get('startTime')) if request.args.get('startTime') else 0
         endTime = int(request.args.get('endTime')) if request.args.get('endTime') else -1
-        if endTime <= startTime:
+        if endTime <= startTime: 
             return {"err": "Invalid start and end time", "status": "failed"}, 400
         
         condition = {
@@ -375,6 +375,7 @@ def check_bookings_within_time():
 def add_booking():
     try:
         formData = request.get_json()
+        print(formData)
 
         # Check for valid input
         if (formData == None):
