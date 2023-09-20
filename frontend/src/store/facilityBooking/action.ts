@@ -58,7 +58,7 @@ export const updateBookingDailyView = (date: Date, selectedFacilityId: number) =
 
         if (startDate === date.getDate() && startTimeObject.getMonth() === date.getMonth()) {
           const startHour = startTimeObject.getHours()
-          const endHour = endTimeObject.getHours() < startHour ? 24 : endTimeObject.getHours()
+          const endHour = endTimeObject.getHours() <= startHour ? 24 : endTimeObject.getHours()
           let timestamp = booking.startTime
           for (let hour = startHour; hour < endHour; hour++) {
             updatedTimeBlocks[hour] = {
