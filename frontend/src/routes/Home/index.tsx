@@ -96,11 +96,11 @@ export default function Home() {
       },
     },
     {
-      name: 'gym',
+      name: 'crowd',
       src: gym_icon,
       filter: 'brightness(5)',
       clickHandler: () => {
-        history.push(PATHS.GYM_MAIN)
+        history.push(PATHS.CROWD_MAIN)
       },
     },
     {

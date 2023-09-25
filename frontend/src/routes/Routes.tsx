@@ -109,6 +109,9 @@ export enum PATHS {
 
   //GYM
   GYM_MAIN = '/gym',
+
+  //CROWD
+  CROWD_MAIN = '/crowd',
 }
 
 //DOCUMENTATION
@@ -212,6 +215,9 @@ const Payment = React.lazy(() => import(/* webpackChuckName: "Payment" */ './Sup
 
 //GYM
 const Gym = React.lazy(() => import(/* webpackChunckName: "Gym" */ './GymPage'))
+
+//CROWD
+const Crowd = React.lazy(() => import(/* webpackChunckName: "Gym" */ './Crowd'))
 export default class Routes extends React.Component {
   render() {
     return (
@@ -283,6 +289,8 @@ export default class Routes extends React.Component {
             <PrivateRoute exact path={PATHS.USER_PAYMENT_BY_ID} component={Payment} />
 
             <PrivateRoute exact path={PATHS.GYM_MAIN} component={Gym} />
+
+            <PrivateRoute exact path={PATHS.CROWD_MAIN} component={Crowd} />
 
             <PublicRoute exact path={PATHS.DOCS_LANDING_PAGE} component={Docs} />
             <PublicRoute exact path={PATHS.DOCS_SUPPER_BY_FILE} component={Supper_Documentation} />
