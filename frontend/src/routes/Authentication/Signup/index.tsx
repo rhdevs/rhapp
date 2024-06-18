@@ -68,7 +68,7 @@ const ADMIN_USERNAMES = [
   'EPHFM', // Prof Mornin
   'GROLC', // Prof Linda
   'ISSNTT', // Prof Tin
-  'VKT66' // Vicent Koh
+  'VKT66', // Vicent Koh
 ]
 
 export default function Signup() {
