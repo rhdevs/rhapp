@@ -19,7 +19,7 @@ authentication_api = Blueprint("authentication", __name__)
 
 
 def load_mail():
-    current_app.config['MAIL_SERVER'] = 'smtp.office365.com'
+    current_app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     current_app.config['MAIL_PORT'] = 587
     # to test input your own NUS acc email
     current_app.config['MAIL_USERNAME'] = os.environ['EMAIL_USER']
