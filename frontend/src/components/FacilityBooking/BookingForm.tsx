@@ -160,7 +160,8 @@ const BookingForm = (props: Props) => {
           }))}
           value={bookingFormCCA}
           placeholder="Select 'Personal' if NA"
-          onChange={(value) => dispatch(setBookingFormCCA(value))}
+          // explicit type assertion to prevent error
+          onChange={(value) => dispatch(setBookingFormCCA(value as string))}
           filterOption={(inputValue, option) => option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
           notFoundContent="No Matching CCAs"
           allowClear

@@ -50,7 +50,9 @@ const StyledRadioGroup = styled(Radio.Group)`
     color: ${PRIMARY_GREEN};
   }
 
-  .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+  .ant-radio-button-wrapper-checked:not(
+      [class*=' ant-radio-button-wrapper-disabled']
+    ).ant-radio-button-wrapper:first-child {
     border-right-color: ${PRIMARY_GREEN};
     border-left-color: ${PRIMARY_GREEN};
   }

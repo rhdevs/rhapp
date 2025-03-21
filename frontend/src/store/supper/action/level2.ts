@@ -22,62 +22,55 @@ import {
   setEstimatedArrivalTime,
 } from './setter'
 
-export const getOrderPageDetails = (supperGroupId: string, restaurantId: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(setIsLoading(true))
-  await Promise.all([
-    dispatch(getSupperGroupById(supperGroupId)),
-    dispatch(getRestaurant(restaurantId)),
-    dispatch(getUserOrder(supperGroupId)).then(() => {
-      const { order } = getState().supper
+export const getOrderPageDetails =
+  (supperGroupId: string, restaurantId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(setIsLoading(true))
+    await Promise.all([
+      dispatch(getSupperGroupById(supperGroupId)),
+      dispatch(getRestaurant(restaurantId)),
+      dispatch(getUserOrder(supperGroupId)).then(() => {
+        const { order } = getState().supper
 
-      if (order) {
-        dispatch(setOrderId(order.orderId))
-      }
-    }),
-  ]).catch(() => dispatch(setSupperErrorMessage('Could not get all order page details! Please try again later.')))
+        if (order) {
+          dispatch(setOrderId(order.orderId))
+        }
+      }),
+    ]).catch(() => dispatch(setSupperErrorMessage('Could not get all order page details! Please try again later.')))
 
-  dispatch(setIsLoading(false))
-}
+    dispatch(setIsLoading(false))
+  }
 
 export const getOrderSummaryPageDetails = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
-  await Promise.all([
-    dispatch(getCollatedOrder(supperGroupId)),
-    dispatch(getSupperGroupById(supperGroupId)),
-  ]).catch(() =>
-    dispatch(setSupperErrorMessage('Could not get all order summary page details! Please try again later.')),
+  await Promise.all([dispatch(getCollatedOrder(supperGroupId)), dispatch(getSupperGroupById(supperGroupId))]).catch(
+    () => dispatch(setSupperErrorMessage('Could not get all order summary page details! Please try again later.')),
   )
   dispatch(setIsLoading(false))
 }
 
-export const getUpdateItemPageDetails = (supperGroupId: string, orderId: string, foodId: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch(setIsLoading(true))
-  await Promise.all([
-    dispatch(getSupperGroupById(supperGroupId)),
-    dispatch(getFoodInOrder(orderId, foodId)),
-  ]).catch(() => dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')))
-  dispatch(setIsLoading(false))
-}
+export const getUpdateItemPageDetails =
+  (supperGroupId: string, orderId: string, foodId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+    dispatch(setIsLoading(true))
+    await Promise.all([dispatch(getSupperGroupById(supperGroupId)), dispatch(getFoodInOrder(orderId, foodId))]).catch(
+      () => dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')),
+    )
+    dispatch(setIsLoading(false))
+  }
 
-export const getUpdateAllItemsPageDetails = (supperGroupId: string, foodId: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(setIsLoading(true))
-  await dispatch(getCollatedOrder(supperGroupId))
-    .then(() => {
-      const { collatedOrder } = getState().supper
-      const currentFood = collatedOrder?.collatedOrderList.find((food) => food.foodIdList?.includes(foodId))
-      dispatch(setFoodState(currentFood))
-      dispatch(setIsLoading(false))
-    })
-    .catch(() => dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')))
-}
+export const getUpdateAllItemsPageDetails =
+  (supperGroupId: string, foodId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(setIsLoading(true))
+    await dispatch(getCollatedOrder(supperGroupId))
+      .then(() => {
+        const { collatedOrder } = getState().supper
+        const currentFood = collatedOrder?.collatedOrderList.find((food) => food.foodIdList?.includes(foodId))
+        dispatch(setFoodState(currentFood))
+        dispatch(setIsLoading(false))
+      })
+      .catch(() =>
+        dispatch(setSupperErrorMessage('Could not get all update item page details! Please try again later.')),
+      )
+  }
 
 export const getGroupHistoryPageDetails = () => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -87,27 +80,25 @@ export const getGroupHistoryPageDetails = () => async (dispatch: Dispatch<Action
   dispatch(setIsLoading(false))
 }
 
-export const getViewOrderPageDetails = (supperGroupId: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-  getState: GetState,
-) => {
-  dispatch(setIsLoading(true))
-  await dispatch(getSupperGroupById(supperGroupId))
-    .then(async () => {
-      const { supperGroup } = getState().supper
-      if (supperGroup) {
-        await Promise.all([
-          dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null)),
-          supperGroup?.ownerId === localStorage.userID
-            ? dispatch(getCollatedOrder(supperGroupId))
-            : dispatch(getUserOrder(supperGroupId)),
-        ]).then(() => dispatch(setIsLoading(false)))
-      } else {
-        dispatch(setIsLoading(false))
-      }
-    })
-    .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
-}
+export const getViewOrderPageDetails =
+  (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
+    dispatch(setIsLoading(true))
+    await dispatch(getSupperGroupById(supperGroupId))
+      .then(async () => {
+        const { supperGroup } = getState().supper
+        if (supperGroup) {
+          await Promise.all([
+            dispatch(setSelectedSupperGroupStatus(supperGroup?.status ?? null)),
+            supperGroup?.ownerId === localStorage.userID
+              ? dispatch(getCollatedOrder(supperGroupId))
+              : dispatch(getUserOrder(supperGroupId)),
+          ]).then(() => dispatch(setIsLoading(false)))
+        } else {
+          dispatch(setIsLoading(false))
+        }
+      })
+      .catch(() => dispatch(setSupperErrorMessage('Could not get view order page details! Please try again later.')))
+  }
 
 export const getJoinGroupPageDetails = (supperGroupId: string) => async (dispatch: Dispatch<ActionTypes>) => {
   dispatch(setIsLoading(true))
@@ -123,15 +114,14 @@ export const getSupperHomePageDetails = () => async (dispatch: Dispatch<ActionTy
     .catch(() => dispatch(setSupperErrorMessage('Could not get supper home page details! Please try again later.')))
 }
 
-export const getAddFoodItemPageDetails = (supperGroupId: string, foodId: string) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch(setIsLoading(true))
-  await Promise.all([dispatch(getSupperGroupById(supperGroupId)), dispatch(getFoodMenu(foodId))]).catch(() =>
-    dispatch(setSupperErrorMessage('Could not get Add Food Item page details! Please try again.')),
-  )
-  dispatch(setIsLoading(false))
-}
+export const getAddFoodItemPageDetails =
+  (supperGroupId: string, foodId: string) => async (dispatch: Dispatch<ActionTypes>) => {
+    dispatch(setIsLoading(true))
+    await Promise.all([dispatch(getSupperGroupById(supperGroupId)), dispatch(getFoodMenu(foodId))]).catch(() =>
+      dispatch(setSupperErrorMessage('Could not get Add Food Item page details! Please try again.')),
+    )
+    dispatch(setIsLoading(false))
+  }
 
 export const getDeliveryDetails = (supperGroupId: string) => (dispatch: Dispatch<ActionTypes>, getState: GetState) => {
   dispatch(setIsLoading(true))
@@ -169,14 +159,13 @@ export const getEditSupperGroupDetails = (supperGroupId: string) => (dispatch: D
     .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
 }
 
-export const getSupperGroupForPaymentList = (supperGroupId: number | undefined) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (!supperGroupId) return
-  dispatch(setIsLoading(true))
-  dispatch(getSupperGroupById(supperGroupId))
-    .then(() => {
-      dispatch(setIsLoading(false))
-    })
-    .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
-}
+export const getSupperGroupForPaymentList =
+  (supperGroupId: number | undefined) => (dispatch: Dispatch<ActionTypes>) => {
+    if (!supperGroupId) return
+    dispatch(setIsLoading(true))
+    dispatch(getSupperGroupById(supperGroupId))
+      .then(() => {
+        dispatch(setIsLoading(false))
+      })
+      .catch(() => dispatch(setSupperErrorMessage('Could not get Edit Supper Group page details! Please try again.')))
+  }
