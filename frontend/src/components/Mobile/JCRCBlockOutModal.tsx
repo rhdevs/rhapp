@@ -276,7 +276,7 @@ function JCRCBlockOutModal({
             {facilityList.map((facility) => {
               if (facility.facilityLocation)
                 return (
-                  <VenueOptions>
+                  <VenueOptions key={facility.facilityID}>
                     {facility.facilityName}
                     <VenueInput
                       id={String(facility.facilityID)}

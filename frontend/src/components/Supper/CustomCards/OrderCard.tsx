@@ -353,7 +353,8 @@ export const OrderCard = (props: Props) => {
                 if (option.isSelected) customisations.push(option.name)
               }),
             )
-            wasEdited = food.updates as boolean
+            // not sure if this works as intended
+            wasEdited = food.updates as unknown as boolean
             return (
               <FoodLine
                 key={index}
@@ -388,7 +389,7 @@ export const OrderCard = (props: Props) => {
                 if (option.isSelected) customisations.push(option.name)
               }),
             )
-            wasEdited = food.updates as boolean
+            wasEdited = food.updates as unknown as boolean
             return (
               <FoodLine
                 key={index}
@@ -495,7 +496,7 @@ export const OrderCard = (props: Props) => {
                       if (option.isSelected) customisations.push(option.name)
                     }),
                   )
-                  wasEdited = food.updates as boolean
+                  wasEdited = food.updates as unknown as boolean
                   return (
                     <FoodLine
                       key={foodIndex}
@@ -538,7 +539,7 @@ export const OrderCard = (props: Props) => {
                   if (option.isSelected) customisations.push(option.name)
                 }),
               )
-              wasEdited = food.updates as boolean
+              wasEdited = food.updates as unknown as boolean
               return (
                 <FoodLine
                   key={foodIndex}

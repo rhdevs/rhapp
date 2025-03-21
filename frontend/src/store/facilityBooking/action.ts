@@ -21,81 +21,80 @@ import {
  *
  * @remarks
  */
-export const updateBookingDailyView = (date: Date, selectedFacilityId: number) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  const updatedTimeBlocks: TimeBlock[] = [...defaultTimeBlocks]
+export const updateBookingDailyView =
+  (date: Date, selectedFacilityId: number) => async (dispatch: Dispatch<ActionTypes>) => {
+    const updatedTimeBlocks: TimeBlock[] = [...defaultTimeBlocks]
 
-  const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-  const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
+    const adjustedStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+    const adjustedEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 23, 59, 59, 999)
 
-  //set all elements in Time Blocks to available
-  for (let i = 0; i < 24; i++) {
-    updatedTimeBlocks[i] = {
-      id: i,
-      timestamp: adjustedStart.getTime() / 1000 + i * 3600,
-      type: TimeBlockType.AVAILABLE,
-    }
-  }
-  fetch(
-    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_BOOKING}/${selectedFacilityId}/?` +
-      new URLSearchParams({
-        startTime: (adjustedStart.getTime() / 1000).toFixed(0),
-        endTime: (adjustedEnd.getTime() / 1000).toFixed(0),
-      }),
-    {
-      method: 'GET',
-      mode: 'cors',
-    },
-  )
-    .then((resp) => resp.json())
-    .then((res) => {
-      const updatedDayBookings: Booking[] = res.data
-      for (const booking of updatedDayBookings) {
-        const startTimeObject = new Date(booking.startTime * 1000)
-        const endTimeObject = new Date(booking.endTime * 1000)
-        const startDate = startTimeObject.getDate()
-
-        if (startDate === date.getDate() && startTimeObject.getMonth() === date.getMonth()) {
-          const startHour = startTimeObject.getHours()
-          const endHour = endTimeObject.getHours() <= startHour ? 24 : endTimeObject.getHours()
-          let timestamp = booking.startTime
-          for (let hour = startHour; hour < endHour; hour++) {
-            updatedTimeBlocks[hour] = {
-              id: hour,
-              timestamp: timestamp,
-              type: TimeBlockType.OCCUPIED,
-              ccaName: booking.ccaName,
-              eventName: booking.eventName,
-              booking: booking,
-            }
-            timestamp += 3600
-          }
-        }
-
-        if (startDate < date.getDate() && startTimeObject.getMonth() <= date.getMonth()) {
-          const startHour = 0
-          const endHour = endTimeObject.getHours()
-          let timestamp = booking.startTime
-          for (let hour = startHour; hour < endHour; hour++) {
-            updatedTimeBlocks[hour] = {
-              id: hour,
-              timestamp: timestamp,
-              type: TimeBlockType.OCCUPIED,
-              ccaName: booking.ccaName,
-              eventName: booking.eventName,
-              booking: booking,
-            }
-            timestamp += 3600
-          }
-        }
+    //set all elements in Time Blocks to available
+    for (let i = 0; i < 24; i++) {
+      updatedTimeBlocks[i] = {
+        id: i,
+        timestamp: adjustedStart.getTime() / 1000 + i * 3600,
+        type: TimeBlockType.AVAILABLE,
       }
+    }
+    fetch(
+      `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_BOOKING}/${selectedFacilityId}/?` +
+        new URLSearchParams({
+          startTime: (adjustedStart.getTime() / 1000).toFixed(0),
+          endTime: (adjustedEnd.getTime() / 1000).toFixed(0),
+        }),
+      {
+        method: 'GET',
+        mode: 'cors',
+      },
+    )
+      .then((resp) => resp.json())
+      .then((res) => {
+        const updatedDayBookings: Booking[] = res.data
+        for (const booking of updatedDayBookings) {
+          const startTimeObject = new Date(booking.startTime * 1000)
+          const endTimeObject = new Date(booking.endTime * 1000)
+          const startDate = startTimeObject.getDate()
 
-      dispatch(setSelectedDayBookings(updatedDayBookings))
-      dispatch(setTimeBlocks(updatedTimeBlocks))
-      dispatch(setIsLoading(false))
-    })
-}
+          if (startDate === date.getDate() && startTimeObject.getMonth() === date.getMonth()) {
+            const startHour = startTimeObject.getHours()
+            const endHour = endTimeObject.getHours() <= startHour ? 24 : endTimeObject.getHours()
+            let timestamp = booking.startTime
+            for (let hour = startHour; hour < endHour; hour++) {
+              updatedTimeBlocks[hour] = {
+                id: hour,
+                timestamp: timestamp,
+                type: TimeBlockType.OCCUPIED,
+                ccaName: booking.ccaName,
+                eventName: booking.eventName,
+                booking: booking,
+              }
+              timestamp += 3600
+            }
+          }
+
+          if (startDate < date.getDate() && startTimeObject.getMonth() <= date.getMonth()) {
+            const startHour = 0
+            const endHour = endTimeObject.getHours()
+            let timestamp = booking.startTime
+            for (let hour = startHour; hour < endHour; hour++) {
+              updatedTimeBlocks[hour] = {
+                id: hour,
+                timestamp: timestamp,
+                type: TimeBlockType.OCCUPIED,
+                ccaName: booking.ccaName,
+                eventName: booking.eventName,
+                booking: booking,
+              }
+              timestamp += 3600
+            }
+          }
+        }
+
+        dispatch(setSelectedDayBookings(updatedDayBookings))
+        dispatch(setTimeBlocks(updatedTimeBlocks))
+        dispatch(setIsLoading(false))
+      })
+  }
 
 /**
  *
@@ -163,15 +162,14 @@ export const getFacilityList = () => async (dispatch: Dispatch<ActionTypes>) => 
  *
  * @remarks
  */
-const setFacilityListWithinTime = (facilityList: Facility[], locationList: string[]) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
-    facilityListWithinTime: facilityList,
-    locationListWithinTime: locationList,
-  })
-}
+const setFacilityListWithinTime =
+  (facilityList: Facility[], locationList: string[]) => async (dispatch: Dispatch<ActionTypes>) => {
+    dispatch({
+      type: FACILITY_ACTIONS.GET_FACILITY_LIST_WITHIN_TIME,
+      facilityListWithinTime: facilityList,
+      locationListWithinTime: locationList,
+    })
+  }
 
 /**
  *
@@ -184,33 +182,32 @@ const setFacilityListWithinTime = (facilityList: Facility[], locationList: strin
  * @remarks
  *
  */
-export const getFacilityListWithinTime = (startTime: number, endTime: number) => async (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  await fetch(
-    `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
-      new URLSearchParams({
-        startTime: `${startTime}`,
-        endTime: `${endTime}`,
-      }),
-    {
-      method: 'GET',
-      mode: 'cors',
-    },
-  )
-    .then((resp) => resp.json())
-    .then((data) => {
-      const facilityList = data.available_facilities
-      if (facilityList) {
-        const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
-        const locationList = ['All'].concat(uniqueLocationList as string[])
-        dispatch(setFacilityListWithinTime(facilityList, locationList))
-      } else {
-        dispatch(setFacilityListWithinTime([], []))
-      }
-      dispatch(setIsLoading(false))
-    })
-}
+export const getFacilityListWithinTime =
+  (startTime: number, endTime: number) => async (dispatch: Dispatch<ActionTypes>) => {
+    await fetch(
+      `${DOMAIN_URL.FACILITY}${ENDPOINTS.FACILITY_LIST_WITHIN_TIME}?` +
+        new URLSearchParams({
+          startTime: `${startTime}`,
+          endTime: `${endTime}`,
+        }),
+      {
+        method: 'GET',
+        mode: 'cors',
+      },
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        const facilityList = data.available_facilities
+        if (facilityList) {
+          const uniqueLocationList = [...new Set(facilityList.map((item: Facility) => item.facilityLocation))]
+          const locationList = ['All'].concat(uniqueLocationList as string[])
+          dispatch(setFacilityListWithinTime(facilityList, locationList))
+        } else {
+          dispatch(setFacilityListWithinTime([], []))
+        }
+        dispatch(setIsLoading(false))
+      })
+  }
 
 /**
  *
@@ -483,78 +480,80 @@ const setBookingStatusErrorMessage = (body) => (dispatch: Dispatch<ActionTypes>)
  *
  * @remarks
  */
-export const handleCreateNewBooking = (
-  facilityID: number | undefined,
-  eventName: string | undefined,
-  startTime: number | null,
-  endTime: number | null,
-  isRecurring: boolean,
-  endDate?: number,
-  ccaID?: number,
-  description?: string,
-  forceBook?: boolean,
-) => async (dispatch: Dispatch<ActionTypes>) => {
-  const requestBody = {
-    facilityID: facilityID,
-    eventName: eventName,
-    userID: localStorage.getItem('userID'),
-    ccaID: ccaID,
-    startTime: startTime,
-    endTime: endTime,
-    bookUntil: isRecurring ? (endDate ? endDate + 86400 : undefined) : endTime, // add 86400 to end date to include the last day
-    description: description,
-    forceBook: forceBook,
-  }
-  dispatch(
-    setBooking({
-      eventName: eventName ?? '',
-      facilityID: facilityID ?? -1,
-      userID: localStorage.getItem('userID') ?? '',
-      ccaID: ccaID ?? -1,
-      startTime: startTime ?? Math.round(Date.now() / 1000),
-      endTime: endTime ?? Math.round(Date.now() / 1000),
-      description: description ?? '',
-      endDate: endDate,
-    }),
-  )
-  if (startTime === null || endTime === null) {
-    dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
-  } else {
-    const tokenId = localStorage.getItem('token')
-    fetch(
-      `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}?` +
-        new URLSearchParams({
-          token: `${tokenId}`,
-          userID: `${localStorage.getItem('userID')}`,
-        }),
-      {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
+export const handleCreateNewBooking =
+  (
+    facilityID: number | undefined,
+    eventName: string | undefined,
+    startTime: number | null,
+    endTime: number | null,
+    isRecurring: boolean,
+    endDate?: number,
+    ccaID?: number,
+    description?: string,
+    forceBook?: boolean,
+  ) =>
+  async (dispatch: Dispatch<ActionTypes>) => {
+    const requestBody = {
+      facilityID: facilityID,
+      eventName: eventName,
+      userID: localStorage.getItem('userID'),
+      ccaID: ccaID,
+      startTime: startTime,
+      endTime: endTime,
+      bookUntil: isRecurring ? (endDate ? endDate + 86400 : undefined) : endTime, // add 86400 to end date to include the last day
+      description: description,
+      forceBook: forceBook,
+    }
+    dispatch(
+      setBooking({
+        eventName: eventName ?? '',
+        facilityID: facilityID ?? -1,
+        userID: localStorage.getItem('userID') ?? '',
+        ccaID: ccaID ?? -1,
+        startTime: startTime ?? Math.round(Date.now() / 1000),
+        endTime: endTime ?? Math.round(Date.now() / 1000),
+        description: description ?? '',
+        endDate: endDate,
+      }),
+    )
+    if (startTime === null || endTime === null) {
+      dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
+    } else {
+      const tokenId = localStorage.getItem('token')
+      fetch(
+        `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}?` +
+          new URLSearchParams({
+            token: `${tokenId}`,
+            userID: `${localStorage.getItem('userID')}`,
+          }),
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      },
-    ).then((resp) => {
-      console.log(resp)
-      if (resp.status === 200) {
-        dispatch(setBookingStatus(BookingStatus.SUCCESS))
-      } else if (resp.status === 409) {
-        dispatch(setBookingStatus(isRecurring ? BookingStatus.CONFLICT_RECURRING : BookingStatus.CONFLICT_SINGLE))
-        resp.json().then((body) => {
-          dispatch(setConflictBookings(body.conflict_bookings))
-        })
-      } else {
-        resp.json().then((body) => {
-          setBookingStatusErrorMessage(body)
-        })
-      }
-    })
-    dispatch(resetTimeSelectorSelection())
-    dispatch(setBookingStartTime(0))
-    dispatch(setBookingEndTime(0))
+      ).then((resp) => {
+        console.log(resp)
+        if (resp.status === 200) {
+          dispatch(setBookingStatus(BookingStatus.SUCCESS))
+        } else if (resp.status === 409) {
+          dispatch(setBookingStatus(isRecurring ? BookingStatus.CONFLICT_RECURRING : BookingStatus.CONFLICT_SINGLE))
+          resp.json().then((body) => {
+            dispatch(setConflictBookings(body.conflict_bookings))
+          })
+        } else {
+          resp.json().then((body) => {
+            setBookingStatusErrorMessage(body)
+          })
+        }
+      })
+      dispatch(resetTimeSelectorSelection())
+      dispatch(setBookingStartTime(0))
+      dispatch(setBookingEndTime(0))
+    }
   }
-}
 
 /**
  *
@@ -575,73 +574,75 @@ export const handleCreateNewBooking = (
  * @remarks
  *
  */
-export const handleEditBooking = (
-  bookingID: number,
-  facilityID: number | undefined,
-  eventName: string | undefined,
-  startTime: number | null,
-  endTime: number | null,
-  ccaID?: number,
-  description?: string,
-) => async (dispatch: Dispatch<ActionTypes>) => {
-  const requestBody = {
-    // Note that eventName is not editable in the BE
-    facilityID: facilityID,
-    userID: localStorage.getItem('userID'),
-    ccaID: ccaID,
-    startTime: startTime,
-    endTime: endTime,
-    description: description,
-  }
-  dispatch(
-    setBooking({
-      eventName: eventName ?? '',
-      facilityID: facilityID ?? -1,
-      userID: localStorage.getItem('userID') ?? '',
-      ccaID: ccaID ?? -1,
-      startTime: startTime ?? Math.round(Date.now() / 1000),
-      endTime: endTime ?? Math.round(Date.now() / 1000),
-      description: description ?? '',
-      endDate: 0,
-    }),
-  )
-  if (startTime === null || endTime === null) {
-    dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
-  } else {
-    const tokenId = localStorage.getItem('token')
-    fetch(
-      `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}/${bookingID}?` +
-        new URLSearchParams({
-          token: `${tokenId}`,
-          userID: `${localStorage.getItem('userID')}`,
-        }),
-      {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
+export const handleEditBooking =
+  (
+    bookingID: number,
+    facilityID: number | undefined,
+    eventName: string | undefined,
+    startTime: number | null,
+    endTime: number | null,
+    ccaID?: number,
+    description?: string,
+  ) =>
+  async (dispatch: Dispatch<ActionTypes>) => {
+    const requestBody = {
+      // Note that eventName is not editable in the BE
+      facilityID: facilityID,
+      userID: localStorage.getItem('userID'),
+      ccaID: ccaID,
+      startTime: startTime,
+      endTime: endTime,
+      description: description,
+    }
+    dispatch(
+      setBooking({
+        eventName: eventName ?? '',
+        facilityID: facilityID ?? -1,
+        userID: localStorage.getItem('userID') ?? '',
+        ccaID: ccaID ?? -1,
+        startTime: startTime ?? Math.round(Date.now() / 1000),
+        endTime: endTime ?? Math.round(Date.now() / 1000),
+        description: description ?? '',
+        endDate: 0,
+      }),
+    )
+    if (startTime === null || endTime === null) {
+      dispatch(setBookingStatus(BookingStatus.FAILURE, 'Please select a start and end time!'))
+    } else {
+      const tokenId = localStorage.getItem('token')
+      fetch(
+        `${DOMAIN_URL.FACILITY}${ENDPOINTS.BOOKING}/${bookingID}?` +
+          new URLSearchParams({
+            token: `${tokenId}`,
+            userID: `${localStorage.getItem('userID')}`,
+          }),
+        {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      },
-    ).then((resp) => {
-      if (resp.status === 200) {
-        dispatch(setBookingStatus(BookingStatus.SUCCESS))
-      } else if (resp.status === 409) {
-        dispatch(setBookingStatus(BookingStatus.CONFLICT_SINGLE))
-        resp.json().then((body) => {
-          dispatch(setConflictBookings(body.conflict_bookings))
-        })
-      } else {
-        resp.json().then((body) => {
-          setBookingStatusErrorMessage(body)
-        })
-      }
-    })
-    dispatch(resetTimeSelectorSelection())
-    dispatch(setBookingStartTime(0))
-    dispatch(setBookingEndTime(0))
+      ).then((resp) => {
+        if (resp.status === 200) {
+          dispatch(setBookingStatus(BookingStatus.SUCCESS))
+        } else if (resp.status === 409) {
+          dispatch(setBookingStatus(BookingStatus.CONFLICT_SINGLE))
+          resp.json().then((body) => {
+            dispatch(setConflictBookings(body.conflict_bookings))
+          })
+        } else {
+          resp.json().then((body) => {
+            setBookingStatusErrorMessage(body)
+          })
+        }
+      })
+      dispatch(resetTimeSelectorSelection())
+      dispatch(setBookingStartTime(0))
+      dispatch(setBookingEndTime(0))
+    }
   }
-}
 
 /**
  *
@@ -650,15 +651,14 @@ export const handleEditBooking = (
  * @returns sets `bookingStatus`, `bookingErrorMessage`
  */
 
-export const setBookingStatus = (bookingStatus: BookingStatus, bookingErrorMessage?: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
-    bookingStatus: bookingStatus,
-    bookingErrorMessage: bookingErrorMessage,
-  })
-}
+export const setBookingStatus =
+  (bookingStatus: BookingStatus, bookingErrorMessage?: string) => (dispatch: Dispatch<ActionTypes>) => {
+    dispatch({
+      type: FACILITY_ACTIONS.SET_BOOKING_STATUS,
+      bookingStatus: bookingStatus,
+      bookingErrorMessage: bookingErrorMessage,
+    })
+  }
 
 /**
  *

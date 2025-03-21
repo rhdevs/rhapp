@@ -82,15 +82,14 @@ export const setDeliveryTime = (newDeliveryTime: number) => (dispatch: Dispatch<
   })
 }
 
-export const setSelectedPaymentMethod = (selectedPaymentMethod?: PaymentMethod[]) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  if (!selectedPaymentMethod) return
-  dispatch({
-    type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
-    selectedPaymentMethod: selectedPaymentMethod,
-  })
-}
+export const setSelectedPaymentMethod =
+  (selectedPaymentMethod?: PaymentMethod[]) => (dispatch: Dispatch<ActionTypes>) => {
+    if (!selectedPaymentMethod) return
+    dispatch({
+      type: SUPPER_ACTIONS.SET_SELECTED_PAYMENT_METHOD,
+      selectedPaymentMethod: selectedPaymentMethod,
+    })
+  }
 
 export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -99,14 +98,13 @@ export const setSelectedRestaurant = (selectedRestaurant: string) => (dispatch: 
   })
 }
 
-export const setSelectedSupperGroupStatus = (selectedSupperGroupStatus: SupperGroupStatus | null) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS,
-    selectedSupperGroupStatus: selectedSupperGroupStatus,
-  })
-}
+export const setSelectedSupperGroupStatus =
+  (selectedSupperGroupStatus: SupperGroupStatus | null) => (dispatch: Dispatch<ActionTypes>) => {
+    dispatch({
+      type: SUPPER_ACTIONS.SET_SELECTED_SUPPER_GROUP_STATUS,
+      selectedSupperGroupStatus: selectedSupperGroupStatus,
+    })
+  }
 
 export const setSearchValue = (query: string) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
@@ -193,15 +191,14 @@ export const setIsFoodMenuModalOpen = (isFoodMenuModalOpen: boolean) => (dispatc
   })
 }
 
-export const setFoodModalInfo = (foodMenuModalId: string, modalMenuFoodName: string) => (
-  dispatch: Dispatch<ActionTypes>,
-) => {
-  dispatch({
-    type: SUPPER_ACTIONS.SET_FOOD_MODAL_INFO,
-    foodMenuModalId: foodMenuModalId,
-    modalMenuFoodName: modalMenuFoodName,
-  })
-}
+export const setFoodModalInfo =
+  (foodMenuModalId: string, modalMenuFoodName: string) => (dispatch: Dispatch<ActionTypes>) => {
+    dispatch({
+      type: SUPPER_ACTIONS.SET_FOOD_MODAL_INFO,
+      foodMenuModalId: foodMenuModalId,
+      modalMenuFoodName: modalMenuFoodName,
+    })
+  }
 
 export const setClosingTimeFilter = (chosenFilter: Filter) => (dispatch: Dispatch<ActionTypes>) => {
   dispatch({
