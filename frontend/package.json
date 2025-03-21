@@ -2,6 +2,9 @@
   "name": "frontend",
   "version": "2.1.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "@testing-library/jest-dom": "^5.11.4",
